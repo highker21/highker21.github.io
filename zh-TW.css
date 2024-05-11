@@ -2,13 +2,13 @@
   font-family: BiauKaiTC-Regular;
   font-style: normal;
   font-weight: 400;
-  src: local('BiauKaiTC Regular'), local('BiauKaiTC-Regular'), url(/Users/highker/Library/Fonts/KAIU.TTF) format("opentype");
+  src: local('BiauKaiTC Regular'), local('BiauKaiTC-Regular'), url(/Users/highker/Library/Fonts/KAIU.TTF) format("opentype"), url(./KAIU.TTF) format("opentype");;
 }
 @font-face{
   font-family: jf-jinxuanlatte-2;
   font-style: normal;
   font-weight: 400;
-  src: url(/Users/highker/Library/Fonts/jf-jinxuanlatte-2.1-regular.otf) format("opentype"), local('jf-jinxuanlatte-2.1-Regular');
+  src: url(/Users/highker/Library/Fonts/jf-jinxuanlatte-2.1-regular.otf) format("opentype"),url(./jf-jinxuanlatte-2.1-regular.otf) format("opentype"), local('jf-jinxuanlatte-2.1-Regular');
 }
 @font-face {
   font-family: 'Droid Serif';
