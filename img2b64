@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clipboard Image to Base64</title>
+</head>
+<body>
+    <h2>Paste Image Here</h2>
+    <textarea id="pasteArea" rows="10" cols="50" placeholder="Paste an image here..."></textarea>
+    <div id="result"></div>
+
+    <script>
+        document.getElementById('pasteArea').addEventListener('paste', function(event) {
+            var items = (event.clipboardData || event.originalEvent.clipboardData).items;
+            for (var index in items) {
+                var item = items[index];
+                if (item.kind === 'file') {
+                    var blob = item.getAsFile();
+                    var reader = new FileReader();
+                    reader.onload = function(event) {
+                        var base64String = event.target.result;
+                        document.getElementById('result').innerHTML = '<p>Base64:</p><textarea rows="10" cols="50">' + base64String + '</textarea>';
+                    };
+                    reader.readAsDataURL(blob);
+                }
+            }
+        });
+    </script>
+</body>
+</html>
