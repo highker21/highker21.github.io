@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>甲狀腺超音波報告產生器 v3.2</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', 'Noto Sans TC', sans-serif;
+            background-color: #f0f4f8;
+        }
+        .form-section {
+            background-color: white;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            margin-bottom: 1.5rem;
+        }
+        .section-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #1e3a8a;
+            border-bottom: 2px solid #3b82f6;
+            padding-bottom: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        label.option {
+            display: flex;
+            align-items: center;
+            padding: 0.5rem 0.75rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            border: 1px solid #e5e7eb;
+        }
+        label.option:hover {
+            background-color: #f3f4f6;
+        }
+        input[type="checkbox"]:checked + span, input[type="radio"]:checked + span {
+            font-weight: 600;
+            color: #1d4ed8;
+        }
+        input[type="text"] {
+             width: 60px;
+             border: 1px solid #d1d5db;
+             border-radius: 0.375rem;
+             padding: 0.25rem 0.5rem;
+             text-align: center;
+        }
+        .input-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .tirads-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.875rem;
+        }
+        .tirads-table th, .tirads-table td {
+            border: 1px solid #d1d5db;
+            padding: 0.5rem;
+            text-align: left;
+        }
+        .tirads-table th {
+            background-color: #eef2ff;
+        }
+        .tirads-table tr.highlight {
+            background-color: #dbeafe;
+            font-weight: bold;
+        }
+        #copy-button {
+            transition: all 0.2s;
+        }
+        .sub-section-title {
+            font-weight: 600;
+            color: #4b5563;
+            margin-bottom: 0.5rem;
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+
+    <div class="max-w-6xl mx-auto">
+        <header class="text-center mb-8">
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-800">甲狀腺超音波報告產生器</h1>
+            <p class="text-gray-500 mt-2">v3.2 - 完整尺寸記錄</p>
+        </header>
+
+        <div id="report-form" class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div class="lg:col-span-2">
+                 <div class="form-section">
+                    <h2 class="section-title">整體發現 / 檢查限制</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <label class="option"><input type="radio" name="overall_finding" value="normal" class="mr-2 h-4 w-4"><span>甲狀腺及頸部超音波無結構性異常發現</span></label>
+                        <label class="option"><input type="radio" name="overall_finding" value="limited" class="mr-2 h-4 w-4"><span>檢查受限</span></label>
+                    </div>
+                     <div id="limitations" class="mt-2 pl-6 text-sm space-y-1 hidden">
+                        <label class="option !p-1"><input type="checkbox" name="limitation_reason" value="氣管/鎖骨遮蔽" class="mr-2"><span>因氣管/鎖骨遮蔽</span></label>
+                        <label class="option !p-1"><input type="checkbox" name="limitation_reason" value="病人合作不佳" class="mr-2"><span>病人合作不佳</span></label>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <div class="form-section">
+                    <h2 class="section-title">甲狀腺整體評估</h2>
+                    <div class="space-y-4">
+                        <div>
+                            <h3 class="sub-section-title">大小與尺寸</h3>
+                            <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 mb-3">
+                                <label class="option"><input type="radio" name="gland_size" value="大小正常" class="mr-2"><span>大小正常</span></label>
+                                <label class="option"><input type="radio" name="gland_size" value="甲狀腺腫大" class="mr-2"><span>甲狀腺腫大</span></label>
+                                <label class="option"><input type="radio" name="gland_size" value="甲狀腺萎縮" class="mr-2"><span>甲狀腺萎縮</span></label>
+                            </div>
+                            <div class="space-y-2 text-sm">
+                                <div class="grid grid-cols-4 gap-2 items-center">
+                                    <span class="font-medium">右葉:</span>
+                                    <div class="input-group">L:<input type="text" id="right_lobe_l"></div>
+                                    <div class="input-group">W:<input type="text" id="right_lobe_w"></div>
+                                    <div class="input-group">T:<input type="text" id="right_lobe_t"></div>
+                                </div>
+                                <div class="grid grid-cols-4 gap-2 items-center">
+                                    <span class="font-medium">左葉:</span>
+                                    <div class="input-group">L:<input type="text" id="left_lobe_l"></div>
+                                    <div class="input-group">W:<input type="text" id="left_lobe_w"></div>
+                                    <div class="input-group">T:<input type="text" id="left_lobe_t"></div>
+                                </div>
+                                 <div class="grid grid-cols-4 gap-2 items-center">
+                                    <span class="font-medium">峽部:</span>
+                                     <div class="input-group col-span-3">厚:<input type="text" id="isthmus_t" class="w-16"><span>mm</span></div>
+                                </div>
+                                <div class="text-xs text-gray-400 text-right">L:長 / W:寬 / T:厚 (cm)</div>
+                            </div>
+                        </div>
+                        <div>
+                            <h3 class="sub-section-title">瀰漫性病變 / 實質</h3>
+                            <div class="grid grid-cols-2 gap-2">
+                                <label class="option"><input type="radio" name="parenchyma" value="實質均質正常" class="mr-2"><span>實質均質正常</span></label>
+                                <label class="option"><input type="radio" name="parenchyma" value="實質不均質" class="mr-2"><span>實質不均質</span></label>
+                                <label class="option"><input type="radio" name="parenchyma" value="瀰漫性低迴聲" class="mr-2"><span>瀰漫性低迴聲</span></label>
+                                <label class="option"><input type="radio" name="parenchyma" value="自體免疫甲狀腺炎表現" class="mr-2"><span>自體免疫甲狀腺炎表現</span></label>
+                                <label class="option"><input type="radio" name="parenchyma" value="結節性甲狀腺腫" class="mr-2"><span>結節性甲狀腺腫</span></label>
+                            </div>
+                        </div>
+                         <div>
+                            <h3 class="sub-section-title">手術史</h3>
+                            <div class="flex items-center space-x-4">
+                               <label class="option"><input type="checkbox" id="post_op_status" class="mr-2"><span>甲狀腺切除術後</span></label>
+                               <div id="post_op_details" class="hidden flex flex-wrap gap-2">
+                                   <label class="option !p-1"><input type="radio" name="op_type" value="全切除" class="mr-2"><span>全切除</span></label>
+                                   <label class="option !p-1"><input type="radio" name="op_type" value="右葉切除" class="mr-2"><span>右葉切除</span></label>
+                                   <label class="option !p-1"><input type="radio" name="op_type" value="左葉切除" class="mr-2"><span>左葉切除</span></label>
+                                   <label class="option !p-1"><input type="radio" name="op_type" value="殘餘甲狀腺" class="mr-2"><span>殘餘 (Remnant)</span></label>
+                               </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h2 class="section-title">頸部發現</h2>
+                    <div class="space-y-2">
+                         <label class="option"><input type="radio" name="neck_finding" value="無異常發現" class="mr-2"><span>無異常發現</span></label>
+                         <label class="option"><input type="radio" name="neck_finding" value="頸部淋巴結腫大" class="mr-2"><span>頸部淋巴結腫大</span></label>
+                         <div id="lymph_node_details" class="hidden pl-6 space-y-2 mt-1">
+                             <div class="input-group text-sm"><span>位置/大小:</span><input type="text" id="lymph_node_location" class="flex-grow !w-auto"></div>
+                             <label class="option !p-1"><input type="checkbox" id="lymph_node_malignant" class="mr-2"><span>疑似惡性特徵淋巴結</span></label>
+                         </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div>
+                <div class="form-section">
+                    <h2 class="section-title">甲狀腺結節</h2>
+                    <label class="option mb-4"><input type="checkbox" id="no_nodule" class="mr-2"><span>無明顯結節</span></label>
+
+                    <div id="nodule_section" class="space-y-4">
+                        <div>
+                            <h3 class="sub-section-title">主要結節描述 (可疑或最大者)</h3>
+                             <div class="flex flex-wrap gap-x-4 gap-y-2 my-2 text-sm items-center">
+                                <div class="input-group"><span>腺葉:</span>
+                                    <label class="option !p-1"><input type="checkbox" name="nodule_lobe" value="右葉" class="mr-2"><span>右葉</span></label>
+                                    <label class="option !p-1"><input type="checkbox" name="nodule_lobe" value="左葉" class="mr-2"><span>左葉</span></label>
+                                    <label class="option !p-1"><input type="checkbox" name="nodule_lobe" value="峽部" class="mr-2"><span>峽部</span></label>
+                                </div>
+                                 <div class="input-group"><span>位置:</span>
+                                    <label class="option !p-1"><input type="checkbox" name="nodule_pos" value="上段" class="mr-2"><span>上</span></label>
+                                    <label class="option !p-1"><input type="checkbox" name="nodule_pos" value="中段" class="mr-2"><span>中</span></label>
+                                    <label class="option !p-1"><input type="checkbox" name="nodule_pos" value="下段" class="mr-2"><span>下</span></label>
+                                </div>
+                                <div class="input-group"><span>尺寸:</span><input type="text" id="nodule_size" placeholder="cm"><span>cm</span></div>
+                             </div>
+                        </div>
+
+                        <div data-tirads-group="composition">
+                            <h4 class="font-medium text-sm text-gray-600 mb-1">成分 (Composition)</h4>
+                            <div class="grid grid-cols-2 gap-2">
+                                <label class="option"><input type="radio" name="composition" value="0" class="mr-2"><span>囊腫/囊泡 (0分)</span></label>
+                                <label class="option"><input type="radio" name="composition" value="0" class="mr-2"><span>海綿樣 (0分)</span></label>
+                                <label class="option"><input type="radio" name="composition" value="1" class="mr-2"><span>混合性 (1分)</span></label>
+                                <label class="option"><input type="radio" name="composition" value="2" class="mr-2"><span>實質性 (2分)</span></label>
+                            </div>
+                        </div>
+                        <div data-tirads-group="echogenicity">
+                            <h4 class="font-medium text-sm text-gray-600 mb-1">回音 (Echogenicity)</h4>
+                            <div class="grid grid-cols-2 gap-2">
+                                <label class="option"><input type="radio" name="echogenicity" value="1" class="mr-2"><span>高回音 (1分)</span></label>
+                                <label class="option"><input type="radio" name="echogenicity" value="1" class="mr-2"><span>等回音 (1分)</span></label>
+                                <label class="option"><input type="radio" name="echogenicity" value="2" class="mr-2"><span>低回音 (2分)</span></label>
+                                <label class="option"><input type="radio" name="echogenicity" value="3" class="mr-2"><span>極低回音 (3分)</span></label>
+                            </div>
+                        </div>
+                        <div data-tirads-group="shape">
+                            <h4 class="font-medium text-sm text-gray-600 mb-1">形狀 (Shape)</h4>
+                             <div class="grid grid-cols-2 gap-2">
+                                <label class="option"><input type="radio" name="shape" value="0" class="mr-2"><span>寬扁形 (0分)</span></label>
+                                <label class="option"><input type="radio" name="shape" value="3" class="mr-2"><span>高窄形 (3分)</span></label>
+                            </div>
+                        </div>
+                        <div data-tirads-group="margin">
+                            <h4 class="font-medium text-sm text-gray-600 mb-1">邊緣 (Margin)</h4>
+                             <div class="grid grid-cols-2 gap-2">
+                                <label class="option"><input type="radio" name="margin" value="0" class="mr-2"><span>平滑/模糊 (0分)</span></label>
+                                <label class="option"><input type="radio" name="margin" value="2" class="mr-2"><span>不規則/小葉狀 (2分)</span></label>
+                                <label class="option"><input type="radio" name="margin" value="3" class="mr-2"><span>結節外侵犯 (3分)</span></label>
+                            </div>
+                        </div>
+                        <div data-tirads-group="foci">
+                            <h4 class="font-medium text-sm text-gray-600 mb-1">鈣化點 (Echogenic Foci)</h4>
+                             <div class="grid grid-cols-2 gap-2">
+                                <label class="option"><input type="radio" name="foci" value="0" class="mr-2"><span>無/巨型鈣化 (0分)</span></label>
+                                <label class="option"><input type="radio" name="foci" value="1" class="mr-2"><span>邊緣環狀鈣化 (1分)</span></label>
+                                <label class="option"><input type="radio" name="foci" value="2" class="mr-2"><span>點狀高回音 (2分)</span></label>
+                                <label class="option"><input type="radio" name="foci" value="3" class="mr-2"><span>微小鈣化 (3分)</span></label>
+                            </div>
+                        </div>
+                         <div>
+                            <h4 class="font-medium text-sm text-gray-600 mb-1">其他特徵</h4>
+                            <div class="grid grid-cols-2 gap-2">
+                                <label class="option"><input type="checkbox" name="other_feature" value="疑似被膜侵犯 (Capsule invasion)" class="mr-2"><span>被膜侵犯</span></label>
+                                <label class="option"><input type="checkbox" name="other_feature" value="疑似血管侵犯 (Vessel invasion)" class="mr-2"><span>血管侵犯</span></label>
+                            </div>
+                        </div>
+                        <div>
+                            <h4 class="font-medium text-sm text-gray-600 mb-1">血流 (Vascularity)</h4>
+                             <div class="grid grid-cols-2 gap-2">
+                                <label class="option"><input type="radio" name="vascularity" value="無明顯血流" class="mr-2"><span>無明顯血流</span></label>
+                                <label class="option"><input type="radio" name="vascularity" value="周邊血流" class="mr-2"><span>周邊血流</span></label>
+                                <label class="option"><input type="radio" name="vascularity" value="內部血流" class="mr-2"><span>內部血流</span></label>
+                                <label class="option"><input type="radio" name="vascularity" value="整體血流豐富" class="mr-2"><span>整體血流豐富</span></label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="lg:col-span-2">
+                <div class="form-section">
+                    <h2 class="section-title">ACR TIRADS® 評分與建議</h2>
+                    <p class="mb-4">總分: <span id="tirads-score" class="text-2xl font-bold text-blue-600">0</span> 分 (等級: <span id="tirads-level" class="font-bold text-blue-600">TR1</span>)</p>
+                    <div class="overflow-x-auto">
+                        <table id="tirads-ref-table" class="tirads-table">
+                            <thead><tr><th>分數</th><th>等級</th><th>惡性風險</th><th>處理建議</th></tr></thead>
+                            <tbody>
+                                <tr data-level="TR1"><td>0</td><td>TR1</td><td>&lt; 2% (良性)</td><td>不需做細針穿刺 (FNA)</td></tr>
+                                <tr data-level="TR2"><td>2</td><td>TR2</td><td>&lt; 2% (非可疑)</td><td>不需做細針穿刺 (FNA)</td></tr>
+                                <tr data-level="TR3"><td>3</td><td>TR3</td><td>&lt; 5% (輕度可疑)</td><td>≥ 2.5 cm 建議 FNA； ≥ 1.5 cm 可考慮追蹤</td></tr>
+                                <tr data-level="TR4"><td>4-6</td><td>TR4</td><td>5-20% (中度可疑)</td><td>≥ 1.5 cm 建議 FNA； ≥ 1.0 cm 可考慮追蹤</td></tr>
+                                <tr data-level="TR5"><td>≥ 7</td><td>TR5</td><td>> 20% (高度可疑)</td><td>≥ 1.0 cm 建議 FNA； ≥ 0.5 cm 可考慮追蹤</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h2 class="section-title">處理與建議</h2>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                        <label class="option"><input type="checkbox" name="recommendation" value="建議安排細針穿刺細胞學檢查 (FNA)" class="mr-2"><span>建議安排細針穿刺細胞學檢查 (FNA)</span></label>
+                        <label class="option"><input type="checkbox" name="recommendation" value="建議甲狀腺功能抽血檢查" class="mr-2"><span>建議甲狀腺功能抽血檢查</span></label>
+                        <label class="option"><input type="checkbox" name="recommendation" value="請三個月內至內分泌科門診追蹤" class="mr-2"><span>請三個月內至內分泌科門診追蹤</span></label>
+                        <label class="option"><input type="checkbox" name="recommendation" value="請六個月內至內分泌科門診追蹤" class="mr-2"><span>請六個月內至內分泌科門診追蹤</span></label>
+                        <label class="option"><input type="checkbox" name="recommendation" value="請一年內至內分泌科門診追蹤" class="mr-2"><span>請一年內至內分泌科門診追蹤</span></label>
+                        <label class="option"><input type="checkbox" name="recommendation" value="請至耳鼻喉科/一般外科門診評估" class="mr-2"><span>請至耳鼻喉科/一般外科門診評估</span></label>
+                        <label class="option"><input type="checkbox" name="recommendation" value="立即安排門診或轉診" class="mr-2"><span>立即安排門診或轉診</span></label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-8">
+            <div class="flex justify-center mb-4">
+                 <button id="generate-button" class="bg-blue-600 text-white font-bold py-3 px-8 rounded-lg shadow-lg hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300 transform hover:scale-105 transition-transform">
+                    產生報告
+                </button>
+            </div>
+            <div class="form-section">
+                <div class="flex justify-between items-center mb-2">
+                    <h2 class="section-title !border-0 !mb-0">純文字報告</h2>
+                    <button id="copy-button" class="bg-gray-200 text-gray-700 font-semibold py-2 px-4 rounded-md hover:bg-gray-300">
+                        複製內容
+                    </button>
+                </div>
+                <textarea id="report-output" rows="15" class="w-full p-3 border border-gray-300 rounded-md bg-gray-50 font-mono text-sm" readonly placeholder="點擊「產生報告」按鈕後，報告將會顯示於此..."></textarea>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.getElementById('report-form');
+            const tiradsInputs = form.querySelectorAll('[data-tirads-group] input[type="radio"]');
+            const scoreDisplay = document.getElementById('tirads-score');
+            const levelDisplay = document.getElementById('tirads-level');
+            const tiradsTableRows = document.querySelectorAll('#tirads-ref-table tbody tr');
+
+            const noNoduleCheckbox = document.getElementById('no_nodule');
+            const noduleSection = document.getElementById('nodule_section');
+            
+            const overallFindingRadios = document.querySelectorAll('input[name="overall_finding"]');
+            const limitationsDiv = document.getElementById('limitations');
+
+            const postOpCheckbox = document.getElementById('post_op_status');
+            const postOpDetailsDiv = document.getElementById('post_op_details');
+
+            const neckFindingRadios = document.querySelectorAll('input[name="neck_finding"]');
+            const lymphNodeDetailsDiv = document.getElementById('lymph_node_details');
+
+            const generateButton = document.getElementById('generate-button');
+            const copyButton = document.getElementById('copy-button');
+            const reportOutput = document.getElementById('report-output');
+
+            // --- TIRADS Score Calculation ---
+            function calculateTiradsScore() {
+                if (noNoduleCheckbox.checked) {
+                    updateScoreUI(0);
+                    return;
+                }
+                let totalScore = 0;
+                tiradsInputs.forEach(input => {
+                    if (input.checked) {
+                        totalScore += parseInt(input.value, 10);
+                    }
+                });
+                updateScoreUI(totalScore);
+            }
+
+            function updateScoreUI(score) {
+                scoreDisplay.textContent = score;
+                let level = 'TR1';
+                if (score >= 7) level = 'TR5';
+                else if (score >= 4) level = 'TR4';
+                else if (score === 3) level = 'TR3';
+                else if (score === 2) level = 'TR2';
+                
+                levelDisplay.textContent = level;
+
+                tiradsTableRows.forEach(row => {
+                    row.classList.remove('highlight');
+                    if (row.dataset.level === level) {
+                        row.classList.add('highlight');
+                    }
+                });
+            }
+
+            tiradsInputs.forEach(input => input.addEventListener('change', calculateTiradsScore));
+            
+            // --- UI Logic ---
+            noNoduleCheckbox.addEventListener('change', () => {
+                noduleSection.style.display = noNoduleCheckbox.checked ? 'none' : 'block';
+                if(noNoduleCheckbox.checked) {
+                    tiradsInputs.forEach(input => input.checked = false);
+                }
+                calculateTiradsScore();
+            });
+            
+            overallFindingRadios.forEach(radio => {
+                radio.addEventListener('change', (e) => {
+                    limitationsDiv.classList.toggle('hidden', e.target.value !== 'limited');
+                });
+            });
+
+            postOpCheckbox.addEventListener('change', () => {
+                postOpDetailsDiv.classList.toggle('hidden', !postOpCheckbox.checked);
+            });
+
+            neckFindingRadios.forEach(radio => {
+                 radio.addEventListener('change', (e) => {
+                    lymphNodeDetailsDiv.classList.toggle('hidden', e.target.value !== '頸部淋巴結腫大');
+                });
+            });
+
+
+            // --- Report Generation ---
+            generateButton.addEventListener('click', () => {
+                let report = '甲狀腺及頸部超音波報告\n';
+                report += '=================================\n\n';
+
+                const getCheckedValue = (name) => {
+                    const checked = document.querySelector(`input[name="${name}"]:checked`);
+                    return checked ? checked.labels[0].textContent.replace(/\s*\(\d+分\)/, '') : '';
+                };
+                 const getCheckedValues = (name) => {
+                    const checked = Array.from(document.querySelectorAll(`input[name="${name}"]:checked`));
+                    return checked.map(c => c.value);
+                };
+
+                const overall = getCheckedValue('overall_finding');
+                if (overall === '甲狀腺及頸部超音波無結構性異常發現') {
+                    report += 'FINDINGS:\n- 甲狀腺及頸部超音波無結構性異常發現。\n';
+                } else {
+                    report += 'FINDINGS:\n';
+                    if (overall === '檢查受限') {
+                        const reasons = getCheckedValues('limitation_reason');
+                        report += `- 檢查受限${reasons.length > 0 ? '，原因：' + reasons.join('、') : ''}。\n`;
+                    }
+
+                    // Gland Assessment
+                    const glandSize = getCheckedValue('gland_size');
+                    if (glandSize) report += `- 甲狀腺大小: ${glandSize}。\n`;
+                    
+                    const rll = document.getElementById('right_lobe_l').value;
+                    const rlw = document.getElementById('right_lobe_w').value;
+                    const rlt = document.getElementById('right_lobe_t').value;
+                    const lll = document.getElementById('left_lobe_l').value;
+                    const llw = document.getElementById('left_lobe_w').value;
+                    const llt = document.getElementById('left_lobe_t').value;
+                    const isthmus = document.getElementById('isthmus_t').value;
+
+                    if (rll || rlw || rlt || lll || llw || llt || isthmus) {
+                        report += `  - 尺寸 (L x W x T):\n`;
+                        if (rll || rlw || rlt) report += `    - 右葉: ${rll||'--'} x ${rlw||'--'} x ${rlt||'--'} cm\n`;
+                        if (lll || llw || llt) report += `    - 左葉: ${lll||'--'} x ${llw||'--'} x ${llt||'--'} cm\n`;
+                        if (isthmus) report += `    - 峽部厚度: ${isthmus} mm\n`;
+                    }
+
+
+                    const parenchyma = getCheckedValue('parenchyma');
+                    if (parenchyma) report += `- 甲狀腺實質: ${parenchyma}。\n`;
+                    
+                    if (postOpCheckbox.checked) {
+                        const opType = getCheckedValue('op_type').replace(/\s*\(.*\)/,'').trim();
+                        report += `- 手術史: 甲狀腺切除術後 (${opType || '未指定'})。\n`;
+                    }
+
+                    // Nodule
+                    if (noNoduleCheckbox.checked) {
+                        report += '- 甲狀腺結節: 無明顯結節。\n';
+                    } else {
+                        report += '- 甲狀腺結節:\n';
+                        const lobes = getCheckedValues('nodule_lobe');
+                        const positions = getCheckedValues('nodule_pos');
+                        const noduleSize = document.getElementById('nodule_size').value;
+                        if(lobes.length > 0 || noduleSize) {
+                             let locationStr = `${lobes.join('、')} ${positions.join('/')}`.trim();
+                             report += `  - 於 ${locationStr} 發現一主要結節，大小約 ${noduleSize || '未測量'} cm。\n`;
+                        }
+                       
+                        const composition = getCheckedValue('composition');
+                        const echogenicity = getCheckedValue('echogenicity');
+                        const shape = getCheckedValue('shape');
+                        const margin = getCheckedValue('margin');
+                        const foci = getCheckedValue('foci');
+                        const vascularity = getCheckedValue('vascularity');
+                        const other_features = getCheckedValues('other_feature');
+
+                        let description = '  - 結節特徵: ';
+                        let features = [composition, echogenicity, shape, margin, foci, vascularity].filter(Boolean);
+                        description += features.join('、 ') + '。\n';
+                        if(other_features.length > 0){
+                            description += `  - 高風險特徵: ${other_features.join('、 ')}。\n`;
+                        }
+                        report += description;
+                        
+                        const score = scoreDisplay.textContent;
+                        const level = levelDisplay.textContent;
+                        report += `  - ACR TIRADS® Score: ${score}分 (等級: ${level})。\n`;
+                    }
+                    
+                    // Neck Finding
+                    const neckFinding = getCheckedValue('neck_finding');
+                    if (neckFinding) {
+                        report += `- 頸部發現: ${neckFinding}。\n`;
+                        if(neckFinding === '頸部淋巴結腫大') {
+                            const location = document.getElementById('lymph_node_location').value;
+                            if (location) report += `  - 位置/大小: ${location}\n`;
+                            if (document.getElementById('lymph_node_malignant').checked) {
+                                report += '  - 疑似惡性特徵淋巴結。\n';
+                            }
+                        }
+                    }
+                }
+
+                // Impression & Recommendations
+                report += '\nIMPRESSION & RECOMMENDATIONS:\n';
+                const recommendations = getCheckedValues('recommendation');
+                if (recommendations.length > 0) {
+                    recommendations.forEach(rec => {
+                        report += `- ${rec}\n`;
+                    });
+                } else {
+                    report += '- 依臨床狀況評估。\n';
+                }
+                reportOutput.value = report;
+            });
+            
+            // --- Copy to Clipboard ---
+            copyButton.addEventListener('click', () => {
+                if(!reportOutput.value) return;
+                reportOutput.select();
+                try {
+                    document.execCommand('copy');
+                    const originalText = copyButton.textContent;
+                    copyButton.textContent = '已複製!';
+                    copyButton.classList.add('bg-green-500', 'text-white');
+                    setTimeout(() => {
+                        copyButton.textContent = originalText;
+                        copyButton.classList.remove('bg-green-500', 'text-white');
+                    }, 2000);
+                } catch (err) {
+                    console.error('Fallback: Oops, unable to copy', err);
+                }
+            });
+
+            // Initial calculation
+            calculateTiradsScore();
+        });
+    </script>
+</body>
+</html>
