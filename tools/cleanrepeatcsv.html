@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSV 重複資料移除工具</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background-color: #f3f4f6;
+        }
+        .drop-zone {
+            border: 2px dashed #cbd5e1;
+            transition: all 0.3s ease;
+        }
+        .drop-zone:hover, .drop-zone.dragover {
+            border-color: #3b82f6;
+            background-color: #eff6ff;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+
+    <div class="bg-white rounded-xl shadow-lg w-full max-w-2xl p-8">
+        <div class="text-center mb-8">
+            <h1 class="text-3xl font-bold text-gray-800 mb-2">
+                <i class="fas fa-file-csv text-green-600 mr-2"></i>病歷號碼去重工具
+            </h1>
+            <p class="text-gray-500">上傳 CSV 檔案，自動移除重複的病歷號碼並匯出。</p>
+        </div>
+
+        <!-- File Upload Section -->
+        <div id="dropZone" class="drop-zone rounded-lg p-10 text-center cursor-pointer mb-6 relative">
+            <input type="file" id="fileInput" accept=".csv,.txt" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
+            <div id="uploadPrompt">
+                <i class="fas fa-cloud-upload-alt text-4xl text-gray-400 mb-4"></i>
+                <p class="text-lg text-gray-600 font-medium">點擊或拖僅檔案至此處</p>
+                <p class="text-sm text-gray-400 mt-1">支援 .csv 或 .txt 格式</p>
+            </div>
+            <div id="fileInfo" class="hidden">
+                <i class="fas fa-file-alt text-4xl text-blue-500 mb-4"></i>
+                <p id="fileName" class="text-lg text-gray-800 font-medium break-all"></p>
+                <p class="text-sm text-green-600 mt-2 font-bold">讀取成功！準備處理...</p>
+            </div>
+        </div>
+
+        <!-- Stats Section (Hidden initially) -->
+        <div id="statsSection" class="hidden grid grid-cols-2 gap-4 mb-6">
+            <div class="bg-gray-50 rounded-lg p-4 text-center border border-gray-200">
+                <p class="text-sm text-gray-500 mb-1">原始資料筆數</p>
+                <p id="originalCount" class="text-2xl font-bold text-gray-700">0</p>
+            </div>
+            <div class="bg-blue-50 rounded-lg p-4 text-center border border-blue-200">
+                <p class="text-sm text-blue-600 mb-1">移除重複後筆數</p>
+                <p id="uniqueCount" class="text-2xl font-bold text-blue-700">0</p>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div id="actionButtons" class="hidden flex flex-col gap-3">
+            <button id="downloadBtn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition duration-200 flex items-center justify-center shadow-md">
+                <i class="fas fa-download mr-2"></i> 下載去重後的檔案
+            </button>
+            
+            <button id="resetBtn" class="w-full bg-white hover:bg-gray-100 text-gray-600 font-medium py-2 px-6 rounded-lg border border-gray-300 transition duration-200">
+                處理其他檔案
+            </button>
+        </div>
+
+        <!-- Error Message -->
+        <div id="errorMessage" class="hidden mt-4 p-3 bg-red-100 text-red-700 rounded-lg text-center text-sm"></div>
+    </div>
+
+    <script>
+        const dropZone = document.getElementById('dropZone');
+        const fileInput = document.getElementById('fileInput');
+        const uploadPrompt = document.getElementById('uploadPrompt');
+        const fileInfo = document.getElementById('fileInfo');
+        const fileNameDisplay = document.getElementById('fileName');
+        const statsSection = document.getElementById('statsSection');
+        const actionButtons = document.getElementById('actionButtons');
+        const downloadBtn = document.getElementById('downloadBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const originalCountDisplay = document.getElementById('originalCount');
+        const uniqueCountDisplay = document.getElementById('uniqueCount');
+        const errorMessage = document.getElementById('errorMessage');
+
+        let processedData = null;
+        let originalFileName = '';
+
+        // Drag and drop effects
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            dropZone.addEventListener(eventName, preventDefaults, false);
+        });
+
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        ['dragenter', 'dragover'].forEach(eventName => {
+            dropZone.addEventListener(eventName, () => dropZone.classList.add('dragover'), false);
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            dropZone.addEventListener(eventName, () => dropZone.classList.remove('dragover'), false);
+        });
+
+        dropZone.addEventListener('drop', handleDrop, false);
+        fileInput.addEventListener('change', handleFiles, false);
+
+        function handleDrop(e) {
+            const dt = e.dataTransfer;
+            const files = dt.files;
+            handleFiles({ target: { files: files } });
+        }
+
+        function handleFiles(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            // Reset UI
+            errorMessage.classList.add('hidden');
+            
+            // Show loading state visually
+            uploadPrompt.classList.add('hidden');
+            fileInfo.classList.remove('hidden');
+            fileNameDisplay.textContent = file.name;
+            originalFileName = file.name;
+
+            const reader = new FileReader();
+            
+            reader.onload = function(event) {
+                try {
+                    const text = event.target.result;
+                    processCSV(text);
+                } catch (err) {
+                    showError("檔案讀取失敗，請確認檔案格式是否正確。");
+                    console.error(err);
+                }
+            };
+
+            reader.onerror = function() {
+                showError("讀取檔案時發生錯誤。");
+            };
+
+            reader.readAsText(file);
+        }
+
+        function processCSV(text) {
+            // Split lines, handle both Windows (\r\n) and Unix (\n) line endings
+            const lines = text.split(/\r?\n/);
+            
+            const originalCount = lines.filter(line => line.trim() !== '').length;
+            
+            // Use a Set to store unique values.
+            // We trim whitespace to ensure " 123 " and "123" are treated as same, 
+            // but we preserve the string format (leading zeros).
+            const uniqueSet = new Set();
+            
+            // This array preserves the order of first appearance
+            const uniqueLines = [];
+
+            lines.forEach(line => {
+                const cleanLine = line.trim();
+                // Skip empty lines
+                if (cleanLine) {
+                    if (!uniqueSet.has(cleanLine)) {
+                        uniqueSet.add(cleanLine);
+                        uniqueLines.push(cleanLine);
+                    }
+                }
+            });
+
+            const uniqueCount = uniqueLines.length;
+
+            // Update UI Stats
+            originalCountDisplay.textContent = originalCount.toLocaleString();
+            uniqueCountDisplay.textContent = uniqueCount.toLocaleString();
+            
+            // Prepare data for download
+            processedData = uniqueLines.join('\n');
+
+            // Show results
+            statsSection.classList.remove('hidden');
+            actionButtons.classList.remove('hidden');
+        }
+
+        function downloadFile() {
+            if (!processedData) return;
+
+            const blob = new Blob([processedData], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            
+            // Generate new filename
+            const nameParts = originalFileName.split('.');
+            const ext = nameParts.pop();
+            const baseName = nameParts.join('.');
+            const newFileName = `${baseName}_clean.${ext}`;
+
+            link.setAttribute('href', url);
+            link.setAttribute('download', newFileName);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        function resetUI() {
+            fileInput.value = '';
+            processedData = null;
+            originalFileName = '';
+            
+            uploadPrompt.classList.remove('hidden');
+            fileInfo.classList.add('hidden');
+            statsSection.classList.add('hidden');
+            actionButtons.classList.add('hidden');
+            errorMessage.classList.add('hidden');
+        }
+
+        function showError(msg) {
+            errorMessage.textContent = msg;
+            errorMessage.classList.remove('hidden');
+        }
+
+        downloadBtn.addEventListener('click', downloadFile);
+        resetBtn.addEventListener('click', resetUI);
+
+    </script>
+</body>
+</html>
