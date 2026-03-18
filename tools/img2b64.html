@@ -13,14 +13,23 @@
     <script>
         document.getElementById('pasteArea').addEventListener('paste', function(event) {
             var items = (event.clipboardData || event.originalEvent.clipboardData).items;
-            for (var index in items) {
-                var item = items[index];
+            for (var i = 0; i < items.length; i++) {
+                var item = items[i];
                 if (item.kind === 'file') {
                     var blob = item.getAsFile();
                     var reader = new FileReader();
                     reader.onload = function(event) {
                         var base64String = event.target.result;
-                        document.getElementById('result').innerHTML = '<p>Base64:</p><textarea rows="10" cols="50">' + base64String + '</textarea>';
+                        var resultDiv = document.getElementById('result');
+                        resultDiv.innerHTML = '';
+                        var p = document.createElement('p');
+                        p.textContent = 'Base64:';
+                        var textarea = document.createElement('textarea');
+                        textarea.rows = 10;
+                        textarea.cols = 50;
+                        textarea.value = base64String;
+                        resultDiv.appendChild(p);
+                        resultDiv.appendChild(textarea);
                     };
                     reader.readAsDataURL(blob);
                 }

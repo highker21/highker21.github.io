@@ -511,9 +511,7 @@
             // --- Copy to Clipboard ---
             copyButton.addEventListener('click', () => {
                 if(!reportOutput.value) return;
-                reportOutput.select();
-                try {
-                    document.execCommand('copy');
+                navigator.clipboard.writeText(reportOutput.value).then(() => {
                     const originalText = copyButton.textContent;
                     copyButton.textContent = '已複製!';
                     copyButton.classList.add('bg-green-500', 'text-white');
@@ -521,9 +519,9 @@
                         copyButton.textContent = originalText;
                         copyButton.classList.remove('bg-green-500', 'text-white');
                     }, 2000);
-                } catch (err) {
-                    console.error('Fallback: Oops, unable to copy', err);
-                }
+                }).catch(err => {
+                    console.error('Unable to copy', err);
+                });
             });
 
             // Initial calculation
