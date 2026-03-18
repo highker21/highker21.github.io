@@ -1,0 +1,273 @@
+# 內分泌暨新陳代謝科 國考重點總複習講義 (107-115年)
+
+> **編按：** 本講義乃根據107年迄今之醫師國考「醫學(三)」考畢試題中，內分泌與新陳代謝科之所有命題重點，提煉彙整而成。旨在以最精煉、好讀的「筆記講義」形式，協助各位在考前迅速掌握本科目之核心命題趨勢與鑑別診斷機轉。
+
+---
+
+## 壹、 糖尿病與低血糖 (Diabetes & Hypoglycemia)
+
+糖尿病在最新國考題中佔比極重 (近半數)，其致病機轉包含著名的**「八重奏 (Ominous Octet)」**（包含 $\beta$細胞分泌減少、$\alpha$細胞昇糖素增加、脂解作用增加、腎臟糖重吸收增加、肌肉糖攝取減少、肝醣產生增加、腦部神經傳導物質功能障礙及腸泌素效應降低）。除傳統的口服藥機轉，近年強烈側重於**糖尿病的特殊型態**、**糖尿病感染症**及**連續血糖監測 (CGM)**。
+
+### 一、 糖尿病分類與特殊型態
+* **第1型糖尿病 (Type 1 DM)**：
+  * 機轉：細胞介導的自體免疫破壞 $\beta$ 細胞。需終身依賴胰島素。若給予全靜脈營養 (TPN)，**必須**加入胰島素，以防引發 DKA。
+  * **鑑別診斷**：測量 **C-peptide** 可反映內源性胰島素分泌。T1DM 通常 C-peptide 極低。
+* **潛伏性成人自體免疫糖尿病 (LADA)**：
+  * 常被匿稱為「1.5型糖尿病」。發病年齡通常 >30 歲，初期不需依賴胰島素，但血液中同樣帶有第1型的自體免疫抗體（必考：**Anti-GAD65 antibody**為主要檢測標記）。$\beta$ 細胞衰竭速度較一般第2型快。
+* **移植後糖尿病 (PTDM / NODAT)**：
+  * 接受活體/大體器官移植的病患，因長期使用高張力免疫抑制劑（尤其是 **Tacrolimus 等鈣磷酸酶抑制劑 (CNI)** 及 **類固醇 (Glucocorticoids)**），常在此階段誘發新發生的糖尿病。
+* **妊娠糖尿病 (GDM) 預防**：
+  * 對於子癲前症(Preeclampsia)高危險群的孕婦，強烈建議在第一孕期末開始每天服用「**低劑量阿斯匹靈 (Low-dose Aspirin)**」以預防發生。
+
+### 二、 常見口服降血糖藥物 (OAD) 核心考點
+* **Metformin (Biguanide類)**：
+  * **機轉**：減少肝臟糖質新生 (Gluconeogenesis)、增加周邊組織敏感度。
+  * **優點**：不增加體重、極少引起低血糖。
+  * **副作用與禁忌**：最嚴重的副作用為**乳酸性酸中毒(Lactic acidosis)**。在面臨**急性腎損傷 (AKI)** (例如：施打含碘顯影劑引發對比劑腎病變) 或 eGFR < 30 mL/min/1.73m² 時絕對禁用。長期使用需監測 **維生素 B12 缺乏 (B12 Deficiency)**。
+* **SGLT2 inhibitors (排糖藥, "-gliflozin")**：
+  * **額外效益**：減重、降血壓，能大幅**降低心衰竭惡化住院率**與**腎臟併發症**，合併心腎衰竭者列為首選指引。
+  * **副作用**：泌尿道感染(UTI) 及 **正常血糖性糖尿病酮酸中毒 (Euglycemic DKA)**（因 SGLT2i 使得血糖不高的情況下仍有酮酸中毒風險，常出現在手術前後或禁食時）。
+* **GLP-1 Receptor Agonists ("-glutide")**：
+  * **機制與效益**：最強減重效果，具心血管保護效益。減重手術(如胃繞道)術後血糖瞬間改善，也與此腸泌素(GLP-1, GIP)短路大量釋放高度相關。
+  * **禁忌**：有**甲狀腺髓質癌 (MTC)** 家族史者禁用。
+* **DPP-4 inhibitors ("-gliptin")**：
+  * 抑制GLP-1降解。低血糖風險低。注意：部分藥物可能增加心衰竭風險。
+* **Thiazolidinediones (TZD, "-glitazone")**：
+  * PPAR-$\gamma$ 活化劑 (胰島素增敏劑)。會造成**體液滯留(水腫)、心臟衰竭惡化 (NYHA III/IV禁用)**，並增加骨折風險。
+* **Sulfonylureas (SU)、Meglitinides**：
+  * 直接刺激分泌胰島素。最大副作用為**低血糖**與體重增加。
+
+### 三、 糖尿病急性與慢性併發症
+* **糖尿病酮酸中毒 (DKA)**：
+  * **處置標準流程**：首要為**大量靜脈輸液補充(生理解食鹽水)** 解決休克，接著給予 IV Insulin，並嚴格監控且**提早補充鉀離子**。
+  * **高致死感染合併症**：DKA 嚴重的酸血症環境，極易促發**白黴菌感染 (Mucormycosis)**！若病患出現顏面腫脹、視力模糊，且鼻腔伴隨典型的**「黑色痂皮/分泌物 (Black eschar)」**，應高度懷疑侵襲性黴菌感染。
+* **併發感染症 (國考極高頻重點)**：
+  * **克雷伯氏肺炎桿菌 (Klebsiella pneumoniae, KP)**：台灣糖尿病患極易感染這隻「會轉移的高毒力菌株」。常見情境為：本為原發性**化膿性肝膿瘍**，幾天後出現眼睛紅腫痛(內眼炎 Endophthalmitis) 或化膿性脾臟膿瘍，需高度警覺 KP 血行轉移。
+  * **糖尿病足感染 (DFI)**：常因神經病變(爪狀趾、夏科氏關節)與周邊動脈缺血(PAD)引起。骨髓炎的臨床快篩指摽為 **Probe-to-bone test (探針探骨測試) 陽性**。
+  * **無症狀性菌尿症 (ASB)**：在糖尿病患身上若無尿路感染症狀，**「不建議」**給予抗生素治療。
+* **生病日守則 (Sick day rules)**：
+  * 當糖尿病患發生急性腸胃炎(嘔吐、腹瀉)面臨嚴重脫水時，應**主動暫停**可能加重脫水或腎損傷的藥物（如：利尿劑、ACEi/ARB降血壓藥、NSAIDs止痛藥、以及會引發正常血糖DKA的SGLT2i）。
+* **慢性大血管與微血管併發症**：
+  * 微血管病變(視網膜、腎臟、神經)與大血管病變(心肌梗塞、中風、PAD)的風險，與**罹病期的長短**以及**糖化血色素($HbA_{1c}$)的控制狀況**呈絕對正相關。$HbA_{1c}$ 對多數病患目標為 <7%，但對高齡/共病極多者**必須個人化 (Individualized) 放寬**。
+  * 糖尿病腎病變 (DKD) 伴隨微量白蛋白尿時，首選護腎降壓藥為 **ACEi 或 ARB**。
+
+### 四、 連續血糖監測 (CGM) 新指標
+* **TIR (Time in Range)**：目標範圍(70-180 mg/dL)內的時間百分比。一般建議 > 70% (高齡者可放寬)。
+* **GMI (Glucose Management Indicator)**：由 CGM 平均血糖估算而得的「預估 $HbA_{1c}$」。
+* **CV (Coefficient of Variation)**：反映血糖波動程度。建議目標為 $\le$ 36%。
+
+### 五、 低血糖鑑別診斷
+* **Whipple's triad (惠普氏三要素)** 確診低血糖：(1)有低血糖發作症狀 (2)生化數值確實驗出低血糖 (3)補充葡萄糖後症狀改善。
+* 低血糖是極大壓力，會促發**反向調節賀爾蒙**：第一道防線為**胰島素下降**，隨後為**升糖素上升**、**腎上腺素上升**。
+* **72小時禁食測試 (72-h Fasting Test)**：診斷胰島素瘤的黃金標準。終止條件為：血糖 < 45 mg/dL 或出現低血糖症狀。
+* **胰島素瘤 (Insulinoma)**：
+  * 發生低血糖時，血中 **Insulin $\ge$ 3 $\mu$U/mL**，且內生性副產物 **C-peptide $\ge$ 0.6 ng/mL**（與施打外源性胰島素 C-peptide 極低有別）。
+
+---
+
+## 貳、 甲狀腺疾病 (Thyroid)
+
+國考於此環節側重在**甲狀腺機能亢進 (Graves' vs 甲狀腺炎)** 的鑑別、**亢進併發症(甲狀腺風暴、心房顫動)**，**甲狀腺結節與癌症的評估(超音波特徵、FNA)**，以及**低下症(橋本氏、呆小症、Sick Euthyroid)**。此外，**Amiodarone 引發的甲狀腺異常**也是近年熱點。
+
+### 一、 甲狀腺生理解剖與理學評估
+* **UNICEF/WHO 甲狀腺腫 (Goiter) 觸診分級**：
+  * Grade 0：肉眼看不見，手也摸不到。
+  * Grade 1：肉眼看不見，但手「摸得到」 (1a:僅摸得到; 1b:脖子向後仰才看得到)。
+  * Grade 2：肉眼「看得到」，手也「摸得到」。
+  * Grade 3：巨大的甲狀腺腫，遠處即可辨識。
+
+### 二、 甲狀腺機能亢進 (Hyperthyroidism)
+* **葛雷夫氏症 (Graves' Disease)**：
+  * 機轉：自體免疫產生**促甲狀腺素接受器抗體 (TSH receptor Ab, TRAb)**，刺激全腺體發炎腫大。
+  * 典型症狀：除了心悸、怕熱、體重減輕，最獨特的為**浸潤性眼病變 (Ophthalmopathy/exophthalmos)** 與 **脛前黏液性水腫 (Pretibial myxedema)**。
+  * **高齡特殊表現**：老年人的甲亢經常不表現出典型的「激動、手抖、眼突」，反而常以**「心房顫動 (Atrial fibrillation) 與嚴重體重減輕」** 表現，稱為**冷漠型甲亢 (Apathetic hyperthyroidism)**。
+  * 檢驗：TSH 極低，Free T4 偏高，且**放射性碘攝取率 (RAIU) 呈現「廣泛性增高」**。
+* **抗甲狀腺藥物 (Anti-thyroid drugs, ATD)**：
+  * **Methimazole (MMI)** / **Propylthiouracil (PTU)**。
+  * **嚴重副作用**：最致命的過敏反應是**無顆粒性白血球缺乏症 (Agranulocytosis)**。若病患服藥後出現**發燒、嚴重喉嚨痛**，必須立即停藥並抽血驗 WBC。
+  * **懷孕用藥選擇**：**第一孕期強烈建議改用 PTU** (MMI有致畸胎風險)；但到了第二、三孕期，因 PTU 具嚴重肝毒性疑慮，多數建議換回 MMI。
+* **甲狀腺風暴 (Thyroid Storm) 處置金三角**：
+  * 抑制合成：給予高劑量 **PTU** (比起 MMI，PTU 還有額外阻斷周邊 T4 轉 T3 的神效)。
+  * 抑制釋放：給予**高濃度含碘水溶液 (Lugol's iodine)**，利用 Wolff-Chaikoff 效應「鎖死」腺體，通常在手術前或危象時使用。
+  * 症狀控制：給予 $\beta$-blocker (**Propranolol 首選**，因其也能微調 T4 轉 T3)。
+  * 免疫調節/抗壓：給予靜脈注射高劑量類固醇 (Hydrocortisone)。
+* **Amiodarone 引發之甲狀腺亢進 (AIT)**：
+  * **Type 1 (碘誘發型)**：好發於本有結節性甲狀腺腫病患 (Jod-Basedow 效應)。治療：抗甲狀腺藥物 (ATD)。
+  * **Type 2 (破壞發炎型)**：引發破壞性甲狀腺炎。治療：類固醇 (Steroids)。
+
+### 三、 甲狀腺機能低下 (Hypothyroidism)
+* 機轉與症狀：如同一台快沒電的機器，全身代謝極度放緩。常見**全身性黏液性水腫(Myxedema)**、心跳過慢。因自由水清除率下降，會引發**等容積型低血鈉 (Euvolemic hyponatremia)**。
+* **橋本氏甲狀腺炎 (Hashimoto's Thyroiditis)**：
+  * 台灣與歐美造成甲低最常見的主因。
+  * 必考抗體：**Anti-TPO (Anti-thyroid peroxidase Ab)** 及 Anti-thyroglobulin (Anti-Tg Ab)。
+* **新生兒先天性甲狀腺低下症 (呆小症 Cretinism)**：
+  * 甲狀腺素對嬰幼兒腦神經發育及骨骼生長無可取代。若未及時於出生數週內補充，將導致嚴重的智力不足與矮小。目前為國健署強制新生兒篩檢項目。
+* **疾病甲狀腺正能症 (Sick euthyroid syndrome / NTIS)**：
+  * 常見於加護病房重度感染或創傷病患。TSH、T3、T4 皆低下，類似中央型甲低，但這是身體為了降低代謝的「防禦機制」。
+  * **必考鑑別點**：測量 **反三碘甲狀腺素 (Reverse T3, rT3)**。在 NTIS 中，周邊去碘酶路徑改變，會把多餘的 T4 轉化為無活性的 rT3，導致 **rT3 異常飆高**！
+
+### 四、 各甲狀腺炎鑑別要點
+* **亞急性甲狀腺炎 (Subacute / De Quervain's Thyroiditis)**：
+  * 病毒感染引發的發炎破壞。
+  * 特徵：**極度疼痛的甲狀腺腫 (Painful goiter)**，常伴隨發燒、CRP/ESR上升。
+  * 此時濾泡被破壞，庫存甲狀腺素「漏出」造成短暫亢進，但因為腺體處於罷工狀態，因此**放射性碘攝取率 (RAIU) 趨近於零 (極低)**！
+  * 處置：給予 NSAIDs 或類固醇止痛消炎即可，**絕對不需要**給抗甲狀腺藥物。
+
+### 五、 甲狀腺結節與甲狀腺癌 (Thyroid Cancers)
+* **結節惡性評估**：
+  * 觸診或超音波發現結節極為普遍。超音波高風險特徵包含：**極度低回音 (Marked Hypoechoic)**、微鈣化 (Microcalcifications)、邊緣不規則及「高大於寬 (Taller-than-wide)」。
+  * **黃金標準確診工具**：**細針穿刺細胞學檢查 (FNA)**。除了濾泡癌外，多數良惡性皆可由此定讞。
+  * 危險因子：雖然女性易長結節，但若**年輕男性**長出結節，其惡性機率反而異常地高。
+* **乳突癌 (Papillary Thyroid Carcinoma, PTC)**：
+  * **最常見 (約佔8成)**，發生率最高且預後最好。源自濾泡上皮細胞。
+  * 特徵：極易發生**頸部淋巴結轉移 (Lymphatic spread)**。
+  * 病理學特徵：Orphan Annie eye nuclei (孤兒安妮眼)、Psammoma bodies (砂粒體)。
+* **濾泡癌 (Follicular Thyroid Carcinoma, FTC)**：
+  * 源自濾泡上皮細胞。主要透過**血行擴散 (Hematogenous spread)** 轉移至骨頭與肺部。在缺碘地區發生率較高。
+  * **無法僅靠 FNA 診斷**：必須有完整的組織切片，在顯微鏡下看到**「包膜侵犯(Capsular invasion)」或「血管侵犯(Vascular invasion)」**才能判定為惡性濾泡癌。
+* **髓質癌 (Medullary Thyroid Carcinoma, MTC)**：
+  * 來源：由濾泡旁的 C細胞 (C cells/Parafollicular cells) 變異而來，而非濾泡細胞。
+  * 特徵：會自主分泌大量的 **降鈣素 (Calcitonin)** 及 CEA，可當作腫瘤標記。常與**第二型多發性內分泌神經瘤 (MEN 2)** 關聯 (RET基因突變)。
+* **術後追蹤指標血脂**：
+  * 病患接受甲狀腺全切除術加上放射線碘-131 大劑量消融後，體內正常組織與癌細胞應被清零。此時，正常人體內唯一會製造的 **甲狀腺球蛋白 (Thyroglobulin, Tg)** 若再次升高，即為最具特異性的**腫瘤復發指標**。
+
+---
+
+## 參、 肥胖與代謝症候群 (Obesity & Metabolic Syndrome)
+
+國考常考判定標準與相關荷爾蒙（如 Leptin、Adiponectin）。
+
+### 一、 代謝症候群 (Metabolic Syndrome) 判定標準 (台灣國健署)
+滿足以下 **5 項中之 3 項** 即可診斷：
+1. **腹部肥胖**：男腰圍 $\ge$ 90cm，女腰圍 $\ge$ 80cm級。
+2. **血壓偏高**：SBP $\ge$ 130mmHg 或 DBP $\ge$ 85mmHg (或已服藥)。
+3. **空腹血糖偏高**：FPG $\ge$ 100mg/dL (或已服藥)。
+4. **三酸甘油脂 (TG) 偏高**：TG $\ge$ 150mg/dL (或已服藥)。
+5. **高密度脂蛋白 (HDL) 偏低**：男 < 40mg/dL，女 < 50mg/dL。
+* **注意**：**LDL-C 濃度「不包含」在代謝症候群的判定標準內**，但 small dense LDL 會增加。
+
+### 二、 肥胖相關荷爾蒙與治療
+* **Leptin (瘦素)**：由脂肪細胞分泌，抑制食慾。肥胖者血中 Leptin 通常較高（因瘦素阻抗）。
+* **Adiponectin (脂聯素)**：由脂肪細胞分泌，可增加胰島素敏感度。**肥胖與代謝症候群患者其 Adiponectin 濃度會「降低」**。
+* **減重手術 (Bariatric Surgery)**：對 T2DM 的改善不僅因限制進食，更因改變了**腸道荷爾蒙 (如 GLP-1 增加)**。可大幅降低死亡率。
+
+---
+
+## 肆、 腎上腺疾病 (Adrenal)
+
+重點為：庫欣氏症後群的診斷階梯、醛固酮增多症(Conn's)的篩檢、嗜鉻細胞瘤的特徵及術前給藥順序，與先天性腎上腺增生。
+
+### 一、 庫欣氏症候群 (Cushing's Syndrome)
+* **機轉**：體內糖皮質類固醇 (Cortisol) 過高。表現出月亮臉、水牛肩、中心型肥胖、紫色妊娠紋、高血壓、高血糖、易瘀青。
+* **最常見原因**：醫源性(Iatrogenic)，即長期服用外源性類固醇(如來路不明的中藥黑藥丸)。此時若抽血，**ACTH 及自體 Cortisol 會呈現「極度低下」**，因為長期的超量外來類固醇已讓 HPA 軸完全罷工萎縮。此類病患若驟然停藥，會立刻爆發致命的腎上腺機能不全 (Addisonian crisis)。
+* **診斷第一階 (確認高 Cortisol)**：
+  - (1) 24小時尿液游離皮質醇 (24-h UFC)：若 > 正常上限 2 倍則具意義。
+  - (2) 隔夜 1mg Dexamethasone 抑制試驗 (DST) 試式：服藥後隔早 Cortisol 應被抑制至 **< 1.8 $\mu$g/dL**。
+  - (3) 深夜唾液皮質醇 (Late-night salivary cortisol)。
+* **診斷第二階 (鑑別病因，測量 ACTH)**：
+  - **ACTH 依賴型 (ACTH $\uparrow$)**：多半是腦下垂體長腺瘤狂分泌 ACTH (特稱 **Cushing's disease**)，或異位性(小細胞肺癌)分泌ACTH。
+  - **ACTH 非依賴型 (ACTH $\downarrow\downarrow$)**：腎上腺本身長了腺瘤/癌(Adrenal adenoma)，自主狂分泌 Cortisol 抑制了上位。
+
+### 二、 原發性醛固酮增多症 (Primary Aldosteronism / Conn's syndrome)
+* **次發性高血壓最常見原因**：佔內分泌次發高血壓的壓倒性第一名。
+* **臨床懷疑起手式**：病患同時擁有 **「難治型高血壓」+「自發性低血鉀 (常常 K < 3.0)」**！
+* **篩檢**：計算 **醛固酮/腎素比值 (ARR, Aldosterone-to-Renin Ratio)**。
+  * 因大量分泌的醛固酮(Aldosterone)會造成水鈉留滯把血壓撐高，這會強力反饋「抑制」腎素 (Renin)。故抽血發現 **Aldosterone($\uparrow$) 且 Renin($\downarrow\downarrow$)**，ARR比值極大(>30)則高度懷疑。
+  * **注意**：原發性醛固酮症會造成**代謝性鹼中毒 (Metabolic alkalosis)** 及低血鉀。
+* **確診(Confirmatory test)**：給予高鈉負荷(打生理食鹽水點滴或補充鹽分)，正常人的醛固酮會被抑制。若病患的醛固酮仍降不下來即確診。
+
+### 三、 嗜鉻細胞瘤 (Pheochromocytoma)
+* **機轉**：源自神經脊細胞的腎上腺髓質腫瘤，狂激發兒茶酚胺 (Catecholamines) 風暴。
+* **經典症狀三合一 (Classic Triad)**：陣發性發汗 (Diaphoresis)、劇烈頭痛 (Headache)、心悸 (Palpitations)；伴隨極高血壓。
+* **Rule of 10s (十分之一法則)**：約 10% 為惡性、10% 在腎上腺外(Extra-adrenal, 稱為 Paraganglioma)、10% 為雙側、10% 與家族遺傳(如 MEN2A/2B, VHL) 相關。
+* **診斷**：測量 24小時尿液中的 Catecholamines 或代謝物 **Metanephrines / VMA**。因發作常是「短暫陣發性」，必須在發作有症狀時(心悸血壓飆高)去留尿或抽血最為準確。
+* **術前用藥守則 (國考極端必考)**：
+  * 開刀切除前，為避免動刀擠壓腫瘤瞬間噴出巨量激素引發高血壓危機，**絕對必須先給予 $\alpha$ 阻斷劑 (Alpha-blocker)** 撐開血管 1-2 週。
+  * **絕對禁止**在沒有使用 Alpha-blocker 的前提下單獨給予 Beta-blocker！否則 Alpha 受體失去血管擴張的抗衡，將會引發無極限的劇烈收縮與致命高血壓。
+
+### 四、 其他腎上腺考點
+* **原發性腎上腺皮質機能不全 (Addison's disease) 典型特徵**：
+  * 皮質的 Cortisol, Aldosterone 全面崩潰。（出現嚴重低血壓、低血鈉、**高血鉀**）。因缺乏 Cortisol 反饋，腦袋狂分泌 POMC/ACTH，連帶產生巨量 MSH (黑色素刺激素)，導致**皮膚、牙齦、乳暈黏膜異常色素沉著變黑 (Hyperpigmentation)**。
+  * 最常見(>90%) 的病因為 **21-hydroxylase deficiency (21-羥化酶缺乏症)**。
+  * **病理生理**：因酵素缺乏導致原料無法合成 Cortisol 與 Aldosterone。下視丘感應到 Cortisol 不足，回饋性地分泌大量 **ACTH**，刺激腎上腺皮質增生，並將原料導向雄性素路徑。
+  * **檢測**：血中 **17-OH progesterone (17-OHP)** 會異常升高，為診斷關鍵。
+* **腎上腺偶發瘤 (Adrenal Incidentaloma)**：影像意外發現。首要任務為：排除具有功能性 (如分泌 Cortisol 或 Catecholamines) 以及排除惡性。
+
+---
+
+## 伍、 腦下垂體神經內分泌及水電解質 (Pituitary, NETs & Electrolytes)
+
+### 一、 腦下垂體疾病 (Pituitary Disorders)
+* **希漢氏症候群 (Sheehan's syndrome)**：
+  * 孕婦懷孕時腦下垂體生理性肥大，若發生**產後大出血 (Postpartum hemorrhage)**，極易導致脆弱的腦下垂體發生「缺血性壞死區塊」。
+  * 臨床表現：產後**無法分泌乳汁 (Failure to lactate)**、無月經、怕冷倦怠。若後續遭遇嚴重感染壓力，可能因 ACTH/Cortisol 儲備不足爆發休克。
+* **肢端肥大症 (Acromegaly)**：
+  * 幾乎 99% 皆由腦下垂體前葉分泌 GH 的腺瘤引起。病患下顎突出、手腳變大。
+  * 篩檢：測量血清 **IGF-1** (其濃度全天候穩定點，優於會波動的 GH)。
+  * 確診：**口服葡萄糖耐受壓抑試驗 (OGTT, 75g)**。正常喝糖水後 GH 應被極度壓制 (< 1 ng/mL)，若降不下來即確診肢端肥大症。
+* **尿崩症 (Diabetes Insipidus, DI)**：
+  * 特徵：大量稀釋尿、高血鈉。
+  * **限水測試 (Water Deprivation Test)**：區分原發性多飲與尿崩症。
+  * **Desmopressin (DDAVP) 測試**：
+    - **中樞性 (Central DI)**：注射 DDAVP 後尿液回歸濃縮 (Osmolality 上升)，代表後葉缺乏 AVP。
+    - **腎性 (Nephrogenic DI)**：注射 DDAVP 後尿液依然稀釋，代表腎小管對 AVP 無反應。
+  * **治療首選**：對於有系統性壓迫的腦下垂體實體瘤 (除泌乳激素瘤外)，**經蝶竇手術 (Transsphenoidal surgery, TSS)** 切除是首選。
+* **淋巴球性腦垂體炎 (Lymphocytic hypophysitis)**：
+  * 針對腦下垂體的自體免疫發炎。極具特色好發於**女性懷孕晚期或「剛生產後 (Postpartum)」**。
+* **多發性內分泌腫瘤 (MEN)**：
+  * **MEN 1 (3個P)**：**P**arathyroid (副甲狀腺增生)、**P**ituitary (腦垂腺瘤)、**P**ancreas (胰臟內分泌瘤，如 Gastrinoma, Insulinoma)。
+  * **MEN 2A**：**M**edullary thyroid cancer (100%)、**P**heochromocytoma (50%)、Parathyroid (增生)。
+  * **MEN 2B**：**M**edullary thyroid cancer、**P**heochromocytoma、Neuromas (黏膜神經瘤)。
+  - **致病基因**：MEN 2 系列皆由 **RET 原致癌基因**點突變引發。
+
+### 二、 神經內分泌瘤 (Neuroendocrine Tumors, NETs)
+* NET 是一群起源廣泛、具有「潛在惡性轉移能力」(特別是肝轉移) 的腫瘤群，絕對不能單純視為良性。
+* 確診標記 (IHC染色)：**Chromogranin A (CgA) 與 Synaptophysin** 是最具統治地位的診斷標記。
+
+### 三、 水分與電解質異常 (Na, K, Ca急症)
+* **抗利尿激素 (ADH / AVP)**：
+  * 腦下垂體後葉(連接下視丘)分泌，負責在集尿管留水。
+  * 最敏銳控制 ADH 釋放的開關為：**血漿滲透壓 (Plasma Osmolality)** 些微的改變(1-2%)。
+* **低血鈉 (Hyponatremia)** 鑑別：
+  * 等容積型低血鈉 (Euvolemic)：最常見原因為 **嚴重甲狀腺低下症 (Hypothyroidism)** 及 **SIADH**。
+  * **SIADH**：ADH分泌亂噴，水留滯太多。經典特徵為生化上的**等血容低血鈉**，且腎臟依然排出**不適當的高張濃縮尿 (Urine Osmolality $\uparrow$)**。常見於小細胞肺癌。
+* **鉀離子急症 (Potassium) 與心電圖**：
+  * **嚴重高血鉀 (Hyperkalemia)**：致死心律不整。心電圖特徵為 **高尖的 T 波 (Peaked T wave)**、P波消失、QRS變寬擴張。治療首要給予 **Calcium gluconate (鈣離子)** 穩定心肌細胞膜，並注射 Insulin/Glucose 將鉀逼入細胞內。
+  * **嚴重低血鉀 (Hypokalemia)**：心電圖特徵為 **T波變平/倒置、出現顯著的 U 波 (U wave)**、QTc 延長。極易引發多型性心室心搏過速 (Torsades de pointes)。
+
+---
+
+## 陸、 鈣與骨骼代謝 (Calcium & Bone)
+
+### 一、 高血鈣與低血鈣 (Hyper/Hypocalcemia)
+* **極重度惡性腫瘤高血鈣 (Hypercalcemia of malignancy)**：
+  * 高血鈣急症(>14 mg/dL)會引發劇烈脫水昏迷與心律不整。
+  * **第一線急救鐵則**：**大量給予等張生理解食鹽水 (Normal Saline) 靜脈輸液** 沖刷補水，隨後才給予雙磷酸鹽 (Bisphosphonates)。
+  * 機轉：除了多發性骨髓瘤吃骨頭外，實體腫瘤(特別是肺鱗狀細胞癌)常會分泌 **副甲狀腺前驅蛋白 (PTHrP)**，不僅直接把鈣拉高，且此時血液中真正的 **PTH 會被狠狠壓制趨近於零**。
+* **低血鈣 (Hypocalcemia)**：
+  * 常見於甲狀腺全切除術誤傷副甲狀腺。
+  * 獨特理學檢查：**Chvostek's sign** (輕敲耳前顏面神經引發同側肌肉抽搐) 及 **Trousseau's sign** (血壓帶充氣逼出攣縮手勢 Carpopedal spasm)。
+
+### 二、 原發與次發副甲狀腺亢進
+* **原發性副甲狀腺機能過高 (Primary Hyperparathyroidism, PHPT)**：
+  * 最常見原因 (約80-85%) 為**單一顆腺瘤 (Isolated adenoma)** 自主性狂分泌 PTH。
+  * 抽血：高血鈣、低血磷、**高血氯**。
+  * 骨骼 X 光特徵：**骨囊腫 (Brown tumor)** 與指標性的「胡椒鹽頭蓋骨 (Salt-and-pepper skull)」。
+* **慢性腎病-礦物質骨病變 (CKD-MBD) 引起的次發性亢進**：
+  * 晚期洗腎病人因為腎臟失去排磷能力，導致**高血磷**。
+  * 高血磷作為代償，會刺激骨細胞分泌大量 **FGF-23** 以促使腎臟排磷；同時因為缺乏腎臟 1-$\alpha$-hydroxylase，活性維他命D(1,25-OH)D 掉底，引發低血鈣。這兩者雙重刺激副甲狀腺極度肥大增生狂分泌 PTH (**次發性亢進 Secondary HPT**)。
+
+### 三、 骨質疏鬆及骨髓瘤 (Osteoporosis & Multiple Myeloma)
+* **骨質疏鬆篩檢 (USPSTF 建議)**：
+  * 最高等級 (Grade B) 建議：**強烈建議所有 65 歲 (含) 以上的婦女，進行常規 DXA (雙能量X光骨密度儀) 篩檢**。
+  * 診斷標準：T-score $\le$ -2.5 為骨質疏鬆；-1.0 到 -2.5 為骨質低下(Osteopenia)。
+* **多發性骨髓瘤 (Multiple Myeloma, MM)**：
+  * 血液科/代謝科重點惡性疾病。骨漿細胞異常製造巨量無用單株免疫球蛋白 (M-protein)，導致正常抗體低下，極易死於肺炎鏈球菌感染。
+  * 核心臨床表徵 **CRAB**：
+    * **C** (HyperCalcemia)：高血鈣 (蝕骨作用活躍)
+    * **R** (Renal failure)：腎功能衰竭 (輕鏈蛋白堆積卡住腎小管)
+    * **A** (Anemia)：貧血
+    * **B** (Bone lesions)：溶骨性病變 (Osteolytic lesions) 導致劇烈骨頭痛。
+
+---
+*祝各位醫師國考金榜題名，臨床順心！*
