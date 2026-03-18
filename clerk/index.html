@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>內分泌新陳代謝科 - 國考歷屆試題復習</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4A90E2;
+            --primary-dark: #357ABD;
+            --secondary: #F5F7FA;
+            --text-dark: #2C3E50;
+            --text-light: #7F8C8D;
+            --bg-body: #ECF0F1;
+            --bg-card: #FFFFFF;
+            --success: #2ECC71;
+            --danger: #E74C3C;
+            --border: #E0E6ED;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Noto Sans TC', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-dark);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Sidebar Sidebar Sidebar */
+        .sidebar {
+            width: 300px;
+            background-color: var(--bg-card);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.05);
+            z-index: 10;
+        }
+
+        .sidebar-header {
+            padding: 20px;
+            background-color: var(--primary);
+            color: white;
+            text-align: center;
+        }
+
+        .sidebar-header h2 {
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+
+        .score-board {
+            padding: 15px 20px;
+            background-color: var(--secondary);
+            border-bottom: 1px solid var(--border);
+            text-align: center;
+        }
+
+        .score-text {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            margin-bottom: 5px;
+        }
+
+        .score-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .category-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 10px 0;
+        }
+
+        .category-item {
+            padding: 12px 20px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-left: 4px solid transparent;
+            font-weight: 500;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .category-item:hover {
+            background-color: var(--secondary);
+        }
+
+        .category-item.active {
+            background-color: #EBF4FC;
+            border-left-color: var(--primary);
+            color: var(--primary-dark);
+        }
+
+        .category-badge {
+            background-color: var(--border);
+            color: var(--text-light);
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+        }
+        
+        .category-item.active .category-badge {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        /* Sidebar Tabs */
+        .sidebar-tabs {
+            display: flex;
+            background-color: var(--secondary);
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .sidebar-tab {
+            flex: 1;
+            text-align: center;
+            padding: 12px 10px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--text-light);
+            transition: all 0.2s;
+            border-bottom: 2px solid transparent;
+        }
+        
+        .sidebar-tab:hover {
+            color: var(--primary);
+            background-color: rgba(74, 144, 226, 0.05);
+        }
+        
+        .sidebar-tab.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+            background-color: var(--bg-card);
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .top-navbar {
+            height: 60px;
+            background-color: var(--bg-card);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            padding: 0 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+            font-weight: 700;
+            color: var(--primary-dark);
+            justify-content: space-between;
+        }
+
+        .question-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 30px;
+            scroll-behavior: smooth;
+        }
+
+        .question-card {
+            background-color: var(--bg-card);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+            border: 1px solid var(--border);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .question-card:target {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.3);
+        }
+
+        .q-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px dashed var(--border);
+        }
+
+        .q-number {
+            font-weight: 700;
+            color: var(--primary);
+            font-size: 1.1rem;
+        }
+
+        .q-tag {
+            background-color: var(--secondary);
+            color: var(--text-light);
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+        }
+
+        .q-text {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        .options-list {
+            list-style: none;
+            margin-bottom: 20px;
+        }
+
+        .option-item {
+            padding: 12px 15px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+        }
+        
+        .option-item:hover:not(.disabled) {
+            background-color: var(--secondary);
+            border-color: var(--primary);
+        }
+
+        .option-item.disabled {
+            cursor: default;
+        }
+
+        /* Statuses */
+        .option-item.selected.correct {
+            background-color: rgba(46, 204, 113, 0.1);
+            border-color: var(--success);
+            color: #27AE60;
+        }
+
+        .option-item.selected.incorrect {
+            background-color: rgba(231, 76, 60, 0.1);
+            border-color: var(--danger);
+            color: #C0392B;
+        }
+
+        .option-item.actual-correct.show {
+            background-color: rgba(46, 204, 113, 0.1);
+            border-color: var(--success);
+            box-shadow: 0 0 0 1px var(--success);
+        }
+
+        .explanation-box {
+            display: none;
+            background-color: var(--secondary);
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid var(--primary);
+            margin-top: 20px;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: var(--text-dark);
+            animation: fadeIn 0.4s ease;
+        }
+
+        .explanation-box.show {
+            display: block;
+        }
+
+        .explanation-title {
+            font-weight: 700;
+            color: var(--primary-dark);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .explanation-title::before {
+            content: "📝";
+            margin-right: 8px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Utilities */
+        .loading {
+            text-align: center;
+            padding: 50px;
+            color: var(--text-light);
+            font-size: 1.2rem;
+        }
+        
+        .progress-bar-container {
+            height: 4px;
+            background-color: var(--border);
+            width: 100%;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background-color: var(--primary);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .markdown-body h2 { color: var(--primary-dark); border-bottom: 2px solid var(--border); padding-bottom: 8px; margin-top: 1.5em; }
+        .markdown-body h3 { color: var(--primary); margin-top: 1.2em; }
+        .markdown-body ul, .markdown-body ol { margin-left: 20px; margin-bottom: 1em; }
+        .markdown-body li { margin-bottom: 8px; }
+        .markdown-body strong { color: #d946ef; font-weight: 600; background-color: rgba(217, 70, 239, 0.05); padding: 0 4px; border-radius: 4px; }
+        
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+</head>
+<body>
+
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <h2>內分泌新陳代謝科</h2>
+            <p style="font-size: 0.8rem; margin-top: 5px; opacity: 0.8;">歷年國考題庫系統</p>
+        </div>
+        
+        <div class="score-board">
+            <div class="score-text">整體正確率</div>
+            <div class="score-value" id="overall-score">0% (0/0)</div>
+        </div>
+
+        <div class="sidebar-tabs">
+            <div class="sidebar-tab active" id="tab-category" onclick="switchSidebarTab('category')">依主題</div>
+            <div class="sidebar-tab" id="tab-year" onclick="switchSidebarTab('year')">依年份</div>
+            <div class="sidebar-tab" id="tab-guide" onclick="switchSidebarTab('guide')">總講義</div>
+        </div>
+
+        <div class="category-list" id="sidebar-list">
+            <!-- Categories will be injected here -->
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="top-navbar">
+            <span id="current-category-title">請選擇主題</span>
+            <div style="font-size: 0.9rem; font-weight: 400; color: var(--text-light)">
+                主題進度：<span id="category-progress">0/0</span> 完成
+            </div>
+        </div>
+        <div class="progress-bar-container">
+            <div class="progress-bar" id="topic-progress-bar"></div>
+        </div>
+        
+        <div class="question-container" id="question-container">
+            <div class="loading">載入題目中...</div>
+            <!-- Questions will be injected here -->
+        </div>
+    </div>
+
+    <!-- Import data -->
+    <script src="data.js"></script>
+    <script src="guide_data.js"></script>
+    <script>
+        // App State
+        const state = {
+            categories: {},
+            years: {},
+            currentSidebarTab: 'category', // 'category' or 'year'
+            currentSelection: null,
+            stats: {
+                totalAnswered: 0,
+                totalCorrect: 0,
+                byCategory: {},
+                byYear: {}
+            },
+            guideConfig: []
+        };
+
+        // Initialize App
+        function initApp() {
+            if (typeof examData !== 'undefined') {
+                processData(examData);
+                if (typeof studyGuideData !== 'undefined') {
+                    state.guideConfig = studyGuideData;
+                }
+                switchSidebarTab('guide'); // Set default to guide for wow-factor
+            } else {
+                document.getElementById('question-container').innerHTML = '<div class="loading">找不到資料檔案 data.js，請確認是否成功生成。</div>';
+            }
+        }
+
+        // Process flat data into categorized structure
+        function processData(data) {
+            data.forEach((q, index) => {
+                const cat = q.category;
+                const year = q.year || '未知年份';
+                
+                // Process Category
+                if (!state.categories[cat]) {
+                    state.categories[cat] = {
+                        name: cat,
+                        questions: [],
+                        answered: 0,
+                        correct: 0
+                    };
+                    state.stats.byCategory[cat] = { answered: 0, correct: 0 };
+                }
+                
+                // Process Year
+                if (!state.years[year]) {
+                    state.years[year] = {
+                        name: year,
+                        questions: [],
+                        answered: 0,
+                        correct: 0
+                    };
+                    state.stats.byYear[year] = { answered: 0, correct: 0 };
+                }
+                
+                // Add tracking metadata 
+                q.globalIndex = index;
+                q.hasAnswered = false;
+                q.isCorrect = false;
+                
+                state.categories[cat].questions.push(q);
+                state.years[year].questions.push(q);
+            });
+            
+            // Sort years descending (newest first)
+            const sortedYears = {};
+            Object.keys(state.years).sort().reverse().forEach(y => {
+                sortedYears[y] = state.years[y];
+            });
+            state.years = sortedYears;
+        }
+
+        // Switch Sidebar Tab
+        function switchSidebarTab(tabName) {
+            state.currentSidebarTab = tabName;
+            
+            // Update UI tabs
+            document.getElementById('tab-category').classList.remove('active');
+            document.getElementById('tab-year').classList.remove('active');
+            if(document.getElementById('tab-guide')) document.getElementById('tab-guide').classList.remove('active');
+            
+            document.getElementById(`tab-${tabName}`).classList.add('active');
+            
+            renderSidebarList();
+            
+            if (tabName === 'guide') {
+                const firstKey = state.guideConfig.length > 0 ? 'guide-0' : null;
+                if (firstKey) {
+                    selectSidebarItem(firstKey);
+                }
+            } else {
+                const dataSource = tabName === 'category' ? state.categories : state.years;
+                if (!state.currentSelection || !dataSource[state.currentSelection]) {
+                    const firstKey = Object.keys(dataSource)[0];
+                    if (firstKey) {
+                        selectSidebarItem(firstKey);
+                    }
+                } else {
+                    selectSidebarItem(state.currentSelection);
+                }
+            }
+        }
+
+        // Render Sidebar Category/Year List
+        function renderSidebarList() {
+            const listEl = document.getElementById('sidebar-list');
+            listEl.innerHTML = '';
+            
+            if (state.currentSidebarTab === 'guide') {
+                if (state.guideConfig) {
+                    state.guideConfig.forEach((guide, index) => {
+                        const item = document.createElement('div');
+                        item.className = 'category-item';
+                        item.id = `sidebar-item-${hashString('guide-'+index)}`;
+                        item.onclick = () => selectSidebarItem('guide-'+index);
+                        
+                        item.innerHTML = `
+                            <span style="flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-right: 10px;" title="${guide.title}">${guide.title}</span>
+                            <span class="category-badge">講義</span>
+                        `;
+                        listEl.appendChild(item);
+                    });
+                }
+                return;
+            }
+            
+            const dataSource = state.currentSidebarTab === 'category' ? state.categories : state.years;
+
+            Object.keys(dataSource).forEach(key => {
+                const itemData = dataSource[key];
+                const item = document.createElement('div');
+                item.className = 'category-item';
+                item.id = `sidebar-item-${hashString(key)}`;
+                item.onclick = () => selectSidebarItem(key);
+                
+                item.innerHTML = `
+                    <span style="flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-right: 10px;" title="${key}">${key}</span>
+                    <span class="category-badge">${itemData.questions.length} 題</span>
+                `;
+                
+                listEl.appendChild(item);
+            });
+        }
+
+        // Select an item from sidebar
+        function selectSidebarItem(key) {
+            state.currentSelection = key;
+            
+            // Update UI Sidebar
+            document.querySelectorAll('.category-item').forEach(el => el.classList.remove('active'));
+            const activeEl = document.getElementById(`sidebar-item-${hashString(key)}`);
+            if (activeEl) activeEl.classList.add('active');
+
+            if (state.currentSidebarTab === 'guide') {
+                const idx = parseInt(key.split('-')[1]);
+                const guide = state.guideConfig[idx];
+                document.getElementById('current-category-title').textContent = guide.title;
+                
+                document.getElementById('category-progress').textContent = '講義閱覽模式';
+                document.getElementById('topic-progress-bar').style.width = '100%';
+                
+                renderGuideAndQuestions(guide);
+                return;
+            }
+
+            const dataSource = state.currentSidebarTab === 'category' ? state.categories : state.years;
+            const itemData = dataSource[key];
+            
+            // Update Top Navbar
+            document.getElementById('current-category-title').textContent = key;
+            updateCategoryProgress();
+
+            // Render Questions
+            renderQuestions(itemData.questions);
+            
+            // Scroll to top
+            document.getElementById('question-container').scrollTop = 0;
+        }
+
+        function renderGuideAndQuestions(guide) {
+            const container = document.getElementById('question-container');
+            container.innerHTML = '';
+            
+            const guideCard = document.createElement('div');
+            guideCard.className = 'markdown-body';
+            guideCard.style.backgroundColor = 'var(--bg-card)';
+            guideCard.style.borderRadius = '12px';
+            guideCard.style.padding = '35px 40px';
+            guideCard.style.marginBottom = '35px';
+            guideCard.style.boxShadow = '0 4px 15px rgba(0,0,0,0.03)';
+            guideCard.style.border = '1px solid var(--border)';
+            guideCard.style.lineHeight = '1.8';
+            guideCard.style.fontSize = '1.05rem';
+            
+            guideCard.innerHTML = marked.parse(guide.content_markdown);
+            container.appendChild(guideCard);
+            
+            const sectionTitle = document.createElement('h3');
+            sectionTitle.textContent = '🏅 ' + guide.title + ' - 相關歷屆試題演練';
+            sectionTitle.style.marginBottom = '25px';
+            sectionTitle.style.color = 'var(--primary-dark)';
+            sectionTitle.style.borderBottom = '3px solid var(--primary)';
+            sectionTitle.style.paddingBottom = '10px';
+            container.appendChild(sectionTitle);
+            
+            let matchedQuestions = [];
+            guide.categories.forEach(cat => {
+                if (state.categories[cat]) {
+                    matchedQuestions = matchedQuestions.concat(state.categories[cat].questions);
+                }
+            });
+            
+            if(matchedQuestions.length === 0) {
+                 const emptyMsg = document.createElement('div');
+                 emptyMsg.textContent = '此章節暫無對應的題目資料。';
+                 emptyMsg.className = 'loading';
+                 container.appendChild(emptyMsg);
+            } else {
+                 renderQuestions(matchedQuestions, true);
+            }
+            
+            document.getElementById('question-container').scrollTop = 0;
+        }
+
+        // Render Questions
+        function renderQuestions(questions, appendToContainer = false) {
+            const container = document.getElementById('question-container');
+            if (!appendToContainer) {
+                container.innerHTML = '';
+            }
+
+            questions.forEach((q, index) => {
+                const card = document.createElement('div');
+                card.className = 'question-card';
+                card.id = `q-${q.globalIndex}`;
+                
+                // Options HTML
+                let optionsHtml = '';
+                if (q.options && q.options.length > 0) {
+                    q.options.forEach((opt, optIdx) => {
+                        // Support classic A B C D matching
+                        const optLetter = opt.key || String.fromCharCode(65 + optIdx); 
+                        optionsHtml += `
+                            <li class="option-item" 
+                                id="opt-${q.globalIndex}-${optLetter}" 
+                                onclick="handleAnswer(${q.globalIndex}, '${optLetter}', '${q.answer}')">
+                                <strong>${optLetter}.</strong>&nbsp;&nbsp;${opt.text}
+                            </li>
+                        `;
+                    });
+                } else {
+                    // Fallback if options parsing failed
+                    optionsHtml = `<li style="color:var(--danger)">選項解析異常，請確認來源 MD 格式。</li>`;
+                }
+                
+                // Format explanation markdown-ish
+                const fmtExplanation = q.explanation
+                    .replace(/\n\n/g, '<br><br>')
+                    .replace(/\n-/g, '<br>•')
+                    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+
+                card.innerHTML = `
+                    <div class="q-header">
+                        <span class="q-number">Q${q.q_num}</span>
+                        <span class="q-tag">${q.keywords.join(', ')}</span>
+                    </div>
+                    <div class="q-text">${q.question.replace(/\n/g, '<br>')}</div>
+                    
+                    <ul class="options-list" id="opts-${q.globalIndex}">
+                        ${optionsHtml}
+                    </ul>
+                    
+                    <div class="explanation-box" id="exp-${q.globalIndex}">
+                        <div class="explanation-title">詳解與考點分析</div>
+                        ${fmtExplanation}
+                    </div>
+                `;
+                
+                container.appendChild(card);
+                
+                // Restore state if answered previously
+                if (q.hasAnswered) {
+                    restoreAnswerState(q);
+                }
+            });
+        }
+
+        // Handle User Answer Click
+        function handleAnswer(qIndex, selectedOpt, correctOpt) {
+            // Find the question object
+            let targetQ = null;
+            let catName = null;
+            let yearName = null;
+            
+            Object.keys(state.categories).forEach(cat => {
+                const f = state.categories[cat].questions.find(q => q.globalIndex === qIndex);
+                if (f) {
+                    targetQ = f;
+                    catName = cat;
+                    yearName = targetQ.year || '未知年份';
+                }
+            });
+
+            if (!targetQ || targetQ.hasAnswered) return; // Prevent double answering
+
+            const isCorrect = selectedOpt === correctOpt || selectedOpt.replace('.','') === correctOpt;
+
+            // Update State
+            targetQ.hasAnswered = true;
+            targetQ.isCorrect = isCorrect;
+            targetQ.userAnswer = selectedOpt;
+            
+            state.stats.totalAnswered++;
+            if (isCorrect) state.stats.totalCorrect++;
+            
+            state.stats.byCategory[catName].answered++;
+            if (isCorrect) state.stats.byCategory[catName].correct++;
+
+            if (state.stats.byYear[yearName]) {
+                state.stats.byYear[yearName].answered++;
+                if (isCorrect) state.stats.byYear[yearName].correct++;
+            }
+
+            // Update UI for this question
+            restoreAnswerState(targetQ);
+
+            // Update Global Stats UI
+            updateScores();
+            updateCategoryProgress();
+        }
+
+        // Visually update the question card based on answered state
+        function restoreAnswerState(q) {
+            // Disable all options
+            const optsList = document.getElementById(`opts-${q.globalIndex}`);
+            if(!optsList) return;
+            
+            const options = optsList.querySelectorAll('.option-item');
+            options.forEach(opt => opt.classList.add('disabled'));
+
+            // Highlight User Selection
+            if (q.userAnswer) {
+                // The actual letter might be A, A., etc based on parsing. We stored it as A in js.
+                const selectedElId = `opt-${q.globalIndex}-${q.userAnswer}`;
+                const selectedEl = document.getElementById(selectedElId);
+                
+                if (selectedEl) {
+                    selectedEl.classList.add('selected');
+                    selectedEl.classList.add(q.isCorrect ? 'correct' : 'incorrect');
+                }
+            }
+
+            // Always Highlight Correct Answer
+            const correctElId = `opt-${q.globalIndex}-${q.answer.replace('.','')}`;
+            const correctEl = document.getElementById(correctElId);
+            if (correctEl) {
+                correctEl.classList.add('actual-correct');
+                correctEl.classList.add('show');
+            }
+
+            // Show Explanation
+            const expBox = document.getElementById(`exp-${q.globalIndex}`);
+            if (expBox) {
+                expBox.classList.add('show');
+            }
+        }
+
+        // Update overall score in sidebar
+        function updateScores() {
+            const el = document.getElementById('overall-score');
+            const total = state.stats.totalAnswered;
+            const correct = state.stats.totalCorrect;
+            
+            if (total === 0) {
+                el.textContent = "0% (0/0)";
+                return;
+            }
+            
+            const pct = Math.round((correct / total) * 100);
+            el.textContent = `${pct}% (${correct}/${total})`;
+            
+            if (pct >= 80) el.style.color = 'var(--success)';
+            else if (pct < 60) el.style.color = 'var(--danger)';
+            else el.style.color = 'var(--primary)';
+        }
+        
+        // Update category progress and progress bar
+        function updateCategoryProgress() {
+            const key = state.currentSelection;
+            if (!key) return;
+            
+            const isCat = state.currentSidebarTab === 'category';
+            const statsSource = isCat ? state.stats.byCategory : state.stats.byYear;
+            const dataSource = isCat ? state.categories : state.years;
+            
+            if (!statsSource[key] || !dataSource[key]) return;
+            
+            const answered = statsSource[key].answered;
+            const total = dataSource[key].questions.length;
+            
+            document.getElementById('category-progress').textContent = `${answered}/${total}`;
+            
+            const pct = total === 0 ? 0 : (answered / total) * 100;
+            document.getElementById('topic-progress-bar').style.width = `${pct}%`;
+        }
+
+        // Helper to hash string for valid HTML IDs
+        function hashString(str) {
+            let hash = 0;
+            for (let i = 0; i < str.length; i++) {
+                const char = str.charCodeAt(i);
+                hash = ((hash << 5) - hash) + char;
+                hash = hash & hash;
+            }
+            return Math.abs(hash);
+        }
+
+        // Run Init
+        window.onload = initApp;
+    </script>
+</body>
+</html>
