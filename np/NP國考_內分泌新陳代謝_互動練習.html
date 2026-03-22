@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NP國考｜內分泌新陳代謝 互動練習（103–114年）</title>
+<style>
+:root {
+  --primary:       #1a5f8a;
+  --primary-light: #e8f3fb;
+  --primary-mid:   #2d7ab5;
+  --accent:        #d97706;
+  --accent-light:  #fef3c7;
+  --correct:       #166534;
+  --correct-bg:    #dcfce7;
+  --correct-border:#4ade80;
+  --danger:        #991b1b;
+  --danger-bg:     #fef2f2;
+  --danger-border: #f87171;
+  --text:          #1f2937;
+  --muted:         #6b7280;
+  --border:        #e5e7eb;
+  --bg:            #f9fafb;
+  --card:          #ffffff;
+  --sidebar-w:     268px;
+  --radius:        10px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif;
+       color: var(--text); background: var(--bg); min-height: 100vh; }
+
+/* ══ SIDEBAR ══ */
+#sidebar {
+  position: fixed; top: 0; left: 0; width: var(--sidebar-w);
+  height: 100vh; background: #1e3a5f; color: #cbd5e1;
+  overflow-y: auto; z-index: 200; display: flex; flex-direction: column;
+  transition: transform .3s;
+}
+#sidebar-header { padding: 18px 16px 14px; border-bottom: 1px solid #2d5080; background: #162840; }
+#sidebar-header h2 { font-size: 13.5px; color: #93c5fd; font-weight: 700; line-height: 1.45; }
+#sidebar-header p  { font-size: 11px; color: #64748b; margin-top: 4px; }
+
+#search-wrap { padding: 10px 12px; border-bottom: 1px solid #2d5080; }
+#search-input {
+  width: 100%; padding: 7px 10px 7px 30px; border-radius: 7px;
+  border: 1px solid #2d5080; background: #162840; color: #e2e8f0; font-size: 13px; outline: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.35-4.35'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: 9px center;
+}
+#search-input::placeholder { color: #4b5563; }
+#search-count { font-size: 11px; color: #64748b; margin-top: 4px; padding-left: 2px; min-height: 15px; }
+
+#sidebar-nav { flex: 1; padding: 8px 0; }
+.nav-section-label { font-size: 10.5px; color: #475569; text-transform: uppercase; letter-spacing: .08em; padding: 10px 16px 4px; font-weight: 600; }
+.nav-link {
+  display: flex; align-items: center; gap: 8px;
+  padding: 8px 16px; font-size: 13px; color: #94a3b8;
+  text-decoration: none; cursor: pointer;
+  border-left: 3px solid transparent;
+  transition: background .15s, color .15s, border-color .15s;
+}
+.nav-link:hover  { background: rgba(147,197,253,.1); color: #e2e8f0; border-left-color: #60a5fa; }
+.nav-link.active { background: rgba(147,197,253,.18); color: #eff6ff; border-left-color: #3b82f6; font-weight: 600; }
+.nav-link .nav-icon  { font-size: 14px; width: 18px; text-align: center; flex-shrink: 0; }
+.nav-link .nav-text  { flex: 1; }
+.nav-link .nav-badge { background: rgba(255,255,255,.1); color: #94a3b8; font-size: 11px; padding: 1px 6px; border-radius: 99px; flex-shrink: 0; }
+.nav-link.active .nav-badge { background: rgba(59,130,246,.3); color: #93c5fd; }
+
+#sidebar-stat { padding: 10px 14px 0; display: flex; gap: 6px; flex-wrap: wrap; }
+.s-stat { background: rgba(255,255,255,.06); border-radius: 7px; padding: 6px 10px; flex: 1; min-width: 70px; text-align: center; }
+.s-stat .s-num { font-size: 18px; font-weight: 700; color: #93c5fd; }
+.s-stat .s-lbl { font-size: 10px; color: #64748b; margin-top: 1px; }
+
+#sidebar-controls { padding: 12px 14px; border-top: 1px solid #2d5080; background: #162840; }
+.ctrl-label { font-size: 10.5px; color: #475569; text-transform: uppercase; letter-spacing: .07em; margin-bottom: 7px; font-weight: 600; }
+.ctrl-row { display: flex; gap: 6px; margin-bottom: 8px; }
+.ctrl-btn { flex: 1; background: #1e3a5f; border: 1px solid #2d5080; border-radius: 6px; color: #94a3b8; font-size: 12px; padding: 6px 4px; cursor: pointer; transition: all .15s; text-align: center; }
+.ctrl-btn:hover  { border-color: #60a5fa; color: #e2e8f0; background: rgba(147,197,253,.1); }
+.ctrl-btn.active { background: var(--primary); border-color: var(--primary-mid); color: #fff; }
+.start-btn { width: 100%; background: var(--primary); border: none; border-radius: 7px; color: #fff; font-size: 13.5px; font-weight: 700; padding: 9px; cursor: pointer; transition: opacity .15s; margin-top: 4px; }
+.start-btn:hover { opacity: .88; }
+
+/* ══ MAIN ══ */
+#main { margin-left: var(--sidebar-w); min-height: 100vh; }
+#content-wrap { max-width: 800px; margin: 0 auto; padding: 28px 24px 80px; }
+
+#welcome-area h1 { font-size: 22px; font-weight: 700; color: var(--primary); line-height: 1.3; }
+#welcome-area p  { font-size: 13.5px; color: var(--muted); margin-top: 5px; }
+.stats-bar { display: flex; gap: 12px; flex-wrap: wrap; margin: 18px 0 28px; }
+.stat-box { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 18px; flex: 1; min-width: 110px; text-align: center; box-shadow: 0 1px 3px rgba(0,0,0,.06); }
+.stat-box .num { font-size: 26px; font-weight: 700; color: var(--primary); }
+.stat-box .lbl { font-size: 12px; color: var(--muted); margin-top: 2px; }
+
+/* Progress */
+#quiz-area { display: none; }
+.progress-wrap { margin-bottom: 20px; }
+.progress-info { display: flex; justify-content: space-between; font-size: 13px; color: var(--muted); margin-bottom: 6px; }
+.progress-info strong { color: var(--text); }
+#progress-track { height: 5px; background: var(--border); border-radius: 99px; overflow: hidden; }
+#progress-bar   { height: 100%; background: var(--primary); border-radius: 99px; transition: width .3s; }
+
+/* Dot navigator */
+.dot-nav { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 20px; }
+.dot { width: 22px; height: 22px; border-radius: 50%; background: var(--border); cursor: pointer; transition: all .15s; border: 2px solid transparent; }
+.dot:hover    { transform: scale(1.2); }
+.dot.current  { border-color: var(--primary); box-shadow: 0 0 0 2px var(--primary-light); }
+.dot.correct  { background: var(--correct-border); }
+.dot.wrong    { background: var(--danger-border); }
+.dot.skipped  { background: #fbbf24; }
+
+/* Q-Card */
+.q-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,.06); transition: box-shadow .2s; }
+.q-card:hover { box-shadow: 0 4px 14px rgba(0,0,0,.1); }
+.q-header { padding: 18px 20px 14px; }
+.q-meta { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-bottom: 12px; }
+.q-num-badge   { background: var(--primary-light); color: var(--primary); font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 6px; }
+.q-year-badge  { background: var(--accent-light);  color: var(--accent);  font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 6px; }
+.q-topic-badge { background: #f0fdf4; color: #166534; font-size: 12px; padding: 3px 10px; border-radius: 6px; }
+.q-stem { font-size: 16px; line-height: 1.65; font-weight: 500; color: var(--text); }
+
+.q-options-wrap { padding: 0 20px 16px; }
+.opt-row { display: flex; align-items: flex-start; gap: 10px; padding: 10px 14px; border: 2px solid var(--border); border-radius: 8px; margin-bottom: 8px; cursor: pointer; transition: all .15s; background: #fff; font-size: 14.5px; line-height: 1.55; }
+.opt-row:hover:not(.disabled) { border-color: var(--primary); background: var(--primary-light); }
+.opt-letter { font-weight: 700; color: var(--muted); min-width: 22px; flex-shrink: 0; padding-top: 1px; }
+.opt-row.correct-opt { border-color: var(--correct-border); background: var(--correct-bg); }
+.opt-row.correct-opt .opt-letter { color: var(--correct); }
+.opt-row.wrong-opt   { border-color: var(--danger-border);  background: var(--danger-bg); }
+.opt-row.wrong-opt .opt-letter   { color: #dc2626; }
+.opt-row.disabled { cursor: default; }
+
+.answer-row {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--correct-bg); color: var(--correct);
+  font-weight: 700; padding: 7px 16px; border-radius: 8px;
+  margin: 4px 20px 12px; font-size: 15px; border: 1px solid var(--correct-border);
+}
+.answer-row.wrong-ans { background: var(--danger-bg); color: var(--danger); border-color: var(--danger-border); }
+.answer-row.skip-ans  { background: var(--accent-light); color: var(--accent); border-color: #fcd34d; }
+
+.q-explanation { margin: 0 20px 20px; border-top: 1px solid var(--border); padding-top: 14px; font-size: 14px; line-height: 1.75; color: #374151; }
+.q-explanation p { margin-bottom: 8px; }
+.exp-correct-note { background: var(--correct-bg); border-left: 3px solid var(--correct-border); padding: 7px 12px; margin: 5px 0; border-radius: 0 7px 7px 0; font-size: 13.5px; line-height: 1.65; }
+.exp-wrong-opt    { background: var(--danger-bg);  border-left: 3px solid var(--danger-border);  padding: 7px 12px; margin: 5px 0; border-radius: 0 7px 7px 0; font-size: 13.5px; line-height: 1.65; }
+.key-term { color: var(--primary); font-weight: 600; }
+mark.hl   { background: #fde68a; border-radius: 2px; padding: 0 1px; }
+
+/* Markdown table */
+.md-table-wrap { overflow-x: auto; margin: 8px 0; border-radius: 8px; border: 1px solid var(--border); }
+.md-table      { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 280px; }
+.md-table th   { background: var(--primary); color: #fff; padding: .45rem .8rem; text-align: center; font-weight: 600; border: 1px solid rgba(255,255,255,.15); white-space: nowrap; }
+.md-table td   { padding: .4rem .8rem; border: 1px solid var(--border); vertical-align: top; line-height: 1.55; }
+.md-table tr:nth-child(even) td { background: #f8fafc; }
+.md-table tr:hover td { background: var(--primary-light); }
+
+/* Nav row */
+.nav-row { display: flex; gap: 8px; align-items: center; justify-content: space-between; margin-top: 16px; flex-wrap: wrap; }
+.nav-btn    { background: var(--card); border: 1.5px solid var(--border); border-radius: 8px; padding: 8px 18px; cursor: pointer; font-size: 14px; color: var(--text); transition: all .15s; }
+.nav-btn:hover    { border-color: var(--primary); color: var(--primary); }
+.nav-btn:disabled { opacity: .35; cursor: default; }
+.skip-btn   { background: var(--accent-light); border: 1.5px solid #fcd34d; border-radius: 8px; padding: 8px 16px; cursor: pointer; font-size: 13.5px; color: var(--accent); transition: all .15s; }
+.skip-btn:hover { background: #fde68a; }
+.finish-btn { background: var(--correct); color: #fff; border: none; border-radius: 8px; padding: 8px 18px; cursor: pointer; font-size: 14px; font-weight: 600; transition: opacity .15s; }
+.finish-btn:hover { opacity: .88; }
+
+/* Score */
+#score-panel { display: none; }
+.score-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; box-shadow: 0 1px 4px rgba(0,0,0,.06); }
+.score-center { text-align: center; margin-bottom: 24px; }
+.score-ring { width: 130px; height: 130px; border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; margin: 0 auto 14px; font-weight: 700; border: 6px solid var(--correct-border); background: var(--correct-bg); color: var(--correct); }
+.score-ring.fail { border-color: var(--danger-border); background: var(--danger-bg); color: var(--danger); }
+.score-ring .pct { font-size: 2.2rem; line-height: 1; }
+.score-ring .sub { font-size: 11px; color: var(--muted); margin-top: 4px; }
+.score-detail { font-size: 14px; color: var(--muted); }
+.score-detail strong { color: var(--text); }
+.score-table-wrap { overflow-x: auto; margin: 18px 0; }
+.score-table    { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+.score-table th { background: var(--primary); color: #fff; padding: 8px 12px; text-align: left; font-weight: 600; }
+.score-table td { padding: 8px 12px; border-bottom: 1px solid var(--border); }
+.score-table tr:nth-child(even) td { background: var(--bg); }
+.mini-bar      { height: 6px; border-radius: 3px; background: var(--border); margin-top: 4px; }
+.mini-bar-fill { height: 100%; border-radius: 3px; }
+.score-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px; }
+.act-btn { padding: 10px 22px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; border: none; transition: opacity .15s; }
+.act-btn:hover { opacity: .85; }
+.act-primary { background: var(--primary); color: #fff; }
+.act-danger  { background: #dc2626; color: #fff; }
+.act-outline { background: transparent; border: 2px solid var(--border); color: var(--text); font-weight: 500; }
+.act-outline:hover { border-color: var(--primary); color: var(--primary); opacity: 1; }
+
+/* back-top */
+#back-top { position: fixed; bottom: 24px; right: 24px; width: 42px; height: 42px; background: var(--primary); color: #fff; border-radius: 50%; border: none; font-size: 18px; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,.2); display: flex; align-items: center; justify-content: center; z-index: 300; opacity: 0; transition: opacity .3s; pointer-events: none; }
+#back-top.show { opacity: 1; pointer-events: auto; }
+#sidebar-toggle { display: none; position: fixed; top: 14px; left: 14px; z-index: 300; background: var(--primary); color: #fff; border: none; border-radius: 8px; width: 38px; height: 38px; font-size: 18px; cursor: pointer; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(0,0,0,.2); }
+.sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.4); z-index: 199; }
+
+@media (max-width: 768px) {
+  #sidebar { transform: translateX(-100%); }
+  #sidebar.open { transform: translateX(0); }
+  #sidebar-toggle { display: flex; }
+  #main { margin-left: 0; }
+  #content-wrap { padding: 60px 14px 80px; }
+  .q-stem { font-size: 15px; }
+  .opt-row { font-size: 13.5px; }
+  .sidebar-overlay.open { display: block; }
+}
+</style>
+</head>
+<body>
+
+<button id="sidebar-toggle" onclick="toggleSidebar()" aria-label="選單">☰</button>
+<div class="sidebar-overlay" id="overlay" onclick="closeSidebar()"></div>
+
+<!-- ═══ SIDEBAR ═══ -->
+<div id="sidebar">
+  <div id="sidebar-header">
+    <h2>🩺 NP國考<br>內分泌新陳代謝</h2>
+    <p>103–114年考古題 · 互動練習</p>
+  </div>
+  <div id="search-wrap">
+    <input type="text" id="search-input" placeholder="搜尋題目關鍵字…" oninput="doSearch(this.value)" autocomplete="off">
+    <div id="search-count"></div>
+  </div>
+  <div id="sidebar-stat">
+    <div class="s-stat"><div class="s-num" id="stat-total">?</div><div class="s-lbl">總題數</div></div>
+    <div class="s-stat"><div class="s-num" id="stat-correct">0</div><div class="s-lbl">答對</div></div>
+    <div class="s-stat"><div class="s-num" id="stat-wrong">0</div><div class="s-lbl">答錯</div></div>
+  </div>
+  <nav id="sidebar-nav">
+    <div class="nav-section-label">主題篩選</div>
+    <a href="#" class="nav-link active" data-topic="all" onclick="filterByTopic(this)">
+      <span class="nav-icon">📋</span><span class="nav-text">全部主題</span>
+      <span class="nav-badge" id="badge-all">?</span>
+    </a>
+    <a href="#" class="nav-link" data-topic="一、糖尿病（Diabetes Mellitus）" onclick="filterByTopic(this)"><span class="nav-icon">🍬</span><span class="nav-text">糖尿病</span><span class="nav-badge">41</span></a>
+    <a href="#" class="nav-link" data-topic="二、甲狀腺疾病（Thyroid Disorders）" onclick="filterByTopic(this)"><span class="nav-icon">🦋</span><span class="nav-text">甲狀腺</span><span class="nav-badge">15</span></a>
+    <a href="#" class="nav-link" data-topic="三、副甲狀腺疾病（Parathyroid Disorders）" onclick="filterByTopic(this)"><span class="nav-icon">🔬</span><span class="nav-text">副甲狀腺</span><span class="nav-badge">5</span></a>
+    <a href="#" class="nav-link" data-topic="四、腎上腺疾病（Adrenal Disorders）" onclick="filterByTopic(this)"><span class="nav-icon">⚡</span><span class="nav-text">腎上腺</span><span class="nav-badge">7</span></a>
+    <a href="#" class="nav-link" data-topic="五、腦垂體疾病（Pituitary Disorders）" onclick="filterByTopic(this)"><span class="nav-icon">🧠</span><span class="nav-text">腦垂體</span><span class="nav-badge">8</span></a>
+    <a href="#" class="nav-link" data-topic="六、高血脂（Dyslipidemia）" onclick="filterByTopic(this)"><span class="nav-icon">💊</span><span class="nav-text">高血脂</span><span class="nav-badge">7</span></a>
+    <a href="#" class="nav-link" data-topic="七、電解質異常（Electrolyte Disorders）" onclick="filterByTopic(this)"><span class="nav-icon">⚗️</span><span class="nav-text">電解質</span><span class="nav-badge">13</span></a>
+    <a href="#" class="nav-link" data-topic="八、痛風（Gout）" onclick="filterByTopic(this)"><span class="nav-icon">🦴</span><span class="nav-text">痛風</span><span class="nav-badge">6</span></a>
+    <a href="#" class="nav-link" data-topic="九、肥胖／代謝症候群（Obesity / Metabolic Syndrome）" onclick="filterByTopic(this)"><span class="nav-icon">⚖️</span><span class="nav-text">肥胖/代謝</span><span class="nav-badge">7</span></a>
+    <a href="#" class="nav-link" data-topic="十、其他內分泌（Other Endocrine）" onclick="filterByTopic(this)"><span class="nav-icon">🏥</span><span class="nav-text">其他內分泌</span><span class="nav-badge">12</span></a>
+  </nav>
+  <div id="sidebar-controls">
+    <div class="ctrl-label">出題方式</div>
+    <div class="ctrl-row">
+      <button class="ctrl-btn active" data-mode="sequential" onclick="selectMode(this)">📖 順序</button>
+      <button class="ctrl-btn"        data-mode="random"     onclick="selectMode(this)">🔀 隨機</button>
+    </div>
+    <button class="start-btn" onclick="startQuiz()">▶ 開始練習</button>
+  </div>
+</div>
+
+<!-- ═══ MAIN ═══ -->
+<div id="main">
+<div id="content-wrap">
+
+  <div id="welcome-area">
+    <h1>NP國考｜內分泌新陳代謝 互動練習</h1>
+    <p>103–114年考古題彙整 · 點擊選項即顯示答案與詳解</p>
+    <div class="stats-bar">
+      <div class="stat-box"><div class="num" id="welcome-total">?</div><div class="lbl">總題數</div></div>
+      <div class="stat-box"><div class="num">12</div><div class="lbl">涵蓋年份</div></div>
+      <div class="stat-box"><div class="num">10</div><div class="lbl">主題章節</div></div>
+      <div class="stat-box"><div class="num">4</div><div class="lbl">選項逐一解析</div></div>
+    </div>
+    <p style="font-size:13px;color:var(--muted)">← 左側選擇主題與出題方式，按「開始練習」開始<br>
+    <span style="opacity:.6">題庫資料儲存於 <code>NP國考_內分泌新陳代謝_data.js</code>，可獨立擴充</span></p>
+  </div>
+
+  <div id="quiz-area">
+    <div class="progress-wrap">
+      <div class="progress-info">
+        <span>題目 <strong id="prog-cur">1</strong> / <strong id="prog-tot">?</strong></span>
+        <span>✓ <strong id="prog-correct" style="color:var(--correct)">0</strong>
+              &nbsp;✗ <strong id="prog-wrong" style="color:#dc2626">0</strong>
+              &nbsp;— <strong id="prog-skip" style="color:var(--accent)">0</strong></span>
+      </div>
+      <div id="progress-track"><div id="progress-bar" style="width:0%"></div></div>
+    </div>
+    <div class="dot-nav" id="dot-nav"></div>
+    <div id="q-card-area"></div>
+    <div class="nav-row">
+      <button class="nav-btn"   id="btn-prev"  onclick="goTo(currentIdx-1)">← 上一題</button>
+      <button class="skip-btn"  id="btn-skip"  onclick="skipQuestion()">跳過 →</button>
+      <button class="nav-btn"   id="btn-next"  onclick="goTo(currentIdx+1)">下一題 →</button>
+      <button class="finish-btn"               onclick="showScore()">🏁 計分</button>
+    </div>
+  </div>
+
+  <div id="score-panel">
+    <div class="score-card">
+      <div class="score-center">
+        <div class="score-ring" id="score-ring">
+          <div class="pct" id="score-pct">--</div>
+          <div class="sub">正確率</div>
+        </div>
+        <div class="score-detail" id="score-detail"></div>
+      </div>
+      <div class="score-table-wrap">
+        <table class="score-table">
+          <thead><tr><th>主題</th><th>答對</th><th>未對</th><th>正確率</th></tr></thead>
+          <tbody id="score-tbody"></tbody>
+        </table>
+      </div>
+      <div class="score-actions">
+        <button class="act-btn act-primary" onclick="restartSetup()">🔄 重新選題</button>
+        <button class="act-btn act-danger"  id="btn-retry-wrong" onclick="retryWrong()">❌ 練習錯題</button>
+        <button class="act-btn act-outline" onclick="goTo(0)">← 回頭複習</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<button id="back-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<!-- ★ 題庫資料：更換或擴充只需修改這個檔案 ★ -->
+<script src="NP國考_內分泌新陳代謝_data.js"></script>
+
+<script>
+// ══════════════════════════════════════════
+// 初始化（等 data.js 載入完畢後設定題數顯示）
+// ══════════════════════════════════════════
+(function init() {
+  if (typeof ALL_QUESTIONS === 'undefined') {
+    document.getElementById('welcome-area').innerHTML =
+      '<p style="color:#dc2626;font-size:15px">⚠️ 找不到題庫資料！<br>請確認 <code>NP國考_內分泌新陳代謝_data.js</code> 與本 HTML 在同一資料夾，並用瀏覽器直接開啟 HTML 檔案。</p>';
+    return;
+  }
+  const n = ALL_QUESTIONS.length;
+  document.getElementById('welcome-total').textContent = n;
+  document.getElementById('badge-all').textContent = n;
+  document.getElementById('stat-total').textContent = n;
+})();
+
+// ══════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════
+let queue = [], currentIdx = 0;
+let answered = {}, wrongIds = new Set();
+let selectedTopic = 'all', quizMode = 'sequential';
+
+// ══════════════════════════════════════════
+// SIDEBAR
+// ══════════════════════════════════════════
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('overlay').classList.toggle('open');
+}
+function closeSidebar() {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('overlay').classList.remove('open');
+}
+function filterByTopic(el) {
+  document.querySelectorAll('.nav-link').forEach(a => a.classList.remove('active'));
+  el.classList.add('active');
+  selectedTopic = el.dataset.topic;
+  return false;
+}
+function selectMode(btn) {
+  quizMode = btn.dataset.mode;
+  document.querySelectorAll('.ctrl-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+// ══════════════════════════════════════════
+// QUIZ FLOW
+// ══════════════════════════════════════════
+function startQuiz() {
+  let pool = selectedTopic === 'all'
+    ? [...ALL_QUESTIONS]
+    : ALL_QUESTIONS.filter(q => q.topic === selectedTopic);
+  if (quizMode === 'random') pool.sort(() => Math.random() - .5);
+  queue = pool; currentIdx = 0; answered = {}; wrongIds = new Set();
+  document.getElementById('welcome-area').style.display = 'none';
+  document.getElementById('quiz-area').style.display   = 'block';
+  document.getElementById('score-panel').style.display = 'none';
+  document.getElementById('stat-total').textContent = queue.length;
+  buildDots(); renderQ(); closeSidebar(); window.scrollTo({top:0});
+}
+function retryWrong() {
+  const pool = ALL_QUESTIONS.filter(q => wrongIds.has(q.id));
+  if (!pool.length) return;
+  queue = pool; currentIdx = 0; answered = {}; wrongIds = new Set();
+  document.getElementById('score-panel').style.display = 'none';
+  document.getElementById('quiz-area').style.display   = 'block';
+  document.getElementById('stat-total').textContent = queue.length;
+  buildDots(); renderQ(); window.scrollTo({top:0});
+}
+function restartSetup() {
+  document.getElementById('score-panel').style.display = 'none';
+  document.getElementById('quiz-area').style.display   = 'none';
+  document.getElementById('welcome-area').style.display = 'block';
+}
+
+// ══════════════════════════════════════════
+// NAVIGATION
+// ══════════════════════════════════════════
+function buildDots() {
+  const nav = document.getElementById('dot-nav');
+  nav.innerHTML = '';
+  queue.forEach((q, i) => {
+    const d = document.createElement('div');
+    d.className = 'dot'; d.title = q.title; d.id = 'dot-' + i;
+    d.onclick = () => goTo(i);
+    nav.appendChild(d);
+  });
+}
+function updateAllDots() {
+  queue.forEach((q, i) => {
+    const d = document.getElementById('dot-' + i);
+    if (!d) return;
+    const a = answered[q.id];
+    d.className = 'dot'
+      + (i === currentIdx ? ' current' : '')
+      + (a ? (a.skipped ? ' skipped' : a.correct ? ' correct' : ' wrong') : '');
+  });
+}
+function goTo(idx) {
+  if (idx < 0 || idx >= queue.length) return;
+  currentIdx = idx; renderQ(); window.scrollTo({top:0, behavior:'smooth'});
+}
+function skipQuestion() {
+  const q = queue[currentIdx];
+  if (!answered[q.id]) { answered[q.id] = {selected:null,correct:false,skipped:true}; wrongIds.add(q.id); }
+  if (currentIdx < queue.length - 1) goTo(currentIdx + 1); else showScore();
+}
+
+// ══════════════════════════════════════════
+// RENDER
+// ══════════════════════════════════════════
+function updateProgress() {
+  const tot  = queue.length;
+  const vals = Object.values(answered);
+  const cor  = vals.filter(x => x.correct).length;
+  const wrg  = vals.filter(x => !x.correct && !x.skipped).length;
+  const skp  = vals.filter(x => x.skipped).length;
+  document.getElementById('prog-cur').textContent     = currentIdx + 1;
+  document.getElementById('prog-tot').textContent     = tot;
+  document.getElementById('prog-correct').textContent = cor;
+  document.getElementById('prog-wrong').textContent   = wrg;
+  document.getElementById('prog-skip').textContent    = skp;
+  document.getElementById('progress-bar').style.width = (currentIdx / Math.max(tot-1,1) * 100) + '%';
+  document.getElementById('stat-correct').textContent = cor;
+  document.getElementById('stat-wrong').textContent   = wrg;
+  updateAllDots();
+  document.getElementById('btn-prev').disabled = currentIdx === 0;
+  document.getElementById('btn-next').disabled = currentIdx === queue.length - 1;
+}
+
+function renderQ() {
+  const q = queue[currentIdx];
+  const a = answered[q.id];
+  updateProgress();
+  const topicShort = q.topic.replace(/（.+?）/, '').trim();
+
+  let optsHtml = '';
+  q.options.forEach(opt => {
+    let cls = 'opt-row';
+    if (a) {
+      cls += ' disabled';
+      if (opt.key === q.answer)   cls += ' correct-opt';
+      else if (opt.key === a.selected) cls += ' wrong-opt';
+    }
+    const oc = a ? '' : `onclick="selectOpt(${q.id},'${opt.key}')"`;
+    optsHtml += `<div class="${cls}" ${oc}><span class="opt-letter">(${opt.key})</span><span>${inlineMd(opt.text)}</span></div>`;
+  });
+
+  let ansHtml = '', expHtml = '';
+  if (a) {
+    if (a.skipped) {
+      ansHtml = `<div class="answer-row skip-ans">⏭ 已跳過，正確答案：(${q.answer})</div>`;
+    } else {
+      ansHtml = `<div class="answer-row${a.correct ? '' : ' wrong-ans'}">${a.correct ? '✓ 答對！正確答案：' : '✗ 答錯！正確答案：'}(${q.answer})</div>`;
+    }
+    expHtml = `<div class="q-explanation">${mdToHtml(q.explanation)}</div>`;
+  }
+
+  document.getElementById('q-card-area').innerHTML = `
+  <div class="q-card">
+    <div class="q-header">
+      <div class="q-meta">
+        <span class="q-num-badge">第 ${q.num} 題</span>
+        <span class="q-year-badge">🗓 ${escHtml(q.year)}</span>
+        <span class="q-topic-badge">📚 ${escHtml(topicShort)}</span>
+      </div>
+      <div class="q-stem">${inlineMd(q.question)}</div>
+    </div>
+    <div class="q-options-wrap">${optsHtml}</div>
+    ${ansHtml}${expHtml}
+  </div>`;
+}
+
+function selectOpt(qId, key) {
+  const q = queue.find(x => x.id === qId);
+  if (!q || answered[qId]) return;
+  const correct = key === q.answer;
+  answered[qId] = {selected:key, correct, skipped:false};
+  if (!correct) wrongIds.add(qId);
+  renderQ();
+}
+
+// ══════════════════════════════════════════
+// SCORE
+// ══════════════════════════════════════════
+function showScore() {
+  document.getElementById('quiz-area').style.display   = 'none';
+  document.getElementById('score-panel').style.display = 'block';
+  const tot  = queue.length;
+  const vals = Object.values(answered);
+  const cor  = vals.filter(x => x.correct).length;
+  const pct  = tot > 0 ? Math.round(cor/tot*100) : 0;
+  document.getElementById('score-ring').className = 'score-ring' + (pct >= 60 ? '' : ' fail');
+  document.getElementById('score-pct').textContent = pct + '%';
+  document.getElementById('score-detail').innerHTML =
+    `答題 <strong>${vals.length}</strong>/${tot} &nbsp;｜&nbsp; 答對 <strong>${cor}</strong> &nbsp;｜&nbsp; 答錯 <strong>${vals.filter(x=>!x.correct&&!x.skipped).length}</strong> &nbsp;｜&nbsp; 跳過 <strong>${vals.filter(x=>x.skipped).length}</strong>`;
+
+  const byT = {};
+  queue.forEach(q => {
+    const t = q.topic.replace(/（.+?）/,'').trim();
+    if (!byT[t]) byT[t] = {total:0, correct:0};
+    byT[t].total++;
+    if (answered[q.id]?.correct) byT[t].correct++;
+  });
+  let rows = '';
+  for (const [t, s] of Object.entries(byT)) {
+    const tp = s.total ? Math.round(s.correct/s.total*100) : 0;
+    const c  = tp >= 60 ? 'var(--correct-border)' : 'var(--danger-border)';
+    rows += `<tr><td>${escHtml(t)}</td><td>${s.correct}</td><td>${s.total-s.correct}</td>
+      <td>${tp}%<div class="mini-bar"><div class="mini-bar-fill" style="width:${tp}%;background:${c}"></div></div></td></tr>`;
+  }
+  document.getElementById('score-tbody').innerHTML = rows;
+  document.getElementById('btn-retry-wrong').style.display = wrongIds.size ? 'inline-block' : 'none';
+  window.scrollTo({top:0});
+}
+
+// ══════════════════════════════════════════
+// MARKDOWN → HTML
+// ══════════════════════════════════════════
+function escHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function inlineMd(s) {
+  return escHtml(s)
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    .replace(/(?<!\*)\*(?!\*)(.+?)(?<!\*)\*(?!\*)/g, '<em>$1</em>')
+    .replace(/`([^`]+)`/g, '<code style="background:#e2e8f0;padding:.1em .35em;border-radius:4px;font-size:.9em">$1</code>');
+}
+function isTableRow(l) { return l.trim().startsWith('|') && l.trim().endsWith('|'); }
+function isSepRow(l)   { return /^\|[\s\-:]+(\|[\s\-:]+)*\|$/.test(l.trim()); }
+function splitCells(l) { return l.trim().replace(/^\|/,'').replace(/\|$/,'').split('|').map(c=>c.trim()); }
+
+function mdToHtml(text) {
+  const lines = text.split('\n');
+  let html = '', i = 0;
+  while (i < lines.length) {
+    const line = lines[i];
+    if (isTableRow(line)) {
+      const tbl = [];
+      while (i < lines.length && isTableRow(lines[i])) { tbl.push(lines[i]); i++; }
+      const si = tbl.findIndex(isSepRow);
+      let thead='', tbody='';
+      if (si > 0) {
+        thead = '<thead>' + tbl.slice(0,si).map(r=>'<tr>'+splitCells(r).map(c=>`<th>${inlineMd(c)}</th>`).join('')+'</tr>').join('') + '</thead>';
+        tbody = '<tbody>' + tbl.slice(si+1).map(r=>'<tr>'+splitCells(r).map(c=>`<td>${inlineMd(c)}</td>`).join('')+'</tr>').join('') + '</tbody>';
+      } else {
+        tbody = '<tbody>' + tbl.map(r=>'<tr>'+splitCells(r).map(c=>`<td>${inlineMd(c)}</td>`).join('')+'</tr>').join('') + '</tbody>';
+      }
+      html += `<div class="md-table-wrap"><table class="md-table">${thead}${tbody}</table></div>`;
+      continue;
+    }
+    if (/^- \*\*/.test(line)) {
+      while (i < lines.length && /^- /.test(lines[i]) && !isTableRow(lines[i])) {
+        const ln = lines[i], m = ln.match(/^- \*\*(.+?)\*\*[：:](.*)/);
+        if (m) {
+          const cls = /正確/.test(m[1]) ? 'exp-correct-note' : 'exp-wrong-opt';
+          html += `<div class="${cls}"><strong>${escHtml(m[1])}</strong>：${inlineMd(m[2].trim())}</div>`;
+        } else {
+          html += `<div style="padding:.3rem 0">${inlineMd(ln.slice(2))}</div>`;
+        }
+        i++;
+      }
+      continue;
+    }
+    if (/^- /.test(line) && !isTableRow(line)) {
+      let ul = '<ul style="padding-left:1.2rem;margin:.4rem 0">';
+      while (i < lines.length && /^- /.test(lines[i]) && !isTableRow(lines[i])) {
+        ul += `<li style="margin:.2rem 0">${inlineMd(lines[i].slice(2))}</li>`;
+        i++;
+      }
+      html += ul + '</ul>'; continue;
+    }
+    if (/^#{1,4} /.test(line)) {
+      const m = line.match(/^(#{1,4}) (.+)/);
+      const sz = ['.95rem','.9rem','.88rem','.85rem'][m[1].length-1];
+      html += `<p style="font-weight:700;font-size:${sz};margin:.6rem 0 .2rem;color:var(--primary)">${inlineMd(m[2])}</p>`;
+      i++; continue;
+    }
+    if (!line.trim()) { i++; continue; }
+    html += `<p style="margin:.4rem 0">${inlineMd(line)}</p>`;
+    i++;
+  }
+  return html;
+}
+
+// ══════════════════════════════════════════
+// SEARCH
+// ══════════════════════════════════════════
+function doSearch(query) {
+  query = query.trim().toLowerCase();
+  const countEl = document.getElementById('search-count');
+  if (!query) { countEl.textContent = ''; return; }
+  if (document.getElementById('quiz-area').style.display !== 'block') {
+    countEl.textContent = '請先開始練習再搜尋'; return;
+  }
+  let found = 0;
+  queue.forEach((q, idx) => {
+    if ((q.question + q.options.map(o=>o.text).join(' ')).toLowerCase().includes(query)) {
+      found++;
+      if (found === 1) goTo(idx);
+    }
+  });
+  countEl.textContent = found > 0 ? `找到 ${found} 題` : '未找到相關題目';
+}
+
+// ══════════════════════════════════════════
+// MISC
+// ══════════════════════════════════════════
+window.addEventListener('scroll', () => {
+  document.getElementById('back-top').classList.toggle('show', window.scrollY > 400);
+});
+document.addEventListener('keydown', e => {
+  if (document.getElementById('quiz-area').style.display !== 'block') return;
+  if (e.target.tagName === 'INPUT') return;
+  if (e.key === 'ArrowLeft')  goTo(currentIdx - 1);
+  if (e.key === 'ArrowRight') goTo(currentIdx + 1);
+  if (e.key === 'Enter' && answered[queue[currentIdx]?.id]) goTo(currentIdx + 1);
+});
+</script>
+</body>
+</html>
