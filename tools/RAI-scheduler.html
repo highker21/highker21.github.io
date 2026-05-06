@@ -217,23 +217,51 @@
     <label class="mode-option" data-mode="A">
       <input type="radio" name="mode" value="A">
       A. 不打 Thyrogen（傳統停 Eltroxin）
-      <span class="desc">停 Eltroxin 1 個月（與低碘飲食同步），讓 TSH 自然升高</span>
+      <span class="desc">停 Eltroxin 與低碘飲食同步起 → 掃描完，讓 TSH 自然升高</span>
     </label>
     <label class="mode-option" data-mode="B">
       <input type="radio" name="mode" value="B">
       B. 門診打 Thyrogen × 2（健保專案，1 支）
-      <span class="desc">星期三、四 門診治療室各打 1 支，星期五住院當天吃藥（不停 Eltroxin）</span>
+      <span class="desc">星期三、四 門診治療室各打 1 支，星期五住院當天吃藥</span>
     </label>
     <label class="mode-option" data-mode="C">
       <input type="radio" name="mode" value="C">
       C. 住院打 Thyrogen × 2（半支）
-      <span class="desc">提前 1 天入院，住院當天 + 第二天 各打 1/2 支；停 Eltroxin 1 週（吃藥前 1 週起 → 掃描完）</span>
+      <span class="desc">提前 1 天入院，住院當天 + 第二天 各打 1/2 支</span>
     </label>
     <label class="mode-option" data-mode="D">
       <input type="radio" name="mode" value="D">
       D. 住院打 Thyrogen × 2（全支）
-      <span class="desc">提前 1 天入院，住院當天 + 第二天 各打 1 支（不停 Eltroxin）</span>
+      <span class="desc">提前 1 天入院，住院當天 + 第二天 各打 1 支</span>
     </label>
+  </div>
+
+  <div class="field-row" style="margin-top:10px; grid-template-columns: 1fr 1fr;">
+    <div>
+      <label>低碘飲食時間（吃藥前）</label>
+      <div style="display:flex; gap:8px;">
+        <label class="mode-option" style="flex:1; padding:6px 10px; font-size:10pt">
+          <input type="radio" name="lowiodine" value="14"> 2 週
+        </label>
+        <label class="mode-option" style="flex:1; padding:6px 10px; font-size:10pt">
+          <input type="radio" name="lowiodine" value="28" checked> 4 週（預設）
+        </label>
+      </div>
+    </div>
+    <div>
+      <label>停 Eltroxin（吃藥前 → 掃描完）</label>
+      <div style="display:flex; gap:8px;">
+        <label class="mode-option" style="flex:1; padding:6px 10px; font-size:10pt">
+          <input type="radio" name="stopelt" value="yes"> 停 Eltroxin
+        </label>
+        <label class="mode-option" style="flex:1; padding:6px 10px; font-size:10pt">
+          <input type="radio" name="stopelt" value="no"> 不停 Eltroxin
+        </label>
+      </div>
+      <div style="font-size:8.5pt; color:#718096; margin-top:2px">
+        模式預設：A=停｜B=不停｜C=停｜D=不停（可手動覆寫）
+      </div>
+    </div>
   </div>
 
   <label style="margin-top:8px">基因突變篩檢（住院期間，可複選）</label>
@@ -302,12 +330,32 @@ function addDays(d, n) {
 
 // ── Mode selection UI ────────────────────
 document.querySelectorAll('.mode-option').forEach(el => {
-  el.addEventListener('click', () => {
-    document.querySelectorAll('.mode-option').forEach(x => x.classList.remove('selected'));
-    el.classList.add('selected');
-    el.querySelector('input').checked = true;
-    updateComputed();
+  el.addEventListener('click', (e) => {
+    const inp = el.querySelector('input');
+    if (inp.type === 'checkbox') return; // checkboxes use their own native toggle
+    if (inp.type === 'radio') {
+      // For mode radio: toggle "selected" only among siblings of same name
+      const name = inp.name;
+      document.querySelectorAll(`input[name="${name}"]`).forEach(r => {
+        r.closest('.mode-option')?.classList.remove('selected');
+      });
+      el.classList.add('selected');
+      inp.checked = true;
+      // If this is the Thyrogen mode radio, set default for stop Eltroxin
+      if (name === 'mode') {
+        const dflt = (inp.value === 'A' || inp.value === 'C') ? 'yes' : 'no';
+        document.querySelectorAll('input[name="stopelt"]').forEach(r => {
+          r.checked = (r.value === dflt);
+          r.closest('.mode-option')?.classList.toggle('selected', r.checked);
+        });
+      }
+      updateComputed();
+    }
   });
+});
+// Initialize default-selected radios visually
+document.querySelectorAll('input[type=radio]:checked').forEach(r => {
+  r.closest('.mode-option')?.classList.add('selected');
 });
 ['rai_date','rai_dose'].forEach(id => {
   document.getElementById(id).addEventListener('change', updateComputed);
@@ -335,29 +383,36 @@ function compute() {
     scan = addDays(rai, 4);
   }
 
-  const liDietStart = addDays(rai, -30);
+  // 低碘飲食時間（2 週 / 4 週可選）
+  const lowIodineDays = parseInt(document.querySelector('input[name="lowiodine"]:checked')?.value || '28', 10);
+  const liDietStart = addDays(rai, -lowIodineDays);
 
-  const r = { rai, mode, dow, discharge, scan, liDietStart };
+  // 停 Eltroxin yes/no（手動可覆寫模式預設）
+  const stopEltVal = document.querySelector('input[name="stopelt"]:checked')?.value;
+  // 若使用者尚未選，套用模式預設
+  const defaultStop = (mode === 'A' || mode === 'C') ? 'yes' : 'no';
+  const stopElt = stopEltVal || defaultStop;
 
-  if (mode === 'A') {
-    // 不打 Thyrogen → 停 Eltroxin 1 個月（與低碘飲食同步）→ 掃描完才恢復
-    r.stopEltroxin = liDietStart;
-  } else if (mode === 'B') {
+  const r = { rai, mode, dow, discharge, scan, liDietStart, lowIodineDays };
+
+  if (mode === 'B') {
     if (dow !== 5) return {error: '門診打 Thyrogen（B）只能選星期五吃藥（規則 5）'};
     r.thyrogen1 = addDays(rai, -2);   // Wed
     r.thyrogen2 = addDays(rai, -1);   // Thu
     r.admit     = rai;                // Fri 住院 = 吃藥當日
-    // 打 2 支 Thyrogen → 不停 Eltroxin
-  } else if (mode === 'C') {
-    // 住院打 1/2 支 × 2 → 停 Eltroxin 1 週（吃藥前 1 週起）→ 掃描完才恢復
+  } else if (mode === 'C' || mode === 'D') {
     r.admit     = addDays(rai, -1);
     r.thyrogen1 = r.admit;
     r.thyrogen2 = rai;
-    r.stopEltroxin = addDays(rai, -7);
-  } else { // D — 住院打 1 支 × 2，2 支等於完整劑量，不停 Eltroxin
-    r.admit     = addDays(rai, -1);
-    r.thyrogen1 = r.admit;
-    r.thyrogen2 = rai;
+  }
+  // Mode A: no Thyrogen, no admit before RAI day (admit = rai for A)
+  if (mode === 'A') r.admit = rai;
+
+  // 是否停 Eltroxin
+  if (stopElt === 'yes') {
+    // 起：與低碘飲食同步 → 止：掃描完當日
+    r.stopEltroxin = liDietStart;
+    r.resumeEltroxin = scan;
   }
 
   return r;
@@ -374,10 +429,12 @@ function updateComputed() {
     return;
   }
   el.classList.remove('err');
+  const liWeeks = c.lowIodineDays === 14 ? '2 週' : '4 週';
   let html = `<strong>📅 自動推算的日期：</strong><br>`;
   html += `• 吃放射碘：<strong>${fmt(c.rai)}</strong> &nbsp;&nbsp; 出院：<strong>${fmt(c.discharge)}</strong> &nbsp;&nbsp; 掃描：<strong>${fmt(c.scan)}</strong><br>`;
-  html += `• 低碘飲食：<strong>${fmt(c.liDietStart)} ～ ${fmt(c.scan)}</strong>（吃藥前 1 個月 ～ 掃描完）<br>`;
-  if (c.stopEltroxin) html += `• 停 Eltroxin：<strong>${fmt(c.stopEltroxin)}</strong><br>`;
+  html += `• 低碘飲食：<strong>${fmt(c.liDietStart)} ～ ${fmt(c.scan)}</strong>（吃藥前 ${liWeeks} ～ 掃描完）<br>`;
+  if (c.stopEltroxin) html += `• 停 Eltroxin：<strong>${fmt(c.stopEltroxin)} ～ ${fmt(c.scan)}</strong>（掃描完當日恢復）<br>`;
+  else html += `• Eltroxin：<strong>不停</strong>（照常服用）<br>`;
   if (c.thyrogen1) html += `• Thyrogen 第 1 針：<strong>${fmt(c.thyrogen1)}</strong>，第 2 針：<strong>${fmt(c.thyrogen2)}</strong><br>`;
   if (c.admit) html += `• 入院日：<strong>${fmt(c.admit)}</strong>`;
   el.innerHTML = html;
@@ -427,11 +484,9 @@ function render() {
   html += `<li>當日請先到「醫技大樓 - 核醫科一樓櫃台」登記。</li>`;
   html += `<li><strong>${fmtMD(c.liDietStart)} 至 ${fmtMD(c.scan)}</strong> 採 <span class="hl">低碘飲食</span>：禁食來自海中的食物（紫菜、海帶、海苔、醃漬加工食品等）。</li>`;
   if (c.stopEltroxin) {
-    const eltDays = Math.round((c.rai - c.stopEltroxin) / 86400000);
-    const eltLabel = c.mode === 'A' ? '1 個月' : `${eltDays} 天`;
-    html += `<li><strong>${fmtMD(c.stopEltroxin)} 起 ～ 掃描完當日</strong> 停止服用甲狀腺素 (Eltroxin)，共停 <span class="hl">${eltLabel}</span>。</li>`;
+    html += `<li><strong>${fmtMD(c.stopEltroxin)}</strong> 起停止服用甲狀腺素 (Eltroxin)，<strong>掃描完當日（${fmtMD(c.scan)}）</strong>恢復服用。</li>`;
   } else {
-    html += `<li>使用 Thyrogen 共 2 支（${c.mode==='B'?'門診':'住院'}打），<strong>全程不需停 Eltroxin</strong>，照常服用。</li>`;
+    html += `<li>使用 Thyrogen，<strong>全程不需停 Eltroxin</strong>，照常服用。</li>`;
   }
   html += `<li>預先開立住院 3 天需服用的藥物（緩解碘 131 副作用）。</li>`;
   html += `<li>看診當日，診間發給「住院許可證」、「住院通知」${c.mode==='A'?'':'、「領藥處方箋」、「門診注射單」'}。</li>`;
@@ -464,7 +519,7 @@ function render() {
     html += `<li>注射療程：<span class="hl">Thyrogen ${dose_thy} IM</span>（${fmt(c.thyrogen1)}）。</li>`;
     html += `</ol>`;
     html += `<div class="section-title">💉 住院第二天 = 吃放射碘日（${fmt(c.thyrogen2)}）</div><ol>`;
-    html += `<li>上午 9:00 注射 <span class="hl">Thyrogen ${dose_thy} IM</span>。</li>`;
+    html += `<li>上午注射 <span class="hl">Thyrogen ${dose_thy} IM</span>。</li>`;
     html += `<li>注射後 1 小時，病房開立並完成抽血檢驗 TSH、free T4、Thyroglobulin (Tg)、Tg-Ab。</li>`;
     html += `<li>進入輻射防護病房隔離並依醫師指示服用 <span class="hl">碘 131 治療（${dose} mCi）</span>。</li>`;
     html += `</ol>`;
