@@ -501,8 +501,23 @@ function render() {
   }
   html += `</ol>`;
 
-  html += `<div class="signature">內分泌新陳代謝內科 關心您 — 盧子文醫師<br>
-            <span style="font-size:9pt; color:#718096">列印日期：${fmt(new Date())}</span></div>`;
+  html += `<div class="signature" style="margin-top:24px">
+            <table style="width:100%; border-collapse:collapse; font-size:10pt;">
+              <tr>
+                <td style="width:50%; padding:6px 12px; vertical-align:bottom">
+                  主治醫師簽名：
+                  <span style="display:inline-block; border-bottom:1px solid #1a202c; min-width:160px; height:22px;"></span>
+                </td>
+                <td style="width:50%; padding:6px 12px; vertical-align:bottom; text-align:right">
+                  日期：
+                  <span style="display:inline-block; border-bottom:1px solid #1a202c; min-width:140px; height:22px;"></span>
+                </td>
+              </tr>
+            </table>
+            <div style="text-align:right; margin-top:6px; font-size:9pt; color:#718096">
+              內分泌新陳代謝內科 ・ 列印日期：${fmt(new Date())}
+            </div>
+          </div>`;
 
   html += `<div class="footer-note">
             本排程單由系統依規則自動產生：吃藥日 ${fmt(c.rai)} → 出院 ${fmt(c.discharge)} → 掃描 ${fmt(c.scan)}
