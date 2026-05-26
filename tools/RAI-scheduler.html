@@ -288,7 +288,7 @@
   <div class="actions">
     <button class="primary" onclick="render()">產生排程單</button>
     <button class="secondary" onclick="window.print()">🖨 列印 / 存 PDF</button>
-    <button class="secondary" onclick="copyAsHTML()">📋 複製 HTML（給 Word）</button>
+    <button class="secondary" onclick="copyChartNote()">📋 複製病歷排程（英文 EMR plan）</button>
     <button class="secondary" onclick="exportDocx()">📄 下載 Word (.doc)</button>
   </div>
 </div>
@@ -581,12 +581,97 @@ function render() {
   out.innerHTML = html;
 }
 
-// ── Copy preview as HTML to clipboard ────
-function copyAsHTML() {
-  const html = document.getElementById('preview').innerHTML;
-  navigator.clipboard.writeText(html).then(() => {
-    alert('✅ 已複製 HTML 到剪貼簿，可直接貼到 Word');
-  }).catch(err => alert('複製失敗：' + err));
+// ── Copy chart note (English plan, paste into EMR) ────
+function fmtChart(d) {
+  if (!d) return '';
+  const pad = n => String(n).padStart(2, '0');
+  return `${d.getFullYear()}/${pad(d.getMonth()+1)}/${pad(d.getDate())}`;
+}
+function fmtDow(d) {
+  if (!d) return '';
+  const en = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  return en[d.getDay()];
+}
+
+function buildChartNote(c, dose) {
+  const lines = [];
+  // 1. Core RAI order
+  lines.push(`. arrange I-131 ${dose} mCi on ${fmtChart(c.rai)} (${fmtDow(c.rai)})`);
+
+  // 2. Admission
+  if (c.mode === 'B') {
+    lines.push(`. admission on ${fmtChart(c.admit)} (${fmtDow(c.admit)}, same day as RAI; OPD-based thyrogen)`);
+  } else if (c.mode === 'A') {
+    lines.push(`. admission on ${fmtChart(c.admit)} (${fmtDow(c.admit)}, same day as RAI)`);
+  } else {
+    lines.push(`. admission on ${fmtChart(c.admit)} (${fmtDow(c.admit)}, 1 day before RAI for inpatient thyrogen)`);
+  }
+
+  // 3. Thyrogen orders
+  if (c.mode === 'B') {
+    lines.push(`. thyrogen 1 amp IM at OPD injection room on ${fmtChart(c.thyrogen1)} (${fmtDow(c.thyrogen1)}) and ${fmtChart(c.thyrogen2)} (${fmtDow(c.thyrogen2)})`);
+    lines.push(`. instruct patient to bring "領藥處方箋" + "門診注射單" 8:00 AM each day for thyrogen pickup at 啟川 OPD pharmacy window 10`);
+  } else if (c.mode === 'C') {
+    lines.push(`. thyrogen 1/2 amp IM during admission on ${fmtChart(c.thyrogen1)} and ${fmtChart(c.thyrogen2)} (morning of RAI day)`);
+  } else if (c.mode === 'D') {
+    lines.push(`. thyrogen 1 amp IM during admission on ${fmtChart(c.thyrogen1)} and ${fmtChart(c.thyrogen2)} (morning of RAI day)`);
+  } else {
+    lines.push(`. no thyrogen (traditional thyroid hormone withdrawal protocol)`);
+  }
+
+  // 4. Pre-RAI labs
+  const labLine = (c.mode === 'A' || c.mode === 'B')
+    ? `. check TSH, free T4, thyroglobulin (Tg), anti-Tg on ${fmtChart(c.rai)} before I-131 administration`
+    : `. check TSH, free T4, thyroglobulin (Tg), anti-Tg 1 hour after second thyrogen injection (${fmtChart(c.thyrogen2)})`;
+  lines.push(labLine);
+
+  // 5. Low iodine diet
+  const liWeeks = c.lowIodineDays === 14 ? '2 weeks' : '4 weeks';
+  lines.push(`. suggest low iodine diet during ${fmtChart(c.liDietStart)} - ${fmtChart(c.scan)} (${liWeeks} pre-RAI through scan day; avoid seaweed, salted/processed seafood)`);
+
+  // 6. Eltroxin
+  if (c.stopEltroxin) {
+    lines.push(`. hold eltroxin since ${fmtChart(c.stopEltroxin)}, resume on ${fmtChart(c.scan)} (after thyroid scan)`);
+  } else {
+    lines.push(`. keep eltroxin throughout (no need to hold; thyrogen substitutes for endogenous TSH rise)`);
+  }
+
+  // 7. Pre-medication & ancillary care
+  lines.push(`. pre-order 3 days of side-effect medications (anti-emetics, salivary gland protection: lemon candy, etc.) starting ${fmtChart(c.rai)}`);
+
+  // 8. In-hospital care
+  lines.push(`. educate more than 2000 mL water/day during admission to enhance I-131 excretion`);
+  lines.push(`. educate radiation isolation rules in shielded room until discharge`);
+  lines.push(`. discharge planned on ${fmtChart(c.discharge)} (${fmtDow(c.discharge)}); follow home radiation safety guidelines after discharge`);
+
+  // 9. Scan
+  lines.push(`. arrange thyroid whole-body scan on ${fmtChart(c.scan)} (${fmtDow(c.scan)}) at NM department`);
+  lines.push(`. resume normal diet after scan day`);
+
+  // 10. Gene tests (if checked)
+  const genes = [];
+  if (document.getElementById('gene_kras').checked)      genes.push('K-ras (3014435)');
+  if (document.getElementById('gene_kras_plus').checked) genes.push('KRAS+K-ras (3014983)');
+  if (document.getElementById('gene_braf').checked)      genes.push('BRAF V600E (3014438)');
+  if (genes.length > 0) {
+    lines.push(`. arrange gene mutation panel during admission: ${genes.join(', ')}`);
+  }
+
+  // 11. Follow-up
+  lines.push(`. follow up at endocrinology OPD 2 weeks after scan to review results and adjust eltroxin dose if needed`);
+
+  return lines.join('\n');
+}
+
+function copyChartNote() {
+  const c = compute();
+  if (c.error) { alert('❌ ' + c.error); return; }
+  const dose = document.getElementById('rai_dose').value;
+  if (!dose) { alert('請先填放射碘劑量'); return; }
+  const note = buildChartNote(c, dose);
+  navigator.clipboard.writeText(note).then(() => {
+    alert('✅ 已複製病歷排程內容到剪貼簿\n\n預覽：\n\n' + note.substring(0, 500) + (note.length > 500 ? '\n...' : ''));
+  }).catch(err => alert('複製失敗：' + err + '\n\n手動複製：\n' + note));
 }
 
 // ── Export as .doc (Word-compatible HTML wrapper) ──
