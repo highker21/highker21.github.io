@@ -62,6 +62,8 @@
     <div class="card">
       <h2>基本資料 — <span id="pTitle"></span></h2>
       <div class="grid">
+        <div><label>姓名 / 代號</label><input id="b_name" oninput="saveBasic()" onchange="renderAll()"></div>
+        <div><label>病歷號</label><input id="b_mrn" oninput="saveBasic()"></div>
         <div><label>身高 (cm)</label><input id="b_height" oninput="saveBasic()"></div>
         <div><label>性別</label><select id="b_sex" onchange="saveBasic()"><option value="女">女</option><option value="男">男</option></select></div>
         <div><label>年齡</label><input id="b_age" oninput="saveBasic()"></div>
@@ -151,9 +153,12 @@ function delPatient(){
 function selectPatient(id){ cur=id; renderAll(); }
 function saveBasic(){
   const p=P(); if(!p)return;
+  const nm=document.getElementById('b_name').value.trim(); if(nm)p.name=nm;
+  p.mrn=document.getElementById('b_mrn').value;
   p.height=document.getElementById('b_height').value; p.sex=document.getElementById('b_sex').value;
   p.age=document.getElementById('b_age').value; p.target=document.getElementById('b_target').value;
   p.note=document.getElementById('b_note').value; p.advice=document.getElementById('b_advice').value;
+  document.getElementById('pTitle').textContent=p.name+(p.mrn?'（'+p.mrn+'）':'');
   save();
 }
 function buildVisitForm(){
@@ -251,7 +256,8 @@ function renderAll(){
   const p=P();
   document.getElementById('main').style.display=p?'':'none';
   if(!p)return;
-  document.getElementById('pTitle').textContent=p.name;
+  document.getElementById('pTitle').textContent=p.name+(p.mrn?'（'+p.mrn+'）':'');
+  document.getElementById('b_name').value=p.name||''; document.getElementById('b_mrn').value=p.mrn||'';
   document.getElementById('b_height').value=p.height||''; document.getElementById('b_sex').value=p.sex||'女';
   document.getElementById('b_age').value=p.age||''; document.getElementById('b_target').value=p.target||'';
   document.getElementById('b_note').value=p.note||''; document.getElementById('b_advice').value=p.advice||'';
