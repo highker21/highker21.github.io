@@ -217,7 +217,7 @@
     <label class="mode-option" data-mode="A">
       <input type="radio" name="mode" value="A">
       A. 不打 Thyrogen（傳統停 Eltroxin）
-      <span class="desc">停 Eltroxin 與低碘飲食同步起 → 掃描完，讓 TSH 自然升高</span>
+      <span class="desc">吃放射碘前 1 個月停 Eltroxin → 掃描完恢復，讓 TSH 自然升高（與低碘飲食時間分開）</span>
     </label>
     <label class="mode-option" data-mode="B">
       <input type="radio" name="mode" value="B">
@@ -249,17 +249,20 @@
       </div>
     </div>
     <div>
-      <label>停 Eltroxin（吃藥前 → 掃描完）</label>
-      <div style="display:flex; gap:8px;">
-        <label class="mode-option" style="flex:1; padding:6px 10px; font-size:10pt">
-          <input type="radio" name="stopelt" value="yes"> 停 Eltroxin
+      <label>停 Eltroxin（與低碘飲食時間獨立）</label>
+      <div style="display:flex; gap:6px; flex-wrap:wrap;">
+        <label class="mode-option" style="flex:1; min-width:90px; padding:6px 8px; font-size:9.5pt">
+          <input type="radio" name="stopelt" value="1month"> 前 1 個月停<br><span style="font-size:8pt;color:#718096">不打 Thyrogen，停到掃描完</span>
         </label>
-        <label class="mode-option" style="flex:1; padding:6px 10px; font-size:10pt">
-          <input type="radio" name="stopelt" value="no"> 不停 Eltroxin
+        <label class="mode-option" style="flex:1; min-width:90px; padding:6px 8px; font-size:9.5pt">
+          <input type="radio" name="stopelt" value="1week"> 前 1 週停<br><span style="font-size:8pt;color:#718096">停到掃描完</span>
+        </label>
+        <label class="mode-option" style="flex:1; min-width:70px; padding:6px 8px; font-size:9.5pt">
+          <input type="radio" name="stopelt" value="no"> 不停
         </label>
       </div>
       <div style="font-size:8.5pt; color:#718096; margin-top:2px">
-        模式預設：A=停｜B=不停｜C=停｜D=不停（可手動覆寫）
+        模式預設：A（不打 Thyrogen）=前 1 個月停｜B/C/D（打 Thyrogen）=不停（可手動覆寫）
       </div>
     </div>
   </div>
@@ -343,7 +346,7 @@ document.querySelectorAll('.mode-option').forEach(el => {
       inp.checked = true;
       // If this is the Thyrogen mode radio, set default for stop Eltroxin
       if (name === 'mode') {
-        const dflt = (inp.value === 'A' || inp.value === 'C') ? 'yes' : 'no';
+        const dflt = (inp.value === 'A') ? '1month' : 'no';
         document.querySelectorAll('input[name="stopelt"]').forEach(r => {
           r.checked = (r.value === dflt);
           r.closest('.mode-option')?.classList.toggle('selected', r.checked);
@@ -387,10 +390,9 @@ function compute() {
   const lowIodineDays = parseInt(document.querySelector('input[name="lowiodine"]:checked')?.value || '28', 10);
   const liDietStart = addDays(rai, -lowIodineDays);
 
-  // 停 Eltroxin yes/no（手動可覆寫模式預設）
+  // 停 Eltroxin：1month / 1week / no（時間與低碘飲食獨立；手動可覆寫模式預設）
   const stopEltVal = document.querySelector('input[name="stopelt"]:checked')?.value;
-  // 若使用者尚未選，套用模式預設
-  const defaultStop = (mode === 'A' || mode === 'C') ? 'yes' : 'no';
+  const defaultStop = (mode === 'A') ? '1month' : 'no';
   const stopElt = stopEltVal || defaultStop;
 
   const r = { rai, mode, dow, discharge, scan, liDietStart, lowIodineDays };
@@ -408,10 +410,16 @@ function compute() {
   // Mode A: no Thyrogen, no admit before RAI day (admit = rai for A)
   if (mode === 'A') r.admit = rai;
 
-  // 是否停 Eltroxin
-  if (stopElt === 'yes') {
-    // 起：與低碘飲食同步 → 止：掃描完當日
-    r.stopEltroxin = liDietStart;
+  // 停 Eltroxin（時間與低碘飲食獨立計算）
+  r.stopEltScheme = stopElt;
+  if (stopElt === '1month') {
+    // 不打 Thyrogen：吃放射碘前 1 個月停 → 掃描完當日恢復
+    const sm = new Date(rai); sm.setMonth(sm.getMonth() - 1);
+    r.stopEltroxin = sm;
+    r.resumeEltroxin = scan;
+  } else if (stopElt === '1week') {
+    // 吃放射碘前 1 週停 → 掃描完當日恢復
+    r.stopEltroxin = addDays(rai, -7);
     r.resumeEltroxin = scan;
   }
 
@@ -433,8 +441,10 @@ function updateComputed() {
   let html = `<strong>📅 自動推算的日期：</strong><br>`;
   html += `• 吃放射碘：<strong>${fmt(c.rai)}</strong> &nbsp;&nbsp; 出院：<strong>${fmt(c.discharge)}</strong> &nbsp;&nbsp; 掃描：<strong>${fmt(c.scan)}</strong><br>`;
   html += `• 低碘飲食：<strong>${fmt(c.liDietStart)} ～ ${fmt(c.scan)}</strong>（吃藥前 ${liWeeks} ～ 掃描完）<br>`;
-  if (c.stopEltroxin) html += `• 停 Eltroxin：<strong>${fmt(c.stopEltroxin)} ～ ${fmt(c.scan)}</strong>（掃描完當日恢復）<br>`;
-  else html += `• Eltroxin：<strong>不停</strong>（照常服用）<br>`;
+  if (c.stopEltroxin) {
+    const tag = c.stopEltScheme === '1month' ? '吃藥前 1 個月停（不打 Thyrogen）' : '吃藥前 1 週停';
+    html += `• 停 Eltroxin：<strong>${fmt(c.stopEltroxin)} ～ ${fmt(c.scan)}</strong>（${tag}、掃描完當日恢復）<br>`;
+  } else html += `• Eltroxin：<strong>不停</strong>（照常服用）<br>`;
   if (c.thyrogen1) html += `• Thyrogen 第 1 針：<strong>${fmt(c.thyrogen1)}</strong>，第 2 針：<strong>${fmt(c.thyrogen2)}</strong><br>`;
   if (c.admit) html += `• 入院日：<strong>${fmt(c.admit)}</strong>`;
   el.innerHTML = html;
