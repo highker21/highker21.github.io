@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GLP-1 減重針劑量小幫手（Ozempic / Mounjaro）</title>
+<style>
+  :root{ --blue:#1a3b6e; --blue2:#2c5aa0; --bg:#f4f6fa; --card:#fff; --line:#dde3ec; --ink:#1f2733; --muted:#667; --warn:#b54708; --warnbg:#fff7ed; }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,"PingFang TC","Noto Sans TC",sans-serif;background:var(--bg);color:var(--ink);line-height:1.6;font-size:16px}
+  .wrap{max-width:760px;margin:0 auto;padding:16px}
+  h1{font-size:1.25rem;color:var(--blue);margin:.2em 0}
+  h2{font-size:1.05rem;color:var(--blue);border-left:4px solid var(--blue2);padding-left:8px;margin:1.2em 0 .5em}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;margin:12px 0;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+  .tabs{display:flex;gap:8px;margin:8px 0}
+  .tab{flex:1;text-align:center;padding:10px;border-radius:10px;border:1px solid var(--line);background:#fff;cursor:pointer;font-weight:700;color:var(--muted)}
+  .tab.active{background:var(--blue);color:#fff;border-color:var(--blue)}
+  label{display:block;font-size:.9rem;color:var(--muted);margin:.6em 0 .2em}
+  input,select{width:100%;padding:10px;border:1px solid var(--line);border-radius:8px;font-size:1rem;background:#fff}
+  table{width:100%;border-collapse:collapse;margin:.4em 0}
+  th,td{border:1px solid var(--line);padding:8px;text-align:center;font-size:.95rem}
+  th{background:#eef2f8;color:var(--blue)}
+  .big{font-size:1.15rem;font-weight:800;color:var(--blue2)}
+  .clicks{font-size:1.35rem;font-weight:800;color:#0a7d3c}
+  .note{font-size:.86rem;color:var(--muted)}
+  .warn{background:var(--warnbg);border:1px solid #f0c79a;border-radius:10px;padding:12px;color:var(--warn);font-size:.9rem}
+  .hl{background:#e8f0fe;border-radius:6px;padding:1px 6px;font-weight:700}
+  .hide{display:none}
+  .sched td:first-child{text-align:left;font-weight:600}
+  footer{font-size:.8rem;color:var(--muted);text-align:center;margin:18px 0}
+  .pill{display:inline-block;background:#eef2f8;border-radius:20px;padding:2px 10px;font-size:.82rem;color:var(--blue);margin:2px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>💉 GLP-1 減重針劑量小幫手</h1>
+  <p class="note">Ozempic（semaglutide）／Mounjaro（tirzepatide）劑量與「格數」對照、滴定排程查詢。供衛教與自我提醒用，<b>實際劑量請依盧醫師指示</b>。</p>
+
+  <div class="warn" id="topWarn">
+    ⚠️ 這是衛教輔助工具，<b>不是醫療指示</b>。請務必依照盧醫師為你開立的劑量與排程使用；自行調整前先與醫師確認。若出現嚴重噁心嘔吐、腹痛、低血糖（冒冷汗、發抖、頭暈）等不適，請聯絡醫師。孕婦／備孕、有胰臟炎或甲狀腺髓質癌家族史者另請醫師評估。
+  </div>
+
+  <div class="tabs">
+    <div class="tab active" data-m="oz" onclick="setMode('oz')">Ozempic</div>
+    <div class="tab" data-m="mj" onclick="setMode('mj')">Mounjaro</div>
+  </div>
+
+  <!-- ============ OZEMPIC ============ -->
+  <div id="oz">
+    <div class="card">
+      <h2>劑量 ↔ 格數對照（Ozempic 筆）</h2>
+      <table>
+        <tr><th>劑量</th><th>轉幾格</th><th>用途</th></tr>
+        <tr><td class="big">0.25 mg</td><td class="clicks">約 18 格</td><td>起始（適應期）</td></tr>
+        <tr><td class="big">0.5 mg</td><td class="clicks">37 格</td><td>常用維持（減重有效就續用最省）</td></tr>
+        <tr><td class="big">0.75 mg</td><td class="clicks">約 55 格</td><td>0.5 不夠、1mg 副作用太強時的折衷</td></tr>
+        <tr><td class="big">1 mg</td><td class="clicks">74 格</td><td>標準目標劑量</td></tr>
+      </table>
+      <p class="note">原則：1 mg = 74 格，每 0.25 mg ≈ 18.5 格。格數為盧醫師臨床換算，請依醫師指示操作。</p>
+    </div>
+
+    <div class="card">
+      <h2>滴定排程</h2>
+      <p class="note">① 官方標準</p>
+      <table class="sched">
+        <tr><th>期間</th><th>劑量</th><th>格數</th></tr>
+        <tr><td>第 1 個月</td><td>0.25 mg</td><td>約 18 格</td></tr>
+        <tr><td>第 2 個月</td><td>0.5 mg</td><td>37 格</td></tr>
+        <tr><td>第 3 個月起</td><td>1 mg（持續）</td><td>74 格</td></tr>
+      </table>
+      <p class="note" style="margin-top:14px">② 臨床加速法（盧醫師）— 剛好打完 1 支（總劑量 4 mg）</p>
+      <table class="sched">
+        <tr><th>期間</th><th>劑量</th><th>格數</th></tr>
+        <tr><td>第 1～2 週</td><td>0.25 mg</td><td>約 18 格</td></tr>
+        <tr><td>第 3～5 週</td><td>0.5 mg</td><td>37 格</td></tr>
+        <tr><td>第 6～7 週</td><td>1 mg</td><td>74 格</td></tr>
+      </table>
+    </div>
+
+    <div class="card">
+      <h2>我的個人化排程（加速法）</h2>
+      <label>第一針（0.25 mg）施打日期</label>
+      <input type="date" id="ozStart" onchange="ozSchedule()">
+      <div id="ozOut" style="margin-top:10px"></div>
+    </div>
+
+    <div class="card">
+      <h2>減重病人小提醒</h2>
+      <ul style="margin:.3em 0;padding-left:1.2em">
+        <li><b>0.5 mg（37 格）有效就繼續打 0.5 mg</b> 即可，不必硬加到 1 mg，比較省藥省錢。</li>
+        <li>若 <b>1 mg 副作用太強、0.5 mg 又覺得效果不夠</b>，可改打 <span class="hl">0.75 mg（約 55 格）</span> 折衷。</li>
+        <li>劑量調整、是否續打，請與盧醫師討論後再決定。</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ============ MOUNJARO ============ -->
+  <div id="mj" class="hide">
+    <div class="card">
+      <h2>劑量 ↔ 格數對照（Mounjaro 筆，分兩種）</h2>
+      <p class="note">🔵 小劑量筆（一支 20 mg，60 格 = 5 mg）→ 可打 2 次 2.5 mg ＋ 3 次 5 mg</p>
+      <table>
+        <tr><th>劑量</th><th>格數</th></tr>
+        <tr><td class="big">2.5 mg</td><td class="clicks">30 格</td></tr>
+        <tr><td class="big">5 mg</td><td class="clicks">60 格</td></tr>
+      </table>
+      <p class="note" style="margin-top:12px">🟣 大劑量筆（一支 40 mg，60 格 = 10 mg）→ 可打 4 次 7.5 mg ＋ 1 次 10 mg</p>
+      <table>
+        <tr><th>劑量</th><th>格數</th></tr>
+        <tr><td class="big">7.5 mg</td><td class="clicks">45 格</td></tr>
+        <tr><td class="big">10 mg</td><td class="clicks">60 格</td></tr>
+      </table>
+      <p class="note">格數為盧醫師臨床換算（小筆 12 格/mg、大筆 6 格/mg），請依醫師指示操作。</p>
+    </div>
+
+    <div class="card">
+      <h2>滴定排程</h2>
+      <p class="note">① 官方標準</p>
+      <table class="sched">
+        <tr><th>期間</th><th>劑量</th><th>筆 / 格數</th></tr>
+        <tr><td>第 1 個月</td><td>2.5 mg</td><td>小筆 30 格</td></tr>
+        <tr><td>第 2 個月</td><td>5 mg</td><td>小筆 60 格</td></tr>
+        <tr><td>第 3 個月</td><td>7.5 mg</td><td>大筆 45 格</td></tr>
+        <tr><td>第 4 個月起</td><td>10 mg（持續）</td><td>大筆 60 格</td></tr>
+      </table>
+      <p class="note" style="margin-top:14px">② 臨床加速法（盧醫師）— 小劑量筆剛好用完 1 支（2 次 2.5 + 3 次 5 = 20 mg）</p>
+      <table class="sched">
+        <tr><th>期間</th><th>劑量</th><th>筆 / 格數</th></tr>
+        <tr><td>第 1～2 週</td><td>2.5 mg</td><td>小筆 30 格</td></tr>
+        <tr><td>第 3～5 週</td><td>5 mg</td><td>小筆 60 格</td></tr>
+        <tr><td>第 6 週起（換大筆）</td><td>7.5 mg → 10 mg</td><td>大筆 45→60 格</td></tr>
+      </table>
+    </div>
+
+    <div class="card">
+      <h2>我的個人化排程（加速法）</h2>
+      <label>第一針（2.5 mg）施打日期</label>
+      <input type="date" id="mjStart" onchange="mjSchedule()">
+      <div id="mjOut" style="margin-top:10px"></div>
+    </div>
+
+    <div class="card">
+      <h2>小提醒</h2>
+      <ul style="margin:.3em 0;padding-left:1.2em">
+        <li>每階能耐受、仍需加強療效再往上加；以「能達標的最低有效劑量」為原則。</li>
+        <li>副作用太強可停在當前劑量、或回前一階，與盧醫師討論後再決定。</li>
+        <li>小劑量筆走 2.5→5 mg 階段、大劑量筆走 7.5→10 mg 階段；換筆時注意是「小筆 60 格=5mg」還是「大筆 60 格=10mg」，格數相同但劑量差一倍，別搞混。</li>
+      </ul>
+    </div>
+  </div>
+
+  <footer>
+    本工具僅供衛教與自我提醒，非醫療診斷或處方。實際劑量、調整與排程一律以盧醫師指示為準。<br>
+    高雄醫學大學附設高醫岡山醫院 內分泌新陳代謝科
+  </footer>
+</div>
+
+<script>
+function setMode(m){
+  document.getElementById('oz').classList.toggle('hide', m!=='oz');
+  document.getElementById('mj').classList.toggle('hide', m!=='mj');
+  document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active', t.dataset.m===m));
+}
+function addDays(d,n){ const x=new Date(d); x.setDate(x.getDate()+n); return x; }
+function fmt(d){ return `${d.getFullYear()}/${String(d.getMonth()+1).padStart(2,'0')}/${String(d.getDate()).padStart(2,'0')}`; }
+function wd(d){ return ['日','一','二','三','四','五','六'][d.getDay()]; }
+function ozSchedule(){
+  const v=document.getElementById('ozStart').value;
+  const out=document.getElementById('ozOut');
+  if(!v){ out.innerHTML=''; return; }
+  const s=new Date(v+'T00:00:00');
+  // 加速法：每週一針。第1-2週0.25、3-5週0.5、6-7週1mg
+  const plan=[
+    {wk:'第 1～2 週',dose:'0.25 mg',clk:'約 18 格',start:0,weeks:2},
+    {wk:'第 3～5 週',dose:'0.5 mg',clk:'37 格',start:2,weeks:3},
+    {wk:'第 6～7 週',dose:'1 mg',clk:'74 格',start:5,weeks:2},
+  ];
+  let rows='';
+  plan.forEach(p=>{
+    const d0=addDays(s,p.start*7), d1=addDays(s,(p.start+p.weeks)*7-1);
+    rows+=`<tr><td>${p.wk}</td><td>${p.dose}</td><td class="clicks" style="font-size:1rem">${p.clk}</td><td class="note">${fmt(d0)}（${wd(d0)}）～ ${fmt(d1)}（${wd(d1)}）</td></tr>`;
+  });
+  const end=addDays(s,7*7-1);
+  out.innerHTML=`<table class="sched"><tr><th>期間</th><th>劑量</th><th>格數</th><th>日期範圍</th></tr>${rows}</table>
+    <p class="note">每週固定一針。約第 7 週（${fmt(end)}）打完，剛好用完 1 支（總 4 mg）。之後是否續打、用哪個劑量（0.5/0.75/1mg）請與盧醫師討論。</p>`;
+}
+function mjSchedule(){
+  const v=document.getElementById('mjStart').value;
+  const out=document.getElementById('mjOut');
+  if(!v){ out.innerHTML=''; return; }
+  const s=new Date(v+'T00:00:00');
+  const plan=[
+    {wk:'第 1～2 週',dose:'2.5 mg',clk:'小筆 30 格',start:0,weeks:2},
+    {wk:'第 3～5 週',dose:'5 mg',clk:'小筆 60 格',start:2,weeks:3},
+    {wk:'第 6 週起（換大筆）',dose:'7.5 mg',clk:'大筆 45 格',start:5,weeks:1},
+  ];
+  let rows='';
+  plan.forEach(p=>{
+    const d0=addDays(s,p.start*7), d1=addDays(s,(p.start+p.weeks)*7-1);
+    rows+=`<tr><td>${p.wk}</td><td>${p.dose}</td><td class="clicks" style="font-size:1rem">${p.clk}</td><td class="note">${fmt(d0)}（${wd(d0)}）～ ${fmt(d1)}（${wd(d1)}）</td></tr>`;
+  });
+  out.innerHTML=`<table class="sched"><tr><th>期間</th><th>劑量</th><th>筆/格數</th><th>日期範圍</th></tr>${rows}</table>
+    <p class="note">前 5 週用小劑量筆（2 次 2.5 + 3 次 5 mg = 20 mg 剛好用完）；第 6 週起換大劑量筆打 7.5 mg，之後是否加到 10 mg 或維持，請與盧醫師討論。</p>`;
+}
+</script>
+</body>
+</html>
