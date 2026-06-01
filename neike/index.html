@@ -14,6 +14,9 @@ body { margin: 0; padding: 0; font-family: -apple-system, "PingFang TC", "Micros
 header { background: white; border-bottom: 1px solid var(--border); padding: 20px 28px; position: sticky; top: 0; z-index: 10; }
 header h1 { margin: 0; font-size: 22px; }
 header .meta { color: var(--muted); font-size: 14px; margin-top: 4px; }
+.hero { background: #1e3a8a; line-height: 0; }
+.hero svg { display: block; width: 100%; height: auto; max-height: 320px; }
+@media (max-width: 768px) { .hero svg { max-height: 220px; } header h1 { font-size: 18px; } }
 .filters { background: white; padding: 14px 28px; border-bottom: 1px solid var(--border); display: flex; gap: 16px; flex-wrap: wrap; align-items: center; }
 .filters label { font-weight: 500; color: var(--muted); margin-right: 4px; }
 .filters select, .filters input[type=text] { padding: 6px 10px; border: 1px solid var(--border); border-radius: 6px; font-size: 14px; background: white; }
@@ -45,6 +48,115 @@ mark { background: var(--hi-bg); padding: 0 2px; }
 </style>
 </head>
 <body>
+<div class="hero"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1536 432" preserveAspectRatio="xMidYMid slice" role="img" aria-label="內專考古 內分泌新陳代謝 hero banner">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1e3a8a"/>
+      <stop offset="50%" stop-color="#3b82f6"/>
+      <stop offset="100%" stop-color="#dbeafe"/>
+    </linearGradient>
+    <linearGradient id="paper" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#fffbeb"/>
+      <stop offset="100%" stop-color="#fef3c7"/>
+    </linearGradient>
+    <linearGradient id="organ" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#10b981"/>
+      <stop offset="100%" stop-color="#065f46"/>
+    </linearGradient>
+    <filter id="glow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="6" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <pattern id="dotGrid" x="0" y="0" width="32" height="32" patternUnits="userSpaceOnUse">
+      <circle cx="2" cy="2" r="1" fill="#fff" opacity="0.10"/>
+    </pattern>
+  </defs>
+
+  <rect width="1536" height="432" fill="url(#bg)"/>
+  <rect width="1536" height="432" fill="url(#dotGrid)"/>
+
+  <!-- Subtle Chinese characters in background -->
+  <g opacity="0.08" font-family="PingFang TC, Microsoft JhengHei, sans-serif" font-weight="900" fill="#ffffff">
+    <text x="60" y="190" font-size="84">內專考古</text>
+    <text x="60" y="290" font-size="64">內分泌新陳代謝</text>
+    <text x="780" y="380" font-size="48" letter-spacing="6">109 110 111 112 113 114</text>
+  </g>
+
+  <!-- Open textbook on left -->
+  <g transform="translate(120,90)">
+    <path d="M0,160 Q20,140 90,150 L90,30 Q40,15 0,40 Z" fill="url(#paper)" stroke="#92400e" stroke-width="2"/>
+    <path d="M180,160 Q160,140 90,150 L90,30 Q140,15 180,40 Z" fill="url(#paper)" stroke="#92400e" stroke-width="2"/>
+    <path d="M90,30 L90,150" stroke="#92400e" stroke-width="2.5" fill="none"/>
+    <!-- Notes lines on left page -->
+    <g stroke="#1e40af" stroke-width="1.4" opacity="0.6">
+      <line x1="14" y1="55" x2="82" y2="50"/>
+      <line x1="14" y1="72" x2="80" y2="68"/>
+      <line x1="14" y1="89" x2="78" y2="85"/>
+      <line x1="14" y1="106" x2="84" y2="102"/>
+      <line x1="14" y1="123" x2="76" y2="119"/>
+    </g>
+    <!-- Highlighter marks -->
+    <rect x="14" y="58" width="34" height="9" fill="#fbbf24" opacity="0.55" rx="1"/>
+    <rect x="20" y="108" width="40" height="9" fill="#fbbf24" opacity="0.55" rx="1"/>
+    <!-- Hand-written check marks on right page -->
+    <g stroke="#dc2626" stroke-width="2.2" fill="none" opacity="0.85">
+      <path d="M105,55 L112,62 L125,48"/>
+      <path d="M105,80 L112,87 L125,73"/>
+      <path d="M105,105 L112,112 L125,98"/>
+    </g>
+    <g stroke="#1e40af" stroke-width="1.4" opacity="0.6">
+      <line x1="135" y1="58" x2="172" y2="54"/>
+      <line x1="135" y1="83" x2="170" y2="80"/>
+      <line x1="135" y1="108" x2="170" y2="105"/>
+      <line x1="105" y1="130" x2="172" y2="127"/>
+    </g>
+  </g>
+
+  <!-- Right side: 3 endocrine organ icons -->
+  <g transform="translate(880,80)" filter="url(#glow)">
+    <!-- Pituitary (top, small brain-like sphere) -->
+    <g transform="translate(40,30)">
+      <circle cx="0" cy="0" r="36" fill="url(#organ)"/>
+      <circle cx="-10" cy="-8" r="14" fill="#34d399" opacity="0.7"/>
+      <path d="M-25,-5 Q0,-25 25,-5 Q15,15 0,12 Q-15,15 -25,-5 Z" fill="#a7f3d0" opacity="0.6"/>
+      <text x="0" y="55" font-family="PingFang TC, sans-serif" font-size="13" font-weight="600" fill="#fffbeb" text-anchor="middle">腦下垂體</text>
+    </g>
+    <!-- Thyroid (middle, butterfly shape) -->
+    <g transform="translate(240,90)">
+      <path d="M-50,-15 Q-55,-35 -25,-30 Q-15,-15 0,-10 Q15,-15 25,-30 Q55,-35 50,-15 Q55,15 25,30 Q5,20 0,10 Q-5,20 -25,30 Q-55,15 -50,-15 Z"
+            fill="url(#organ)"/>
+      <path d="M-25,-5 Q-10,-5 0,0 Q10,-5 25,-5" stroke="#fffbeb" stroke-width="1.5" fill="none" opacity="0.5"/>
+      <text x="0" y="55" font-family="PingFang TC, sans-serif" font-size="13" font-weight="600" fill="#fffbeb" text-anchor="middle">甲狀腺</text>
+    </g>
+    <!-- Adrenal (bottom, triangular cap shape) -->
+    <g transform="translate(440,30)">
+      <path d="M-35,30 Q-40,-10 0,-25 Q40,-10 35,30 Q15,40 0,32 Q-15,40 -35,30 Z" fill="url(#organ)"/>
+      <ellipse cx="0" cy="-5" rx="20" ry="10" fill="#34d399" opacity="0.6"/>
+      <text x="0" y="55" font-family="PingFang TC, sans-serif" font-size="13" font-weight="600" fill="#fffbeb" text-anchor="middle">腎上腺</text>
+    </g>
+  </g>
+
+  <!-- Foreground title text -->
+  <g font-family="PingFang TC, Microsoft JhengHei, sans-serif">
+    <text x="120" y="320" font-size="48" font-weight="800" fill="#fffbeb" letter-spacing="2">
+      內科專科甄審試題
+    </text>
+    <text x="120" y="362" font-size="22" font-weight="500" fill="#dbeafe" letter-spacing="3">
+      109 – 114 年 · 內分泌新陳代謝專題詳解
+    </text>
+    <text x="120" y="395" font-size="14" font-weight="400" fill="#bfdbfe" letter-spacing="1">
+      992 題 · 271 題內分泌相關 · 年份 / 主題切換 · Gemini + Opus 雙重生成詳解
+    </text>
+  </g>
+
+  <!-- Bottom-right credit chip -->
+  <g transform="translate(1330,400)">
+    <rect x="0" y="0" width="180" height="22" rx="11" fill="#1e3a8a" opacity="0.6"/>
+    <text x="90" y="15" font-family="PingFang TC, sans-serif" font-size="11" font-weight="500" fill="#dbeafe" text-anchor="middle">
+      TSIM 官方公開題庫
+    </text>
+  </g>
+</svg></div>
 <header>
   <h1>內科專科甄審試題 109–114 年 · 內分泌新陳代謝專題</h1>
   <div class="meta">總題數 <strong>997</strong> 題（內分泌相關 <strong id="endo-count">271</strong> 題） · 資料來源 TSIM 官方公開題庫 · 詳解由 Gemini 2.5 Flash 生成</div>
