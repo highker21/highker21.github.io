@@ -239,6 +239,11 @@
       E. 門診打 1 支 + 住院打 1 支（全支）
       <span class="desc">星期三 門診治療室打 1 支；星期四 入院 + 住院打 1 支；星期五住院當天吃藥</span>
     </label>
+    <label class="mode-option" data-mode="F">
+      <input type="radio" name="mode" value="F">
+      F. 門診打 1 支 + 住院打 1 支（RAI 當日同步）
+      <span class="desc">星期一 / 四 門診治療室打 1 支；星期二 / 五 入院 + 住院打 1 支 + 當日吃藥</span>
+    </label>
   </div>
 
   <div class="field-row" style="margin-top:10px; grid-template-columns: 1fr 1fr;">
@@ -267,7 +272,7 @@
         </label>
       </div>
       <div style="font-size:8.5pt; color:#718096; margin-top:2px">
-        模式預設：A（不打 Thyrogen）=前 1 個月停｜B/C/D/E（打 Thyrogen）=不停（可手動覆寫）
+        模式預設：A（不打 Thyrogen）=前 1 個月停｜B/C/D/E/F（打 Thyrogen）=不停（可手動覆寫）
       </div>
     </div>
   </div>
@@ -417,6 +422,11 @@ function compute() {
     r.thyrogen1 = addDays(rai, -2);   // Wed 門診
     r.admit     = addDays(rai, -1);   // Thu 入院
     r.thyrogen2 = r.admit;            // Thu 住院當天打第二針
+  } else if (mode === 'F') {
+    if (dow !== 2 && dow !== 5) return {error: '混合模式（F）只能選星期二或星期五吃藥'};
+    r.thyrogen1 = addDays(rai, -1);   // Mon or Thu 門診
+    r.admit     = rai;                // Tue or Fri 入院 = RAI 當日
+    r.thyrogen2 = rai;                // Tue or Fri 住院當天打第二針
   }
   // Mode A: no Thyrogen, no admit before RAI day (admit = rai for A)
   if (mode === 'A') r.admit = rai;
@@ -482,6 +492,7 @@ function render() {
     case 'C': titleSub = '住院注意事項（住院使用 Thyrogen 1/2 支 × 2）'; break;
     case 'D': titleSub = '住院注意事項（住院使用 Thyrogen 1 支 × 2）'; break;
     case 'E': titleSub = '混合模式注意事項（門診 1 支 + 住院 1 支）'; break;
+    case 'F': titleSub = '混合模式注意事項（門診 1 支 + 住院 1 支，當日吃藥）'; break;
   }
 
   let html = `
@@ -512,9 +523,9 @@ function render() {
   }
   html += `<li>預先開立住院 3 天需服用的藥物（緩解碘 131 副作用）。</li>`;
   // A: 不打 Thyrogen，只發住院文件
-  // B/E: 有門診打針 → 加「領藥處方箋」+「門診注射單」
+  // B/E/F: 有門診打針 → 加「領藥處方箋」+「門診注射單」
   // C/D: 純住院 → 不需門診處方箋
-  const docsExtra = (c.mode === 'B' || c.mode === 'E') ? '、「領藥處方箋」、「門診注射單」' : '';
+  const docsExtra = (c.mode === 'B' || c.mode === 'E' || c.mode === 'F') ? '、「領藥處方箋」、「門診注射單」' : '';
   html += `<li>看診當日，診間發給「住院許可證」、「住院通知」${docsExtra}。</li>`;
   html += `</ol>`;
 
@@ -531,6 +542,22 @@ function render() {
     html += `<li>抽完血後，攜帶「住院許可證」至 B、C 棟一樓「入出院服務中心」辦理住院手續。</li>`;
     html += `<li>至啟川 14EN 內分泌新陳代謝病房報到並進行病房介紹及護理指導。</li>`;
     html += `<li>病房介紹後，進入輻射防護病房隔離並依醫師指示服用 <span class="hl">碘 131 治療（${dose} mCi）</span>。</li>`;
+    html += `</ol>`;
+  }
+
+  // Mode F: 混合（門診 1 支 + 住院 1 支，當日吃藥）
+  if (c.mode === 'F') {
+    html += `<div class="section-title">💉 門診打 Thyrogen 第 1 針（住院前 1 天）</div><ol>`;
+    html += `<li><strong>${fmt(c.thyrogen1)}</strong>（住院前 1 天）<br>
+              上午 8:00 攜帶「領藥處方箋」至啟川大樓一樓「門診藥局針劑領藥 10 號窗口」領 Thyrogen 1 支 → 上午 8:00～9:30 持「門診注射單」至 B、C 棟一樓「門診治療室」注射 <span class="hl">Thyrogen 1 支 IM</span>。</li>`;
+    html += `</ol>`;
+    html += `<div class="section-title">🏥 住院當天 = 吃放射碘日（${fmt(c.rai)}）</div><ol>`;
+    html += `<li>上午 8:00 攜帶檢驗單至「C 棟一樓檢驗室」抽血（TSH、free T4、Tg、Tg-Ab）。</li>`;
+    html += `<li>抽完血後，攜帶「住院許可證」至 B、C 棟一樓「入出院服務中心」辦理住院手續。</li>`;
+    html += `<li>至啟川 14EN 內分泌新陳代謝病房報到並進行病房介紹及護理指導。</li>`;
+    html += `<li>住院開立：「人工合成甲促素」(Thyrogen) 1 支。</li>`;
+    html += `<li>注射 <span class="hl">Thyrogen 1 支 IM</span>（${fmt(c.thyrogen2)} 第 2 針，住院當天）。</li>`;
+    html += `<li>注射後 1 小時，進入輻射防護病房隔離並依醫師指示服用 <span class="hl">碘 131 治療（${dose} mCi）</span>。</li>`;
     html += `</ol>`;
   }
 
@@ -650,6 +677,8 @@ function buildChartNote(c, dose) {
     lines.push(`. admission on ${fmtChart(c.admit)} (${fmtDow(c.admit)}, same day as RAI)`);
   } else if (c.mode === 'E') {
     lines.push(`. admission on ${fmtChart(c.admit)} (${fmtDow(c.admit)}, 1 day before RAI; hybrid OPD + inpatient thyrogen)`);
+  } else if (c.mode === 'F') {
+    lines.push(`. admission on ${fmtChart(c.admit)} (${fmtDow(c.admit)}, same day as RAI; hybrid OPD + inpatient thyrogen)`);
   } else {
     lines.push(`. admission on ${fmtChart(c.admit)} (${fmtDow(c.admit)}, 1 day before RAI for inpatient thyrogen)`);
   }
@@ -665,13 +694,16 @@ function buildChartNote(c, dose) {
   } else if (c.mode === 'E') {
     lines.push(`. thyrogen 1 amp IM at OPD injection room on ${fmtChart(c.thyrogen1)} (${fmtDow(c.thyrogen1)}); patient brings "領藥處方箋" + "門診注射單" to 啟川 OPD pharmacy window 10`);
     lines.push(`. thyrogen 1 amp IM during admission on ${fmtChart(c.thyrogen2)} (${fmtDow(c.thyrogen2)}, admission day, 1 day before RAI)`);
+  } else if (c.mode === 'F') {
+    lines.push(`. thyrogen 1 amp IM at OPD injection room on ${fmtChart(c.thyrogen1)} (${fmtDow(c.thyrogen1)}); patient brings "領藥處方箋" + "門診注射單" to 啟川 OPD pharmacy window 10`);
+    lines.push(`. thyrogen 1 amp IM during admission on ${fmtChart(c.thyrogen2)} (${fmtDow(c.thyrogen2)}, admission day = RAI day; I-131 administered 1 hr after second thyrogen)`);
   } else {
     lines.push(`. no thyrogen (traditional thyroid hormone withdrawal protocol)`);
   }
 
   // 4. Pre-RAI labs
   // A/B/E：抽血在 RAI 當天（E 的第 2 針 24 hr 前已打、TSH peak 在 RAI 當天）
-  // C/D：第 2 針在 RAI 當天打，抽血在打針後 1 hr
+  // C/D/F：第 2 針在 RAI 當天打，抽血在打針後 1 hr (F = 門診打第 1 針隔天住院打第 2 針 + 同日 RAI)
   const labLine = (c.mode === 'A' || c.mode === 'B' || c.mode === 'E')
     ? `. check TSH, free T4, thyroglobulin (Tg), anti-Tg on ${fmtChart(c.rai)} before I-131 administration`
     : `. check TSH, free T4, thyroglobulin (Tg), anti-Tg 1 hour after second thyrogen injection (${fmtChart(c.thyrogen2)})`;
