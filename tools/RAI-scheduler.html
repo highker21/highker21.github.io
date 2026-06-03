@@ -546,18 +546,20 @@ function render() {
   }
 
   // Mode F: 混合（門診 1 支 + 住院 1 支，當日吃藥）
+  // 抽血時機：住院當日第 2 針後 1 小時（與 C/D/E 同邏輯，無清晨抽血）
   if (c.mode === 'F') {
-    html += `<div class="section-title">💉 門診打 Thyrogen 第 1 針（住院前 1 天）</div><ol>`;
+    html += `<div class="section-title">💉 門診打 Thyrogen 第 1 針（住院前 1 天，<strong>不需抽血</strong>）</div><ol>`;
     html += `<li><strong>${fmt(c.thyrogen1)}</strong>（住院前 1 天）<br>
               上午 8:00 攜帶「領藥處方箋」至啟川大樓一樓「門診藥局針劑領藥 10 號窗口」領 Thyrogen 1 支 → 上午 8:00～9:30 持「門診注射單」至 B、C 棟一樓「門診治療室」注射 <span class="hl">Thyrogen 1 支 IM</span>。</li>`;
+    html += `<li>當日不必抽血、不必返診（抽血改在住院當天第 2 針後）。</li>`;
     html += `</ol>`;
     html += `<div class="section-title">🏥 住院當天 = 吃放射碘日（${fmt(c.rai)}）</div><ol>`;
-    html += `<li>上午 8:00 攜帶檢驗單至「C 棟一樓檢驗室」抽血（TSH、free T4、Tg、Tg-Ab）。</li>`;
-    html += `<li>抽完血後，攜帶「住院許可證」至 B、C 棟一樓「入出院服務中心」辦理住院手續。</li>`;
+    html += `<li>請於上午 8:00～9:00 攜帶「住院許可證」至 B、C 棟一樓「入出院服務中心」辦理住院手續，<strong>不另行通知</strong>（住院當天的早上不必抽血）。</li>`;
     html += `<li>至啟川 14EN 內分泌新陳代謝病房報到並進行病房介紹及護理指導。</li>`;
     html += `<li>住院開立：「人工合成甲促素」(Thyrogen) 1 支。</li>`;
     html += `<li>注射 <span class="hl">Thyrogen 1 支 IM</span>（${fmt(c.thyrogen2)} 第 2 針，住院當天）。</li>`;
-    html += `<li>注射後 1 小時，進入輻射防護病房隔離並依醫師指示服用 <span class="hl">碘 131 治療（${dose} mCi）</span>。</li>`;
+    html += `<li>注射後 1 小時，病房開立並完成抽血檢驗 TSH、free T4、Thyroglobulin (Tg)、Tg-Ab。</li>`;
+    html += `<li>抽血後，進入輻射防護病房隔離並依醫師指示服用 <span class="hl">碘 131 治療（${dose} mCi）</span>。</li>`;
     html += `</ol>`;
   }
 
