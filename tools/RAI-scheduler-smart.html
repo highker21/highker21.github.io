@@ -1,0 +1,986 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<title>甲狀腺癌碘 131 治療排程單產生器</title>
+<style>
+  @page { size: A4; margin: 14mm 16mm; }
+  * { box-sizing: border-box; }
+  body {
+    font-family: "PingFang TC", "Microsoft JhengHei", "Helvetica Neue", sans-serif;
+    margin: 0;
+    background: #f0f4f8;
+    color: #1a202c;
+    line-height: 1.55;
+  }
+  .container { max-width: 900px; margin: 0 auto; padding: 16px; }
+
+  /* ── Form panel ─────────────────────── */
+  .form-panel {
+    background: white;
+    padding: 18px 24px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,.08);
+    margin-bottom: 16px;
+  }
+  .form-panel h2 {
+    margin: 0 0 14px;
+    color: #1a365d;
+    border-bottom: 2px solid #1a365d;
+    padding-bottom: 6px;
+    font-size: 17pt;
+  }
+  .field-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px;
+    margin-bottom: 10px;
+  }
+  label {
+    display: block;
+    font-size: 9.5pt;
+    color: #4a5568;
+    margin-bottom: 3px;
+  }
+  input[type=text], input[type=number], input[type=date], select {
+    width: 100%;
+    padding: 7px 10px;
+    border: 1.5px solid #cbd5e0;
+    border-radius: 5px;
+    font-size: 11pt;
+    font-family: inherit;
+  }
+  input:focus, select:focus { outline: none; border-color: #2c5282; }
+  .mode-group {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin: 8px 0;
+  }
+  .mode-option {
+    border: 2px solid #cbd5e0;
+    border-radius: 6px;
+    padding: 8px 12px;
+    cursor: pointer;
+    font-size: 10pt;
+    user-select: none;
+    background: #f7fafc;
+  }
+  .mode-option:hover { border-color: #2c5282; background: #ebf4ff; }
+  .mode-option input { display: none; }
+  .mode-option.selected { border-color: #2c5282; background: #ebf4ff; font-weight: bold; }
+  .mode-option .desc { display: block; font-weight: normal; color: #718096; font-size: 9pt; margin-top: 2px; }
+
+  .computed-dates {
+    background: #ebf4ff;
+    border-left: 4px solid #2c5282;
+    padding: 10px 14px;
+    margin: 12px 0;
+    border-radius: 4px;
+    font-size: 10pt;
+  }
+  .computed-dates strong { color: #1a365d; }
+  .err { background: #fff5f5; border-left-color: #c53030; color: #742a2a; }
+
+  .actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 12px;
+  }
+  button {
+    padding: 9px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 11pt;
+    cursor: pointer;
+    font-family: inherit;
+    font-weight: 600;
+  }
+  button.primary { background: #2c5282; color: white; }
+  button.primary:hover { background: #2a4365; }
+  button.secondary { background: #cbd5e0; color: #1a202c; }
+  button.secondary:hover { background: #a0aec0; }
+
+  /* ── Preview ─────────────────────────── */
+  .preview-panel {
+    background: white;
+    padding: 22px 26px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,.08);
+    min-height: 200px;
+  }
+  .preview-panel h1 {
+    text-align: center;
+    font-size: 14pt;
+    color: #1a365d;
+    margin: 0 0 6px;
+  }
+  .preview-panel h2 {
+    text-align: center;
+    font-size: 12.5pt;
+    margin: 0 0 14px;
+    color: #2c5282;
+  }
+  .preview-panel .info-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 8px 0 14px;
+    font-size: 10.5pt;
+  }
+  .preview-panel .info-table td {
+    border: 1px solid #4a5568;
+    padding: 5px 10px;
+  }
+  .preview-panel .dose-box {
+    background: #fff5e6;
+    border: 2px solid #c05621;
+    padding: 8px 14px;
+    margin: 10px auto;
+    text-align: center;
+    font-weight: bold;
+    font-size: 12pt;
+    width: fit-content;
+    border-radius: 4px;
+  }
+  .preview-panel ol, .preview-panel ul {
+    margin: 6px 0 10px 22px;
+    font-size: 10.5pt;
+  }
+  .preview-panel li { margin-bottom: 4px; }
+  .preview-panel .section-title {
+    background: #ebf4ff;
+    color: #1a365d;
+    padding: 5px 10px;
+    margin: 12px 0 6px;
+    font-weight: bold;
+    font-size: 11pt;
+    border-left: 3px solid #2c5282;
+  }
+  .preview-panel .signature {
+    margin-top: 18px;
+    text-align: right;
+    font-size: 10pt;
+    color: #4a5568;
+  }
+  .hl { color: #c05621; font-weight: bold; }
+  .footer-note {
+    margin-top: 14px;
+    padding-top: 8px;
+    border-top: 1px solid #cbd5e0;
+    font-size: 9pt;
+    color: #718096;
+    text-align: center;
+  }
+
+  /* ── Print mode ──────────────────────── */
+  @media print {
+    body { background: white; }
+    .form-panel, .actions, .footer-instructions { display: none !important; }
+    .container { padding: 0; max-width: none; }
+    .preview-panel { box-shadow: none; padding: 0; }
+  }
+  /* SMART on FHIR banner */
+  .smart-banner { background: linear-gradient(135deg, #2563eb 0%, #1e3a8a 100%);
+                  color: white; padding: 14px 18px; border-radius: 8px; margin-bottom: 16px;
+                  font-size: 14px; box-shadow: 0 2px 8px rgba(37,99,235,0.2); }
+  .smart-banner.connected { background: linear-gradient(135deg, #059669 0%, #065f46 100%); }
+  .smart-banner.error { background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%); }
+  .smart-banner h3 { margin: 0 0 4px; font-size: 15px; font-weight: 600; }
+  .smart-banner .small { font-size: 12.5px; opacity: 0.92; }
+  .smart-banner a { color: #fef9c3; text-decoration: underline; }
+  .smart-banner button { background: rgba(255,255,255,0.18); color: white;
+                          border: 1px solid rgba(255,255,255,0.35); padding: 4px 12px;
+                          border-radius: 6px; font-size: 12.5px; cursor: pointer; margin-left: 8px; }
+  .smart-banner button:hover { background: rgba(255,255,255,0.3); }
+  .fhir-lab-box { background: #f0fdf4; border-left: 3px solid #16a34a;
+                  padding: 8px 12px; margin: 8px 0; border-radius: 6px; font-size: 13px; }
+  .fhir-lab-box .lab-item { display: inline-block; margin-right: 14px; }
+  .fhir-lab-box .lab-value { font-weight: 700; color: #166534; }
+</style>
+</head>
+<body>
+<div class="container">
+
+<div id="smart-banner" class="smart-banner no-print">
+  <h3>🚀 SMART on FHIR 模式（v1 prototype）</h3>
+  <div class="small">
+    此版本可從 EHR 啟動、自動帶入病人資料。
+    <span id="smart-status">⏳ 初始化中⋯</span>
+    <button onclick="launchSmartSandbox()">🧪 SMART 沙盒測試</button>
+    <button onclick="useStandaloneMode()">✋ 手動輸入</button>
+  </div>
+</div>
+
+<div id="fhir-labs" class="fhir-lab-box no-print" style="display:none">
+  <strong>🧪 自動帶入的最近檢驗</strong>：
+  <span id="lab-list"></span>
+</div>
+
+<div class="form-panel no-print">
+  <h2>🏥 甲狀腺癌碘 131 (RAI) 治療排程單產生器 <span style="font-size:12px;color:#64748b;font-weight:400">v1 SMART</span></h2>
+
+  <div class="field-row">
+    <div><label>姓名</label><input id="patient_name" type="text" placeholder="王小明"></div>
+    <div><label>病歷號</label><input id="patient_id" type="text" placeholder="1234567"></div>
+    <div><label>年齡</label><input id="patient_age" type="number" placeholder="55" min="0" max="120"></div>
+    <div>
+      <label>性別</label>
+      <select id="patient_sex">
+        <option value="男">男</option>
+        <option value="女">女</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="field-row">
+    <div>
+      <label>放射碘劑量 (mCi) <span style="color:#c53030">*</span></label>
+      <input id="rai_dose" type="number" placeholder="例：30 / 100 / 150" min="1" step="1" required>
+    </div>
+    <div>
+      <label>預計吃放射碘日期（必須是 Tue 或 Fri） <span style="color:#c53030">*</span></label>
+      <input id="rai_date" type="date" required>
+    </div>
+  </div>
+
+  <label style="margin-top:8px">Thyrogen 模式 <span style="color:#c53030">*</span></label>
+  <div class="mode-group">
+    <label class="mode-option" data-mode="A">
+      <input type="radio" name="mode" value="A">
+      A. 不打 Thyrogen（傳統停 Eltroxin）
+      <span class="desc">吃放射碘前 1 個月停 Eltroxin → 掃描完恢復，讓 TSH 自然升高（與低碘飲食時間分開）</span>
+    </label>
+    <label class="mode-option" data-mode="B">
+      <input type="radio" name="mode" value="B">
+      B. 門診打 Thyrogen × 2（健保專案，1 支）
+      <span class="desc">星期三、四 門診治療室各打 1 支，星期五住院當天吃藥</span>
+    </label>
+    <label class="mode-option" data-mode="C">
+      <input type="radio" name="mode" value="C">
+      C. 住院打 Thyrogen × 2（半支）
+      <span class="desc">提前 1 天入院，住院當天 + 第二天 各打 1/2 支</span>
+    </label>
+    <label class="mode-option" data-mode="D">
+      <input type="radio" name="mode" value="D">
+      D. 住院打 Thyrogen × 2（全支）
+      <span class="desc">提前 1 天入院，住院當天 + 第二天 各打 1 支</span>
+    </label>
+    <label class="mode-option" data-mode="E">
+      <input type="radio" name="mode" value="E">
+      E. 門診打 1 支 + 住院打 1 支（全支）
+      <span class="desc">星期三 門診治療室打 1 支；星期四 入院 + 住院打 1 支；星期五住院當天吃藥</span>
+    </label>
+    <label class="mode-option" data-mode="F">
+      <input type="radio" name="mode" value="F">
+      F. 門診打 1 支 + 住院打 1 支（RAI 當日同步）
+      <span class="desc">星期一 / 四 門診治療室打 1 支；星期二 / 五 入院 + 住院打 1 支 + 當日吃藥</span>
+    </label>
+  </div>
+
+  <div class="field-row" style="margin-top:10px; grid-template-columns: 1fr 1fr;">
+    <div>
+      <label>低碘飲食時間（吃藥前）</label>
+      <div style="display:flex; gap:8px;">
+        <label class="mode-option" style="flex:1; padding:6px 10px; font-size:10pt">
+          <input type="radio" name="lowiodine" value="14"> 2 週
+        </label>
+        <label class="mode-option" style="flex:1; padding:6px 10px; font-size:10pt">
+          <input type="radio" name="lowiodine" value="28" checked> 4 週（預設）
+        </label>
+      </div>
+    </div>
+    <div>
+      <label>停 Eltroxin（與低碘飲食時間獨立）</label>
+      <div style="display:flex; gap:6px; flex-wrap:wrap;">
+        <label class="mode-option" style="flex:1; min-width:90px; padding:6px 8px; font-size:9.5pt">
+          <input type="radio" name="stopelt" value="1month"> 前 1 個月停<br><span style="font-size:8pt;color:#718096">不打 Thyrogen，停到掃描完</span>
+        </label>
+        <label class="mode-option" style="flex:1; min-width:90px; padding:6px 8px; font-size:9.5pt">
+          <input type="radio" name="stopelt" value="1week"> 前 1 週停<br><span style="font-size:8pt;color:#718096">停到掃描完</span>
+        </label>
+        <label class="mode-option" style="flex:1; min-width:70px; padding:6px 8px; font-size:9.5pt">
+          <input type="radio" name="stopelt" value="no"> 不停
+        </label>
+      </div>
+      <div style="font-size:8.5pt; color:#718096; margin-top:2px">
+        模式預設：A（不打 Thyrogen）=前 1 個月停｜B/C/D/E/F（打 Thyrogen）=不停（可手動覆寫）
+      </div>
+    </div>
+  </div>
+
+  <label style="margin-top:8px">基因突變篩檢（住院期間，可複選）</label>
+  <div class="mode-group" style="grid-template-columns: 1fr 1fr 1fr;">
+    <label class="mode-option" style="padding:6px 10px; font-size:9.5pt">
+      <input type="checkbox" id="gene_kras" style="display:inline-block; vertical-align:middle; margin-right:6px">
+      K-ras 基因突變分析
+      <span class="desc">代碼 3014435</span>
+    </label>
+    <label class="mode-option" style="padding:6px 10px; font-size:9.5pt">
+      <input type="checkbox" id="gene_kras_plus" style="display:inline-block; vertical-align:middle; margin-right:6px">
+      KRAS+K-ras 基因突變分析
+      <span class="desc">代碼 3014983</span>
+    </label>
+    <label class="mode-option" style="padding:6px 10px; font-size:9.5pt">
+      <input type="checkbox" id="gene_braf" style="display:inline-block; vertical-align:middle; margin-right:6px">
+      BRAF V600E
+      <span class="desc">代碼 3014438</span>
+    </label>
+  </div>
+
+  <div id="computed" class="computed-dates" style="display:none"></div>
+
+  <div class="actions">
+    <button class="primary" onclick="render()">產生排程單</button>
+    <button class="secondary" onclick="window.print()">🖨 列印 / 存 PDF</button>
+    <button class="secondary" onclick="copyChartNote()">📋 複製病歷排程（英文 EMR plan）</button>
+    <button class="secondary" onclick="exportDocx()">📄 下載 Word (.doc)</button>
+  </div>
+</div>
+
+<div class="preview-panel" id="preview">
+  <p style="text-align:center; color:#718096; padding:30px">
+    ← 在上方填寫病人資訊 + 劑量 + 日期 + Thyrogen 模式，按「產生排程單」
+  </p>
+</div>
+
+<div class="footer-instructions" style="text-align:center; margin-top:14px; font-size:9.5pt; color:#718096">
+  💡 規則：吃放射碘必須 Tue 或 Fri • Tue 吃 → Thu 出院 → 隔週一掃描 • Fri 吃 → Mon 出院 → 隔天 Tue 掃描 • 吃前 1 個月開始低碘飲食
+  <div style="margin-top:6px; font-size:8.5pt; color:#a0aec0">工具版本：2026-05-27</div>
+</div>
+
+</div>
+
+<script>
+// ── Date utility ─────────────────────────
+const DOW_NAMES = ['日','一','二','三','四','五','六'];
+
+function pd(s) { // "2026-05-12" → Date (treat as local midnight)
+  const [y,m,d] = s.split('-').map(Number);
+  return new Date(y, m-1, d);
+}
+function fmt(d) {
+  if (!d) return '';
+  const pad = n => String(n).padStart(2,'0');
+  return `${d.getFullYear()}/${pad(d.getMonth()+1)}/${pad(d.getDate())}（星期${DOW_NAMES[d.getDay()]}）`;
+}
+function fmtMD(d) {
+  if (!d) return '';
+  return `${d.getMonth()+1}月${d.getDate()}日`;
+}
+function addDays(d, n) {
+  const r = new Date(d.getTime());
+  r.setDate(r.getDate()+n);
+  return r;
+}
+
+// ── Mode selection UI ────────────────────
+document.querySelectorAll('.mode-option').forEach(el => {
+  el.addEventListener('click', (e) => {
+    const inp = el.querySelector('input');
+    if (inp.type === 'checkbox') return; // checkboxes use their own native toggle
+    if (inp.type === 'radio') {
+      // For mode radio: toggle "selected" only among siblings of same name
+      const name = inp.name;
+      document.querySelectorAll(`input[name="${name}"]`).forEach(r => {
+        r.closest('.mode-option')?.classList.remove('selected');
+      });
+      el.classList.add('selected');
+      inp.checked = true;
+      // If this is the Thyrogen mode radio, set default for stop Eltroxin
+      if (name === 'mode') {
+        const dflt = (inp.value === 'A') ? '1month' : 'no';
+        document.querySelectorAll('input[name="stopelt"]').forEach(r => {
+          r.checked = (r.value === dflt);
+          r.closest('.mode-option')?.classList.toggle('selected', r.checked);
+        });
+      }
+      updateComputed();
+    }
+  });
+});
+// Initialize default-selected radios visually
+document.querySelectorAll('input[type=radio]:checked').forEach(r => {
+  r.closest('.mode-option')?.classList.add('selected');
+});
+['rai_date','rai_dose'].forEach(id => {
+  document.getElementById(id).addEventListener('change', updateComputed);
+});
+
+// ── Compute all derived dates ────────────
+function compute() {
+  const raiDateStr = document.getElementById('rai_date').value;
+  const mode = document.querySelector('input[name=mode]:checked')?.value;
+  if (!raiDateStr) return {error: '請選擇吃放射碘日期'};
+  if (!mode) return {error: '請選擇 Thyrogen 模式'};
+
+  const rai = pd(raiDateStr);
+  const dow = rai.getDay();
+  if (dow !== 2 && dow !== 5) {
+    return {error: `吃藥日必須是 Tue 或 Fri，您選的是「星期${DOW_NAMES[dow]}」`};
+  }
+
+  let discharge, scan;
+  if (dow === 2) {        // Tue 吃 → Thu 出院 → 隔週一掃描
+    discharge = addDays(rai, 2);
+    scan = addDays(rai, 6);
+  } else {                 // Fri 吃 → Mon 出院 → 隔天 Tue 掃描
+    discharge = addDays(rai, 3);
+    scan = addDays(rai, 4);
+  }
+
+  // 低碘飲食時間（2 週 / 4 週可選）
+  const lowIodineDays = parseInt(document.querySelector('input[name="lowiodine"]:checked')?.value || '28', 10);
+  const liDietStart = addDays(rai, -lowIodineDays);
+
+  // 停 Eltroxin：1month / 1week / no（時間與低碘飲食獨立；手動可覆寫模式預設）
+  const stopEltVal = document.querySelector('input[name="stopelt"]:checked')?.value;
+  const defaultStop = (mode === 'A') ? '1month' : 'no';
+  const stopElt = stopEltVal || defaultStop;
+
+  const r = { rai, mode, dow, discharge, scan, liDietStart, lowIodineDays };
+
+  if (mode === 'B') {
+    if (dow !== 5) return {error: '門診打 Thyrogen（B）只能選星期五吃藥（規則 5）'};
+    r.thyrogen1 = addDays(rai, -2);   // Wed OPD
+    r.thyrogen2 = addDays(rai, -1);   // Thu OPD
+    r.admit     = rai;                // Fri 住院 = 吃藥當日
+  } else if (mode === 'C' || mode === 'D') {
+    r.admit     = addDays(rai, -1);
+    r.thyrogen1 = r.admit;            // 住院當天
+    r.thyrogen2 = rai;                // RAI 當天
+  } else if (mode === 'E') {
+    if (dow !== 5) return {error: '混合模式（E）只能選星期五吃藥（規則 5）'};
+    r.thyrogen1 = addDays(rai, -2);   // Wed 門診
+    r.admit     = addDays(rai, -1);   // Thu 入院
+    r.thyrogen2 = r.admit;            // Thu 住院當天打第二針
+  } else if (mode === 'F') {
+    if (dow !== 2 && dow !== 5) return {error: '混合模式（F）只能選星期二或星期五吃藥'};
+    r.thyrogen1 = addDays(rai, -1);   // Mon or Thu 門診
+    r.admit     = rai;                // Tue or Fri 入院 = RAI 當日
+    r.thyrogen2 = rai;                // Tue or Fri 住院當天打第二針
+  }
+  // Mode A: no Thyrogen, no admit before RAI day (admit = rai for A)
+  if (mode === 'A') r.admit = rai;
+
+  // 停 Eltroxin（時間與低碘飲食獨立計算）
+  r.stopEltScheme = stopElt;
+  if (stopElt === '1month') {
+    // 不打 Thyrogen：吃放射碘前 1 個月停 → 掃描完當日恢復
+    const sm = new Date(rai); sm.setMonth(sm.getMonth() - 1);
+    r.stopEltroxin = sm;
+    r.resumeEltroxin = scan;
+  } else if (stopElt === '1week') {
+    // 吃放射碘前 1 週停 → 掃描完當日恢復
+    r.stopEltroxin = addDays(rai, -7);
+    r.resumeEltroxin = scan;
+  }
+
+  return r;
+}
+
+function updateComputed() {
+  const c = compute();
+  const el = document.getElementById('computed');
+  if (!c || (!c.rai && !c.error)) { el.style.display='none'; return; }
+  el.style.display = 'block';
+  if (c.error) {
+    el.classList.add('err');
+    el.innerHTML = `❌ ${c.error}`;
+    return;
+  }
+  el.classList.remove('err');
+  const liWeeks = c.lowIodineDays === 14 ? '2 週' : '4 週';
+  let html = `<strong>📅 自動推算的日期：</strong><br>`;
+  html += `• 吃放射碘：<strong>${fmt(c.rai)}</strong> &nbsp;&nbsp; 出院：<strong>${fmt(c.discharge)}</strong> &nbsp;&nbsp; 掃描：<strong>${fmt(c.scan)}</strong><br>`;
+  html += `• 低碘飲食：<strong>${fmt(c.liDietStart)} ～ ${fmt(c.scan)}</strong>（吃藥前 ${liWeeks} ～ 掃描完）<br>`;
+  if (c.stopEltroxin) {
+    const tag = c.stopEltScheme === '1month' ? '吃藥前 1 個月停（不打 Thyrogen）' : '吃藥前 1 週停';
+    html += `• 停 Eltroxin：<strong>${fmt(c.stopEltroxin)} ～ ${fmt(c.scan)}</strong>（${tag}、掃描完當日恢復）<br>`;
+  } else html += `• Eltroxin：<strong>不停</strong>（照常服用）<br>`;
+  if (c.thyrogen1) html += `• Thyrogen 第 1 針：<strong>${fmt(c.thyrogen1)}</strong>，第 2 針：<strong>${fmt(c.thyrogen2)}</strong><br>`;
+  if (c.admit) html += `• 入院日：<strong>${fmt(c.admit)}</strong>`;
+  el.innerHTML = html;
+}
+
+// ── Render full schedule sheet ───────────
+function render() {
+  const c = compute();
+  const out = document.getElementById('preview');
+  if (c.error) {
+    out.innerHTML = `<p style="color:#c53030; text-align:center; padding:20px">❌ ${c.error}</p>`;
+    return;
+  }
+  const name = document.getElementById('patient_name').value || '';
+  const id = document.getElementById('patient_id').value || '';
+  const age = document.getElementById('patient_age').value || '';
+  const sex = document.getElementById('patient_sex').value || '';
+  const dose = document.getElementById('rai_dose').value || '';
+
+  let titleSub;
+  switch(c.mode) {
+    case 'A': titleSub = '住院注意事項（傳統停 Eltroxin，未使用 Thyrogen）'; break;
+    case 'B': titleSub = '門診注意事項（健保專案 Thyrogen 1 支 × 2）'; break;
+    case 'C': titleSub = '住院注意事項（住院使用 Thyrogen 1/2 支 × 2）'; break;
+    case 'D': titleSub = '住院注意事項（住院使用 Thyrogen 1 支 × 2）'; break;
+    case 'E': titleSub = '混合模式注意事項（門診 1 支 + 住院 1 支）'; break;
+    case 'F': titleSub = '混合模式注意事項（門診 1 支 + 住院 1 支，當日吃藥）'; break;
+  }
+
+  let html = `
+    <h1>高雄醫學大學附設中和紀念醫院</h1>
+    <h2>甲狀腺癌「碘 131 輻射治療」${titleSub}</h2>
+    <p style="text-align:center; font-size:9.5pt; color:#4a5568; margin:0 0 8px">內分泌新陳代謝內科制訂</p>
+
+    <table class="info-table">
+      <tr>
+        <td style="width:22%"><strong>姓名：</strong>${name}</td>
+        <td style="width:22%"><strong>年齡：</strong>${age} 歲</td>
+        <td style="width:22%"><strong>性別：</strong>${sex}</td>
+        <td><strong>病歷號碼：</strong>${id}</td>
+      </tr>
+    </table>
+
+    <div class="dose-box">碘 131 治療劑量：<span class="hl">${dose} mCi</span></div>
+  `;
+
+  // Common section: 看診當日 / 低碘 / 停 Eltroxin
+  html += `<div class="section-title">📋 治療前準備</div><ol>`;
+  html += `<li>當日請先到「醫技大樓 - 核醫科一樓櫃台」登記。</li>`;
+  html += `<li><strong>${fmtMD(c.liDietStart)} 至 ${fmtMD(c.scan)}</strong> 採 <span class="hl">低碘飲食</span>：禁食來自海中的食物（紫菜、海帶、海苔、醃漬加工食品等）。</li>`;
+  if (c.stopEltroxin) {
+    html += `<li><strong>${fmtMD(c.stopEltroxin)}</strong> 起停止服用甲狀腺素 (Eltroxin)，<strong>掃描完當日（${fmtMD(c.scan)}）</strong>恢復服用。</li>`;
+  } else {
+    html += `<li>使用 Thyrogen，<strong>全程不需停 Eltroxin</strong>，照常服用。</li>`;
+  }
+  html += `<li>預先開立住院 3 天需服用的藥物（緩解碘 131 副作用）。</li>`;
+  // A: 不打 Thyrogen，只發住院文件
+  // B/E/F: 有門診打針 → 加「領藥處方箋」+「門診注射單」
+  // C/D: 純住院 → 不需門診處方箋
+  const docsExtra = (c.mode === 'B' || c.mode === 'E' || c.mode === 'F') ? '、「領藥處方箋」、「門診注射單」' : '';
+  html += `<li>看診當日，診間發給「住院許可證」、「住院通知」${docsExtra}。</li>`;
+  html += `</ol>`;
+
+  // Mode B: 門診打 Thyrogen × 2
+  if (c.mode === 'B') {
+    html += `<div class="section-title">💉 門診打 Thyrogen（住院前 2 天 + 住院前 1 天，各 1 支）</div><ol>`;
+    html += `<li><strong>${fmt(c.thyrogen1)}</strong>（住院前 2 天）<br>
+              上午 8:00 攜帶「領藥處方箋」至啟川大樓一樓「門診藥局針劑領藥 10 號窗口」領 Thyrogen 1 支 → 上午 8:00～9:30 持「門診注射單」至 B、C 棟一樓「門診治療室」注射 <span class="hl">Thyrogen 1 支 IM</span>。</li>`;
+    html += `<li><strong>${fmt(c.thyrogen2)}</strong>（住院前 1 天）<br>
+              上午 8:00 領 Thyrogen 1 支 → 上午 8:00～9:30 注射 <span class="hl">Thyrogen 1 支 IM</span>。</li>`;
+    html += `</ol>`;
+    html += `<div class="section-title">🏥 住院當天 = 吃放射碘日（${fmt(c.admit)}）</div><ol>`;
+    html += `<li>上午 8:00 攜帶檢驗單至「C 棟一樓檢驗室」抽血（TSH、free T4、Tg、Tg-Ab）。</li>`;
+    html += `<li>抽完血後，攜帶「住院許可證」至 B、C 棟一樓「入出院服務中心」辦理住院手續。</li>`;
+    html += `<li>至啟川 14EN 內分泌新陳代謝病房報到並進行病房介紹及護理指導。</li>`;
+    html += `<li>病房介紹後，進入輻射防護病房隔離並依醫師指示服用 <span class="hl">碘 131 治療（${dose} mCi）</span>。</li>`;
+    html += `</ol>`;
+  }
+
+  // Mode F: 混合（門診 1 支 + 住院 1 支，當日吃藥）
+  if (c.mode === 'F') {
+    html += `<div class="section-title">💉 門診打 Thyrogen 第 1 針（住院前 1 天）</div><ol>`;
+    html += `<li><strong>${fmt(c.thyrogen1)}</strong>（住院前 1 天）<br>
+              上午 8:00 攜帶「領藥處方箋」至啟川大樓一樓「門診藥局針劑領藥 10 號窗口」領 Thyrogen 1 支 → 上午 8:00～9:30 持「門診注射單」至 B、C 棟一樓「門診治療室」注射 <span class="hl">Thyrogen 1 支 IM</span>。</li>`;
+    html += `</ol>`;
+    html += `<div class="section-title">🏥 住院當天 = 吃放射碘日（${fmt(c.rai)}）</div><ol>`;
+    html += `<li>上午 8:00 攜帶檢驗單至「C 棟一樓檢驗室」抽血（TSH、free T4、Tg、Tg-Ab）。</li>`;
+    html += `<li>抽完血後，攜帶「住院許可證」至 B、C 棟一樓「入出院服務中心」辦理住院手續。</li>`;
+    html += `<li>至啟川 14EN 內分泌新陳代謝病房報到並進行病房介紹及護理指導。</li>`;
+    html += `<li>住院開立：「人工合成甲促素」(Thyrogen) 1 支。</li>`;
+    html += `<li>注射 <span class="hl">Thyrogen 1 支 IM</span>（${fmt(c.thyrogen2)} 第 2 針，住院當天）。</li>`;
+    html += `<li>注射後 1 小時，進入輻射防護病房隔離並依醫師指示服用 <span class="hl">碘 131 治療（${dose} mCi）</span>。</li>`;
+    html += `</ol>`;
+  }
+
+  // Mode E: 混合（門診 1 支 + 住院 1 支，抽血在住院第 2 針後 1 小時）
+  if (c.mode === 'E') {
+    html += `<div class="section-title">💉 門診打 Thyrogen 第 1 針（住院前 2 天，<strong>不需抽血</strong>）</div><ol>`;
+    html += `<li><strong>${fmt(c.thyrogen1)}</strong>（住院前 2 天）<br>
+              上午 8:00 攜帶「領藥處方箋」至啟川大樓一樓「門診藥局針劑領藥 10 號窗口」領 Thyrogen 1 支 → 上午 8:00～9:30 持「門診注射單」至 B、C 棟一樓「門診治療室」注射 <span class="hl">Thyrogen 1 支 IM</span>。</li>`;
+    html += `<li>當日不必抽血、不必返診（抽血改在住院當天第 2 針後）。</li>`;
+    html += `</ol>`;
+    html += `<div class="section-title">🏥 入院日 + 住院打 Thyrogen 第 2 針（${fmt(c.admit)}，提前 1 天）</div><ol>`;
+    html += `<li>請於上午 11:00 直接住院報到（午餐自理），<strong>不另行通知</strong>。</li>`;
+    html += `<li>住院手續：攜帶「住院許可證」至 B、C 棟一樓「入出院服務中心」辦理。</li>`;
+    html += `<li>至啟川 14EN 內分泌新陳代謝病房報到。</li>`;
+    html += `<li>住院開立：「人工合成甲促素」(Thyrogen) 1 支。</li>`;
+    html += `<li>注射 <span class="hl">Thyrogen 1 支 IM</span>（${fmt(c.thyrogen2)} 住院當天第 2 針）。</li>`;
+    html += `<li>注射後 1 小時，病房開立並完成抽血檢驗 TSH、free T4、Thyroglobulin (Tg)、Tg-Ab。</li>`;
+    html += `</ol>`;
+    html += `<div class="section-title">💊 住院第二天 = 吃放射碘日（${fmt(c.rai)}）</div><ol>`;
+    html += `<li>進入輻射防護病房隔離並依醫師指示服用 <span class="hl">碘 131 治療（${dose} mCi）</span>。</li>`;
+    html += `</ol>`;
+  }
+
+  // Mode C / D: 住院打 Thyrogen
+  if (c.mode === 'C' || c.mode === 'D') {
+    const dose_thy = c.mode === 'C' ? '1/2 支' : '1 支';
+    html += `<div class="section-title">🏥 住院當天（${fmt(c.admit)}，提前 1 天）</div><ol>`;
+    html += `<li>請於上午 11:00 直接住院報到（午餐自理），<strong>不另行通知</strong>。</li>`;
+    html += `<li>住院手續：攜帶「住院許可證」至 B、C 棟一樓「入出院服務中心」辦理。</li>`;
+    html += `<li>至啟川 14EN 內分泌新陳代謝病房報到。</li>`;
+    html += `<li>住院開立：「人工合成甲促素」(Thyrogen) 1 支。</li>`;
+    html += `<li>注射療程：<span class="hl">Thyrogen ${dose_thy} IM</span>（${fmt(c.thyrogen1)}）。</li>`;
+    html += `</ol>`;
+    html += `<div class="section-title">💉 住院第二天 = 吃放射碘日（${fmt(c.thyrogen2)}）</div><ol>`;
+    html += `<li>上午注射 <span class="hl">Thyrogen ${dose_thy} IM</span>。</li>`;
+    html += `<li>注射後 1 小時，病房開立並完成抽血檢驗 TSH、free T4、Thyroglobulin (Tg)、Tg-Ab。</li>`;
+    html += `<li>進入輻射防護病房隔離並依醫師指示服用 <span class="hl">碘 131 治療（${dose} mCi）</span>。</li>`;
+    html += `</ol>`;
+  }
+
+  // Mode A: 不打 Thyrogen
+  if (c.mode === 'A') {
+    html += `<div class="section-title">🏥 住院日 = 吃放射碘日（${fmt(c.rai)}）</div><ol>`;
+    html += `<li>請於上午 08:00～08:30 直接住院報到，<strong>不另行通知</strong>。</li>`;
+    html += `<li>攜帶檢驗單至「C 棟一樓檢驗室」抽血（TSH、free T4、Thyroglobulin、Tg-Ab）。</li>`;
+    html += `<li>抽完血後，攜帶「住院許可證」至 B、C 棟一樓「入出院服務中心」辦理住院手續。</li>`;
+    html += `<li>至啟川 14EN 內分泌新陳代謝病房報到並進行病房介紹及護理指導。</li>`;
+    html += `<li>病房介紹後，進入輻射防護病房隔離並依醫師指示服用 <span class="hl">碘 131 治療（${dose} mCi）</span>。</li>`;
+    html += `</ol>`;
+  }
+
+  // Common: 出院 + 掃描
+  html += `<div class="section-title">🚪 出院與掃描</div><ol>`;
+  html += `<li>預計出院日：<strong>${fmt(c.discharge)}</strong>（出院後依居家輻射防護原則生活）。</li>`;
+  html += `<li>核醫科全身掃描檢查：<strong>${fmt(c.scan)}</strong>。</li>`;
+  if (c.stopEltroxin) {
+    html += `<li><strong>掃描檢查完當天</strong>開始恢復服用甲狀腺素 (Eltroxin) 與正常飲食。</li>`;
+  } else {
+    html += `<li>掃描檢查完當天開始恢復正常飲食（Eltroxin 全程未停，照常服用）。</li>`;
+  }
+
+  // 基因突變篩檢 — 只列出有勾選的
+  const genes = [];
+  if (document.getElementById('gene_kras').checked)      genes.push('☑ 3014435 K-ras 基因突變分析');
+  if (document.getElementById('gene_kras_plus').checked) genes.push('☑ 3014983 KRAS+K-ras 基因突變分析');
+  if (document.getElementById('gene_braf').checked)      genes.push('☑ 3014438 BRAF V600E');
+  if (genes.length > 0) {
+    html += `<li>住院期間請篩檢：${genes.join(' &nbsp; ')}</li>`;
+  }
+  html += `</ol>`;
+
+  html += `<div class="signature" style="margin-top:24px">
+            <table style="width:100%; border-collapse:collapse; font-size:10pt;">
+              <tr>
+                <td style="width:50%; padding:6px 12px; vertical-align:bottom">
+                  主治醫師簽名：
+                  <span style="display:inline-block; border-bottom:1px solid #1a202c; min-width:160px; height:22px;"></span>
+                </td>
+                <td style="width:50%; padding:6px 12px; vertical-align:bottom; text-align:right">
+                  日期：
+                  <span style="display:inline-block; border-bottom:1px solid #1a202c; min-width:140px; height:22px;"></span>
+                </td>
+              </tr>
+            </table>
+            <div style="text-align:right; margin-top:6px; font-size:9pt; color:#718096">
+              內分泌新陳代謝內科 ・ 列印日期：${fmt(new Date())}
+            </div>
+          </div>`;
+
+  html += `<div class="footer-note">
+            本排程單由系統依規則自動產生：吃藥日 ${fmt(c.rai)} → 出院 ${fmt(c.discharge)} → 掃描 ${fmt(c.scan)}
+          </div>`;
+
+  out.innerHTML = html;
+}
+
+// ── Copy chart note (English plan, paste into EMR) ────
+function fmtChart(d) {
+  if (!d) return '';
+  const pad = n => String(n).padStart(2, '0');
+  return `${d.getFullYear()}/${pad(d.getMonth()+1)}/${pad(d.getDate())}`;
+}
+function fmtDow(d) {
+  if (!d) return '';
+  const en = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  return en[d.getDay()];
+}
+
+function buildChartNote(c, dose) {
+  const lines = [];
+  // 1. Core RAI order
+  lines.push(`. arrange I-131 ${dose} mCi on ${fmtChart(c.rai)} (${fmtDow(c.rai)})`);
+
+  // 2. Admission
+  if (c.mode === 'B') {
+    lines.push(`. admission on ${fmtChart(c.admit)} (${fmtDow(c.admit)}, same day as RAI; OPD-based thyrogen)`);
+  } else if (c.mode === 'A') {
+    lines.push(`. admission on ${fmtChart(c.admit)} (${fmtDow(c.admit)}, same day as RAI)`);
+  } else if (c.mode === 'E') {
+    lines.push(`. admission on ${fmtChart(c.admit)} (${fmtDow(c.admit)}, 1 day before RAI; hybrid OPD + inpatient thyrogen)`);
+  } else if (c.mode === 'F') {
+    lines.push(`. admission on ${fmtChart(c.admit)} (${fmtDow(c.admit)}, same day as RAI; hybrid OPD + inpatient thyrogen)`);
+  } else {
+    lines.push(`. admission on ${fmtChart(c.admit)} (${fmtDow(c.admit)}, 1 day before RAI for inpatient thyrogen)`);
+  }
+
+  // 3. Thyrogen orders
+  if (c.mode === 'B') {
+    lines.push(`. thyrogen 1 amp IM at OPD injection room on ${fmtChart(c.thyrogen1)} (${fmtDow(c.thyrogen1)}) and ${fmtChart(c.thyrogen2)} (${fmtDow(c.thyrogen2)})`);
+    lines.push(`. instruct patient to bring "領藥處方箋" + "門診注射單" 8:00 AM each day for thyrogen pickup at 啟川 OPD pharmacy window 10`);
+  } else if (c.mode === 'C') {
+    lines.push(`. thyrogen 1/2 amp IM during admission on ${fmtChart(c.thyrogen1)} and ${fmtChart(c.thyrogen2)} (morning of RAI day)`);
+  } else if (c.mode === 'D') {
+    lines.push(`. thyrogen 1 amp IM during admission on ${fmtChart(c.thyrogen1)} and ${fmtChart(c.thyrogen2)} (morning of RAI day)`);
+  } else if (c.mode === 'E') {
+    lines.push(`. thyrogen 1 amp IM at OPD injection room on ${fmtChart(c.thyrogen1)} (${fmtDow(c.thyrogen1)}); no labs at OPD; patient brings "領藥處方箋" + "門診注射單" to 啟川 OPD pharmacy window 10`);
+    lines.push(`. thyrogen 1 amp IM during admission on ${fmtChart(c.thyrogen2)} (${fmtDow(c.thyrogen2)}, admission day, 1 day before RAI); labs drawn 1 hr after second thyrogen`);
+  } else if (c.mode === 'F') {
+    lines.push(`. thyrogen 1 amp IM at OPD injection room on ${fmtChart(c.thyrogen1)} (${fmtDow(c.thyrogen1)}); patient brings "領藥處方箋" + "門診注射單" to 啟川 OPD pharmacy window 10`);
+    lines.push(`. thyrogen 1 amp IM during admission on ${fmtChart(c.thyrogen2)} (${fmtDow(c.thyrogen2)}, admission day = RAI day; I-131 administered 1 hr after second thyrogen)`);
+  } else {
+    lines.push(`. no thyrogen (traditional thyroid hormone withdrawal protocol)`);
+  }
+
+  // 4. Pre-RAI labs
+  // A/B：抽血在 RAI 當天
+  // C/D/E/F：抽血在第 2 針後 1 hr（E 也是住院當天打完第 2 針即抽，不延到隔天）
+  const labLine = (c.mode === 'A' || c.mode === 'B')
+    ? `. check TSH, free T4, thyroglobulin (Tg), anti-Tg on ${fmtChart(c.rai)} before I-131 administration`
+    : `. check TSH, free T4, thyroglobulin (Tg), anti-Tg 1 hour after second thyrogen injection (${fmtChart(c.thyrogen2)})`;
+  lines.push(labLine);
+
+  // 5. Low iodine diet
+  const liWeeks = c.lowIodineDays === 14 ? '2 weeks' : '4 weeks';
+  lines.push(`. suggest low iodine diet during ${fmtChart(c.liDietStart)} - ${fmtChart(c.scan)} (${liWeeks} pre-RAI through scan day; avoid seaweed, salted/processed seafood)`);
+
+  // 6. Eltroxin
+  if (c.stopEltroxin) {
+    lines.push(`. hold eltroxin since ${fmtChart(c.stopEltroxin)}, resume on ${fmtChart(c.scan)} (after thyroid scan)`);
+  } else {
+    lines.push(`. keep eltroxin throughout (no need to hold; thyrogen substitutes for endogenous TSH rise)`);
+  }
+
+  // 7. Pre-medication & ancillary care
+  lines.push(`. pre-order 3 days of side-effect medications (anti-emetics, salivary gland protection: lemon candy, etc.) starting ${fmtChart(c.rai)}`);
+
+  // 8. In-hospital care
+  lines.push(`. educate more than 2000 mL water/day during admission to enhance I-131 excretion`);
+  lines.push(`. educate radiation isolation rules in shielded room until discharge`);
+  lines.push(`. discharge planned on ${fmtChart(c.discharge)} (${fmtDow(c.discharge)}); follow home radiation safety guidelines after discharge`);
+
+  // 9. Scan
+  lines.push(`. arrange thyroid whole-body scan on ${fmtChart(c.scan)} (${fmtDow(c.scan)}) at NM department`);
+  lines.push(`. resume normal diet after scan day`);
+
+  // 10. Gene tests (if checked)
+  const genes = [];
+  if (document.getElementById('gene_kras').checked)      genes.push('K-ras (3014435)');
+  if (document.getElementById('gene_kras_plus').checked) genes.push('KRAS+K-ras (3014983)');
+  if (document.getElementById('gene_braf').checked)      genes.push('BRAF V600E (3014438)');
+  if (genes.length > 0) {
+    lines.push(`. arrange gene mutation panel during admission: ${genes.join(', ')}`);
+  }
+
+  // 11. Follow-up
+  lines.push(`. follow up at endocrinology OPD 2 weeks after scan to review results and adjust eltroxin dose if needed`);
+
+  return lines.join('\n');
+}
+
+function copyChartNote() {
+  const c = compute();
+  if (c.error) { alert('❌ ' + c.error); return; }
+  const dose = document.getElementById('rai_dose').value;
+  if (!dose) { alert('請先填放射碘劑量'); return; }
+  const note = buildChartNote(c, dose);
+  navigator.clipboard.writeText(note).then(() => {
+    alert('✅ 已複製病歷排程內容到剪貼簿\n\n預覽：\n\n' + note.substring(0, 500) + (note.length > 500 ? '\n...' : ''));
+  }).catch(err => alert('複製失敗：' + err + '\n\n手動複製：\n' + note));
+}
+
+// ── Export as .doc (Word-compatible HTML wrapper) ──
+function exportDocx() {
+  const previewHTML = document.getElementById('preview').innerHTML;
+  if (!previewHTML.trim() || previewHTML.includes('在上方填寫')) {
+    alert('請先按「產生排程單」');
+    return;
+  }
+  const styles = `
+    <style>
+      body { font-family: "PingFang TC","Microsoft JhengHei",sans-serif; line-height:1.5; }
+      h1 { text-align:center; font-size:14pt; }
+      h2 { text-align:center; font-size:12.5pt; }
+      table { border-collapse:collapse; width:100%; margin:6px 0; }
+      td { border:1px solid #333; padding:5px 10px; }
+      .dose-box { border:2px solid #c05621; padding:6px 14px; text-align:center; font-weight:bold; margin:10px auto; width:fit-content; }
+      .section-title { background:#ebf4ff; padding:5px 10px; font-weight:bold; margin:12px 0 6px; }
+      .hl { color:#c05621; font-weight:bold; }
+      .signature { text-align:right; margin-top:18px; }
+      .footer-note { text-align:center; font-size:9pt; color:#666; margin-top:14px; padding-top:8px; border-top:1px solid #ccc; }
+    </style>
+  `;
+  const wordDoc = `
+    <html xmlns:o='urn:schemas-microsoft-com:office:office'
+          xmlns:w='urn:schemas-microsoft-com:office:word'
+          xmlns='http://www.w3.org/TR/REC-html40'>
+    <head><meta charset='UTF-8'>${styles}</head>
+    <body>${previewHTML}</body>
+    </html>
+  `;
+  const blob = new Blob(['﻿', wordDoc], { type: 'application/msword' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  const name = document.getElementById('patient_name').value || 'RAI排程單';
+  const date = document.getElementById('rai_date').value || new Date().toISOString().slice(0,10);
+  a.href = url;
+  a.download = `RAI排程_${name}_${date}.doc`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+</script>
+
+<!-- ============================================================== -->
+<!-- SMART on FHIR integration (v1 prototype)                       -->
+<!-- 流程：                                                          -->
+<!--   1. RAI-launch.html 被 EHR 呼叫 → 走 OAuth2 authorize           -->
+<!--   2. EHR 回 redirect 到本頁（RAI-scheduler-smart.html）           -->
+<!--   3. 本頁 FHIR.oauth2.ready() 取得 client                        -->
+<!--   4. 抓 Patient + Observation（TSH/Tg/Anti-Tg）→ 自動填表        -->
+<!-- ============================================================== -->
+<script src="https://cdn.jsdelivr.net/npm/fhirclient@2.6.3/build/fhir-client.js"></script>
+<script>
+// LOINC codes for thyroid markers (依台灣健保常用 + LOINC 國際對照)
+const LOINC_CODES = {
+  TSH:        ['3016-3',  '11580-8'],
+  FREE_T4:    ['3024-7',  '14920-3'],
+  THYROGLOBULIN: ['2820-1', '6741-1'],
+  ANTI_TG:    ['8099-7',  '6796-5']
+};
+const LOINC_LABELS = {
+  TSH: 'TSH', FREE_T4: 'Free T4', THYROGLOBULIN: 'Tg', ANTI_TG: 'Anti-Tg'
+};
+
+function setSmartStatus(text, klass) {
+  const banner = document.getElementById('smart-banner');
+  banner.className = 'smart-banner no-print' + (klass ? ' ' + klass : '');
+  document.getElementById('smart-status').innerHTML = text;
+}
+
+function launchSmartSandbox() {
+  // Open SMART Health IT sandbox with this app's launch URL pre-filled
+  const myLaunch = encodeURIComponent('https://highker21.github.io/tools/RAI-launch.html');
+  window.open(`https://launch.smarthealthit.org/?launch_url=${myLaunch}`, '_blank');
+}
+
+function useStandaloneMode() {
+  setSmartStatus('✋ 改用手動輸入模式（不連 EHR）', '');
+  document.getElementById('fhir-labs').style.display = 'none';
+}
+
+function ageFromBirthDate(bd) {
+  if (!bd) return null;
+  const d = new Date(bd);
+  const diff = Date.now() - d.getTime();
+  return Math.floor(diff / (365.25 * 24 * 3600 * 1000));
+}
+
+function fillFormFromPatient(patient) {
+  const name = patient.name && patient.name[0]
+    ? [(patient.name[0].family || ''), ...(patient.name[0].given || [])].join(' ').trim()
+    : '';
+  const mrn = (patient.identifier || []).find(i =>
+    (i.type && i.type.coding && i.type.coding.some(c => c.code === 'MR'))
+    || (i.system && i.system.toLowerCase().includes('mrn'))
+  );
+  document.getElementById('patient_name').value = name || patient.id || '';
+  document.getElementById('patient_id').value   = mrn ? mrn.value : (patient.id || '');
+  const age = ageFromBirthDate(patient.birthDate);
+  if (age !== null) document.getElementById('patient_age').value = age;
+  if (patient.gender) {
+    const select = document.getElementById('patient_sex');
+    const map = { male: 'M', female: 'F' };
+    select.value = map[patient.gender] || '';
+  }
+}
+
+async function fetchLatestObservation(client, codes) {
+  // 用 OR 多個 LOINC code 撈最新一筆
+  const query = codes.map(c => `code=http://loinc.org|${c}`).join('&');
+  try {
+    const bundle = await client.patient.request(
+      `Observation?${query}&_count=1&_sort=-date`, { graph: false }
+    );
+    const entries = (bundle.entry || []).map(e => e.resource);
+    return entries[0] || null;
+  } catch (e) {
+    console.warn('[FHIR] obs query failed:', e);
+    return null;
+  }
+}
+
+function obsValueString(obs) {
+  if (!obs) return null;
+  if (obs.valueQuantity) {
+    return `${obs.valueQuantity.value} ${obs.valueQuantity.unit || ''}`.trim();
+  }
+  if (obs.valueString) return obs.valueString;
+  if (obs.component && obs.component[0] && obs.component[0].valueQuantity) {
+    return `${obs.component[0].valueQuantity.value} ${obs.component[0].valueQuantity.unit || ''}`.trim();
+  }
+  return '(無數值)';
+}
+function obsDateStr(obs) {
+  return obs.effectiveDateTime || obs.issued || obs.effectivePeriod?.start || '';
+}
+
+async function loadFhirLabs(client) {
+  const labBox = document.getElementById('fhir-labs');
+  const listEl = document.getElementById('lab-list');
+  const results = {};
+  for (const [key, codes] of Object.entries(LOINC_CODES)) {
+    results[key] = await fetchLatestObservation(client, codes);
+  }
+  const items = [];
+  for (const [key, obs] of Object.entries(results)) {
+    if (!obs) continue;
+    const v = obsValueString(obs);
+    const d = obsDateStr(obs);
+    const dStr = d ? `(${d.substr(0,10)})` : '';
+    items.push(`<span class="lab-item">${LOINC_LABELS[key]}: <span class="lab-value">${v}</span> ${dStr}</span>`);
+  }
+  if (items.length > 0) {
+    listEl.innerHTML = items.join('');
+    labBox.style.display = 'block';
+  } else {
+    listEl.innerHTML = '<em style="color:#94a3b8">EHR 中無 TSH/Tg/Anti-Tg 紀錄</em>';
+    labBox.style.display = 'block';
+  }
+}
+
+// ── Main：嘗試 SMART ready，失敗則 fallback 為手動模式 ──────────
+window.addEventListener('load', async () => {
+  if (typeof FHIR === 'undefined') {
+    setSmartStatus('⚠️ fhirclient.js 未載入', 'error');
+    return;
+  }
+  // 先檢查 URL 有沒有 OAuth 回呼參數
+  const hasOAuthCallback = /[?&](code|state)=/.test(location.search);
+  if (!hasOAuthCallback) {
+    setSmartStatus(
+      `📋 待連線（尚未從 EHR 啟動）。<a href="RAI-launch.html?iss=https://launch.smarthealthit.org/v/r4/sim/eyJoIjoiMSIsImkiOiIxIiwiaiI6IjEifQ/fhir" target="_self">直接觸發 standalone launch</a>`,
+      ''
+    );
+    return;
+  }
+  try {
+    const client = await FHIR.oauth2.ready();
+    const patient = await client.patient.read();
+    fillFormFromPatient(patient);
+    setSmartStatus(
+      `✅ 已連線 EHR (${client.state.serverUrl.split('/').slice(0,3).join('/')}) · 病人：<strong>${patient.name?.[0]?.given?.join(' ') || patient.id}</strong>`,
+      'connected'
+    );
+    await loadFhirLabs(client);
+  } catch (e) {
+    console.error('[SMART] ready failed:', e);
+    setSmartStatus(`❌ SMART 授權失敗：${e.message || e}`, 'error');
+  }
+});
+</script>
+</body>
+</html>

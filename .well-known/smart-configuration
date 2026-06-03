@@ -1,0 +1,20 @@
+{
+  "issuer": "https://highker21.github.io/tools/",
+  "authorization_endpoint": "https://launch.smarthealthit.org/v/r4/auth/authorize",
+  "token_endpoint": "https://launch.smarthealthit.org/v/r4/auth/token",
+  "scopes_supported": [
+    "openid", "fhirUser", "launch",
+    "patient/Patient.read",
+    "patient/Observation.read",
+    "launch/patient"
+  ],
+  "response_types_supported": ["code"],
+  "capabilities": [
+    "launch-ehr",
+    "launch-standalone",
+    "client-public",
+    "context-ehr-patient",
+    "permission-patient"
+  ],
+  "code_challenge_methods_supported": ["S256"]
+}
