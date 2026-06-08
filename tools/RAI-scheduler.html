@@ -286,7 +286,7 @@
     </label>
     <label class="mode-option" style="padding:6px 10px; font-size:9.5pt">
       <input type="checkbox" id="gene_kras_plus" style="display:inline-block; vertical-align:middle; margin-right:6px">
-      KRAS+K-ras 基因突變分析
+      KRAS+NRAS 基因突變分析
       <span class="desc">代碼 3014983</span>
     </label>
     <label class="mode-option" style="padding:6px 10px; font-size:9.5pt">
@@ -624,7 +624,7 @@ function render() {
   // 基因突變篩檢 — 只列出有勾選的
   const genes = [];
   if (document.getElementById('gene_kras').checked)      genes.push('☑ 3014435 K-ras 基因突變分析');
-  if (document.getElementById('gene_kras_plus').checked) genes.push('☑ 3014983 KRAS+K-ras 基因突變分析');
+  if (document.getElementById('gene_kras_plus').checked) genes.push('☑ 3014983 KRAS+NRAS 基因突變分析');
   if (document.getElementById('gene_braf').checked)      genes.push('☑ 3014438 BRAF V600E');
   if (genes.length > 0) {
     html += `<li>住院期間請篩檢：${genes.join(' &nbsp; ')}</li>`;
@@ -738,7 +738,7 @@ function buildChartNote(c, dose) {
   // 10. Gene tests (if checked)
   const genes = [];
   if (document.getElementById('gene_kras').checked)      genes.push('K-ras (3014435)');
-  if (document.getElementById('gene_kras_plus').checked) genes.push('KRAS+K-ras (3014983)');
+  if (document.getElementById('gene_kras_plus').checked) genes.push('KRAS+NRAS (3014983)');
   if (document.getElementById('gene_braf').checked)      genes.push('BRAF V600E (3014438)');
   if (genes.length > 0) {
     lines.push(`. arrange gene mutation panel during admission: ${genes.join(', ')}`);
