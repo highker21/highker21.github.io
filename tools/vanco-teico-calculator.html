@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Vancomycin / Teicoplanin 劑量計算機（高醫藥典）</title>
+<style>
+:root{
+  --ink:#1b2733; --soft:#5d6b7a; --line:#e3e8ee; --bg:#eef2f7; --card:#fff;
+  --van:#1e6dd8; --van-bg:#e9f1fd; --tei:#0f9d8c; --tei-bg:#e3f6f2;
+  --warn:#b3392b; --warn-bg:#fdecea; --amber:#9a6a12; --amber-bg:#fbf3df;
+  --shadow:0 1px 2px rgba(30,45,70,.05),0 10px 30px rgba(30,45,70,.07);
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);
+ font-family:"PingFang TC","Noto Sans TC",-apple-system,"Segoe UI",sans-serif;line-height:1.6;font-size:16px;}
+.wrap{max-width:780px;margin:0 auto;padding:0 14px 60px;}
+header.hero{background:linear-gradient(135deg,#1e6dd8,#2f8fb0 60%,#0f9d8c);color:#fff;
+ padding:26px 20px 22px;border-radius:0 0 22px 22px;box-shadow:var(--shadow);text-align:center;margin-bottom:16px;}
+header.hero h1{margin:0 0 4px;font-size:21px;letter-spacing:.5px;}
+header.hero p{margin:0;font-size:13px;opacity:.92;}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px 16px 14px;margin:14px 0;box-shadow:var(--shadow);}
+.card h2{margin:0 0 12px;font-size:17px;display:flex;align-items:center;gap:9px;}
+.dot{width:11px;height:11px;border-radius:50%;display:inline-block;}
+.dot.van{background:var(--van)} .dot.tei{background:var(--tei)}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px 12px;}
+.field label{display:block;font-size:13px;color:var(--soft);margin-bottom:3px;font-weight:600;}
+.field input,.field select{width:100%;padding:9px 10px;border:1px solid #cdd6e0;border-radius:9px;font-size:16px;background:#fbfcfe;color:var(--ink);}
+.field input:focus,.field select:focus{outline:none;border-color:var(--van);background:#fff;}
+.seg{display:flex;gap:6px;}
+.seg button{flex:1;padding:9px 0;border:1px solid #cdd6e0;background:#fbfcfe;border-radius:9px;font-size:15px;cursor:pointer;color:var(--soft);}
+.seg button.on{background:var(--van);color:#fff;border-color:var(--van);font-weight:700;}
+.toggles{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;}
+.chip{display:flex;align-items:center;gap:7px;border:1px solid #cdd6e0;border-radius:999px;padding:7px 13px;font-size:14px;cursor:pointer;background:#fbfcfe;user-select:none;}
+.chip input{width:16px;height:16px;margin:0;}
+.chip.on{background:var(--amber-bg);border-color:#e3c277;color:#7a5410;font-weight:600;}
+.crcl-box{margin-top:14px;background:#f5f8fc;border:1px solid #dde6f1;border-radius:12px;padding:12px 14px;}
+.crcl-row{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:6px;}
+.crcl-row .big{font-size:26px;font-weight:800;color:var(--van);}
+.crcl-row .unit{font-size:13px;color:var(--soft);}
+.badge{display:inline-block;font-size:12px;font-weight:700;padding:3px 11px;border-radius:999px;}
+.b-ok{background:#e3f6ee;color:#157a52} .b-mod{background:var(--amber-bg);color:#8a5e10} .b-low{background:var(--warn-bg);color:var(--warn)} .b-hd{background:#ede7fb;color:#5b3aa6}
+.sub{font-size:12.5px;color:var(--soft);margin-top:6px;}
+.result{border-radius:12px;padding:13px 15px;margin:10px 0;}
+.result.van{background:var(--van-bg);border:1px solid #c8ddf8;}
+.result.tei{background:var(--tei-bg);border:1px solid #bce8df;}
+.result .rt{font-size:13px;color:var(--soft);font-weight:700;text-transform:uppercase;letter-spacing:.5px;}
+.result .rv{font-size:23px;font-weight:800;margin:3px 0;}
+.result.van .rv{color:#15509f} .result.tei .rv{color:#0b7567}
+.result .rd{font-size:13.5px;color:#3a4856;}
+.vials{display:inline-block;background:#fff;border:1px dashed #aebfd2;border-radius:8px;padding:2px 9px;font-size:13px;margin-top:5px;color:#3a4856;}
+.note{font-size:13px;color:#3a4856;background:#f7f9fc;border-left:4px solid #b9c8da;border-radius:0 8px 8px 0;padding:8px 12px;margin:9px 0;}
+.note.warn{background:var(--warn-bg);border-color:var(--warn);color:#7a2b22;}
+.note.amber{background:var(--amber-bg);border-color:#e3c277;color:#6f4e0e;}
+details{margin:10px 0;border:1px solid var(--line);border-radius:12px;background:#fff;overflow:hidden;}
+details summary{padding:12px 15px;font-weight:700;font-size:15px;cursor:pointer;background:#f5f8fc;}
+details .dc{padding:6px 15px 14px;font-size:13.5px;color:#3a4856;}
+details .dc b{color:var(--ink);}
+table.kv{width:100%;border-collapse:collapse;font-size:13px;margin:6px 0;}
+table.kv td{border:1px solid #e3e8ee;padding:6px 8px;vertical-align:top;}
+table.kv td:first-child{background:#f5f8fc;font-weight:600;white-space:nowrap;width:30%;}
+.disc{font-size:12px;color:#7c8794;line-height:1.65;margin-top:22px;border-top:1px dashed var(--line);padding-top:14px;}
+.disc b{color:var(--warn);}
+.ver{text-align:center;font-size:12px;color:#9aa4af;margin-top:10px;}
+h3.sec{font-size:13px;color:var(--soft);letter-spacing:1px;margin:14px 2px 2px;text-transform:uppercase;}
+code{background:#eef1f4;padding:1px 5px;border-radius:5px;font-size:13px;}
+</style>
+</head>
+<body>
+<header class="hero">
+  <h1>Vancomycin / Teicoplanin 劑量計算機</h1>
+  <p>依高醫體系藥典（KMUH）院內劑量建議 · 成人靜脈注射</p>
+</header>
+
+<div class="wrap">
+
+  <!-- 病人參數 -->
+  <div class="card">
+    <h2>① 病人參數</h2>
+    <div class="grid">
+      <div class="field">
+        <label>性別</label>
+        <div class="seg" id="sexSeg">
+          <button type="button" data-sex="M" class="on">男</button>
+          <button type="button" data-sex="F">女</button>
+        </div>
+      </div>
+      <div class="field"><label>年齡（歲）</label><input id="age" type="number" inputmode="numeric" placeholder="如 65"></div>
+      <div class="field"><label>體重 TBW（kg）</label><input id="wt" type="number" inputmode="decimal" placeholder="如 60"></div>
+      <div class="field"><label>身高（cm，選填）</label><input id="ht" type="number" inputmode="decimal" placeholder="如 165"></div>
+      <div class="field"><label>血清肌酸酐 SCr（mg/dL）</label><input id="scr" type="number" inputmode="decimal" placeholder="如 1.0"></div>
+      <div class="field">
+        <label>臨床情境</label>
+        <select id="severe">
+          <option value="0">一般感染</option>
+          <option value="1">嚴重感染 / 重症</option>
+        </select>
+      </div>
+    </div>
+    <div class="toggles">
+      <label class="chip" id="hdChip"><input type="checkbox" id="hd"><span>血液透析 (HD)</span></label>
+    </div>
+
+    <div class="crcl-box">
+      <div class="crcl-row">
+        <div><span class="big" id="crclVal">—</span> <span class="unit">mL/min（Cockcroft-Gault）</span></div>
+        <span class="badge" id="crclBadge">輸入資料</span>
+      </div>
+      <div class="sub" id="wtInfo">理想體重(IBW)、計算用體重將顯示於此</div>
+    </div>
+  </div>
+
+  <!-- Vancomycin -->
+  <div class="card">
+    <h2><span class="dot van"></span>② Vancomycin（萬古黴素）</h2>
+    <div class="result van">
+      <div class="rt">負荷劑量 Loading</div>
+      <div class="rv" id="vLoad">—</div>
+      <div class="rd" id="vLoadD">以實際體重（TBW）計</div>
+      <div class="vials" id="vLoadVial"></div>
+    </div>
+    <div class="result van">
+      <div class="rt">維持劑量 Maintenance</div>
+      <div class="rv" id="vMaint">—</div>
+      <div class="rd" id="vMaintD">依腎功能調整</div>
+      <div class="vials" id="vMaintVial"></div>
+    </div>
+    <div class="note" id="vNote">輸入體重與 SCr 後計算。</div>
+    <div class="note">⏱ <b>輸注</b>：1 vial 溶於 ≥100 mL D5W/NS，濃度 ≤5 mg/mL，輸注 &gt;60 分鐘（每 500 mg 約 30–45 分），過快易致 red man syndrome。<br>🩸 <b>TDM</b>：第 4–5 劑「給藥前 30 分」測 trough；透析者第 3 次「洗腎前」測。建議以 AUC/MIC 400–600 為目標，本機提供經驗性起始估算。</div>
+  </div>
+
+  <!-- Teicoplanin -->
+  <div class="card">
+    <h2><span class="dot tei"></span>③ Teicoplanin（替考拉寧 / Targocid）</h2>
+    <div class="result tei">
+      <div class="rt">負荷劑量 Loading</div>
+      <div class="rv" id="tLoad">—</div>
+      <div class="rd" id="tLoadD">前幾劑每 12 小時一次</div>
+      <div class="vials" id="tLoadVial"></div>
+    </div>
+    <div class="result tei">
+      <div class="rt">維持劑量 Maintenance（每日一次）</div>
+      <div class="rv" id="tMaint">—</div>
+      <div class="rd" id="tMaintD"></div>
+      <div class="vials" id="tMaintVial"></div>
+    </div>
+    <div class="note" id="tNote">輸入體重後計算。</div>
+    <div class="note amber" id="tRenal">腎功能調整（一般參考）：輸入 CrCl 後顯示。</div>
+    <div class="note">⏱ <b>輸注</b>：劑量 ≥800 mg 建議輸注 30–60 分；以 3 mL 注射用水還原，製備時避免產生泡沫（起泡可靜置約 15 分）。</div>
+  </div>
+
+  <!-- C. difficile 口服參考 -->
+  <details>
+    <summary>💊 困難梭菌腸炎（C. difficile）口服劑量參考</summary>
+    <div class="dc">
+      <b>Vancomycin（口服 Vancover 125 mg/Cap）</b>：PO 125 mg qid × 10–14 天；猛爆型 PO/NG/灌腸 500 mg qid × 10–14 天。（口服不吸收，僅用於腸道感染）<br><br>
+      <b>Teicoplanin</b>：PO 100–200 mg bid × 7–14 天。
+    </div>
+  </details>
+
+  <!-- 高醫藥典資訊 -->
+  <details>
+    <summary>🏥 高醫藥典品項與規範（資料來源）</summary>
+    <div class="dc">
+      <table class="kv">
+        <tr><td>Vancomycin（靜脈）</td><td>萬古利凡乾粉靜脈注射劑（中化）<br><code>2V500</code> Vancomycin 500 mg/Vial；還原劑：注射用水 10 mL</td></tr>
+        <tr><td>Vancomycin（口服）</td><td>凡可復（友霖）<br><code>1VANCO</code> Vancover 125 mg/Cap</td></tr>
+        <tr><td>Teicoplanin（靜脈）</td><td>得時高凍晶注射劑（賽諾菲）<br><code>2TARGO</code> Targocid 200 mg/Vial；還原劑：注射用水 3 mL</td></tr>
+        <tr><td>臨床用途</td><td>MRSA、PRSP、enterococci、C. difficile</td></tr>
+        <tr><td>院內 Vanco 劑量</td><td>IVD 15–20 mg/kg q8–12h；重症加負荷 20–35 mg/kg（max 3 g）。<br>Ccr 15–&lt;50：負荷 20–25 mg/kg，後 10–15 mg/kg qd。<br>Ccr &lt;15：負荷 20–25 mg/kg，後 10–15 mg/kg q2–3d。</td></tr>
+        <tr><td>院內 Teico 劑量</td><td>IV 6 mg/kg q12h × 3 劑後改 qd；重症 12 mg/kg（max 1 g）q12h × 3–5 劑後 6–12 mg/kg qd。</td></tr>
+        <tr><td>健保規範</td><td>10.8.1（88/3/1）：限對其他抗生素有抗藥性/嚴重過敏之 G(+) 菌感染、或感染科醫師認定需用者；慢箋不可開立。</td></tr>
+        <tr><td>副作用</td><td>Vanco：red man syndrome、腎/耳毒性、血球低下。Teico：蕁麻疹、高頻聽力下降、白血球/血小板低下。</td></tr>
+      </table>
+      <div class="sub">資料擷取自高醫體系藥品資訊（KMUH 藥典），擷取彙整：2026-06-13。Teicoplanin 腎功能調整一節為一般參考（SmPC / 常用準則），院內藥典未明列，臨床請依藥劑部與感染科建議。</div>
+    </div>
+  </details>
+
+  <div class="disc">
+    <b>⚠️ 重要聲明</b>：本工具為依高醫藥典與常用準則製作之<b>劑量試算輔助</b>，僅供盧子文醫師個人臨床參考，<b>不取代</b>藥劑部 TDM 服務、感染科會診與臨床判斷。Vancomycin 應以治療藥物監測（TDM，建議 AUC 導向）調整；Teicoplanin 重症/特殊族群（肥胖、燒傷、腎功能波動、透析）需個別化。計算採 Cockcroft-Gault 估算 CrCl，可能與實際腎絲球過濾率有落差。用藥前請核對藥袋、藥典與最新指引。
+  </div>
+  <div class="ver">工具版本：2026-06-13</div>
+
+</div>
+
+<script>
+(function(){
+  var sex='M';
+  var seg=document.getElementById('sexSeg');
+  seg.addEventListener('click',function(e){
+    var b=e.target.closest('button'); if(!b)return;
+    sex=b.dataset.sex;
+    [].forEach.call(seg.children,function(x){x.classList.toggle('on',x===b);});
+    calc();
+  });
+  ['age','wt','ht','scr','severe','hd'].forEach(function(id){
+    document.getElementById(id).addEventListener('input',calc);
+    document.getElementById(id).addEventListener('change',calc);
+  });
+  document.getElementById('hd').addEventListener('change',function(){
+    document.getElementById('hdChip').classList.toggle('on',this.checked);
+  });
+
+  function num(id){var v=parseFloat(document.getElementById(id).value);return isFinite(v)?v:null;}
+  function roundTo(x,step){return Math.round(x/step)*step;}
+  function fmt(x){return x.toLocaleString('en-US');}
+
+  function calc(){
+    var age=num('age'), wt=num('wt'), ht=num('ht'), scr=num('scr');
+    var severe=document.getElementById('severe').value==='1';
+    var hd=document.getElementById('hd').checked;
+
+    // ---- IBW + dosing weight for CrCl ----
+    var ibw=null, wtCrCl=wt, adj=null;
+    if(ht && ht>0){
+      var inches=ht/2.54, over=Math.max(0,inches-60);
+      ibw=(sex==='M'?50:45.5)+2.3*over;
+      if(ibw<=0) ibw=null;
+    }
+    if(ibw && wt){
+      if(wt<ibw) wtCrCl=wt;
+      else if(wt>=1.2*ibw){ adj=ibw+0.4*(wt-ibw); wtCrCl=adj; }
+      else wtCrCl=ibw;
+    }
+
+    // ---- CrCl Cockcroft-Gault ----
+    var crcl=null;
+    if(age!=null && wtCrCl && scr && scr>0){
+      crcl=((140-age)*wtCrCl)/(72*scr)*(sex==='F'?0.85:1);
+    }
+    var crclEl=document.getElementById('crclVal'), badge=document.getElementById('crclBadge');
+    var wtInfo=document.getElementById('wtInfo');
+    if(crcl!=null){
+      crclEl.textContent=crcl.toFixed(0);
+      var cat;
+      if(hd){cat={t:'透析 (HD)',c:'b-hd'};}
+      else if(crcl>=50)cat={t:'≥50 正常/輕度',c:'b-ok'};
+      else if(crcl>=15)cat={t:'15–49 中重度',c:'b-mod'};
+      else cat={t:'<15 嚴重',c:'b-low'};
+      badge.textContent=cat.t; badge.className='badge '+cat.c;
+    } else { crclEl.textContent='—'; badge.textContent='輸入 年齡/體重/SCr'; badge.className='badge'; }
+    var wtBits=[];
+    if(ibw) wtBits.push('IBW '+ibw.toFixed(1)+' kg');
+    if(adj) wtBits.push('調整體重 '+adj.toFixed(1)+' kg（肥胖用於 CrCl）');
+    if(crcl!=null) wtBits.push('CrCl 計算用體重 '+wtCrCl.toFixed(1)+' kg');
+    if(!ht) wtBits.push('未填身高 → CrCl 以實際體重估算');
+    wtInfo.textContent = wtBits.length? wtBits.join('　·　') : '理想體重(IBW)、計算用體重將顯示於此';
+
+    // ============ VANCOMYCIN（以實際體重 TBW 計）============
+    var vLoad=document.getElementById('vLoad'),vLoadD=document.getElementById('vLoadD'),vLoadVial=document.getElementById('vLoadVial');
+    var vMaint=document.getElementById('vMaint'),vMaintD=document.getElementById('vMaintD'),vMaintVial=document.getElementById('vMaintVial');
+    var vNote=document.getElementById('vNote');
+    if(wt){
+      // Loading 20-25 mg/kg (重症可至 35)，上限 3000
+      var lLo=Math.min(roundTo(20*wt,250),3000), lHi=Math.min(roundTo((severe?35:25)*wt,250),3000);
+      vLoad.textContent = (lLo===lHi? lLo : lLo+'–'+lHi)+' mg';
+      vLoadD.textContent = (severe?'20–35':'20–25')+' mg/kg ×實際體重（上限 3 g），重症/重病建議給負荷劑量';
+      vLoadVial.textContent='≈ '+Math.ceil(lHi/500)+' vial（500 mg/vial），上限 6 vial(3 g)';
+      // Maintenance by CrCl
+      var perLo,perHi,interval,extra='';
+      if(hd){
+        perLo=10;perHi=15;interval='依血中濃度補充（HD 後給藥）';
+        extra='透析者：負荷後依 trough（目標 15–20，AUC 導向）於每次洗腎後補給。';
+      } else if(crcl==null){
+        vMaint.textContent='—';vMaintD.textContent='需 CrCl';vMaintVial.textContent='';
+      } else if(crcl>=50){
+        perLo=15;perHi=20;interval='q8–12h';
+      } else if(crcl>=15){
+        perLo=10;perHi=15;interval='q24h';
+      } else {
+        perLo=10;perHi=15;interval='q24–72h（每 2–3 天）';
+      }
+      if(crcl!=null || hd){
+        var mLo=roundTo(perLo*wt,250), mHi=roundTo(perHi*wt,250);
+        if(mLo<250)mLo=250;
+        vMaint.textContent=(mLo===mHi?mLo:mLo+'–'+mHi)+' mg　'+ (hd?'':interval);
+        vMaintD.textContent=perLo+'–'+perHi+' mg/kg '+(hd?'（HD）':interval);
+        vMaintVial.textContent='≈ '+Math.ceil(mHi/500)+' vial / 次';
+        vNote.innerHTML = (severe?'🔴 嚴重感染情境：':'')+ '維持劑量依腎功能（CrCl '+(crcl!=null?crcl.toFixed(0):'—')+'）採高醫藥典分級。'+(extra?'<br>'+extra:'');
+      }
+    } else {
+      vLoad.textContent='—';vMaint.textContent='—';vLoadVial.textContent='';vMaintVial.textContent='';
+      vNote.textContent='輸入體重與 SCr 後計算。';
+    }
+
+    // ============ TEICOPLANIN ============
+    var tLoad=document.getElementById('tLoad'),tLoadD=document.getElementById('tLoadD'),tLoadVial=document.getElementById('tLoadVial');
+    var tMaint=document.getElementById('tMaint'),tMaintD=document.getElementById('tMaintD'),tMaintVial=document.getElementById('tMaintVial');
+    var tNote=document.getElementById('tNote'),tRenal=document.getElementById('tRenal');
+    if(wt){
+      var loadPer=severe?12:6, loadCap=severe?1000:Infinity;
+      var loadDose=Math.min(roundTo(loadPer*wt,50),loadCap);
+      var doses=severe?'3–5 劑':'3 劑';
+      tLoad.textContent=loadDose+' mg　q12h × '+doses;
+      tLoadD.textContent=loadPer+' mg/kg'+(severe?'（上限 1 g/劑）':'')+' 每 12 小時，前 '+doses;
+      tLoadVial.textContent='≈ '+Math.ceil(loadDose/200)+' vial（200 mg/vial）/ 劑';
+      // maintenance
+      var mPerLo=6, mPerHi=severe?12:6;
+      var maLo=roundTo(mPerLo*wt,50), maHi=roundTo(mPerHi*wt,50);
+      tMaint.textContent=(maLo===maHi?maLo:maLo+'–'+maHi)+' mg　qd';
+      tMaintD.textContent=mPerLo+(mPerHi!==mPerLo?'–'+mPerHi:'')+' mg/kg 每日一次（自第 4 劑起）';
+      tMaintVial.textContent='≈ '+Math.ceil(maHi/200)+' vial / 日';
+      tNote.innerHTML=(severe?'🔴 嚴重感染情境（高負荷）。':'')+'負荷期維持 q12h，之後改每日一次。';
+      // renal adjust (general reference)
+      var r;
+      if(crcl==null && !hd) r='輸入 CrCl 後顯示腎功能調整建議。';
+      else if(hd || (crcl!=null && crcl<40)) r='🔻 CrCl &lt;40 或透析（第 4 天起）：維持劑量改為標準量的 ⅓，或標準劑量改 q72h。';
+      else if(crcl!=null && crcl<60) r='🔸 CrCl 40–60（第 4 天起）：維持劑量減半，或標準劑量改 q48h。';
+      else r='✅ CrCl ≥60：維持劑量不需調整。';
+      tRenal.innerHTML='腎功能調整（一般參考，非院內藥典明列）：'+r;
+    } else {
+      tLoad.textContent='—';tMaint.textContent='—';tLoadVial.textContent='';tMaintVial.textContent='';
+      tNote.textContent='輸入體重後計算。';
+      tRenal.textContent='腎功能調整（一般參考）：輸入 CrCl 後顯示。';
+    }
+  }
+  calc();
+})();
+</script>
+</body>
+</html>
