@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>GLP-1 減重針劑量小幫手（Ozempic / Mounjaro）</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <style>
   :root{ --blue:#1a3b6e; --blue2:#2c5aa0; --bg:#f4f6fa; --card:#fff; --line:#dde3ec; --ink:#1f2733; --muted:#667; --warn:#b54708; --warnbg:#fff7ed; }
   *{box-sizing:border-box}
@@ -29,6 +30,42 @@
   .sched td:first-child{text-align:left;font-weight:600}
   footer{font-size:.8rem;color:var(--muted);text-align:center;margin:18px 0}
   .pill{display:inline-block;background:#eef2f8;border-radius:20px;padding:2px 10px;font-size:.82rem;color:var(--blue);margin:2px}
+
+  /* ===== 減重衛教 A4 單張 ===== */
+  #eduSection{background:#e9edf2;padding:24px 12px;margin-top:28px;border-top:1px solid var(--line)}
+  .edu-actions{text-align:center;margin-bottom:16px}
+  .btn-print{background:var(--blue);color:#fff;border:none;border-radius:10px;padding:12px 22px;font-size:1rem;font-weight:700;cursor:pointer}
+  .btn-print:hover{background:var(--blue2)}
+  .edu-preview{overflow:auto}
+  .edu-sheet{width:210mm;min-height:297mm;margin:0 auto;background:#fff;box-shadow:0 6px 24px rgba(0,0,0,.12);
+    padding:11mm 9mm;font-family:"PingFang TC","Noto Sans TC","Heiti TC",sans-serif;color:#16202a}
+  .edu-head{text-align:center;border-bottom:2px solid #cfe5e9;padding-bottom:9px;margin-bottom:11px}
+  .edu-tag{display:inline-block;background:#dcf0f3;color:#1d7a8c;font-weight:700;font-size:11px;letter-spacing:1px;padding:3px 14px;border-radius:999px}
+  .edu-title{font-size:21px;font-weight:800;margin:9px 0 3px}
+  .edu-sub{font-size:12px;color:#5d6b78}
+  .edu-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+  .ec{position:relative;border:1.5px solid #cfe5e9;border-radius:10px;background:#fff;padding:11px 8px 9px;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;min-height:55mm}
+  .ec .num{position:absolute;top:5px;left:8px;font-size:11px;font-weight:800;color:#a7bcc6}
+  .ec i{font-size:30px;color:#16202a;margin:8px 0 7px}
+  .ec-t{font-size:12.5px;font-weight:800;line-height:1.32}
+  .ec-s{font-size:9.5px;color:#5d6b78;line-height:1.42;margin-top:5px}
+  .ec-amber{background:#fffaf0;border-color:#eccb86}
+  .ec-amber i{color:#c77d1a}
+  .ec-amber .num{color:#d2a85a}
+  .ec-take{background:#f4fbfc;border-color:#7cc4cf}
+  .ec-cover{background:#f4fbfc;border-color:#bfe3e8}
+  .edu-foot{margin-top:11px;text-align:center;font-size:10px;color:#7a8893;line-height:1.7;border-top:1px solid #e3e9ef;padding-top:8px}
+  @media print{
+    @page{size:A4 portrait;margin:8mm}
+    .wrap{display:none!important}
+    .no-print{display:none!important}
+    #eduSection{background:none!important;padding:0!important;margin:0!important;border:none!important}
+    .edu-preview{overflow:visible!important}
+    .edu-sheet{width:auto!important;min-height:auto!important;box-shadow:none!important;padding:0!important;margin:0!important}
+    .ec{break-inside:avoid}
+  }
+  @media (max-width:820px){ .edu-sheet{transform:scale(.82);transform-origin:top center;margin-bottom:-50mm} }
 </style>
 </head>
 <body>
@@ -152,9 +189,44 @@
   <footer>
     本工具僅供衛教與自我提醒，非醫療診斷或處方。實際劑量、調整與排程一律以盧醫師指示為準。<br>
     高雄醫學大學附設高醫岡山醫院 內分泌新陳代謝科<br>
-    <span style="color:#aab">工具版本：2026-05-27</span>
+    <span style="color:#aab">工具版本：2026-06-23（新增可列印「減重衛教單」A4）</span>
   </footer>
 </div>
+
+<!-- ============ 減重衛教 A4 單張（接在劑量工具後面，可單獨列印） ============ -->
+<section id="eduSection">
+  <div class="edu-actions no-print">
+    <button class="btn-print" onclick="window.print()">🖨 列印這張減重衛教單（A4 一頁）</button>
+    <span class="note" style="display:block;margin-top:6px">按下只會印出下面這張 A4 衛教單，不會印上面的劑量工具</span>
+  </div>
+  <div class="edu-preview">
+    <div class="edu-sheet">
+      <div class="edu-head">
+        <span class="edu-tag">減重衛教</span>
+        <div class="edu-title">減重用藥，先搞懂這 12 件事</div>
+        <div class="edu-sub">從熱量赤字、運動，到減重藥怎麼選　｜　高醫附設高醫岡山醫院　內分泌新陳代謝科</div>
+      </div>
+      <div class="edu-grid">
+        <div class="ec ec-cover"><span class="num">1</span><i class="fa-solid fa-bullseye"></i><div class="ec-t">減重，先把這幾件事搞懂</div><div class="ec-s">從熱量赤字、運動，到減重藥怎麼選</div></div>
+        <div class="ec ec-teal"><span class="num">2</span><i class="fa-solid fa-fire-flame-curved"></i><div class="ec-t">減重核心：製造「熱量赤字」</div><div class="ec-s">白話就是少吃、多動——吃進來的比消耗的少</div></div>
+        <div class="ec ec-teal"><span class="num">3</span><i class="fa-solid fa-dumbbell"></i><div class="ec-t">重訓長肌肉，拉高基礎代謝率</div><div class="ec-s">肌肉越多，連休息都燒更多熱量，也較不復胖</div></div>
+        <div class="ec ec-teal"><span class="num">4</span><i class="fa-solid fa-syringe"></i><div class="ec-t">藥物只是輔助；較有效的是兩類糖尿病藥</div><div class="ec-s">SGLT2i（排糖藥）＋ GLP-1 RA（瘦瘦針）</div></div>
+        <div class="ec ec-amber"><span class="num">5</span><i class="fa-solid fa-ban"></i><div class="ec-t">但這些糖尿病藥，適應症沒有「減重」</div><div class="ec-s">所有排糖藥＋部分瘦瘦針，核准的是控糖、不是減重</div></div>
+        <div class="ec ec-teal"><span class="num">6</span><i class="fa-solid fa-circle-check"></i><div class="ec-t">真正有「減重適應症」的是這三支</div><div class="ec-s">善纖達（已停產）、周纖達、猛健樂</div></div>
+        <div class="ec ec-teal"><span class="num">7</span><i class="fa-solid fa-weight-scale"></i><div class="ec-t">周纖達、猛健樂：要符合「肥胖」條件</div><div class="ec-s">BMI ≥30，或 BMI ≥27 且至少一項體重相關共病</div></div>
+        <div class="ec ec-teal"><span class="num">8</span><i class="fa-solid fa-face-frown"></i><div class="ec-t">都可能有副作用</div><div class="ec-s">以噁心、腸胃不適為主；停藥體重可能回升，要照醫師指示</div></div>
+        <div class="ec ec-amber"><span class="num">9</span><i class="fa-solid fa-money-bill-wave"></i><div class="ec-t">減重用途，健保都不給付 → 自費</div><div class="ec-s">不論仿單內或仿單外，減重都要自費</div></div>
+        <div class="ec ec-amber"><span class="num">10</span><i class="fa-solid fa-file-lines"></i><div class="ec-t">把糖尿病藥拿來減重＝「仿單外使用」</div><div class="ec-s">合法、醫界常見，但說明書沒寫這用途——有它的限制</div></div>
+        <div class="ec ec-amber"><span class="num">11</span><i class="fa-solid fa-file-signature"></i><div class="ec-t">仿單外：責任怎麼算？</div><div class="ec-s">沒有廠商仿單背書，是醫師依專業與證據判斷、你充分了解後同意；故需簽知情同意書，對你和醫師都是保障</div></div>
+        <div class="ec ec-take"><span class="num">12</span><i class="fa-solid fa-circle-check"></i><div class="ec-t">先把生活型態打底，藥物是輔助</div><div class="ec-s">了解清楚再決定。僅供說明參考，個別狀況請與醫師討論</div></div>
+      </div>
+      <div class="edu-foot">
+        本單張僅供衛教與自我提醒，非醫療診斷或處方；實際用藥、劑量與適應症一律以盧醫師評估為準。<br>
+        高雄醫學大學附設高醫岡山醫院　內分泌新陳代謝科　｜　搭配上方 GLP-1 劑量小幫手使用　｜　版本：2026-06-23
+      </div>
+    </div>
+  </div>
+</section>
 
 <script>
 function setMode(m){
