@@ -135,7 +135,7 @@ function render(q){
   const toks=q.toLowerCase().split(/\s+/).filter(Boolean);
   const onlyrw=$('onlyrw').checked, anyword=$('anyword').checked, useSem=$('sem').checked;
 
-  // 1) 名稱關鍵字直接比對（空白分隔，適合英文/明確詞）
+  // 1) 直接 ICD 名稱/代碼比對（baseline，永遠先做；空白分隔多詞取 AND）
   const nameSet=new Set();
   if(toks.length){
     DATA.forEach(d=>{const hay=(d.z+' '+(d.e||'')+' '+d.c).toLowerCase();
@@ -143,20 +143,23 @@ function render(q){
   }
   // 2) 中文斷詞比對（部位×病灶/傷型 取交集）
   const ex=extractTerms(q);
-  // 精準模式：抽到「部位」＋「具體病灶/傷型」(非泛詞) → 只做精準交集、抑制主訴展開
-  //   避免廣義主訴展開把整類診斷(全身骨折／全部甲狀腺良性病灶)灌進來、用高 RW 蓋過使用者點名的診斷(足骨折／甲狀腺癌)
   const precise = ex.site.length>0 && ex.finding.some(f=>!f.broad);
   const trauma = precise && ex.finding.some(f=>f.injury);  // 外傷子類：急性外傷碼(S/T)優先
-  // 3) 主訴鑑別診斷展開（精準模式不展開）— 先算，供下方判斷是否還需做廣義器官全比對
+  // 3) 主訴鑑別診斷展開（精準模式不展開）— 先算，供下方判斷
   const cps = (useSem && !precise) ? matchComplaints(q,ex.site) : [];
+  // 直接搜尋優先：查詢字串本身就命中 ICD 名稱/代碼、且非主訴/精準語境 → 視為「直接查診斷」，
+  //   不再做斷詞擴張，避免被詞庫挾持（例：「僵直性脊椎炎」被拆成 脊髓×炎 跑出脊髓灰白質炎/小兒麻痺）
+  const pureDirect = nameSet.size>0 && cps.length===0 && !precise;
   let siteUsed=false;
-  if(ex.finding.length){
-    ex.finding.forEach(f=>{
-      if(ex.site.length){ siteUsed=true; ex.site.forEach(s=>{DATA.forEach(d=>{if(d.z.includes(f.k)&&d.z.includes(s))nameSet.add(d);});}); }
-      else if(!f.broad){ DATA.forEach(d=>{if(d.z.includes(f.k))nameSet.add(d);}); }
-    });
-  } else if(ex.site.length && !cps.length){  // 純器官查詢且無對應主訴(如副甲狀腺/腦下垂體)才做器官全比對；有主訴(洗腎/甲狀腺)則交給主訴展開避免器官洗版
-    siteUsed=true; ex.site.forEach(s=>{DATA.forEach(d=>{if(d.z.includes(s))nameSet.add(d);});});
+  if(!pureDirect){
+    if(ex.finding.length){
+      ex.finding.forEach(f=>{
+        if(ex.site.length){ siteUsed=true; ex.site.forEach(s=>{DATA.forEach(d=>{if(d.z.includes(f.k)&&d.z.includes(s))nameSet.add(d);});}); }
+        else if(!f.broad){ DATA.forEach(d=>{if(d.z.includes(f.k))nameSet.add(d);}); }
+      });
+    } else if(ex.site.length && !cps.length){  // 純器官查詢且無對應主訴(副甲狀腺/腦下垂體)才做器官全比對
+      siteUsed=true; ex.site.forEach(s=>{DATA.forEach(d=>{if(d.z.includes(s))nameSet.add(d);});});
+    }
   }
   const semSet=new Set(); cps.forEach(c=>c.dx.forEach(d=>semSet.add(d)));
   // 合併
@@ -175,8 +178,8 @@ function render(q){
     return (b.d.r==null?-1:b.d.r)-(a.d.r==null?-1:a.d.r);
   });
 
-  // 展開/斷詞提示列
-  const usedFind = ex.site.length ? ex.finding : ex.finding.filter(f=>!f.broad);
+  // 展開/斷詞提示列（直接搜尋不顯示斷詞）
+  const usedFind = pureDirect ? [] : (ex.site.length ? ex.finding : ex.finding.filter(f=>!f.broad));
   const parts=[];
   if(siteUsed) parts.push(`<span class="lab">部位</span>`+ex.site.map(s=>`<span class="chip t">${esc(s)}</span>`).join(''));
   if(usedFind.length) parts.push(`<span class="lab">病灶/傷型</span>`+usedFind.map(f=>`<span class="chip t">${esc(f.k)}</span>`).join(''));
