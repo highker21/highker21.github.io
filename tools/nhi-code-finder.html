@@ -95,13 +95,17 @@ function render(){
   const toks=$('q').value.trim().toLowerCase().split(/\s+/).filter(Boolean);
   const any=$('anyword').checked;
   const arr=DATA[TAB];
+  // 子序列比對：中文常見插字（眼底「彩色」攝影），整詞 substring 找不到時，允許「依序出現」(≥3字)
+  const subseq=(t,h)=>{let i=0;for(let j=0;j<h.length&&i<t.length;j++)if(h[j]===t[i])i++;return i===t.length;};
+  const cjk=t=>/[一-鿿]/.test(t);  // 子序列只用於中文（英文字母依序比對會亂中）
+  const mt=(t,hay)=>hay.includes(t)||(t.length>=3&&cjk(t)&&subseq(t,hay));
   let res=[];
   if(toks.length){
     res=arr.filter(d=>{
       const hay = TAB==='proc'
         ? (d.z+' '+d.c).toLowerCase()
         : (d.z+' '+(d.e||'')+' '+(d.i||'')+' '+(d.a||'')+' '+d.c).toLowerCase();
-      return any ? toks.some(t=>hay.includes(t)) : toks.every(t=>hay.includes(t));
+      return any ? toks.some(t=>mt(t,hay)) : toks.every(t=>mt(t,hay));
     });
   }
   const cap=600, shown=res.slice(0,cap);
