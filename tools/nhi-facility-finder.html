@@ -40,7 +40,7 @@ footer{font-size:11px;color:var(--sub);text-align:center;padding:18px 14px 30px;
 <body>
 <header>
 <h1>醫療機構代碼快查 <span class="sub">台南・高雄・屏東｜轉診用</span></h1>
-<input id="q" placeholder="輸入院所名稱或代碼（例：高醫、尊德、3507…）" autocomplete="off">
+<input id="q" placeholder="院所名稱／地區／代碼（例：小港、高醫、尊德、3507…）" autocomplete="off">
 <div class="filters" id="cityF">
   <span class="chip on" data-city="">全部縣市</span>
   <span class="chip" data-city="台南">台南</span>
@@ -90,7 +90,7 @@ function matchText(term,f){
   if(!term)return true;
   const t=term.trim().toLowerCase();
   if(/^[0-9a-z]+$/i.test(t)) return f.code.toLowerCase().includes(t)||f.name.toLowerCase().includes(t);
-  const hay=f.name+ " "+(f.adrs.join(""))+" "+(f.aspec.join(""));
+  const hay=f.name+" "+f.addr+" "+(f.adrs.join(""))+" "+(f.aspec.join(""));
   return hay.includes(term.trim())||subseq(term.trim(),f.name);
 }
 function esc(s){return (s||"").replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));}
