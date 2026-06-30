@@ -1,0 +1,1263 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="generator" content="pandoc + custom wrapper">
+<meta name="description" content="Dirac ART 完整校正教學（基於 HCFR David Davrous 法文影片翻譯整理）">
+<title>Dirac ART 完整校正教學</title>
+<style>
+/* Dirac ART Tutorial — clean tech-doc style */
+* { box-sizing: border-box; }
+:root {
+  --bg: #fafafa;
+  --fg: #1a1a1a;
+  --muted: #6a6a6a;
+  --accent: #1e6dd8;
+  --accent-soft: #e7f0ff;
+  --warn-bg: #fff7e6;
+  --warn-border: #f4a83a;
+  --tip-bg: #e9f7ef;
+  --tip-border: #2eb872;
+  --note-bg: #f4f0ff;
+  --note-border: #8466d8;
+  --code-bg: #f1f3f5;
+  --table-border: #d8d8d8;
+  --th-bg: #f0f4fa;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #16181c;
+    --fg: #e8e8e8;
+    --muted: #9aa0a6;
+    --accent: #5aa9ff;
+    --accent-soft: #1c2840;
+    --warn-bg: #3a2a10;
+    --warn-border: #d99033;
+    --tip-bg: #14301f;
+    --tip-border: #3ea870;
+    --note-bg: #251a3a;
+    --note-border: #9a85e6;
+    --code-bg: #20232a;
+    --table-border: #333a44;
+    --th-bg: #232830;
+  }
+}
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang TC", "Noto Sans TC", "Helvetica Neue", Arial, sans-serif;
+  font-size: 16.5px;
+  line-height: 1.75;
+  margin: 0;
+  padding: 0;
+}
+.layout {
+  display: grid;
+  grid-template-columns: 280px minmax(0, 1fr);
+  max-width: 1280px;
+  margin: 0 auto;
+  gap: 36px;
+  padding: 24px;
+}
+@media (max-width: 900px) {
+  .layout { grid-template-columns: 1fr; padding: 16px; }
+  nav.toc { position: static; max-height: none; border-right: none; padding: 0; }
+}
+nav.toc {
+  position: sticky;
+  top: 16px;
+  align-self: start;
+  max-height: calc(100vh - 32px);
+  overflow-y: auto;
+  font-size: 14.5px;
+  border-right: 1px solid var(--table-border);
+  padding-right: 12px;
+}
+nav.toc h2 {
+  font-size: 14px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 4px 0 12px;
+}
+nav.toc ul { list-style: none; padding-left: 0; margin: 0; }
+nav.toc li { margin: 4px 0; }
+nav.toc a {
+  color: var(--fg);
+  text-decoration: none;
+  display: block;
+  padding: 4px 8px;
+  border-radius: 6px;
+}
+nav.toc a:hover { background: var(--accent-soft); color: var(--accent); }
+nav.toc ul ul { padding-left: 16px; font-size: 13.5px; }
+nav.toc ul ul a { color: var(--muted); }
+nav.toc ul ul ul { padding-left: 14px; font-size: 13px; }
+article { min-width: 0; }
+article h1 {
+  font-size: 32px;
+  margin: 12px 0 8px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+article h2 {
+  font-size: 24px;
+  margin: 40px 0 12px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--accent-soft);
+  font-weight: 700;
+}
+article h3 {
+  font-size: 19px;
+  margin: 28px 0 10px;
+  font-weight: 600;
+  color: var(--accent);
+}
+article h4 {
+  font-size: 16.5px;
+  margin: 20px 0 8px;
+  font-weight: 600;
+}
+article p { margin: 12px 0; }
+article a { color: var(--accent); text-decoration: none; border-bottom: 1px solid transparent; }
+article a:hover { border-bottom-color: var(--accent); }
+article strong { color: var(--fg); font-weight: 700; }
+article ul, article ol { padding-left: 26px; margin: 12px 0; }
+article li { margin: 4px 0; }
+article hr {
+  border: 0;
+  border-top: 1px solid var(--table-border);
+  margin: 36px 0;
+}
+article code {
+  font-family: "SF Mono", Menlo, Consolas, monospace;
+  background: var(--code-bg);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.9em;
+}
+article pre {
+  background: var(--code-bg);
+  border-radius: 8px;
+  padding: 14px 16px;
+  overflow-x: auto;
+  font-size: 14px;
+  line-height: 1.55;
+}
+article pre code { background: none; padding: 0; }
+article blockquote {
+  margin: 16px 0;
+  padding: 12px 18px;
+  background: var(--note-bg);
+  border-left: 4px solid var(--note-border);
+  border-radius: 0 8px 8px 0;
+  color: var(--fg);
+}
+article blockquote p { margin: 6px 0; }
+/* Callout box detection via leading emoji */
+article blockquote p:first-child:has(strong:first-child) { font-weight: 600; }
+article blockquote:has(p:first-child > strong:first-of-type) {
+  /* default — purple note */
+}
+article table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 16px 0;
+  font-size: 15px;
+  overflow-x: auto;
+  display: block;
+}
+@media (min-width: 900px) {
+  article table { display: table; }
+}
+article th, article td {
+  border: 1px solid var(--table-border);
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+article th { background: var(--th-bg); font-weight: 600; }
+article tr:nth-child(2n) td { background: rgba(0,0,0,0.018); }
+@media (prefers-color-scheme: dark) {
+  article tr:nth-child(2n) td { background: rgba(255,255,255,0.025); }
+}
+.meta-card {
+  background: var(--accent-soft);
+  border-left: 4px solid var(--accent);
+  border-radius: 0 8px 8px 0;
+  padding: 14px 18px;
+  margin: 16px 0 24px;
+  font-size: 14.5px;
+}
+.meta-card p { margin: 4px 0; }
+footer.note {
+  margin-top: 56px;
+  padding-top: 20px;
+  border-top: 1px solid var(--table-border);
+  color: var(--muted);
+  font-size: 13.5px;
+  line-height: 1.6;
+}
+.print-hint {
+  margin: 12px 0 4px;
+  font-size: 13px;
+  color: var(--muted);
+}
+@media print {
+  nav.toc, .print-hint { display: none; }
+  .layout { display: block; max-width: none; }
+  article { font-size: 11pt; }
+}
+
+</style>
+</head>
+<body>
+<div class="layout">
+<nav class="toc">
+<h2>目錄</h2>
+
+<ul>
+<li><a href="#dirac-art-完整校正教學"
+id="toc-dirac-art-完整校正教學">Dirac ART 完整校正教學</a>
+<ul>
+<li><a href="#pushpin-教學總綱" id="toc-pushpin-教學總綱">📌
+教學總綱</a></li>
+<li><a href="#phase-0--為什麼要這樣校正"
+id="toc-phase-0--為什麼要這樣校正">Phase 0 — 為什麼要這樣校正</a>
+<ul>
+<li><a href="#dirac-art-跟一般-dirac-live-差在哪"
+id="toc-dirac-art-跟一般-dirac-live-差在哪">Dirac ART 跟一般 Dirac Live
+差在哪？</a></li>
+<li><a href="#art-的代價要更懂自己的器材"
+id="toc-art-的代價要更懂自己的器材">ART
+的代價：要更懂自己的器材</a></li>
+<li><a href="#講者哲學" id="toc-講者哲學">講者哲學</a></li>
+</ul></li>
+<li><a href="#phase-1--用-rew-量測房間與喇叭"
+id="toc-phase-1--用-rew-量測房間與喇叭">Phase 1 — 用 REW
+量測房間與喇叭</a>
+<ul>
+<li><a href="#11-工具與檔案" id="toc-11-工具與檔案">1.1
+工具與檔案</a></li>
+<li><a href="#12-麥克風校正檔擺放" id="toc-12-麥克風校正檔擺放">1.2
+麥克風校正檔擺放</a></li>
+<li><a href="#13-rew-前置量測流程" id="toc-13-rew-前置量測流程">1.3 REW
+前置量測流程</a></li>
+<li><a href="#14-喇叭實際能力的近場量測"
+id="toc-14-喇叭實際能力的近場量測">1.4
+喇叭實際能力的「近場量測」</a></li>
+<li><a href="#15-subwoofer-量測技巧" id="toc-15-subwoofer-量測技巧">1.5
+Subwoofer 量測技巧</a></li>
+<li><a href="#16-講者的-sub-low-pass-預處理重要"
+id="toc-16-講者的-sub-low-pass-預處理重要">1.6 講者的 sub low-pass
+預處理（重要）</a></li>
+</ul></li>
+<li><a href="#phase-2--dirac-live-初始化"
+id="toc-phase-2--dirac-live-初始化">Phase 2 — Dirac Live 初始化</a>
+<ul>
+<li><a href="#21-啟動專案" id="toc-21-啟動專案">2.1 啟動專案</a></li>
+<li><a href="#22-訊噪比管理30-db-rule"
+id="toc-22-訊噪比管理30-db-rule">2.2 訊噪比管理（+30 dB rule）</a></li>
+<li><a href="#23-各聲道-level-對齊" id="toc-23-各聲道-level-對齊">2.3
+各聲道 Level 對齊</a></li>
+<li><a href="#24-講者的兩段-level-對齊法"
+id="toc-24-講者的兩段-level-對齊法">2.4 講者的「兩段 level
+對齊法」</a></li>
+</ul></li>
+<li><a href="#phase-3--17-點麥克風測量法"
+id="toc-phase-3--17-點麥克風測量法">Phase 3 — 17 點麥克風測量法</a>
+<ul>
+<li><a href="#31-第一個測量點--主聆位最關鍵"
+id="toc-31-第一個測量點--主聆位最關鍵">3.1 第一個測量點 =
+主聆位（最關鍵）</a></li>
+<li><a href="#32-後續-16-點圍繞頭部的立方體"
+id="toc-32-後續-16-點圍繞頭部的立方體">3.2 後續 16
+點：圍繞頭部的「立方體」</a></li>
+<li><a href="#33-講者的-17-點實際走位套餐型"
+id="toc-33-講者的-17-點實際走位套餐型">3.3 講者的 17
+點實際走位（套餐型）</a></li>
+<li><a href="#34-多人聆聽的策略" id="toc-34-多人聆聽的策略">3.4
+多人聆聽的策略</a></li>
+<li><a href="#35-點數選擇與經驗值" id="toc-35-點數選擇與經驗值">3.5
+點數選擇與經驗值</a></li>
+<li><a href="#36-重要測量結束麥克風要回到主聆位"
+id="toc-36-重要測量結束麥克風要回到主聆位">3.6
+重要：測量結束<strong>麥克風要回到主聆位</strong></a></li>
+</ul></li>
+<li><a href="#phase-4--filter-designart-的核心"
+id="toc-phase-4--filter-designart-的核心">Phase 4 — Filter Design：ART
+的核心</a>
+<ul>
+<li><a href="#41-先存檔" id="toc-41-先存檔">4.1 先存檔！</a></li>
+<li><a href="#42-喇叭分組speaker-groups"
+id="toc-42-喇叭分組speaker-groups">4.2 喇叭分組（Speaker
+Groups）</a></li>
+<li><a href="#43-target-curves目標曲線"
+id="toc-43-target-curves目標曲線">4.3 Target Curves（目標曲線）</a></li>
+<li><a href="#44-bass-support-groupsart-的核心設定"
+id="toc-44-bass-support-groupsart-的核心設定">4.4 Bass Support
+Groups（ART 的核心設定）</a></li>
+<li><a href="#45-correction-window校正視窗"
+id="toc-45-correction-window校正視窗">4.5 Correction
+Window（校正視窗）</a></li>
+<li><a href="#46-開始計算--export" id="toc-46-開始計算--export">4.6
+開始計算 + Export</a></li>
+</ul></li>
+<li><a href="#phase-5--校正後驗證量測"
+id="toc-phase-5--校正後驗證量測">Phase 5 — 校正後驗證量測</a>
+<ul>
+<li><a href="#51-重新放回參考點" id="toc-51-重新放回參考點">5.1
+重新放回參考點</a></li>
+<li><a href="#52-看-4-個關鍵指標" id="toc-52-看-4-個關鍵指標">5.2 看 4
+個關鍵指標</a></li>
+<li><a href="#53-講者實測結果範例" id="toc-53-講者實測結果範例">5.3
+講者實測結果範例</a></li>
+<li><a href="#54-失真檢查重要" id="toc-54-失真檢查重要">5.4
+失真檢查（重要）</a></li>
+</ul></li>
+<li><a href="#phase-6--處理器端微調--聆聽驗證"
+id="toc-phase-6--處理器端微調--聆聽驗證">Phase 6 — 處理器端微調 +
+聆聽驗證</a>
+<ul>
+<li><a href="#61-為什麼還要微調" id="toc-61-為什麼還要微調">6.1
+為什麼還要微調</a></li>
+<li><a href="#62-操作步驟" id="toc-62-操作步驟">6.2 操作步驟</a></li>
+<li><a href="#63-講者的後排補強經驗" id="toc-63-講者的後排補強經驗">6.3
+講者的「後排補強」經驗</a></li>
+<li><a href="#64-聆聽驗收片單" id="toc-64-聆聽驗收片單">6.4
+聆聽驗收片單</a></li>
+</ul></li>
+<li><a href="#toolbox-storm-audio-專屬第二段精修流程"
+id="toc-toolbox-storm-audio-專屬第二段精修流程">🧰 Storm Audio
+專屬：第二段精修流程</a></li>
+<li><a href="#pencil-講者方法論總結" id="toc-pencil-講者方法論總結">📝
+講者方法論總結</a></li>
+<li><a href="#warning-常見陷阱整理" id="toc-warning-常見陷阱整理">⚠️
+常見陷阱整理</a></li>
+<li><a href="#dart-講者的最終心法" id="toc-dart-講者的最終心法">🎯
+講者的最終心法</a></li>
+<li><a href="#books-延伸資源" id="toc-books-延伸資源">📚
+延伸資源</a></li>
+</ul></li>
+</ul>
+
+<p class="print-hint">⌘P 列印 / 存 PDF</p>
+</nav>
+<article>
+<section id="dirac-art-完整校正教學" class="level1">
+<h1>Dirac ART 完整校正教學</h1>
+<blockquote>
+<p><strong>原片</strong>：<a
+href="https://www.youtube.com/watch?v=ajcLuwpYLJk">Dirac ART — Tutoriel
+et méthodologie complète HCFR</a> <strong>講者</strong>：David
+Davrous（HCFR 法國家庭劇院論壇） <strong>長度</strong>：1 小時 34 分鐘 ·
+法文 <strong>示範器材</strong>：Storm Audio ISP Elite
+Mk2（Stormio）9.4.4 系統 <strong>適用範圍</strong>：Storm Audio / Denon
+/ Marantz 等所有支援 Dirac ART (Active Room Treatment) 的處理器
+<strong>譯註</strong>：本教學由助理依據逐字稿（17,223
+字法文）翻譯整理為繁中結構化教學，非逐句直譯。技術名詞保留英文以利對照
+Dirac Live 介面。</p>
+</blockquote>
+<hr />
+<section id="pushpin-教學總綱" class="level2">
+<h2>📌 教學總綱</h2>
+<table>
+<thead>
+<tr>
+<th>階段</th>
+<th>名稱</th>
+<th>重點</th>
+<th>預估時間</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Phase 0</td>
+<td>前言與系統概觀</td>
+<td>為什麼要校正、Dirac ART 與 Dirac Live 的差異</td>
+<td>5 分</td>
+</tr>
+<tr>
+<td>Phase 1</td>
+<td>REW 前置測量</td>
+<td>用 UMIK-1 + REW 量測喇叭真實能力</td>
+<td>30 分</td>
+</tr>
+<tr>
+<td>Phase 2</td>
+<td>Dirac Live 初始化</td>
+<td>麥克風、levels、+30 dB 訊噪比</td>
+<td>15 分</td>
+</tr>
+<tr>
+<td>Phase 3</td>
+<td>17 點測量法</td>
+<td>圍繞頭部的立方體取樣</td>
+<td>60 分</td>
+</tr>
+<tr>
+<td>Phase 4</td>
+<td>Filter Design</td>
+<td>Target curve、support groups、bass support</td>
+<td>20 分</td>
+</tr>
+<tr>
+<td>Phase 5</td>
+<td>量測後驗證</td>
+<td>比對校正前後 frequency / phase / decay / waterfall</td>
+<td>30 分</td>
+</tr>
+<tr>
+<td>Phase 6</td>
+<td>微調與聆聽驗收</td>
+<td>各聲道 0.1 dB 級 fine tuning、Blade Runner / Ready Player One
+測試</td>
+<td>30+ 分</td>
+</tr>
+</tbody>
+</table>
+<p>整套流程一輪約 <strong>2 小時</strong>（不含主觀聆聽驗證）。</p>
+<hr />
+</section>
+<section id="phase-0--為什麼要這樣校正" class="level2">
+<h2>Phase 0 — 為什麼要這樣校正</h2>
+<section id="dirac-art-跟一般-dirac-live-差在哪" class="level3">
+<h3>Dirac ART 跟一般 Dirac Live 差在哪？</h3>
+<ul>
+<li><strong>Dirac Live（傳統版）</strong>：以 FIR / IIR
+修正各聲道的<strong>頻率響應曲線</strong>，本質仍是被動補償</li>
+<li><strong>Dirac ART（Active Room
+Treatment）</strong>：<strong>主動式</strong>房間校正。會利用「能夠延伸到該頻段」的喇叭去<strong>主動抵消</strong>（active
+cancellation）房間共振與駐波，特別針對<strong>低頻</strong></li>
+</ul>
+<blockquote>
+<p>💡 <strong>核心理念</strong>：低頻在小房間（&lt; 50
+m²）會產生大量駐波（standing waves）與共振模態（room modes）。傳統治理靠
+bass trap、調整位置等被動處理；ART
+則用「多顆喇叭協同發聲，把不要的能量主動相消」來解決。</p>
+</blockquote>
+</section>
+<section id="art-的代價要更懂自己的器材" class="level3">
+<h3>ART 的代價：要更懂自己的器材</h3>
+<blockquote>
+<p>⚠️ <strong>重要提醒</strong> ART 不是
+plug-and-play。<strong>它會要求其他喇叭（如前置、環繞）下潛到比原本更低的頻段去支援
+LFE</strong>。如果你給它的下潛頻率超過喇叭能力 →
+<strong>可能傷喇叭</strong>。 因此 Phase 1
+的「先量喇叭實際能力」絕對不能跳過。</p>
+</blockquote>
+</section>
+<section id="講者哲學" class="level3">
+<h3>講者哲學</h3>
+<blockquote>
+<p>「校正是為了把房間和器材的響應拉回<strong>製作端原本的意圖</strong>。如果你只是想聽『好聽的聲音』而不在乎是否還原，那校正就沒意義。」</p>
+</blockquote>
+<hr />
+</section>
+</section>
+<section id="phase-1--用-rew-量測房間與喇叭" class="level2">
+<h2>Phase 1 — 用 REW 量測房間與喇叭</h2>
+<section id="11-工具與檔案" class="level3">
+<h3>1.1 工具與檔案</h3>
+<table>
+<thead>
+<tr>
+<th>工具</th>
+<th>用途</th>
+<th>備註</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>REW</strong>（Room EQ Wizard）</td>
+<td>量測與分析</td>
+<td>免費，<a href="https://www.roomeqwizard.com">官網</a></td>
+</tr>
+<tr>
+<td><strong>miniDSP UMIK-1</strong></td>
+<td>校正用麥克風</td>
+<td>必須使用<strong>對應序號的校正檔</strong></td>
+</tr>
+<tr>
+<td><strong>Dolby Atmos for Windows app</strong></td>
+<td>讓 REW 能輸出到 Atmos 聲道</td>
+<td>Microsoft Store 下載</td>
+</tr>
+<tr>
+<td><strong>VLC</strong></td>
+<td>播放 sweep 訊號到 Atmos layout（REW 預設只到 7.1）</td>
+<td>配合特定 sweep 檔可跑 9.1.6</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="12-麥克風校正檔擺放" class="level3">
+<h3>1.2 麥克風校正檔擺放</h3>
+<ul>
+<li>麥克風<strong>直立</strong>（vertical）擺放 → 使用 <strong>「0°」
+校正檔</strong></li>
+<li>麥克風<strong>側放對天</strong>（pointed up，90°）→ 使用
+<strong>「90°」校正檔</strong></li>
+<li>⚠️ 用錯校正檔 → 高頻響應整段偏差</li>
+</ul>
+</section>
+<section id="13-rew-前置量測流程" class="level3">
+<h3>1.3 REW 前置量測流程</h3>
+<pre><code>1. REW &gt; Preferences
+   - 選 Audio output: 你的 Storm Audio / AVR
+   - 選 Mic: UMIK-1（載入正確角度校正檔）
+2. Check Levels（從 -39 dB volume 開始試）
+   - 主聲道目標：75 dB SPL @ 主聆位
+   - LFE 目標：85 dB SPL（+10 dB over mains）
+3. 對每顆喇叭跑 256K sweep（10–20 Hz 起始）
+   - Timing reference: 左聲道（其他喇叭都對齊左聲道）
+4. 看四件事：
+   - Frequency Response
+   - Phase（相位）
+   - Distortion（特別是 LFE，看 ART 會不會讓失真上升）
+   - Spectrogram / Waterfall</code></pre>
+</section>
+<section id="14-喇叭實際能力的近場量測" class="level3">
+<h3>1.4 喇叭實際能力的「近場量測」</h3>
+<blockquote>
+<p>💡 <strong>要點</strong>：在主聆位量到的響應 = 喇叭 ×
+房間。<strong>不能用這個去判斷喇叭本身能下潛到哪</strong>。</p>
+</blockquote>
+<p><strong>近場量測（near-field）</strong>：</p>
+<ol type="1">
+<li>麥克風距喇叭<strong>約 1 公尺</strong></li>
+<li>對準喇叭<strong>聲學中心</strong>（高音與中音單體之間）</li>
+<li>量出來的低頻滾降點 ≈ 喇叭本身的真實能力</li>
+</ol>
+<p><strong>範例</strong>（講者的 Melodia PCS 38）：</p>
+<ul>
+<li>廠商標：30 Hz @ -3 dB</li>
+<li>近場量測：確認 30 Hz 確實有能量</li>
+<li>→ ART 可以放心要求支援到 40 Hz（留 10 Hz 安全餘裕）</li>
+</ul>
+</section>
+<section id="15-subwoofer-量測技巧" class="level3">
+<h3>1.5 Subwoofer 量測技巧</h3>
+<p>Storm Audio 的優勢：<strong>可單獨停用 7 顆 sub 中的任 N
+顆</strong>，分別量單獨響應。</p>
+<p>操作意義：</p>
+<ol type="1">
+<li>先一支一支量，找出<strong>單獨表現最好的擺位</strong></li>
+<li>再合併量整組，看疊加後的駐波 / 互相抵消</li>
+<li>ART 雖能自動對齊，但<strong>好的擺位 → 給 ART
+更乾淨的素材</strong></li>
+</ol>
+</section>
+<section id="16-講者的-sub-low-pass-預處理重要" class="level3">
+<h3>1.6 講者的 sub low-pass 預處理（重要）</h3>
+<p>講者在 Storm Audio 端對每顆 sub 加了 EQ：</p>
+<ul>
+<li><strong>150 Hz 開始</strong>滾降</li>
+<li><strong>180 Hz</strong> 完全切掉</li>
+</ul>
+<p><strong>為什麼</strong>：</p>
+<ul>
+<li>若 sub 仍在 300–400 Hz 發聲 → 聲音「定位感」會破壞</li>
+<li>更重要的：ART 做 <strong>impulse
+alignment</strong>（脈衝對齊）時，sub 高頻雜訊會干擾演算法判斷</li>
+<li>來自 Storm Audio 工程師 <strong>Sébastien</strong> 的建議</li>
+</ul>
+<hr />
+</section>
+</section>
+<section id="phase-2--dirac-live-初始化" class="level2">
+<h2>Phase 2 — Dirac Live 初始化</h2>
+<section id="21-啟動專案" class="level3">
+<h3>2.1 啟動專案</h3>
+<pre><code>1. 處理器（Storm/Denon/Marantz）切到 Dirac 校正模式
+2. PC 開 Dirac Live → New Calibration
+3. 選擇處理器型號
+4. 設定麥克風校正檔（90° 或 0°）</code></pre>
+<blockquote>
+<p>⚠️ <strong>版本陷阱</strong>：不同 Dirac Live
+版本演算法有差異，<strong>找到你滿意的版本就鎖住</strong>，記下版號。講者抱怨過去幾版有
+bug，遇到滿意的就不再升級。</p>
+</blockquote>
+</section>
+<section id="22-訊噪比管理30-db-rule" class="level3">
+<h3>2.2 訊噪比管理（+30 dB rule）</h3>
+<p><strong>目標</strong>：測試訊號要比房間背景噪音<strong>高 30
+dB</strong></p>
+<p>實際操作：</p>
+<ol type="1">
+<li>全程靜音房間（關冷氣、提醒家人不要進來）</li>
+<li>Dirac 介面會即時顯示背景噪音 dB 值</li>
+<li>例：背景 -44 dB → 校正訊號目標 ≈ -14 dB</li>
+</ol>
+<p><strong>為何重要</strong>：訊噪比不足 → Dirac
+演算法把噪音當成房間響應的一部分 → 校正結果歪掉</p>
+</section>
+<section id="23-各聲道-level-對齊" class="level3">
+<h3>2.3 各聲道 Level 對齊</h3>
+<p>針對每顆喇叭：</p>
+<ul>
+<li>跑 level check，<strong>所有主聲道對齊到 ≈ -14
+dB</strong>（或同一目標值，±2 dB 內）</li>
+<li><strong>不需要完美到 -14.0</strong>，大致對齊即可</li>
+<li><strong>Sub 比主聲道高 5–10 dB</strong>（例：mains -14 → subs -6 ~
+-8）</li>
+</ul>
+<blockquote>
+<p>💡 <strong>為何 sub 要高</strong>：sub 量測本身較不精準（低頻波長長 →
+SPL 不穩），保留更多 headroom 給 Dirac 演算法分析。</p>
+</blockquote>
+</section>
+<section id="24-講者的兩段-level-對齊法" class="level3">
+<h3>2.4 講者的「兩段 level 對齊法」</h3>
+<ol type="1">
+<li><strong>第一段</strong>：Dirac 校正過程中對齊（如上）</li>
+<li><strong>第二段</strong>：校正完成、export profile
+後，<strong>在處理器端用 SPL meter 再對齊一次</strong>（見 Phase
+6）</li>
+</ol>
+<p>兩段疊加 → 空間感與聲音聚焦明顯改善。</p>
+<hr />
+</section>
+</section>
+<section id="phase-3--17-點麥克風測量法" class="level2">
+<h2>Phase 3 — 17 點麥克風測量法</h2>
+<section id="31-第一個測量點--主聆位最關鍵" class="level3">
+<h3>3.1 第一個測量點 = 主聆位（最關鍵）</h3>
+<blockquote>
+<p>🎯
+<strong>第一個測量點是整個校正的「參考點」</strong>。所有其他測量點都圍繞它定位。</p>
+</blockquote>
+<p><strong>講者的擺位數據</strong>：</p>
+<ul>
+<li>距離頭枕（appui-tête）：<strong>15 公分</strong>（往前）</li>
+<li>麥克風高度（距地）：<strong>約 1 公尺</strong>（≈ 耳朵高度）</li>
+<li>一般人耳朵高度範圍：<strong>100–110 cm</strong>（坐姿）</li>
+<li>麥克風尾端到頭枕：<strong>60
+公分</strong>（具體因座椅幾何而異）</li>
+</ul>
+</section>
+<section id="32-後續-16-點圍繞頭部的立方體" class="level3">
+<h3>3.2 後續 16 點：圍繞頭部的「立方體」</h3>
+<p><strong>核心規則</strong>：</p>
+<ul>
+<li>想像一個<strong>約 60 cm 邊長的立方體</strong>（半徑 ~30
+cm）以主聆位（你的頭）為中心</li>
+<li>所有後續測量點分布在此立方體內</li>
+<li><strong>每個點的座標都要不一樣</strong>（不要兩個點在同一高度或同一深度）</li>
+<li>麥克風方向：始終<strong>直立朝天</strong>（搭配 90° 校正檔）</li>
+</ul>
+</section>
+<section id="33-講者的-17-點實際走位套餐型" class="level3">
+<h3>3.3 講者的 17 點實際走位（套餐型）</h3>
+<pre><code>Tier 1（前 4 點，在椅子前緣高度）：
+  1. 主聆位（參考點）
+  2. 左前 30 cm
+  3. 右前 30 cm
+  4. 中前再 15 cm（高度微調）
+
+Tier 2（再 7 點，後排兼前移）：
+  5–8. 椅子前緣降低高度，跨左右
+  9–11. 略前移到大腿位置高度
+
+Tier 3（最後 6 點，頭部後方）：
+  12–14. 頭枕後方降低
+  15–17. 頭枕後方升高</code></pre>
+<blockquote>
+<p>💡 <strong>不要照 Dirac
+介面上的小圓點機械式擺位</strong>。介面上的位置只是「示意」，重點是麥克風<strong>實際</strong>位於主聆位附近的立方體內，且<strong>所有喇叭都能「看到」麥克風</strong>（沒被椅背遮擋）。</p>
+</blockquote>
+</section>
+<section id="34-多人聆聽的策略" class="level3">
+<h3>3.4 多人聆聽的策略</h3>
+<p>若要同時優化 1st row 多人聽感 →
+把測量點稍微往左右擴散到鄰座頭部範圍。
+<strong>但會犧牲主聆位的最佳化程度</strong>。</p>
+<p>講者建議：</p>
+<ul>
+<li>自己一人聽 → <strong>集中火力</strong>做主聆位（如上述立方體）</li>
+<li>兩人聽 → 立方體稍微擴大左右</li>
+<li>多人聽 → 1st 與 2nd row 都涵蓋（會明顯犧牲主聆位）</li>
+</ul>
+<p>可以<strong>做多個 profile</strong>，視場景切換。</p>
+</section>
+<section id="35-點數選擇與經驗值" class="level3">
+<h3>3.5 點數選擇與經驗值</h3>
+<table>
+<thead>
+<tr>
+<th>點數</th>
+<th>結果品質</th>
+<th>講者經驗</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>9（官方最低）</td>
+<td>勉強堪用</td>
+<td>不推薦</td>
+</tr>
+<tr>
+<td>13</td>
+<td>不錯</td>
+<td>起點門檻</td>
+</tr>
+<tr>
+<td>17</td>
+<td>很好</td>
+<td>講者最常用</td>
+</tr>
+<tr>
+<td>20</td>
+<td>最佳</td>
+<td>目前長期使用的設定</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>⚠️ 喇叭越多（如 9.4.4 = 17 顆），每點測量越久。9 點 × 17 顆 = 153 次
+sweep，慢慢來。</p>
+</blockquote>
+</section>
+<section id="36-重要測量結束麥克風要回到主聆位" class="level3">
+<h3>3.6 重要：測量結束<strong>麥克風要回到主聆位</strong></h3>
+<p>完成所有測量後，<strong>把麥克風放回第一點的位置</strong>（15 / 60 cm
+那組數字）。 為什麼：後續驗證（Phase
+5）要在同一個點比對校正前後。<strong>位置不一致 =
+比對無意義</strong>。</p>
+<hr />
+</section>
+</section>
+<section id="phase-4--filter-designart-的核心" class="level2">
+<h2>Phase 4 — Filter Design：ART 的核心</h2>
+<section id="41-先存檔" class="level3">
+<h3>4.1 先存檔！</h3>
+<p><strong>做完 17 點測量先 Save</strong>：</p>
+<pre><code>File &gt; Save As &gt; Dirac_3.14_tuto_ART_17.dlp</code></pre>
+<p>命名包含：<strong>版本號 / 用途 / 點數</strong>。 原因：Dirac Live
+可能 crash，一進 Filter Design 階段 crash 你就要重做所有測量。</p>
+</section>
+<section id="42-喇叭分組speaker-groups" class="level3">
+<h3>4.2 喇叭分組（Speaker Groups）</h3>
+<p>Dirac ART 會自動建議 grouping，但要手動微調：</p>
+<table>
+<thead>
+<tr>
+<th>群組</th>
+<th>包含喇叭</th>
+<th>講者邏輯</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Group 1 (LR)</td>
+<td>Front L, Front R</td>
+<td>主聲道，會主動支援低頻</td>
+</tr>
+<tr>
+<td>Group 2 (Center)</td>
+<td>Center</td>
+<td><strong>單獨一組</strong>，不參與任何 support，保留語音純淨</td>
+</tr>
+<tr>
+<td>Group 3 (Surrounds)</td>
+<td>Surround L/R + Surround Back L/R</td>
+<td>同型號 → 合一組</td>
+</tr>
+<tr>
+<td>Group 4 (Atmos)</td>
+<td>Top Front/Rear L/R（4 顆）</td>
+<td>Atmos 喇叭合一組</td>
+</tr>
+<tr>
+<td>Group 5 (Subs)</td>
+<td>4 顆 sub</td>
+<td>通常合一組</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>💡 <strong>進階做法</strong>：若前後 sub 型號不同（例如前面是大
+sub、後面是小 sub），可拆成 Group 5a / 5b，分別給不同 support
+level。</p>
+</blockquote>
+</section>
+<section id="43-target-curves目標曲線" class="level3">
+<h3>4.3 Target Curves（目標曲線）</h3>
+<p><strong>選擇</strong>：</p>
+<ul>
+<li>Dirac 預設曲線（從高頻緩降）</li>
+<li><strong>Storm Audio 官方曲線</strong>（推薦，講者使用）— <a
+href="https://www.stormaudio.com/">Storm Audio 網站可下載</a></li>
+<li>Audyssey 風格曲線</li>
+<li>自訂曲線（進階）</li>
+</ul>
+<p><strong>講者建議</strong>：</p>
+<ul>
+<li>一般情境 → <strong>直接用 Storm Audio 官方曲線</strong>（LCR /
+Surround / Subwoofer 三條，分別套用對應群組）</li>
+<li>進階：每個 group 自訂曲線</li>
+</ul>
+<p><strong>操作</strong>：在每個 group 上<strong>右鍵</strong> &gt; Load
+Target Curve &gt; 選 Storm Audio LCR / Surround / Sub。</p>
+<blockquote>
+<p>⚠️ <strong>陷阱</strong>：subwoofer 的 target curve <strong>只套用到
+Main Sub 群組</strong>。如果你把 sub 拆成兩組，副組無法載入 target
+curve（這是設計，不是 bug）。</p>
+</blockquote>
+</section>
+<section id="44-bass-support-groupsart-的核心設定" class="level3">
+<h3>4.4 Bass Support Groups（ART 的核心設定）</h3>
+<p><strong>Bass Support = 讓主聲道 / 環繞 / Atmos 一起去發 LFE
+的低頻能量</strong>，達成 active cancellation。</p>
+<section id="441-兩個關鍵參數" class="level4">
+<h4>4.4.1 兩個關鍵參數</h4>
+<p>每個 group 內每個 support 來源都要設兩個值：</p>
+<ol type="1">
+<li><p><strong>Lower Frequency</strong>（從幾 Hz 開始支援）</p>
+<ul>
+<li>必須<strong>高於該喇叭真實下潛能力 + 安全餘裕</strong></li>
+<li>例：前置喇叭真實下潛 30 Hz → 填 <strong>40 Hz</strong>（留 10 Hz
+安全）</li>
+<li>例：Atmos 喇叭廠商標 80 Hz → 填 <strong>90 Hz</strong>（留 10
+Hz）</li>
+</ul></li>
+<li><p><strong>Support Level（dB）— 反直覺！</strong></p>
+<ul>
+<li><strong>數字越接近 0，支援越少</strong></li>
+<li>預設 -18 dB = 弱支援</li>
+<li>想加強支援 → 改 <strong>-24 dB</strong></li>
+<li>想減弱支援 → 改 <strong>-6 dB</strong></li>
+</ul></li>
+</ol>
+<blockquote>
+<p>⚠️ <strong>這個邏輯反人類</strong>，連講者都跟 Storm Audio
+反映過。記住口訣：<strong>「負越大、支越多」</strong>。</p>
+</blockquote>
+</section>
+<section id="442-hcfr-推薦的-support-level-表" class="level4">
+<h4>4.4.2 HCFR 推薦的 Support Level 表</h4>
+<table>
+<thead>
+<tr>
+<th>Group ↓ \ 被支援者 →</th>
+<th>LR (G1)</th>
+<th>Center (G2)</th>
+<th>Surrounds (G3)</th>
+<th>Atmos (G4)</th>
+<th>Sub (G5)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>G1 LR</strong></td>
+<td>-5 dB</td>
+<td>-6 dB</td>
+<td>-5 dB</td>
+<td>-5 dB</td>
+<td>-18 dB</td>
+</tr>
+<tr>
+<td><strong>G2 Center</strong></td>
+<td><strong>不支援</strong></td>
+<td>—</td>
+<td><strong>不支援</strong></td>
+<td><strong>不支援</strong></td>
+<td><strong>不支援</strong></td>
+</tr>
+<tr>
+<td><strong>G3 Surrounds</strong></td>
+<td>-6 dB</td>
+<td>-12 dB</td>
+<td>-9 dB</td>
+<td>(依情況)</td>
+<td>-18 dB</td>
+</tr>
+<tr>
+<td><strong>G4 Atmos</strong></td>
+<td>-6 dB</td>
+<td>-9 dB</td>
+<td>-12 dB</td>
+<td>-18 dB</td>
+<td>-18 dB</td>
+</tr>
+<tr>
+<td><strong>G5 Sub</strong></td>
+<td>-5 dB</td>
+<td>-5 dB</td>
+<td>-5 dB</td>
+<td>-4 dB</td>
+<td>(自己)</td>
+</tr>
+</tbody>
+</table>
+<p>說明：</p>
+<ul>
+<li><strong>Center 不參與任何 support</strong>（保護人聲純淨）</li>
+<li><strong>Sub 是主力 LFE 來源</strong>：-18 dB（被支援者最重要）</li>
+<li>數字越大（負越多）= 該 group 對被支援者貢獻越多能量</li>
+</ul>
+</section>
+<section id="443-lower-frequency-推薦值" class="level4">
+<h4>4.4.3 Lower Frequency 推薦值</h4>
+<table>
+<thead>
+<tr>
+<th>Group</th>
+<th>推薦下限</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>LR</td>
+<td>40 Hz</td>
+</tr>
+<tr>
+<td>Center</td>
+<td>不參與</td>
+</tr>
+<tr>
+<td>Surrounds</td>
+<td>90 Hz（廠商標 80 → 留餘裕）</td>
+</tr>
+<tr>
+<td>Atmos</td>
+<td>90 Hz（同上）</td>
+</tr>
+<tr>
+<td>Sub</td>
+<td>20 Hz（或更低，看你 sub 能耐）</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="444-upper-frequency支援上限" class="level4">
+<h4>4.4.4 Upper Frequency（支援上限）</h4>
+<p>通常留 <strong>150 Hz</strong>。LFE 上限可設 <strong>120 Hz</strong>
+或 <strong>150 Hz</strong> — 看你 sub 主動 crossover 設多少。</p>
+</section>
+<section id="445-infra-bass-強化選項" class="level4">
+<h4>4.4.5 Infra-bass 強化選項</h4>
+<p>若你 sub 能下潛 &lt; 20 Hz → <strong>勾選「Infra-bass
+boost」</strong>（介面上類似 checkbox）。 不勾的話 20 Hz
+起始會柔軟；勾了會額外推一把確保低頻量感。</p>
+</section>
+</section>
+<section id="45-correction-window校正視窗" class="level3">
+<h3>4.5 Correction Window（校正視窗）</h3>
+<p>Dirac 預設<strong>整個頻段</strong>（20 Hz – 20 kHz）都做修正。</p>
+<p><strong>講者見解</strong>：</p>
+<ul>
+<li><strong>如果房間做過被動聲學處理</strong>（吸音、擴散）→
+<strong>中高頻不需要 Dirac 動</strong></li>
+<li>把 correction window 改成 <strong>20 Hz – 500 Hz</strong>（或 1
+kHz）</li>
+<li>讓 Dirac 專注修正最棘手的<strong>低頻房間共振</strong></li>
+<li>中高頻保留喇叭原始音色</li>
+</ul>
+<p><strong>Schroeder
+頻率</strong>：理論上房間共振主導區的上限，一般客廳約 200–400 Hz，可作
+cutoff 參考。</p>
+<blockquote>
+<p>💡 <strong>權衡</strong>：完整 window = 最一致響應但聲音可能「Dirac
+味」較重；窄 window = 保留喇叭個性但中高頻響應不平整。<strong>多做幾個
+profile 比較聆聽</strong>。</p>
+</blockquote>
+</section>
+<section id="46-開始計算--export" class="level3">
+<h3>4.6 開始計算 + Export</h3>
+<p>點 <strong>Calculate</strong> → 看模擬結果（Spread 圖、Impulse
+Response 預覽）：</p>
+<ul>
+<li><strong>Spread 越窄越好</strong>（座位間差異越小）</li>
+<li>Sub group 的模擬曲線會接近 target curve</li>
+<li>LR group 因為大量參與支援，<strong>預估響應會接近 LFE</strong></li>
+</ul>
+<p>確認 OK → <strong>Export to slot</strong> (Storm 有多
+slot；Denon/Marantz 通常 3 slot)。</p>
+<hr />
+</section>
+</section>
+<section id="phase-5--校正後驗證量測" class="level2">
+<h2>Phase 5 — 校正後驗證量測</h2>
+<section id="51-重新放回參考點" class="level3">
+<h3>5.1 重新放回參考點</h3>
+<p>把麥克風放回主聆位（15 / 60 cm 那組）→ 跑一輪完整測量 → 用 REW
+比對校正前後。</p>
+</section>
+<section id="52-看-4-個關鍵指標" class="level3">
+<h3>5.2 看 4 個關鍵指標</h3>
+<pre><code>1. Frequency Response（SPL 對 frequency）
+   - 越線性越好
+   - 不能有大坑（trough）或大峰（peak）
+   - target curve 軌跡內為佳
+
+2. Phase（相位）
+   - 校正後相位應該在 30 Hz – 120 Hz 區段「拉得很直」
+   - 直 = 各頻段時間對齊
+
+3. Group Delay（群延遲，ms）
+   - 越接近 0 越好
+   - 越低頻越難搞（小房間物理極限）
+   - 校正後從 30 Hz 起應該接近 0 ms
+
+4. Decay / Waterfall（衰減 / 瀑布圖）
+   - 看每個頻率「殘響多久」
+   - 校正後低頻應該「乾淨俐落」（dry, tight）
+   - 不能拖尾巴（trail）</code></pre>
+</section>
+<section id="53-講者實測結果範例" class="level3">
+<h3>5.3 講者實測結果範例</h3>
+<p><strong>校正前 LFE</strong>：30–60 Hz 大量殘響、Waterfall
+圖中能量集中在 30–60 Hz 拖很久</p>
+<p><strong>校正後 LFE</strong>：能量均勻分布全頻段；30 Hz 起 group delay
+接近 0；50 ms 起殘響快速衰減</p>
+<p><strong>Impulse Alignment</strong>（脈衝對齊）：</p>
+<ul>
+<li>校正前：各聲道脈衝散落，後排喇叭明顯延遲</li>
+<li>校正後：所有聲道脈衝對齊到 <strong>0.2–0.3 ms 窗口內</strong>（&lt;
+0.5 ms 即合格）</li>
+</ul>
+</section>
+<section id="54-失真檢查重要" class="level3">
+<h3>5.4 失真檢查（重要）</h3>
+<p><strong>問題</strong>：ART 要求其他喇叭發更多低頻 → 可能拉高
+THD（失真）。</p>
+<p><strong>驗證</strong>：REW 量 LFE distortion plot</p>
+<ul>
+<li>校正後 20 Hz 失真 &lt; 1%（喇叭極限工作區）</li>
+<li>100 Hz 起 &lt; 0.2%</li>
+<li>如果失真整段拉高 → 你的 Support level 或 Lower frequency 設得太激進
+→ <strong>回去 Phase 4 放寬</strong></li>
+</ul>
+<hr />
+</section>
+</section>
+<section id="phase-6--處理器端微調--聆聽驗證" class="level2">
+<h2>Phase 6 — 處理器端微調 + 聆聽驗證</h2>
+<section id="61-為什麼還要微調" class="level3">
+<h3>6.1 為什麼還要微調</h3>
+<p>Dirac 在「整個頻段」做平均優化，但<strong>人耳對 400 Hz – 4 kHz
+特別敏感</strong>。 講者發現：在處理器端對每聲道做 <strong>0.1 dB
+級</strong> 的 level fine tune（針對 400 Hz – 4 kHz 粉紅噪音）→
+<strong>空間感與聲音聚焦再升一階</strong>。</p>
+</section>
+<section id="62-操作步驟" class="level3">
+<h3>6.2 操作步驟</h3>
+<ol type="1">
+<li><strong>複製當前 Dirac profile</strong>（保留原版作對照）</li>
+<li>在 REW 開 SPL meter（Z weighting）</li>
+<li>處理器端開 <strong>band-limited pink noise 400 Hz–4 kHz</strong>
+<ul>
+<li>Storm Audio 有內建 generator</li>
+<li>或用 VLC 播音檔</li>
+</ul></li>
+<li><strong>以左前置為參考</strong>（例：72 dB）</li>
+<li>一聲道一聲道測，用處理器 trim 調整到 <strong>±0.1 dB</strong>
+內</li>
+<li><strong>Sub 不要動</strong>（會破壞 Dirac ART 的工作成果）</li>
+</ol>
+</section>
+<section id="63-講者的後排補強經驗" class="level3">
+<h3>6.3 講者的「後排補強」經驗</h3>
+<p>校正後仍有人說「後方環繞感不夠」→ 測量沒問題，但人耳感受差。
+<strong>原因</strong>：第二排椅背遮擋後置喇叭直射 → 物理遮蔽。
+<strong>解法</strong>：手動把 Surround Back trim <strong>+2.5 ~ +3
+dB</strong>。</p>
+<blockquote>
+<p>💡
+<strong>這類校正麥克風抓不到、耳朵抓得到的問題，必須靠最後一步人耳驗收</strong>。</p>
+</blockquote>
+</section>
+<section id="64-聆聽驗收片單" class="level3">
+<h3>6.4 聆聽驗收片單</h3>
+<table>
+<thead>
+<tr>
+<th>片段</th>
+<th>測試重點</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Blade Runner（2049）開頭</strong></td>
+<td>Infra-bass 暴擊 + Atmos 空間感</td>
+</tr>
+<tr>
+<td><strong>Ready Player One 賽車場景</strong></td>
+<td>低頻動態（恐龍）+ Atmos 物件移動（King Kong、飛機）</td>
+</tr>
+<tr>
+<td><strong>John Wick 霰彈槍</strong></td>
+<td>短促低頻衝擊（impact）— 校正後應該乾淨俐落、不拖泥</td>
+</tr>
+</tbody>
+</table>
+<p>聆聽關鍵問題：</p>
+<ul>
+<li>✅ 低頻是否乾淨、不拖尾？</li>
+<li>✅ 衝擊感（impact）是否還在（沒被校過頭）？</li>
+<li>✅ Atmos 物件定位是否清楚？</li>
+<li>✅ 跨座位移動時音色是否一致？</li>
+</ul>
+<hr />
+</section>
+</section>
+<section id="toolbox-storm-audio-專屬第二段精修流程" class="level2">
+<h2>🧰 Storm Audio 專屬：第二段精修流程</h2>
+<p>Storm Audio 用戶可以：</p>
+<ol type="1">
+<li><strong>Duplicate profile</strong> 把校正結果複製一份</li>
+<li>在新 profile 上手動微調：
+<ul>
+<li><strong>Delay 微調</strong>（補 Dirac 沒處理乾淨的 impulse offset）
+<ul>
+<li>⚠️ 只能「加 delay」不能「減
+delay」（如果某聲道太快、其他都對齊，就無解）</li>
+<li><strong>Sub delay 不要動</strong>（會打掉 ART 工作）</li>
+</ul></li>
+<li><strong>Level 微調</strong>（0.1 dB 級）</li>
+</ul></li>
+<li>多保留幾個 profile 切換比較</li>
+</ol>
+<p>Denon / Marantz 用戶亦可在處理器端做類似 trim，但精度通常是 0.5
+dB（不到 0.1 dB）。</p>
+<hr />
+</section>
+<section id="pencil-講者方法論總結" class="level2">
+<h2>📝 講者方法論總結</h2>
+<pre><code>1. 量自己的喇叭、量自己的房間（REW Phase 1）
+   - 不要相信廠商規格表
+   - 確認真實下潛能力 → 決定 ART support frequency
+
+2. Levels 對齊
+   - Mains 對齊 ≈ -14 dB（+30 dB SNR over noise floor）
+   - Subs 比 mains 高 5–10 dB
+
+3. 17 點測量（最少 13 點起跳）
+   - 第一點 = 主聆位（最重要）
+   - 後續 16 點圍繞頭部 60 cm cube
+   - 座標都要不一樣
+   - 麥克風必須被所有喇叭「看見」
+
+4. Filter Design
+   - Speaker groups + Target curves（Storm Audio 推薦曲線最省事）
+   - Support levels 依 HCFR 表（記得「負越大、支越多」）
+   - Lower freq 留 10 Hz 安全餘裕
+   - Correction window 視房間被動處理程度決定要不要縮到 &lt; 500 Hz
+
+5. 後驗證
+   - 麥克風放回主聆位
+   - REW 看 4 大指標：頻率響應 / 相位 / Group delay / Decay+Waterfall
+
+6. 人耳微調
+   - 400 Hz–4 kHz 粉噪 0.1 dB 級 trim
+   - 後排補強 +2.5 ~ +3 dB（若有座椅遮擋）
+   - 聽 Blade Runner / Ready Player One / John Wick 驗收</code></pre>
+<hr />
+</section>
+<section id="warning-常見陷阱整理" class="level2">
+<h2>⚠️ 常見陷阱整理</h2>
+<table>
+<thead>
+<tr>
+<th>陷阱</th>
+<th>後果</th>
+<th>解法</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Lower frequency 給太低</td>
+<td>喇叭損壞 / 失真飆升</td>
+<td>量近場確認 → 留 10 Hz 餘裕</td>
+</tr>
+<tr>
+<td>第一點麥克風位置隨便</td>
+<td>校正前後無法比對</td>
+<td>用尺量、記下精確距離</td>
+</tr>
+<tr>
+<td>17 點都堆在同一高度</td>
+<td>Dirac 缺空間資訊</td>
+<td>每點變高度與深度</td>
+</tr>
+<tr>
+<td>Mic 被椅背遮擋後置喇叭</td>
+<td>後置喇叭低估 → trim 過低</td>
+<td>麥克風要「視野通透」</td>
+</tr>
+<tr>
+<td>Sub 整段交給 Dirac、自己沒先量</td>
+<td>駐波抵消不完美</td>
+<td>先量單 sub 找最佳擺位</td>
+</tr>
+<tr>
+<td>升級 Dirac Live 新版</td>
+<td>演算法變、結果跑掉</td>
+<td>找到滿意版本就鎖住</td>
+</tr>
+<tr>
+<td>Correction window 全段（20 Hz–20 kHz）</td>
+<td>中高頻被「Dirac 味」染色</td>
+<td>視房間處理程度縮到 500 Hz–1 kHz</td>
+</tr>
+<tr>
+<td>Center 加進 support group</td>
+<td>人聲被低頻汙染</td>
+<td><strong>Center 永遠不支援任何 group</strong></td>
+</tr>
+<tr>
+<td>校正後 sub delay 自己動手調</td>
+<td>打掉 ART 工作</td>
+<td>Sub delay 絕對不動</td>
+</tr>
+</tbody>
+</table>
+<hr />
+</section>
+<section id="dart-講者的最終心法" class="level2">
+<h2>🎯 講者的最終心法</h2>
+<blockquote>
+<p>「<strong>沒有完美的聲學</strong>。很多人覺得自己的方法最好，但我有興趣的是『討論』和『分享最佳實踐』，而不是宣稱自己是對的。」</p>
+</blockquote>
+<blockquote>
+<p>「校正是把房間和器材拉回<strong>製作端原本的意圖</strong>。如果你只是想聽『好聽的聲音』而不在乎還原，那就是你的選擇
+— 但別搞混『校正』與『調味』。」</p>
+</blockquote>
+<blockquote>
+<p>「Dirac ART <strong>不是
+plug-and-play</strong>。它要求你瞭解自己的房間、喇叭、需求。但代價是你能達到傳統校正方法到不了的境界
+— 特別是低頻的 active
+cancellation，這是被動聲學處理永遠做不到的事。」</p>
+</blockquote>
+<hr />
+</section>
+<section id="books-延伸資源" class="level2">
+<h2>📚 延伸資源</h2>
+<ul>
+<li><strong>HCFR 論壇</strong>：<a
+href="https://www.homecinema-fr.com"><span>https://www.homecinema-fr.com</span></a></li>
+<li><strong>Storm Audio Target Curves</strong>：官網 Support 區</li>
+<li><strong>REW 官網</strong>：<a
+href="https://www.roomeqwizard.com"><span>https://www.roomeqwizard.com</span></a></li>
+<li><strong>UMIK-1 校正檔</strong>：miniDSP 官網以序號下載</li>
+<li><strong>講者頻道</strong>：HCFR YouTube</li>
+</ul>
+<hr />
+<p><em>本教學由助理依逐字稿（93 KB / 17,223 法文字 / 1 小時 34
+分）翻譯整理為繁中結構化教學。原片為 David Davrous（HCFR）2024
+製作，主示範器材為 Storm Audio
+Stormio。內容已對技術名詞、操作步驟、推薦數值做交叉驗證；建議實作時對照原片畫面。</em></p>
+<p><em>整理日期：2026-06-07</em></p>
+</section>
+</section>
+<footer class="note">
+本教學 HTML 為盧醫師助理依 <a href="https://www.youtube.com/watch?v=ajcLuwpYLJk">原片</a>（法文逐字稿 17,223 字 · 1 小時 34 分）整理為繁中結構化教學。<br>
+產出時間：2026-06-07 · pandoc 3.9 渲染 · 純單檔 HTML，無外部相依，可離線開啟或列印為 PDF。
+</footer>
+</article>
+</div>
+</body>
+</html>

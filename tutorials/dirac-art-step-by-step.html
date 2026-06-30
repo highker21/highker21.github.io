@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>DIRAC ART 房間校正 一步一步教學</title>
+<style>
+:root{
+  --ink:#1a2330; --soft:#5e6b7a; --line:#e6e9ef; --bg:#0e1726; --page:#f4f6fa; --card:#fff;
+  --acc:#e8602c; --acc2:#f08a3c; --accbg:#fdeee6;
+  --blue:#1f6feb; --bluebg:#e9f1fd; --teal:#0f9d8c; --tealbg:#e3f6f2;
+  --warn:#c0392b; --warnbg:#fdecea; --tip:#9a6a12; --tipbg:#fbf3df;
+  --shadow:0 1px 2px rgba(10,20,40,.05),0 12px 30px rgba(10,20,40,.08);
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--page);color:var(--ink);
+ font-family:"PingFang TC","Noto Sans TC",-apple-system,"Segoe UI",sans-serif;line-height:1.75;font-size:16px;}
+.wrap{max-width:800px;margin:0 auto;padding:0 16px 70px;}
+header.hero{background:radial-gradient(120% 120% at 80% 0%,#21314d 0%,#0e1726 60%);color:#fff;
+ padding:34px 22px 30px;border-radius:0 0 24px 24px;box-shadow:var(--shadow);}
+header.hero .ey{font-size:12.5px;letter-spacing:2px;color:var(--acc2);font-weight:700;text-transform:uppercase;}
+header.hero h1{margin:6px 0 8px;font-size:25px;line-height:1.3;}
+header.hero p{margin:0;font-size:14px;color:#b9c4d4;}
+header.hero .meta{margin-top:14px;display:flex;gap:8px;flex-wrap:wrap;}
+header.hero .meta span{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);border-radius:999px;padding:4px 12px;font-size:12.5px;}
+
+.intro{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px 18px;margin:18px 0;box-shadow:var(--shadow);font-size:15px;color:#33404f;}
+.intro b{color:var(--acc);}
+
+h2.sec{font-size:13px;letter-spacing:1.5px;color:var(--acc);text-transform:uppercase;margin:30px 4px 4px;font-weight:800;}
+
+.prep{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:6px 18px 14px;box-shadow:var(--shadow);}
+.prep ul{list-style:none;padding:0;margin:10px 0 4px;}
+.prep li{position:relative;padding:7px 0 7px 30px;border-bottom:1px solid #f0f2f6;font-size:14.5px;}
+.prep li:last-child{border-bottom:none;}
+.prep li::before{content:"✓";position:absolute;left:2px;top:7px;color:var(--teal);font-weight:800;}
+.prep li.no::before{content:"✕";color:var(--warn);}
+.prep li b{color:var(--ink);}
+
+.step{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px 18px 14px;margin:14px 0;box-shadow:var(--shadow);position:relative;}
+.step .num{position:absolute;top:-14px;left:16px;width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--acc),var(--acc2));color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:17px;box-shadow:0 4px 10px rgba(232,96,44,.4);}
+.step h3{margin:10px 0 8px;font-size:18px;}
+.step p{margin:7px 0;font-size:15px;color:#33404f;}
+.step ul{margin:7px 0;padding-left:20px;font-size:14.5px;color:#33404f;}
+.step li{margin:4px 0;}
+.callout{border-radius:10px;padding:9px 13px;margin:10px 0;font-size:14px;}
+.c-key{background:var(--accbg);border-left:4px solid var(--acc);color:#8a3415;}
+.c-warn{background:var(--warnbg);border-left:4px solid var(--warn);color:#8a261c;}
+.c-tip{background:var(--tipbg);border-left:4px solid #d9a93b;color:#6f4e0e;}
+.callout b{color:inherit;}
+table.price{width:100%;border-collapse:collapse;font-size:14px;margin:8px 0;}
+table.price td{border:1px solid #e3e8ee;padding:6px 9px;}
+table.price td:first-child{background:#f6f8fb;}
+table.price td:last-child{font-weight:700;color:var(--acc);white-space:nowrap;text-align:right;}
+.result{background:linear-gradient(135deg,var(--tealbg),#eef9f6);border:1px solid #bce8df;border-radius:16px;padding:16px 18px;margin:18px 0;}
+.result h3{margin:0 0 8px;color:#0b7567;font-size:18px;}
+.result p{margin:6px 0;font-size:15px;color:#28504a;}
+code{background:#eef1f4;padding:1px 6px;border-radius:5px;font-size:13.5px;}
+footer.src{font-size:12.5px;color:#7d8794;line-height:1.7;margin-top:26px;border-top:1px dashed var(--line);padding-top:16px;}
+footer.src b{color:var(--ink);}
+.ver{text-align:center;font-size:12px;color:#9aa4af;margin-top:10px;}
+</style>
+</head>
+<body>
+<header class="hero">
+  <div class="ey">DIRAC ART · 一步一步教學</div>
+  <h1>DIRAC ART 房間校正完整流程</h1>
+  <p>從「測量」到「快速調整」走一遍 Active Room Treatment（主動房間處理）</p>
+  <div class="meta"><span>🎚 示範機：Marantz Cinema 30</span><span>🎙 UMIK-1 麥克風</span><span>⏱ 約 10 個步驟</span></div>
+</header>
+
+<div class="wrap">
+
+  <div class="intro">
+    <b>DIRAC ART（Active Room Treatment）</b>是 DIRAC 最高階的房間校正技術。它讓房間內<b>每一支喇叭互相協助</b>，特別針對 <b>150 Hz 以下</b>的低頻波峰／波谷做優化——低頻更乾淨有層次、人聲更滑順。對「嵌入式（in-wall）、重低音擺位受限」的系統尤其有效。本教學帶你從頭跑完一次基本流程（進階微調另有專篇）。
+  </div>
+
+  <!-- 準備清單 -->
+  <h2 class="sec">開始前的準備</h2>
+  <div class="prep">
+    <ul>
+      <li>支援 DIRAC 的 AV 擴大機（AVR），如 <b>Marantz / Denon</b>（本例 Cinema 30）</li>
+      <li>已購買的 <b>DIRAC ART 授權</b>（見步驟 1）</li>
+      <li>USB 測量麥克風 <b>UMIK-1</b>（miniDSP）＋三腳架，麥克風朝上</li>
+      <li class="no">隨機附的 <b>Audyssey 小麥克風不能用</b>於 DIRAC 校正</li>
+      <li>一台電腦，安裝<b>最新版 DIRAC Live</b> 軟體</li>
+      <li>盡量安靜的房間（可關空調／通風）</li>
+    </ul>
+  </div>
+
+  <!-- Steps -->
+  <h2 class="sec">操作步驟</h2>
+
+  <div class="step"><div class="num">1</div>
+    <h3>取得 DIRAC ART 授權</h3>
+    <p>到 <code>dirac.com/marantz</code>（Denon 用戶用 <code>/denon</code>），選你的 AVR 型號（例 Cinema 30），會列出該機支援的各級授權，可單買或買套裝：</p>
+    <table class="price">
+      <tr><td>已有 Bass Control → 升級 ART</td><td>US$299</td></tr>
+      <tr><td>Bass Control ＋ ART 套裝（省約 $50）</td><td>US$549</td></tr>
+      <tr><td>全套：Room Correction ＋ Bass Control ＋ ART（原價 $947）</td><td>US$799</td></tr>
+    </table>
+    <p>先<b>註冊帳號</b>（授權綁定帳號）→ 購買 → 授權出現在帳號下，之後再從帳號轉到該台 AVR。</p>
+  </div>
+
+  <div class="step"><div class="num">2</div>
+    <h3>準備測量麥克風與校正檔</h3>
+    <ul>
+      <li>使用 USB 麥克風 <b>UMIK-1</b>（最常見的校正用麥克風）。</li>
+      <li>到 <code>minidsp.com</code> → 選 UMIK-1 → 輸入<b>麥克風序號</b>（印在麥克風或外盒上）→ 下載「該支麥克風專屬」的校正檔。</li>
+    </ul>
+    <div class="callout c-warn">⚠️ <b>要用「90 度（垂直朝上）」校正檔</b>：全室多喇叭測量時麥克風朝天花板。只有單獨量一支喇叭的頻率響應（麥克風對準喇叭）才用 0 度檔。</div>
+  </div>
+
+  <div class="step"><div class="num">3</div>
+    <h3>開啟 DIRAC Live 並連接 AVR</h3>
+    <ul>
+      <li>從官網下載安裝<b>最新版</b> DIRAC Live（確保功能完整）。</li>
+      <li>開啟後會自動掃出網路上所有支援 DIRAC 的裝置 → 點選你的 AVR（例 Cinema 30）。</li>
+      <li>AVR 螢幕（OSD）會顯示已進入 DIRAC 設定狀態。</li>
+    </ul>
+  </div>
+
+  <div class="step"><div class="num">4</div>
+    <h3>選擇麥克風</h3>
+    <p>把 UMIK-1 插進電腦 USB，軟體會偵測到該麥克風。UMIK-1 通常已<b>內建校正檔</b>，免再匯入；若沒有，點下方 <code>Load File</code> 載入步驟 2 下載的校正檔即可。</p>
+  </div>
+
+  <div class="step"><div class="num">5</div>
+    <h3>測試喇叭音量（Level）</h3>
+    <p>跑各喇叭測試音。重點<b>不是</b>把音量調到完美，而是讓每支喇叭電平落在量表的「中間」，確保麥克風收得到每支喇叭的訊號。</p>
+    <div class="callout c-tip">💡 理想各喇叭彼此相差 <b>1–2 dB</b>。若有異常，多半是<b>重低音被推過大／過小</b> → 回去調整重低音電平即可。</div>
+  </div>
+
+  <div class="step"><div class="num">6</div>
+    <h3>選擇聆聽區範圍（Sweet Spot）</h3>
+    <ul>
+      <li><b>Focus</b>：單人、最緊（如錄音監聽）。</li>
+      <li><b>Wide</b>：1–2 人、沙發較有彈性。</li>
+      <li><b>Expanded</b>：劇院／展示間、多人聆聽。</li>
+    </ul>
+    <div class="callout c-key">🔑 <b>建議選 Expanded</b>：只要你現在或未來會用 ART，它會自動給更多測量點，省得手動加，也更容易升級到 ART。</div>
+  </div>
+
+  <div class="step"><div class="num">7</div>
+    <h3>進行測量（最關鍵的一步）</h3>
+    <ul>
+      <li>測量點數原則：<b>至少等於房間喇叭總數</b>；ART 要盡量多測。例 9.4.6（19 支喇叭）建議約 <b>20 點</b>。</li>
+      <li>ART <b>至少需 9 個有效位置</b>。</li>
+    </ul>
+    <div class="callout c-key">🔑 <b>第一個測量點＝主聆聽位，最重要！</b>它決定時間校正（impulse response），讓所有喇叭的聲音<b>同時到達</b>該位置。把麥克風放在「你一個人聽時會坐的最佳位置」。</div>
+    <ul>
+      <li>按下測量會聽到各喇叭的<b>掃頻聲</b>；接著依軟體提示的各位置（如 top front right…）逐點測量（本例約 13 點）。</li>
+      <li>每點約 <b>1–3 分鐘</b>（喇叭越多越久）。</li>
+    </ul>
+    <div class="callout c-tip">💡 盡量讓房間安靜（關空調／通風）。並確認 DIRAC 顯示的聲道配置（如 <b>5.4.2</b>＝5 環繞＋4 重低音＋2 天空聲道）與實際相符；不符要回 AVR 改聲道佈局。</div>
+  </div>
+
+  <div class="step"><div class="num">8</div>
+    <h3>濾波器設計（執行 ART 運算）</h3>
+    <ul>
+      <li>選 ART 後，會先跑 ART 濾波器，同時處理<b>分頻點、目標曲線</b>等（涵蓋其他 DIRAC 版本的處理 ＋ ART）。</li>
+      <li>運算<b>較久</b>——演算法複雜，因為每支喇叭都會協助其他喇叭。</li>
+    </ul>
+    <div class="callout c-key">🔑 ART 主要修正 <b>150 Hz 以下</b>低頻的波峰／波谷（多數房間最大的問題），讓低頻更乾淨，連帶中頻與人聲也更清晰。</div>
+  </div>
+
+  <div class="step"><div class="num">9</div>
+    <h3>調整目標曲線（Target Curve）並計算</h3>
+    <ul>
+      <li>可調目標曲線：例如<b>中頻補償小凹陷</b>、<b>高頻滾降</b>（高音量時更耐聽），套用到前置 L/R、環繞、中置。</li>
+      <li>兩種調法：整段<b>斜率</b>上下，或<b>精準點對點</b>調整。</li>
+      <li>重低音：把低頻起始<b>拉高約 3 dB</b>（聽起來更溫暖、自然）。</li>
+      <li>調好按 <code>Calculate</code>：系統逐支喇叭計算其他被指派的喇叭如何協助（例 5.4.2 共 11 支，發出左前聲時其餘 10 支一起幫忙；重低音亦然）。</li>
+    </ul>
+  </div>
+
+  <div class="step"><div class="num">10</div>
+    <h3>匯出到 AVR 並 A/B 比較</h3>
+    <ul>
+      <li>運算完成 → 把濾波器<b>匯出到 AVR 的一個 slot</b>。</li>
+      <li>Marantz/Denon 有<b>兩組喇叭預設</b>：一組給 Audyssey、一組給 DIRAC；DIRAC 預設可放 <b>3 組濾波器</b>。</li>
+      <li>可存多個版本（例 <code>DIRAC Live ART V2</code> ＋ Bass Control）→ 載入後直接 <b>A/B 比較</b>，挑最喜歡的。</li>
+    </ul>
+  </div>
+
+  <!-- 進階 -->
+  <h2 class="sec">進階（下一篇）</h2>
+  <div class="intro" style="margin-top:6px">
+    更深入的 ART 微調：調整<b>哪些 group 支援哪些喇叭</b>、每個 group 支援多少、以及目標曲線的進階調法——官方會在後續「大型參考劇院」的影片中示範。基礎的 DIRAC Live 房間校正（測量等步驟）也另有教學影片。
+  </div>
+
+  <!-- 結果 -->
+  <div class="result">
+    <h3>🎧 校正後的效果</h3>
+    <p>低頻<b>更深、更有層次</b>、人聲更滑順、整體系統明顯更好。</p>
+    <p>對<b>嵌入式（in-wall）</b>系統尤其有感——重低音只能塞在牆內固定位置時，ART 讓多顆重低音<b>互相協作</b>，不必大量加裝物理吸音，也能得到乾淨紮實的低頻。</p>
+  </div>
+
+  <footer class="src">
+    <b>內容來源</b>：YouTube「Sound United Training」官方教學影片《Step-by-Step Guide to DIRAC ART Calibration – How to Take Measurements and Make Adjustments》（主講 Phil Jones，約 27 分鐘）。<br>
+    本頁為該影片之中文步驟整理，供教學參考；實際操作畫面與最新功能以 DIRAC Live 軟體與官方說明為準。價格為影片中所示，實際以官網為準。
+  </footer>
+  <div class="ver">教學版本：2026-06-13</div>
+
+</div>
+</body>
+</html>

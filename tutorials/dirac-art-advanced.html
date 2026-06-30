@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>DIRAC ART 進階微調與實戰技巧 教學</title>
+<style>
+:root{
+  --ink:#1a2330; --soft:#5e6b7a; --line:#e6e9ef; --page:#f4f6fa; --card:#fff;
+  --acc:#7b3ff2; --acc2:#9a64f5; --accbg:#f1ebfd;
+  --blue:#1f6feb; --bluebg:#e9f1fd; --teal:#0f9d8c; --tealbg:#e3f6f2;
+  --warn:#c0392b; --warnbg:#fdecea; --tip:#9a6a12; --tipbg:#fbf3df;
+  --shadow:0 1px 2px rgba(10,20,40,.05),0 12px 30px rgba(10,20,40,.08);
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--page);color:var(--ink);
+ font-family:"PingFang TC","Noto Sans TC",-apple-system,"Segoe UI",sans-serif;line-height:1.75;font-size:16px;}
+.wrap{max-width:800px;margin:0 auto;padding:0 16px 70px;}
+header.hero{background:radial-gradient(120% 120% at 80% 0%,#3a2566 0%,#171029 60%);color:#fff;
+ padding:34px 22px 30px;border-radius:0 0 24px 24px;box-shadow:var(--shadow);}
+header.hero .ey{font-size:12.5px;letter-spacing:2px;color:var(--acc2);font-weight:700;text-transform:uppercase;}
+header.hero h1{margin:6px 0 8px;font-size:24px;line-height:1.3;}
+header.hero p{margin:0;font-size:14px;color:#c3bcd6;}
+header.hero .meta{margin-top:14px;display:flex;gap:8px;flex-wrap:wrap;}
+header.hero .meta span{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);border-radius:999px;padding:4px 12px;font-size:12.5px;}
+.crumb{background:#ede7fb;border:1px solid #d9cdf7;border-radius:12px;padding:10px 14px;margin:16px 0;font-size:13.5px;color:#5b3aa6;}
+.crumb b{color:#43287d;}
+.intro{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px 18px;margin:14px 0;box-shadow:var(--shadow);font-size:15px;color:#33404f;}
+.intro b{color:var(--acc);}
+h2.sec{font-size:13px;letter-spacing:1.5px;color:var(--acc);text-transform:uppercase;margin:30px 4px 4px;font-weight:800;}
+.step{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px 18px 14px;margin:14px 0;box-shadow:var(--shadow);position:relative;}
+.step .num{position:absolute;top:-14px;left:16px;min-width:34px;height:34px;padding:0 9px;border-radius:18px;background:linear-gradient(135deg,var(--acc),var(--acc2));color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;box-shadow:0 4px 10px rgba(123,63,242,.4);}
+.step h3{margin:10px 0 8px;font-size:18px;}
+.step p{margin:7px 0;font-size:15px;color:#33404f;}
+.step ul{margin:7px 0;padding-left:20px;font-size:14.5px;color:#33404f;}
+.step li{margin:5px 0;}
+.callout{border-radius:10px;padding:9px 13px;margin:10px 0;font-size:14px;}
+.c-key{background:var(--accbg);border-left:4px solid var(--acc);color:#4a2a91;}
+.c-warn{background:var(--warnbg);border-left:4px solid var(--warn);color:#8a261c;}
+.c-tip{background:var(--tipbg);border-left:4px solid #d9a93b;color:#6f4e0e;}
+.param{border:1px solid #e6e9ef;border-radius:10px;padding:10px 13px;margin:8px 0;background:#fafbfd;}
+.param .pn{font-weight:800;color:var(--acc);font-size:14.5px;}
+.param .pd{font-size:14px;color:#33404f;margin-top:3px;}
+table.lv{width:100%;border-collapse:collapse;font-size:14px;margin:6px 0;}
+table.lv td{border:1px solid #e3e8ee;padding:6px 9px;}
+table.lv td:first-child{background:#f6f8fb;font-weight:700;white-space:nowrap;}
+.slot{display:flex;gap:10px;margin:8px 0;align-items:flex-start;}
+.slot .sn{flex:0 0 auto;width:30px;height:30px;border-radius:8px;background:var(--acc);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;}
+.slot .sd{font-size:14.5px;color:#33404f;}
+.result{background:linear-gradient(135deg,var(--tealbg),#eef9f6);border:1px solid #bce8df;border-radius:16px;padding:16px 18px;margin:18px 0;}
+.result h3{margin:0 0 8px;color:#0b7567;font-size:18px;}
+.result p{margin:6px 0;font-size:15px;color:#28504a;}
+code{background:#eef1f4;padding:1px 6px;border-radius:5px;font-size:13.5px;}
+footer.src{font-size:12.5px;color:#7d8794;line-height:1.7;margin-top:26px;border-top:1px dashed var(--line);padding-top:16px;}
+footer.src b{color:var(--ink);}
+.ver{text-align:center;font-size:12px;color:#9aa4af;margin-top:10px;}
+</style>
+</head>
+<body>
+<header class="hero">
+  <div class="ey">DIRAC ART · 進階微調</div>
+  <h1>DIRAC ART 進階微調與實戰技巧</h1>
+  <p>分組、support 參數、濾波器限制——把開箱的 ART 調到「真正好聽」</p>
+  <div class="meta"><span>🎚 示範：Marantz AV10 · 5.2.4</span><span>🔧 Group / Support 調校</span><span>⏱ 進階篇</span></div>
+</header>
+
+<div class="wrap">
+
+  <div class="crumb">📎 這是 <b>進階微調篇</b>，建議先看<b>基礎流程篇</b>（測量→濾波器→匯出）。本篇專講官方說「下一集才教」的微調：speaker 分組與 support 參數。</div>
+
+  <div class="intro">
+    <b>DIRAC ART（Active Room Treatment）</b>不只個別優化每支喇叭，而是<b>動用全部喇叭一起抵消房間共振與駐波</b>——像是「整個房間的降噪」，低頻特別有感。但<b>開箱不等於最佳</b>：預設常把中置推太多、人聲可能變軟、細節變少。本篇示範如何透過分組與 support 微調，把這些救回來。
+  </div>
+
+  <!-- A 基本回顧 + slot -->
+  <h2 class="sec">一、開始前：測量與濾波器槽策略</h2>
+
+  <div class="step"><div class="num">1</div>
+    <h3>測量點：多一點、帶高低差</h3>
+    <ul>
+      <li>升級 Bass Control → ART 約 <b>US$300</b>（依機型/地區，以官網為準）。</li>
+      <li>已有<b>至少 9 個有效測量點</b>的舊校正可沿用，不必從頭。</li>
+      <li>但講者實測<b>9 點 → 13 點（並加入高低差）效果明顯更好</b>，值得多花時間。</li>
+      <li>小撇步：設 <b>15 秒延遲</b>再開始，按下後人先離開房間再讓掃頻開始。</li>
+    </ul>
+  </div>
+
+  <div class="step"><div class="num">2</div>
+    <h3>濾波器槽（slot）策略——方便 A/B 比較</h3>
+    <p>運算後 <code>Calculate</code> → <code>proceed to filter export</code>，建議這樣分配 AVR 的三個 slot：</p>
+    <div class="slot"><div class="sn">1</div><div class="sd"><b>舊的 Bass Control</b> 濾波器（保留）</div></div>
+    <div class="slot"><div class="sn">2</div><div class="sd"><b>ART default</b>（DIRAC 算出的預設，先<b>不要改</b>）</div></div>
+    <div class="slot"><div class="sn">3</div><div class="sd"><b>ART 自訂版</b>（稍後微調的成果，命名如 <code>ART test</code>）</div></div>
+    <div class="callout c-tip">💡 用遙控器 <b>Options</b> 鍵即可在三個濾波器間切換比較（切換時短暫靜音是正常的）。<b>記得把專案存到電腦本機</b>，避免軟體當掉前功盡棄。</div>
+    <div class="callout c-warn">⚠️ 若匯出濾波器到 AVR 失敗 → 把 <b>AVR 做一次原廠重置（factory reset）</b>再試。</div>
+  </div>
+
+  <!-- B 開箱感受 -->
+  <h2 class="sec">二、開箱即聽的感受（為什麼要微調）</h2>
+  <div class="intro" style="margin-top:6px">
+    用 Blu-ray 實聽（Oppenheimer、Top Gun: Maverick）：相較 Bass Control，ART 讓<b>低頻變 3D、規模感與動態大幅提升</b>，像多了兩顆隱形重低音。<br>
+    但開箱版的<b>副作用</b>：人聲對白會<b>變軟、變平</b>，部分定位細節（如雨滴）變不明確。這正是<b>需要微調</b>的原因——下面教怎麼救回來。
+  </div>
+
+  <!-- C 進階微調指南 -->
+  <h2 class="sec">三、進階微調指南（核心）</h2>
+
+  <div class="step"><div class="num">3</div>
+    <h3>先看「分組（Groups）」是否合理</h3>
+    <p>DIRAC 會把喇叭分成數個 group，同組共用參數。先確認分組合理。講者 5.2.4 的分組：</p>
+    <ul>
+      <li>G1 前置 L/R｜G2 中置｜G3 環繞｜G4 天空前｜G5 天空後｜G6 兩顆重低音</li>
+      <li>可用<b>拖曳</b>重新分組。何時要重分？例如<b>環繞離你比主聲道近很多</b>時（主聲道＝前置 L/R）。</li>
+      <li>擺位已經合理就用<b>預設分組</b>即可。</li>
+    </ul>
+    <div class="callout c-key">🔑 <b>150 Hz 是分界</b>：<b>150 Hz 以下</b> ART 用所有「有能力」的喇叭（不只重低音）協助修正直達聲與部分房間反射；<b>150 Hz 以上</b>套用傳統 DIRAC Live 修正。</div>
+  </div>
+
+  <div class="step"><div class="num">4</div>
+    <h3>讀懂 Support 參數（每組可調）</h3>
+    <p>點選一個 group 會看到 support 滑桿，可開關「哪些組來支援它」。各參數意義：</p>
+
+    <div class="param"><div class="pn">F support max（支援最高頻，50–150 Hz）</div><div class="pd">ART 用喇叭協助控制低頻衰減的上限。講者留在 <b>150 Hz</b>（LFE 到 120 Hz，仍在範圍內）。</div></div>
+    <div class="param"><div class="pn">Support level（支援強度，−24 ~ −1 dB）</div><div class="pd">
+      <table class="lv">
+        <tr><td>Full（最強）</td><td>−24 dB</td></tr>
+        <tr><td>Medium（預設）</td><td>−18 dB</td></tr>
+        <tr><td>Light（輕）</td><td>−6 dB</td></tr>
+      </table>
+      −24＝最大支援、−1＝最小支援。</div></div>
+    <div class="param"><div class="pn">F support low（支援能到多低）</div><div class="pd">設定支援可延伸到的最低頻。<b>對齊喇叭真正的低頻下限</b>（查原廠規格 +10~20 Hz）。例：Manger P2 可到 30 Hz → 設 40 Hz。</div></div>
+    <div class="param"><div class="pn">F support high（支援最高頻，預設 150 Hz）</div><div class="pd">若支援喇叭離你較近、或看電影時變得「聽得到」，可<b>調低 support high 或降 support level</b>。</div></div>
+    <div class="param"><div class="pn">Infrasonic（超低頻 &lt;20 Hz）</div><div class="pd">只在能播 20 Hz 以下的喇叭出現。<b>只在重低音群組開啟</b>（延伸 20 Hz 以下修正）；開在主聲道/環繞會浪費 DSP 並產生雜訊。</div></div>
+    <div class="param"><div class="pn">LFE reference channel（重低音群組內）</div><div class="pd">指定 LFE 時間對齊要參考哪支喇叭。<b>留在中置</b>即可，除非佈局很不對稱。</div></div>
+
+    <div class="callout c-warn">⚠️ <b>濾波器數量有上限</b>：每開一個 support group 都會消耗濾波器。講者的 Marantz AV10 上限 <b>98 個</b>，開太多就無法再啟用其他組。</div>
+    <div class="callout c-tip">💡 <b>支援限制</b>：DIRAC 禁止「循環依賴」，至少要有一個不對稱關係。若某組無法啟用支援，多半是這個限制、或濾波器已用完。</div>
+  </div>
+
+  <div class="step"><div class="num">5</div>
+    <h3>重低音分組的規則</h3>
+    <ul>
+      <li>Marantz 把<b>所有重低音當成「一個邏輯低頻系統」</b>。把某顆拆成獨立群組 → 會<b>失去其曲線與 support 選項</b>，且移除一顆等於把它排除在 ART 之外。</li>
+      <li>👉 建議<b>所有重低音留在同一個 ART 群組</b>，用 DIRAC 的目標曲線去塑形低頻。停用某顆＝該顆不再被修正。</li>
+    </ul>
+  </div>
+
+  <!-- D 講者範例 -->
+  <h2 class="sec">四、講者的實際調整範例（僅供參考）</h2>
+  <div class="callout c-warn" style="margin-top:6px">⚠️ 以下設定是<b>講者針對自己的房間／喇叭</b>的調整，請當「靈感」而非「處方」。每個房間都不同，務必自己聽。</div>
+
+  <div class="step"><div class="num">範例</div>
+    <h3>各群組怎麼調</h3>
+    <ul>
+      <li><b>G1 前置</b>：低頻略升 1–2 dB；同組互助（intra-group，L/R 在低頻互相幫忙）；F support low 50→40 Hz；<b>關掉中置與天空聲道的支援</b>（避免中置糊化對白；天空喇叭太小不適合當支援者）。</li>
+      <li><b>G2 中置</b>：只讓<b>前置＋重低音</b>支援；把 DIRAC 修正限制在約 <b>400–500 Hz</b>（保留小反射讓對白更有個性，全濾掉反而變平）；預設把中置推太多 → 降到 +1/+2 dB。</li>
+      <li><b>環繞</b>：前置支援降到 <b>−6 dB（很輕）</b>；關掉中置與天空當支援；讓重低音完整支援。</li>
+      <li><b>天空（Atmos）</b>：彼此不互相支援。</li>
+      <li><b>重低音群組</b>：只接受<b>前置</b>（唯一全頻喇叭）支援；試 −6 dB 反而低頻不乾淨 → 維持 <b>−18 dB</b>（Oppenheimer 開場更乾淨、消除破音）；support low 設 40 Hz；兩顆重低音間<b>完全互助 −24 dB</b>；開啟 infrasonic。</li>
+    </ul>
+    <div class="callout c-tip">💡 重算後 <b>20 Hz 附近出現小突起是正常的</b>（ART 只修正到 20 Hz，相位不匹配所致）；太高可用<b>目標曲線</b>壓一下。</div>
+  </div>
+
+  <!-- E 工作流 -->
+  <h2 class="sec">五、微調工作流與心法</h2>
+  <div class="step"><div class="num">★</div>
+    <h3>怎麼調才不會越調越亂</h3>
+    <ul>
+      <li><b>一次只改一個參數</b>，才搞得清楚每個改動的效果。</li>
+      <li>用 <b>Blu-ray</b> 而非串流來聽（資訊量較完整）；挑你<b>不喜歡的地方</b>針對性地調。</li>
+      <li>調好 → 匯出到 <b>slot 3</b>（命名 <code>ART test</code>）→ 跟 slot 1/2 比較。</li>
+      <li>核心是<b>用心聽（listen critically）</b>，數字只是輔助。</li>
+    </ul>
+  </div>
+
+  <!-- 結語 -->
+  <div class="result">
+    <h3>🎧 講者結論</h3>
+    <p>ART 不只是升級，是<b>全新的房間校正體驗</b>——動用每支喇叭一起對抗房間。調對了，聲音更緊、更乾淨、更有動態與規模感，像「多了幾顆重低音、改善了房間聲學、升級了整套系統」，而這全靠軟體。</p>
+    <p>但<b>開箱不完美、設定很講究</b>，小失誤就會改變整體音色平衡。<b>慢慢調、好好聽</b>。對 Denon/Marantz 用戶，這 US$300 升級「絕對值得」。</p>
+  </div>
+
+  <footer class="src">
+    <b>內容來源</b>：YouTube「Mad Audio」《The TRUTH About Dirac ART – Tutorial, Results & Real Setup Tips》（約 20 分鐘）。本頁為該影片之中文步驟與技巧整理，供教學參考；影片中的具體參數為講者個人系統設定，請依自身器材與房間調整，並以 DIRAC 官方技術指南與軟體實際畫面為準。
+  </footer>
+  <div class="ver">教學版本：2026-06-13</div>
+
+</div>
+</body>
+</html>
