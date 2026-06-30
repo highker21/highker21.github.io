@@ -63,7 +63,7 @@ Promise.resolve(JSON.parse(document.getElementById('nhidata').textContent)).then
   $('nproc').textContent='('+j.proc.length.toLocaleString()+')';
   $('ndrug').textContent='('+j.drug.length.toLocaleString()+')';
   $('loading').style.display='none'; $('tbl').style.display='';
-  $('ft').textContent=`處置 ${j.proc.length.toLocaleString()} 項 ｜ 藥品 ${j.drug.length.toLocaleString()} 項　·　${j.meta.proc_src}／${j.meta.drug_src}　·　工具版本：${j.meta.built}`;
+  $('ft').innerHTML=`處置 ${j.proc.length.toLocaleString()} 項 ｜ 藥品 ${j.drug.length.toLocaleString()} 項　·　工具版本：${j.meta.built}<br>資料來源：${j.meta.proc_src}；${j.meta.drug_src}（data.gov.tw／健保署開放資料）。點數/藥價以健保署最新公告為準。`;
   const sp=new URLSearchParams(location.search);
   const pq=sp.get('q')||''; if(pq)$('q').value=pq;
   setTab(sp.get('tab')==='drug'?'drug':'proc');

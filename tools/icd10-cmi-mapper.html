@@ -91,7 +91,7 @@ Promise.resolve([JSON.parse(document.getElementById('icddata').textContent),JSON
   (SEM.abbr||[]).forEach(a=>{a.dx=expandPx(a.px); a.lc=a.a.toLowerCase();});
   $('loading').style.display='none'; $('tbl').style.display='';
   const cov=j.meta;
-  $('ft').textContent=`索引：${DATA.length.toLocaleString()} 筆可申報 ICD-10-CM ｜ 主訴 ${SEM.complaints.length} 項＋斷詞詞庫 ｜ ${j.meta.rw_basis} ｜ 版本 ${j.meta.version} (${j.meta.built})`;
+  $('ft').innerHTML=`索引：${DATA.length.toLocaleString()} 筆可申報 ICD-10-CM ｜ 主訴 ${SEM.complaints.length} 項＋斷詞詞庫 ｜ ${j.meta.rw_basis} ｜ 版本 ${j.meta.version} (${j.meta.built})<br>資料來源：衛生福利部／中央健康保險署「ICD-10-CM・ICD-10-PCS 2023 中文版」＋健保署「Tw-DRG 分類表・適用權重表 3.4 版」（data.gov.tw／健保署開放資料）。RW 為近似值僅供參考；診斷碼中文名以官方檔為準，部分官方原檔字元有亂碼。工具版本：${j.meta.built}`;
   const pq=new URLSearchParams(location.search).get('q')||'';
   if(pq){$('q').value=pq;}
   render(pq);
