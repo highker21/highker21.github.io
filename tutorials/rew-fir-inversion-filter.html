@@ -1,0 +1,1194 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>用 REW 自製 FIR 反轉濾波器做 DRC（無 EQ）</title>
+<style>
+/* Dirac ART Tutorial — clean tech-doc style */
+* { box-sizing: border-box; }
+:root {
+  --bg: #fafafa;
+  --fg: #1a1a1a;
+  --muted: #6a6a6a;
+  --accent: #1e6dd8;
+  --accent-soft: #e7f0ff;
+  --warn-bg: #fff7e6;
+  --warn-border: #f4a83a;
+  --tip-bg: #e9f7ef;
+  --tip-border: #2eb872;
+  --note-bg: #f4f0ff;
+  --note-border: #8466d8;
+  --code-bg: #f1f3f5;
+  --table-border: #d8d8d8;
+  --th-bg: #f0f4fa;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #16181c;
+    --fg: #e8e8e8;
+    --muted: #9aa0a6;
+    --accent: #5aa9ff;
+    --accent-soft: #1c2840;
+    --warn-bg: #3a2a10;
+    --warn-border: #d99033;
+    --tip-bg: #14301f;
+    --tip-border: #3ea870;
+    --note-bg: #251a3a;
+    --note-border: #9a85e6;
+    --code-bg: #20232a;
+    --table-border: #333a44;
+    --th-bg: #232830;
+  }
+}
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang TC", "Noto Sans TC", "Helvetica Neue", Arial, sans-serif;
+  font-size: 16.5px;
+  line-height: 1.75;
+  margin: 0;
+  padding: 0;
+}
+.layout {
+  display: grid;
+  grid-template-columns: 280px minmax(0, 1fr);
+  max-width: 1280px;
+  margin: 0 auto;
+  gap: 36px;
+  padding: 24px;
+}
+@media (max-width: 900px) {
+  .layout { grid-template-columns: 1fr; padding: 16px; }
+  nav.toc { position: static; max-height: none; border-right: none; padding: 0; }
+}
+nav.toc {
+  position: sticky;
+  top: 16px;
+  align-self: start;
+  max-height: calc(100vh - 32px);
+  overflow-y: auto;
+  font-size: 14.5px;
+  border-right: 1px solid var(--table-border);
+  padding-right: 12px;
+}
+nav.toc h2 {
+  font-size: 14px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 4px 0 12px;
+}
+nav.toc ul { list-style: none; padding-left: 0; margin: 0; }
+nav.toc li { margin: 4px 0; }
+nav.toc a {
+  color: var(--fg);
+  text-decoration: none;
+  display: block;
+  padding: 4px 8px;
+  border-radius: 6px;
+}
+nav.toc a:hover { background: var(--accent-soft); color: var(--accent); }
+nav.toc ul ul { padding-left: 16px; font-size: 13.5px; }
+nav.toc ul ul a { color: var(--muted); }
+nav.toc ul ul ul { padding-left: 14px; font-size: 13px; }
+article { min-width: 0; }
+article h1 {
+  font-size: 32px;
+  margin: 12px 0 8px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+article h2 {
+  font-size: 24px;
+  margin: 40px 0 12px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--accent-soft);
+  font-weight: 700;
+}
+article h3 {
+  font-size: 19px;
+  margin: 28px 0 10px;
+  font-weight: 600;
+  color: var(--accent);
+}
+article h4 {
+  font-size: 16.5px;
+  margin: 20px 0 8px;
+  font-weight: 600;
+}
+article p { margin: 12px 0; }
+article a { color: var(--accent); text-decoration: none; border-bottom: 1px solid transparent; }
+article a:hover { border-bottom-color: var(--accent); }
+article strong { color: var(--fg); font-weight: 700; }
+article ul, article ol { padding-left: 26px; margin: 12px 0; }
+article li { margin: 4px 0; }
+article hr {
+  border: 0;
+  border-top: 1px solid var(--table-border);
+  margin: 36px 0;
+}
+article code {
+  font-family: "SF Mono", Menlo, Consolas, monospace;
+  background: var(--code-bg);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.9em;
+}
+article pre {
+  background: var(--code-bg);
+  border-radius: 8px;
+  padding: 14px 16px;
+  overflow-x: auto;
+  font-size: 14px;
+  line-height: 1.55;
+}
+article pre code { background: none; padding: 0; }
+article blockquote {
+  margin: 16px 0;
+  padding: 12px 18px;
+  background: var(--note-bg);
+  border-left: 4px solid var(--note-border);
+  border-radius: 0 8px 8px 0;
+  color: var(--fg);
+}
+article blockquote p { margin: 6px 0; }
+/* Callout box detection via leading emoji */
+article blockquote p:first-child:has(strong:first-child) { font-weight: 600; }
+article blockquote:has(p:first-child > strong:first-of-type) {
+  /* default — purple note */
+}
+article table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 16px 0;
+  font-size: 15px;
+  overflow-x: auto;
+  display: block;
+}
+@media (min-width: 900px) {
+  article table { display: table; }
+}
+article th, article td {
+  border: 1px solid var(--table-border);
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+article th { background: var(--th-bg); font-weight: 600; }
+article tr:nth-child(2n) td { background: rgba(0,0,0,0.018); }
+@media (prefers-color-scheme: dark) {
+  article tr:nth-child(2n) td { background: rgba(255,255,255,0.025); }
+}
+.meta-card {
+  background: var(--accent-soft);
+  border-left: 4px solid var(--accent);
+  border-radius: 0 8px 8px 0;
+  padding: 14px 18px;
+  margin: 16px 0 24px;
+  font-size: 14.5px;
+}
+.meta-card p { margin: 4px 0; }
+footer.note {
+  margin-top: 56px;
+  padding-top: 20px;
+  border-top: 1px solid var(--table-border);
+  color: var(--muted);
+  font-size: 13.5px;
+  line-height: 1.6;
+}
+.print-hint {
+  margin: 12px 0 4px;
+  font-size: 13px;
+  color: var(--muted);
+}
+@media print {
+  nav.toc, .print-hint { display: none; }
+  .layout { display: block; max-width: none; }
+  article { font-size: 11pt; }
+}
+
+</style>
+</head><body>
+<div class="layout">
+<nav class="toc">
+<h2>目錄</h2>
+
+<ul>
+<li><a href="#用-rew-自製-fir-反轉濾波器做-drc無-eq"
+id="toc-用-rew-自製-fir-反轉濾波器做-drc無-eq">用 REW 自製 FIR
+反轉濾波器做 DRC（無 EQ）</a>
+<ul>
+<li><a href="#dart-為什麼用這個方法" id="toc-dart-為什麼用這個方法">🎯
+為什麼用這個方法</a>
+<ul>
+<li><a href="#跟傳統-drceq-拉桿差在哪"
+id="toc-跟傳統-drceq-拉桿差在哪">跟傳統 DRC（EQ 拉桿）差在哪</a></li>
+<li><a href="#為什麼說技術上最準確"
+id="toc-為什麼說技術上最準確">為什麼說「技術上最準確」</a></li>
+<li><a href="#我的系統需不需要-drc"
+id="toc-我的系統需不需要-drc">「我的系統需不需要 DRC？」</a></li>
+</ul></li>
+<li><a href="#hammer_and_wrench-前置條件"
+id="toc-hammer_and_wrench-前置條件">🛠️ 前置條件</a></li>
+<li><a href="#clipboard-完整流程總覽11-步"
+id="toc-clipboard-完整流程總覽11-步">📋 完整流程總覽（11 步）</a></li>
+<li><a href="#step-1--量測" id="toc-step-1--量測">Step 1 — 量測</a>
+<ul>
+<li><a href="#11-設定" id="toc-11-設定">1.1 設定</a></li>
+<li><a href="#12-量測" id="toc-12-量測">1.2 量測</a></li>
+</ul></li>
+<li><a href="#step-2--frequency-dependent-window去除反射"
+id="toc-step-2--frequency-dependent-window去除反射">Step 2 —
+Frequency-Dependent Window（去除反射）</a>
+<ul>
+<li><a href="#操作" id="toc-操作">操作</a></li>
+<li><a href="#為何-35-cycles" id="toc-為何-35-cycles">為何 35
+cycles</a></li>
+<li><a href="#warning-不要做-smoothing"
+id="toc-warning-不要做-smoothing">⚠️ 不要做 smoothing</a></li>
+</ul></li>
+<li><a href="#step-3--時間對齊最容易被忽略的細節"
+id="toc-step-3--時間對齊最容易被忽略的細節">Step 3 —
+時間對齊（最容易被忽略的細節）</a>
+<ul>
+<li><a href="#31-為什麼要對齊" id="toc-31-為什麼要對齊">3.1
+為什麼要對齊</a></li>
+<li><a href="#32-操作流程" id="toc-32-操作流程">3.2 操作流程</a></li>
+<li><a href="#33-對齊只用於計算" id="toc-33-對齊只用於計算">3.3
+對齊只用於計算</a></li>
+</ul></li>
+<li><a href="#step-4--音量對齊spl-alignment"
+id="toc-step-4--音量對齊spl-alignment">Step 4 — 音量對齊（SPL
+Alignment）</a>
+<ul>
+<li><a href="#41-為什麼要對齊" id="toc-41-為什麼要對齊">4.1
+為什麼要對齊</a></li>
+<li><a href="#42-對齊範圍625-hz--4000-hz"
+id="toc-42-對齊範圍625-hz--4000-hz">4.2 對齊範圍：62.5 Hz – 4000
+Hz</a></li>
+<li><a href="#43-操作" id="toc-43-操作">4.3 操作</a></li>
+<li><a href="#44-跟時間對齊一樣convolution-不會-fix-volume"
+id="toc-44-跟時間對齊一樣convolution-不會-fix-volume">4.4
+跟時間對齊一樣，convolution 不會 fix volume</a></li>
+</ul></li>
+<li><a href="#step-5--rms-平均得-lr-curve"
+id="toc-step-5--rms-平均得-lr-curve">Step 5 — RMS 平均得 LR Curve</a>
+<ul>
+<li><a href="#操作-1" id="toc-操作-1">操作</a></li>
+<li><a href="#為何用-rms-而非-vector"
+id="toc-為何用-rms-而非-vector">為何用 RMS 而非 Vector</a></li>
+</ul></li>
+<li><a href="#step-6--載入-harman-target-curve"
+id="toc-step-6--載入-harman-target-curve">Step 6 — 載入 Harman Target
+Curve</a>
+<ul>
+<li><a href="#61-為何是-harman-curve"
+id="toc-61-為何是-harman-curve">6.1 為何是 Harman Curve</a></li>
+<li><a href="#62-載入步驟" id="toc-62-載入步驟">6.2 載入步驟</a></li>
+<li><a href="#63-曲線形狀" id="toc-63-曲線形狀">6.3 曲線形狀</a></li>
+</ul></li>
+<li><a href="#step-7--target-settings--產生-target-shape"
+id="toc-step-7--target-settings--產生-target-shape">Step 7 — Target
+Settings + 產生 Target Shape</a>
+<ul>
+<li><a href="#71-target-settings" id="toc-71-target-settings">7.1 Target
+Settings</a></li>
+<li><a href="#72-產生-target-shape-measurement"
+id="toc-72-產生-target-shape-measurement">7.2 產生 Target shape
+measurement</a></li>
+</ul></li>
+<li><a href="#step-8--反轉核心步驟" id="toc-step-8--反轉核心步驟">Step 8
+— 反轉：核心步驟</a>
+<ul>
+<li><a href="#81-原理" id="toc-81-原理">8.1 原理</a></li>
+<li><a href="#82-操作左聲道" id="toc-82-操作左聲道">8.2
+操作：左聲道</a></li>
+<li><a href="#83-對-r-做一次" id="toc-83-對-r-做一次">8.3 對 R
+做一次</a></li>
+<li><a href="#84-檢查反轉是否正確" id="toc-84-檢查反轉是否正確">8.4
+檢查反轉是否正確</a></li>
+</ul></li>
+<li><a href="#step-9--轉成-minimum-phase防-ringing"
+id="toc-step-9--轉成-minimum-phase防-ringing">Step 9 — 轉成 Minimum
+Phase（防 ringing）</a>
+<ul>
+<li><a href="#91-為什麼要做這步" id="toc-91-為什麼要做這步">9.1
+為什麼要做這步</a></li>
+<li><a href="#92-解決取-minimum-phase-版本"
+id="toc-92-解決取-minimum-phase-版本">9.2 解決：取 minimum phase
+版本</a></li>
+<li><a href="#93-對-r-做一次" id="toc-93-對-r-做一次">9.3 對 R
+做一次</a></li>
+<li><a href="#94-驗證" id="toc-94-驗證">9.4 驗證</a></li>
+</ul></li>
+<li><a href="#step-10--export-成-convolution-wave-file"
+id="toc-step-10--export-成-convolution-wave-file">Step 10 — Export 成
+Convolution Wave File</a>
+<ul>
+<li><a href="#101-操作" id="toc-101-操作">10.1 操作</a></li>
+<li><a href="#102-為何-48-khz-為主" id="toc-102-為何-48-khz-為主">10.2
+為何 48 kHz 為主</a></li>
+<li><a href="#103-產出檔案命名建議" id="toc-103-產出檔案命名建議">10.3
+產出檔案命名建議</a></li>
+</ul></li>
+<li><a href="#step-11--載入-dsp-引擎"
+id="toc-step-11--載入-dsp-引擎">Step 11 — 載入 DSP 引擎</a>
+<ul>
+<li><a href="#111-各家引擎做法" id="toc-111-各家引擎做法">11.1
+各家引擎做法</a></li>
+<li><a href="#112-別忘了時間音量-offset"
+id="toc-112-別忘了時間音量-offset">11.2 別忘了時間+音量 offset</a></li>
+</ul></li>
+<li><a href="#mag-驗收模擬看修正後長什麼樣"
+id="toc-mag-驗收模擬看修正後長什麼樣">🔍 驗收：模擬看修正後長什麼樣</a>
+<ul>
+<li><a href="#算修正後的-l_corrected"
+id="toc-算修正後的-l_corrected">算修正後的 L_corrected</a></li>
+<li><a href="#對-r-做一次--r_corrected"
+id="toc-對-r-做一次--r_corrected">對 R 做一次 → R_corrected</a></li>
+<li><a href="#看結果" id="toc-看結果">看結果</a></li>
+<li><a href="#驗收-4-個面向" id="toc-驗收-4-個面向">驗收 4
+個面向</a></li>
+</ul></li>
+<li><a href="#warning-後續相位精修選做"
+id="toc-warning-後續相位精修選做">⚠️ 後續：相位精修（選做）</a></li>
+<li><a href="#bar_chart-跟其他-drc-方案的比較"
+id="toc-bar_chart-跟其他-drc-方案的比較">📊 跟其他 DRC
+方案的比較</a></li>
+<li><a href="#question-常見問題--陷阱"
+id="toc-question-常見問題--陷阱">❓ 常見問題 / 陷阱</a>
+<ul>
+<li><a href="#q1frequency-dependent-window-35-cycles-太多怎麼辦"
+id="toc-q1frequency-dependent-window-35-cycles-太多怎麼辦">Q1：Frequency-Dependent
+Window 35 cycles 太多怎麼辦？</a></li>
+<li><a href="#q28-regularization-不夠太多"
+id="toc-q28-regularization-不夠太多">Q2：8% regularization
+不夠/太多？</a></li>
+<li><a href="#q3minimum-phase-後-frequency-變了"
+id="toc-q3minimum-phase-後-frequency-變了">Q3：minimum phase 後
+frequency 變了？</a></li>
+<li><a href="#q4convolution-之後低頻反而變差"
+id="toc-q4convolution-之後低頻反而變差">Q4：convolution
+之後低頻反而變差？</a></li>
+<li><a href="#q5左右聲道個別處理還是合併處理"
+id="toc-q5左右聲道個別處理還是合併處理">Q5：左右聲道個別處理還是合併處理？</a></li>
+<li><a href="#q6可以用-eq-filter--convolution-混合嗎"
+id="toc-q6可以用-eq-filter--convolution-混合嗎">Q6：可以用 EQ filter +
+convolution 混合嗎？</a></li>
+<li><a href="#q7我音量平時很小聲-60-db這方法還適用"
+id="toc-q7我音量平時很小聲-60-db這方法還適用">Q7：我音量平時很小聲（&lt;
+60 dB），這方法還適用？</a></li>
+<li><a href="#q8可以-zip-多份不同房間-profile-切換"
+id="toc-q8可以-zip-多份不同房間-profile-切換">Q8：可以 ZIP 多份不同房間
+profile 切換？</a></li>
+</ul></li>
+<li><a href="#dart-oca-的核心心法" id="toc-dart-oca-的核心心法">🎯 OCA
+的核心心法</a></li>
+<li><a href="#books-延伸資源" id="toc-books-延伸資源">📚
+延伸資源</a></li>
+</ul></li>
+</ul>
+
+<p class="print-hint">⌘P 列印 / 存 PDF</p>
+</nav>
+<article>
+<section id="用-rew-自製-fir-反轉濾波器做-drc無-eq" class="level1">
+<h1>用 REW 自製 FIR 反轉濾波器做 DRC（無 EQ）</h1>
+<blockquote>
+<p><strong>原片</strong>：<a
+href="https://www.youtube.com/watch?v=wZq9ouQMV0o">利用 REW 自製 FIR
+濾波器以校正空間中頻響（沒用到 EQ）</a>
+<strong>講者</strong>：OCA（OCA's Audio Channel）
+<strong>長度</strong>：27 分 59 秒 <strong>核心方法</strong>：用 REW
+把喇叭響應曲線<strong>反轉</strong>生成 convolution 檔案，不用任何 EQ
+filter <strong>適用對象</strong>：已有基本 REW 測量基礎、想做 DRC 但厭倦
+EQ 拉桿微調的玩家 <strong>預計花時</strong>：完整流程約 <strong>30
+分鐘</strong>（OCA 親自驗證）
+<strong>譯註</strong>：本教學由助理依逐字稿翻譯整理為繁中結構化教學，非逐句直譯。技術名詞保留英文以利對照
+REW 介面。</p>
+</blockquote>
+<hr />
+<section id="dart-為什麼用這個方法" class="level2">
+<h2>🎯 為什麼用這個方法</h2>
+<section id="跟傳統-drceq-拉桿差在哪" class="level3">
+<h3>跟傳統 DRC（EQ 拉桿）差在哪</h3>
+<ul>
+<li>❌ 傳統做法：用 REW 的 EQ filter 工具，一條一條設
+PEQ（peaking）、shelf、notch 補償喇叭/房間缺陷</li>
+<li>✅ 本方法：<strong>完全不用 EQ
+filter</strong>，直接把喇叭測量曲線「反轉」(invert) 在目標曲線上，生成
+convolution wave file 餵給 DSP 引擎</li>
+</ul>
+</section>
+<section id="為什麼說技術上最準確" class="level3">
+<h3>為什麼說「技術上最準確」</h3>
+<ul>
+<li>EQ 拉桿是<strong>有限個離散點</strong>的補償，永遠無法完全 cover
+真實響應</li>
+<li>反轉法是<strong>每個頻率點</strong>都精確抵消差值 → 收斂到 target
+curve</li>
+</ul>
+</section>
+<section id="我的系統需不需要-drc" class="level3">
+<h3>「我的系統需不需要 DRC？」</h3>
+<ul>
+<li>OCA 直接斷言：<strong>需要</strong></li>
+<li>即使你有最高階喇叭擺位完美，<strong>可聞頻段 peak vs dip 仍有最少 20
+dB 差</strong>（房間模態、反射、不對稱性）</li>
+<li>訊號要乾淨到耳朵，DRC 不是奢侈品而是必需品</li>
+</ul>
+<hr />
+</section>
+</section>
+<section id="hammer_and_wrench-前置條件" class="level2">
+<h2>🛠️ 前置條件</h2>
+<table>
+<thead>
+<tr>
+<th>項目</th>
+<th>要求</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>軟體</td>
+<td><strong>REW</strong>（Room EQ Wizard，免費）</td>
+</tr>
+<tr>
+<td>麥克風</td>
+<td>miniDSP <strong>UMIK-2</strong>（OCA 用的；UMIK-1 也可）</td>
+</tr>
+<tr>
+<td>喇叭</td>
+<td>左右各一聲道</td>
+</tr>
+<tr>
+<td>量測訊號</td>
+<td><strong>4 MB sweep</strong>（最長 sweep → 最高 S/N 比）</td>
+</tr>
+<tr>
+<td>量測位置</td>
+<td><strong>主聆位（central listening position）</strong></td>
+</tr>
+<tr>
+<td>取樣率</td>
+<td><strong>48 kHz / 16 bit</strong>（REW 內部運算用這個，不要改）</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>⚠️
+<strong>音量很重要</strong>：要用<strong>平時聆聽音量</strong>測。人耳對低頻感知會隨音量改變，target
+curve 必須對應你習慣的音量才有意義。</p>
+</blockquote>
+<hr />
+</section>
+<section id="clipboard-完整流程總覽11-步" class="level2">
+<h2>📋 完整流程總覽（11 步）</h2>
+<pre><code>Step 1：在主聆位、平時音量下，量左/右各一次（4 MB sweep）
+Step 2：加 frequency-dependent window（35 cycles）去除反射干擾
+Step 3：時間對齊（time alignment）— 用 impulse response 對齊到 t=0
+Step 4：音量對齊（SPL alignment, 62.5–4000 Hz 區段）
+Step 5：取 L+R RMS 平均，得 LR curve
+Step 6：載入 Harman Target Curve
+Step 7：依喇叭 low-frequency cutoff 設 Target settings，產生 Target shape measurement
+Step 8：把 L、R 各自除以 target、再取倒數 → L_inverted、R_inverted
+Step 9：把 inverted 兩條轉成 minimum phase 版本
+Step 10：export 成 wave file（44.1 / 48 kHz）→ stereo convolution file
+Step 11：載入到 DSP 引擎（Roon / EqualizerAPO / JRiver）</code></pre>
+<hr />
+</section>
+<section id="step-1--量測" class="level2">
+<h2>Step 1 — 量測</h2>
+<section id="11-設定" class="level3">
+<h3>1.1 設定</h3>
+<ul>
+<li>主聆位放 UMIK-2</li>
+<li>取樣率 48 kHz</li>
+<li>Sweep 長度選 <strong>4 MB</strong>（最長，最佳 S/N）</li>
+<li>音量轉到<strong>平常聆聽音量</strong></li>
+</ul>
+</section>
+<section id="12-量測" class="level3">
+<h3>1.2 量測</h3>
+<ul>
+<li>左聲道 → 存成 <strong>L</strong></li>
+<li>右聲道 → 存成 <strong>R</strong></li>
+</ul>
+<hr />
+</section>
+</section>
+<section id="step-2--frequency-dependent-window去除反射" class="level2">
+<h2>Step 2 — Frequency-Dependent Window（去除反射）</h2>
+<p><strong>目的</strong>：把房間反射在 impulse response
+切掉，看真正喇叭直達聲的高頻細節。</p>
+<section id="操作" class="level3">
+<h3>操作</h3>
+<ol type="1">
+<li>選 measurement (L 或 R)</li>
+<li>開 <strong>Impulse Response</strong> 視窗</li>
+<li>設 <strong>Frequency-Dependent Window</strong></li>
+<li>選 <strong>35 cycles</strong>（REW 的上限，保留最多細節）</li>
+</ol>
+</section>
+<section id="為何-35-cycles" class="level3">
+<h3>為何 35 cycles</h3>
+<table>
+<thead>
+<tr>
+<th>工具</th>
+<th>預設 cycles</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Dirac Live</td>
+<td>7</td>
+</tr>
+<tr>
+<td>Audyssey</td>
+<td>9</td>
+</tr>
+<tr>
+<td><strong>本方法</strong></td>
+<td><strong>35</strong></td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>💡 <strong>OCA 的理由</strong>：Dirac/Audyssey 用小 cycles
+是為了讓自家 EQ filter 容易 fit；本方法不做 filter 擬合 → 不需要平滑 →
+保留最多細節</p>
+</blockquote>
+</section>
+<section id="warning-不要做-smoothing" class="level3">
+<h3>⚠️ 不要做 smoothing</h3>
+<p>本方法<strong>不做任何 smoothing</strong>（1/3 octave / 1/6 octave
+等）。理由同上。</p>
+<hr />
+</section>
+</section>
+<section id="step-3--時間對齊最容易被忽略的細節" class="level2">
+<h2>Step 3 — 時間對齊（最容易被忽略的細節）</h2>
+<section id="31-為什麼要對齊" class="level3">
+<h3>3.1 為什麼要對齊</h3>
+<p>左右喇叭到耳朵的距離若差 1 mm，convolution filter
+計算就會有相位偏差。<strong>先對齊 t=0</strong>，filter
+才能精準工作。</p>
+</section>
+<section id="32-操作流程" class="level3">
+<h3>3.2 操作流程</h3>
+<section id="找出-impulse-peak" class="level4">
+<h4>找出 impulse peak</h4>
+<ol type="1">
+<li>開 <strong>Overlays → Impulse Response</strong></li>
+<li>同時顯示 L 和 R</li>
+<li><strong>放大畫面</strong>找 impulse peak</li>
+<li>⚠️ <strong>重點</strong>：impulse peak
+是<strong>最大振幅的那個尖端</strong>，可能向下也可能向上（看 phase
+polarity）</li>
+</ol>
+</section>
+<section id="量測-time-offset" class="level4">
+<h4>量測 time offset</h4>
+<ol type="1">
+<li>鍵盤按住 <strong>Ctrl</strong></li>
+<li>滑鼠右鍵點 peak A 點</li>
+<li>不放開鍵，移動到 peak B 點</li>
+<li>讀出 time difference（例：<strong>−4.295 ns</strong>，相當於 0.001
+mm = 0.06 in）</li>
+</ol>
+</section>
+<section id="套用-offset-對齊" class="level4">
+<h4>套用 offset 對齊</h4>
+<ol type="1">
+<li>切換到 <strong>Realtime Analyzer → Impulse</strong> 頁籤</li>
+<li>選中要對齊的 measurement（如 R）</li>
+<li>點 <strong>Controls → Offset t = 0</strong></li>
+<li>輸入 <strong>÷ 1000 後的值</strong>：<code>-4.295 ns</code> ÷ 1000 =
+<strong>0.004295 ms</strong>（單位是 ms 不是 ns）</li>
+<li>按 <strong>Tab</strong> 鍵確認</li>
+<li>在 Overlays 視窗點 <strong>Apply</strong> → R 會往後移到 t=0</li>
+<li>同樣對 L 做一次（OCA 例：−0.872 ns → 0.000872 ms）</li>
+</ol>
+</section>
+</section>
+<section id="33-對齊只用於計算" class="level3">
+<h3>3.3 對齊只用於計算</h3>
+<p><strong>重點</strong>：REW 對齊只是為了計算
+convolution。<strong>實體</strong>要靠：</p>
+<ul>
+<li>物理移動喇叭，或</li>
+<li>DSP 引擎裡的 delay 參數（Roon、EqualizerAPO 都有）</li>
+</ul>
+<hr />
+</section>
+</section>
+<section id="step-4--音量對齊spl-alignment" class="level2">
+<h2>Step 4 — 音量對齊（SPL Alignment）</h2>
+<section id="41-為什麼要對齊" class="level3">
+<h3>4.1 為什麼要對齊</h3>
+<p>要讓<strong>人聲定位</strong>精準在兩喇叭中間。若 L/R 音量差 0.5 dB →
+中央人聲會偏一邊。</p>
+</section>
+<section id="42-對齊範圍625-hz--4000-hz" class="level3">
+<h3>4.2 對齊範圍：62.5 Hz – 4000 Hz</h3>
+<p><strong>為什麼是這範圍</strong>：</p>
+<ul>
+<li>涵蓋所有<strong>人聲頻段</strong></li>
+<li>男聲最低 65 Hz（極低男低音）→ 女聲花腔最高 1,280 Hz</li>
+<li>女高音尖叫可達 3,000 Hz</li>
+<li>留餘裕到 4,000 Hz</li>
+</ul>
+</section>
+<section id="43-操作" class="level3">
+<h3>4.3 操作</h3>
+<section id="a-先複製避免破壞原始檔" class="level4">
+<h4>A. 先複製避免破壞原始檔</h4>
+<ol type="1">
+<li>Measurement Actions → <strong>Response Copy</strong> 對 L
+做一份</li>
+<li>同樣對 R 做一份</li>
+<li>取消勾選 L 和 R，<strong>只勾兩份 copy</strong></li>
+</ol>
+</section>
+<section id="b-用-rew-align-spl-工具" class="level4">
+<h4>B. 用 REW Align SPL 工具</h4>
+<ol type="1">
+<li><strong>Alignment center</strong> = <code>500 Hz</code></li>
+<li><strong>Alignment span</strong> = <code>3 octaves</code>
+<ul>
+<li>500 ÷ 2³ = 62.5 Hz（下限）</li>
+<li>500 × 2³ = 4000 Hz（上限）</li>
+</ul></li>
+<li>勾選 <strong>Use average SPL of measurements</strong></li>
+<li>點 Align SPL → L_copy 與 R_copy 對齊</li>
+</ol>
+</section>
+<section id="c-算每聲道需要的-offset" class="level4">
+<h4>C. 算每聲道需要的 offset</h4>
+<ol type="1">
+<li>取消勾 R_copy，只勾 L 和 L_copy</li>
+<li>Measurement Actions → <strong>SPL Offset for L</strong></li>
+<li>看 L 需要 +N dB 才能對到 L_copy（例：<strong>−0.2 dB</strong>）</li>
+<li><strong>Add Offset to Data</strong></li>
+<li>對 R 重複，offset 會剛好相反（<strong>+0.2 dB</strong>）</li>
+</ol>
+<blockquote>
+<p>💡 OCA 範例：L/R 差 0.4 dB → 各補 ±0.2 dB</p>
+</blockquote>
+</section>
+</section>
+<section id="44-跟時間對齊一樣convolution-不會-fix-volume"
+class="level3">
+<h3>4.4 跟時間對齊一樣，convolution 不會 fix volume</h3>
+<p><strong>SPL offset 不會寫進 convolution wave</strong>。要靠：</p>
+<ul>
+<li>amplifier 的 balance 旋鈕</li>
+<li>DSP 引擎的 gain 參數</li>
+</ul>
+<hr />
+</section>
+</section>
+<section id="step-5--rms-平均得-lr-curve" class="level2">
+<h2>Step 5 — RMS 平均得 LR Curve</h2>
+<section id="操作-1" class="level3">
+<h3>操作</h3>
+<ol type="1">
+<li>確保 L 和 R 已時間+音量對齊</li>
+<li>選兩個 measurement</li>
+<li>Measurement Actions → <strong>Average the responses → RMS
+Average</strong></li>
+<li>命名為 <strong>LR</strong></li>
+</ol>
+</section>
+<section id="為何用-rms-而非-vector" class="level3">
+<h3>為何用 RMS 而非 Vector</h3>
+<table>
+<thead>
+<tr>
+<th>平均方式</th>
+<th>特點</th>
+<th>適用情境</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>RMS Average</strong></td>
+<td>只取 SPL 平均，忽略相位</td>
+<td>本方法用這個</td>
+</tr>
+<tr>
+<td>Vector Average</td>
+<td>同時考慮 phase</td>
+<td>高品質但 unwrapped phase 在範圍外有 bug</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>💡 OCA 註：REW 作者 John 在開發新平均演算法，但還沒 release。RMS
+目前夠用。</p>
+</blockquote>
+<hr />
+</section>
+</section>
+<section id="step-6--載入-harman-target-curve" class="level2">
+<h2>Step 6 — 載入 Harman Target Curve</h2>
+<section id="61-為何是-harman-curve" class="level3">
+<h3>6.1 為何是 Harman Curve</h3>
+<ul>
+<li>Harman/Kardon
+多年技術研究歸納出來的「<strong>人耳感知補償曲線</strong>」</li>
+<li><strong>跟你的房間/喜好無關</strong>，純粹補償人耳對不同頻段的非線性感知</li>
+<li>人類只有在 <strong>83 dB SPL</strong>
+時對所有頻率感知相同，其他音量會偏差</li>
+<li><strong>你只需要這一條曲線</strong></li>
+</ul>
+</section>
+<section id="62-載入步驟" class="level3">
+<h3>6.2 載入步驟</h3>
+<ol type="1">
+<li><strong>Preferences → House Curve</strong>（注意：選 House Curve
+但內容是 Harman 通用曲線）</li>
+<li>上傳 Harman Target Curve 檔案（OCA 評論區有連結）</li>
+</ol>
+</section>
+<section id="63-曲線形狀" class="level3">
+<h3>6.3 曲線形狀</h3>
+<ul>
+<li><strong>200 Hz 以下</strong>：低頻往上抬（boost bass）</li>
+<li><strong>高頻</strong>：緩慢往下降（roll-off treble）</li>
+<li>中段大致平坦</li>
+</ul>
+<blockquote>
+<p>⚠️
+<strong>重點</strong>：這曲線<strong>不是「房間/口味偏好」</strong>，是補償人耳。<strong>如果你用平時音量量測
+→ 這條 curve 對你就會正確</strong>。</p>
+</blockquote>
+<hr />
+</section>
+</section>
+<section id="step-7--target-settings--產生-target-shape" class="level2">
+<h2>Step 7 — Target Settings + 產生 Target Shape</h2>
+<section id="71-target-settings" class="level3">
+<h3>7.1 Target Settings</h3>
+<ol type="1">
+<li>開 <strong>EQ</strong> 頁籤</li>
+<li><strong>Speaker type</strong>：選
+<code>Full range speaker</code></li>
+<li><strong>Low frequency cutoff</strong>：填你喇叭的低頻滾降點（OCA
+範例：<strong>35 Hz</strong>）
+<ul>
+<li>不用很精確，大概值即可</li>
+</ul></li>
+<li><strong>Slope</strong>：自動填（OCA 範例：<strong>24
+dB/oct</strong>）</li>
+<li><strong>Target level</strong>：點 <strong>Calculate from
+response</strong>（REW 算出，OCA 範例：72.3 dB）</li>
+</ol>
+<blockquote>
+<p>⚠️ <strong>不能手動改 target level</strong> — REW
+會自動算，目的只是找出「需要反轉的曲線形狀」。</p>
+</blockquote>
+</section>
+<section id="72-產生-target-shape-measurement" class="level3">
+<h3>7.2 產生 Target shape measurement</h3>
+<ol type="1">
+<li>點 <strong>Generate measurement from target shape</strong></li>
+<li>這就是 EQ 頁籤要做的<strong>唯一一件事</strong></li>
+<li>你的 measurements 清單會多一條 <strong>Target LR</strong></li>
+</ol>
+<hr />
+</section>
+</section>
+<section id="step-8--反轉核心步驟" class="level2">
+<h2>Step 8 — 反轉：核心步驟</h2>
+<section id="81-原理" class="level3">
+<h3>8.1 原理</h3>
+<p>要把 L speaker 響應「反轉成符合 Target curve」：</p>
+<p><span class="math display">$$
+L_{inverted}(f) = \frac{Target(f)}{L(f)}
+$$</span></p>
+<p>但因為 FFT 計算限制，<strong>要分兩步</strong>：</p>
+<ol type="1">
+<li>先算 <code>L / Target</code></li>
+<li>再取倒數 <code>1 / (L/Target)</code></li>
+</ol>
+</section>
+<section id="82-操作左聲道" class="level3">
+<h3>8.2 操作：左聲道</h3>
+<section id="step-821-算-l--target" class="level4">
+<h4>Step 8.2.1 算 L / Target</h4>
+<ol type="1">
+<li><strong>Controls → Trace Arithmetic</strong></li>
+<li><strong>A</strong> = L speaker measurement</li>
+<li><strong>B</strong> = Target LR</li>
+<li><strong>Action</strong> = <code>A / B</code></li>
+<li><strong>Regularization</strong> =
+<code>0</code>（不做任何正則化）</li>
+<li><strong>Generate</strong> → 產生一條 <code>A/B</code></li>
+</ol>
+</section>
+<section id="step-822-取倒數" class="level4">
+<h4>Step 8.2.2 取倒數</h4>
+<ol type="1">
+<li><strong>Trace Arithmetic</strong> 再開</li>
+<li><strong>A</strong> = 剛才產生的 A/B</li>
+<li><strong>Action</strong> = <code>1 / A</code>（B 不重要）</li>
+<li><strong>Regularization</strong> = <strong>8%</strong>
+<ul>
+<li>8% ≈ <strong>每個頻率點最大 5 dB 校正</strong></li>
+<li>你可調，但 8% 經驗值平衡修正力與穩定性</li>
+</ul></li>
+<li><strong>Target level</strong> = <code>3.6</code>（這欄 OCA
+沒詳述，照預設）</li>
+<li><strong>Exclude notches</strong> = ✓（避免極端 notch 處過修）</li>
+<li><strong>Generate</strong> → 產生倒數</li>
+<li><strong>刪掉中間 A/B</strong></li>
+<li>把倒數命名為 <strong>L_inverted</strong></li>
+</ol>
+</section>
+</section>
+<section id="83-對-r-做一次" class="level3">
+<h3>8.3 對 R 做一次</h3>
+<p>重複 Step 8.2，產生 <strong>R_inverted</strong></p>
+</section>
+<section id="84-檢查反轉是否正確" class="level3">
+<h3>8.4 檢查反轉是否正確</h3>
+<ul>
+<li>0 dB 線在中間</li>
+<li>L 原本 peak 的地方 → L_inverted 對應的位置應該是 dip</li>
+<li>L 原本 dip 的地方 → L_inverted 對應的位置應該是 peak</li>
+<li>形狀互補</li>
+</ul>
+<hr />
+</section>
+</section>
+<section id="step-9--轉成-minimum-phase防-ringing" class="level2">
+<h2>Step 9 — 轉成 Minimum Phase（防 ringing）</h2>
+<section id="91-為什麼要做這步" class="level3">
+<h3>9.1 為什麼要做這步</h3>
+<p>反轉後的 L_inverted/R_inverted <strong>不是 minimum phase</strong>。
+直接拿去 convolve 喇叭會：</p>
+<ul>
+<li><strong>產生大量 ringing</strong>（鈴聲尾巴）</li>
+<li>頻響跟預期天差地遠</li>
+</ul>
+</section>
+<section id="92-解決取-minimum-phase-版本" class="level3">
+<h3>9.2 解決：取 minimum phase 版本</h3>
+<ol type="1">
+<li>選 L_inverted</li>
+<li><strong>Measurement Actions → Minimum Phase Version</strong></li>
+<li><strong>Replicate data outside range</strong>：✓ 勾選
+<ul>
+<li>因為要對 0–24,000 Hz <strong>全範圍</strong>做計算</li>
+<li>REW 預設範圍剛好是 0–24 kHz</li>
+<li>範圍外要外推資料避免 zero-padding 導致 FFT 失真</li>
+</ul></li>
+<li><strong>Make minimum phase copy</strong></li>
+</ol>
+</section>
+<section id="93-對-r-做一次" class="level3">
+<h3>9.3 對 R 做一次</h3>
+<p>得到 <strong>L_inverted_MP</strong> 和 <strong>R_inverted_MP</strong>
+—— <strong>這就是要 export 的最終 filter</strong>。</p>
+</section>
+<section id="94-驗證" class="level3">
+<h3>9.4 驗證</h3>
+<ul>
+<li>頻響（amplitude）：跟原 L_inverted 幾乎一樣</li>
+<li>相位（phase）：原版到處亂跳；<strong>minimum phase 版本應接近
+0°</strong></li>
+</ul>
+<blockquote>
+<p>💡 OCA：「Look at the phase — it's around zero everywhere」← minimum
+phase 的招牌特徵</p>
+</blockquote>
+<hr />
+</section>
+</section>
+<section id="step-10--export-成-convolution-wave-file" class="level2">
+<h2>Step 10 — Export 成 Convolution Wave File</h2>
+<section id="101-操作" class="level3">
+<h3>10.1 操作</h3>
+<ol type="1">
+<li>選 L_inverted_MP 和 R_inverted_MP</li>
+<li><strong>Export → Filters as wav</strong> 或 <strong>Save as
+convolution filter</strong></li>
+<li>勾選 <strong>Stereo</strong> 包成一個 wav（也可分 mono）</li>
+<li>格式建議：<strong>48 kHz</strong>（44.1 kHz 也輸出一份備用）</li>
+</ol>
+</section>
+<section id="102-為何-48-khz-為主" class="level3">
+<h3>10.2 為何 48 kHz 為主</h3>
+<ul>
+<li>REW 內部 48 kHz 運算</li>
+<li>若你 DSP 引擎要 96k / 192k → 讓 <strong>Roon</strong> 等引擎自己
+upsample（state-of-the-art 演算法）</li>
+<li>REW upsample 也不差但不及 Roon</li>
+</ul>
+</section>
+<section id="103-產出檔案命名建議" class="level3">
+<h3>10.3 產出檔案命名建議</h3>
+<ul>
+<li><code>correction_LR_48k.wav</code></li>
+<li><code>correction_LR_44k.wav</code></li>
+</ul>
+<hr />
+</section>
+</section>
+<section id="step-11--載入-dsp-引擎" class="level2">
+<h2>Step 11 — 載入 DSP 引擎</h2>
+<section id="111-各家引擎做法" class="level3">
+<h3>11.1 各家引擎做法</h3>
+<table>
+<thead>
+<tr>
+<th>DSP 引擎</th>
+<th>載入方式</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Roon</strong></td>
+<td>ZIP 兩 wav 檔 → Roon Convolver 指向 zip</td>
+</tr>
+<tr>
+<td><strong>EqualizerAPO</strong></td>
+<td>直接 load wav</td>
+</tr>
+<tr>
+<td><strong>JRiver</strong></td>
+<td>配 config 文字檔</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="112-別忘了時間音量-offset" class="level3">
+<h3>11.2 別忘了時間+音量 offset</h3>
+<p>不論用哪個 DSP，<strong>時間 delay 與 SPL gain
+是另外的設定區</strong>：</p>
+<ul>
+<li>Roon：在 Audio 設定的 Speaker Setup</li>
+<li>EqualizerAPO：另開一條 delay/gain</li>
+<li>JRiver：有獨立 mixer</li>
+</ul>
+<p>把 Step 3 的 time offset 與 Step 4 的 SPL offset 填進去。</p>
+<hr />
+</section>
+</section>
+<section id="mag-驗收模擬看修正後長什麼樣" class="level2">
+<h2>🔍 驗收：模擬看修正後長什麼樣</h2>
+<blockquote>
+<p>註：以下是模擬用、<strong>不是必要步驟</strong></p>
+</blockquote>
+<section id="算修正後的-l_corrected" class="level3">
+<h3>算修正後的 L_corrected</h3>
+<ol type="1">
+<li><strong>Trace Arithmetic</strong></li>
+<li>A = 原 L</li>
+<li>B = L_inverted_MP</li>
+<li>Action = <code>A × B</code>（vector multiply）</li>
+<li><strong>Generate</strong> → 得到 <strong>L_corrected</strong></li>
+</ol>
+</section>
+<section id="對-r-做一次--r_corrected" class="level3">
+<h3>對 R 做一次 → R_corrected</h3>
+</section>
+<section id="看結果" class="level3">
+<h3>看結果</h3>
+<ul>
+<li><strong>L_corrected</strong>：peak 全被磨平、貼近 target curve</li>
+<li><strong>R_corrected</strong>：同上</li>
+<li>RMS 平均（LR_corrected）：跟 target curve 高度吻合</li>
+</ul>
+</section>
+<section id="驗收-4-個面向" class="level3">
+<h3>驗收 4 個面向</h3>
+<table>
+<thead>
+<tr>
+<th>面向</th>
+<th>預期改善</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>SPL frequency response</strong></td>
+<td>Peak 全消，貼合 target</td>
+</tr>
+<tr>
+<td><strong>Step response</strong></td>
+<td>Clarity 明顯提升、ringing 減少</td>
+</tr>
+<tr>
+<td><strong>Group delay</strong></td>
+<td>低頻段接近 0</td>
+</tr>
+<tr>
+<td><strong>Phase response</strong></td>
+<td>整段振盪被平滑（但仍保留 minimum phase 應有的形狀）</td>
+</tr>
+</tbody>
+</table>
+<hr />
+</section>
+</section>
+<section id="warning-後續相位精修選做" class="level2">
+<h2>⚠️ 後續：相位精修（選做）</h2>
+<p>OCA 推薦的下一步工具：<strong>rePhase</strong>（免費）</p>
+<ul>
+<li>可以<strong>進一步修正相位響應</strong></li>
+<li>本影片不展開（內容夠長了）</li>
+<li>詳細教學另有專片 + 文字 guide（評論區連結）</li>
+</ul>
+<hr />
+</section>
+<section id="bar_chart-跟其他-drc-方案的比較" class="level2">
+<h2>📊 跟其他 DRC 方案的比較</h2>
+<table>
+<thead>
+<tr>
+<th>項目</th>
+<th>Dirac Live</th>
+<th>Audyssey</th>
+<th>本 OCA 反轉法</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>工具</td>
+<td>商用 (~$500+)</td>
+<td>AVR 內建</td>
+<td>免費（REW）</td>
+</tr>
+<tr>
+<td>修正方式</td>
+<td>EQ filter</td>
+<td>EQ filter</td>
+<td><strong>直接反轉</strong></td>
+</tr>
+<tr>
+<td>Window cycles</td>
+<td>7</td>
+<td>9</td>
+<td><strong>35</strong>（保留細節）</td>
+</tr>
+<tr>
+<td>平滑</td>
+<td>有</td>
+<td>有</td>
+<td><strong>無</strong></td>
+</tr>
+<tr>
+<td>完成時間</td>
+<td>30 min</td>
+<td>30 min</td>
+<td><strong>~30 min</strong></td>
+</tr>
+<tr>
+<td>學習曲線</td>
+<td>平緩</td>
+<td>平緩</td>
+<td><strong>中等</strong></td>
+</tr>
+<tr>
+<td>修正力</td>
+<td>中</td>
+<td>中</td>
+<td><strong>高（5 dB 精修）</strong></td>
+</tr>
+</tbody>
+</table>
+<hr />
+</section>
+<section id="question-常見問題--陷阱" class="level2">
+<h2>❓ 常見問題 / 陷阱</h2>
+<section id="q1frequency-dependent-window-35-cycles-太多怎麼辦"
+class="level3">
+<h3>Q1：Frequency-Dependent Window 35 cycles 太多怎麼辦？</h3>
+<p>A：35 是 REW 上限。如果你想跟 Dirac 一致用 7
+cycles，可以改但會丟細節。本方法的精髓就是不平滑 → 用 35。</p>
+</section>
+<section id="q28-regularization-不夠太多" class="level3">
+<h3>Q2：8% regularization 不夠/太多？</h3>
+<p>A：8% ≈ 每頻率點最大 5 dB 校正。如果你 peak 大於 5 dB 沒被修到 →
+提高（但 ≥ 15% 開始 destabilize）。預設 8% 是甜蜜點。</p>
+</section>
+<section id="q3minimum-phase-後-frequency-變了" class="level3">
+<h3>Q3：minimum phase 後 frequency 變了？</h3>
+<p>A：應該幾乎一樣（差 &lt; 0.5 dB）。如果差很多，<strong>檢查 replicate
+data outside range</strong> 有沒有勾。</p>
+</section>
+<section id="q4convolution-之後低頻反而變差" class="level3">
+<h3>Q4：convolution 之後低頻反而變差？</h3>
+<p>A：可能 target level 算錯。重做 Step 7 點 <strong>Calculate from
+response</strong>。</p>
+</section>
+<section id="q5左右聲道個別處理還是合併處理" class="level3">
+<h3>Q5：左右聲道個別處理還是合併處理？</h3>
+<p>A：本方法<strong>個別處理</strong>（產 L_inverted +
+R_inverted）。如果合併會丟失 L/R 不對稱資訊。</p>
+</section>
+<section id="q6可以用-eq-filter--convolution-混合嗎" class="level3">
+<h3>Q6：可以用 EQ filter + convolution 混合嗎？</h3>
+<p>A：可以但<strong>沒必要</strong>。convolution 已經涵蓋 EQ
+能做的所有事，更精準。</p>
+</section>
+<section id="q7我音量平時很小聲-60-db這方法還適用" class="level3">
+<h3>Q7：我音量平時很小聲（&lt; 60 dB），這方法還適用？</h3>
+<p>A：適用，但<strong>請用你平時音量量測</strong>。Harman target
+只在你習慣音量正確。</p>
+</section>
+<section id="q8可以-zip-多份不同房間-profile-切換" class="level3">
+<h3>Q8：可以 ZIP 多份不同房間 profile 切換？</h3>
+<p>A：Roon 可以多 zip 切換；EqualizerAPO 可以多 config 切換。便於「日間
+/ 夜間音量」分別最佳化。</p>
+<hr />
+</section>
+</section>
+<section id="dart-oca-的核心心法" class="level2">
+<h2>🎯 OCA 的核心心法</h2>
+<blockquote>
+<p>「<strong>Even the highest end gear with speakers placed perfectly,
+you'll have a minimum of 20 dB difference between its peaks and dips in
+the audible frequency range due to room modes, reflections, asymmetry
+and what have you.</strong>」</p>
+<p>不管你的器材多高階、擺位多完美，房間就是會造成至少 20 dB
+的頻響不平整。<strong>Digital correction
+不是奢侈品</strong>，是讓你聽到「製作端意圖」的必要工具。</p>
+</blockquote>
+<blockquote>
+<p>「<strong>This is technically the most accurate way to correct for
+dips and peaks in a speaker's room response.</strong>」</p>
+<p>反轉法是技術上最準的 dip/peak 修正方式 —
+因為它是<strong>逐頻率點精準抵消</strong>，而非有限個 EQ filter
+的擬合近似。</p>
+</blockquote>
+<hr />
+</section>
+<section id="books-延伸資源" class="level2">
+<h2>📚 延伸資源</h2>
+<ul>
+<li><strong>OCA 詳細
+guide</strong>（含理論、測量方法、深度解釋）：評論區連結</li>
+<li><strong>Harman Target Curve 下載</strong>：評論區連結</li>
+<li><strong>REW 官網</strong>：<a
+href="https://www.roomeqwizard.com"><span>https://www.roomeqwizard.com</span></a></li>
+<li><strong>rePhase（相位精修）</strong>：免費工具，另有 OCA
+專片教學</li>
+</ul>
+<hr />
+<p><em>本教學由助理依逐字稿（28 分鐘 / 3,648
+英文字）翻譯整理為繁中結構化教學。產出日期：2026-06-07。</em></p>
+</section>
+</section>
+<footer class="note">
+原片 OCA's Audio Channel · 27 分 59 秒 · YouTube ID wZq9ouQMV0o<br>
+本繁中教學為盧醫師助理依逐字稿整理 · 產出時間 2026-06-07
+</footer>
+</article>
+</div></body></html>

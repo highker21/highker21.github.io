@@ -1,0 +1,1036 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>用 REW 做最小相位反轉濾波器 DRC — 進化版</title>
+<style>
+/* Dirac ART Tutorial — clean tech-doc style */
+* { box-sizing: border-box; }
+:root {
+  --bg: #fafafa;
+  --fg: #1a1a1a;
+  --muted: #6a6a6a;
+  --accent: #1e6dd8;
+  --accent-soft: #e7f0ff;
+  --warn-bg: #fff7e6;
+  --warn-border: #f4a83a;
+  --tip-bg: #e9f7ef;
+  --tip-border: #2eb872;
+  --note-bg: #f4f0ff;
+  --note-border: #8466d8;
+  --code-bg: #f1f3f5;
+  --table-border: #d8d8d8;
+  --th-bg: #f0f4fa;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #16181c;
+    --fg: #e8e8e8;
+    --muted: #9aa0a6;
+    --accent: #5aa9ff;
+    --accent-soft: #1c2840;
+    --warn-bg: #3a2a10;
+    --warn-border: #d99033;
+    --tip-bg: #14301f;
+    --tip-border: #3ea870;
+    --note-bg: #251a3a;
+    --note-border: #9a85e6;
+    --code-bg: #20232a;
+    --table-border: #333a44;
+    --th-bg: #232830;
+  }
+}
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang TC", "Noto Sans TC", "Helvetica Neue", Arial, sans-serif;
+  font-size: 16.5px;
+  line-height: 1.75;
+  margin: 0;
+  padding: 0;
+}
+.layout {
+  display: grid;
+  grid-template-columns: 280px minmax(0, 1fr);
+  max-width: 1280px;
+  margin: 0 auto;
+  gap: 36px;
+  padding: 24px;
+}
+@media (max-width: 900px) {
+  .layout { grid-template-columns: 1fr; padding: 16px; }
+  nav.toc { position: static; max-height: none; border-right: none; padding: 0; }
+}
+nav.toc {
+  position: sticky;
+  top: 16px;
+  align-self: start;
+  max-height: calc(100vh - 32px);
+  overflow-y: auto;
+  font-size: 14.5px;
+  border-right: 1px solid var(--table-border);
+  padding-right: 12px;
+}
+nav.toc h2 {
+  font-size: 14px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 4px 0 12px;
+}
+nav.toc ul { list-style: none; padding-left: 0; margin: 0; }
+nav.toc li { margin: 4px 0; }
+nav.toc a {
+  color: var(--fg);
+  text-decoration: none;
+  display: block;
+  padding: 4px 8px;
+  border-radius: 6px;
+}
+nav.toc a:hover { background: var(--accent-soft); color: var(--accent); }
+nav.toc ul ul { padding-left: 16px; font-size: 13.5px; }
+nav.toc ul ul a { color: var(--muted); }
+nav.toc ul ul ul { padding-left: 14px; font-size: 13px; }
+article { min-width: 0; }
+article h1 {
+  font-size: 32px;
+  margin: 12px 0 8px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+article h2 {
+  font-size: 24px;
+  margin: 40px 0 12px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--accent-soft);
+  font-weight: 700;
+}
+article h3 {
+  font-size: 19px;
+  margin: 28px 0 10px;
+  font-weight: 600;
+  color: var(--accent);
+}
+article h4 {
+  font-size: 16.5px;
+  margin: 20px 0 8px;
+  font-weight: 600;
+}
+article p { margin: 12px 0; }
+article a { color: var(--accent); text-decoration: none; border-bottom: 1px solid transparent; }
+article a:hover { border-bottom-color: var(--accent); }
+article strong { color: var(--fg); font-weight: 700; }
+article ul, article ol { padding-left: 26px; margin: 12px 0; }
+article li { margin: 4px 0; }
+article hr {
+  border: 0;
+  border-top: 1px solid var(--table-border);
+  margin: 36px 0;
+}
+article code {
+  font-family: "SF Mono", Menlo, Consolas, monospace;
+  background: var(--code-bg);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.9em;
+}
+article pre {
+  background: var(--code-bg);
+  border-radius: 8px;
+  padding: 14px 16px;
+  overflow-x: auto;
+  font-size: 14px;
+  line-height: 1.55;
+}
+article pre code { background: none; padding: 0; }
+article blockquote {
+  margin: 16px 0;
+  padding: 12px 18px;
+  background: var(--note-bg);
+  border-left: 4px solid var(--note-border);
+  border-radius: 0 8px 8px 0;
+  color: var(--fg);
+}
+article blockquote p { margin: 6px 0; }
+/* Callout box detection via leading emoji */
+article blockquote p:first-child:has(strong:first-child) { font-weight: 600; }
+article blockquote:has(p:first-child > strong:first-of-type) {
+  /* default — purple note */
+}
+article table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 16px 0;
+  font-size: 15px;
+  overflow-x: auto;
+  display: block;
+}
+@media (min-width: 900px) {
+  article table { display: table; }
+}
+article th, article td {
+  border: 1px solid var(--table-border);
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+article th { background: var(--th-bg); font-weight: 600; }
+article tr:nth-child(2n) td { background: rgba(0,0,0,0.018); }
+@media (prefers-color-scheme: dark) {
+  article tr:nth-child(2n) td { background: rgba(255,255,255,0.025); }
+}
+.meta-card {
+  background: var(--accent-soft);
+  border-left: 4px solid var(--accent);
+  border-radius: 0 8px 8px 0;
+  padding: 14px 18px;
+  margin: 16px 0 24px;
+  font-size: 14.5px;
+}
+.meta-card p { margin: 4px 0; }
+footer.note {
+  margin-top: 56px;
+  padding-top: 20px;
+  border-top: 1px solid var(--table-border);
+  color: var(--muted);
+  font-size: 13.5px;
+  line-height: 1.6;
+}
+.print-hint {
+  margin: 12px 0 4px;
+  font-size: 13px;
+  color: var(--muted);
+}
+@media print {
+  nav.toc, .print-hint { display: none; }
+  .layout { display: block; max-width: none; }
+  article { font-size: 11pt; }
+}
+
+</style>
+</head><body>
+<div class="layout">
+<nav class="toc">
+<h2>目錄</h2>
+
+<ul>
+<li><a href="#用-rew-做最小相位反轉濾波器drc--進化版"
+id="toc-用-rew-做最小相位反轉濾波器drc--進化版">用 REW
+做「最小相位反轉濾波器」DRC — 進化版</a>
+<ul>
+<li><a href="#vs-vs-前一版反轉法video-3--用-rew-自製-fir-反轉濾波器"
+id="toc-vs-vs-前一版反轉法video-3--用-rew-自製-fir-反轉濾波器">🆚 vs
+前一版反轉法（video 3 — 用 REW 自製 FIR 反轉濾波器）</a></li>
+<li><a href="#dart-核心理念" id="toc-dart-核心理念">🎯 核心理念</a>
+<ul>
+<li><a href="#為什麼只校正-schroeder-以下"
+id="toc-為什麼只校正-schroeder-以下">為什麼只校正 Schroeder
+以下？</a></li>
+<li><a href="#為什麼選最小相位minimum-phase"
+id="toc-為什麼選最小相位minimum-phase">為什麼選<strong>最小相位（Minimum
+Phase）</strong>？</a></li>
+</ul></li>
+<li><a href="#hammer_and_wrench-前置條件"
+id="toc-hammer_and_wrench-前置條件">🛠️ 前置條件</a>
+<ul>
+<li><a href="#warning-不要做的事" id="toc-warning-不要做的事">⚠️
+不要做的事</a></li>
+</ul></li>
+<li><a href="#clipboard-完整流程6-步" id="toc-clipboard-完整流程6-步">📋
+完整流程（6 步）</a></li>
+<li><a href="#step-1--移除-ir-delay最容易忘的關鍵"
+id="toc-step-1--移除-ir-delay最容易忘的關鍵">Step 1 — 移除 IR
+Delay（最容易忘的關鍵）</a>
+<ul>
+<li><a href="#為什麼" id="toc-為什麼">為什麼</a></li>
+<li><a href="#操作" id="toc-操作">操作</a></li>
+<li><a href="#確認" id="toc-確認">確認</a></li>
+</ul></li>
+<li><a href="#step-2--建立-minimum-phase-版本"
+id="toc-step-2--建立-minimum-phase-版本">Step 2 — 建立 Minimum Phase
+版本</a>
+<ul>
+<li><a href="#對-l0" id="toc-對-l0">對 L0</a></li>
+<li><a href="#對-r0-同樣做一次--r0_mp"
+id="toc-對-r0-同樣做一次--r0_mp">對 R0 同樣做一次 →
+<strong>R0_MP</strong></a></li>
+<li><a href="#驗證" id="toc-驗證">驗證</a></li>
+<li><a href="#step-response-視覺化驗證"
+id="toc-step-response-視覺化驗證">Step Response 視覺化驗證</a></li>
+</ul></li>
+<li><a href="#step-3--反轉得-l-filter"
+id="toc-step-3--反轉得-l-filter">Step 3 — 反轉得 L Filter</a>
+<ul>
+<li><a href="#操作-1" id="toc-操作-1">操作</a></li>
+<li><a href="#為什麼是-25-regularization"
+id="toc-為什麼是-25-regularization">為什麼是 25% regularization</a></li>
+<li><a href="#為什麼上限-225-hz" id="toc-為什麼上限-225-hz">為什麼上限
+225 Hz</a></li>
+</ul></li>
+<li><a href="#step-4--對-r-做一次--r_filter"
+id="toc-step-4--對-r-做一次--r_filter">Step 4 — 對 R 做一次 →
+R_filter</a></li>
+<li><a href="#step-5--export-為-convolution-wav"
+id="toc-step-5--export-為-convolution-wav">Step 5 — Export 為
+Convolution Wav</a>
+<ul>
+<li><a href="#操作-2" id="toc-操作-2">操作</a></li>
+<li><a href="#32-bit-float-而非-16-bit-的原因"
+id="toc-32-bit-float-而非-16-bit-的原因">32-bit float 而非 16-bit
+的原因</a></li>
+</ul></li>
+<li><a href="#step-6--載入-dsp-引擎" id="toc-step-6--載入-dsp-引擎">Step
+6 — 載入 DSP 引擎</a>
+<ul>
+<li><a href="#引擎別載入方式"
+id="toc-引擎別載入方式">引擎別載入方式</a></li>
+<li><a href="#gift-oca-隱藏推薦jriver--wdm-driver"
+id="toc-gift-oca-隱藏推薦jriver--wdm-driver">🎁 OCA 隱藏推薦：JRiver +
+WDM driver</a></li>
+</ul></li>
+<li><a href="#mag-驗收模擬看修正後" id="toc-mag-驗收模擬看修正後">🔍
+驗收：模擬看修正後</a>
+<ul>
+<li><a href="#算-l-corrected" id="toc-算-l-corrected">算 L
+corrected</a></li>
+<li><a href="#對-r-同樣--r1" id="toc-對-r-同樣--r1">對 R 同樣 →
+R1</a></li>
+<li><a href="#觀察" id="toc-觀察">觀察</a></li>
+</ul></li>
+<li><a href="#mortar_board-為什麼高頻別亂修oca-詳細論證"
+id="toc-mortar_board-為什麼高頻別亂修oca-詳細論證">🎓
+為什麼高頻別亂修（OCA 詳細論證）</a>
+<ul>
+<li><a href="#1-高頻測量本身就不準" id="toc-1-高頻測量本身就不準">1.
+高頻測量本身就不準</a></li>
+<li><a href="#2-人腦本來就在過濾這些反射"
+id="toc-2-人腦本來就在過濾這些反射">2.
+人腦本來就在「過濾」這些反射</a></li>
+<li><a href="#3-想用-gated-windowing-也不行"
+id="toc-3-想用-gated-windowing-也不行">3. 想用 gated windowing
+也不行</a></li>
+<li><a href="#4-例外" id="toc-4-例外">4. 例外</a></li>
+</ul></li>
+<li><a href="#gear-進階合併-harman-target-curve"
+id="toc-gear-進階合併-harman-target-curve">⚙️ 進階：合併 Harman Target
+Curve</a></li>
+<li><a href="#studio_microphone-進階建立麥克風-minimum-phase-校正檔"
+id="toc-studio_microphone-進階建立麥克風-minimum-phase-校正檔">🎙️
+進階：建立麥克風 minimum phase 校正檔</a>
+<ul>
+<li><a href="#為何必要" id="toc-為何必要">為何必要</a></li>
+<li><a href="#建立流程" id="toc-建立流程">建立流程</a></li>
+<li><a href="#驗證-1" id="toc-驗證-1">驗證</a></li>
+<li><a href="#使用" id="toc-使用">使用</a></li>
+</ul></li>
+<li><a href="#question-常見問題" id="toc-question-常見問題">❓
+常見問題</a>
+<ul>
+<li><a href="#q1頻寬上限-225-hz-跟我房間不合怎麼辦"
+id="toc-q1頻寬上限-225-hz-跟我房間不合怎麼辦">Q1：頻寬上限 225 Hz
+跟我房間不合怎麼辦？</a></li>
+<li><a href="#q2regularization-25-太弱要不要降"
+id="toc-q2regularization-25-太弱要不要降">Q2：Regularization 25%
+太弱？要不要降？</a></li>
+<li><a href="#q3為什麼前版反轉法要-harman-target本版不要"
+id="toc-q3為什麼前版反轉法要-harman-target本版不要">Q3：為什麼前版反轉法要
+Harman target，本版不要？</a></li>
+<li><a href="#q4能不能同時用-video-3-的全頻反轉--本版的-minimum-phase"
+id="toc-q4能不能同時用-video-3-的全頻反轉--本版的-minimum-phase">Q4：能不能同時用
+video 3 的全頻反轉 + 本版的 minimum phase？</a></li>
+<li><a href="#q5高頻真的什麼都不動"
+id="toc-q5高頻真的什麼都不動">Q5：高頻真的什麼都不動？</a></li>
+<li><a href="#q6如何驗證-minimum-phase-版本對了"
+id="toc-q6如何驗證-minimum-phase-版本對了">Q6：如何驗證 minimum phase
+版本對了？</a></li>
+<li><a href="#q7可以加-crossover-phase-correction"
+id="toc-q7可以加-crossover-phase-correction">Q7：可以加 crossover phase
+correction？</a></li>
+<li><a href="#q8跨房間或不同音量切換-profile"
+id="toc-q8跨房間或不同音量切換-profile">Q8：跨房間或不同音量切換
+profile？</a></li>
+</ul></li>
+<li><a href="#dart-oca-心法精選" id="toc-dart-oca-心法精選">🎯 OCA
+心法精選</a></li>
+<li><a href="#books-延伸資源" id="toc-books-延伸資源">📚
+延伸資源</a></li>
+<li><a href="#pencil-結語" id="toc-pencil-結語">📝 結語</a></li>
+</ul></li>
+</ul>
+
+<p class="print-hint">⌘P 列印 / 存 PDF</p>
+</nav>
+<article>
+<section id="用-rew-做最小相位反轉濾波器drc--進化版" class="level1">
+<h1>用 REW 做「最小相位反轉濾波器」DRC — 進化版</h1>
+<blockquote>
+<p><strong>原片</strong>：<a
+href="https://www.youtube.com/watch?v=igY3eBsBy4U">REW 應用：簡潔高效的
+DRC 方法（最小相位反轉濾波器）</a> <strong>講者</strong>：OCA（OCA's
+Audio Channel） <strong>長度</strong>：29 分 52 秒
+<strong>核心差異</strong>：跟前一版反轉法相比，<strong>只校正 Schroeder
+頻率以下</strong>（房間共振區），高頻<strong>不動</strong>
+<strong>適用對象</strong>：玩過前一版反轉法、或玩過 Dirac/Audyssey
+但覺得「全頻段校正」反而失真者 <strong>產生檔案</strong>：minimum phase
+IIR filter（convolution wav） <strong>完成時間</strong>：&lt; 15 分鐘
+<strong>譯註</strong>：本教學由助理依逐字稿翻譯整理為繁中結構化教學。技術名詞保留英文以利對照
+REW 介面。</p>
+</blockquote>
+<hr />
+<section id="vs-vs-前一版反轉法video-3--用-rew-自製-fir-反轉濾波器"
+class="level2">
+<h2>🆚 vs 前一版反轉法（<a
+href="video3_REW_inversion_filter_zh.html">video 3 — 用 REW 自製 FIR
+反轉濾波器</a>）</h2>
+<table>
+<thead>
+<tr>
+<th>項目</th>
+<th>前一版（全頻反轉）</th>
+<th><strong>本版（最小相位反轉）</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>校正頻段</td>
+<td>全頻段</td>
+<td><strong>僅 Schroeder 以下</strong> (~225 Hz↓)</td>
+</tr>
+<tr>
+<td>Target curve</td>
+<td>需 Harman target</td>
+<td><strong>不需要</strong></td>
+</tr>
+<tr>
+<td>音量對齊</td>
+<td>手動算 SPL offset</td>
+<td><strong>自動對齊</strong>（minimum phase 內建）</td>
+</tr>
+<tr>
+<td>Step 數</td>
+<td>11 步</td>
+<td><strong>6 步</strong></td>
+</tr>
+<tr>
+<td>高頻處理</td>
+<td>修</td>
+<td><strong>完全不動</strong></td>
+</tr>
+<tr>
+<td>副作用</td>
+<td>高頻可能被「修壞」</td>
+<td>高頻保留喇叭原音色</td>
+</tr>
+<tr>
+<td>適合誰</td>
+<td>初學者完整體驗</td>
+<td>玩家進階版</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>💬 <strong>OCA 自述</strong>：「This is sort of next-level, folks.
+... produces remarkably better results than the quite popular inversion
+method I have introduced about a year ago.」</p>
+</blockquote>
+<hr />
+</section>
+<section id="dart-核心理念" class="level2">
+<h2>🎯 核心理念</h2>
+<section id="為什麼只校正-schroeder-以下" class="level3">
+<h3>為什麼只校正 Schroeder 以下？</h3>
+<section id="高頻在主聆位無法可靠量測" class="level4">
+<h4>高頻在主聆位<strong>無法可靠量測</strong></h4>
+<ul>
+<li>20 kHz 波長 ≈ <strong>1.7 cm</strong> → 比頭部小幅度移動還短</li>
+<li>omnidirectional
+microphone（全向麥克風）測不出<strong>方向性高頻波</strong></li>
+<li>反射方向受房間表面材質、形狀、吸收係數、入射角度、頻率等多重影響</li>
+<li>「修高頻」聽起來像 marketing
+故事，實際<strong>害多於益</strong></li>
+</ul>
+</section>
+<section id="反觀低頻可靠且應該修" class="level4">
+<h4>反觀低頻：可靠且應該修</h4>
+<ul>
+<li>200 Hz 波長 ≈ <strong>1.7 公尺</strong>，比喇叭單體還大 →
+<strong>真正全向</strong></li>
+<li>一支麥克風就能精準捕捉聆位整體低頻聲壓</li>
+<li>Minimum phase IIR filter 修這段<strong>穩定有效</strong></li>
+</ul>
+</section>
+<section id="oca-對-diracaudyssey-的批評" class="level4">
+<h4>OCA 對 Dirac/Audyssey 的批評</h4>
+<blockquote>
+<p>「Trying to correct the entire frequency range is a major flaw. ...
+It's a tempting marketing story but it's not an accurate anticipation of
+the human response to a very complex sound field.」</p>
+</blockquote>
+<p>→ 「修全頻」是大陷阱。</p>
+</section>
+</section>
+<section id="為什麼選最小相位minimum-phase" class="level3">
+<h3>為什麼選<strong>最小相位（Minimum Phase）</strong>？</h3>
+<section id="數學原因" class="level4">
+<h4>數學原因</h4>
+<ul>
+<li>任何頻率響應可能對應<strong>多種相位響應</strong></li>
+<li>只有<strong>最小相位版本</strong>是「<strong>可反轉</strong>」(invertible)
+— Z-plane 中極點與零點都在單位圓內</li>
+<li>反轉時：極點變零點、零點變極點 →
+只有最小相位系統的反轉<strong>穩定</strong></li>
+</ul>
+</section>
+<section id="直觀比喻oca-自創" class="level4">
+<h4>直觀比喻（OCA 自創）</h4>
+<table>
+<thead>
+<tr>
+<th>系統</th>
+<th>是否 minimum phase</th>
+<th>為何難控制</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>騎腳踏車</td>
+<td>❌（trail 設計帶來初始反向）</td>
+<td>要學會反方向轉龍頭才能直走</td>
+</tr>
+<tr>
+<td>倒車入庫</td>
+<td>❌（先要往反方向才能進去）</td>
+<td>違反直覺</td>
+</tr>
+<tr>
+<td>投資理財</td>
+<td>❌（先付錢才有回報）</td>
+<td>時間延遲 + 反向動作</td>
+</tr>
+<tr>
+<td>吃飯到產生能量</td>
+<td>❌（消化要時間）</td>
+<td>同上</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>💡
+<strong>核心</strong>：以上系統都「<strong>難控制</strong>」。腎臟同理 —
+非最小相位的房間響應就是不好控制。 <strong>要先轉成 minimum
+phase，才有辦法 invert 修正</strong>。</p>
+</blockquote>
+</section>
+<section id="跟一般-minimum-phase-iir-filter-差別" class="level4">
+<h4>跟一般 minimum phase IIR filter 差別</h4>
+<ul>
+<li>REW Auto EQ 也產 minimum phase IIR filter</li>
+<li>但兩者的<strong>相位響應不同</strong></li>
+<li>本方法（先 minimum phase 響應再反轉）→
+<strong>相位也被修到</strong></li>
+<li>一般 IIR EQ → 只修幅度、相位留 excess phase</li>
+</ul>
+<hr />
+</section>
+</section>
+</section>
+<section id="hammer_and_wrench-前置條件" class="level2">
+<h2>🛠️ 前置條件</h2>
+<table>
+<thead>
+<tr>
+<th>項目</th>
+<th>要求</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>REW</td>
+<td>最新版（測試版有 API integration）</td>
+</tr>
+<tr>
+<td>Mic</td>
+<td>UMIK-1 或 UMIK-2</td>
+</tr>
+<tr>
+<td>量測前置</td>
+<td>已對 L、R 各做多次量測並做 vector average（如 L1/L3/L5/L7 取平均得
+L0）</td>
+</tr>
+<tr>
+<td>量測位置</td>
+<td><strong>單一主聆位</strong>（不要跨座位平均 — 會犧牲精度）</td>
+</tr>
+<tr>
+<td>麥克風校正檔</td>
+<td>先做好 <strong>minimum phase 版本</strong>（見最後章節）</td>
+</tr>
+</tbody>
+</table>
+<section id="warning-不要做的事" class="level3">
+<h3>⚠️ 不要做的事</h3>
+<ul>
+<li>❌ 在主聆位<strong>周圍多點</strong>平均（會稀釋主聆位精度）</li>
+<li>❌ 用便宜麥克風但<strong>沒做 minimum phase
+校正檔</strong>（相位反轉會錯）</li>
+<li>❌ 想要「全房間均勻低頻」靠多麥克風 → 直接買<strong>多顆
+subwoofer</strong>才對</li>
+</ul>
+<hr />
+</section>
+</section>
+<section id="clipboard-完整流程6-步" class="level2">
+<h2>📋 完整流程（6 步）</h2>
+<pre><code>Step 1：移除測量檔的 IR delay（remove IR delays）
+Step 2：對 L0、R0 分別建立 minimum phase 版本
+        → L0_MP、R0_MP
+Step 3：對 L0_MP 做 1/A 反轉，regularization = 25%、upper limit = 225 Hz
+        → 得到 L_filter
+Step 4：對 R0_MP 做同樣反轉 → R_filter
+Step 5：Export 兩個 filter 為 stereo wav（48 kHz，32-bit float）
+Step 6：載入 DSP 引擎（Roon / EqualizerAPO / JRiver）</code></pre>
+<p>整流程<strong>不需要 target curve、不需要算 SPL offset</strong>。</p>
+<hr />
+</section>
+<section id="step-1--移除-ir-delay最容易忘的關鍵" class="level2">
+<h2>Step 1 — 移除 IR Delay（最容易忘的關鍵）</h2>
+<section id="為什麼" class="level3">
+<h3>為什麼</h3>
+<ul>
+<li>主聆位放麥永遠無法剛好在絕對中央</li>
+<li>系統內部本身就有延遲</li>
+<li>不移除 → minimum phase 版本算錯 → 反轉炸掉</li>
+</ul>
+</section>
+<section id="操作" class="level3">
+<h3>操作</h3>
+<ol type="1">
+<li>同時選 L0 和 R0</li>
+<li><strong>Measurement Actions → Remove IR Delays</strong></li>
+<li>觀察 phase 響應有變化</li>
+<li><strong>多點幾次</strong>確認 phase 完全不動了</li>
+<li>看 Impulse Graph 應該所有測量都對齊到 t=0</li>
+</ol>
+</section>
+<section id="確認" class="level3">
+<h3>確認</h3>
+<ul>
+<li>Phase 響應結尾的「irregularities」應該消失</li>
+<li>Impulse peak 在 t=0</li>
+</ul>
+<hr />
+</section>
+</section>
+<section id="step-2--建立-minimum-phase-版本" class="level2">
+<h2>Step 2 — 建立 Minimum Phase 版本</h2>
+<section id="對-l0" class="level3">
+<h3>對 L0</h3>
+<ol type="1">
+<li>選 <strong>L0</strong></li>
+<li><strong>Measurement Actions → All SPL → Minimum Phase
+Version</strong></li>
+<li><strong>Include calibration file effects</strong> =
+✓（重要！要把麥克風校正檔的相位也納入）</li>
+<li>其他選項<strong>不勾</strong></li>
+<li><strong>Make minimum phase copy</strong></li>
+<li>得到 <strong>L0_MP</strong></li>
+</ol>
+</section>
+<section id="對-r0-同樣做一次--r0_mp" class="level3">
+<h3>對 R0 同樣做一次 → <strong>R0_MP</strong></h3>
+</section>
+<section id="驗證" class="level3">
+<h3>驗證</h3>
+<ul>
+<li>比較 L0 vs L0_MP
+的<strong>幅度</strong>：應該<strong>完全相同</strong></li>
+<li>比較 L0 vs L0_MP
+的<strong>相位</strong>：<strong>完全不同</strong>（這就是 minimum phase
+的特徵）</li>
+</ul>
+</section>
+<section id="step-response-視覺化驗證" class="level3">
+<h3>Step Response 視覺化驗證</h3>
+<p>對比 L0 與 L0_MP 的 step response：</p>
+<ul>
+<li>L0（非最小相位）：初始<strong>反向移動</strong>（向下衝），延遲一段才往上</li>
+<li>L0_MP（最小相位）：<strong>直接往上</strong>、無反向、無延遲</li>
+</ul>
+<p>OCA 原話：</p>
+<blockquote>
+<p>「This is why this is reversible.」</p>
+</blockquote>
+<hr />
+</section>
+</section>
+<section id="step-3--反轉得-l-filter" class="level2">
+<h2>Step 3 — 反轉得 L Filter</h2>
+<section id="操作-1" class="level3">
+<h3>操作</h3>
+<ol type="1">
+<li><strong>Controls → Trace Arithmetic</strong></li>
+<li><strong>A</strong> = L0_MP</li>
+<li><strong>B</strong> = 不重要</li>
+<li><strong>Action</strong> = <code>1/A</code></li>
+<li><strong>Regularization</strong> = <strong>25%</strong>
+<ul>
+<li>25% 表示 <strong>0 dB boost</strong>（不會 boost 任何頻段）</li>
+<li>不像 video 3 給 8%（5 dB boost），本版<strong>不
+boost</strong>，更安全</li>
+</ul></li>
+<li><strong>Lower limit</strong> =
+<code>none</code>（從最低頻開始）</li>
+<li><strong>Upper limit</strong> = <strong>225 Hz</strong>
+<ul>
+<li>這是 OCA 在他房間實測 210–240 Hz 範圍找出最佳值</li>
+<li>與 Schroeder 頻率對應（小房間約 200–300 Hz）</li>
+<li>你的房間可能略不同但 <strong>225 Hz 是好的起點</strong></li>
+<li>因為 REW 內部 FFT 計算會在 200 Hz 開始 fade，填 225 確保到 200 Hz
+都有效</li>
+</ul></li>
+<li><strong>Target level</strong> = <code>auto</code>（讓 REW
+自動算）</li>
+<li><strong>Exclude notches</strong> = ✗（不影響）</li>
+<li><strong>Generate</strong> → 得到 <strong>L_filter</strong></li>
+</ol>
+</section>
+<section id="為什麼是-25-regularization" class="level3">
+<h3>為什麼是 25% regularization</h3>
+<ul>
+<li>25% = 0 dB boost cap</li>
+<li>50% = 反向（cut）</li>
+<li>0% = full boost（危險）</li>
+<li>25% 是<strong>只 cut 不 boost</strong>的甜蜜點 — peak
+大的地方修下來、dip 不會被 boost 爆喇叭單體</li>
+</ul>
+</section>
+<section id="為什麼上限-225-hz" class="level3">
+<h3>為什麼上限 225 Hz</h3>
+<ul>
+<li>Schroeder 頻率 = 房間從「離散模態」過渡到「統計分布」的頻率</li>
+<li>一般居家 100 m³ 以下：200–400 Hz</li>
+<li>225 Hz 涵蓋了大多數小房間情境</li>
+<li><strong>超過 Schroeder 不修</strong>（高頻不可靠）</li>
+</ul>
+<hr />
+</section>
+</section>
+<section id="step-4--對-r-做一次--r_filter" class="level2">
+<h2>Step 4 — 對 R 做一次 → R_filter</h2>
+<p>完全同 Step 3 操作。</p>
+<hr />
+</section>
+<section id="step-5--export-為-convolution-wav" class="level2">
+<h2>Step 5 — Export 為 Convolution Wav</h2>
+<section id="操作-2" class="level3">
+<h3>操作</h3>
+<ol type="1">
+<li>選 <strong>L_filter</strong> 和 <strong>R_filter</strong></li>
+<li><strong>File → Export → Impulse Responses as WAV</strong></li>
+<li><strong>格式設定</strong>：
+<ul>
+<li><strong>Sample rate</strong>：<code>48 kHz</code>（REW 內部
+native）</li>
+<li><strong>Bit depth</strong>：<strong>32-bit
+float</strong>（最大精度）</li>
+<li><strong>Apply IR Windows before export</strong> = ✗
+<strong>不要勾</strong></li>
+<li>選 <strong>Stereo file</strong> 或分別 mono</li>
+</ul></li>
+<li><strong>左聲道指向 L_filter，右聲道指向
+R_filter</strong>（<strong>不要弄反！</strong>）</li>
+<li>命名 <code>inverse_MP_filters_48k.wav</code></li>
+</ol>
+</section>
+<section id="32-bit-float-而非-16-bit-的原因" class="level3">
+<h3>32-bit float 而非 16-bit 的原因</h3>
+<ul>
+<li>反轉後 filter 在某些頻段可能有極大或極小值</li>
+<li>16-bit 會 clip 或失精度</li>
+<li>32-bit float 完全保留動態範圍</li>
+</ul>
+<hr />
+</section>
+</section>
+<section id="step-6--載入-dsp-引擎" class="level2">
+<h2>Step 6 — 載入 DSP 引擎</h2>
+<section id="引擎別載入方式" class="level3">
+<h3>引擎別載入方式</h3>
+<table>
+<thead>
+<tr>
+<th>引擎</th>
+<th>動作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Roon</strong></td>
+<td>Convolver 直接吃 wav（或包成 zip）</td>
+</tr>
+<tr>
+<td><strong>EqualizerAPO</strong></td>
+<td>直接 load</td>
+</tr>
+<tr>
+<td><strong>JRiver</strong></td>
+<td><strong>新版</strong>也能直接吃 stereo wav（舊版要 config
+文字檔）</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="gift-oca-隱藏推薦jriver--wdm-driver" class="level3">
+<h3>🎁 OCA 隱藏推薦：JRiver + WDM driver</h3>
+<ul>
+<li>JRiver 一次性 license ~$70（vs Roon 年費）</li>
+<li>勾 <strong>General Features → WDM driver</strong></li>
+<li>系統音訊（含 <strong>Tidal、Qobuz</strong>）都會走 JRiver DSP</li>
+<li>等於用 Roon 等級的整合，但花 fraction of the cost</li>
+</ul>
+<hr />
+</section>
+</section>
+<section id="mag-驗收模擬看修正後" class="level2">
+<h2>🔍 驗收：模擬看修正後</h2>
+<blockquote>
+<p>不是必要步驟，但能 visual check</p>
+</blockquote>
+<section id="算-l-corrected" class="level3">
+<h3>算 L corrected</h3>
+<ol type="1">
+<li><strong>Trace Arithmetic</strong></li>
+<li>A = L0（原始 — 非 minimum phase 版）</li>
+<li>B = L_filter</li>
+<li>Action = <code>A × B</code></li>
+<li><strong>Generate</strong> → 得到 <strong>L1</strong></li>
+</ol>
+</section>
+<section id="對-r-同樣--r1" class="level3">
+<h3>對 R 同樣 → R1</h3>
+</section>
+<section id="觀察" class="level3">
+<h3>觀察</h3>
+<ul>
+<li>L1 / R1 應該：
+<ul>
+<li><strong>音量自動對齊</strong>（minimum phase 反轉本身就會
+normalize）</li>
+<li>帶喇叭<strong>自然滾降</strong>形狀</li>
+<li>低頻 peak/dip <strong>削平</strong></li>
+</ul></li>
+<li><strong>高頻完全不動</strong>（因為 upper limit = 225 Hz）</li>
+</ul>
+<hr />
+</section>
+</section>
+<section id="mortar_board-為什麼高頻別亂修oca-詳細論證" class="level2">
+<h2>🎓 為什麼高頻別亂修（OCA 詳細論證）</h2>
+<section id="1-高頻測量本身就不準" class="level3">
+<h3>1. 高頻測量本身就不準</h3>
+<ul>
+<li>omnidirectional mic 抓不到方向資訊</li>
+<li>反射模式因房間表面而異</li>
+<li>multi-vector 互動形成 sound
+field，<strong>單點測量資訊不足</strong></li>
+</ul>
+</section>
+<section id="2-人腦本來就在過濾這些反射" class="level3">
+<h3>2. 人腦本來就在「過濾」這些反射</h3>
+<ul>
+<li>演化讓我們<strong>可以區分</strong>喇叭音色 vs 房間反射</li>
+<li>小到中型房間：多向反射對人<strong>友善</strong>（甚至偏好）</li>
+<li>早期反射<strong>提升語音清晰度</strong>（學術研究）</li>
+</ul>
+</section>
+<section id="3-想用-gated-windowing-也不行" class="level3">
+<h3>3. 想用 gated windowing 也不行</h3>
+<ul>
+<li>可以 filter 時間波動</li>
+<li>但<strong>方向資訊永遠遺失</strong></li>
+<li>嘗試修「擴散場」→ 高風險弄壞原本好聲</li>
+</ul>
+</section>
+<section id="4-例外" class="level3">
+<h3>4. 例外</h3>
+<p>若你喇叭非常爛、 directivity 差到不行 →
+修高頻可能有救。但<strong>祝你好運</strong>對付那種複雜度。</p>
+<hr />
+</section>
+</section>
+<section id="gear-進階合併-harman-target-curve" class="level2">
+<h2>⚙️ 進階：合併 Harman Target Curve</h2>
+<p>若仍想要 Harman target shape：</p>
+<ol type="1">
+<li>把 Harman target curve <strong>正規化到 1 kHz = 0
+dB</strong>（純文字檔調整）</li>
+<li><strong>Trace Arithmetic</strong></li>
+<li>A = L_filter（從 Step 3 出來的）</li>
+<li>B = Harman_target</li>
+<li>Action = <code>A × B</code></li>
+<li>Generate → 得 <strong>L_filter_with_target</strong></li>
+<li>重複給 R</li>
+<li>Export 這兩個檔案</li>
+</ol>
+<blockquote>
+<p>💡 <strong>OCA 個人見解</strong>：「I don't need this. ... If you
+want more bass, then turn on the volume.」
+高音量人耳本來就感受更多低頻，硬塞 Harman boost 是脫褲子放屁。</p>
+</blockquote>
+<hr />
+</section>
+<section id="studio_microphone-進階建立麥克風-minimum-phase-校正檔"
+class="level2">
+<h2>🎙️ 進階：建立麥克風 minimum phase 校正檔</h2>
+<section id="為何必要" class="level3">
+<h3>為何必要</h3>
+<ul>
+<li>UMIK-1/UMIK-2
+出廠校正檔<strong>只有頻率與振幅</strong>，<strong>沒有相位資訊</strong></li>
+<li>但麥克風在<strong>極低頻和極高頻</strong>確實有 phase shift</li>
+<li>不修正 → 反轉 filter 的相位算錯</li>
+</ul>
+</section>
+<section id="建立流程" class="level3">
+<h3>建立流程</h3>
+<ol type="1">
+<li><strong>匯入原始校正檔</strong>（如
+<code>UMIK-1_xxx_0deg.txt</code>）</li>
+<li>在 REW 載入這支「校正檔當 measurement」</li>
+<li><strong>All SPL → Minimum Phase Version</strong></li>
+<li>設定：
+<ul>
+<li><strong>Include calibration file effects</strong> = ✗（不需要 —
+因為這就是校正檔本體）</li>
+<li><strong>Replicate data outside range</strong> = ✓
+<strong>必勾</strong>（避免 FFT 範圍邊界 artifact）</li>
+</ul></li>
+<li><strong>Make minimum phase copy</strong></li>
+<li><strong>Export as text</strong></li>
+<li>命名 <code>UMIK-1_xxx_0deg_MP.txt</code></li>
+</ol>
+</section>
+<section id="驗證-1" class="level3">
+<h3>驗證</h3>
+<ul>
+<li>原校正檔：每頻率只有 SPL deviation</li>
+<li>MP 版校正檔：每頻率有 <strong>SPL + phase</strong> 兩欄</li>
+</ul>
+</section>
+<section id="使用" class="level3">
+<h3>使用</h3>
+<p>在 REW Preferences 換用 MP 版的校正檔，<strong>重新跑 Step 2</strong>
+的 minimum phase version 建立流程。</p>
+<hr />
+</section>
+</section>
+<section id="question-常見問題" class="level2">
+<h2>❓ 常見問題</h2>
+<section id="q1頻寬上限-225-hz-跟我房間不合怎麼辦" class="level3">
+<h3>Q1：頻寬上限 225 Hz 跟我房間不合怎麼辦？</h3>
+<p>A：在 210–240 Hz 範圍微調，<strong>用同一首測試曲評估
+clarity</strong>。OCA 在自己房間找到 225 是最佳。一般小房間 225
+是好起點。</p>
+</section>
+<section id="q2regularization-25-太弱要不要降" class="level3">
+<h3>Q2：Regularization 25% 太弱？要不要降？</h3>
+<p>A：25% 已是 0 dB boost cap，再降就會 boost
+dip（危險，可能炸喇叭）。如果覺得修不夠 → <strong>檢查 Schroeder
+估計</strong>或<strong>直接買 sub</strong>處理 dip。</p>
+</section>
+<section id="q3為什麼前版反轉法要-harman-target本版不要" class="level3">
+<h3>Q3：為什麼前版反轉法要 Harman target，本版不要？</h3>
+<p>A：本版的反轉本身就<strong>自動 level-match</strong>（minimum phase
+特性），不需 target curve 當 reference。OCA 也直言全頻段套 Harman
+是不必要的。</p>
+</section>
+<section id="q4能不能同時用-video-3-的全頻反轉--本版的-minimum-phase"
+class="level3">
+<h3>Q4：能不能同時用 video 3 的全頻反轉 + 本版的 minimum phase？</h3>
+<p>A：不建議。本版<strong>就是 video 3
+的進化</strong>，不互補而是替代。</p>
+</section>
+<section id="q5高頻真的什麼都不動" class="level3">
+<h3>Q5：高頻真的什麼都不動？</h3>
+<p>A：在 225 Hz 以下做反轉、以上維持原狀。喇叭原音色完全保留。</p>
+</section>
+<section id="q6如何驗證-minimum-phase-版本對了" class="level3">
+<h3>Q6：如何驗證 minimum phase 版本對了？</h3>
+<p>A：看 step response — minimum phase 版<strong>起點在
+t=0、直接往上</strong>；非 minimum phase
+會<strong>先往下再往上</strong>。</p>
+</section>
+<section id="q7可以加-crossover-phase-correction" class="level3">
+<h3>Q7：可以加 crossover phase correction？</h3>
+<p>A：可以，<strong>在 inversion 之前</strong>做。OCA：「It will only
+have positive effects.」</p>
+</section>
+<section id="q8跨房間或不同音量切換-profile" class="level3">
+<h3>Q8：跨房間或不同音量切換 profile？</h3>
+<p>A：每組（聆聽距離 / 音量 / 房間布置）都應該分別校正，存成不同 wav
+切換。但本方法因為「不依賴 Harman target」，跨音量穩定性比 video 3
+好。</p>
+<hr />
+</section>
+</section>
+<section id="dart-oca-心法精選" class="level2">
+<h2>🎯 OCA 心法精選</h2>
+<blockquote>
+<p>「<strong>Most attempts to change the diffusive sound field in these
+areas will carry a high risk of causing an otherwise good speaker sound
+bad.</strong>」 在擴散場（高頻反射場）動手腳，高風險把好喇叭弄壞。</p>
+</blockquote>
+<blockquote>
+<p>「<strong>At the end of the day, this is why we have these systems —
+to listen to them.</strong>」
+最後還是要靠耳朵聽。指標跟波形圖只是參考。</p>
+</blockquote>
+<blockquote>
+<p>「<strong>I still believe in listening to the system.</strong>」
+不要被儀器綁架。</p>
+</blockquote>
+<hr />
+</section>
+<section id="books-延伸資源" class="level2">
+<h2>📚 延伸資源</h2>
+<ul>
+<li><strong>REW 官網</strong>：<a
+href="https://www.roomeqwizard.com"><span>https://www.roomeqwizard.com</span></a></li>
+<li><strong>OCA YouTube 頻道</strong>：完整 audiophile crafting
+系列</li>
+<li><strong>rePhase</strong>（相位精修）：免費，OCA 另有專片</li>
+<li><strong>JRiver Media Center</strong>：~$70 一次買斷，配 WDM driver
+是隱藏神器</li>
+</ul>
+<hr />
+</section>
+<section id="pencil-結語" class="level2">
+<h2>📝 結語</h2>
+<p>本方法是 OCA
+在「全頻段反轉法」之後的<strong>進化版</strong>，核心更動：</p>
+<ol type="1">
+<li><strong>只修 Schroeder 以下</strong> — 因為高頻量測不可靠</li>
+<li><strong>先 minimum phase 再 invert</strong> —
+數學上才有穩定反矩陣</li>
+<li><strong>不依賴 target curve</strong> — 反轉本身自動 level match</li>
+<li><strong>6 步取代 11 步</strong> — 簡單、快速、結果更好</li>
+</ol>
+<blockquote>
+<p>「<strong>This is it. This is the filter. ... There is no pre-echo or
+ringing of any kind despite the sharp phase adjustments.</strong>」</p>
+</blockquote>
+<p>如果你之前用 Dirac、Audyssey 但覺得「修完反而不像原本的聲音」—
+試試只修低頻、高頻原音保留的這個方法。</p>
+<hr />
+<p><em>本教學由助理依逐字稿（30 分鐘 / 4,329
+英文字）翻譯整理為繁中結構化教學。產出日期：2026-06-07。</em></p>
+</section>
+</section>
+<footer class="note">
+原片 OCA's Audio Channel · 29 分 52 秒 · YouTube ID igY3eBsBy4U<br>
+本繁中教學為盧醫師助理依逐字稿整理 · 產出時間 2026-06-07
+</footer>
+</article>
+</div></body></html>

@@ -1,0 +1,1349 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>REW 量測數據判讀完整教學</title>
+<style>
+/* Dirac ART Tutorial — clean tech-doc style */
+* { box-sizing: border-box; }
+:root {
+  --bg: #fafafa;
+  --fg: #1a1a1a;
+  --muted: #6a6a6a;
+  --accent: #1e6dd8;
+  --accent-soft: #e7f0ff;
+  --warn-bg: #fff7e6;
+  --warn-border: #f4a83a;
+  --tip-bg: #e9f7ef;
+  --tip-border: #2eb872;
+  --note-bg: #f4f0ff;
+  --note-border: #8466d8;
+  --code-bg: #f1f3f5;
+  --table-border: #d8d8d8;
+  --th-bg: #f0f4fa;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #16181c;
+    --fg: #e8e8e8;
+    --muted: #9aa0a6;
+    --accent: #5aa9ff;
+    --accent-soft: #1c2840;
+    --warn-bg: #3a2a10;
+    --warn-border: #d99033;
+    --tip-bg: #14301f;
+    --tip-border: #3ea870;
+    --note-bg: #251a3a;
+    --note-border: #9a85e6;
+    --code-bg: #20232a;
+    --table-border: #333a44;
+    --th-bg: #232830;
+  }
+}
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang TC", "Noto Sans TC", "Helvetica Neue", Arial, sans-serif;
+  font-size: 16.5px;
+  line-height: 1.75;
+  margin: 0;
+  padding: 0;
+}
+.layout {
+  display: grid;
+  grid-template-columns: 280px minmax(0, 1fr);
+  max-width: 1280px;
+  margin: 0 auto;
+  gap: 36px;
+  padding: 24px;
+}
+@media (max-width: 900px) {
+  .layout { grid-template-columns: 1fr; padding: 16px; }
+  nav.toc { position: static; max-height: none; border-right: none; padding: 0; }
+}
+nav.toc {
+  position: sticky;
+  top: 16px;
+  align-self: start;
+  max-height: calc(100vh - 32px);
+  overflow-y: auto;
+  font-size: 14.5px;
+  border-right: 1px solid var(--table-border);
+  padding-right: 12px;
+}
+nav.toc h2 {
+  font-size: 14px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 4px 0 12px;
+}
+nav.toc ul { list-style: none; padding-left: 0; margin: 0; }
+nav.toc li { margin: 4px 0; }
+nav.toc a {
+  color: var(--fg);
+  text-decoration: none;
+  display: block;
+  padding: 4px 8px;
+  border-radius: 6px;
+}
+nav.toc a:hover { background: var(--accent-soft); color: var(--accent); }
+nav.toc ul ul { padding-left: 16px; font-size: 13.5px; }
+nav.toc ul ul a { color: var(--muted); }
+nav.toc ul ul ul { padding-left: 14px; font-size: 13px; }
+article { min-width: 0; }
+article h1 {
+  font-size: 32px;
+  margin: 12px 0 8px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+article h2 {
+  font-size: 24px;
+  margin: 40px 0 12px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--accent-soft);
+  font-weight: 700;
+}
+article h3 {
+  font-size: 19px;
+  margin: 28px 0 10px;
+  font-weight: 600;
+  color: var(--accent);
+}
+article h4 {
+  font-size: 16.5px;
+  margin: 20px 0 8px;
+  font-weight: 600;
+}
+article p { margin: 12px 0; }
+article a { color: var(--accent); text-decoration: none; border-bottom: 1px solid transparent; }
+article a:hover { border-bottom-color: var(--accent); }
+article strong { color: var(--fg); font-weight: 700; }
+article ul, article ol { padding-left: 26px; margin: 12px 0; }
+article li { margin: 4px 0; }
+article hr {
+  border: 0;
+  border-top: 1px solid var(--table-border);
+  margin: 36px 0;
+}
+article code {
+  font-family: "SF Mono", Menlo, Consolas, monospace;
+  background: var(--code-bg);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.9em;
+}
+article pre {
+  background: var(--code-bg);
+  border-radius: 8px;
+  padding: 14px 16px;
+  overflow-x: auto;
+  font-size: 14px;
+  line-height: 1.55;
+}
+article pre code { background: none; padding: 0; }
+article blockquote {
+  margin: 16px 0;
+  padding: 12px 18px;
+  background: var(--note-bg);
+  border-left: 4px solid var(--note-border);
+  border-radius: 0 8px 8px 0;
+  color: var(--fg);
+}
+article blockquote p { margin: 6px 0; }
+/* Callout box detection via leading emoji */
+article blockquote p:first-child:has(strong:first-child) { font-weight: 600; }
+article blockquote:has(p:first-child > strong:first-of-type) {
+  /* default — purple note */
+}
+article table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 16px 0;
+  font-size: 15px;
+  overflow-x: auto;
+  display: block;
+}
+@media (min-width: 900px) {
+  article table { display: table; }
+}
+article th, article td {
+  border: 1px solid var(--table-border);
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+article th { background: var(--th-bg); font-weight: 600; }
+article tr:nth-child(2n) td { background: rgba(0,0,0,0.018); }
+@media (prefers-color-scheme: dark) {
+  article tr:nth-child(2n) td { background: rgba(255,255,255,0.025); }
+}
+.meta-card {
+  background: var(--accent-soft);
+  border-left: 4px solid var(--accent);
+  border-radius: 0 8px 8px 0;
+  padding: 14px 18px;
+  margin: 16px 0 24px;
+  font-size: 14.5px;
+}
+.meta-card p { margin: 4px 0; }
+footer.note {
+  margin-top: 56px;
+  padding-top: 20px;
+  border-top: 1px solid var(--table-border);
+  color: var(--muted);
+  font-size: 13.5px;
+  line-height: 1.6;
+}
+.print-hint {
+  margin: 12px 0 4px;
+  font-size: 13px;
+  color: var(--muted);
+}
+@media print {
+  nav.toc, .print-hint { display: none; }
+  .layout { display: block; max-width: none; }
+  article { font-size: 11pt; }
+}
+
+</style>
+</head><body>
+<div class="layout">
+<nav class="toc">
+<h2>目錄</h2>
+
+<ul>
+<li><a href="#rew-量測數據判讀完整教學"
+id="toc-rew-量測數據判讀完整教學">REW 量測數據判讀完整教學</a>
+<ul>
+<li><a href="#dart-為什麼需要這篇" id="toc-dart-為什麼需要這篇">🎯
+為什麼需要這篇</a></li>
+<li><a href="#clipboard-量測前準備最關鍵"
+id="toc-clipboard-量測前準備最關鍵">📋 量測前準備（最關鍵）</a>
+<ul>
+<li><a href="#完整量測組7-個檔案"
+id="toc-完整量測組7-個檔案">完整量測組（7 個檔案）</a></li>
+<li><a href="#量測麥克風擺位"
+id="toc-量測麥克風擺位">量測麥克風擺位</a></li>
+<li><a href="#view-limits-一致性最重要的非技術細節"
+id="toc-view-limits-一致性最重要的非技術細節">View Limits
+一致性（最重要的非技術細節）</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#part-1每張圖的解讀" id="toc-part-1每張圖的解讀">Part
+1：每張圖的解讀</a>
+<ul>
+<li><a href="#1-spl--phase頻率響應--相位"
+id="toc-1-spl--phase頻率響應--相位">§1 SPL &amp; Phase（頻率響應 +
+相位）</a>
+<ul>
+<li><a href="#你看到什麼" id="toc-你看到什麼">你看到什麼</a></li>
+<li><a href="#smoothing平滑-必懂"
+id="toc-smoothing平滑-必懂">Smoothing（平滑）— 必懂</a></li>
+<li><a href="#變異範圍variation-房間品質指標"
+id="toc-變異範圍variation-房間品質指標">變異範圍（Variation）—
+房間品質指標</a></li>
+<li><a href="#spl-圖不夠用" id="toc-spl-圖不夠用">SPL
+圖<strong>不夠用</strong></a></li>
+</ul></li>
+<li><a href="#2-impulse-response--energy-time-curve-etc"
+id="toc-2-impulse-response--energy-time-curve-etc">§2 Impulse Response /
+Energy Time Curve (ETC)</a>
+<ul>
+<li><a href="#你看到什麼-1" id="toc-你看到什麼-1">你看到什麼</a></li>
+<li><a href="#filtered-vs-unfiltered"
+id="toc-filtered-vs-unfiltered">Filtered vs Unfiltered</a></li>
+<li><a href="#view-時間窗" id="toc-view-時間窗">View 時間窗</a></li>
+<li><a href="#怎麼讀" id="toc-怎麼讀">怎麼讀</a></li>
+<li><a href="#期望樣子" id="toc-期望樣子">期望樣子</a></li>
+<li><a href="#用-etc-抓反射源" id="toc-用-etc-抓反射源">用 ETC
+抓反射源</a></li>
+</ul></li>
+<li><a href="#3-rt60--t20--t30" id="toc-3-rt60--t20--t30">§3 RT60 / T20
+/ T30</a>
+<ul>
+<li><a href="#名詞區分" id="toc-名詞區分">名詞區分</a></li>
+<li><a href="#為什麼錄音室不用-rt60"
+id="toc-為什麼錄音室不用-rt60">為什麼錄音室不用 RT60</a></li>
+<li><a href="#期望值" id="toc-期望值">期望值</a></li>
+<li><a href="#低頻偏高是-ok-的" id="toc-低頻偏高是-ok-的">低頻偏高是 OK
+的</a></li>
+<li><a href="#何時不一致--房間問題"
+id="toc-何時不一致--房間問題">何時不一致 → 房間問題</a></li>
+</ul></li>
+<li><a href="#4-waterfall-plot瀑布圖" id="toc-4-waterfall-plot瀑布圖">§4
+Waterfall Plot（瀑布圖）</a>
+<ul>
+<li><a href="#同時看-3-個維度" id="toc-同時看-3-個維度">同時看 3
+個維度</a></li>
+<li><a href="#graham-偏好的設定" id="toc-graham-偏好的設定">Graham
+偏好的設定</a></li>
+<li><a href="#怎麼判讀" id="toc-怎麼判讀">怎麼判讀</a></li>
+<li><a href="#範例" id="toc-範例">範例</a></li>
+</ul></li>
+<li><a href="#5-spectrogram頻譜圖" id="toc-5-spectrogram頻譜圖">§5
+Spectrogram（頻譜圖）</a>
+<ul>
+<li><a href="#跟-waterfall-同資訊不同視覺呈現"
+id="toc-跟-waterfall-同資訊不同視覺呈現">跟 Waterfall
+同資訊、不同視覺呈現</a></li>
+<li><a href="#顏色判讀" id="toc-顏色判讀">顏色判讀</a></li>
+<li><a href="#view-設定" id="toc-view-設定">View 設定</a></li>
+<li><a href="#用途分工" id="toc-用途分工">用途分工</a></li>
+</ul></li>
+<li><a href="#6-phase-圖" id="toc-6-phase-圖">§6 Phase 圖</a>
+<ul>
+<li><a href="#你看到什麼-2" id="toc-你看到什麼-2">你看到什麼</a></li>
+<li><a href="#包覆wrapping"
+id="toc-包覆wrapping">包覆（Wrapping）</a></li>
+<li><a href="#兩個-sources-相位差判讀"
+id="toc-兩個-sources-相位差判讀">兩個 sources 相位差判讀</a></li>
+</ul></li>
+<li><a href="#7-暫不重要的影片沒深入" id="toc-7-暫不重要的影片沒深入">§7
+暫不重要的（影片沒深入）</a></li>
+</ul></li>
+<li><a href="#part-2實戰範例" id="toc-part-2實戰範例">Part
+2：實戰範例</a>
+<ul>
+<li><a href="#8-治理前-vs-治理後範例-1"
+id="toc-8-治理前-vs-治理後範例-1">§8 治理前 vs 治理後（範例 1）</a>
+<ul>
+<li><a href="#設置" id="toc-設置">設置</a></li>
+<li><a href="#結果對比表" id="toc-結果對比表">結果對比表</a></li>
+<li><a href="#為何低頻沒變" id="toc-為何低頻沒變">為何低頻沒變</a></li>
+</ul></li>
+<li><a href="#9-喇叭擺位優化範例-2" id="toc-9-喇叭擺位優化範例-2">§9
+喇叭擺位優化（範例 2）</a>
+<ul>
+<li><a href="#設置-1" id="toc-設置-1">設置</a></li>
+<li><a href="#結果" id="toc-結果">結果</a></li>
+<li><a href="#關鍵啟發" id="toc-關鍵啟發">關鍵啟發</a></li>
+</ul></li>
+<li><a href="#10-sub-與主喇叭整合" id="toc-10-sub-與主喇叭整合">§10 Sub
+與主喇叭整合</a>
+<ul>
+<li><a href="#4-個檢查步驟" id="toc-4-個檢查步驟">4 個檢查步驟</a></li>
+<li><a href="#整合不好的徵兆"
+id="toc-整合不好的徵兆">整合不好的徵兆</a></li>
+</ul></li>
+<li><a href="#11-sbirspeaker-boundary-interference-response"
+id="toc-11-sbirspeaker-boundary-interference-response">§11 SBIR（Speaker
+Boundary Interference Response）</a>
+<ul>
+<li><a href="#概念" id="toc-概念">概念</a></li>
+<li><a href="#範例-1拿掉前牆面板" id="toc-範例-1拿掉前牆面板">範例
+1：拿掉前牆面板</a></li>
+<li><a href="#範例-2移動兩塊面板" id="toc-範例-2移動兩塊面板">範例
+2：移動兩塊面板</a></li>
+<li><a href="#用時間找反射源"
+id="toc-用時間找反射源">用時間找反射源</a></li>
+<li><a href="#治理建議" id="toc-治理建議">治理建議</a></li>
+</ul></li>
+<li><a href="#12-flutter-echo顫動回聲"
+id="toc-12-flutter-echo顫動回聲">§12 Flutter Echo（顫動回聲）</a>
+<ul>
+<li><a href="#場景" id="toc-場景">場景</a></li>
+<li><a href="#範例設置" id="toc-範例設置">範例設置</a></li>
+<li><a href="#waterfall-plot-揭露"
+id="toc-waterfall-plot-揭露">Waterfall Plot 揭露</a></li>
+<li><a href="#etc-揭露" id="toc-etc-揭露">ETC 揭露</a></li>
+<li><a href="#治理-flutter" id="toc-治理-flutter">治理 Flutter</a></li>
+</ul></li>
+<li><a href="#bar_chart-速查表哪張圖看什麼"
+id="toc-bar_chart-速查表哪張圖看什麼">📊 速查表：哪張圖看什麼</a></li>
+<li><a href="#dart-graham-重點心法" id="toc-dart-graham-重點心法">🎯
+Graham 重點心法</a></li>
+<li><a href="#bulb-給家庭劇院-diy-的優先順序"
+id="toc-bulb-給家庭劇院-diy-的優先順序">💡 給家庭劇院 DIY
+的優先順序</a></li>
+<li><a href="#question-常見問題" id="toc-question-常見問題">❓
+常見問題</a>
+<ul>
+<li><a href="#q1112-跟-13-smoothing-哪個對"
+id="toc-q1112-跟-13-smoothing-哪個對">Q1：1/12 跟 1/3 smoothing
+哪個對？</a></li>
+<li><a href="#q2我的-spl-圖看起來像鋸齒怎麼辦"
+id="toc-q2我的-spl-圖看起來像鋸齒怎麼辦">Q2：我的 SPL
+圖看起來像鋸齒怎麼辦？</a></li>
+<li><a href="#q3t20-一定要-200-ms-嗎"
+id="toc-q3t20-一定要-200-ms-嗎">Q3：T20 一定要 200 ms 嗎？</a></li>
+<li><a href="#q4怎麼判斷-sub-反相"
+id="toc-q4怎麼判斷-sub-反相">Q4：怎麼判斷 sub 反相？</a></li>
+<li><a href="#q5etc-顯示-5-ms-有-spike怎麼找牆"
+id="toc-q5etc-顯示-5-ms-有-spike怎麼找牆">Q5：ETC 顯示 5 ms 有
+spike，怎麼找牆？</a></li>
+<li><a href="#q6waterfall-一直拖尾代表什麼"
+id="toc-q6waterfall-一直拖尾代表什麼">Q6：Waterfall
+一直拖尾代表什麼？</a></li>
+<li><a href="#q7要不要把整個房間都吸滿"
+id="toc-q7要不要把整個房間都吸滿">Q7：要不要把整個房間都吸滿？</a></li>
+<li><a href="#q8家用-vs-錄音室差別"
+id="toc-q8家用-vs-錄音室差別">Q8：家用 vs 錄音室差別？</a></li>
+</ul></li>
+<li><a href="#books-延伸資源" id="toc-books-延伸資源">📚
+延伸資源</a></li>
+<li><a href="#pencil-結語" id="toc-pencil-結語">📝 結語</a></li>
+</ul></li>
+</ul>
+
+<p class="print-hint">⌘P 列印 / 存 PDF</p>
+</nav>
+<article>
+<section id="rew-量測數據判讀完整教學" class="level1">
+<h1>REW 量測數據判讀完整教學</h1>
+<blockquote>
+<p><strong>原片</strong>：<a
+href="https://www.youtube.com/watch?v=Es-B3BLoLsQ">REW
+數據判讀：頻率響應 / 相位 / 脈衝響應 / RT60 / 瀑布圖 / 頻譜圖 /
+重低音整合 / SBIR / ETC</a> <strong>講者</strong>：Graham — Music City
+Acoustics（專營錄音室聲學處理） <strong>長度</strong>：34 分 27 秒
+<strong>適用對象</strong>：已會用 REW
+量測但<strong>不知道結果該怎麼看</strong>的玩家、混音工程師、家庭劇院
+DIY 者 <strong>預計學習時間</strong>：精讀本教學約 60
+分鐘；對照自己量測練習 2-3 小時
+<strong>譯註</strong>：本教學由助理依逐字稿整理為繁中結構化教材，非逐句直譯。技術名詞保留英文以利對照
+REW 介面。</p>
+</blockquote>
+<hr />
+<section id="dart-為什麼需要這篇" class="level2">
+<h2>🎯 為什麼需要這篇</h2>
+<p>量測完一堆 REW 數據後常見問題：</p>
+<ul>
+<li>「<strong>這張圖到底要看什麼？</strong>」</li>
+<li>「<strong>哪張圖最該優先修？</strong>」</li>
+<li>「<strong>SPL 看起來改變不大，治理真的有效嗎？</strong>」</li>
+</ul>
+<p>本教學分兩部分：</p>
+<ul>
+<li><strong>Part
+1</strong>：每張圖代表什麼意思、座標軸怎麼讀（§1-7）</li>
+<li><strong>Part 2</strong>：實際範例—治理前後對比、subwoofer 整合、SBIR
+抓反射源、Flutter Echo 偵測（§8-12）</li>
+</ul>
+<hr />
+</section>
+<section id="clipboard-量測前準備最關鍵" class="level2">
+<h2>📋 量測前準備（最關鍵）</h2>
+<section id="完整量測組7-個檔案" class="level3">
+<h3>完整量測組（7 個檔案）</h3>
+<p>要分析得徹底，你需要：</p>
+<table>
+<thead>
+<tr>
+<th>編號</th>
+<th>量測對象</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Left speaker 單獨</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Right speaker 單獨</td>
+</tr>
+<tr>
+<td>3</td>
+<td>L + R 兩聲道一起</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Sub 單獨</td>
+</tr>
+<tr>
+<td>5</td>
+<td>L + Sub</td>
+</tr>
+<tr>
+<td>6</td>
+<td>R + Sub</td>
+</tr>
+<tr>
+<td>7</td>
+<td>L + R + Sub 全開</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>💡
+<strong>不一定每張都用</strong>，但若要把資料給聲學公司分析、或自己徹底診斷，七張缺一不可。</p>
+</blockquote>
+</section>
+<section id="量測麥克風擺位" class="level3">
+<h3>量測麥克風擺位</h3>
+<ul>
+<li><strong>高度</strong>：耳朵高度（坐在主聆位時）</li>
+<li><strong>位置</strong>：<strong>完全置中</strong>（與左右喇叭等距）</li>
+<li><strong>必備</strong>：<strong>紙膠帶</strong>標記喇叭架 /
+麥架位置，方便日後 A/B 比較
+<ul>
+<li>沒紙膠帶？等於每次量測都是新的，無法迭代</li>
+</ul></li>
+</ul>
+</section>
+<section id="view-limits-一致性最重要的非技術細節" class="level3">
+<h3>View Limits 一致性（最重要的非技術細節）</h3>
+<blockquote>
+<p>🚨 <strong>同一張量測</strong>，如果你 zoom in 和 zoom out
+顯示完全不同！</p>
+</blockquote>
+<ul>
+<li><strong>Zoom 太大</strong> → 凹凸看起來都被平滑掉</li>
+<li><strong>Zoom 太小</strong> → 一點點變化都看似嚴重問題</li>
+<li><strong>解法</strong>：永遠用固定的 view limits</li>
+</ul>
+<blockquote>
+<p>Graham 在影片下方有附他用的 view limits 參數標準，建議直接抄。</p>
+</blockquote>
+<hr />
+</section>
+</section>
+</section>
+<section id="part-1每張圖的解讀" class="level1">
+<h1>Part 1：每張圖的解讀</h1>
+<section id="1-spl--phase頻率響應--相位" class="level2">
+<h2>§1 SPL &amp; Phase（頻率響應 + 相位）</h2>
+<section id="你看到什麼" class="level3">
+<h3>你看到什麼</h3>
+<ul>
+<li><strong>X 軸</strong>：頻率（Hz，對數）</li>
+<li><strong>Y 軸</strong>：SPL（dB）</li>
+</ul>
+</section>
+<section id="smoothing平滑-必懂" class="level3">
+<h3>Smoothing（平滑）— 必懂</h3>
+<table>
+<thead>
+<tr>
+<th>Smoothing</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Psychoacoustic</strong></td>
+<td>模擬「人耳實際感知」— 抓整體調性、決定 EQ 方向</td>
+</tr>
+<tr>
+<td><strong>1/48 oct</strong></td>
+<td>抓低頻特定問題的最細節</td>
+</tr>
+<tr>
+<td><strong>1/24 oct</strong></td>
+<td>低頻問題的常用平衡</td>
+</tr>
+<tr>
+<td><strong>1/12 oct</strong></td>
+<td>整體觀察用</td>
+</tr>
+<tr>
+<td><strong>1/3 oct</strong></td>
+<td>業界標準（EBU、廠商規格皆用此）</td>
+</tr>
+<tr>
+<td><strong>不平滑</strong></td>
+<td>看起來會很亂，幾乎不用</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>💡 <strong>黃金法則</strong>：技術規格永遠以 <strong>1/3
+smoothing</strong> 為準。「±2 dB 變異」意思是 1/3 smoothing 後的 ±2
+dB。</p>
+</blockquote>
+</section>
+<section id="變異範圍variation-房間品質指標" class="level3">
+<h3>變異範圍（Variation）— 房間品質指標</h3>
+<p>按 <code>Ctrl + 右鍵</code>，REW 自動算出整段變異範圍。</p>
+<table>
+<thead>
+<tr>
+<th>變異 (1/3 smoothing)</th>
+<th>判讀</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>±2 dB</strong></td>
+<td>EBU 標準 / 世界頂級錄音室</td>
+</tr>
+<tr>
+<td><strong>±5 dB</strong></td>
+<td>優秀家庭錄音室 / 完善處理過的家庭劇院</td>
+</tr>
+<tr>
+<td><strong>±9 dB</strong></td>
+<td>喇叭擺位優化但未做聲學處理</td>
+</tr>
+<tr>
+<td><strong>±16 dB</strong></td>
+<td>未處理空房間（<strong>正常起點</strong>，別灰心）</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="spl-圖不夠用" class="level3">
+<h3>SPL 圖<strong>不夠用</strong></h3>
+<blockquote>
+<p>Graham 警告：「<strong>The SPL graph is probably the LEAST helpful or
+LEAST insightful in terms of understanding what's happening in your
+room.</strong>」</p>
+</blockquote>
+<p>SPL 圖適合：</p>
+<ul>
+<li>比較不同擺位</li>
+<li>看整體調性</li>
+</ul>
+<p>但<strong>抓不到時間維度問題</strong>（反射、共振、整合）。要看下面其他圖。</p>
+<hr />
+</section>
+</section>
+<section id="2-impulse-response--energy-time-curve-etc" class="level2">
+<h2>§2 Impulse Response / Energy Time Curve (ETC)</h2>
+<section id="你看到什麼-1" class="level3">
+<h3>你看到什麼</h3>
+<ul>
+<li><strong>X 軸</strong>：時間（ms，毫秒）</li>
+<li><strong>Y 軸</strong>：能量（%，相對於初始峰值）</li>
+</ul>
+</section>
+<section id="filtered-vs-unfiltered" class="level3">
+<h3>Filtered vs Unfiltered</h3>
+<table>
+<thead>
+<tr>
+<th>模式</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Filtered</strong></td>
+<td>可選 octave band 看特定頻段的反射 → <strong>Graham
+偏好</strong></td>
+</tr>
+<tr>
+<td><strong>Unfiltered</strong></td>
+<td>全頻段聚合 → 整體觀察</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="view-時間窗" class="level3">
+<h3>View 時間窗</h3>
+<ul>
+<li><strong>未處理房間</strong>：0–50 ms（反射拖很久）</li>
+<li><strong>已處理房間</strong>：0–30 ms（反射衰減快）</li>
+</ul>
+</section>
+<section id="怎麼讀" class="level3">
+<h3>怎麼讀</h3>
+<ol type="1">
+<li><strong>初始峰值</strong>：100% = 直達聲到達麥克風</li>
+<li><strong>後面所有 spike</strong>：都是反射</li>
+<li><strong>Schroeder Integral</strong>（藍色滑落線）：整體衰減形狀</li>
+</ol>
+</section>
+<section id="期望樣子" class="level3">
+<h3>期望樣子</h3>
+<table>
+<thead>
+<tr>
+<th>房間狀態</th>
+<th>Schroeder line</th>
+<th>反射峰值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>未處理</td>
+<td>階梯狀、突降</td>
+<td>很多、很高</td>
+</tr>
+<tr>
+<td>處理過</td>
+<td><strong>平滑線性下滑</strong></td>
+<td>少、低</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="用-etc-抓反射源" class="level3">
+<h3>用 ETC 抓反射源</h3>
+<blockquote>
+<p>🎯 <strong>核心公式</strong>：<strong>聲音 1 ms ≈ 1 ft（30
+cm）</strong></p>
+</blockquote>
+<p>如果你在 11 ms 看到一個 spike：</p>
+<ul>
+<li>該反射聲多走了 <strong>11 ft（3.3 m）</strong></li>
+<li>拿張紙畫房間平面 + 用線找：「從喇叭出發、額外走 11 ft
+後回到麥的路徑」</li>
+<li>通常是某面牆/天花板/桌面</li>
+<li>→ <strong>在那位置貼吸音板</strong></li>
+</ul>
+<hr />
+</section>
+</section>
+<section id="3-rt60--t20--t30" class="level2">
+<h2>§3 RT60 / T20 / T30</h2>
+<section id="名詞區分" class="level3">
+<h3>名詞區分</h3>
+<ul>
+<li><strong>RT60</strong>：聲音衰減 60 dB 所需時間</li>
+<li><strong>T20</strong>：衰減 20 dB 所需時間 →
+用於不夠安靜或不夠擴散的場域</li>
+<li><strong>T30</strong>：30 dB 衰減時間</li>
+</ul>
+</section>
+<section id="為什麼錄音室不用-rt60" class="level3">
+<h3>為什麼錄音室不用 RT60</h3>
+<p>錄音室太「不擴散」，沒有真正的擴散聲場 → 60 dB 衰減量不到，<strong>用
+T20 替代</strong>。</p>
+</section>
+<section id="期望值" class="level3">
+<h3>期望值</h3>
+<table>
+<thead>
+<tr>
+<th>用途</th>
+<th>T20 目標</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>混音/控制室</strong></td>
+<td><strong>150–250 ms</strong>（理想 ~200 ms）</td>
+</tr>
+<tr>
+<td>一般家庭劇院</td>
+<td>200–400 ms</td>
+</tr>
+<tr>
+<td>未處理空房</td>
+<td>700–1500 ms</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="低頻偏高是-ok-的" class="level3">
+<h3>低頻偏高是 OK 的</h3>
+<ul>
+<li>100 Hz 以下 T20 略高（如 300–400 ms）→ <strong>正常</strong></li>
+<li>但不能差太多（200 → 700 ms 那種 → 還要加 bass trap）</li>
+</ul>
+</section>
+<section id="何時不一致--房間問題" class="level3">
+<h3>何時不一致 → 房間問題</h3>
+<p>任何一個 octave band 顯著突出於其他 → 該頻段有共振或缺乏吸收</p>
+<hr />
+</section>
+</section>
+<section id="4-waterfall-plot瀑布圖" class="level2">
+<h2>§4 Waterfall Plot（瀑布圖）</h2>
+<section id="同時看-3-個維度" class="level3">
+<h3>同時看 3 個維度</h3>
+<ul>
+<li><strong>頻率</strong>（左右）</li>
+<li><strong>SPL</strong>（上下）</li>
+<li><strong>時間衰減</strong>（深度，往螢幕內走）</li>
+</ul>
+</section>
+<section id="graham-偏好的設定" class="level3">
+<h3>Graham 偏好的設定</h3>
+<ul>
+<li>主要看 <strong>20–300 Hz</strong>（低頻治理）</li>
+<li>全頻段看（治理高頻時）</li>
+</ul>
+</section>
+<section id="怎麼判讀" class="level3">
+<h3>怎麼判讀</h3>
+<ul>
+<li><strong>某頻率高峰持久不衰</strong>（柱狀延伸進深處）→
+<strong>房間模態 / 駐波</strong></li>
+<li><strong>整片均勻下滑</strong> → 健康房間</li>
+<li><strong>某頻率突然「斷崖」</strong> → 過度治理 / 吸音不平衡</li>
+</ul>
+</section>
+<section id="範例" class="level3">
+<h3>範例</h3>
+<p>影片中可見 <strong>214 Hz、240 Hz
+兩個明顯駐波</strong>，會延後衰減。</p>
+<hr />
+</section>
+</section>
+<section id="5-spectrogram頻譜圖" class="level2">
+<h2>§5 Spectrogram（頻譜圖）</h2>
+<section id="跟-waterfall-同資訊不同視覺呈現" class="level3">
+<h3>跟 Waterfall 同資訊、不同視覺呈現</h3>
+<table>
+<thead>
+<tr>
+<th>Spectrogram</th>
+<th>Waterfall</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2D（時間 vs 頻率，顏色=能量）</td>
+<td>3D（時間 + 頻率 + SPL）</td>
+</tr>
+<tr>
+<td><strong>適合精細頻段分析</strong></td>
+<td>適合<strong>宏觀觀察</strong></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="顏色判讀" class="level3">
+<h3>顏色判讀</h3>
+<ul>
+<li><strong>紅</strong> = 高能量</li>
+<li><strong>深藍</strong> = 低能量</li>
+</ul>
+</section>
+<section id="view-設定" class="level3">
+<h3>View 設定</h3>
+<ul>
+<li>整體觀察：20 Hz – 20 kHz</li>
+<li>低頻問題：20–300 Hz</li>
+</ul>
+</section>
+<section id="用途分工" class="level3">
+<h3>用途分工</h3>
+<ul>
+<li><strong>抓「哪個確切頻率」拖太久</strong> → Spectrogram</li>
+<li><strong>整體房間品質印象</strong> → Waterfall</li>
+</ul>
+<hr />
+</section>
+</section>
+<section id="6-phase-圖" class="level2">
+<h2>§6 Phase 圖</h2>
+<section id="你看到什麼-2" class="level3">
+<h3>你看到什麼</h3>
+<ul>
+<li><strong>X 軸</strong>：頻率</li>
+<li><strong>Y 軸</strong>：相位（°，degrees）</li>
+</ul>
+</section>
+<section id="包覆wrapping" class="level3">
+<h3>包覆（Wrapping）</h3>
+<p>當相位往下走超出 ±180° → REW 自動「+360°」拉回螢幕顯示（虛線標示）。
+這是<strong>視覺技巧</strong>，相位仍持續下走。 可以<strong>關掉
+wrap</strong>看真實累積相位。</p>
+</section>
+<section id="兩個-sources-相位差判讀" class="level3">
+<h3>兩個 sources 相位差判讀</h3>
+<ul>
+<li>若一個在 <strong>−28°</strong>、另一個在 <strong>−149°</strong> → 差
+121°</li>
+<li>若一個 <strong>0°</strong>、另一個 <strong>180°</strong> →
+<strong>完全反相</strong>（抵消）</li>
+<li>一個 <strong>0°</strong>、另一個 <strong>−180°</strong> →
+也是完全反相</li>
+</ul>
+<blockquote>
+<p>💡 主要用途：<strong>檢查 sub 是否跟 main speaker 同相</strong> —
+詳見 §10 sub 整合段。</p>
+</blockquote>
+<hr />
+</section>
+</section>
+<section id="7-暫不重要的影片沒深入" class="level2">
+<h2>§7 暫不重要的（影片沒深入）</h2>
+<ul>
+<li>Group Delay</li>
+<li>Minimum Phase</li>
+<li>Clarity（C50, C80）— 演講廳、教堂常用，工作室少用</li>
+</ul>
+<p>Graham：「如果想看這部分，留言。」</p>
+<hr />
+</section>
+</section>
+<section id="part-2實戰範例" class="level1">
+<h1>Part 2：實戰範例</h1>
+<section id="8-治理前-vs-治理後範例-1" class="level2">
+<h2>§8 治理前 vs 治理後（範例 1）</h2>
+<section id="設置" class="level3">
+<h3>設置</h3>
+<ul>
+<li>同一個 14×11 ft 辦公室</li>
+<li>治理前 = 完全空房</li>
+<li>治理後 = 加 home studio room kit（高 / 中 / broadband
+panels，<strong>沒有 bass trap</strong>）</li>
+</ul>
+</section>
+<section id="結果對比表" class="level3">
+<h3>結果對比表</h3>
+<table>
+<thead>
+<tr>
+<th>圖</th>
+<th>治理前 → 治理後</th>
+<th>解讀</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>SPL</strong></td>
+<td>變化<strong>不大</strong>（甚至看似更不平整）</td>
+<td>SPL 不是好指標！反射多時 SPL 看似平</td>
+</tr>
+<tr>
+<td><strong>ETC</strong></td>
+<td>反射 spikes <strong>大幅減少</strong></td>
+<td>治理有效</td>
+</tr>
+<tr>
+<td><strong>T20</strong></td>
+<td>1 sec → <strong>250 ms</strong></td>
+<td>治理有效，但 70 Hz 以下幾無變</td>
+</tr>
+<tr>
+<td><strong>Spectrogram</strong></td>
+<td>顏色更均勻、衰減大幅縮短</td>
+<td>治理有效</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>🚨 <strong>核心洞察</strong>：<strong>SPL 不變 ≠
+治理無效</strong>。SPL
+平整可能是「反射太多把細節糊掉了」造成的假象。<strong>多看 ETC / RT60 /
+Spectrogram</strong>。</p>
+</blockquote>
+</section>
+<section id="為何低頻沒變" class="level3">
+<h3>為何低頻沒變</h3>
+<ul>
+<li>Kit 沒含真正 bass trap</li>
+<li>100 Hz 以下需要 <strong>6 吋深以上 + 6 吋空氣層</strong>（總共 12
+吋深的 bass trap）</li>
+<li>沒這種 trap → 低頻無法治</li>
+</ul>
+<hr />
+</section>
+</section>
+<section id="9-喇叭擺位優化範例-2" class="level2">
+<h2>§9 喇叭擺位優化（範例 2）</h2>
+<section id="設置-1" class="level3">
+<h3>設置</h3>
+<ul>
+<li>未處理房間</li>
+<li>量測 7 個不同擺位（A–G）</li>
+<li>比較 SPL frequency response</li>
+</ul>
+</section>
+<section id="結果" class="level3">
+<h3>結果</h3>
+<table>
+<thead>
+<tr>
+<th>擺位</th>
+<th>±dB 變異</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A（最佳）</td>
+<td><strong>±9 dB</strong></td>
+</tr>
+<tr>
+<td>B、C、E、F</td>
+<td>±13 ~ <strong>±15 dB</strong></td>
+</tr>
+<tr>
+<td>D</td>
+<td>跟 A 差不多</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="關鍵啟發" class="level3">
+<h3>關鍵啟發</h3>
+<ul>
+<li><strong>僅靠移動喇叭就讓變異減少 6 dB</strong></li>
+<li><strong>A 是最佳起點</strong> — 即使沒處理也達 ±9 dB</li>
+<li>後續處理在 A 基礎上做 → 比較容易達 ±5 dB 級</li>
+</ul>
+<blockquote>
+<p>💡 <strong>黃金順序</strong>：</p>
+<ol type="1">
+<li><strong>先優化擺位</strong>（不花錢，省最多力）</li>
+<li><strong>再做被動吸音 / 擴散</strong></li>
+<li><strong>最後考慮主動 DSP / DRC</strong></li>
+</ol>
+</blockquote>
+<hr />
+</section>
+</section>
+<section id="10-sub-與主喇叭整合" class="level2">
+<h2>§10 Sub 與主喇叭整合</h2>
+<section id="4-個檢查步驟" class="level3">
+<h3>4 個檢查步驟</h3>
+<section id="step-1對比sub-alonevsmain-alone" class="level4">
+<h4>Step 1：對比「Sub alone」vs「Main alone」</h4>
+<ul>
+<li>看 crossover 點是否乾淨（範例：56 Hz）</li>
+<li>Main 在 50 Hz 以下沒能量、Sub 在 100 Hz 以上沒能量 → 正常</li>
+</ul>
+</section>
+<section id="step-2加-main--sub-同時量測" class="level4">
+<h4>Step 2：加 Main + Sub 同時量測</h4>
+<ul>
+<li>期望：兩者相加 → 低頻延伸 + 不創造新 null</li>
+<li>影片範例：成功，低頻延伸 5 dB、null 沒惡化</li>
+</ul>
+</section>
+<section id="step-3反相實驗phase-flip-180" class="level4">
+<h4>Step 3：反相實驗（Phase Flip 180°）</h4>
+<ul>
+<li>把 Sub 反相後再量</li>
+<li>應該在 crossover 點看到<strong>巨大 null</strong>（範例：56 Hz 凹陷
+-15 dB）</li>
+<li>這驗證「正相時相加」是對的</li>
+</ul>
+</section>
+<section id="step-4phase-圖確認" class="level4">
+<h4>Step 4：Phase 圖確認</h4>
+<ul>
+<li>Sub alone 與 Sub-flipped 之間的相位差應該 <strong>接近
+180°</strong></li>
+<li>例：sub 在 <strong>-28°</strong>、sub flipped 在
+<strong>-149°</strong> → 差 121°（接近反相）</li>
+<li>主喇叭與 sub（正相時）→ 相位平滑連續 → 無大跳變</li>
+</ul>
+</section>
+</section>
+<section id="整合不好的徵兆" class="level3">
+<h3>整合不好的徵兆</h3>
+<ul>
+<li><strong>Crossover 點出現大 null</strong> → 反相問題（→ 翻 phase
+switch）</li>
+<li><strong>不是剛好 180° 反相</strong> → <strong>移動 sub
+位置</strong>才能對齊（光翻 phase 不夠）</li>
+</ul>
+<hr />
+</section>
+</section>
+<section id="11-sbirspeaker-boundary-interference-response"
+class="level2">
+<h2>§11 SBIR（Speaker Boundary Interference Response）</h2>
+<section id="概念" class="level3">
+<h3>概念</h3>
+<p>喇叭發出的聲音同時：</p>
+<ul>
+<li>直接傳到耳朵</li>
+<li>從<strong>牆面、桌面、地板、天花板</strong>反射後也傳到耳朵</li>
+<li>兩者疊加 → 某些頻率<strong>強化</strong> / 某些<strong>抵消</strong>
+→ <strong>frequency response 出現大凹凸</strong></li>
+</ul>
+</section>
+<section id="範例-1拿掉前牆面板" class="level3">
+<h3>範例 1：拿掉前牆面板</h3>
+<table>
+<thead>
+<tr>
+<th>條件</th>
+<th>變化</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>全治理</td>
+<td>baseline</td>
+</tr>
+<tr>
+<td>拿掉<strong>前牆</strong>面板</td>
+<td>240 Hz 巨大 dip、68 Hz peak、400 Hz 峰起伏</td>
+</tr>
+</tbody>
+</table>
+<p>ETC 顯示：3–6 ms 有額外反射
+spike（<strong>反射從前牆來</strong>）</p>
+</section>
+<section id="範例-2移動兩塊面板" class="level3">
+<h3>範例 2：移動兩塊面板</h3>
+<table>
+<thead>
+<tr>
+<th>條件</th>
+<th>變化</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>兩塊面板在<strong>後牆中央</strong></td>
+<td>4 ms 有反射 → <strong>這是地板反射</strong></td>
+</tr>
+<tr>
+<td>把面板<strong>放到地板</strong></td>
+<td>4 ms 反射消失，但 <strong>15–16 ms
+出現大反射</strong>（後牆暴露）</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="用時間找反射源" class="level3">
+<h3>用時間找反射源</h3>
+<blockquote>
+<p><strong>公式</strong>：時間（ms）≈ 距離（ft） <strong>室深</strong>
+14 ft × 2 = 28 ft（來回） → 16 ms 反射 = 後牆距離 5–6 ft（mic 位於 8 ft
+遠處時的回返）</p>
+</blockquote>
+</section>
+<section id="治理建議" class="level3">
+<h3>治理建議</h3>
+<ol type="1">
+<li>看 ETC 找最大 spike</li>
+<li>用尺/繩標出對應路徑</li>
+<li>在反射點貼吸音板</li>
+<li><strong>重測</strong>驗證 spike 消失</li>
+</ol>
+<hr />
+</section>
+</section>
+<section id="12-flutter-echo顫動回聲" class="level2">
+<h2>§12 Flutter Echo（顫動回聲）</h2>
+<section id="場景" class="level3">
+<h3>場景</h3>
+<ul>
+<li>房間整體治理得很好</li>
+<li>但有兩面<strong>平行硬面</strong>沒處理</li>
+<li>聲音在兩面間多次反彈 → <strong>Flutter
+Echo</strong>（「噠噠噠」連續反射）</li>
+</ul>
+</section>
+<section id="範例設置" class="level3">
+<h3>範例設置</h3>
+<ul>
+<li>充分治理的房間 + <strong>天花板 cloud</strong>（吸音雲）</li>
+<li>對比：拿掉 cloud 看會怎樣</li>
+</ul>
+</section>
+<section id="waterfall-plot-揭露" class="level3">
+<h3>Waterfall Plot 揭露</h3>
+<table>
+<thead>
+<tr>
+<th>頻段</th>
+<th>有 cloud</th>
+<th>沒 cloud</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>全頻段衰減</td>
+<td>均勻</td>
+<td>300 Hz 以上開始<strong>長拖尾</strong></td>
+</tr>
+<tr>
+<td>視覺特徵</td>
+<td>平滑</td>
+<td>多條<strong>長尾巴</strong>（flutter echo）</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="etc-揭露" class="level3">
+<h3>ETC 揭露</h3>
+<table>
+<thead>
+<tr>
+<th>時間點</th>
+<th>有 cloud</th>
+<th>沒 cloud</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>4 ms</td>
+<td>平</td>
+<td>spike（<strong>天花板反射</strong> — 4 ft 麥距、8 ft 天花板剛好對應
+4 ms）</td>
+</tr>
+<tr>
+<td>8、12 ms...</td>
+<td>平</td>
+<td>持續 spike（flutter）</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="治理-flutter" class="level3">
+<h3>治理 Flutter</h3>
+<ol type="1">
+<li><strong>加 cloud</strong>（天花板吸音）— 最有效</li>
+<li><strong>不能兩面都吸 → 一面擴散</strong>（diffusor）</li>
+<li><strong>絕對禁忌</strong>：兩面平行硬面（光禿磁磚牆、玻璃對玻璃）</li>
+</ol>
+<hr />
+</section>
+</section>
+<section id="bar_chart-速查表哪張圖看什麼" class="level2">
+<h2>📊 速查表：哪張圖看什麼</h2>
+<table>
+<thead>
+<tr>
+<th>想知道</th>
+<th>看哪張圖</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>整體調性平不平</td>
+<td><strong>SPL（1/3 smoothing）</strong></td>
+</tr>
+<tr>
+<td>主聆位被反射汙染嗎</td>
+<td><strong>ETC</strong></td>
+</tr>
+<tr>
+<td>房間殘響時長對不對</td>
+<td><strong>T20</strong></td>
+</tr>
+<tr>
+<td>哪個頻率最共振</td>
+<td><strong>Spectrogram</strong></td>
+</tr>
+<tr>
+<td>Sub 跟主喇叭對齊嗎</td>
+<td><strong>Phase 圖 + Crossover 處 SPL</strong></td>
+</tr>
+<tr>
+<td>治理是否有效</td>
+<td><strong>多張對比</strong>（SPL+ETC+T20+Spectrogram）</td>
+</tr>
+<tr>
+<td>反射來自哪面牆</td>
+<td><strong>ETC（測時間→換距離）</strong></td>
+</tr>
+<tr>
+<td>治理太多（聲音乾澀）</td>
+<td><strong>Waterfall low frequency 是否過早衰減</strong></td>
+</tr>
+</tbody>
+</table>
+<hr />
+</section>
+<section id="dart-graham-重點心法" class="level2">
+<h2>🎯 Graham 重點心法</h2>
+<blockquote>
+<p>「<strong>The SPL graph is not the whole picture.</strong>」 不要只看
+SPL，要看 ETC、RT60、Spectrogram 多面向分析。</p>
+</blockquote>
+<blockquote>
+<p>「<strong>The treatment that we do have in the room is very effective
+from 70 Hz all the way up to 10,000 Hz. It's just not doing a whole lot
+below that.</strong>」 沒 bass trap → 70 Hz 以下別期待改善。家庭劇院的
+bass trap 真的很關鍵。</p>
+</blockquote>
+<blockquote>
+<p>「<strong>Don't get discouraged when you start looking at your
+measurements.</strong>」
+第一次量測一定很糟，這是<strong>正常起點</strong>。</p>
+</blockquote>
+<hr />
+</section>
+<section id="bulb-給家庭劇院-diy-的優先順序" class="level2">
+<h2>💡 給家庭劇院 DIY 的優先順序</h2>
+<ol type="1">
+<li><strong>量喇叭擺位 5–7 個位置</strong>找最佳 → 省最多力（範例 §9
+證實 6 dB 改善）</li>
+<li><strong>加吸音板</strong>在前 4
+大反射點（前牆、後牆、左右側牆面、可能加 cloud）</li>
+<li><strong>量 ETC 確認反射 spike 已減少</strong></li>
+<li><strong>看 RT60 是否壓到 250 ms 以下</strong></li>
+<li><strong>裝 6 吋以上 bass trap</strong>處理 100 Hz 以下</li>
+<li><strong>整合 sub</strong>（量 phase、優化位置、用 §10 4 步驟）</li>
+<li><strong>最後</strong>才考慮 DRC（Dirac/Audyssey/OCA 反轉法）→
+接前面教學</li>
+</ol>
+<hr />
+</section>
+<section id="question-常見問題" class="level2">
+<h2>❓ 常見問題</h2>
+<section id="q1112-跟-13-smoothing-哪個對" class="level3">
+<h3>Q1：1/12 跟 1/3 smoothing 哪個對？</h3>
+<p>A：<strong>看你要做什麼</strong>。診斷問題用 1/24 或
+1/12；對外規格比較用 1/3。</p>
+</section>
+<section id="q2我的-spl-圖看起來像鋸齒怎麼辦" class="level3">
+<h3>Q2：我的 SPL 圖看起來像鋸齒怎麼辦？</h3>
+<p>A：先<strong>加 smoothing</strong>（1/12 或
+1/24）。鋸齒通常是反射造成、不是真實人耳感受。</p>
+</section>
+<section id="q3t20-一定要-200-ms-嗎" class="level3">
+<h3>Q3：T20 一定要 200 ms 嗎？</h3>
+<p>A：錄音室目標。家庭劇院 250–400 ms 也 OK，只要均勻。低頻略高（300–400
+ms）正常。</p>
+</section>
+<section id="q4怎麼判斷-sub-反相" class="level3">
+<h3>Q4：怎麼判斷 sub 反相？</h3>
+<p>A：先量「Main + Sub」SPL。在 crossover 點若有 dip → 試翻 phase switch
+→ 再量。 應該變平整 = 原本反相。</p>
+</section>
+<section id="q5etc-顯示-5-ms-有-spike怎麼找牆" class="level3">
+<h3>Q5：ETC 顯示 5 ms 有 spike，怎麼找牆？</h3>
+<p>A：5 ms = 多走 5 ft。從喇叭到反射面到麥的路徑長度 = 比直達聲多 5
+ft。畫平面圖找。</p>
+</section>
+<section id="q6waterfall-一直拖尾代表什麼" class="level3">
+<h3>Q6：Waterfall 一直拖尾代表什麼？</h3>
+<p>A：駐波 / 模態未治理。在該頻率對應位置加 bass trap 或 Helmholtz
+resonator。</p>
+</section>
+<section id="q7要不要把整個房間都吸滿" class="level3">
+<h3>Q7：要不要把整個房間都吸滿？</h3>
+<p>A：<strong>不要</strong>。早期反射（最初 50 ms
+內）某些研究指出有助語音清晰度。完全 dead 的房間反而不自然。</p>
+</section>
+<section id="q8家用-vs-錄音室差別" class="level3">
+<h3>Q8：家用 vs 錄音室差別？</h3>
+<p>A：錄音室更嚴格、更乾燥（T20 200 ms）；家庭劇院可以稍多殘響（T20
+250-400 ms），聽感更包圍。</p>
+<hr />
+</section>
+</section>
+<section id="books-延伸資源" class="level2">
+<h2>📚 延伸資源</h2>
+<ul>
+<li><strong>REW 官網</strong>：<a
+href="https://www.roomeqwizard.com"><span>https://www.roomeqwizard.com</span></a></li>
+<li><strong>Music City
+Acoustics</strong>：聲學處理工程公司（影片頻道主）</li>
+<li><strong>Graham 的 view limits 設定</strong>：原片下方
+description</li>
+<li><strong>part 1（量測 SOP）</strong>：<a
+href="https://www.youtube.com/@MusicCityAcoustics">REW 量測前篇</a></li>
+<li><strong>後續搭配</strong>：見本系列 video 3（OCA 反轉法）、video
+4（OCA minimum phase 進化版）</li>
+</ul>
+<hr />
+</section>
+<section id="pencil-結語" class="level2">
+<h2>📝 結語</h2>
+<p>REW
+不是「按一鍵自動修房間」工具，是<strong>診斷儀</strong>。每張圖告訴你不同維度的問題，多張交叉看才能掌握全貌。</p>
+<blockquote>
+<p>「<strong>The SPL graph is the LEAST helpful in terms of
+understanding what's happening in your room.</strong>」</p>
+</blockquote>
+<p>下次量測完，<strong>不要只看 SPL</strong>。打開
+ETC、RT60、Spectrogram、Phase、Waterfall — 才能真正治理。</p>
+<hr />
+<p><em>本教學由助理依逐字稿（34 分鐘 / 7,634
+英文字）翻譯整理為繁中結構化教學。產出日期：2026-06-07。</em></p>
+</section>
+</section>
+<footer class="note">
+原片 Music City Acoustics (Graham) · 34 分 27 秒 · YouTube ID Es-B3BLoLsQ<br>
+本繁中教學為盧醫師助理依逐字稿整理 · 產出時間 2026-06-07
+</footer>
+</article>
+</div></body></html>

@@ -1,0 +1,1811 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mitch Barnett 最先進 DRC 數位空間校正完整教學</title>
+<style>
+/* Dirac ART Tutorial — clean tech-doc style */
+* { box-sizing: border-box; }
+:root {
+  --bg: #fafafa;
+  --fg: #1a1a1a;
+  --muted: #6a6a6a;
+  --accent: #1e6dd8;
+  --accent-soft: #e7f0ff;
+  --warn-bg: #fff7e6;
+  --warn-border: #f4a83a;
+  --tip-bg: #e9f7ef;
+  --tip-border: #2eb872;
+  --note-bg: #f4f0ff;
+  --note-border: #8466d8;
+  --code-bg: #f1f3f5;
+  --table-border: #d8d8d8;
+  --th-bg: #f0f4fa;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #16181c;
+    --fg: #e8e8e8;
+    --muted: #9aa0a6;
+    --accent: #5aa9ff;
+    --accent-soft: #1c2840;
+    --warn-bg: #3a2a10;
+    --warn-border: #d99033;
+    --tip-bg: #14301f;
+    --tip-border: #3ea870;
+    --note-bg: #251a3a;
+    --note-border: #9a85e6;
+    --code-bg: #20232a;
+    --table-border: #333a44;
+    --th-bg: #232830;
+  }
+}
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang TC", "Noto Sans TC", "Helvetica Neue", Arial, sans-serif;
+  font-size: 16.5px;
+  line-height: 1.75;
+  margin: 0;
+  padding: 0;
+}
+.layout {
+  display: grid;
+  grid-template-columns: 280px minmax(0, 1fr);
+  max-width: 1280px;
+  margin: 0 auto;
+  gap: 36px;
+  padding: 24px;
+}
+@media (max-width: 900px) {
+  .layout { grid-template-columns: 1fr; padding: 16px; }
+  nav.toc { position: static; max-height: none; border-right: none; padding: 0; }
+}
+nav.toc {
+  position: sticky;
+  top: 16px;
+  align-self: start;
+  max-height: calc(100vh - 32px);
+  overflow-y: auto;
+  font-size: 14.5px;
+  border-right: 1px solid var(--table-border);
+  padding-right: 12px;
+}
+nav.toc h2 {
+  font-size: 14px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 4px 0 12px;
+}
+nav.toc ul { list-style: none; padding-left: 0; margin: 0; }
+nav.toc li { margin: 4px 0; }
+nav.toc a {
+  color: var(--fg);
+  text-decoration: none;
+  display: block;
+  padding: 4px 8px;
+  border-radius: 6px;
+}
+nav.toc a:hover { background: var(--accent-soft); color: var(--accent); }
+nav.toc ul ul { padding-left: 16px; font-size: 13.5px; }
+nav.toc ul ul a { color: var(--muted); }
+nav.toc ul ul ul { padding-left: 14px; font-size: 13px; }
+article { min-width: 0; }
+article h1 {
+  font-size: 32px;
+  margin: 12px 0 8px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+article h2 {
+  font-size: 24px;
+  margin: 40px 0 12px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--accent-soft);
+  font-weight: 700;
+}
+article h3 {
+  font-size: 19px;
+  margin: 28px 0 10px;
+  font-weight: 600;
+  color: var(--accent);
+}
+article h4 {
+  font-size: 16.5px;
+  margin: 20px 0 8px;
+  font-weight: 600;
+}
+article p { margin: 12px 0; }
+article a { color: var(--accent); text-decoration: none; border-bottom: 1px solid transparent; }
+article a:hover { border-bottom-color: var(--accent); }
+article strong { color: var(--fg); font-weight: 700; }
+article ul, article ol { padding-left: 26px; margin: 12px 0; }
+article li { margin: 4px 0; }
+article hr {
+  border: 0;
+  border-top: 1px solid var(--table-border);
+  margin: 36px 0;
+}
+article code {
+  font-family: "SF Mono", Menlo, Consolas, monospace;
+  background: var(--code-bg);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.9em;
+}
+article pre {
+  background: var(--code-bg);
+  border-radius: 8px;
+  padding: 14px 16px;
+  overflow-x: auto;
+  font-size: 14px;
+  line-height: 1.55;
+}
+article pre code { background: none; padding: 0; }
+article blockquote {
+  margin: 16px 0;
+  padding: 12px 18px;
+  background: var(--note-bg);
+  border-left: 4px solid var(--note-border);
+  border-radius: 0 8px 8px 0;
+  color: var(--fg);
+}
+article blockquote p { margin: 6px 0; }
+/* Callout box detection via leading emoji */
+article blockquote p:first-child:has(strong:first-child) { font-weight: 600; }
+article blockquote:has(p:first-child > strong:first-of-type) {
+  /* default — purple note */
+}
+article table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 16px 0;
+  font-size: 15px;
+  overflow-x: auto;
+  display: block;
+}
+@media (min-width: 900px) {
+  article table { display: table; }
+}
+article th, article td {
+  border: 1px solid var(--table-border);
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+article th { background: var(--th-bg); font-weight: 600; }
+article tr:nth-child(2n) td { background: rgba(0,0,0,0.018); }
+@media (prefers-color-scheme: dark) {
+  article tr:nth-child(2n) td { background: rgba(255,255,255,0.025); }
+}
+.meta-card {
+  background: var(--accent-soft);
+  border-left: 4px solid var(--accent);
+  border-radius: 0 8px 8px 0;
+  padding: 14px 18px;
+  margin: 16px 0 24px;
+  font-size: 14.5px;
+}
+.meta-card p { margin: 4px 0; }
+footer.note {
+  margin-top: 56px;
+  padding-top: 20px;
+  border-top: 1px solid var(--table-border);
+  color: var(--muted);
+  font-size: 13.5px;
+  line-height: 1.6;
+}
+.print-hint {
+  margin: 12px 0 4px;
+  font-size: 13px;
+  color: var(--muted);
+}
+@media print {
+  nav.toc, .print-hint { display: none; }
+  .layout { display: block; max-width: none; }
+  article { font-size: 11pt; }
+}
+
+</style>
+</head><body>
+<div class="layout">
+<nav class="toc">
+<h2>目錄</h2>
+
+<ul>
+<li><a href="#mitch-barnett-最先進的drc-數位空間校正完整教學"
+id="toc-mitch-barnett-最先進的drc-數位空間校正完整教學">Mitch Barnett
+—「最先進的」DRC 數位空間校正完整教學</a>
+<ul>
+<li><a href="#dart-為什麼這篇值得讀" id="toc-dart-為什麼這篇值得讀">🎯
+為什麼這篇值得讀</a></li>
+<li><a href="#clipboard-教學總綱" id="toc-clipboard-教學總綱">📋
+教學總綱</a></li>
+</ul></li>
+<li><a href="#part-1--dsp-與-drc-是什麼"
+id="toc-part-1--dsp-與-drc-是什麼">Part 1 — DSP 與 DRC 是什麼</a>
+<ul>
+<li><a href="#11-drc-的標準定義wikipedia"
+id="toc-11-drc-的標準定義wikipedia">1.1 DRC
+的標準定義（Wikipedia）</a></li>
+<li><a href="#12-為什麼需要-drc" id="toc-12-為什麼需要-drc">1.2
+為什麼需要 DRC</a></li>
+<li><a href="#13-dsp-革命從錄音室到家"
+id="toc-13-dsp-革命從錄音室到家">1.3 DSP 革命：從錄音室到家</a></li>
+</ul></li>
+<li><a href="#part-2--房間聲學基礎看波長不看方向"
+id="toc-part-2--房間聲學基礎看波長不看方向">Part 2 —
+房間聲學基礎（看波長，不看方向）</a>
+<ul>
+<li><a href="#21-三大頻段區分" id="toc-21-三大頻段區分">2.1
+三大頻段區分</a></li>
+<li><a href="#22-schroeder-頻率轉換頻率"
+id="toc-22-schroeder-頻率轉換頻率">2.2 Schroeder
+頻率（轉換頻率）</a></li>
+<li><a href="#23-波長思維drc-的核心轉變"
+id="toc-23-波長思維drc-的核心轉變">2.3 波長思維（DRC
+的核心轉變）</a></li>
+<li><a href="#24-room-modes駐波" id="toc-24-room-modes駐波">2.4 Room
+Modes（駐波）</a></li>
+<li><a href="#25-sbirspeaker-boundary-interference-response"
+id="toc-25-sbirspeaker-boundary-interference-response">2.5 SBIR（Speaker
+Boundary Interference Response）</a></li>
+</ul></li>
+<li><a href="#part-3--minimum-phase-systems可反轉的關鍵"
+id="toc-part-3--minimum-phase-systems可反轉的關鍵">Part 3 — Minimum
+Phase Systems：可反轉的關鍵</a>
+<ul>
+<li><a href="#31-數學定義白話版" id="toc-31-數學定義白話版">3.1
+數學定義（白話版）</a></li>
+<li><a href="#32-為什麼大多數房間不是-minimum-phase"
+id="toc-32-為什麼大多數房間不是-minimum-phase">3.2 為什麼大多數房間不是
+minimum phase</a></li>
+<li><a href="#33-mitch-的範例" id="toc-33-mitch-的範例">3.3 Mitch
+的範例</a></li>
+</ul></li>
+<li><a href="#part-4--jjjames-johnston的-6-條核心原則"
+id="toc-part-4--jjjames-johnston的-6-條核心原則">Part 4 — JJ（James
+Johnston）的 6 條核心原則</a>
+<ul>
+<li><a href="#41-jj-是誰" id="toc-41-jj-是誰">4.1 JJ 是誰</a></li>
+<li><a href="#42-房間-impulse-response-的-4-段"
+id="toc-42-房間-impulse-response-的-4-段">4.2 房間 impulse response 的 4
+段</a></li>
+<li><a href="#43-jj-的-6-條結論" id="toc-43-jj-的-6-條結論">4.3 JJ 的 6
+條結論</a></li>
+<li><a href="#44-推論drc-的金科玉律" id="toc-44-推論drc-的金科玉律">4.4
+推論：DRC 的金科玉律</a></li>
+</ul></li>
+<li><a href="#part-5--sean-olive-的喜好研究"
+id="toc-part-5--sean-olive-的喜好研究">Part 5 — Sean Olive
+的喜好研究</a>
+<ul>
+<li><a href="#51-實驗" id="toc-51-實驗">5.1 實驗</a></li>
+<li><a href="#52-結果最喜好的響應形狀"
+id="toc-52-結果最喜好的響應形狀">5.2 結果：最喜好的響應形狀</a></li>
+<li><a href="#53-為什麼" id="toc-53-為什麼">5.3 為什麼</a></li>
+<li><a href="#54-音量等響度補償fletcher-munson"
+id="toc-54-音量等響度補償fletcher-munson">5.4
+音量等響度補償（Fletcher-Munson）</a></li>
+<li><a href="#55-haas-效應precedence-effect"
+id="toc-55-haas-效應precedence-effect">5.5 Haas 效應（precedence
+effect）</a></li>
+</ul></li>
+<li><a href="#part-6--drc-完整工作流10-步"
+id="toc-part-6--drc-完整工作流10-步">Part 6 — DRC 完整工作流（10
+步）</a></li>
+<li><a href="#part-7--fir-filter-基礎"
+id="toc-part-7--fir-filter-基礎">Part 7 — FIR Filter 基礎</a>
+<ul>
+<li><a href="#71-fir-規格" id="toc-71-fir-規格">7.1 FIR 規格</a></li>
+<li><a href="#72-iir-vs-fir" id="toc-72-iir-vs-fir">7.2 IIR vs
+FIR</a></li>
+<li><a href="#73-為什麼-hardware-avr-不夠"
+id="toc-73-為什麼-hardware-avr-不夠">7.3 為什麼 hardware AVR
+不夠</a></li>
+</ul></li>
+<li><a href="#part-8--psychoacoustic-filtering核心招牌-1"
+id="toc-part-8--psychoacoustic-filtering核心招牌-1">Part 8 —
+Psychoacoustic Filtering（核心招牌 1）</a>
+<ul>
+<li><a href="#81-概念" id="toc-81-概念">8.1 概念</a></li>
+<li><a href="#82-視覺化" id="toc-82-視覺化">8.2 視覺化</a></li>
+<li><a href="#83-一般-drc-為何做不到"
+id="toc-83-一般-drc-為何做不到">8.3 一般 DRC 為何做不到</a></li>
+</ul></li>
+<li><a href="#part-9--frequency-dependent-windowing-fdw核心招牌-2"
+id="toc-part-9--frequency-dependent-windowing-fdw核心招牌-2">Part 9 —
+Frequency Dependent Windowing, FDW（核心招牌 2）</a>
+<ul>
+<li><a href="#91-概念" id="toc-91-概念">9.1 概念</a></li>
+<li><a href="#92-公式" id="toc-92-公式">9.2 公式</a></li>
+<li><a href="#93-視覺把窗疊在-impulse-response-上看"
+id="toc-93-視覺把窗疊在-impulse-response-上看">9.3 視覺：把窗疊在
+impulse response 上看</a></li>
+<li><a href="#94-數學範例61-cycles-設定"
+id="toc-94-數學範例61-cycles-設定">9.4 數學範例：6/1 cycles
+設定</a></li>
+<li><a href="#95-為什麼-61-cycles-是好設定"
+id="toc-95-為什麼-61-cycles-是好設定">9.5 為什麼 6/1 cycles
+是好設定</a></li>
+<li><a href="#96-一般-drc-為何做不到"
+id="toc-96-一般-drc-為何做不到">9.6 一般 DRC 為何做不到</a></li>
+</ul></li>
+<li><a href="#part-10--pre-filter-技巧大幅平整低頻"
+id="toc-part-10--pre-filter-技巧大幅平整低頻">Part 10 — Pre-filter
+技巧（大幅平整低頻）</a>
+<ul>
+<li><a href="#101-場景" id="toc-101-場景">10.1 場景</a></li>
+<li><a href="#102-pre-filter-三步驟" id="toc-102-pre-filter-三步驟">10.2
+Pre-filter 三步驟</a></li>
+<li><a href="#103-套用" id="toc-103-套用">10.3 套用</a></li>
+<li><a href="#104-視覺結果" id="toc-104-視覺結果">10.4 視覺結果</a></li>
+</ul></li>
+<li><a href="#part-11--group-delay-校正左右對稱"
+id="toc-part-11--group-delay-校正左右對稱">Part 11 — Group Delay
+校正（左右對稱）</a>
+<ul>
+<li><a href="#111-為什麼重要" id="toc-111-為什麼重要">11.1
+為什麼重要</a></li>
+<li><a href="#112-操作" id="toc-112-操作">11.2 操作</a></li>
+<li><a href="#113-結果" id="toc-113-結果">11.3 結果</a></li>
+</ul></li>
+<li><a href="#part-12--listening-comparison怎麼-ab-才對"
+id="toc-part-12--listening-comparison怎麼-ab-才對">Part 12 — Listening
+Comparison：怎麼 A/B 才對</a>
+<ul>
+<li><a href="#121-感官記憶echoic-memory"
+id="toc-121-感官記憶echoic-memory">12.1 感官記憶（Echoic
+Memory）</a></li>
+<li><a href="#122-一般-convolver-的問題"
+id="toc-122-一般-convolver-的問題">12.2 一般 convolver 的問題</a></li>
+<li><a href="#123-解法zero-latency-convolver"
+id="toc-123-解法zero-latency-convolver">12.3 解法：Zero-Latency
+Convolver</a></li>
+<li><a href="#124-listening-的層次" id="toc-124-listening-的層次">12.4
+Listening 的層次</a></li>
+</ul></li>
+<li><a href="#part-13--軟體對比" id="toc-part-13--軟體對比">Part 13 —
+軟體對比</a>
+<ul>
+<li><a href="#131-mitch-評選的-4-個-state-of-the-art"
+id="toc-131-mitch-評選的-4-個-state-of-the-art">13.1 Mitch 評選的 4 個
+state-of-the-art</a></li>
+<li><a href="#132-為什麼很多熱門產品沒入選"
+id="toc-132-為什麼很多熱門產品沒入選">13.2
+為什麼很多熱門產品沒入選</a></li>
+<li><a href="#133-評選標準" id="toc-133-評選標準">13.3 評選標準</a></li>
+</ul></li>
+<li><a href="#part-14--single-vs-multiple-measurements"
+id="toc-part-14--single-vs-multiple-measurements">Part 14 — Single vs
+Multiple Measurements</a>
+<ul>
+<li><a href="#141-一般做法" id="toc-141-一般做法">14.1 一般做法</a></li>
+<li><a href="#142-問題" id="toc-142-問題">14.2 問題</a></li>
+<li><a href="#143-mitch-的研究發現" id="toc-143-mitch-的研究發現">14.3
+Mitch 的研究發現</a></li>
+<li><a href="#144-focus-fidelity-designer-的特殊處理"
+id="toc-144-focus-fidelity-designer-的特殊處理">14.4 Focus Fidelity
+Designer 的特殊處理</a></li>
+<li><a href="#145-推薦做法" id="toc-145-推薦做法">14.5 推薦做法</a></li>
+</ul></li>
+<li><a href="#part-15--hardware-限制"
+id="toc-part-15--hardware-限制">Part 15 — Hardware 限制</a>
+<ul>
+<li><a href="#151-usb-mic-的時鐘漂移問題"
+id="toc-151-usb-mic-的時鐘漂移問題">15.1 USB Mic 的時鐘漂移問題</a></li>
+<li><a href="#152-hardware-avr-為何不行"
+id="toc-152-hardware-avr-為何不行">15.2 Hardware AVR 為何不行</a></li>
+<li><a href="#153-折衷硬體-dsp--軟體預處理"
+id="toc-153-折衷硬體-dsp--軟體預處理">15.3 折衷：硬體 DSP +
+軟體預處理</a></li>
+</ul></li>
+<li><a href="#part-16--多-sub-與-smooth-response"
+id="toc-part-16--多-sub-與-smooth-response">Part 16 — 多 Sub 與 Smooth
+Response</a>
+<ul>
+<li><a href="#161-多-sub-不是萬靈丹" id="toc-161-多-sub-不是萬靈丹">16.1
+多 sub 不是萬靈丹</a></li>
+<li><a href="#162-多-sub--drc-的最佳搭配"
+id="toc-162-多-sub--drc-的最佳搭配">16.2 多 sub + DRC
+的最佳搭配</a></li>
+<li><a href="#163-結果mitch-jbl-m2--4-subs-系統"
+id="toc-163-結果mitch-jbl-m2--4-subs-系統">16.3 結果（Mitch JBL M2 + 4
+subs 系統）</a></li>
+</ul></li>
+<li><a href="#part-17--驗證模擬-vs-實測"
+id="toc-part-17--驗證模擬-vs-實測">Part 17 — 驗證：模擬 vs 實測</a>
+<ul>
+<li><a href="#171-黃金標準" id="toc-171-黃金標準">17.1 黃金標準</a></li>
+<li><a href="#172-mitch-的範例" id="toc-172-mitch-的範例">17.2 Mitch
+的範例</a></li>
+<li><a href="#173-如果差很多--通常是"
+id="toc-173-如果差很多--通常是">17.3 如果差很多 → 通常是</a></li>
+</ul></li>
+<li><a href="#bar_chart-一般-drc-vs-state-of-the-art-drc"
+id="toc-bar_chart-一般-drc-vs-state-of-the-art-drc">📊 一般 DRC vs
+State-of-the-Art DRC</a></li>
+<li><a href="#mortar_board-mitch-給家庭-audiophile-的建議路徑"
+id="toc-mortar_board-mitch-給家庭-audiophile-的建議路徑">🎓 Mitch 給家庭
+audiophile 的建議路徑</a>
+<ul>
+<li><a href="#tier-1基本配置-500" id="toc-tier-1基本配置-500">Tier
+1：基本配置（&lt; $500）</a></li>
+<li><a href="#tier-2進階配置500---1500"
+id="toc-tier-2進階配置500---1500">Tier 2：進階配置（$500 -
+$1500）</a></li>
+<li><a href="#tier-3旗艦配置1500" id="toc-tier-3旗艦配置1500">Tier
+3：旗艦配置（$1500+）</a></li>
+</ul></li>
+<li><a href="#question-常見問題-faq" id="toc-question-常見問題-faq">❓
+常見問題 FAQ</a>
+<ul>
+<li><a href="#q1我用-diracaudyssey-已經很滿意需要升級"
+id="toc-q1我用-diracaudyssey-已經很滿意需要升級">Q1：我用 Dirac/Audyssey
+已經很滿意，需要升級？</a></li>
+<li><a href="#q2psychoacoustic-filter-跟-13-oct-smoothing-不一樣"
+id="toc-q2psychoacoustic-filter-跟-13-oct-smoothing-不一樣">Q2：psychoacoustic
+filter 跟 1/3 oct smoothing 不一樣？</a></li>
+<li><a href="#q3fdw-我可以自己決定-cycles-嗎"
+id="toc-q3fdw-我可以自己決定-cycles-嗎">Q3：FDW 我可以自己決定 cycles
+嗎？</a></li>
+<li><a href="#q4iphoneipad-app-量測夠用嗎"
+id="toc-q4iphoneipad-app-量測夠用嗎">Q4：iPhone/iPad app
+量測夠用嗎？</a></li>
+<li><a href="#q54-顆-sub-真的差很多"
+id="toc-q54-顆-sub-真的差很多">Q5：4 顆 sub 真的差很多？</a></li>
+<li><a href="#q6fir-filter-的-latency-看影片會延遲"
+id="toc-q6fir-filter-的-latency-看影片會延遲">Q6：FIR filter 的 latency
+看影片會延遲？</a></li>
+<li><a href="#q7acourate-跟-audiolense-哪個好"
+id="toc-q7acourate-跟-audiolense-哪個好">Q7：Acourate 跟 Audiolense
+哪個好？</a></li>
+<li><a href="#q8可以用-mac-嗎" id="toc-q8可以用-mac-嗎">Q8：可以用 Mac
+嗎？</a></li>
+<li><a href="#q9類比麥比-usb-麥真的差很多"
+id="toc-q9類比麥比-usb-麥真的差很多">Q9：類比麥比 USB
+麥真的差很多？</a></li>
+<li><a href="#q10要不要學-dsp-數學才能用"
+id="toc-q10要不要學-dsp-數學才能用">Q10：要不要學 DSP
+數學才能用？</a></li>
+</ul></li>
+<li><a href="#dart-mitch-的核心心法" id="toc-dart-mitch-的核心心法">🎯
+Mitch 的核心心法</a></li>
+<li><a href="#books-延伸資源mitch-推薦"
+id="toc-books-延伸資源mitch-推薦">📚 延伸資源（Mitch 推薦）</a>
+<ul>
+<li><a href="#必讀" id="toc-必讀">必讀</a></li>
+<li><a href="#軟體評選通過"
+id="toc-軟體評選通過">軟體（評選通過）</a></li>
+<li><a href="#mitch-自開發" id="toc-mitch-自開發">Mitch 自開發</a></li>
+<li><a href="#mitch-聯絡" id="toc-mitch-聯絡">Mitch 聯絡</a></li>
+</ul></li>
+<li><a href="#pencil-結語" id="toc-pencil-結語">📝 結語</a></li>
+</ul>
+
+<p class="print-hint">⌘P 列印 / 存 PDF</p>
+</nav>
+<article>
+<section id="mitch-barnett-最先進的drc-數位空間校正完整教學"
+class="level1">
+<h1>Mitch Barnett —「最先進的」DRC 數位空間校正完整教學</h1>
+<blockquote>
+<p><strong>原片</strong>：<a
+href="https://www.youtube.com/watch?v=5HUAhclQaP4">Mitch Barnett
+介紹「最先進的」DRC（數位空間校正）技術</a> <strong>講者</strong>：Mitch
+Barnett（Accurate Sound 創辦人、《Accurate Sound Reproduction Using
+DSP》作者，11 年以上 DRC 產品評測經驗） <strong>長度</strong>：1 小時 50
+分 40 秒 <strong>主題</strong>：state-of-the-art DRC 的理論基礎 + FIR
+filter 設計實作 + 軟體對比 <strong>適用對象</strong>：已會用 REW、想瞭解
+DRC「為什麼」而不只「怎麼操作」的玩家、Audiophile、聲學工程師
+<strong>預計學習時間</strong>：精讀本教學 3 小時；對照原片 + 軟體實作
+10+ 小時
+<strong>譯註</strong>：本教學由助理依逐字稿整理為繁中結構化教材，非逐句直譯。技術名詞保留英文以利對照
+REW / Acourate / Audiolense 等軟體介面。</p>
+</blockquote>
+<hr />
+<section id="dart-為什麼這篇值得讀" class="level2">
+<h2>🎯 為什麼這篇值得讀</h2>
+<p>Mitch 的開場：</p>
+<blockquote>
+<p>「I've come to two conclusions: (1) <strong>there is considerable
+misunderstanding about digital room correction</strong> — how it works,
+and even what problems DRC is trying to solve; (2) just as important,
+<strong>understanding what is possible using the
+state-of-the-art</strong> of digital room correction.」</p>
+</blockquote>
+<p>整支影片的核心命題是：<strong>state-of-the-art DRC vs 一般 DRC
+差在哪</strong>？答案在 4 個關鍵概念：</p>
+<ol type="1">
+<li><strong>Psychoacoustic Filtering</strong>（心理聲學濾波）</li>
+<li><strong>Frequency Dependent Windowing,
+FDW</strong>（頻率相依窗）</li>
+<li><strong>Minimum Phase Inversion</strong>（最小相位反轉）</li>
+<li><strong>Excess Phase Correction（FIR linear
+phase）</strong>（多餘相位校正）</li>
+</ol>
+<p>→ 一般 DRC 只做了 1 半（甚至沒有）；state-of-the-art DRC 4
+個都做到。</p>
+<hr />
+</section>
+<section id="clipboard-教學總綱" class="level2">
+<h2>📋 教學總綱</h2>
+<table>
+<thead>
+<tr>
+<th>Part</th>
+<th>主題</th>
+<th>重點</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Part 1</td>
+<td>DSP / DRC 是什麼</td>
+<td>Wikipedia 定義、DSP 在 pro audio 革命的歷史</td>
+</tr>
+<tr>
+<td>Part 2</td>
+<td>房間聲學基礎</td>
+<td>Room modes、Schroeder freq、SBIR、波長思維</td>
+</tr>
+<tr>
+<td>Part 3</td>
+<td>為什麼需要 Minimum Phase</td>
+<td>可反轉性 / 數學基礎</td>
+</tr>
+<tr>
+<td>Part 4</td>
+<td>心理聲學 — JJ 原則</td>
+<td>James Johnston 的 6 條核心結論</td>
+</tr>
+<tr>
+<td>Part 5</td>
+<td>Sean Olive 喜好研究</td>
+<td>為什麼「平直」不是最佳目標</td>
+</tr>
+<tr>
+<td>Part 6</td>
+<td>DRC 完整工作流</td>
+<td>10 步流程</td>
+</tr>
+<tr>
+<td>Part 7</td>
+<td>FIR filter 基礎</td>
+<td>TAPS、頻率解析度、IIR vs FIR</td>
+</tr>
+<tr>
+<td>Part 8</td>
+<td>Psychoacoustic Filtering 細節</td>
+<td>為什麼<strong>不修 dips</strong></td>
+</tr>
+<tr>
+<td>Part 9</td>
+<td>Frequency Dependent Windowing</td>
+<td>state-of-the-art 的招牌技術</td>
+</tr>
+<tr>
+<td>Part 10</td>
+<td>Pre-filter 技巧</td>
+<td>大幅平整低頻 ±20 dB 變異</td>
+</tr>
+<tr>
+<td>Part 11</td>
+<td>Group Delay 校正</td>
+<td>左右聲道對稱性</td>
+</tr>
+<tr>
+<td>Part 12</td>
+<td>Listening 比較</td>
+<td>Hang Loose Convolver、感官記憶 3-10 秒</td>
+</tr>
+<tr>
+<td>Part 13</td>
+<td>軟體對比</td>
+<td>Acourate / Audiolense / Focus Fidelity / OpenSource</td>
+</tr>
+<tr>
+<td>Part 14</td>
+<td>Single vs Multiple measurements</td>
+<td>一支 vs 多支麥克風哪個好</td>
+</tr>
+<tr>
+<td>Part 15</td>
+<td>Hardware 限制</td>
+<td>為什麼 Hardware DSP 不夠</td>
+</tr>
+<tr>
+<td>Part 16</td>
+<td>結論 + 推薦</td>
+<td>&lt; $450 軟體 + 類比麥克風</td>
+</tr>
+</tbody>
+</table>
+<hr />
+</section>
+</section>
+<section id="part-1--dsp-與-drc-是什麼" class="level1">
+<h1>Part 1 — DSP 與 DRC 是什麼</h1>
+<section id="11-drc-的標準定義wikipedia" class="level2">
+<h2>1.1 DRC 的標準定義（Wikipedia）</h2>
+<blockquote>
+<p>「Digital Room Correction is a process in the field of acoustics
+where digital filters designed to improve the unfavorable effects of a
+room's acoustics are applied to the input of a sound reproduction
+system. DRC is usually referred to the construction of filters which
+attempt to <strong>invert the impulse response of the room and playback
+system</strong>, at least in part.」</p>
+</blockquote>
+<p>關鍵詞：</p>
+<ul>
+<li><strong>數位濾波器</strong>（digital filters）</li>
+<li>改善房間聲學不良效果</li>
+<li><strong>反轉房間 impulse response</strong>（至少部分）</li>
+</ul>
+</section>
+<section id="12-為什麼需要-drc" class="level2">
+<h2>1.2 為什麼需要 DRC</h2>
+<ul>
+<li>喇叭擺進房間 → 房間共振、反射、不對稱破壞原本喇叭的頻響</li>
+<li>DRC
+目標：<strong>線性化（linearize）喇叭頻響</strong>（含所有上游元件直到軟體）</li>
+<li>期望：到達耳朵的音樂 = 製作端原意</li>
+</ul>
+</section>
+<section id="13-dsp-革命從錄音室到家" class="level2">
+<h2>1.3 DSP 革命：從錄音室到家</h2>
+<ul>
+<li>1990s 起 pro audio 用 DSP
+全面取代類比硬體（compressor、reverb、EQ）</li>
+<li>同樣的「modelling + measuring」技術可以下沉到家用 DRC</li>
+<li>→ 我們現在能用 $450 軟體做到 20 年前錄音室才做得到的事</li>
+</ul>
+<hr />
+</section>
+</section>
+<section id="part-2--房間聲學基礎看波長不看方向" class="level1">
+<h1>Part 2 — 房間聲學基礎（看波長，不看方向）</h1>
+<section id="21-三大頻段區分" class="level2">
+<h2>2.1 三大頻段區分</h2>
+<table>
+<thead>
+<tr>
+<th>Zone</th>
+<th>頻率範圍</th>
+<th>主導效應</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Zone 1</strong>：波長 &gt;&gt; 房間尺寸</td>
+<td>極低頻（&lt; 20 Hz）</td>
+<td>房間整體 pressurization</td>
+</tr>
+<tr>
+<td><strong>Zone 2</strong>：波長 ≈ 房間尺寸</td>
+<td>20 Hz – Schroeder 頻率</td>
+<td><strong>Room modes / 駐波</strong>（最棘手）</td>
+</tr>
+<tr>
+<td><strong>Zone 3</strong>：過渡（約 2 octaves）</td>
+<td>Schroeder ~ 4×Schroeder</td>
+<td>wave → ray 轉換</td>
+</tr>
+<tr>
+<td><strong>Zone 4</strong>：擴散場</td>
+<td>&gt; 4×Schroeder</td>
+<td><strong>Reflections / 鏡面反射</strong></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="22-schroeder-頻率轉換頻率" class="level2">
+<h2>2.2 Schroeder 頻率（轉換頻率）</h2>
+<ul>
+<li>一般客廳 100 m³ 以下：<strong>150 – 250 Hz</strong></li>
+<li>公式：<span class="math inline">$f_S = 2000
+\sqrt{T_{60}/V}$</span></li>
+<li><strong>意義</strong>：以下房間共振主導、以上反射主導</li>
+</ul>
+</section>
+<section id="23-波長思維drc-的核心轉變" class="level2">
+<h2>2.3 波長思維（DRC 的核心轉變）</h2>
+<table>
+<thead>
+<tr>
+<th>頻率</th>
+<th>波長</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>20 Hz</td>
+<td><strong>17 公尺（56 ft）</strong></td>
+</tr>
+<tr>
+<td>60 Hz</td>
+<td>5.7 公尺</td>
+</tr>
+<tr>
+<td>200 Hz</td>
+<td>1.7 公尺</td>
+</tr>
+<tr>
+<td>600 Hz</td>
+<td>0.57 公尺（2 ft）</td>
+</tr>
+<tr>
+<td>20 kHz</td>
+<td>1.7 公分</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>💡 <strong>Mitch 的金句</strong>：「<strong>When it comes to DSP DRC
+we need to be thinking about wavelength, not direction.</strong>」</p>
+</blockquote>
+</section>
+<section id="24-room-modes駐波" class="level2">
+<h2>2.4 Room Modes（駐波）</h2>
+<p>工具：<strong>amroc calculator</strong>（線上免費）</p>
+<ul>
+<li>輸入長寬高 → 算出所有 room modes</li>
+<li>滑鼠 hover 到 mode → 直接播該頻率聲音</li>
+<li>在房間裡走動 → 親耳聽到 peak 和 null</li>
+</ul>
+</section>
+<section id="25-sbirspeaker-boundary-interference-response"
+class="level2">
+<h2>2.5 SBIR（Speaker Boundary Interference Response）</h2>
+<ul>
+<li>喇叭靠牆 → 直達聲與反射聲在某些頻率「同相相加」/「反相相消」</li>
+<li>結果：頻響出現大 dip 或 peak</li>
+<li>工具：<strong>SBIR Calculator</strong> + <strong>REW Room
+Simulator</strong></li>
+</ul>
+<blockquote>
+<p>⚠️ <strong>殘酷現實</strong>：「<strong>Regardless of where you put
+your speakers and where you sit, almost invariably you're going to get
+huge variation in low frequency response due to room resonances. In this
+case +20 dB peak-to-peak variation.</strong>」</p>
+<p>不管怎麼擺、坐哪，低頻一定 ±20 dB 變異。<strong>這就是為什麼必須有
+DRC</strong>。</p>
+</blockquote>
+<hr />
+</section>
+</section>
+<section id="part-3--minimum-phase-systems可反轉的關鍵" class="level1">
+<h1>Part 3 — Minimum Phase Systems：可反轉的關鍵</h1>
+<section id="31-數學定義白話版" class="level2">
+<h2>3.1 數學定義（白話版）</h2>
+<p><strong>Minimum phase system</strong> 的特徵：</p>
+<ul>
+<li>Z-plane 上所有極點 (poles) 與零點 (zeros)
+都在<strong>單位圓內</strong></li>
+<li><strong>可反轉</strong>（invertible）：有穩定、因果的反矩陣</li>
+<li>設計反濾波器 → 完美抵銷原系統</li>
+</ul>
+<p><strong>Non-minimum phase</strong>（包含 maximum phase / mixed
+phase）：</p>
+<ul>
+<li>有零點在單位圓外</li>
+<li>反轉 → 變不穩定（爆炸或振盪）</li>
+</ul>
+</section>
+<section id="32-為什麼大多數房間不是-minimum-phase" class="level2">
+<h2>3.2 為什麼大多數房間不是 minimum phase</h2>
+<p><strong>反例 1</strong>：反射音強度 ≥ 直達音</p>
+<ul>
+<li>例：30 ms 後出現的大型 specular reflection</li>
+<li>聽感：基低頻 fuzzy、不清晰</li>
+</ul>
+<p><strong>反例 2</strong>：強烈房間模態</p>
+<p>→
+一般房間在<strong>低頻區域</strong>通常<strong>非最小相位</strong></p>
+</section>
+<section id="33-mitch-的範例" class="level2">
+<h2>3.3 Mitch 的範例</h2>
+<p>「digital triamp system」測量結果：</p>
+<ul>
+<li>Tweeter 先到、Woofer 次之、Sub 第三</li>
+<li><strong>但其中一顆 sub 在 30 ms 後產生 maximum phase
+peak</strong></li>
+<li>結果：基低頻聽起來糊、不清晰</li>
+</ul>
+<p>→ 解法：DSP 把它<strong>強制轉成 minimum phase 再修正</strong></p>
+<hr />
+</section>
+</section>
+<section id="part-4--jjjames-johnston的-6-條核心原則" class="level1">
+<h1>Part 4 — JJ（James Johnston）的 6 條核心原則</h1>
+<section id="41-jj-是誰" class="level2">
+<h2>4.1 JJ 是誰</h2>
+<ul>
+<li>AT&amp;T Bell Labs 工程師、MP3 開發者之一</li>
+<li>房間聲學與心理聲學權威</li>
+<li>簡報「Acoustic and Psychoacoustic Issues in Room Correction」前 31
+張是教學寶典</li>
+<li><strong>Mitch 強烈推薦下載 PPT 自學</strong></li>
+</ul>
+</section>
+<section id="42-房間-impulse-response-的-4-段" class="level2">
+<h2>4.2 房間 impulse response 的 4 段</h2>
+<pre><code>Direct Sound（直達聲）— 0 ms
+  ↓
+Early Reflections（早期反射） — &lt; 10 ms
+  ↓
+Late Reflections（晚期反射）— 包含 specular reflection
+  ↓
+Diffuse Tail（擴散尾） — Broadband decay</code></pre>
+</section>
+<section id="43-jj-的-6-條結論" class="level2">
+<h2>4.3 JJ 的 6 條結論</h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>結論</th>
+<th>含義</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><strong>房間中高頻衰減快於低頻</strong></td>
+<td>反射在不同頻段時間分布不同</td>
+</tr>
+<tr>
+<td>2</td>
+<td><strong>喇叭低頻全向、高頻指向</strong></td>
+<td>低頻 room+speaker 都進耳；高頻只有 direct sound 重要</td>
+</tr>
+<tr>
+<td>3</td>
+<td><strong>In-room measurement 必然傾斜</strong>（低頻多、高頻少）</td>
+<td>不是喇叭本身 frequency response</td>
+</tr>
+<tr>
+<td>4</td>
+<td><strong>Dips 不能填</strong>（add energy to null = 更糟）</td>
+<td>因為 dip 通常是相位抵消，加能量只會延長抵消</td>
+</tr>
+<tr>
+<td>5</td>
+<td><strong>人耳對 peak 比 narrow dip 更敏感</strong></td>
+<td>修 peak 優先、dip 容忍</td>
+</tr>
+<tr>
+<td>6</td>
+<td><strong>人耳跟蹤 spectral envelope</strong></td>
+<td>不在乎細節 ripple</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="44-推論drc-的金科玉律" class="level2">
+<h2>4.4 推論：DRC 的金科玉律</h2>
+<blockquote>
+<p>「At <strong>low frequencies</strong>, correct the overall room
+response. At <strong>high frequencies</strong>, correct only the
+<strong>first arrival timbre</strong>. Always correct gain and delay
+between channels. <strong>Relative correction between channels does more
+perceptually than absolute flatness.</strong> <strong>Too much
+correction is bad.</strong> Don't fill nulls or use long window at high
+freq → 'dentist drill experience'.」</p>
+</blockquote>
+<blockquote>
+<p>🚨 <strong>重點</strong>：一般 DRC（含
+Dirac、Audyssey）為了「全頻段平直」過度修正高頻 → 牙醫鑽牙的尖銳感 —
+這是錯的。</p>
+</blockquote>
+<hr />
+</section>
+</section>
+<section id="part-5--sean-olive-的喜好研究" class="level1">
+<h1>Part 5 — Sean Olive 的喜好研究</h1>
+<section id="51-實驗" class="level2">
+<h2>5.1 實驗</h2>
+<ul>
+<li>Sean Olive（Harman）測試多個 DRC 產品</li>
+<li>受試者盲聽評分喜好</li>
+<li>量測對應的 in-room frequency response</li>
+</ul>
+</section>
+<section id="52-結果最喜好的響應形狀" class="level2">
+<h2>5.2 結果：最喜好的響應形狀</h2>
+<p>✅ <strong>平滑下降的傾斜線</strong>（low end 高、high end 低） ❌
+平直線（flat in room） ❌ 過度 boost low</p>
+</section>
+<section id="53-為什麼" class="level2">
+<h2>5.3 為什麼</h2>
+<ul>
+<li>人耳感知中「傾斜」= 平衡（balanced）</li>
+<li>「flat in-room」聽起來<strong>太亮</strong>（too bright）</li>
+<li>製作端混音時就在做這個傾斜</li>
+<li><strong>DRC target curve 必須是傾斜的</strong></li>
+</ul>
+</section>
+<section id="54-音量等響度補償fletcher-munson" class="level2">
+<h2>5.4 音量等響度補償（Fletcher-Munson）</h2>
+<ul>
+<li><strong>83 dB SPL (C-weighting)</strong>：人耳最線性的音量</li>
+<li>低於 83 dB → 中頻較突出、低高頻較弱 → 需要 loudness
+compensation</li>
+<li>高於 83 dB → 低高頻突出、中頻弱</li>
+<li>混音/母帶用 77–83 dB SPL 為基準</li>
+</ul>
+<blockquote>
+<p>💡 <strong>實務建議</strong>：聽音樂 &lt; 83 dB SPL 時要開 loudness
+補償 / 提升 bass</p>
+</blockquote>
+</section>
+<section id="55-haas-效應precedence-effect" class="level2">
+<h2>5.5 Haas 效應（precedence effect）</h2>
+<ul>
+<li>3 ms 延遲就能聽見</li>
+<li>10 ms 延遲完全混淆定位</li>
+<li>房間反射 = mini Haas 效果（破壞 stereo image）</li>
+<li>→ DRC 必須控制反射時間分布</li>
+</ul>
+<hr />
+</section>
+</section>
+<section id="part-6--drc-完整工作流10-步" class="level1">
+<h1>Part 6 — DRC 完整工作流（10 步）</h1>
+<pre><code>1. 量喇叭：單一或多個 impulse response measurements
+2. Filter the measurement：套用 psychoacoustic filter + FDW
+3. 分離 minimum phase response（從 excess phase）
+4. 畫 target curve（傾斜的目標曲線）
+5. 應用 partial 或 full range correction
+6. Invert minimum phase response（反轉）
+7. 決定多少 excess phase correction（用 FDW 控制）
+8. Generate linear phase FIR filters
+9. 包裝給 convolver / 音樂播放器
+10. 重測驗證（measure 後對比 simulation，應 &lt; 0.25 dB 內）</code></pre>
+<hr />
+</section>
+<section id="part-7--fir-filter-基礎" class="level1">
+<h1>Part 7 — FIR Filter 基礎</h1>
+<section id="71-fir-規格" class="level2">
+<h2>7.1 FIR 規格</h2>
+<p><strong>例</strong>：65,536 TAPS @ 48 kHz</p>
+<ul>
+<li>頻率解析度 = 48,000 / 65,536 = <strong>0.732 Hz</strong></li>
+<li>頻段：0–24 kHz</li>
+<li>等同於 <strong>32,768 個 EQ
+sliders</strong>（圖形等化器超精細版）</li>
+</ul>
+</section>
+<section id="72-iir-vs-fir" class="level2">
+<h2>7.2 IIR vs FIR</h2>
+<table>
+<thead>
+<tr>
+<th>屬性</th>
+<th>IIR</th>
+<th>FIR (linear phase)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>相位</td>
+<td>minimum phase（無法改 excess phase）</td>
+<td><strong>可獨立控制 magnitude + phase</strong></td>
+</tr>
+<tr>
+<td>延遲</td>
+<td>無</td>
+<td>有 latency（與 TAP 數有關）</td>
+</tr>
+<tr>
+<td>計算量</td>
+<td>小</td>
+<td>大</td>
+</tr>
+<tr>
+<td>修 magnitude</td>
+<td>✅</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>修 excess phase</td>
+<td>❌</td>
+<td>✅（time-reversed）</td>
+</tr>
+<tr>
+<td>一般 hardware AVR</td>
+<td>✅ 用這個</td>
+<td>通常做不到</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>💡 <strong>總結</strong>：要做 state-of-the-art DRC（含 phase 校正）→
+<strong>FIR linear phase 是必要</strong>。</p>
+</blockquote>
+</section>
+<section id="73-為什麼-hardware-avr-不夠" class="level2">
+<h2>7.3 為什麼 hardware AVR 不夠</h2>
+<ul>
+<li>通常只有 IIR + 100 Hz 以下 2 個 EQ slider</li>
+<li>真正需要的 modal region 解析度差 50 倍</li>
+<li>軟體 FIR：100 Hz 以下有 100+ 個 sliders</li>
+</ul>
+<hr />
+</section>
+</section>
+<section id="part-8--psychoacoustic-filtering核心招牌-1" class="level1">
+<h1>Part 8 — Psychoacoustic Filtering（核心招牌 1）</h1>
+<section id="81-概念" class="level2">
+<h2>8.1 概念</h2>
+<p><strong>測量原始 impulse response</strong> →
+直接反轉會有兩大問題：</p>
+<ol type="1">
+<li>填滿所有 narrow dip（違反 JJ 原則 #4）</li>
+<li>修 narrow band 細節（人耳聽不到的東西）</li>
+</ol>
+<p><strong>Psychoacoustic Filter</strong> 的工作：</p>
+<ul>
+<li>保留 <strong>envelope</strong>（包絡）— 人耳真正感知的形狀</li>
+<li>忽略 narrow ripple</li>
+<li>結果 = 模擬「人耳實際聽到什麼」</li>
+</ul>
+</section>
+<section id="82-視覺化" class="level2">
+<h2>8.2 視覺化</h2>
+<pre><code>原始 measurement（紅）：上下劇烈鋸齒
+   ↓ Psychoacoustic Filter
+平滑 envelope（藍）：跟隨上包絡、不修細節 dip</code></pre>
+</section>
+<section id="83-一般-drc-為何做不到" class="level2">
+<h2>8.3 一般 DRC 為何做不到</h2>
+<ul>
+<li>Dirac Live、Audyssey 等用 <strong>gentle smoothing</strong>（1/6 oct
+等）</li>
+<li>但 smoothing <strong>不是 psychoacoustic filter</strong></li>
+<li>真正的 psychoacoustic filter 需要<strong>遵循頻率相依規則 + 不填
+narrow dip</strong></li>
+</ul>
+<hr />
+</section>
+</section>
+<section id="part-9--frequency-dependent-windowing-fdw核心招牌-2"
+class="level1">
+<h1>Part 9 — Frequency Dependent Windowing, FDW（核心招牌 2）</h1>
+<section id="91-概念" class="level2">
+<h2>9.1 概念</h2>
+<p>不同頻率用<strong>不同長度的時間窗</strong>檢視 impulse
+response：</p>
+<ul>
+<li>低頻 → 長窗（含房間反射）→ 修房間</li>
+<li>高頻 → 短窗（只含直達聲）→ 修喇叭</li>
+</ul>
+</section>
+<section id="92-公式" class="level2">
+<h2>9.2 公式</h2>
+<pre><code>窗長度（秒）= cycles / 頻率（Hz）</code></pre>
+<p>範例（15 cycles 設定）：</p>
+<table>
+<thead>
+<tr>
+<th>頻率</th>
+<th>窗長度</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>20 Hz</td>
+<td>750 ms（含所有反射）</td>
+</tr>
+<tr>
+<td>100 Hz</td>
+<td>150 ms</td>
+</tr>
+<tr>
+<td>1 kHz</td>
+<td>15 ms</td>
+</tr>
+<tr>
+<td>10 kHz</td>
+<td>1.5 ms</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="93-視覺把窗疊在-impulse-response-上看" class="level2">
+<h2>9.3 視覺：把窗疊在 impulse response 上看</h2>
+<pre><code>低頻：窗開很久 → 大段反射被納入 → DRC 修「房間+喇叭」
+   ↓
+高頻：窗很短 → 只看直達聲 → DRC 只修「喇叭」</code></pre>
+</section>
+<section id="94-數學範例61-cycles-設定" class="level2">
+<h2>9.4 數學範例：6/1 cycles 設定</h2>
+<blockquote>
+<p>「Solve for 600 Hz with 6 cycles low / 1 cycle high設定」</p>
+</blockquote>
+<ul>
+<li>600 Hz 對應 2.18 cycles（介於低高之間插值）</li>
+<li>窗長度 = 2.18 / 600 = <strong>3.6 ms</strong></li>
+<li>聲速 1 ms ≈ 1 ft → 3.5 ft 內反射才進入</li>
+<li><strong>3.5 ft 以外的反射不修</strong></li>
+</ul>
+</section>
+<section id="95-為什麼-61-cycles-是好設定" class="level2">
+<h2>9.5 為什麼 6/1 cycles 是好設定</h2>
+<ul>
+<li>Schroeder 頻率 ~150 Hz × 4 = 600 Hz</li>
+<li>600 Hz 之後就「不修房間、只修喇叭」</li>
+<li>跟 JJ 原則完美對應</li>
+</ul>
+</section>
+<section id="96-一般-drc-為何做不到" class="level2">
+<h2>9.6 一般 DRC 為何做不到</h2>
+<ul>
+<li>Dirac/Audyssey 用<strong>固定時間窗</strong>（全頻段同一個值）</li>
+<li>結果：高頻過度修正、低頻又不夠長</li>
+<li>→ state-of-the-art 必有 FDW</li>
+</ul>
+<hr />
+</section>
+</section>
+<section id="part-10--pre-filter-技巧大幅平整低頻" class="level1">
+<h1>Part 10 — Pre-filter 技巧（大幅平整低頻）</h1>
+<section id="101-場景" class="level2">
+<h2>10.1 場景</h2>
+<p>低頻 ±20 dB peak-to-peak 變異很常見。 直接反轉會導致 <strong>9 dB
+以上 filter insertion loss</strong>（filter 必須提供大量 boost）。</p>
+</section>
+<section id="102-pre-filter-三步驟" class="level2">
+<h2>10.2 Pre-filter 三步驟</h2>
+<pre><code>Step 1：算 magnitude difference
+        target curve − measured response = inverted shape
+
+Step 2：套 magnitude limiter（限制 ≥ 0 dB 那部分）
+        只留下需要 cut 的部分（不要 boost）
+
+Step 3：phase extraction
+        把右側（&gt; 200 Hz）強制變線性 phase
+        → 變成純 minimum phase pre-filter</code></pre>
+</section>
+<section id="103-套用" class="level2">
+<h2>10.3 套用</h2>
+<ul>
+<li>把 pre-filter 加進主校正 pipeline</li>
+<li>重新跑 magnitude prep</li>
+<li>低頻 peak-to-peak 變異 → 從 ±20 dB 壓到 ±3 dB</li>
+<li>主校正壓力大幅減輕</li>
+</ul>
+</section>
+<section id="104-視覺結果" class="level2">
+<h2>10.4 視覺結果</h2>
+<ul>
+<li>校正前低頻：20 dB 峰谷</li>
+<li>Pre-filter 後低頻：±3 dB 內</li>
+<li>主校正再修細節 → 整段 ±1 dB 內</li>
+</ul>
+<hr />
+</section>
+</section>
+<section id="part-11--group-delay-校正左右對稱" class="level1">
+<h1>Part 11 — Group Delay 校正（左右對稱）</h1>
+<section id="111-為什麼重要" class="level2">
+<h2>11.1 為什麼重要</h2>
+<p>左右聲道某些頻率的延遲不一致 → <strong>stereo image
+drift</strong></p>
+<ul>
+<li>Phantom center vocal 偏一邊</li>
+<li>某些 bass note 偏左、某些偏右</li>
+<li>隨頻率改變、極大破壞性</li>
+</ul>
+</section>
+<section id="112-操作" class="level2">
+<h2>11.2 操作</h2>
+<ol type="1">
+<li>用 software 跑 macro 找出 group delay peaks</li>
+<li>例：Left 在 100 Hz、220 Hz 有 group delay</li>
+<li>標出 peak frequency + Q value</li>
+<li>Software 自動生成 asymmetry correction filter</li>
+<li>套用後再測 → 對稱性大幅改善</li>
+</ol>
+</section>
+<section id="113-結果" class="level2">
+<h2>11.3 結果</h2>
+<ul>
+<li>左右聲道 step response 對齊</li>
+<li>Phantom image 銳利、不漂移</li>
+<li><strong>Bass 「sits right in the pocket」</strong>（在正中央）</li>
+</ul>
+<hr />
+</section>
+</section>
+<section id="part-12--listening-comparison怎麼-ab-才對" class="level1">
+<h1>Part 12 — Listening Comparison：怎麼 A/B 才對</h1>
+<section id="121-感官記憶echoic-memory" class="level2">
+<h2>12.1 感官記憶（Echoic Memory）</h2>
+<ul>
+<li>人類<strong>短期聽覺記憶</strong>只有 <strong>3–10 秒</strong></li>
+<li>超過 10 秒 → 大腦開始適應、忘記原音</li>
+<li>→ A/B 比較必須<strong>極快切換</strong></li>
+</ul>
+</section>
+<section id="122-一般-convolver-的問題" class="level2">
+<h2>12.2 一般 convolver 的問題</h2>
+<ul>
+<li>切換 filter 時有 ~750 ms 的 silence gap</li>
+<li>這段 silence 重置感官記憶</li>
+<li>比較結果無效</li>
+</ul>
+</section>
+<section id="123-解法zero-latency-convolver" class="level2">
+<h2>12.3 解法：Zero-Latency Convolver</h2>
+<p><strong>Hang Loose Convolver</strong>（Mitch 自己開發的工具）</p>
+<ul>
+<li><strong>零延遲</strong> filter 切換</li>
+<li>6 個 filter bank</li>
+<li><strong>Auto gain matching</strong>：filter insertion loss 自動補償
+<ul>
+<li>1 dB 響度差 = 大腦偏好較大聲那個（必須消除）</li>
+</ul></li>
+<li>切換瞬間無 gap → echoic memory 仍在 → 真正能比較</li>
+</ul>
+</section>
+<section id="124-listening-的層次" class="level2">
+<h2>12.4 Listening 的層次</h2>
+<table>
+<thead>
+<tr>
+<th>階段</th>
+<th>評估什麼</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>整體 tonal balance</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Bass clarity（拖泥 vs 乾淨）</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Stereo image 寬深</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Phantom center vocal 是否漂</td>
+</tr>
+<tr>
+<td>5</td>
+<td>透明度 / 解析度</td>
+</tr>
+</tbody>
+</table>
+<hr />
+</section>
+</section>
+<section id="part-13--軟體對比" class="level1">
+<h1>Part 13 — 軟體對比</h1>
+<section id="131-mitch-評選的-4-個-state-of-the-art" class="level2">
+<h2>13.1 Mitch 評選的 4 個 state-of-the-art</h2>
+<table>
+<thead>
+<tr>
+<th>軟體</th>
+<th>特點</th>
+<th>價格</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Acourate</strong>（Uli Brüggemann）</td>
+<td>模組化、巨量參數可調</td>
+<td>~€450</td>
+</tr>
+<tr>
+<td><strong>Audiolense XO</strong></td>
+<td>易用、自動化程度高</td>
+<td>~$450</td>
+</tr>
+<tr>
+<td><strong>Focus Fidelity Designer</strong>（David）</td>
+<td><strong>唯一正確處理 multi-measurement</strong></td>
+<td>~$300</td>
+</tr>
+<tr>
+<td><strong>OpenSource DRC</strong>（DIY Audio）</td>
+<td>免費、需自己編譯</td>
+<td>$0</td>
+</tr>
+</tbody>
+</table>
+<p><strong>準入門檻</strong>：必須有 <strong>Psychoacoustic Filtering +
+Frequency Dependent Window</strong> 兩大功能。</p>
+</section>
+<section id="132-為什麼很多熱門產品沒入選" class="level2">
+<h2>13.2 為什麼很多熱門產品沒入選</h2>
+<ul>
+<li><strong>Dirac Live</strong>：固定窗、無 psychoacoustic filter → 不到
+state-of-the-art 標準</li>
+<li><strong>Audyssey</strong>：同上</li>
+<li><strong>Trinnov Optimizer</strong>：硬體限制不夠 modular</li>
+<li><strong>Hardware DSP</strong>：filter 解析度不足（100 Hz 以下只有 2
+sliders）</li>
+</ul>
+</section>
+<section id="133-評選標準" class="level2">
+<h2>13.3 評選標準</h2>
+<blockquote>
+<p>「If a DRC software cannot do <strong>psychoacoustic filtering and
+frequency dependent windowing</strong>, it's not a contender for
+state-of-the-art room correction.」</p>
+</blockquote>
+<hr />
+</section>
+</section>
+<section id="part-14--single-vs-multiple-measurements" class="level1">
+<h1>Part 14 — Single vs Multiple Measurements</h1>
+<section id="141-一般做法" class="level2">
+<h2>14.1 一般做法</h2>
+<p>多數 DRC 軟體（含 Dirac）建議<strong>多麥克風位置量測</strong>（9-17
+點）：</p>
+<ul>
+<li>取平均</li>
+<li>試圖達到「sweet spot 平均最佳」</li>
+</ul>
+</section>
+<section id="142-問題" class="level2">
+<h2>14.2 問題</h2>
+<p><strong>平均化的弊</strong>：</p>
+<ul>
+<li>某個位置強 peak + 另一位置強 dip → 平均後變平</li>
+<li>但<strong>沒有任何位置真實是平的</strong></li>
+<li>主聆位精度降低</li>
+</ul>
+</section>
+<section id="143-mitch-的研究發現" class="level2">
+<h2>14.3 Mitch 的研究發現</h2>
+<ul>
+<li><strong>Acourate / Audiolense：單一精準量測效果更好</strong></li>
+<li>因為這兩家有真正的 psychoacoustic filter + FDW</li>
+<li>主聆位完美校正 → 周圍 3 ft × 6 ft 範圍仍維持很好</li>
+</ul>
+</section>
+<section id="144-focus-fidelity-designer-的特殊處理" class="level2">
+<h2>14.4 Focus Fidelity Designer 的特殊處理</h2>
+<p>唯一正確使用多次量測的：</p>
+<ul>
+<li>不做平均</li>
+<li>用多次量測<strong>重建 transfer function</strong></li>
+<li>對「會因座位變」的特徵<strong>減少校正力道</strong></li>
+<li>避免 over-correction</li>
+</ul>
+</section>
+<section id="145-推薦做法" class="level2">
+<h2>14.5 推薦做法</h2>
+<table>
+<thead>
+<tr>
+<th>你的需求</th>
+<th>推薦</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>自己一人聽</td>
+<td><strong>單一精準量測</strong>（Acourate / Audiolense）</td>
+</tr>
+<tr>
+<td>多人沙發</td>
+<td>Focus Fidelity Designer 多次量測</td>
+</tr>
+<tr>
+<td>商用劇院</td>
+<td>Acourate 多次量測 + 客製化 target curve</td>
+</tr>
+</tbody>
+</table>
+<hr />
+</section>
+</section>
+<section id="part-15--hardware-限制" class="level1">
+<h1>Part 15 — Hardware 限制</h1>
+<section id="151-usb-mic-的時鐘漂移問題" class="level2">
+<h2>15.1 USB Mic 的時鐘漂移問題</h2>
+<p><strong>UMIK-1 / UMIK-2 等 USB mic</strong>：</p>
+<ul>
+<li>ADC 用自己的時鐘</li>
+<li>DAC 用另一個時鐘</li>
+<li>兩者<strong>漂移</strong> → timing 測量誤差</li>
+</ul>
+<p><strong>解法</strong>：</p>
+<ul>
+<li>高階：<strong>類比麥克風</strong>（Earthworks 等）</li>
+<li>配 mic preamp 或 audio interface 共用 clock</li>
+</ul>
+<blockquote>
+<p>💡 <strong>Mitch 推薦</strong>：對於 timing-critical
+應用，<strong>永遠用類比 mic + 共用 clock 的介面</strong>。</p>
+</blockquote>
+</section>
+<section id="152-hardware-avr-為何不行" class="level2">
+<h2>15.2 Hardware AVR 為何不行</h2>
+<table>
+<thead>
+<tr>
+<th>限制</th>
+<th>後果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>FIR TAPS 不足</td>
+<td>低頻解析度差</td>
+</tr>
+<tr>
+<td>通常只有 IIR</td>
+<td>無法修 excess phase</td>
+</tr>
+<tr>
+<td>時鐘鎖定</td>
+<td>Phase precision 差</td>
+</tr>
+<tr>
+<td>無 psychoacoustic filter</td>
+<td>過修 narrow dip</td>
+</tr>
+<tr>
+<td>無 FDW</td>
+<td>高頻過修</td>
+</tr>
+</tbody>
+</table>
+<p>→ Mitch：「Hardware DSP <strong>typically has enough resolution for
+the equivalent of 2 EQ sliders below 100 Hz</strong>. This is the exact
+area where we need a lot more frequency resolution.」</p>
+</section>
+<section id="153-折衷硬體-dsp--軟體預處理" class="level2">
+<h2>15.3 折衷：硬體 DSP + 軟體預處理</h2>
+<ul>
+<li>在 PC 端用軟體做 FIR convolve</li>
+<li>結果經類比輸出給 AVR</li>
+<li>或用 JRiver / Roon convolver</li>
+</ul>
+<hr />
+</section>
+</section>
+<section id="part-16--多-sub-與-smooth-response" class="level1">
+<h1>Part 16 — 多 Sub 與 Smooth Response</h1>
+<section id="161-多-sub-不是萬靈丹" class="level2">
+<h2>16.1 多 sub 不是萬靈丹</h2>
+<blockquote>
+<p>「Multiple subs generally are good. <strong>However it does not
+automatically guarantee a smooth response. Even if you have 4 subs
+perfectly set up, you'll still get around 20 dB of peak-to-peak
+variation in low frequency response due to room resonances. There's just
+no way around it. So DSP is still required.</strong>」</p>
+</blockquote>
+<p>→ 4 顆 sub 加 DRC，不是 4 顆 sub 取代 DRC。</p>
+</section>
+<section id="162-多-sub--drc-的最佳搭配" class="level2">
+<h2>16.2 多 sub + DRC 的最佳搭配</h2>
+<ul>
+<li>4 顆 sub 均勻分布（避開房間轉角）</li>
+<li>用 linear phase digital crossover 接管</li>
+<li>每顆 sub 個別 time-align</li>
+<li>DSP 統一做 minimum phase 反轉</li>
+</ul>
+</section>
+<section id="163-結果mitch-jbl-m2--4-subs-系統" class="level2">
+<h2>16.3 結果（Mitch JBL M2 + 4 subs 系統）</h2>
+<ul>
+<li>15 Hz – 24 kHz 全頻段 flat</li>
+<li>6 ft × 2 ft 沙發區內任意位置 → ideal minimum phase response</li>
+<li>無 specular reflection 30 ms peak</li>
+</ul>
+<hr />
+</section>
+</section>
+<section id="part-17--驗證模擬-vs-實測" class="level1">
+<h1>Part 17 — 驗證：模擬 vs 實測</h1>
+<section id="171-黃金標準" class="level2">
+<h2>17.1 黃金標準</h2>
+<p>設計完 FIR filter 之後：</p>
+<ol type="1">
+<li><strong>Simulation</strong>：軟體預測校正後頻響</li>
+<li><strong>Implement</strong>：filter 載入 convolver</li>
+<li><strong>Re-measure</strong>：REW 量測實際校正後結果</li>
+<li><strong>比對</strong>：simulation vs measurement 應 <strong>&lt;
+0.25 dB</strong></li>
+</ol>
+</section>
+<section id="172-mitch-的範例" class="level2">
+<h2>17.2 Mitch 的範例</h2>
+<p>JBL M2 + 4 sub：</p>
+<ul>
+<li>Simulation：15-20,000 Hz 平滑、無大 dip</li>
+<li>Measurement：<strong>幾乎完全重合</strong></li>
+<li>差異 &lt; 0.25 dB</li>
+</ul>
+</section>
+<section id="173-如果差很多--通常是" class="level2">
+<h2>17.3 如果差很多 → 通常是</h2>
+<ul>
+<li>麥克風時鐘漂移</li>
+<li>Filter implementation 沒對齊（latency 沒補）</li>
+<li>量測時房間狀態變了（家具移動、開關門）</li>
+</ul>
+<hr />
+</section>
+</section>
+<section id="bar_chart-一般-drc-vs-state-of-the-art-drc" class="level1">
+<h1>📊 一般 DRC vs State-of-the-Art DRC</h1>
+<table>
+<thead>
+<tr>
+<th>項目</th>
+<th>一般 DRC（Dirac / Audyssey）</th>
+<th>State-of-the-Art (Mitch 推薦)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Psychoacoustic Filter</strong></td>
+<td>❌ 用 gentle smoothing 替代</td>
+<td>✅ 跟隨 envelope、不填 dip</td>
+</tr>
+<tr>
+<td><strong>FDW</strong></td>
+<td>❌ 固定窗</td>
+<td>✅ 頻率相依、低頻長/高頻短</td>
+</tr>
+<tr>
+<td><strong>Minimum Phase 處理</strong></td>
+<td>⚠️ 部分</td>
+<td>✅ 嚴謹分離 + 反轉</td>
+</tr>
+<tr>
+<td><strong>Excess Phase 校正</strong></td>
+<td>❌（IIR only）</td>
+<td>✅ FIR linear phase + time-reversed</td>
+</tr>
+<tr>
+<td><strong>Group Delay 校正</strong></td>
+<td>❌</td>
+<td>✅ 左右對稱 fix</td>
+</tr>
+<tr>
+<td><strong>Pre-filter 技巧</strong></td>
+<td>❌</td>
+<td>✅ 大幅減低 filter insertion loss</td>
+</tr>
+<tr>
+<td><strong>Target Curve</strong></td>
+<td>❌ 強制 flat</td>
+<td>✅ 傾斜（依 Sean Olive 喜好）</td>
+</tr>
+<tr>
+<td><strong>修高頻</strong></td>
+<td>過度修正（dentist drill）</td>
+<td>✅ 只修 direct sound</td>
+</tr>
+<tr>
+<td><strong>修低頻 dip</strong></td>
+<td>填滿（更糟）</td>
+<td>✅ 不填</td>
+</tr>
+<tr>
+<td><strong>驗證</strong></td>
+<td>通常 ±2 dB 內</td>
+<td>&lt; 0.25 dB</td>
+</tr>
+</tbody>
+</table>
+<hr />
+</section>
+<section id="mortar_board-mitch-給家庭-audiophile-的建議路徑"
+class="level1">
+<h1>🎓 Mitch 給家庭 audiophile 的建議路徑</h1>
+<section id="tier-1基本配置-500" class="level2">
+<h2>Tier 1：基本配置（&lt; $500）</h2>
+<ul>
+<li><strong>REW</strong>（免費）</li>
+<li><strong>UMIK-1</strong>（~$120）</li>
+<li><strong>OpenSource DRC</strong> + JRiver / Roon convolver</li>
+</ul>
+</section>
+<section id="tier-2進階配置500---1500" class="level2">
+<h2>Tier 2：進階配置（$500 - $1500）</h2>
+<ul>
+<li><strong>REW + Earthworks mic + Audio interface</strong>（共用
+clock）</li>
+<li><strong>Acourate 或 Audiolense XO</strong>（~$450）</li>
+<li><strong>JRiver / Roon</strong>（<span
+class="math inline">70−</span>500/yr）</li>
+</ul>
+</section>
+<section id="tier-3旗艦配置1500" class="level2">
+<h2>Tier 3：旗艦配置（$1500+）</h2>
+<ul>
+<li>多顆 sub（建議 4 顆）</li>
+<li>8 通道 DAC（Motu）</li>
+<li>個別 driver direct-coupled</li>
+<li><strong>Linear phase digital crossover</strong> + Acourate 全套</li>
+<li>Mitch 自己用這個 setup 配 JBL M2</li>
+</ul>
+<hr />
+</section>
+</section>
+<section id="question-常見問題-faq" class="level1">
+<h1>❓ 常見問題 FAQ</h1>
+<section id="q1我用-diracaudyssey-已經很滿意需要升級" class="level3">
+<h3>Q1：我用 Dirac/Audyssey 已經很滿意，需要升級？</h3>
+<p>A：先做 Mitch 的 A/B 測試（用 Hang Loose Convolver
+等可零延遲切換的工具）。如果你<strong>真的能聽出差別</strong> →
+升級值得。如果聽不出 → 留著現有設置省錢。</p>
+</section>
+<section id="q2psychoacoustic-filter-跟-13-oct-smoothing-不一樣"
+class="level3">
+<h3>Q2：psychoacoustic filter 跟 1/3 oct smoothing 不一樣？</h3>
+<p>A：完全不同。1/3 smoothing 是視覺平滑、不影響濾波。Psychoacoustic
+filter 是真實的濾波運算，<strong>跟隨包絡、不填 dip</strong>。</p>
+</section>
+<section id="q3fdw-我可以自己決定-cycles-嗎" class="level3">
+<h3>Q3：FDW 我可以自己決定 cycles 嗎？</h3>
+<p>A：可以。但 6/1 或 15/15 是經過驗證的甜蜜點。<strong>建議照 Mitch
+設定</strong>。</p>
+</section>
+<section id="q4iphoneipad-app-量測夠用嗎" class="level3">
+<h3>Q4：iPhone/iPad app 量測夠用嗎？</h3>
+<p>A：娛樂級可以，DRC 級不夠（USB mic +
+時鐘漂移已是問題；手機麥更糟）。</p>
+</section>
+<section id="q54-顆-sub-真的差很多" class="level3">
+<h3>Q5：4 顆 sub 真的差很多？</h3>
+<p>A：4 顆 + DRC &gt; 1 顆 + DRC &gt; 4 顆無 DRC。錢有限先做 1 sub +
+DRC。</p>
+</section>
+<section id="q6fir-filter-的-latency-看影片會延遲" class="level3">
+<h3>Q6：FIR filter 的 latency 看影片會延遲？</h3>
+<p>A：JRiver 自動補償 lip
+sync。<strong>streaming（YouTube/Netflix）會延遲</strong> → 串流時關掉
+excess phase correction、只保留 magnitude correction。</p>
+</section>
+<section id="q7acourate-跟-audiolense-哪個好" class="level3">
+<h3>Q7：Acourate 跟 Audiolense 哪個好？</h3>
+<p>A：<strong>Audiolense
+對新手友好</strong>（更自動化）。<strong>Acourate
+給玩家</strong>（更多細節可調，但學習曲線陡）。<strong>Focus
+Fidelity</strong> 是多次量測首選。</p>
+</section>
+<section id="q8可以用-mac-嗎" class="level3">
+<h3>Q8：可以用 Mac 嗎？</h3>
+<p>A：Acourate Windows only；Audiolense 跨平台；Focus Fidelity Windows
+only；JRiver 跨平台。Mac 用戶建議 <strong>Audiolense + JRiver Mac
+版</strong>。</p>
+</section>
+<section id="q9類比麥比-usb-麥真的差很多" class="level3">
+<h3>Q9：類比麥比 USB 麥真的差很多？</h3>
+<p>A：對於 <strong>timing critical</strong> 場景（多 sub 整合、group
+delay 校正）差很多。<strong>只看 frequency response</strong>
+場景不大。</p>
+</section>
+<section id="q10要不要學-dsp-數學才能用" class="level3">
+<h3>Q10：要不要學 DSP 數學才能用？</h3>
+<p>A：<strong>不用</strong>。Acourate/Audiolense 都有
+macro，跟著流程跑就行。但<strong>理解原理</strong>能讓你判斷結果合不合理、知道何時該調整參數。</p>
+<hr />
+</section>
+</section>
+<section id="dart-mitch-的核心心法" class="level1">
+<h1>🎯 Mitch 的核心心法</h1>
+<blockquote>
+<p>「<strong>Multiple subs generally are good. However it does not
+automatically guarantee a smooth response. DSP is still
+required.</strong>」</p>
+</blockquote>
+<blockquote>
+<p>「<strong>When it comes to DSP DRC we need to be thinking about
+wavelength, not direction.</strong>」</p>
+</blockquote>
+<blockquote>
+<p>「<strong>Hardware DSP typically has enough resolution for the
+equivalent of 2 EQ sliders below 100 Hz. This is exactly the area where
+we need more resolution. So hardware solutions are
+insufficient.</strong>」</p>
+</blockquote>
+<blockquote>
+<p>「<strong>Psychoacoustic filtering and frequency dependent windowing
+are absolutely key features in state-of-the-art digital room correction.
+They differentiate virtually all DRC products from the
+state-of-the-art.</strong>」</p>
+</blockquote>
+<blockquote>
+<p>「<strong>Having DSP'd over 125 different loudspeakers in rooms from
+around the world over the past 18 months has illustrated that the DSP
+modeling approach and solutions are robust and
+repeatable.</strong>」</p>
+</blockquote>
+<hr />
+</section>
+<section id="books-延伸資源mitch-推薦" class="level1">
+<h1>📚 延伸資源（Mitch 推薦）</h1>
+<section id="必讀" class="level2">
+<h2>必讀</h2>
+<ul>
+<li><strong>JJ's 簡報</strong>：「Acoustic and Psychoacoustic Issues in
+Room Correction」前 31 張</li>
+<li><strong>John Mulcahy 文章</strong>（REW 作者）：minimum phase
+介紹</li>
+<li><strong>Mitch 自己的書</strong>：《Accurate Sound Reproduction Using
+DSP》(Amazon)</li>
+<li><strong>Sean Olive 論文</strong>：subjective preference of room
+correction</li>
+</ul>
+</section>
+<section id="軟體評選通過" class="level2">
+<h2>軟體（評選通過）</h2>
+<ul>
+<li><a href="https://www.audiovero.de">Acourate</a> — Uli
+Brüggemann</li>
+<li><a href="https://www.juicehifi.com">Audiolense XO</a></li>
+<li><a href="https://www.focusfidelity.com">Focus Fidelity
+Designer</a></li>
+<li>OpenSource DRC（DIY Audio Forum）</li>
+</ul>
+</section>
+<section id="mitch-自開發" class="level2">
+<h2>Mitch 自開發</h2>
+<ul>
+<li><strong>Hang Loose Convolver</strong> — zero-latency A/B FIR filter
+convolver</li>
+</ul>
+</section>
+<section id="mitch-聯絡" class="level2">
+<h2>Mitch 聯絡</h2>
+<ul>
+<li><a
+href="mailto:mitch@accuratesound.com">mitch@accuratesound.com</a></li>
+<li>DIY Audio Forum：@mitchba / @mitchco</li>
+<li>訪談影片：Jason 與 Chris 各有訪談</li>
+</ul>
+<hr />
+</section>
+</section>
+<section id="pencil-結語" class="level1">
+<h1>📝 結語</h1>
+<p>State-of-the-art DRC 不是行銷詞，是<strong>4
+項關鍵技術</strong>：</p>
+<ol type="1">
+<li><strong>Psychoacoustic Filtering</strong> — 跟著人耳感知走、不填
+narrow dip</li>
+<li><strong>Frequency Dependent Windowing</strong> —
+低頻包房間、高頻只看直達</li>
+<li><strong>Minimum Phase + Excess Phase 分離校正</strong> — FIR linear
+phase 才做得到</li>
+<li><strong>驗證：模擬 vs 實測 &lt; 0.25 dB</strong></li>
+</ol>
+<p>具備這 4 項的軟體不到 5 個（Acourate / Audiolense / Focus Fidelity /
+OpenSource DRC），其餘<strong>都還不是 state-of-the-art</strong>。</p>
+<blockquote>
+<p>「<strong>Whatever music is on the disc is arriving at our ears with
+no frequency or time domain distortion added by the loudspeaker or
+room.</strong>」</p>
+</blockquote>
+<p>這是 state-of-the-art DRC 的最高境界 —
+<strong>聽到製作端原本的意圖</strong>。</p>
+<hr />
+<p><em>本教學由助理依逐字稿（1 小時 50 分 / 15,862
+英文字）翻譯整理為繁中結構化教材。產出日期：2026-06-07。內容涵蓋原片 17
+個主要章節，聚焦核心理論、實作工作流、軟體對比。建議搭配 Mitch 的書 + JJ
+簡報深入學習。</em></p>
+</section>
+<footer class="note">
+原片 Mitch Barnett (Accurate Sound) · 1 小時 50 分 40 秒 · YouTube ID 5HUAhclQaP4<br>
+本繁中教學為盧醫師助理依逐字稿整理 · 產出時間 2026-06-07
+</footer>
+</article>
+</div></body></html>

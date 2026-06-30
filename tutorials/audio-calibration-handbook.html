@@ -1,0 +1,1590 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>家庭音響空間校正完整講義</title>
+<style>
+/* Dirac ART Tutorial — clean tech-doc style */
+* { box-sizing: border-box; }
+:root {
+  --bg: #fafafa;
+  --fg: #1a1a1a;
+  --muted: #6a6a6a;
+  --accent: #1e6dd8;
+  --accent-soft: #e7f0ff;
+  --warn-bg: #fff7e6;
+  --warn-border: #f4a83a;
+  --tip-bg: #e9f7ef;
+  --tip-border: #2eb872;
+  --note-bg: #f4f0ff;
+  --note-border: #8466d8;
+  --code-bg: #f1f3f5;
+  --table-border: #d8d8d8;
+  --th-bg: #f0f4fa;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #16181c;
+    --fg: #e8e8e8;
+    --muted: #9aa0a6;
+    --accent: #5aa9ff;
+    --accent-soft: #1c2840;
+    --warn-bg: #3a2a10;
+    --warn-border: #d99033;
+    --tip-bg: #14301f;
+    --tip-border: #3ea870;
+    --note-bg: #251a3a;
+    --note-border: #9a85e6;
+    --code-bg: #20232a;
+    --table-border: #333a44;
+    --th-bg: #232830;
+  }
+}
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang TC", "Noto Sans TC", "Helvetica Neue", Arial, sans-serif;
+  font-size: 16.5px;
+  line-height: 1.75;
+  margin: 0;
+  padding: 0;
+}
+.layout {
+  display: grid;
+  grid-template-columns: 280px minmax(0, 1fr);
+  max-width: 1280px;
+  margin: 0 auto;
+  gap: 36px;
+  padding: 24px;
+}
+@media (max-width: 900px) {
+  .layout { grid-template-columns: 1fr; padding: 16px; }
+  nav.toc { position: static; max-height: none; border-right: none; padding: 0; }
+}
+nav.toc {
+  position: sticky;
+  top: 16px;
+  align-self: start;
+  max-height: calc(100vh - 32px);
+  overflow-y: auto;
+  font-size: 14.5px;
+  border-right: 1px solid var(--table-border);
+  padding-right: 12px;
+}
+nav.toc h2 {
+  font-size: 14px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 4px 0 12px;
+}
+nav.toc ul { list-style: none; padding-left: 0; margin: 0; }
+nav.toc li { margin: 4px 0; }
+nav.toc a {
+  color: var(--fg);
+  text-decoration: none;
+  display: block;
+  padding: 4px 8px;
+  border-radius: 6px;
+}
+nav.toc a:hover { background: var(--accent-soft); color: var(--accent); }
+nav.toc ul ul { padding-left: 16px; font-size: 13.5px; }
+nav.toc ul ul a { color: var(--muted); }
+nav.toc ul ul ul { padding-left: 14px; font-size: 13px; }
+article { min-width: 0; }
+article h1 {
+  font-size: 32px;
+  margin: 12px 0 8px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+article h2 {
+  font-size: 24px;
+  margin: 40px 0 12px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--accent-soft);
+  font-weight: 700;
+}
+article h3 {
+  font-size: 19px;
+  margin: 28px 0 10px;
+  font-weight: 600;
+  color: var(--accent);
+}
+article h4 {
+  font-size: 16.5px;
+  margin: 20px 0 8px;
+  font-weight: 600;
+}
+article p { margin: 12px 0; }
+article a { color: var(--accent); text-decoration: none; border-bottom: 1px solid transparent; }
+article a:hover { border-bottom-color: var(--accent); }
+article strong { color: var(--fg); font-weight: 700; }
+article ul, article ol { padding-left: 26px; margin: 12px 0; }
+article li { margin: 4px 0; }
+article hr {
+  border: 0;
+  border-top: 1px solid var(--table-border);
+  margin: 36px 0;
+}
+article code {
+  font-family: "SF Mono", Menlo, Consolas, monospace;
+  background: var(--code-bg);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.9em;
+}
+article pre {
+  background: var(--code-bg);
+  border-radius: 8px;
+  padding: 14px 16px;
+  overflow-x: auto;
+  font-size: 14px;
+  line-height: 1.55;
+}
+article pre code { background: none; padding: 0; }
+article blockquote {
+  margin: 16px 0;
+  padding: 12px 18px;
+  background: var(--note-bg);
+  border-left: 4px solid var(--note-border);
+  border-radius: 0 8px 8px 0;
+  color: var(--fg);
+}
+article blockquote p { margin: 6px 0; }
+/* Callout box detection via leading emoji */
+article blockquote p:first-child:has(strong:first-child) { font-weight: 600; }
+article blockquote:has(p:first-child > strong:first-of-type) {
+  /* default — purple note */
+}
+article table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 16px 0;
+  font-size: 15px;
+  overflow-x: auto;
+  display: block;
+}
+@media (min-width: 900px) {
+  article table { display: table; }
+}
+article th, article td {
+  border: 1px solid var(--table-border);
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+article th { background: var(--th-bg); font-weight: 600; }
+article tr:nth-child(2n) td { background: rgba(0,0,0,0.018); }
+@media (prefers-color-scheme: dark) {
+  article tr:nth-child(2n) td { background: rgba(255,255,255,0.025); }
+}
+.meta-card {
+  background: var(--accent-soft);
+  border-left: 4px solid var(--accent);
+  border-radius: 0 8px 8px 0;
+  padding: 14px 18px;
+  margin: 16px 0 24px;
+  font-size: 14.5px;
+}
+.meta-card p { margin: 4px 0; }
+footer.note {
+  margin-top: 56px;
+  padding-top: 20px;
+  border-top: 1px solid var(--table-border);
+  color: var(--muted);
+  font-size: 13.5px;
+  line-height: 1.6;
+}
+.print-hint {
+  margin: 12px 0 4px;
+  font-size: 13px;
+  color: var(--muted);
+}
+@media print {
+  nav.toc, .print-hint { display: none; }
+  .layout { display: block; max-width: none; }
+  article { font-size: 11pt; }
+}
+
+</style>
+</head><body>
+<div class="layout">
+<nav class="toc">
+<h2>目錄</h2>
+
+<ul>
+<li><a href="#家庭音響空間校正完整講義"
+id="toc-家庭音響空間校正完整講義">家庭音響空間校正完整講義</a>
+<ul>
+<li><a href="#open_book-講義導讀" id="toc-open_book-講義導讀">📖
+講義導讀</a></li>
+<li><a href="#part-0--三個你必須先放下的迷思"
+id="toc-part-0--三個你必須先放下的迷思">Part 0 —
+三個你必須先放下的迷思</a>
+<ul>
+<li><a href="#迷思-1我喇叭擺得很好就不用校正了"
+id="toc-迷思-1我喇叭擺得很好就不用校正了">迷思
+1：「我喇叭擺得很好就不用校正了」</a></li>
+<li><a href="#迷思-2我用-diracaudyssey-就是-state-of-the-art"
+id="toc-迷思-2我用-diracaudyssey-就是-state-of-the-art">迷思 2：「我用
+Dirac/Audyssey 就是 state-of-the-art」</a></li>
+<li><a href="#迷思-3平直的頻率響應就是好聲音"
+id="toc-迷思-3平直的頻率響應就是好聲音">迷思
+3：「平直的頻率響應就是好聲音」</a></li>
+</ul></li>
+<li><a href="#part-1--房間在做什麼壞事"
+id="toc-part-1--房間在做什麼壞事">Part 1 — 房間在做什麼壞事？</a>
+<ul>
+<li><a href="#11-三大破壞性現象" id="toc-11-三大破壞性現象">1.1
+三大破壞性現象</a></li>
+<li><a href="#12-schroeder-頻率房間性格的分水嶺"
+id="toc-12-schroeder-頻率房間性格的分水嶺">1.2 Schroeder
+頻率：房間性格的分水嶺</a></li>
+<li><a href="#13-為什麼修高頻會出事jj-原則"
+id="toc-13-為什麼修高頻會出事jj-原則">1.3 為什麼修高頻會出事（JJ
+原則）</a></li>
+</ul></li>
+<li><a href="#part-2--量測你需要知道什麼"
+id="toc-part-2--量測你需要知道什麼">Part 2 — 量測：你需要知道什麼</a>
+<ul>
+<li><a href="#21-工具標準配置" id="toc-21-工具標準配置">2.1
+工具標準配置</a></li>
+<li><a href="#22-主聆位擺位" id="toc-22-主聆位擺位">2.2
+主聆位擺位</a></li>
+<li><a href="#23-完整量測組7-個檔案" id="toc-23-完整量測組7-個檔案">2.3
+完整量測組（7 個檔案）</a></li>
+<li><a href="#24-第一個量測點--主聆位最關鍵"
+id="toc-24-第一個量測點--主聆位最關鍵">2.4 第一個量測點 =
+主聆位（最關鍵）</a></li>
+</ul></li>
+<li><a href="#part-3--讀-rew-量測七種圖怎麼看"
+id="toc-part-3--讀-rew-量測七種圖怎麼看">Part 3 — 讀 REW
+量測：七種圖怎麼看</a>
+<ul>
+<li><a href="#31-速查表" id="toc-31-速查表">3.1 速查表</a></li>
+<li><a href="#32-smoothing-設定黃金法則"
+id="toc-32-smoothing-設定黃金法則">3.2 Smoothing
+設定（黃金法則）</a></li>
+<li><a href="#33-房間品質指標13-smoothing"
+id="toc-33-房間品質指標13-smoothing">3.3 房間品質指標（1/3
+smoothing）</a></li>
+<li><a href="#34-用-etc-抓反射的核心公式"
+id="toc-34-用-etc-抓反射的核心公式">3.4 用 ETC 抓反射的核心公式</a></li>
+<li><a href="#35-spl-不夠用的-4-證據"
+id="toc-35-spl-不夠用的-4-證據">3.5 SPL 不夠用的 4 證據</a></li>
+</ul></li>
+<li><a href="#part-4--治理優先順序不花錢開始"
+id="toc-part-4--治理優先順序不花錢開始">Part 4 —
+治理優先順序（不花錢開始）</a>
+<ul>
+<li><a href="#41-黃金順序依-roi" id="toc-41-黃金順序依-roi">4.1
+黃金順序（依 ROI）</a></li>
+<li><a href="#42-為什麼這個順序" id="toc-42-為什麼這個順序">4.2
+為什麼這個順序</a></li>
+</ul></li>
+<li><a href="#part-5--subwoofer-整合-4-步驟"
+id="toc-part-5--subwoofer-整合-4-步驟">Part 5 — Subwoofer 整合 4
+步驟</a>
+<ul>
+<li><a href="#step-1sub-alone-vs-main-alone"
+id="toc-step-1sub-alone-vs-main-alone">Step 1：Sub alone vs Main
+alone</a></li>
+<li><a href="#step-2main--sub-同時量"
+id="toc-step-2main--sub-同時量">Step 2：Main + Sub 同時量</a></li>
+<li><a href="#step-3反相實驗phase-flip-180"
+id="toc-step-3反相實驗phase-flip-180">Step 3：反相實驗（Phase Flip
+180°）</a></li>
+<li><a href="#step-4phase-圖確認" id="toc-step-4phase-圖確認">Step
+4：Phase 圖確認</a></li>
+</ul></li>
+<li><a href="#part-6--drc四大流派一覽"
+id="toc-part-6--drc四大流派一覽">Part 6 — DRC：四大流派一覽</a>
+<ul>
+<li><a href="#61-mitch-barnett-的state-of-the-art標準"
+id="toc-61-mitch-barnett-的state-of-the-art標準">6.1 Mitch Barnett
+的「state-of-the-art」標準</a></li>
+<li><a href="#62-流派對比" id="toc-62-流派對比">6.2 流派對比</a></li>
+<li><a href="#63-mitch-的尖銳批評" id="toc-63-mitch-的尖銳批評">6.3
+Mitch 的尖銳批評</a></li>
+<li><a href="#64-oca-的同調批評" id="toc-64-oca-的同調批評">6.4 OCA
+的同調批評</a></li>
+</ul></li>
+<li><a href="#part-7--動手實作oca-兩種方法"
+id="toc-part-7--動手實作oca-兩種方法">Part 7 — 動手實作：OCA
+兩種方法</a>
+<ul>
+<li><a href="#71-方法-1v1全頻反轉法--11-步"
+id="toc-71-方法-1v1全頻反轉法--11-步">7.1 方法 1（v1）：全頻反轉法 — 11
+步</a></li>
+<li><a href="#72-方法-2v2最小相位反轉--6-步推薦"
+id="toc-72-方法-2v2最小相位反轉--6-步推薦">7.2 方法
+2（v2）：最小相位反轉 — 6 步（推薦）</a></li>
+<li><a href="#73-兩版差異一覽" id="toc-73-兩版差異一覽">7.3
+兩版差異一覽</a></li>
+</ul></li>
+<li><a href="#part-8--minimum-phase為何重要"
+id="toc-part-8--minimum-phase為何重要">Part 8 — Minimum
+Phase：為何重要</a>
+<ul>
+<li><a href="#81-數學" id="toc-81-數學">8.1 數學</a></li>
+<li><a href="#82-直觀比喻oca-神類比" id="toc-82-直觀比喻oca-神類比">8.2
+直觀比喻（OCA 神類比）</a></li>
+<li><a href="#83-step-response-視覺驗證"
+id="toc-83-step-response-視覺驗證">8.3 Step Response 視覺驗證</a></li>
+</ul></li>
+<li><a href="#part-9--01-db-級微調--聆聽驗收"
+id="toc-part-9--01-db-級微調--聆聽驗收">Part 9 — 0.1 dB 級微調 +
+聆聽驗收</a>
+<ul>
+<li><a href="#91-處理器端-fine-tuning"
+id="toc-91-處理器端-fine-tuning">9.1 處理器端 fine-tuning</a></li>
+<li><a href="#92-後排補強規則" id="toc-92-後排補強規則">9.2
+後排補強規則</a></li>
+<li><a href="#93-聆聽片單驗收" id="toc-93-聆聽片單驗收">9.3
+聆聽片單（驗收）</a></li>
+<li><a href="#94-ab-切換感官記憶-3-10-秒"
+id="toc-94-ab-切換感官記憶-3-10-秒">9.4 A/B 切換：感官記憶 3-10
+秒</a></li>
+<li><a href="#95-1-db-響度差--偏好較大聲那個"
+id="toc-95-1-db-響度差--偏好較大聲那個">9.5 1 dB 響度差 =
+偏好較大聲那個</a></li>
+</ul></li>
+<li><a href="#part-10--7-個常被忽略的陷阱"
+id="toc-part-10--7-個常被忽略的陷阱">Part 10 — 7 個常被忽略的陷阱</a>
+<ul>
+<li><a href="#101-用錯校正檔90-vs-0" id="toc-101-用錯校正檔90-vs-0">10.1
+用錯校正檔（90° vs 0°）</a></li>
+<li><a href="#102-usb-mic-時鐘漂移" id="toc-102-usb-mic-時鐘漂移">10.2
+USB mic 時鐘漂移</a></li>
+<li><a href="#103-量測時環境改變" id="toc-103-量測時環境改變">10.3
+量測時環境改變</a></li>
+<li><a href="#104-sub-crossover-拉太高"
+id="toc-104-sub-crossover-拉太高">10.4 sub crossover 拉太高</a></li>
+<li><a href="#105-升級-dirac-live-新版"
+id="toc-105-升級-dirac-live-新版">10.5 升級 Dirac Live 新版</a></li>
+<li><a href="#106-4-顆-sub--不用-drc"
+id="toc-106-4-顆-sub--不用-drc">10.6 4 顆 sub = 不用 DRC？</a></li>
+<li><a href="#107-用-13-smoothing-看細節問題"
+id="toc-107-用-13-smoothing-看細節問題">10.7 用 1/3 smoothing
+看細節問題</a></li>
+</ul></li>
+<li><a href="#part-11--三條推薦路徑依預算"
+id="toc-part-11--三條推薦路徑依預算">Part 11 —
+三條推薦路徑（依預算）</a>
+<ul>
+<li><a href="#tier-1基本配置-500" id="toc-tier-1基本配置-500">Tier
+1：基本配置（&lt; $500）</a></li>
+<li><a href="#tier-2進階配置500--1500"
+id="toc-tier-2進階配置500--1500">Tier 2：進階配置（$500 –
+$1500）</a></li>
+<li><a href="#tier-3旗艦配置1500" id="toc-tier-3旗艦配置1500">Tier
+3：旗艦配置（$1500+）</a></li>
+</ul></li>
+<li><a href="#part-12--軟體選擇決策樹"
+id="toc-part-12--軟體選擇決策樹">Part 12 — 軟體選擇決策樹</a></li>
+<li><a href="#part-13--一張完整-workflow-路徑圖"
+id="toc-part-13--一張完整-workflow-路徑圖">Part 13 — 一張完整 workflow
+路徑圖</a></li>
+<li><a href="#bar_chart-4-講者的核心命題對比"
+id="toc-bar_chart-4-講者的核心命題對比">📊 4 講者的核心命題對比</a>
+<ul>
+<li><a href="#共同信念" id="toc-共同信念">共同信念</a></li>
+<li><a href="#分歧" id="toc-分歧">分歧</a></li>
+</ul></li>
+<li><a href="#dart-給三類玩家的建議" id="toc-dart-給三類玩家的建議">🎯
+給三類玩家的建議</a>
+<ul>
+<li><a href="#a-你是-diracaudyssey-已用戶但不確定要不要升級"
+id="toc-a-你是-diracaudyssey-已用戶但不確定要不要升級">A. 你是
+Dirac/Audyssey 已用戶但不確定要不要升級</a></li>
+<li><a href="#b-你想-diy-但沒玩過-drc"
+id="toc-b-你想-diy-但沒玩過-drc">B. 你想 DIY 但沒玩過 DRC</a></li>
+<li><a href="#c-你已是玩家想衝旗艦" id="toc-c-你已是玩家想衝旗艦">C.
+你已是玩家想衝旗艦</a></li>
+</ul></li>
+<li><a href="#question-跨講者整合-faq"
+id="toc-question-跨講者整合-faq">❓ 跨講者整合 FAQ</a>
+<ul>
+<li><a href="#q1到底要不要修高頻"
+id="toc-q1到底要不要修高頻">Q1：到底要不要修高頻？</a></li>
+<li><a href="#q2schroeder-頻率怎麼算"
+id="toc-q2schroeder-頻率怎麼算">Q2：Schroeder 頻率怎麼算？</a></li>
+<li><a href="#q3要-4-顆-sub" id="toc-q3要-4-顆-sub">Q3：要 4 顆
+sub？</a></li>
+<li><a href="#q4規律-eq-filter-vs-反轉法哪個準"
+id="toc-q4規律-eq-filter-vs-反轉法哪個準">Q4：規律 EQ filter vs
+反轉法哪個準？</a></li>
+<li><a href="#q5harman-target-curve-真的對嗎"
+id="toc-q5harman-target-curve-真的對嗎">Q5：Harman Target Curve
+真的對嗎？</a></li>
+<li><a href="#q6時間對齊time-alignment為何重要"
+id="toc-q6時間對齊time-alignment為何重要">Q6：時間對齊（time
+alignment）為何重要？</a></li>
+<li><a href="#q7要做麥克風-minimum-phase-校正檔嗎"
+id="toc-q7要做麥克風-minimum-phase-校正檔嗎">Q7：要做麥克風 minimum
+phase 校正檔嗎？</a></li>
+<li><a href="#q8跨房間--不同音量切換-profile"
+id="toc-q8跨房間--不同音量切換-profile">Q8：跨房間 / 不同音量切換
+profile？</a></li>
+</ul></li>
+<li><a href="#mortar_board-最高心法" id="toc-mortar_board-最高心法">🎓
+最高心法</a></li>
+<li><a href="#books-完整資源清單" id="toc-books-完整資源清單">📚
+完整資源清單</a>
+<ul>
+<li><a href="#必讀" id="toc-必讀">必讀</a></li>
+<li><a href="#軟體" id="toc-軟體">軟體</a></li>
+<li><a href="#工具" id="toc-工具">工具</a></li>
+<li><a href="#youtube-系列" id="toc-youtube-系列">YouTube 系列</a></li>
+</ul></li>
+<li><a href="#pencil-結語" id="toc-pencil-結語">📝 結語</a></li>
+</ul></li>
+</ul>
+
+<p class="print-hint">⌘P 列印 / 存 PDF</p>
+</nav>
+<article>
+<section id="家庭音響空間校正完整講義" class="level1">
+<h1>家庭音響空間校正完整講義</h1>
+<blockquote>
+<p><strong>整合自 4 篇影片教學</strong>：Mitch Barnett「state-of-the-art
+DRC」+ Graham「REW 數據判讀」+ OCA「反轉濾波器」+ OCA「最小相位反轉法」
+<strong>適用對象</strong>：家庭劇院 / Hi-Fi 玩家、想自己做 DRC
+但不想被各家行銷話術綁架的人 <strong>預計學習時間</strong>：精讀本講義
+4-6 小時；對照軟體實作 20+ 小時
+<strong>產出日期</strong>：2026-06-07</p>
+</blockquote>
+<hr />
+<section id="open_book-講義導讀" class="level2">
+<h2>📖 講義導讀</h2>
+<p>這份講義把 4
+部各擅勝場的影片整合成<strong>單一連貫的教學路徑</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>角色</th>
+<th>影片</th>
+<th>在本講義扮演</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Mitch Barnett</strong>（理論家）</td>
+<td>state-of-the-art DRC 110 分</td>
+<td>提供<strong>理論框架與評選標準</strong></td>
+</tr>
+<tr>
+<td><strong>Graham</strong>（診斷師）</td>
+<td>REW 數據判讀 34 分</td>
+<td>教你<strong>讀懂量測結果</strong></td>
+</tr>
+<tr>
+<td><strong>OCA</strong>（實踐家 v1）</td>
+<td>REW 反轉濾波器 28 分</td>
+<td>給你<strong>第一個可動手的方法</strong></td>
+</tr>
+<tr>
+<td><strong>OCA</strong>（實踐家 v2）</td>
+<td>REW 最小相位反轉 30 分</td>
+<td><strong>進化版</strong>：只修低頻、不碰高頻</td>
+</tr>
+</tbody>
+</table>
+<p>整本講義走「<strong>為什麼 → 怎麼診斷 → 怎麼做 →
+怎麼進化</strong>」的學習路徑。</p>
+<hr />
+</section>
+<section id="part-0--三個你必須先放下的迷思" class="level2">
+<h2>Part 0 — 三個你必須先放下的迷思</h2>
+<section id="迷思-1我喇叭擺得很好就不用校正了" class="level3">
+<h3>迷思 1：「我喇叭擺得很好就不用校正了」</h3>
+<blockquote>
+<p>❌ <strong>錯</strong>。Mitch Barnett 11 年實測 125+ 喇叭： 「Even
+the highest end gear with speakers placed perfectly, you'll have a
+minimum of <strong>20 dB difference</strong> between peaks and dips in
+the audible frequency range due to room modes, reflections,
+asymmetry.」</p>
+</blockquote>
+<p>不管你的器材多旗艦、擺位多完美，<strong>房間共振 + 反射 +
+不對稱性必然造成 ±20 dB 變異</strong>。</p>
+</section>
+<section id="迷思-2我用-diracaudyssey-就是-state-of-the-art"
+class="level3">
+<h3>迷思 2：「我用 Dirac/Audyssey 就是 state-of-the-art」</h3>
+<blockquote>
+<p>❌ <strong>錯</strong>。Mitch 評選通過 state-of-the-art 標準的 DRC
+軟體只有 4 個：</p>
+<ul>
+<li>Acourate（Uli Brüggemann）</li>
+<li>Audiolense XO</li>
+<li>Focus Fidelity Designer</li>
+<li>OpenSource DRC（DIY Audio）</li>
+</ul>
+</blockquote>
+<p><strong>Dirac、Audyssey 都不算</strong>。為什麼？因為它們沒做
+<strong>Psychoacoustic Filtering + Frequency Dependent
+Windowing</strong> 兩大核心技術。</p>
+</section>
+<section id="迷思-3平直的頻率響應就是好聲音" class="level3">
+<h3>迷思 3：「平直的頻率響應就是好聲音」</h3>
+<blockquote>
+<p>❌ <strong>錯</strong>。Sean Olive（Harman）盲聽研究證實：</p>
+<ul>
+<li>最受偏好：<strong>平滑下降的傾斜線</strong></li>
+<li>倒數：<strong>平直 in-room response</strong>（聽起來太亮）</li>
+</ul>
+</blockquote>
+<p>人耳感知中「<strong>傾斜 =
+平衡</strong>」。製作端混音就是按這個傾斜在做。</p>
+<hr />
+</section>
+</section>
+<section id="part-1--房間在做什麼壞事" class="level2">
+<h2>Part 1 — 房間在做什麼壞事？</h2>
+<section id="11-三大破壞性現象" class="level3">
+<h3>1.1 三大破壞性現象</h3>
+<section id="a-room-modes房間模態--駐波" class="level4">
+<h4>A. Room Modes（房間模態 / 駐波）</h4>
+<ul>
+<li>波長與房間尺寸相符的頻率會<strong>駐波共振</strong></li>
+<li>一般家居 &lt; 100 m³：<strong>150–250 Hz 以下</strong>最嚴重</li>
+<li>工具：<strong>amroc calculator</strong>（線上免費）</li>
+</ul>
+</section>
+<section id="b-sbirspeaker-boundary-interference-response"
+class="level4">
+<h4>B. SBIR（Speaker Boundary Interference Response）</h4>
+<ul>
+<li>喇叭聲與<strong>牆面/桌面/地板反射</strong>疊加</li>
+<li>某些頻率強化（peak）/ 某些抵消（null）</li>
+<li>典型：低中頻 ±10 dB 凹凸</li>
+</ul>
+</section>
+<section id="c-reflections反射" class="level4">
+<h4>C. Reflections（反射）</h4>
+<ul>
+<li>早期反射（&lt; 10 ms）→ 影響定位、清晰度</li>
+<li>晚期反射 → 影響聲音染色、流暢度</li>
+<li>鏡面反射（specular reflection）特別有害 → 「<strong>bass fuzzy
+模糊感</strong>」</li>
+</ul>
+</section>
+</section>
+<section id="12-schroeder-頻率房間性格的分水嶺" class="level3">
+<h3>1.2 Schroeder 頻率：房間性格的分水嶺</h3>
+<ul>
+<li>計算公式：<span class="math inline">$f_S = 2000
+\sqrt{T_{60}/V}$</span></li>
+<li>一般客廳：<strong>150–250 Hz</strong></li>
+<li><strong>以下</strong>：駐波主導（DRC
+<strong>必須</strong>處理）</li>
+<li><strong>以上</strong>：反射主導（DRC
+<strong>應少碰</strong>或<strong>不碰</strong>）</li>
+</ul>
+</section>
+<section id="13-為什麼修高頻會出事jj-原則" class="level3">
+<h3>1.3 為什麼修高頻會出事（JJ 原則）</h3>
+<p>James Johnston（MP3 開發者之一）的 6 條黃金原則：</p>
+<ol type="1">
+<li>房間中高頻衰減快於低頻</li>
+<li>喇叭低頻全向、高頻指向</li>
+<li>In-room measurement 必然傾斜（不是喇叭本身）</li>
+<li><strong>Dips 不能填</strong> — narrow band null
+是相位抵消，加能量更糟</li>
+<li><strong>人耳對 peak 比 narrow dip 更敏感</strong> → 修 peak
+優先</li>
+<li>人耳跟蹤 spectral envelope，不管細節 ripple</li>
+</ol>
+<p><strong>推論</strong>：</p>
+<ul>
+<li>低頻 → 修整體 room response</li>
+<li><strong>高頻 → 只修 first arrival timbre</strong></li>
+<li>全頻段平直化 = 過度修正 = <strong>「牙醫鑽牙感」</strong>（dentist
+drill experience）</li>
+</ul>
+<hr />
+</section>
+</section>
+<section id="part-2--量測你需要知道什麼" class="level2">
+<h2>Part 2 — 量測：你需要知道什麼</h2>
+<section id="21-工具標準配置" class="level3">
+<h3>2.1 工具標準配置</h3>
+<table>
+<thead>
+<tr>
+<th>元件</th>
+<th>推薦</th>
+<th>替代</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>軟體</td>
+<td><strong>REW</strong>（免費）</td>
+<td>—</td>
+</tr>
+<tr>
+<td>麥克風</td>
+<td><strong>UMIK-2</strong> &gt; UMIK-1</td>
+<td>Earthworks 類比 mic（旗艦）</td>
+</tr>
+<tr>
+<td>取樣率</td>
+<td><strong>48 kHz / 16-bit</strong></td>
+<td>REW 內部用這個</td>
+</tr>
+<tr>
+<td>Sweep 長度</td>
+<td><strong>4 MB</strong>（最長，最佳 S/N）</td>
+<td>256K（次選）</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="22-主聆位擺位" class="level3">
+<h3>2.2 主聆位擺位</h3>
+<ul>
+<li>麥克風<strong>直立</strong>，<strong>配 90° 校正檔</strong></li>
+<li>高度 = 耳朵高度（坐姿 100-110 cm）</li>
+<li>與左右喇叭<strong>等距</strong></li>
+<li>用<strong>紙膠帶</strong>標位置，便於 A/B 比較</li>
+</ul>
+</section>
+<section id="23-完整量測組7-個檔案" class="level3">
+<h3>2.3 完整量測組（7 個檔案）</h3>
+<table>
+<thead>
+<tr>
+<th>檔案</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>L</td>
+<td>左聲道單獨</td>
+</tr>
+<tr>
+<td>R</td>
+<td>右聲道單獨</td>
+</tr>
+<tr>
+<td>L+R</td>
+<td>主對</td>
+</tr>
+<tr>
+<td>Sub</td>
+<td>重低音單獨</td>
+</tr>
+<tr>
+<td>L+Sub</td>
+<td>左+sub</td>
+</tr>
+<tr>
+<td>R+Sub</td>
+<td>右+sub</td>
+</tr>
+<tr>
+<td>L+R+Sub</td>
+<td>全開</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="24-第一個量測點--主聆位最關鍵" class="level3">
+<h3>2.4 第一個量測點 = 主聆位（最關鍵）</h3>
+<p>所有後續比較都以這點為基準。<strong>不準確擺位 =
+全部資料無效</strong>。</p>
+<hr />
+</section>
+</section>
+<section id="part-3--讀-rew-量測七種圖怎麼看" class="level2">
+<h2>Part 3 — 讀 REW 量測：七種圖怎麼看</h2>
+<p>由 Graham（Music City Acoustics）的方法論：</p>
+<section id="31-速查表" class="level3">
+<h3>3.1 速查表</h3>
+<table>
+<thead>
+<tr>
+<th>圖</th>
+<th>主要解讀</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>SPL</strong></td>
+<td>整體調性、變異 ±dB（<strong>最不重要</strong>）</td>
+</tr>
+<tr>
+<td><strong>Phase</strong></td>
+<td>Sub 整合、反相問題</td>
+</tr>
+<tr>
+<td><strong>ETC</strong>（Energy Time Curve）</td>
+<td><strong>抓反射源</strong>（時間→距離）</td>
+</tr>
+<tr>
+<td><strong>RT60 / T20</strong></td>
+<td>殘響時長</td>
+</tr>
+<tr>
+<td><strong>Waterfall</strong></td>
+<td>駐波拖尾</td>
+</tr>
+<tr>
+<td><strong>Spectrogram</strong></td>
+<td>哪個確切頻率拖太久</td>
+</tr>
+<tr>
+<td><strong>Group Delay</strong></td>
+<td>低頻同步性</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="32-smoothing-設定黃金法則" class="level3">
+<h3>3.2 Smoothing 設定（黃金法則）</h3>
+<table>
+<thead>
+<tr>
+<th>Smoothing</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Psychoacoustic</td>
+<td>模擬「人耳實際感知」</td>
+</tr>
+<tr>
+<td>1/48 oct</td>
+<td>抓低頻特定問題</td>
+</tr>
+<tr>
+<td>1/24 oct</td>
+<td>低頻平衡</td>
+</tr>
+<tr>
+<td>1/12 oct</td>
+<td>整體觀察</td>
+</tr>
+<tr>
+<td><strong>1/3 oct</strong></td>
+<td><strong>業界標準</strong>（EBU、廠商規格）</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="33-房間品質指標13-smoothing" class="level3">
+<h3>3.3 房間品質指標（1/3 smoothing）</h3>
+<table>
+<thead>
+<tr>
+<th>變異</th>
+<th>評等</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>±2 dB</strong></td>
+<td>EBU 標準 / 世界級錄音室</td>
+</tr>
+<tr>
+<td><strong>±5 dB</strong></td>
+<td>優秀家庭錄音室 / 充分處理過的家庭劇院</td>
+</tr>
+<tr>
+<td><strong>±9 dB</strong></td>
+<td>喇叭擺位優化但未做聲學處理</td>
+</tr>
+<tr>
+<td><strong>±16 dB</strong></td>
+<td>未處理空房間（<strong>正常起點</strong>）</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="34-用-etc-抓反射的核心公式" class="level3">
+<h3>3.4 用 ETC 抓反射的核心公式</h3>
+<pre><code>聲音 1 ms ≈ 1 ft（約 30 cm）
+反射時間 → 多走距離 → 反射面位置</code></pre>
+<p>範例：ETC 顯示 11 ms 有 spike → 反射聲多走 11 ft →
+拿張紙畫房間平面找路徑 → 在反射點貼吸音板</p>
+</section>
+<section id="35-spl-不夠用的-4-證據" class="level3">
+<h3>3.5 SPL 不夠用的 4 證據</h3>
+<p>Graham 警告：「SPL 圖是<strong>最不重要</strong>的圖。」</p>
+<p>範例：治理前 vs 治理後對比：</p>
+<table>
+<thead>
+<tr>
+<th>圖</th>
+<th>變化</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SPL</td>
+<td>看似沒變</td>
+</tr>
+<tr>
+<td>ETC</td>
+<td>spike 大幅減少（<strong>治理有效</strong>）</td>
+</tr>
+<tr>
+<td>T20</td>
+<td>1 sec → 250 ms（<strong>治理有效</strong>）</td>
+</tr>
+<tr>
+<td>Spectrogram</td>
+<td>顏色均勻、衰減快（<strong>治理有效</strong>）</td>
+</tr>
+</tbody>
+</table>
+<p>→ <strong>永遠不要只看 SPL</strong></p>
+<hr />
+</section>
+</section>
+<section id="part-4--治理優先順序不花錢開始" class="level2">
+<h2>Part 4 — 治理優先順序（不花錢開始）</h2>
+<section id="41-黃金順序依-roi" class="level3">
+<h3>4.1 黃金順序（依 ROI）</h3>
+<pre><code>1. 喇叭擺位優化（不花錢）
+   → 範例可從 ±15 dB 改善到 ±9 dB
+2. 前 4 大反射點加吸音板（中等花費）
+   → 前牆、後牆、左右側、可能加 cloud
+3. RT60 壓到 250 ms 以下
+4. 100 Hz 以下加 6&quot;+ bass trap（高花費）
+   → 必要 6&quot;+ 深 + 6&quot;+ 空氣層
+5. 整合 sub（4 步驟，見 §5）
+6. 最後才考慮 DRC / DSP</code></pre>
+</section>
+<section id="42-為什麼這個順序" class="level3">
+<h3>4.2 為什麼這個順序</h3>
+<ul>
+<li><strong>被動聲學</strong>：失誤了就拆掉、永不傷喇叭</li>
+<li><strong>DRC</strong>：強力但「化妝」性質、修正物理問題的能力有限</li>
+<li><strong>配方</strong>：好的物理 + 適度 DRC = 1+1 &gt; 2</li>
+</ul>
+<hr />
+</section>
+</section>
+<section id="part-5--subwoofer-整合-4-步驟" class="level2">
+<h2>Part 5 — Subwoofer 整合 4 步驟</h2>
+<section id="step-1sub-alone-vs-main-alone" class="level3">
+<h3>Step 1：Sub alone vs Main alone</h3>
+<p>看 crossover 點（典型 50-60 Hz）兩條線是否乾淨接合</p>
+</section>
+<section id="step-2main--sub-同時量" class="level3">
+<h3>Step 2：Main + Sub 同時量</h3>
+<p>期望：</p>
+<ul>
+<li>低頻延伸增加 5+ dB</li>
+<li>crossover 點<strong>不出現大 null</strong></li>
+</ul>
+</section>
+<section id="step-3反相實驗phase-flip-180" class="level3">
+<h3>Step 3：反相實驗（Phase Flip 180°）</h3>
+<p>驗證設定正確：</p>
+<ul>
+<li>反相後 crossover 點應出現 <strong>&gt;15 dB null</strong></li>
+<li>沒出現 null = 原本就反相了（需 fix）</li>
+</ul>
+</section>
+<section id="step-4phase-圖確認" class="level3">
+<h3>Step 4：Phase 圖確認</h3>
+<ul>
+<li>Sub 與 Main 在 crossover 點相位差 &lt; 60°</li>
+<li>差太多 → <strong>物理移動 sub</strong>（光翻 phase 不夠）</li>
+</ul>
+<hr />
+</section>
+</section>
+<section id="part-6--drc四大流派一覽" class="level2">
+<h2>Part 6 — DRC：四大流派一覽</h2>
+<section id="61-mitch-barnett-的state-of-the-art標準" class="level3">
+<h3>6.1 Mitch Barnett 的「state-of-the-art」標準</h3>
+<p>入門門檻：</p>
+<ul>
+<li>✅ <strong>Psychoacoustic Filtering</strong>（跟著人耳走、不填
+dip）</li>
+<li>✅ <strong>Frequency Dependent
+Windowing</strong>（低頻長/高頻短）</li>
+</ul>
+<p>進階需求：</p>
+<ul>
+<li>Minimum Phase 分離與反轉</li>
+<li>Excess Phase 校正（FIR linear phase）</li>
+<li>驗證：模擬 vs 實測 &lt; 0.25 dB</li>
+</ul>
+</section>
+<section id="62-流派對比" class="level3">
+<h3>6.2 流派對比</h3>
+<table>
+<thead>
+<tr>
+<th>方案</th>
+<th>代表</th>
+<th>校正範圍</th>
+<th>特色</th>
+<th>適合誰</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>A. 自動全頻商用</strong></td>
+<td>Dirac Live / Audyssey</td>
+<td>全頻段</td>
+<td>易用、自動化</td>
+<td>不想動腦的人</td>
+</tr>
+<tr>
+<td><strong>B. State-of-the-Art 軟體</strong></td>
+<td>Acourate / Audiolense / Focus Fidelity</td>
+<td>全頻段（可分區）</td>
+<td>學習曲線陡、最終結果最強</td>
+<td>玩家</td>
+</tr>
+<tr>
+<td><strong>C. OCA 反轉法（v1）</strong></td>
+<td>自製 REW + 自寫 convolution</td>
+<td>全頻段</td>
+<td>免費、無 EQ filter</td>
+<td>DIYer 中級</td>
+</tr>
+<tr>
+<td><strong>D. OCA 最小相位法（v2）</strong></td>
+<td>自製 REW + 自寫 convolution</td>
+<td><strong>只修 &lt; 225 Hz</strong></td>
+<td>高頻保留喇叭原音色</td>
+<td><strong>進階推薦</strong></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="63-mitch-的尖銳批評" class="level3">
+<h3>6.3 Mitch 的尖銳批評</h3>
+<blockquote>
+<p>「<strong>Dirac, Audyssey 等 try to correct the entire frequency
+range, which in my opinion is a major flaw.</strong>」</p>
+<p>「<strong>Trying to correct high frequencies is a tempting marketing
+story but it's not an accurate anticipation of the human response to a
+very complex sound field.</strong>」</p>
+</blockquote>
+</section>
+<section id="64-oca-的同調批評" class="level3">
+<h3>6.4 OCA 的同調批評</h3>
+<blockquote>
+<p>「<strong>Most attempts to change the diffusive sound field in these
+areas will carry a high risk of causing an otherwise good speaker sound
+bad.</strong>」</p>
+</blockquote>
+<p>→ <strong>結論</strong>：<strong>只修低頻是大勢</strong>。</p>
+<hr />
+</section>
+</section>
+<section id="part-7--動手實作oca-兩種方法" class="level2">
+<h2>Part 7 — 動手實作：OCA 兩種方法</h2>
+<section id="71-方法-1v1全頻反轉法--11-步" class="level3">
+<h3>7.1 方法 1（v1）：全頻反轉法 — 11 步</h3>
+<blockquote>
+<p>詳細教學：<a
+href="video3_REW_inversion_filter_zh.html">video3_REW_inversion_filter_zh.html</a></p>
+</blockquote>
+<pre><code>1. 主聆位、平時音量量左/右各一次
+2. Frequency-Dependent Window（35 cycles，REW 上限）
+3. 時間對齊（impulse response peak → t=0）
+4. SPL 對齊（62.5 Hz – 4 kHz 區段）
+5. RMS 平均得 LR
+6. 載入 Harman Target Curve（不是房間/口味曲線，是人耳補償）
+7. Target Settings + Generate target shape measurement
+8. 反轉：L / Target → 1 / (L/Target)，regularization 8%
+9. 轉成 Minimum Phase（防 ringing）
+10. Export 為 stereo convolution wav
+11. 載入 DSP 引擎（Roon / EqualizerAPO / JRiver）</code></pre>
+</section>
+<section id="72-方法-2v2最小相位反轉--6-步推薦" class="level3">
+<h3>7.2 方法 2（v2）：最小相位反轉 — 6 步（推薦）</h3>
+<blockquote>
+<p>詳細教學：<a
+href="video4_REW_minimum_phase_inversion_zh.html">video4_REW_minimum_phase_inversion_zh.html</a></p>
+</blockquote>
+<pre><code>1. 移除 IR delay
+2. L0、R0 各建立 minimum phase 版本
+   → L0_MP、R0_MP
+3. L0_MP 做 1/A 反轉
+   regularization = 25%（0 dB boost cap）
+   upper limit = 225 Hz（Schroeder 附近）
+4. R0_MP 同樣反轉 → R_filter
+5. Export 為 stereo wav（48 kHz / 32-bit float）
+6. 載入 DSP 引擎</code></pre>
+</section>
+<section id="73-兩版差異一覽" class="level3">
+<h3>7.3 兩版差異一覽</h3>
+<table>
+<thead>
+<tr>
+<th>項目</th>
+<th>v1（全頻）</th>
+<th>v2（最小相位）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>校正頻段</td>
+<td>全頻段</td>
+<td><strong>僅 &lt; 225 Hz</strong></td>
+</tr>
+<tr>
+<td>Target curve</td>
+<td>需 Harman</td>
+<td><strong>不需要</strong></td>
+</tr>
+<tr>
+<td>音量對齊</td>
+<td>手動 SPL offset</td>
+<td><strong>自動</strong></td>
+</tr>
+<tr>
+<td>步驟數</td>
+<td>11</td>
+<td><strong>6</strong></td>
+</tr>
+<tr>
+<td>高頻處理</td>
+<td>修</td>
+<td><strong>完全不動</strong></td>
+</tr>
+<tr>
+<td>副作用</td>
+<td>高頻可能被修壞</td>
+<td>高頻保留喇叭原音色</td>
+</tr>
+<tr>
+<td>適合誰</td>
+<td>初學者完整體驗</td>
+<td><strong>進階首選</strong></td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>💡 <strong>OCA 自評</strong>：「This is sort of next-level, folks.
+... produces remarkably better results than the quite popular inversion
+method I have introduced about a year ago.」</p>
+</blockquote>
+<hr />
+</section>
+</section>
+<section id="part-8--minimum-phase為何重要" class="level2">
+<h2>Part 8 — Minimum Phase：為何重要</h2>
+<section id="81-數學" class="level3">
+<h3>8.1 數學</h3>
+<ul>
+<li><strong>Minimum phase system</strong>：Z-plane 中極點 +
+零點都在單位圓內</li>
+<li><strong>可反轉</strong>（invertible）：有穩定、因果的反矩陣</li>
+<li><strong>非最小相位</strong>：反轉時極點變零點 → 不穩定</li>
+</ul>
+</section>
+<section id="82-直觀比喻oca-神類比" class="level3">
+<h3>8.2 直觀比喻（OCA 神類比）</h3>
+<table>
+<thead>
+<tr>
+<th>系統</th>
+<th>是否 minimum phase</th>
+<th>為何難控</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>騎腳踏車</td>
+<td>❌（trail 設計帶來初始反向）</td>
+<td>要學會反方向轉龍頭才能直走</td>
+</tr>
+<tr>
+<td>倒車入庫</td>
+<td>❌（先要反方向才能進去）</td>
+<td>違反直覺</td>
+</tr>
+<tr>
+<td>投資理財</td>
+<td>❌（先付錢才有回報）</td>
+<td>時間延遲 + 反向動作</td>
+</tr>
+<tr>
+<td>吃飯生能量</td>
+<td>❌（消化要時間）</td>
+<td>同上</td>
+</tr>
+<tr>
+<td>房間響應</td>
+<td>❌</td>
+<td>需先轉成 MP 才能 invert</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="83-step-response-視覺驗證" class="level3">
+<h3>8.3 Step Response 視覺驗證</h3>
+<p><strong>Minimum phase</strong>：起點 t=0、<strong>直接往上</strong>
+<strong>非 minimum
+phase</strong>：<strong>先往下再往上</strong>（initial reverse
+direction）</p>
+<p>OCA：「That is why this is reversible.」</p>
+<hr />
+</section>
+</section>
+<section id="part-9--01-db-級微調--聆聽驗收" class="level2">
+<h2>Part 9 — 0.1 dB 級微調 + 聆聽驗收</h2>
+<section id="91-處理器端-fine-tuning" class="level3">
+<h3>9.1 處理器端 fine-tuning</h3>
+<p>主校正完成後，在 DSP 引擎或處理器端做最後微調：</p>
+<ol type="1">
+<li>REW 開 SPL meter（Z weighting）</li>
+<li>用 <strong>band-limited pink noise 400-4000
+Hz</strong>（人耳最敏感區）</li>
+<li>左前置為基準</li>
+<li>一聲道一聲道測，<strong>0.1 dB 級</strong> 對齊</li>
+<li><strong>Sub 不動</strong>（會打掉 DRC）</li>
+</ol>
+</section>
+<section id="92-後排補強規則" class="level3">
+<h3>9.2 後排補強規則</h3>
+<p>若 sofa 後排或有椅背遮擋 → 後置 trim <strong>+2.5 ~ +3
+dB</strong></p>
+</section>
+<section id="93-聆聽片單驗收" class="level3">
+<h3>9.3 聆聽片單（驗收）</h3>
+<table>
+<thead>
+<tr>
+<th>片段</th>
+<th>測試重點</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Blade Runner 2049 開頭</td>
+<td>Infra-bass + Atmos 空間感</td>
+</tr>
+<tr>
+<td>Ready Player One 賽車</td>
+<td>低頻動態 + Atmos 物件移動</td>
+</tr>
+<tr>
+<td>John Wick 霰彈槍</td>
+<td>短促低頻 impact、不拖泥</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="94-ab-切換感官記憶-3-10-秒" class="level3">
+<h3>9.4 A/B 切換：感官記憶 3-10 秒</h3>
+<ul>
+<li>人類 <strong>echoic memory</strong> 只有 3-10 秒</li>
+<li>普通 convolver 切 filter 有 ~750 ms 靜音 →
+<strong>記憶被重置</strong></li>
+<li>解法：<strong>zero-latency convolver</strong>（OCA 用 hang loose
+convolver）</li>
+<li>切換瞬間無 gap → 真正能比較</li>
+</ul>
+</section>
+<section id="95-1-db-響度差--偏好較大聲那個" class="level3">
+<h3>9.5 1 dB 響度差 = 偏好較大聲那個</h3>
+<ul>
+<li>A/B 比較<strong>必須 level-matched</strong></li>
+<li>否則大腦會偏向較大聲那個（無關品質）</li>
+</ul>
+<hr />
+</section>
+</section>
+<section id="part-10--7-個常被忽略的陷阱" class="level2">
+<h2>Part 10 — 7 個常被忽略的陷阱</h2>
+<section id="101-用錯校正檔90-vs-0" class="level3">
+<h3>10.1 用錯校正檔（90° vs 0°）</h3>
+<ul>
+<li>麥克風直立 → 用 <strong>0° / horizontal</strong></li>
+<li>麥克風朝上 → 用 <strong>90° / vertical</strong></li>
+<li>用錯 → 高頻整段偏差 ±2 dB</li>
+</ul>
+</section>
+<section id="102-usb-mic-時鐘漂移" class="level3">
+<h3>10.2 USB mic 時鐘漂移</h3>
+<ul>
+<li>UMIK-1/2 ADC 跟 DAC 用不同 clock → timing 不準</li>
+<li>修 phase 時會出問題</li>
+<li>高階解法：<strong>Earthworks 類比 mic + audio interface 共用
+clock</strong></li>
+</ul>
+</section>
+<section id="103-量測時環境改變" class="level3">
+<h3>10.3 量測時環境改變</h3>
+<ul>
+<li>量到一半開門、家人走過 → 高頻全變</li>
+<li>解法：量完一個 take 立刻看 spectrogram 一致才繼續</li>
+</ul>
+</section>
+<section id="104-sub-crossover-拉太高" class="level3">
+<h3>10.4 sub crossover 拉太高</h3>
+<ul>
+<li>Sub 跑到 200-300 Hz → 定位感破壞、DRC impulse alignment 受擾</li>
+<li>解法：sub 在 DSP 端 150 Hz 開始 lowpass，180 Hz 完全切</li>
+</ul>
+</section>
+<section id="105-升級-dirac-live-新版" class="level3">
+<h3>10.5 升級 Dirac Live 新版</h3>
+<ul>
+<li>不同版本演算法有差，<strong>找滿意版本鎖住</strong></li>
+<li>記下版本號</li>
+</ul>
+</section>
+<section id="106-4-顆-sub--不用-drc" class="level3">
+<h3>10.6 4 顆 sub = 不用 DRC？</h3>
+<ul>
+<li>❌ <strong>錯</strong>。4 sub + DRC 仍會有 ±20 dB 變異需修</li>
+<li>4 sub 給 DRC <strong>更乾淨的素材</strong>，但取代不了 DRC</li>
+</ul>
+</section>
+<section id="107-用-13-smoothing-看細節問題" class="level3">
+<h3>10.7 用 1/3 smoothing 看細節問題</h3>
+<ul>
+<li>1/3 smoothing 是「對外規格用」</li>
+<li>抓低頻問題用 <strong>1/24 或 1/12</strong></li>
+</ul>
+<hr />
+</section>
+</section>
+<section id="part-11--三條推薦路徑依預算" class="level2">
+<h2>Part 11 — 三條推薦路徑（依預算）</h2>
+<section id="tier-1基本配置-500" class="level3">
+<h3>Tier 1：基本配置（&lt; $500）</h3>
+<ul>
+<li><strong>REW</strong>（免費）</li>
+<li><strong>UMIK-1</strong>（~$120）</li>
+<li><strong>方法 OCA v2 最小相位反轉</strong>（流程最簡）</li>
+<li>DSP：JRiver（~$70）或 EqualizerAPO（免費）</li>
+</ul>
+</section>
+<section id="tier-2進階配置500--1500" class="level3">
+<h3>Tier 2：進階配置（$500 – $1500）</h3>
+<ul>
+<li>REW + <strong>Earthworks mic + audio interface</strong>（共用
+clock）</li>
+<li><strong>Acourate 或 Audiolense XO</strong>（~$450）</li>
+<li><strong>JRiver / Roon</strong>（<span
+class="math inline">70−</span>500/yr）</li>
+</ul>
+</section>
+<section id="tier-3旗艦配置1500" class="level3">
+<h3>Tier 3：旗艦配置（$1500+）</h3>
+<ul>
+<li><strong>多顆 sub</strong>（建議 4 顆）</li>
+<li>8 通道 DAC（Motu）</li>
+<li>個別 driver direct-coupled</li>
+<li><strong>Linear phase digital crossover</strong> + Acourate 全套</li>
+<li>像 Mitch 的 JBL M2 + 4 sub 那種系統</li>
+</ul>
+<hr />
+</section>
+</section>
+<section id="part-12--軟體選擇決策樹" class="level2">
+<h2>Part 12 — 軟體選擇決策樹</h2>
+<pre><code>不想動腦、買齊就好
+  └→ Dirac Live ARC（最方便但非 state-of-the-art）
+
+只想搞低頻、保留高頻原音
+  └→ REW + 方法 OCA v2 最小相位反轉（免費）
+
+要全頻段、能彈性調 target curve、有時間學
+  └→ Acourate（最強但學習曲線陡）
+
+希望易用、結果也好
+  └→ Audiolense XO
+
+家裡多人聽
+  └→ Focus Fidelity Designer（唯一正確處理多次量測）
+
+想看原始碼自己改
+  └→ OpenSource DRC（DIY Audio）</code></pre>
+<hr />
+</section>
+<section id="part-13--一張完整-workflow-路徑圖" class="level2">
+<h2>Part 13 — 一張完整 workflow 路徑圖</h2>
+<pre><code>┌──────────────────────────────────────────┐
+│ 1. 喇叭擺位優化（先別買任何 DSP / 吸音板）│
+│    → REW 量 5-7 位置找最佳                │
+└────────────────┬─────────────────────────┘
+                 │
+┌────────────────▼─────────────────────────┐
+│ 2. 被動聲學處理                          │
+│    → 前 4 大反射點加吸音板               │
+│    → 100 Hz 以下加 bass trap（可選）     │
+└────────────────┬─────────────────────────┘
+                 │
+┌────────────────▼─────────────────────────┐
+│ 3. Subwoofer 整合（若有）                │
+│    → 4 步驟（main/sub/phase/位置）       │
+└────────────────┬─────────────────────────┘
+                 │
+┌────────────────▼─────────────────────────┐
+│ 4. DRC 校正                              │
+│    Option A：Dirac Live（簡單）          │
+│    Option B：OCA v2 最小相位反轉（推薦）  │
+│    Option C：Acourate/Audiolense（旗艦）  │
+└────────────────┬─────────────────────────┘
+                 │
+┌────────────────▼─────────────────────────┐
+│ 5. 處理器端 0.1 dB 微調                  │
+│    → 400-4000 Hz pink noise 對齊各聲道   │
+│    → 後排補強（若有遮蔽）                │
+└────────────────┬─────────────────────────┘
+                 │
+┌────────────────▼─────────────────────────┐
+│ 6. 聆聽驗收                              │
+│    → Blade Runner / Ready Player One     │
+│    → John Wick 短促 impact 測試          │
+│    → A/B 用 zero-latency convolver       │
+└──────────────────────────────────────────┘</code></pre>
+<hr />
+</section>
+<section id="bar_chart-4-講者的核心命題對比" class="level2">
+<h2>📊 4 講者的核心命題對比</h2>
+<table>
+<thead>
+<tr>
+<th>講者</th>
+<th>核心命題</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Mitch Barnett</strong></td>
+<td>State-of-the-art 必有 psychoacoustic filter + FDW，缺一不成</td>
+</tr>
+<tr>
+<td><strong>Graham</strong>（Music City）</td>
+<td>SPL 圖最不重要，要用多張圖診斷</td>
+</tr>
+<tr>
+<td><strong>OCA v1</strong></td>
+<td>不要用 EQ filter，直接反轉最精準</td>
+</tr>
+<tr>
+<td><strong>OCA v2</strong></td>
+<td>只修 Schroeder 以下，高頻別碰</td>
+</tr>
+</tbody>
+</table>
+<section id="共同信念" class="level3">
+<h3>共同信念</h3>
+<ol type="1">
+<li><strong>不要全頻段平直化</strong>（all agree）</li>
+<li><strong>不要 Dirac/Audyssey 那套</strong>（OCA + Mitch agree）</li>
+<li><strong>不要只看 SPL</strong>（Graham + Mitch agree）</li>
+<li><strong>不要相信廠商規格</strong>（Mitch + OCA agree →
+必須自己量）</li>
+</ol>
+</section>
+<section id="分歧" class="level3">
+<h3>分歧</h3>
+<ul>
+<li>全頻段反轉（OCA v1）vs 只修低頻（Mitch / OCA v2）</li>
+<li>多次量測（Mitch 偏好單一）vs 單一量測（OCA 主流）</li>
+</ul>
+<hr />
+</section>
+</section>
+<section id="dart-給三類玩家的建議" class="level2">
+<h2>🎯 給三類玩家的建議</h2>
+<section id="a-你是-diracaudyssey-已用戶但不確定要不要升級"
+class="level3">
+<h3>A. 你是 Dirac/Audyssey 已用戶但不確定要不要升級</h3>
+<p>行動：</p>
+<ol type="1">
+<li>學 §3（REW 數據判讀），用 REW 量你<strong>校正前後</strong></li>
+<li>對比 ETC、Waterfall、Phase</li>
+<li>若仍有大 dip / 拖尾 → 升級值得</li>
+<li>若已 ±5 dB / T20 &lt; 300 ms → 留著省錢</li>
+</ol>
+</section>
+<section id="b-你想-diy-但沒玩過-drc" class="level3">
+<h3>B. 你想 DIY 但沒玩過 DRC</h3>
+<p>行動：</p>
+<ol type="1">
+<li>買 UMIK-1 + 學 REW 基本操作</li>
+<li><strong>跑方法 OCA v2 最小相位反轉</strong>（6 步、最簡單）</li>
+<li>載入 JRiver / EqualizerAPO 試聽</li>
+<li>A/B 比較</li>
+<li>滿意 → 完工；不滿意 → 升 Tier 2</li>
+</ol>
+</section>
+<section id="c-你已是玩家想衝旗艦" class="level3">
+<h3>C. 你已是玩家想衝旗艦</h3>
+<p>行動：</p>
+<ol type="1">
+<li>評選 Mitch 推的 4 軟體中 Acourate vs Audiolense</li>
+<li>Earthworks mic + 良好 audio interface</li>
+<li>多顆 sub + linear phase digital crossover</li>
+<li>多 profile（dinner mode / cinema mode / late night mode）</li>
+<li>投資 hang loose convolver 做 A/B</li>
+</ol>
+<hr />
+</section>
+</section>
+<section id="question-跨講者整合-faq" class="level2">
+<h2>❓ 跨講者整合 FAQ</h2>
+<section id="q1到底要不要修高頻" class="level3">
+<h3>Q1：到底要不要修高頻？</h3>
+<p>A：<strong>不要</strong>。Mitch / OCA v2 / JJ 都同意。Dirac/Audyssey
+那套是 marketing。</p>
+</section>
+<section id="q2schroeder-頻率怎麼算" class="level3">
+<h3>Q2：Schroeder 頻率怎麼算？</h3>
+<p>A：算公式麻煩、實務上<strong>用 amroc calculator</strong> 或直接抓
+<strong>225 Hz</strong>（OCA 建議起點）。</p>
+</section>
+<section id="q3要-4-顆-sub" class="level3">
+<h3>Q3：要 4 顆 sub？</h3>
+<p>A：<strong>不一定</strong>，但若房間 &gt; 30 m² 且預算許可，4 顆 +
+DRC &gt; 1 顆 + DRC &gt; 4 顆無 DRC。</p>
+</section>
+<section id="q4規律-eq-filter-vs-反轉法哪個準" class="level3">
+<h3>Q4：規律 EQ filter vs 反轉法哪個準？</h3>
+<p>A：<strong>反轉法逐點精準</strong>、EQ filter 是有限個 sliders
+擬合。但 EQ filter <strong>更穩定</strong>（不會炸喇叭）。新手先 EQ
+filter。</p>
+</section>
+<section id="q5harman-target-curve-真的對嗎" class="level3">
+<h3>Q5：Harman Target Curve 真的對嗎？</h3>
+<p>A：是「<strong>人耳補償</strong>」不是「<strong>房間/口味</strong>」。在你<strong>平時音量</strong>下，它對。換音量
+→ 應重做。</p>
+</section>
+<section id="q6時間對齊time-alignment為何重要" class="level3">
+<h3>Q6：時間對齊（time alignment）為何重要？</h3>
+<p>A：左右喇叭到耳朵差 1 mm → 相位差幾度 → stereo image
+偏。<strong>convolution 必須先 align</strong>。</p>
+</section>
+<section id="q7要做麥克風-minimum-phase-校正檔嗎" class="level3">
+<h3>Q7：要做麥克風 minimum phase 校正檔嗎？</h3>
+<p>A：<strong>要</strong>。原廠校正檔只給 amplitude 不給
+phase。極低頻和極高頻會有 phase shift。OCA v2 §10 教做法。</p>
+</section>
+<section id="q8跨房間--不同音量切換-profile" class="level3">
+<h3>Q8：跨房間 / 不同音量切換 profile？</h3>
+<p>A：每組情境（聆聽距離 / 音量 / 家具布置）都應分別校正、存不同 profile
+切換。</p>
+<hr />
+</section>
+</section>
+<section id="mortar_board-最高心法" class="level2">
+<h2>🎓 最高心法</h2>
+<blockquote>
+<p><strong>Mitch Barnett</strong>：「Whatever music is on the disc is
+arriving at our ears with no frequency or time domain distortion added
+by the loudspeaker or room.」</p>
+<p>終極目標：聽到製作端<strong>原本的意圖</strong>。</p>
+</blockquote>
+<blockquote>
+<p><strong>Graham</strong>：「The SPL graph is not the whole picture.
+... It is interesting and educational to listen to the same transfer
+function with varying levels of correction applied.」</p>
+<p>多看多比，不要被單一指標綁架。</p>
+</blockquote>
+<blockquote>
+<p><strong>OCA</strong>：「There is not a single system in the world
+which will not benefit from a 20 Hz to 200 Hz auto EQ with 0 dB boost.
+... If you're not doing this, your ears are suffering a lot of bass
+peaks.」</p>
+<p>你的耳朵正在<strong>受罪</strong>而不自知。馬上量馬上修。</p>
+</blockquote>
+<blockquote>
+<p><strong>OCA v2</strong>：「Most attempts to change the diffusive
+sound field will carry a high risk of causing an otherwise good speaker
+sound bad. ... Just don't touch this area.」</p>
+<p>高頻<strong>別碰</strong>就是最大的智慧。</p>
+</blockquote>
+<hr />
+</section>
+<section id="books-完整資源清單" class="level2">
+<h2>📚 完整資源清單</h2>
+<section id="必讀" class="level3">
+<h3>必讀</h3>
+<ul>
+<li><strong>JJ 簡報</strong>：「Acoustic and Psychoacoustic Issues in
+Room Correction」前 31 張</li>
+<li><strong>Mitch Barnett 書</strong>：《Accurate Sound Reproduction
+Using DSP》(Amazon)</li>
+<li><strong>John Mulcahy 文章</strong>（REW 作者）：minimum phase
+介紹</li>
+<li><strong>Sean Olive 論文</strong>：subjective preference of room
+correction</li>
+</ul>
+</section>
+<section id="軟體" class="level3">
+<h3>軟體</h3>
+<ul>
+<li><a href="https://www.roomeqwizard.com">REW</a>（免費）</li>
+<li><a href="https://www.audiovero.de">Acourate</a>（~€450）</li>
+<li><a href="https://www.juicehifi.com">Audiolense XO</a>（~$450）</li>
+<li><a href="https://www.focusfidelity.com">Focus Fidelity
+Designer</a>（~$300）</li>
+<li><a href="https://www.accuratesound.ca">Hang Loose
+Convolver</a>（Mitch 自開發）</li>
+</ul>
+</section>
+<section id="工具" class="level3">
+<h3>工具</h3>
+<ul>
+<li><strong>amroc calculator</strong>（room mode 線上工具）</li>
+<li><strong>SBIR Calculator</strong>（線上工具）</li>
+<li><strong>rePhase</strong>（免費相位精修）</li>
+</ul>
+</section>
+<section id="youtube-系列" class="level3">
+<h3>YouTube 系列</h3>
+<ol type="1">
+<li><a
+href="video1_Mitch_Barnett_DRC_zh.html">video1_Mitch_Barnett_DRC_zh.html</a>
+— 理論基礎</li>
+<li><a
+href="video2_REW_data_interpretation_zh.html">video2_REW_data_interpretation_zh.html</a>
+— 數據判讀</li>
+<li><a
+href="video3_REW_inversion_filter_zh.html">video3_REW_inversion_filter_zh.html</a>
+— 反轉法 v1</li>
+<li><a
+href="video4_REW_minimum_phase_inversion_zh.html">video4_REW_minimum_phase_inversion_zh.html</a>
+— 最小相位 v2</li>
+</ol>
+<hr />
+</section>
+</section>
+<section id="pencil-結語" class="level2">
+<h2>📝 結語</h2>
+<p>家庭音響空間校正不是「一鍵自動」的科技玩意，是<strong>結合物理、心理聲學、數學、工程</strong>的系統工程。</p>
+<p>但好消息是：<strong>&lt; $500 的軟體 +
+一個週末</strong>就能讓你的系統聽起來脫胎換骨。</p>
+<p>從<strong>喇叭擺位</strong>開始，做<strong>被動聲學處理</strong>，整合<strong>多
+sub</strong>，最後才上<strong>state-of-the-art
+DRC</strong>。每一步都不要跳。</p>
+<blockquote>
+<p>「<strong>The end goal: hear the music exactly as the producer
+intended.</strong>」</p>
+</blockquote>
+<p>祝你校正成功 — 然後<strong>好好聽音樂</strong>。</p>
+<hr />
+<p><em>本講義整合自 4 部 YouTube 影片教學（Mitch Barnett 110 min +
+Graham 34 min + OCA 28+30
+min），由助理依逐字稿翻譯整理為繁中結構化教材。產出日期：2026-06-07。</em></p>
+</section>
+</section>
+<footer class="note">
+整合 4 篇影片教學：Mitch Barnett / Graham (Music City) / OCA v1+v2<br>
+本繁中講義為盧醫師助理依逐字稿整理 · 產出時間 2026-06-07
+</footer>
+</article>
+</div></body></html>

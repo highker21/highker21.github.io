@@ -1,0 +1,1509 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>王永福 — 人生的 50 個夢想 講稿整理</title>
+<style>
+/* Dirac ART Tutorial — clean tech-doc style */
+* { box-sizing: border-box; }
+:root {
+  --bg: #fafafa;
+  --fg: #1a1a1a;
+  --muted: #6a6a6a;
+  --accent: #1e6dd8;
+  --accent-soft: #e7f0ff;
+  --warn-bg: #fff7e6;
+  --warn-border: #f4a83a;
+  --tip-bg: #e9f7ef;
+  --tip-border: #2eb872;
+  --note-bg: #f4f0ff;
+  --note-border: #8466d8;
+  --code-bg: #f1f3f5;
+  --table-border: #d8d8d8;
+  --th-bg: #f0f4fa;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #16181c;
+    --fg: #e8e8e8;
+    --muted: #9aa0a6;
+    --accent: #5aa9ff;
+    --accent-soft: #1c2840;
+    --warn-bg: #3a2a10;
+    --warn-border: #d99033;
+    --tip-bg: #14301f;
+    --tip-border: #3ea870;
+    --note-bg: #251a3a;
+    --note-border: #9a85e6;
+    --code-bg: #20232a;
+    --table-border: #333a44;
+    --th-bg: #232830;
+  }
+}
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang TC", "Noto Sans TC", "Helvetica Neue", Arial, sans-serif;
+  font-size: 16.5px;
+  line-height: 1.75;
+  margin: 0;
+  padding: 0;
+}
+.layout {
+  display: grid;
+  grid-template-columns: 280px minmax(0, 1fr);
+  max-width: 1280px;
+  margin: 0 auto;
+  gap: 36px;
+  padding: 24px;
+}
+@media (max-width: 900px) {
+  .layout { grid-template-columns: 1fr; padding: 16px; }
+  nav.toc { position: static; max-height: none; border-right: none; padding: 0; }
+}
+nav.toc {
+  position: sticky;
+  top: 16px;
+  align-self: start;
+  max-height: calc(100vh - 32px);
+  overflow-y: auto;
+  font-size: 14.5px;
+  border-right: 1px solid var(--table-border);
+  padding-right: 12px;
+}
+nav.toc h2 {
+  font-size: 14px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 4px 0 12px;
+}
+nav.toc ul { list-style: none; padding-left: 0; margin: 0; }
+nav.toc li { margin: 4px 0; }
+nav.toc a {
+  color: var(--fg);
+  text-decoration: none;
+  display: block;
+  padding: 4px 8px;
+  border-radius: 6px;
+}
+nav.toc a:hover { background: var(--accent-soft); color: var(--accent); }
+nav.toc ul ul { padding-left: 16px; font-size: 13.5px; }
+nav.toc ul ul a { color: var(--muted); }
+nav.toc ul ul ul { padding-left: 14px; font-size: 13px; }
+article { min-width: 0; }
+article h1 {
+  font-size: 32px;
+  margin: 12px 0 8px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+article h2 {
+  font-size: 24px;
+  margin: 40px 0 12px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--accent-soft);
+  font-weight: 700;
+}
+article h3 {
+  font-size: 19px;
+  margin: 28px 0 10px;
+  font-weight: 600;
+  color: var(--accent);
+}
+article h4 {
+  font-size: 16.5px;
+  margin: 20px 0 8px;
+  font-weight: 600;
+}
+article p { margin: 12px 0; }
+article a { color: var(--accent); text-decoration: none; border-bottom: 1px solid transparent; }
+article a:hover { border-bottom-color: var(--accent); }
+article strong { color: var(--fg); font-weight: 700; }
+article ul, article ol { padding-left: 26px; margin: 12px 0; }
+article li { margin: 4px 0; }
+article hr {
+  border: 0;
+  border-top: 1px solid var(--table-border);
+  margin: 36px 0;
+}
+article code {
+  font-family: "SF Mono", Menlo, Consolas, monospace;
+  background: var(--code-bg);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.9em;
+}
+article pre {
+  background: var(--code-bg);
+  border-radius: 8px;
+  padding: 14px 16px;
+  overflow-x: auto;
+  font-size: 14px;
+  line-height: 1.55;
+}
+article pre code { background: none; padding: 0; }
+article blockquote {
+  margin: 16px 0;
+  padding: 12px 18px;
+  background: var(--note-bg);
+  border-left: 4px solid var(--note-border);
+  border-radius: 0 8px 8px 0;
+  color: var(--fg);
+}
+article blockquote p { margin: 6px 0; }
+/* Callout box detection via leading emoji */
+article blockquote p:first-child:has(strong:first-child) { font-weight: 600; }
+article blockquote:has(p:first-child > strong:first-of-type) {
+  /* default — purple note */
+}
+article table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 16px 0;
+  font-size: 15px;
+  overflow-x: auto;
+  display: block;
+}
+@media (min-width: 900px) {
+  article table { display: table; }
+}
+article th, article td {
+  border: 1px solid var(--table-border);
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+article th { background: var(--th-bg); font-weight: 600; }
+article tr:nth-child(2n) td { background: rgba(0,0,0,0.018); }
+@media (prefers-color-scheme: dark) {
+  article tr:nth-child(2n) td { background: rgba(255,255,255,0.025); }
+}
+.meta-card {
+  background: var(--accent-soft);
+  border-left: 4px solid var(--accent);
+  border-radius: 0 8px 8px 0;
+  padding: 14px 18px;
+  margin: 16px 0 24px;
+  font-size: 14.5px;
+}
+.meta-card p { margin: 4px 0; }
+footer.note {
+  margin-top: 56px;
+  padding-top: 20px;
+  border-top: 1px solid var(--table-border);
+  color: var(--muted);
+  font-size: 13.5px;
+  line-height: 1.6;
+}
+.print-hint {
+  margin: 12px 0 4px;
+  font-size: 13px;
+  color: var(--muted);
+}
+@media print {
+  nav.toc, .print-hint { display: none; }
+  .layout { display: block; max-width: none; }
+  article { font-size: 11pt; }
+}
+
+</style>
+</head><body>
+<div class="layout">
+<nav class="toc">
+<h2>目錄</h2>
+
+<ul>
+<li><a href="#人生的-50-個夢想--願力所致夢想終至"
+id="toc-人生的-50-個夢想--願力所致夢想終至">人生的 50 個夢想 —
+願力所致，夢想終至</a>
+<ul>
+<li><a href="#pray-開場" id="toc-pray-開場">🙏 開場</a></li>
+<li><a href="#mortar_board-講者的三個身份"
+id="toc-mortar_board-講者的三個身份">🎓 講者的三個身份</a></li>
+</ul></li>
+<li><a href="#part-1--一切是怎麼開始的"
+id="toc-part-1--一切是怎麼開始的">Part 1 — 一切是怎麼開始的</a>
+<ul>
+<li><a href="#11-工地五年的轉折25-歲"
+id="toc-11-工地五年的轉折25-歲">1.1 工地五年的轉折（25 歲）</a></li>
+<li><a href="#12-第一次寫下夢想30-歲19992000"
+id="toc-12-第一次寫下夢想30-歲19992000">1.2 第一次寫下夢想（30
+歲，1999/2000）</a>
+<ul>
+<li><a href="#5-個-30-歲的夢想" id="toc-5-個-30-歲的夢想">5 個 30
+歲的夢想</a></li>
+</ul></li>
+<li><a href="#13-探索天賦35-36-歲" id="toc-13-探索天賦35-36-歲">1.3
+探索天賦（35-36 歲）</a></li>
+<li><a href="#14-40-歲的多重打擊2010"
+id="toc-14-40-歲的多重打擊2010">1.4 40 歲的多重打擊（2010）</a></li>
+<li><a href="#15-雪後下山重寫-50-個夢想"
+id="toc-15-雪後下山重寫-50-個夢想">1.5 雪後下山，重寫 50 個夢想</a>
+<ul>
+<li><a href="#福哥對所有遇到低潮的人說的話"
+id="toc-福哥對所有遇到低潮的人說的話">福哥對所有遇到低潮的人說的話</a></li>
+</ul></li>
+<li><a href="#16-v3-版45-歲2015-達成率"
+id="toc-16-v3-版45-歲2015-達成率">1.6 v3 版（45 歲，2015）+ 達成率</a>
+<ul>
+<li><a href="#10-年後2025盤點達成數" id="toc-10-年後2025盤點達成數">10
+年後（2025）盤點達成數</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#part-2--3-個高效實現夢想的祕訣"
+id="toc-part-2--3-個高效實現夢想的祕訣">Part 2 — 3
+個高效實現夢想的祕訣</a>
+<ul>
+<li><a href="#key-祕訣-1寫下夢想--而且要-50-個"
+id="toc-key-祕訣-1寫下夢想--而且要-50-個">🔑 祕訣 1：寫下夢想 — 而且要
+<strong>50 個</strong></a>
+<ul>
+<li><a href="#為什麼是-50-個" id="toc-為什麼是-50-個">為什麼是 50
+個？</a></li>
+<li><a href="#6-大夢想類別福哥的版本" id="toc-6-大夢想類別福哥的版本">6
+大夢想類別（福哥的版本）</a></li>
+<li><a href="#warning-神燈巨人測試--區分夢想vs代辦事項"
+id="toc-warning-神燈巨人測試--區分夢想vs代辦事項">⚠️ 神燈巨人測試 —
+區分「夢想」vs「代辦事項」</a></li>
+<li><a href="#bulb-第二個觀察--你的夢想可能是別人的日常"
+id="toc-bulb-第二個觀察--你的夢想可能是別人的日常">💡 第二個觀察 —
+<strong>你的夢想可能是別人的日常</strong></a></li>
+<li><a href="#house-案例100-坪大房子2015-寫下9-年內達成"
+id="toc-house-案例100-坪大房子2015-寫下9-年內達成">🏠 案例：100
+坪大房子（2015 寫下，9 年內達成）</a></li>
+<li><a href="#earth_americas-案例帶全家出國遊學半年9-年實現"
+id="toc-earth_americas-案例帶全家出國遊學半年9-年實現">🌎
+案例：帶全家出國遊學半年（9 年實現）</a></li>
+</ul></li>
+<li><a href="#dart-祕訣-2聚焦--一年只挑-3-個"
+id="toc-dart-祕訣-2聚焦--一年只挑-3-個">🎯 祕訣 2：聚焦 — 一年只挑 3
+個</a>
+<ul>
+<li><a href="#為什麼要聚焦" id="toc-為什麼要聚焦">為什麼要聚焦</a></li>
+<li><a href="#福哥的聚焦方法201949-歲版本"
+id="toc-福哥的聚焦方法201949-歲版本">福哥的聚焦方法（2019，49
+歲版本）</a></li>
+<li><a href="#ladder-福哥的4-層聚焦結構"
+id="toc-ladder-福哥的4-層聚焦結構">🪜 福哥的「4 層聚焦」結構</a></li>
+<li><a href="#為什麼騎腳踏車會變成重要的事"
+id="toc-為什麼騎腳踏車會變成重要的事">為什麼「騎腳踏車」會變成重要的事？</a></li>
+<li><a href="#計畫-vs-目標--不是直線"
+id="toc-計畫-vs-目標--不是直線">計畫 vs 目標 — 不是直線</a></li>
+</ul></li>
+<li><a href="#hourglass_flowing_sand-祕訣-3投入時間--125-年讀博士的故事"
+id="toc-hourglass_flowing_sand-祕訣-3投入時間--125-年讀博士的故事">⏳
+祕訣 3：投入時間 — 12.5 年讀博士的故事</a>
+<ul>
+<li><a href="#125-年博士之路" id="toc-125-年博士之路">12.5
+年博士之路</a></li>
+<li><a href="#為什麼這麼堅持"
+id="toc-為什麼這麼堅持">為什麼這麼堅持？</a></li>
+<li><a href="#撐不下去的時候做兩件事"
+id="toc-撐不下去的時候做兩件事">撐不下去的時候做兩件事</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#part-3--3-個小提醒給想實踐的你"
+id="toc-part-3--3-個小提醒給想實踐的你">Part 3 — 3
+個小提醒（給想實踐的你）</a>
+<ul>
+<li><a href="#muscle-提醒-1可是我不敢-學潛水的故事"
+id="toc-muscle-提醒-1可是我不敢-學潛水的故事">💪 提醒 1：「可是我不敢」→
+學潛水的故事</a>
+<ul>
+<li><a href="#第一次潛水" id="toc-第一次潛水">第一次潛水</a></li>
+<li><a href="#3-年的潛水課程進階" id="toc-3-年的潛水課程進階">3
+年的潛水課程進階</a></li>
+<li><a href="#福哥對勇氣的重新定義"
+id="toc-福哥對勇氣的重新定義">福哥對勇氣的重新定義</a></li>
+</ul></li>
+<li><a href="#alarm_clock-提醒-2可是現在太遲了-帶媽媽回日本的故事"
+id="toc-alarm_clock-提醒-2可是現在太遲了-帶媽媽回日本的故事">⏰ 提醒
+2：「可是現在太遲了」→ 帶媽媽回日本的故事</a>
+<ul>
+<li><a href="#媽媽的故事" id="toc-媽媽的故事">媽媽的故事</a></li>
+<li><a href="#去年2025的對話"
+id="toc-去年2025的對話">去年（2025）的對話</a></li>
+<li><a href="#其他沒有太晚的例子"
+id="toc-其他沒有太晚的例子">其他「沒有太晚」的例子</a></li>
+</ul></li>
+<li><a href="#thinking-提醒-3可是我還有很多可是-但這是你的夢想"
+id="toc-thinking-提醒-3可是我還有很多可是-但這是你的夢想">🤔 提醒
+3：「可是我還有很多可是」→ 但這是你的夢想</a>
+<ul>
+<li><a href="#從自己的夢想擴展到幫助別人"
+id="toc-從自己的夢想擴展到幫助別人">從自己的夢想擴展到幫助別人</a></li>
+<li><a href="#星雲法師說的從己願到他願"
+id="toc-星雲法師說的從己願到他願">星雲法師說的「從己願到他願」</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#part-4--給三個年齡層的話結尾"
+id="toc-part-4--給三個年齡層的話結尾">Part 4 —
+給三個年齡層的話（結尾）</a>
+<ul>
+<li><a href="#child-對年輕人" id="toc-child-對年輕人">🧒
+對年輕人</a></li>
+<li><a href="#man-對中年人" id="toc-man-對中年人">👨 對中年人</a></li>
+<li><a href="#older_man-對-50-60-歲的人"
+id="toc-older_man-對-50-60-歲的人">👴 對 50-60 歲的人</a></li>
+<li><a href="#gift-25-年前的兩句話最後"
+id="toc-gift-25-年前的兩句話最後">🎁 25 年前的兩句話（最後）</a></li>
+</ul></li>
+<li><a href="#star2-福哥的女兒們也在寫"
+id="toc-star2-福哥的女兒們也在寫">🌟 福哥的女兒們也在寫</a></li>
+<li><a href="#clipboard-全篇精華速查表"
+id="toc-clipboard-全篇精華速查表">📋 全篇精華速查表</a>
+<ul>
+<li><a href="#key-3-個祕訣" id="toc-key-3-個祕訣">🔑 3 個祕訣</a></li>
+<li><a href="#bulb-3-個小提醒" id="toc-bulb-3-個小提醒">💡 3
+個小提醒</a></li>
+<li><a href="#dart-撐不下去時做兩件事"
+id="toc-dart-撐不下去時做兩件事">🎯 撐不下去時做兩件事</a></li>
+<li><a href="#triangular_ruler-4-層聚焦結構"
+id="toc-triangular_ruler-4-層聚焦結構">📐 4 層聚焦結構</a></li>
+<li><a href="#gem-核心金句" id="toc-gem-核心金句">💎 核心金句</a></li>
+</ul></li>
+<li><a href="#pray-結尾儀式" id="toc-pray-結尾儀式">🙏 結尾儀式</a>
+<ul>
+<li><a href="#pencil-完整時間軸一頁速覽"
+id="toc-pencil-完整時間軸一頁速覽">📝 完整時間軸（一頁速覽）</a></li>
+<li><a href="#dart-福哥給你的功課" id="toc-dart-福哥給你的功課">🎯
+福哥給你的功課</a></li>
+</ul></li>
+</ul>
+
+<p class="print-hint">⌘P 列印 / 存 PDF</p>
+</nav>
+<article>
+<section id="人生的-50-個夢想--願力所致夢想終至" class="level1">
+<h1>人生的 50 個夢想 — 願力所致，夢想終至</h1>
+<blockquote>
+<p><strong>講者</strong>：王永福（福哥）—
+簡報與教學教練、《福哥來信》電子報作者、資訊管理博士
+<strong>場合</strong>：佛光山中區總住持絕居法師主持 ‧《2026
+未來與希望系列講座》第四場 <strong>時間</strong>：2026 年 6 月 2 日 LIVE
+直播 ‧ 全長 1 小時 41 分 <strong>地點</strong>：佛光山慧中寺
+<strong>講座系列宗旨</strong>：和諧不是只存在一種聲音，而是要能在異中求同、同中存異
+<strong>逐字稿產出</strong>：本文由助理依 whisper
+ASR（large-v3-turbo）轉寫並整理為繁中講稿，簡體轉繁體
+<strong>產出日期</strong>：2026-06-07</p>
+</blockquote>
+<hr />
+<section id="pray-開場" class="level2">
+<h2>🙏 開場</h2>
+<blockquote>
+<p>「這其實是我第二次在大佛前面演講。上一次是九年前，也是在佛光山，在台南南台別院。」</p>
+</blockquote>
+<p>福哥開場先呼應星雲法師對夢想的看法：</p>
+<blockquote>
+<p>「在佛教來說，夢想其實是『願』、『許願』、『願力』。星雲法師之前也談過：夢想／願力就像是一個指引、一個動力。每個人都應該有夢想，不管是一般人或出家人。」</p>
+</blockquote>
+<p>接著他亮出今天的主軸：</p>
+<blockquote>
+<p>「<strong>我不是要跟大家講道理 — 要聽道理請去找 AI，AI
+最會講道理。我要講的是我自己身上發生過的事，也許可以給大家一些不同的啟示。</strong>」</p>
+</blockquote>
+<hr />
+</section>
+<section id="mortar_board-講者的三個身份" class="level2">
+<h2>🎓 講者的三個身份</h2>
+<table>
+<thead>
+<tr>
+<th>身份</th>
+<th>內容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>簡報與教學教練</strong></td>
+<td>教過台積、鴻海、聯發科等台灣頂尖上市公司；醫師、律師、會計師、檢察官（國民法官的檢察官們）；大學教授、警察專校老師</td>
+</tr>
+<tr>
+<td><strong>創作者</strong></td>
+<td>出了 10 本書（最新《簡報的技術》，2026 年 3
+月出版）；把書一一改成線上課程</td>
+</tr>
+<tr>
+<td><strong>資訊管理博士</strong></td>
+<td>邊讀書邊工作 20 年才拿到；論文獲國際引用前 1% 得獎</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>「我以前是工地主任。這張照片是 1995 年。我沒有讀過大學 —
+我讀彰化建國工專，土木工程科，畢業就去工地。」</p>
+</blockquote>
+<p>→ <strong>這條從工地主任到博士的路，是怎麼走到的？</strong></p>
+<hr />
+</section>
+</section>
+<section id="part-1--一切是怎麼開始的" class="level1">
+<h1>Part 1 — 一切是怎麼開始的</h1>
+<section id="11-工地五年的轉折25-歲" class="level2">
+<h2>1.1 工地五年的轉折（25 歲）</h2>
+<p>1995 年的福哥，已經做了 5 年工地主任。他突然問自己一個問題：</p>
+<blockquote>
+<p>「<strong>5 年之後的我會是怎麼樣子？</strong>」</p>
+</blockquote>
+<p>腦海中沒答案，於是他簡化問題：</p>
+<blockquote>
+<p>「<strong>5 年後我大概會變成我的主管吧。那 —
+我喜歡他現在的樣子嗎？我喜歡他現在的工作嗎？</strong>」</p>
+</blockquote>
+<p>答案是：不太喜歡。</p>
+<blockquote>
+<p>「我又要經過 5 年才會變成他。我又不喜歡，那我幹嘛？」</p>
+</blockquote>
+<p>於是他想換跑道。<strong>但問題來了</strong>：土木工程、武專、沒有特別好的學歷，能換什麼？</p>
+<p>一位開 BMW 的同學來找他：「我現在在做保險。」福哥問媽媽：</p>
+<blockquote>
+<p>媽：「<strong>賣！</strong>
+你工地做好好的，你不要換頭路。你做五年再做五年，這樣已經十年在工地了。」</p>
+</blockquote>
+<p>但福哥還是想了一年，最後跟媽媽說：「<strong>你讓我試試看</strong>。」</p>
+<p>→ 兼職做了 10 個月，業績超過正職 → 全職轉保險</p>
+</section>
+<section id="12-第一次寫下夢想30-歲19992000" class="level2">
+<h2>1.2 第一次寫下夢想（30 歲，1999/2000）</h2>
+<p>保險公司的訓練活動要求設定目標 → 30
+歲的福哥第一次很認真寫下夢想：</p>
+<section id="5-個-30-歲的夢想" class="level3">
+<h3>5 個 30 歲的夢想</h3>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>夢想</th>
+<th>結果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><strong>五子登科</strong>（妻、子、房、車、銀）</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>2</td>
+<td><strong>去讀一個學位</strong>（武專畢業想進修）</td>
+<td>✅ EMBA（朝陽 EMBA）</td>
+</tr>
+<tr>
+<td>3</td>
+<td><strong>學薩克斯風</strong>（電台聽到很棒的，30
+歲還不會看樂譜）</td>
+<td>✅ 隔年報名</td>
+</tr>
+<tr>
+<td>4</td>
+<td><strong>去阿甘正傳的華盛頓尖塔紀念碑</strong></td>
+<td>✅ 同一年達成</td>
+</tr>
+<tr>
+<td>5</td>
+<td><strong>出一本書</strong></td>
+<td>✅ 四年後出第一本電腦書</td>
+</tr>
+<tr>
+<td>6</td>
+<td><strong>台灣三件套</strong>（橫渡日月潭、爬玉山、騎腳踏車環島）</td>
+<td>⚠️ 25 年後<strong>仍未完成</strong>（環島、爬玉山未達）</td>
+</tr>
+</tbody>
+</table>
+<p>→
+福哥當場問現場觀眾「<strong>猜我有哪兩個夢想還沒完成</strong>」做互動。答案：<strong>環島
++ 爬玉山</strong>（日月潭已遊過）。</p>
+</section>
+</section>
+<section id="13-探索天賦35-36-歲" class="level2">
+<h2>1.3 探索天賦（35-36 歲）</h2>
+<p>業務做了五六年，同樣的問題又來：</p>
+<blockquote>
+<p>「5 年後的我會是怎麼樣子？」</p>
+</blockquote>
+<p>答案：<strong>5 年後還是業務，10 年後還是業務。</strong></p>
+<blockquote>
+<p>「我做工程是因為我讀土木；我做業務是因為我想賺錢。但 35、36
+歲的我有個想法 —
+<strong>我的天賦到底是什麼？我真的可以發揮的是什麼？</strong>」</p>
+</blockquote>
+<p>花一年探索，發現自己<strong>喜歡在台上跟人講話</strong>。</p>
+<p>→ 2006-2007：成立企管顧問公司，成為專職講師。</p>
+</section>
+<section id="14-40-歲的多重打擊2010" class="level2">
+<h2>1.4 40 歲的多重打擊（2010）</h2>
+<blockquote>
+<p>「不是只有一件事情，我算給你聽：」</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>打擊</th>
+<th>細節</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1️⃣ 創業初期業績差</td>
+<td>第一次公開班 — 包含躲在旁邊的 <strong>總共 5 人</strong></td>
+</tr>
+<tr>
+<td>2️⃣ 媽媽三癌診斷</td>
+<td>胃癌（切除 80% 胃）→ 肝癌 → 大腸癌（原來肝是大腸癌移轉）→
+第三期第四期遠端移轉。<strong>醫生告 18 個月</strong></td>
+</tr>
+<tr>
+<td>3️⃣ 車子被偷</td>
+<td>—</td>
+</tr>
+<tr>
+<td>4️⃣ 心愛的狗死掉</td>
+<td>—</td>
+</tr>
+<tr>
+<td>5️⃣ 女友離開</td>
+<td>「他覺得沒辦法跟我擺起了」</td>
+</tr>
+<tr>
+<td>6️⃣ 鬼剃頭（圓形禿）</td>
+<td>理髮師告知：「王大哥你的頭頂有一塊沒有頭髮 —
+壓力過大、自體免疫系統有問題」</td>
+</tr>
+<tr>
+<td>7️⃣ 大雪山五月積雪受困</td>
+<td>上山想放空 → 反而被雪困住下不來</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>「40
+歲的我真的覺得：<strong>這是在演連續劇嗎？這是在寫什麼劇本啊？</strong>」</p>
+</blockquote>
+</section>
+<section id="15-雪後下山重寫-50-個夢想" class="level2">
+<h2>1.5 雪後下山，重寫 50 個夢想</h2>
+<blockquote>
+<p>「我記得我曾經寫過夢想，然後那個夢想慢慢的實現。<strong>既然我現在什麼都沒辦法做
+— 那我可以不可以再來做一次？</strong>」</p>
+</blockquote>
+<p>這一次他寫下了 <strong>50 個</strong>夢想，貼在家裡舊書櫃上。50
+張便利貼。</p>
+<blockquote>
+<p>「你可能會很好奇 —
+**這個時候寫夢想要寫什麼？**其實我的夢想也很卑微：」</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>卑微的夢想</th>
+<th>結果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>我媽媽可以康復、身體健康</td>
+<td>✅ 媽媽今年 84 歲，今天還親自來現場</td>
+</tr>
+<tr>
+<td>有一對子女</td>
+<td>✅ 女友回來、結婚、生了 2 個女兒（妻子四十幾歲生兩個孩子）</td>
+</tr>
+<tr>
+<td>出一本專業的簡報書</td>
+<td>✅ 43 歲時（2013）出版第一本上司的技術簡報書</td>
+</tr>
+<tr>
+<td>上商業週刊報導</td>
+<td>✅ 隔年（2014）上商業週刊</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>「<strong>回到 40 歲的那個時候，你可以把它稱為這叫空想。事實上也是啊
+—
+因為你的狀況最爛的時候，你寫這些都是空的。我知道它也是空的。我還能夠做什麼？我總是可以給自己一些希望吧。</strong>」</p>
+</blockquote>
+<section id="福哥對所有遇到低潮的人說的話" class="level3">
+<h3>福哥對所有遇到低潮的人說的話</h3>
+<blockquote>
+<p>「我們沒辦法控制很多事情的發生。<strong>但是我們總是可以保持自己有夢想吧</strong>。反正我們又沒有給人家看
+— 等十幾年之後再給人家看就可以。」</p>
+<p>「希望你在最困難的時候，還記得：<strong>那我們還是可以對自己有一些希望，保持著夢想。</strong>」</p>
+</blockquote>
+</section>
+</section>
+<section id="16-v3-版45-歲2015-達成率" class="level2">
+<h2>1.6 v3 版（45 歲，2015）+ 達成率</h2>
+<p>到 2015
+年，福哥已經出書、有孩子、媽媽不生病、事業好轉。他<strong>又重寫一次</strong>50
+個夢想（v3）：</p>
+<table>
+<thead>
+<tr>
+<th>新增的大目標</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>讀完一個博士學位</td>
+</tr>
+<tr>
+<td>買一間 100 坪、有 view、2000 萬以下的大房子</td>
+</tr>
+<tr>
+<td>帶全家出國半年（讀語文學校）</td>
+</tr>
+<tr>
+<td>事業財富</td>
+</tr>
+<tr>
+<td>做公益跟慈善</td>
+</tr>
+</tbody>
+</table>
+<section id="10-年後2025盤點達成數" class="level3">
+<h3>10 年後（2025）盤點達成數</h3>
+<p><strong>福哥跟女兒一起盤點</strong>：</p>
+<ul>
+<li>✅ <strong>完整達成（圓圈）</strong>：<strong>40 個</strong></li>
+<li>⚠️ <strong>快要達成（三角形）</strong>：<strong>10 個</strong></li>
+</ul>
+<p><strong>50 個夢想 10 年達成 40 個，剩 10 個快達成中。</strong></p>
+<hr />
+</section>
+</section>
+</section>
+<section id="part-2--3-個高效實現夢想的祕訣" class="level1">
+<h1>Part 2 — 3 個高效實現夢想的祕訣</h1>
+<section id="key-祕訣-1寫下夢想--而且要-50-個" class="level2">
+<h2>🔑 祕訣 1：寫下夢想 — 而且要 <strong>50 個</strong></h2>
+<section id="為什麼是-50-個" class="level3">
+<h3>為什麼是 50 個？</h3>
+<p>福哥的觀察：</p>
+<table>
+<thead>
+<tr>
+<th>寫到第幾個</th>
+<th>狀況</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>5 個</td>
+<td>五子登科，容易</td>
+</tr>
+<tr>
+<td>10-20 個</td>
+<td>開始亂寫</td>
+</tr>
+<tr>
+<td><strong>20 個</strong></td>
+<td><strong>卡關</strong></td>
+</tr>
+<tr>
+<td>30+ 個</td>
+<td>必須真正思考</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="6-大夢想類別福哥的版本" class="level3">
+<h3>6 大夢想類別（福哥的版本）</h3>
+<table>
+<thead>
+<tr>
+<th>類別</th>
+<th>意義</th>
+<th>福哥的例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1. <strong>平安健康</strong></td>
+<td>「真的是最重要的關鍵」</td>
+<td>太太、自己、孩子、家人健康平安</td>
+</tr>
+<tr>
+<td>2. <strong>事業成就</strong></td>
+<td>持續創業者的核心</td>
+<td>教學影響力擴大、公司營運</td>
+</tr>
+<tr>
+<td>3. <strong>家人旅行</strong></td>
+<td>共同記憶的累積</td>
+<td>全家四處走走、設定旅行目標</td>
+</tr>
+<tr>
+<td>4. <strong>金錢財富</strong></td>
+<td>「對不起我比較熟悉」</td>
+<td>存款、房子</td>
+</tr>
+<tr>
+<td>5. <strong>自我成長</strong></td>
+<td>學習、技能</td>
+<td>學位、樂器、運動</td>
+</tr>
+<tr>
+<td>6. <strong>助人利他</strong></td>
+<td>從自己擴展到別人</td>
+<td>公益、慈善</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="warning-神燈巨人測試--區分夢想vs代辦事項" class="level3">
+<h3>⚠️ 神燈巨人測試 — 區分「夢想」vs「代辦事項」</h3>
+<p>福哥在「50
+個夢想」社團看到上千個夢想後的觀察：<strong>很多人搞混夢想跟代辦事項</strong>。</p>
+<table>
+<thead>
+<tr>
+<th>例子</th>
+<th>是夢想嗎？</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>每天喝水</td>
+<td>❌ 代辦事項</td>
+</tr>
+<tr>
+<td>每週讀一本書</td>
+<td>❌ 代辦事項</td>
+</tr>
+<tr>
+<td>每週運動</td>
+<td>❌ 代辦事項</td>
+</tr>
+<tr>
+<td>拿一個學位</td>
+<td>✅ 夢想</td>
+</tr>
+<tr>
+<td>對佛法精進</td>
+<td>✅ 夢想</td>
+</tr>
+</tbody>
+</table>
+<section id="測試方法" class="level4">
+<h4>測試方法</h4>
+<blockquote>
+<p>「想像你前面有個神燈巨人。**他說『我給你 50
+個夢想，你可以跟我許願』。**請問你會跟他講『神燈巨人，我希望我每週運動』嗎？<strong>你不會吧！</strong>」</p>
+</blockquote>
+<p>→ <strong>過不過得了神燈巨人測試 = 是不是真正的夢想</strong></p>
+</section>
+</section>
+<section id="bulb-第二個觀察--你的夢想可能是別人的日常" class="level3">
+<h3>💡 第二個觀察 — <strong>你的夢想可能是別人的日常</strong></h3>
+<blockquote>
+<p>「<strong>我發現很多人的夢想，是其他人的日常。</strong>」</p>
+</blockquote>
+<p>現場示範：</p>
+<blockquote>
+<p>「有沒有誰已經登過玉山或環島過的，舉手讓我看一下？……不少。<strong>福哥從寫到現在
+25 年了還沒有完成。你的日常是我的夢想。</strong>」</p>
+</blockquote>
+<p>換個角度：</p>
+<blockquote>
+<p>「<strong>寫書當夢想 — 福哥到現在出 10
+本書，你覺得那是我的夢想嗎？已經不是，那就是我的日常了。</strong>」</p>
+</blockquote>
+<p><strong>核心訊息</strong>：</p>
+<ul>
+<li>寫夢想不要害怕「太大、太難」— 你以為很難的，可能對別人是日常</li>
+<li>反過來：<strong>你早就實現了別人心裡面的夢想，只是你不知道</strong></li>
+</ul>
+</section>
+<section id="house-案例100-坪大房子2015-寫下9-年內達成" class="level3">
+<h3>🏠 案例：100 坪大房子（2015 寫下，9 年內達成）</h3>
+<pre><code>夢想（2015）：
+  100 坪 / 有 view / 2000 萬以下
+       ↓
+太太：「你不想買就講一聲」
+       ↓
+仲介一個一個消失
+       ↓
+最後一個仲介：「中古屋有機會」
+       ↓
+25 年屋齡 / 有 view / 大小對 / 房子老
+       ↓
+福哥用工地主任經驗自己監工設計
+       ↓
+✅ 達成（連商業週刊何飛鵬社長都
+      寫進「天下沒有不可能的事情」專欄）</code></pre>
+</section>
+<section id="earth_americas-案例帶全家出國遊學半年9-年實現"
+class="level3">
+<h3>🌎 案例：帶全家出國遊學半年（9 年實現）</h3>
+<pre><code>2015 寫：「想帶全家出國，自己讀語文學校」
+   ↓
+孩子還小、工作很忙、博士還沒畢業
+   ↓
+9 年後 — 全家去美國住了半年，
+福哥真的讀了語文學校</code></pre>
+<blockquote>
+<p>「<strong>不管是夢想或是願，他就是給我們一個方向、一個前進的動力。他說不定不會馬上達成，但他總是一個方向。</strong>」</p>
+</blockquote>
+<hr />
+</section>
+</section>
+<section id="dart-祕訣-2聚焦--一年只挑-3-個" class="level2">
+<h2>🎯 祕訣 2：聚焦 — 一年只挑 3 個</h2>
+<section id="為什麼要聚焦" class="level3">
+<h3>為什麼要聚焦</h3>
+<blockquote>
+<p>「<strong>我不會建議大家同時去追求 50
+個夢想，這個不實際。</strong>」</p>
+</blockquote>
+</section>
+<section id="福哥的聚焦方法201949-歲版本" class="level3">
+<h3>福哥的聚焦方法（2019，49 歲版本）</h3>
+<p>1970 年生的福哥，2019 年底（49 歲）給自己加碼挑戰 — <strong>50
+歲生日前完成 5 個</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>夢想</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>博士（一直還沒讀完）</td>
+</tr>
+<tr>
+<td>2</td>
+<td>做一個線上課程</td>
+</tr>
+<tr>
+<td>3</td>
+<td>出版一本書</td>
+</tr>
+<tr>
+<td>4</td>
+<td>拿到武術「合氣道」黑帶</td>
+</tr>
+<tr>
+<td>5</td>
+<td>完成鐵人 113 公里挑戰</td>
+</tr>
+</tbody>
+</table>
+<p>→ <strong>2020 達成
+4/5（博士未達）</strong>：線上課程打破當年紀錄、出版《工作與生活的技術》、合氣道黑帶、鐵人三項完賽</p>
+</section>
+<section id="ladder-福哥的4-層聚焦結構" class="level3">
+<h3>🪜 福哥的「4 層聚焦」結構</h3>
+<pre><code>   每年 3 個夢想
+        ↓
+    貼在書桌前面
+        ↓
+  ┌──────────────┐
+  │  每週聚焦      │ ← 白板：這禮拜要做什麼
+  │  （白板）     │
+  └──────┬───────┘
+         ↓
+  ┌──────────────┐
+  │ 每天聚焦       │ ← 便利貼：
+  │ （便利貼）    │   左邊「重要」/ 右邊「次重要」
+  └──────┬───────┘
+         ↓
+  ┌──────────────┐
+  │ 每 25 分鐘聚焦 │ ← 計時器（番茄鐘）
+  │ （計時器）    │
+  └──────────────┘</code></pre>
+</section>
+<section id="為什麼騎腳踏車會變成重要的事" class="level3">
+<h3>為什麼「騎腳踏車」會變成重要的事？</h3>
+<blockquote>
+<p>「因為我要比鐵人三項嘛！所以<strong>重要不重要是取決於：我今年到底想要達成什麼事</strong>。」</p>
+</blockquote>
+<p>→ 重要性 = <strong>相對於你今年的 3 個夢想</strong></p>
+</section>
+<section id="計畫-vs-目標--不是直線" class="level3">
+<h3>計畫 vs 目標 — 不是直線</h3>
+<p>很多人以為從「計畫」到「目標」是這條線：</p>
+<pre><code>計畫 ─────────→ 目標</code></pre>
+<p>但福哥的實際路徑長這樣：</p>
+<pre><code>計畫 → 走 → 退 ↗ → 折 ↘ → 修 → 換 ↗ → 倒退 → ↑ → 目標
+       上上下下，左左右右，前進後退</code></pre>
+<blockquote>
+<p>「<strong>每一個轉折就像代表一個禮拜。我每個禮拜都重新寫下這個禮拜的計畫，看著我的目標，不斷的修正。有一天總是會到的吧。</strong>」</p>
+</blockquote>
+<hr />
+</section>
+</section>
+<section id="hourglass_flowing_sand-祕訣-3投入時間--125-年讀博士的故事"
+class="level2">
+<h2>⏳ 祕訣 3：投入時間 — 12.5 年讀博士的故事</h2>
+<blockquote>
+<p>「<strong>寫下夢想 ≠
+自動實現。有些東西需要時間，需要你投入時間。</strong>」</p>
+</blockquote>
+<section id="125-年博士之路" class="level3">
+<h3>12.5 年博士之路</h3>
+<table>
+<thead>
+<tr>
+<th>年份</th>
+<th>事件</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>2009</strong>（39 歲）</td>
+<td>考上博士班</td>
+</tr>
+<tr>
+<td>隔年</td>
+<td>寫 50 個夢想時希望「<strong>4 年畢業</strong>」</td>
+</tr>
+<tr>
+<td>2013</td>
+<td><strong>半休學</strong>（生了第一個孩子，又有事業、寫書）</td>
+</tr>
+<tr>
+<td>2015（45 歲）</td>
+<td>50 個夢想 v3 仍寫「希望完成博士」</td>
+</tr>
+<tr>
+<td><strong>2017</strong>（47 歲）</td>
+<td>簽書會被問「有沒有什麼遺憾」→ <strong>重新申請復學</strong></td>
+</tr>
+<tr>
+<td>2017-2019</td>
+<td>投入 paper 寫作</td>
+</tr>
+<tr>
+<td>2020</td>
+<td>疫情、paper 投國際期刊</td>
+</tr>
+<tr>
+<td>期刊 6 個月後回信</td>
+<td><strong>「審查委員消失了」</strong>（不敢繼續問為什麼）→ 重來</td>
+</tr>
+<tr>
+<td>2020-2021</td>
+<td>重投、煎熬</td>
+</tr>
+<tr>
+<td><strong>2022</strong>（52 歲）</td>
+<td><strong>終於畢業！</strong></td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>「<strong>12.5 年讀博士 — 因為男生也有育嬰假，我有兩個孩子可以扣 5
+年，再加 7 年、再一年特殊貢獻休學，12.5 年這樣子。</strong>」</p>
+</blockquote>
+</section>
+<section id="為什麼這麼堅持" class="level3">
+<h3>為什麼這麼堅持？</h3>
+<blockquote>
+<p>「拿到學位對我有什麼幫助嗎？<strong>沒有</strong>。我是企業講師，不需要學位。」</p>
+<p>「我為什麼這麼堅持？<strong>因為我是為了幫助更多的人</strong>。」</p>
+</blockquote>
+<p>讀博士期間做了什麼研究：</p>
+<ul>
+<li><strong>教學的技術</strong>（書 + 線上課程）</li>
+<li><strong>遊戲化教學的技術</strong>（論文獲國際引用前 1%
+得獎、英文書出版）</li>
+<li>影響很多大學老師、師培演講</li>
+<li>影響一個老師 = 影響更多學生</li>
+</ul>
+</section>
+<section id="撐不下去的時候做兩件事" class="level3">
+<h3>撐不下去的時候做兩件事</h3>
+<section id="方法-1祈禱拜拜" class="level4">
+<h4>方法 1：祈禱拜拜</h4>
+<blockquote>
+<p>「**我在大佛前面這樣告訴你 —
+我會祈禱拜拜。**我覺得很多時候，<strong>承認有比你更高的神佛</strong>，對你是一個很大的支持。」</p>
+<p>「我總是告訴上天的長輩們：『<strong>我讀學位不是為了我自己，我是希望可以幫助別人。我希望得到力量支持</strong>。』」</p>
+</blockquote>
+</section>
+<section id="方法-2每天寫下昨天做的最好的-3-件事" class="level4">
+<h4>方法 2：每天寫下「昨天做的最好的 3 件事」</h4>
+<blockquote>
+<p>「<strong>在沒有任何人鼓勵你的時候，你應該鼓勵你自己。方法很簡單：每天寫下你昨天最好的
+3 件事情。每個人總是有最好的 3 件事情。</strong>」</p>
+</blockquote>
+</section>
+<section id="福哥當場示範" class="level4">
+<h4>福哥當場示範</h4>
+<blockquote>
+<p>昨天最好的第一件事情：我來聽好哥的演講
+昨天最好的第二件事情：花很多時間準備今天的簡報
+昨天最好的第三件事情：帶我女兒去吃飯</p>
+</blockquote>
+<p>→ 就這樣。</p>
+<hr />
+</section>
+</section>
+</section>
+</section>
+<section id="part-3--3-個小提醒給想實踐的你" class="level1">
+<h1>Part 3 — 3 個小提醒（給想實踐的你）</h1>
+<p>福哥預先知道大家聽完會說「<strong>可是…</strong>」，所以準備了 3
+個對應的提醒。</p>
+<section id="muscle-提醒-1可是我不敢-學潛水的故事" class="level2">
+<h2>💪 提醒 1：「可是我不敢」→ 學潛水的故事</h2>
+<section id="第一次潛水" class="level3">
+<h3>第一次潛水</h3>
+<p>第一次潛水照片裡，福哥比了「<strong>讚</strong>」的手勢。</p>
+<blockquote>
+<p>「<strong>那不是讚！那是『我要上去！』</strong> —
+我快沒氣了！如果你以後在水裡面看到人家比這樣，不是讚 —
+旁邊教練就把他拉上去了。」</p>
+</blockquote>
+<p>第一次上來，眼鏡進水、快窒息、教練問：</p>
+<blockquote>
+<p>教練：「福哥，<strong>你還要下去嗎？</strong>」</p>
+</blockquote>
+<p>福哥第一個感覺：「<strong>我才不要。</strong>」</p>
+<blockquote>
+<p>「可是當我說『不下去』的時候，我知道接下來會發生什麼事 —
+我只要一想到潛水，這個記憶就會留在我身上一輩子。我就會知道我其實是害怕水的，我會記得我的恐慌。」</p>
+</blockquote>
+<p>於是福哥跟教練說：</p>
+<blockquote>
+<p>「<strong>我要下去。而且不只我要下去 —
+我要報名潛水課程，我現在就要報名。</strong>」</p>
+</blockquote>
+</section>
+<section id="3-年的潛水課程進階" class="level3">
+<h3>3 年的潛水課程進階</h3>
+<pre><code>初階潛水課程 → 覺得上得不太好
+       ↓
+進階潛水課程 → 試著多嘗試幾次
+       ↓
+救援潛水課程 → 還是有點害怕
+       ↓
+潛水長課程 → 3 年下來
+       ↓
+✅ 變成在水裡可以「比讚（真的讚）」的人</code></pre>
+</section>
+<section id="福哥對勇氣的重新定義" class="level3">
+<h3>福哥對勇氣的重新定義</h3>
+<blockquote>
+<p>「<strong>很多人對勇氣有一個錯誤的定義 —
+以為勇氣就是不會害怕。</strong></p>
+<p><strong>不是的。真正的勇氣是 —
+在害怕的時候，你依然會勇敢前進。你知道害怕，但是你還會勇敢前進。那才叫做勇氣。</strong>」</p>
+</blockquote>
+<blockquote>
+<p>「因為我不想要被恐懼支配。」</p>
+</blockquote>
+<hr />
+</section>
+</section>
+<section id="alarm_clock-提醒-2可是現在太遲了-帶媽媽回日本的故事"
+class="level2">
+<h2>⏰ 提醒 2：「可是現在太遲了」→ 帶媽媽回日本的故事</h2>
+<section id="媽媽的故事" class="level3">
+<h3>媽媽的故事</h3>
+<table>
+<thead>
+<tr>
+<th>年代</th>
+<th>事件</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>—</td>
+<td>媽媽<strong>在日本出生</strong>（外公外婆在日本經商）</td>
+</tr>
+<tr>
+<td>—</td>
+<td>外公在日本過世</td>
+</tr>
+<tr>
+<td>媽媽 <strong>12 歲</strong></td>
+<td>外婆帶媽媽來台灣</td>
+</tr>
+<tr>
+<td><strong>70 年後</strong></td>
+<td>媽媽 82 歲，福哥 50 多歲</td>
+</tr>
+</tbody>
+</table>
+<p>福哥從 2010、2015 年的 50
+個夢想都寫著「<strong>帶媽媽回日本</strong>」。</p>
+<p>但媽媽生病、體能差、COVID-19、護照過期 —
+一件<strong>很簡單的事情，卻有很多波折</strong>。</p>
+</section>
+<section id="去年2025的對話" class="level3">
+<h3>去年（2025）的對話</h3>
+<blockquote>
+<p>福哥：「<strong>媽，我現在帶你去日本好不好？</strong>」
+媽媽：「我已經很老了，沒辦法走路了。」 福哥：「沒關係。護照呢？」
+媽媽：「護照過期了。」 福哥：「<strong>沒關係，我去處理。</strong>」</p>
+</blockquote>
+<p>→ 結果：<strong>真的帶媽媽回日本了</strong>。媽媽出生的地方，日文叫
+<strong>Fusei（布斯）</strong>。</p>
+<blockquote>
+<p>「事實上她對那個地方也沒有什麼印象了 — 經過 70
+年了。但是<strong>我總是實現了她一個夢想，在 84
+歲的時候</strong>。」</p>
+</blockquote>
+</section>
+<section id="其他沒有太晚的例子" class="level3">
+<h3>其他「沒有太晚」的例子</h3>
+<table>
+<thead>
+<tr>
+<th>案例</th>
+<th>中斷</th>
+<th>重啟</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>合氣道黑帶</strong></td>
+<td>1999 年要考試遇到 <strong>921 大地震</strong> → 取消</td>
+<td><strong>20 年後</strong>重新拿到</td>
+</tr>
+<tr>
+<td><strong>空手道</strong></td>
+<td>—</td>
+<td><strong>56 歲還在練（每週一天）</strong></td>
+</tr>
+<tr>
+<td><strong>鐵人三項</strong></td>
+<td>—</td>
+<td>這幾年比了 <strong>9 場</strong></td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>「<strong>沒有太晚實現的夢想 — 只要你想，沒有太晚。</strong>」</p>
+</blockquote>
+<hr />
+</section>
+</section>
+<section id="thinking-提醒-3可是我還有很多可是-但這是你的夢想"
+class="level2">
+<h2>🤔 提醒 3：「可是我還有很多可是」→ 但這是你的夢想</h2>
+<p>福哥語氣堅定：</p>
+<blockquote>
+<p>「你可不可以、可不可以<strong>可不要再可是了</strong>？<strong>是你的夢想，又不是我的夢想
+— 你可不可以？</strong>」</p>
+</blockquote>
+<blockquote>
+<p>「你總是可以找理由。但你要不要試著找一些方法，讓自己前進？」</p>
+</blockquote>
+<section id="從自己的夢想擴展到幫助別人" class="level3">
+<h3>從自己的夢想擴展到幫助別人</h3>
+<blockquote>
+<p>「我今天來這邊，不是只是要分享我怎麼實現我的夢想 —
+你知道有些夢想，其實是可以<strong>幫助別人</strong>的。」</p>
+</blockquote>
+<section id="福哥的公益夢想實現" class="level4">
+<h4>福哥的「公益夢想」實現</h4>
+<table>
+<thead>
+<tr>
+<th>時間</th>
+<th>行動</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2015 寫的夢想</td>
+<td>「我希望有公益演講」</td>
+</tr>
+<tr>
+<td>今天</td>
+<td><strong>今天演講的所有講師費全部回捐給佛光山</strong></td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>「<strong>這是我的福分 —
+能夠跟大家分享、站在大佛前面演講。</strong>」</p>
+</blockquote>
+</section>
+</section>
+<section id="星雲法師說的從己願到他願" class="level3">
+<h3>星雲法師說的「從己願到他願」</h3>
+<blockquote>
+<p>「我們總是從小小的願望開始，然後慢慢的讓這個願望可以擴展到別人 —
+<strong>從己願到他願，從小的願望到大的願望</strong>。這是星雲法師說的。」</p>
+</blockquote>
+<hr />
+</section>
+</section>
+</section>
+<section id="part-4--給三個年齡層的話結尾" class="level1">
+<h1>Part 4 — 給三個年齡層的話（結尾）</h1>
+<section id="child-對年輕人" class="level2">
+<h2>🧒 對年輕人</h2>
+<blockquote>
+<p>「你要<strong>相信自己有很多的可能性</strong>。不管你現在喜不喜歡讀書，你還是有很多成長的可能性。</p>
+<p><strong>Uncle 以前沒讀過大學，現在是資訊管理博士。對年輕的朋友 —
+你有無限的可能性。</strong>」</p>
+</blockquote>
+</section>
+<section id="man-對中年人" class="level2">
+<h2>👨 對中年人</h2>
+<blockquote>
+<p>「<strong>如果你是中年的朋友 — 像我那個時候那麼胖、人生不如意 —
+你的感覺我清楚，我也懂，真心的。</strong></p>
+<p><strong>給自己一些勇氣、一些堅持。需要的時候尋求老天或朋友的幫助。堅持下去。</strong></p>
+<p><strong>一切都會過去的。一切都會過去的。</strong>」</p>
+</blockquote>
+</section>
+<section id="older_man-對-50-60-歲的人" class="level2">
+<h2>👴 對 50-60 歲的人</h2>
+<blockquote>
+<p>「<strong>我們還有很多可能性。沒有什麼叫太晚。</strong></p>
+<p>我現在每個禮拜都還去練一天空手道。這幾年我比了 9
+場鐵人三項。<strong>我們總是有更多、無限的可能。</strong>」</p>
+</blockquote>
+<hr />
+</section>
+<section id="gift-25-年前的兩句話最後" class="level2">
+<h2>🎁 25 年前的兩句話（最後）</h2>
+<p>福哥回去看 25 年前手寫的 50 個夢想，發現最上面寫了兩句話：</p>
+<blockquote>
+<p>「<strong>我希望自己越變越好的目的，是希望讓這個世界因為我而有機會變得更好。</strong>」</p>
+</blockquote>
+<blockquote>
+<p>「<strong>寫下你的夢想，實現你的夢想。</strong>」</p>
+</blockquote>
+<hr />
+</section>
+</section>
+<section id="star2-福哥的女兒們也在寫" class="level1">
+<h1>🌟 福哥的女兒們也在寫</h1>
+<blockquote>
+<p>「我現在也帶著我的女兒在寫她們的人生的 50 個夢想 — 一個 14 歲、一個
+12 歲。</p>
+<p>我用了一個方法：<strong>我說你們如果寫 50 個夢想，爸爸就給你們 500
+塊</strong>。</p>
+<p>有人說『你這樣不太好吧』。我覺得 — 如果可以用 500 塊讓我女兒有 50
+個夢想，一個價值 10
+塊錢，應該還可以吧？<strong>而且每一年更新，我還會重新給
+500。</strong>」</p>
+</blockquote>
+<hr />
+</section>
+<section id="clipboard-全篇精華速查表" class="level1">
+<h1>📋 全篇精華速查表</h1>
+<section id="key-3-個祕訣" class="level2">
+<h2>🔑 3 個祕訣</h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>祕訣</th>
+<th>行動</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><strong>寫下夢想</strong></td>
+<td>50 個，過神燈巨人測試</td>
+</tr>
+<tr>
+<td>2</td>
+<td><strong>聚焦</strong></td>
+<td>一年挑 3 個，4 層結構（年/週/日/25 分）</td>
+</tr>
+<tr>
+<td>3</td>
+<td><strong>投入時間</strong></td>
+<td>12.5 年的博士證明你需要堅持</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="bulb-3-個小提醒" class="level2">
+<h2>💡 3 個小提醒</h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>可是的想法</th>
+<th>福哥的破解</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>「我不敢」</td>
+<td>真正的勇氣是<strong>害怕的時候依然勇敢前進</strong>（學潛水 3
+年）</td>
+</tr>
+<tr>
+<td>2</td>
+<td>「現在太遲了」</td>
+<td><strong>沒有太晚實現的夢想</strong>（媽媽 84 歲回日本、921 後 20
+年拿合氣道黑帶）</td>
+</tr>
+<tr>
+<td>3</td>
+<td>「還有很多可是」</td>
+<td><strong>是你的夢想又不是我的</strong> — 從己願擴展到他願</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="dart-撐不下去時做兩件事" class="level2">
+<h2>🎯 撐不下去時做兩件事</h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>方法</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><strong>祈禱拜拜</strong>（承認有更高的力量，求支持）</td>
+</tr>
+<tr>
+<td>2</td>
+<td><strong>每天寫下昨天做的最好的 3 件事</strong>（自我鼓勵）</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="triangular_ruler-4-層聚焦結構" class="level2">
+<h2>📐 4 層聚焦結構</h2>
+<pre><code>每年 → 3 個夢想
+  ↓
+每週 → 白板寫這禮拜要做什麼
+  ↓
+每天 → 便利貼：左邊「重要」/ 右邊「次重要」
+  ↓
+每 25 分鐘 → 計時器（番茄鐘）</code></pre>
+</section>
+<section id="gem-核心金句" class="level2">
+<h2>💎 核心金句</h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>金句</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><strong>「我們常常高估了一年的改變，但卻低估了十年的成就。」</strong></td>
+</tr>
+<tr>
+<td>2</td>
+<td><strong>「真正的勇氣不是不害怕 —
+是在害怕的時候依然勇敢前進。」</strong></td>
+</tr>
+<tr>
+<td>3</td>
+<td><strong>「沒有太晚實現的夢想 — 只要你想，沒有太晚。」</strong></td>
+</tr>
+<tr>
+<td>4</td>
+<td><strong>「夢想（願）就是給你一個方向、前進的動力 —
+他說不定不會馬上達成，但他總是一個方向。」</strong></td>
+</tr>
+<tr>
+<td>5</td>
+<td><strong>「在沒有任何人鼓勵你的時候，你應該鼓勵你自己 —
+每天寫下昨天最好的 3 件事。」</strong></td>
+</tr>
+<tr>
+<td>6</td>
+<td><strong>「你的夢想可能是別人的日常 —
+你不知道你已經實現了多少別人心裡的夢想。」</strong></td>
+</tr>
+<tr>
+<td>7</td>
+<td><strong>「我希望自己越變越好的目的，是希望讓這個世界因為我而有機會變得更好。」</strong></td>
+</tr>
+</tbody>
+</table>
+<hr />
+</section>
+</section>
+<section id="pray-結尾儀式" class="level1">
+<h1>🙏 結尾儀式</h1>
+<p>演講結束後：</p>
+<ul>
+<li>福光山中區總住持絕居法師致贈結緣品</li>
+<li>粉絲獻花</li>
+<li><strong>福哥的媽媽親自上台為他獻花</strong>（從三癌診斷到 84
+歲健在）</li>
+</ul>
+<p>主持人總結：</p>
+<blockquote>
+<p>「福哥今天用他自己的親身經歷跟我們分享他人生在最低潮的時候，仍保有夢想、給自己機會跟挑戰、激勵自己給一些勇氣跟堅持，人生就會充滿希望。<strong>天下沒有不可能的事情</strong>。」</p>
+</blockquote>
+<hr />
+<section id="pencil-完整時間軸一頁速覽" class="level2">
+<h2>📝 完整時間軸（一頁速覽）</h2>
+<pre><code>1995  25 歲  工地主任第 5 年，問自己未來
+            ↓ 想了 1 年要不要轉行
+1996  26 歲  兼職保險 10 個月
+1997  27 歲  全職保險
+1999  29 歲  五子登科 + 第一次寫下 5 個夢想
+2000  30 歲  第一次寫夢想（業務培訓觸發）
+2001  31 歲  ✅ 學薩克斯風 / ✅ 華盛頓尖塔
+2004  34 歲  ✅ 朝陽 EMBA
+2005  35 歲  探索天賦
+2006  36 歲  ✅ 成立企管顧問公司，成為講師
+2009  39 歲  ✅ 考上博士班 / 出第一本電腦書
+2010  40 歲  🌧️ 最低潮（媽媽三癌、女友離開、車被偷、狗死、業績差、鬼剃頭）
+            ↓ 大雪山雪後下山
+            ✏️ 重寫 50 個夢想 v2
+2011  41 歲  女友回來、結婚
+2012  42 歲  ✅ 大女兒出生
+2013  43 歲  ✅ 出第一本簡報書 / 半休學博士班
+2014  44 歲  ✅ 上商業週刊 / 小女兒出生
+2015  45 歲  ✏️ 50 個夢想 v3（博士、大房、出國、財富、公益）
+2017  47 歲  ✅ 復學博士班
+2019  49 歲  挑 5 個 50 歲前完成
+2020  50 歲  ✅ 線上課程 / ✅ 出書 / ✅ 合氣道黑帶 / ✅ 鐵人 113
+2022  52 歲  ✅ 博士畢業（12.5 年）
+2024  54 歲  ✅ 帶媽媽回日本（媽媽 12 歲離日，70 年後回去）
+2025  55 歲  全家美國半年遊學 / 論文獲國際前 1% 引用
+2026  56 歲  今天在佛光山慧中寺演講，講師費全捐
+            女兒（14 + 12 歲）也開始寫自己的 50 個夢想</code></pre>
+<hr />
+</section>
+<section id="dart-福哥給你的功課" class="level2">
+<h2>🎯 福哥給你的功課</h2>
+<blockquote>
+<p>「<strong>請你答應我一件事 — 回去想辦法寫下你的 50
+個夢想，好嗎？</strong></p>
+<p><strong>你答應過的喔。不容易喔。先不要管完不完成，自己寫也不用給我看。你自己想辦法寫下
+50 個夢想。</strong>」</p>
+</blockquote>
+<p>加碼：</p>
+<blockquote>
+<p>「<strong>如果你寫下夢想或達成夢想，歡迎你跟我分享。如果你跟我分享，我會視為是一個禮物。</strong>」</p>
+</blockquote>
+<hr />
+<p><em>本文由助理依王永福於佛光山慧中寺 2026/6/2 LIVE 演講之 whisper
+ASR（large-v3-turbo）逐字稿（2,337 行 / 57 KB / 1 小時 41
+分鐘）整理為繁中結構化講稿。已修正簡轉繁、補上脈絡、整理 3 大祕訣 + 3
+小提醒 + 完整時間軸。產出日期：2026-06-07。原講座為《佛光山慧中寺 2026
+未來與希望系列講座》第四場。</em></p>
+</section>
+</section>
+<footer class="note">
+原片 王永福《人生的 50 個夢想 — 願力所致，夢想終至》<br>
+佛光山慧中寺 2026 未來與希望系列講座第四場 · 2026/6/2 LIVE · 1 小時 41 分<br>
+本繁中講稿由盧醫師助理依 whisper ASR（large-v3-turbo）整理 · 產出時間 2026-06-07
+</footer>
+</article>
+</div></body></html>
