@@ -1259,5 +1259,19 @@ Stormio。內容已對技術名詞、操作步驟、推薦數值做交叉驗證�
 </footer>
 </article>
 </div>
+<!-- toc-mobile-collapse -->
+<script>
+(function(){
+  if(!window.matchMedia('(max-width:899px)').matches) return;
+  var nav=document.querySelector('nav.toc'); if(!nav) return;
+  var h=nav.querySelector('h2'), list=nav.querySelector('ul');
+  if(!h||!list) return;
+  h.style.cursor='pointer'; h.setAttribute('role','button');
+  var base=h.textContent.trim();
+  function set(open){ list.style.display=open?'':'none'; h.textContent=base+(open?'  ▲':'  ▼'); }
+  set(false);
+  h.addEventListener('click',function(){ set(list.style.display==='none'); });
+})();
+</script>
 </body>
 </html>

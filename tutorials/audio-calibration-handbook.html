@@ -1587,4 +1587,18 @@ min），由助理依逐字稿翻譯整理為繁中結構化教材。產出日�
 本繁中講義為盧醫師助理依逐字稿整理 · 產出時間 2026-06-07
 </footer>
 </article>
-</div></body></html>
+</div><!-- toc-mobile-collapse -->
+<script>
+(function(){
+  if(!window.matchMedia('(max-width:899px)').matches) return;
+  var nav=document.querySelector('nav.toc'); if(!nav) return;
+  var h=nav.querySelector('h2'), list=nav.querySelector('ul');
+  if(!h||!list) return;
+  h.style.cursor='pointer'; h.setAttribute('role','button');
+  var base=h.textContent.trim();
+  function set(open){ list.style.display=open?'':'none'; h.textContent=base+(open?'  ▲':'  ▼'); }
+  set(false);
+  h.addEventListener('click',function(){ set(list.style.display==='none'); });
+})();
+</script>
+</body></html>
