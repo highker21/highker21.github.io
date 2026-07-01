@@ -9,8 +9,7 @@
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 body{margin:0;font-family:-apple-system,"PingFang TC","Noto Sans TC",system-ui,sans-serif;background:var(--bg);color:var(--ink);font-size:16px;line-height:1.55}
 header{background:var(--brand);color:#fff;padding:16px 16px 14px}
-h1{font-size:20px;margin:0}
-.sub{font-size:12.5px;opacity:.9;margin-top:3px}
+h1{font-size:20px;margin:0}.sub{font-size:12.5px;opacity:.9;margin-top:3px}
 .wrap{max-width:760px;margin:0 auto;padding:14px}
 .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px;margin:12px 0;box-shadow:0 1px 2px rgba(0,0,0,.03)}
 .card h2{font-size:16px;margin:0 0 10px;color:var(--brand)}
@@ -18,32 +17,25 @@ label{font-size:13px;color:var(--sub);display:block;margin:8px 0 3px}
 select,input{width:100%;padding:10px;font-size:16px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink)}
 .row{display:flex;gap:10px}.row>div{flex:1}
 .hide{display:none}
-.ome{text-align:center;padding:10px 0}
-.ome .big{font-size:34px;font-weight:800;color:var(--brand)}
-.ome .u{font-size:14px;color:var(--sub)}
+.ome{text-align:center;padding:10px 0}.ome .big{font-size:34px;font-weight:800;color:var(--brand)}.ome .u{font-size:14px;color:var(--sub)}
 table{width:100%;border-collapse:collapse;margin-top:6px;font-size:14.5px}
 th,td{border-bottom:1px solid var(--line);padding:9px 6px;text-align:left}
 th{color:var(--sub);font-weight:600;font-size:12.5px}
 td.d{font-weight:700;color:var(--brand);white-space:nowrap}
 .pill{display:inline-block;font-size:11px;padding:1px 7px;border-radius:8px;background:#fbeaea;color:var(--warn);margin-left:6px}
-.rowsel{display:flex;align-items:center;gap:10px;margin:8px 0}
-.rowsel input[type=range]{flex:1}
+.rowsel{display:flex;align-items:center;gap:10px;margin:8px 0}.rowsel input[type=range]{flex:1}
 .note{font-size:12.5px;color:var(--sub);margin-top:8px}
-.disc{background:#fff8f0;border:1px solid #f0d9b8;border-radius:10px;padding:12px;font-size:13px;color:#7a4a10}
-.disc b{color:var(--warn)}
-.factors{font-size:12.5px;color:var(--sub)}
-.factors td{padding:5px 6px}
+.disc{background:#fff8f0;border:1px solid #f0d9b8;border-radius:10px;padding:12px;font-size:13px;color:#7a4a10}.disc b{color:var(--warn)}
+.factors{font-size:12.5px;color:var(--sub)}.factors td{padding:5px 6px}
 footer{font-size:11px;color:var(--sub);text-align:center;padding:16px 14px 28px;line-height:1.7}
 .warnbox{background:#fdecea;border:1px solid #f5b7b1;color:#922;border-radius:8px;padding:8px 10px;font-size:13px;margin-top:8px}
 </style>
 </head>
 <body>
-<header>
-<div class="wrap" style="padding:0">
+<header><div class="wrap" style="padding:0">
 <h1>類鴉片劑量換算計算機</h1>
-<div class="sub">以「口服嗎啡當量（Oral Morphine Equivalent, OME）」為基準　·　tramadol／oxycodone／morphine／fentanyl</div>
-</div>
-</header>
+<div class="sub">以「口服嗎啡當量（Oral Morphine Equivalent, OME）」為基準　·　morphine／oxycodone／hydromorphone／tramadol／codeine／fentanyl／buprenorphine</div>
+</div></header>
 <div class="wrap">
 
 <div class="card">
@@ -52,145 +44,129 @@ footer{font-size:11px;color:var(--sub);text-align:center;padding:16px 14px 28px;
   <select id="drug">
     <option value="morphine">Morphine 嗎啡</option>
     <option value="oxycodone">Oxycodone 羥考酮</option>
+    <option value="hydromorphone">Hydromorphone 二氫嗎啡酮</option>
     <option value="tramadol">Tramadol 曲馬多</option>
+    <option value="codeine">Codeine 可待因</option>
     <option value="fentanyl">Fentanyl 吩坦尼</option>
+    <option value="buprenorphine">Buprenorphine 丁基原啡因</option>
   </select>
   <div id="oralBlock">
     <div class="row">
-      <div>
-        <label>途徑</label>
-        <select id="route"><option value="po">口服 PO</option><option value="iv">針劑 IV／SC</option></select>
-      </div>
-      <div>
-        <label id="doseLbl">單次劑量（mg）</label>
-        <input id="dose" type="number" inputmode="decimal" min="0" step="0.5" value="10">
-      </div>
-      <div>
-        <label>每日次數</label>
-        <input id="freq" type="number" inputmode="numeric" min="1" step="1" value="4">
-      </div>
+      <div><label>途徑</label><select id="route"></select></div>
+      <div><label>單次劑量（mg）</label><input id="dose" type="number" inputmode="decimal" min="0" step="0.5" value="10"></div>
+      <div><label>每日次數</label><input id="freq" type="number" inputmode="numeric" min="1" step="1" value="4"></div>
     </div>
   </div>
   <div id="fentBlock" class="hide">
     <label>Fentanyl 劑型</label>
     <select id="fentRoute"><option value="td">穿皮貼片（mcg/hr）</option><option value="iv">針劑 IV 連續輸注（mcg/hr）</option></select>
-    <div id="fentTd">
-      <label>貼片劑量（mcg/hr，每 72 小時更換）</label>
-      <select id="fentDose"><option>12</option><option selected>25</option><option>50</option><option>75</option><option>100</option></select>
-    </div>
-    <div id="fentIv" class="hide">
-      <label>IV 連續輸注速率（mcg/hr）</label>
+    <div id="fentTd"><label>貼片劑量（mcg/hr，每 72 小時更換）</label>
+      <select id="fentDose"><option>12</option><option selected>25</option><option>50</option><option>75</option><option>100</option></select></div>
+    <div id="fentIv" class="hide"><label>IV 連續輸注速率（mcg/hr）</label>
       <input id="fentIvDose" type="number" inputmode="decimal" min="0" step="1" value="25">
-      <div class="note">⚠️ 穿皮 25 mcg/hr 與 IV 25 mcg/hr <b>不等值</b>（IV 是純藥理 100:1，換算值約為貼片的 3 倍）。IV fentanyl 常用於 ICU／PCA。</div>
-    </div>
+      <div class="note">⚠️ 穿皮 25 mcg/hr 與 IV 25 mcg/hr <b>不等值</b>（IV 純藥理 100:1，約為貼片 3 倍）。</div></div>
+  </div>
+  <div id="bupBlock" class="hide">
+    <label>Buprenorphine 穿皮貼片（mcg/hr）</label>
+    <input id="bupDose" type="number" inputmode="decimal" min="0" step="1" value="10">
+    <div class="warnbox">⚠️ Buprenorphine 是<b>部分致效劑</b>、有天花板效應、與其他類鴉片換算<b>高度不可靠</b>（CDC 已將其排除於 MME 計算）。本工具數字僅粗估，<b>務必由疼痛/緩和專科以誘導protocol處理</b>，避免 precipitated withdrawal。</div>
   </div>
   <div id="routeWarn" class="warnbox hide"></div>
 </div>
 
-<div class="card">
-  <h2>② 口服嗎啡當量（OME）</h2>
-  <div class="ome"><span class="big" id="omeVal">—</span> <span class="u">mg 口服嗎啡／日</span></div>
-</div>
+<div class="card"><h2>② 口服嗎啡當量（OME）</h2>
+  <div class="ome"><span class="big" id="omeVal">—</span> <span class="u">mg 口服嗎啡／日</span></div></div>
 
 <div class="card">
   <h2>③ 換算為其他藥物（每日總量）</h2>
-  <div class="rowsel">
-    <label style="margin:0">輪替新藥物 → 起始下修</label>
-    <input id="red" type="range" min="0" max="50" step="5" value="33">
-    <b id="redVal" style="color:var(--warn);min-width:42px;text-align:right">33%</b>
-  </div>
+  <div class="rowsel"><label style="margin:0">輪替新藥物 → 起始下修</label>
+    <input id="red" type="range" min="0" max="50" step="5" value="33"><b id="redVal" style="color:var(--warn);min-width:42px;text-align:right">33%</b></div>
   <div class="note">換到「不同的」類鴉片時，因<b>不完全交叉耐受性</b>，建議先下修 25–50% 再依反應調整；同藥換途徑可設 0%。</div>
-  <table>
-    <thead><tr><th>藥物／途徑</th><th>等效劑量</th><th>下修後起始</th></tr></thead>
-    <tbody id="out"></tbody>
-  </table>
+  <table><thead><tr><th>藥物／途徑</th><th>等效劑量</th><th>下修後起始</th></tr></thead><tbody id="out"></tbody></table>
 </div>
 
-<div class="card">
-  <h2>換算比值（透明列出）</h2>
+<div class="card"><h2>換算比值（透明列出，對口服嗎啡）</h2>
   <table class="factors">
     <tr><td>口服 Morphine</td><td>×1（基準）</td></tr>
-    <tr><td>針劑 Morphine（IV/SC）</td><td>口服 : 針劑 = 3 : 1</td></tr>
-    <tr><td>口服 Oxycodone</td><td>oxycodone : morphine = 1 : 1.5</td></tr>
-    <tr><td>口服 Tramadol</td><td>tramadol : morphine ≈ 10 : 1（保守；上限約 400 mg/日）</td></tr>
-    <tr><td>穿皮 Fentanyl（貼片）</td><td>25 mcg/hr ≈ 60 mg 口服嗎啡/日（×2.4）</td></tr>
-    <tr><td>針劑 Fentanyl（IV 輸注）</td><td>1 mg 針劑 fentanyl ≈ 100 mg 針劑 morphine（100:1）→ mcg/hr ×7.2 = OME/日</td></tr>
+    <tr><td>針劑 Morphine（IV/SC）</td><td>口服:針劑 = 3:1</td></tr>
+    <tr><td>口服 Oxycodone</td><td>oxycodone:morphine = 1:1.5</td></tr>
+    <tr><td>口服 Hydromorphone</td><td>×4（HM 7.5mg PO ≈ morphine 30mg PO）</td></tr>
+    <tr><td>針劑 Hydromorphone（IV/SC）</td><td>×20（HM 1.5mg IV ≈ morphine 10mg IV）</td></tr>
+    <tr><td>口服 Tramadol</td><td>≈10:1（保守；上限約 400 mg/日）</td></tr>
+    <tr><td>口服 Codeine</td><td>×0.15（上限約 360 mg/日；受 CYP2D6 影響大）</td></tr>
+    <tr><td>穿皮 Fentanyl（貼片）</td><td>25 mcg/hr ≈ 60 mg（×2.4）</td></tr>
+    <tr><td>針劑 Fentanyl（IV 輸注）</td><td>parenteral 100:1 → mcg/hr ×7.2</td></tr>
+    <tr><td>穿皮 Buprenorphine</td><td>粗估 ×2/mcg-hr（部分致效劑，僅參考）</td></tr>
   </table>
-  <div class="note">比值各家指引略有差異（如 tramadol 5–10:1；fentanyl 個體差異尤大）；本工具取常用之保守臨床等效值，非唯一標準。</div>
+  <div class="note">比值各家指引略有差異；fentanyl／buprenorphine 個體差異尤大。本工具取常用之保守臨床等效值，非唯一標準。</div>
 </div>
 
 <div class="card disc">
   <b>⚠️ 重要聲明</b>：本工具僅供<b>臨床參考</b>，換算結果<b>不是</b>直接處方建議。<br>
-  · 等效比值僅為估計，個別差異大；<b>opioid-naive、高齡、肝腎功能不全、共用鎮靜劑</b>者應更保守。<br>
+  · 等效比值僅為估計、個別差異大；<b>opioid-naive、高齡、肝腎功能不全、共用鎮靜劑</b>者應更保守。<br>
   · 換到不同類鴉片務必依「不完全交叉耐受性」<b>下修 25–50%</b>並密切監測。<br>
-  · <b>Fentanyl 個體變異最大</b>；穿皮貼片與 IV 輸注同 mcg/hr <b>不等值</b>；<b>IV fentanyl 換算尤其不可靠</b>，急性/ICU 情境與慢性疼痛不同，建議由疼痛/緩和專科保守處理。<br>
-  · <b>不適用 methadone</b>（藥動學特殊，需專科換算）。<br>
+  · <b>Fentanyl 與 Buprenorphine 個體變異最大</b>；穿皮與 IV 同 mcg/hr 不等值；<b>IV fentanyl、buprenorphine 換算尤其不可靠</b>，建議疼痛/緩和專科保守處理。<br>
+  · <b>Codeine</b> 效果受 CYP2D6 基因型影響大（超快代謝者風險高）；<b>不適用 methadone</b>。<br>
   · 一切以主治醫師臨床判斷與最新藥品仿單/指引為準。
 </div>
-
 </div>
 <footer>
-換算基準：口服嗎啡當量（OME/MME）等效鎮痛表（緩和醫療常用臨床等效值＋parenteral fentanyl 100:1）；不完全交叉耐受性下修 25–50%（多數指引共識）。<br>
+換算基準：口服嗎啡當量（OME/MME）等效鎮痛表（CDC MME 因子＋緩和醫療常用臨床等效值；parenteral fentanyl 100:1）；不完全交叉耐受性下修 25–50%。<br>
 本工具為衛教/臨床輔助試算，非醫療器材、非取代醫囑。　·　工具版本：2026-07-01
 </footer>
 <script>
-const F={morphine:{po:1,iv:3},oxycodone:{po:1.5},tramadol:{po:0.1},fentTD:2.4,fentIV:7.2};
+// 各藥「對口服嗎啡」的因子；oral 類可有 po/iv 途徑
+const D={
+  morphine:{po:1,iv:3}, oxycodone:{po:1.5}, hydromorphone:{po:4,iv:20},
+  tramadol:{po:0.1,cap:400}, codeine:{po:0.15,cap:360}
+};
+const FENT={td:2.4,iv:7.2}, BUP=2;
 const $=id=>document.getElementById(id);
-function fentRound(mcghr){ // 湊出可用穿皮貼片組合（12/25/50/75/100）
-  if(mcghr<=0) return "0";
-  let rem=Math.round(mcghr), parts=[];
-  for(const s of [100,75,50,25,12]){ while(rem>=s-2){ parts.push(s); rem-=s; } }
-  if(!parts.length) parts=[12];
-  return parts.sort((a,b)=>b-a).join(" + ");
-}
+function patchRound(x){ if(x<=0)return "0"; let rem=Math.round(x),p=[]; for(const s of [100,75,50,25,12]){while(rem>=s-2){p.push(s);rem-=s;}} if(!p.length)p=[12]; return p.sort((a,b)=>b-a).join(" + ");}
 function calc(){
   const drug=$('drug').value; let ome=0;
-  if(drug==='fentanyl'){
-    if($('fentRoute').value==='iv'){ ome=(+$('fentIvDose').value||0)*F.fentIV; }
-    else{ ome=(+$('fentDose').value||0)*F.fentTD; }
-  } else {
-    const route=$('route').value, dose=+$('dose').value||0, freq=+$('freq').value||0;
-    const f=(F[drug]&&F[drug][route])!=null?F[drug][route]:(F[drug].po||1);
-    ome=dose*freq*f;
-  }
-  $('omeVal').textContent = ome? (Math.round(ome*10)/10) : '—';
-  const red=(+$('red').value)/100, k=1-red;
+  if(drug==='fentanyl'){ ome=(+ ($('fentRoute').value==='iv'?$('fentIvDose').value:$('fentDose').value)||0) * (FENT[$('fentRoute').value]); }
+  else if(drug==='buprenorphine'){ ome=(+$('bupDose').value||0)*BUP; }
+  else { const r=$('route').value,dose=+$('dose').value||0,freq=+$('freq').value||0; const f=(D[drug][r]!=null?D[drug][r]:D[drug].po); ome=dose*freq*f; }
+  $('omeVal').textContent = ome? (Math.round(ome*10)/10):'—';
+  const k=1-(+$('red').value)/100;
   const rows=[
-    ['口服 Morphine', ome, 'mg', false],
-    ['針劑 Morphine（IV/SC）', ome/3, 'mg', false],
-    ['口服 Oxycodone', ome/1.5, 'mg', false],
-    ['口服 Tramadol', ome/0.1, 'mg', ome/0.1>400],
-    ['穿皮 Fentanyl（貼片）', ome/2.4, 'patch', false],
-    ['針劑 Fentanyl（IV 輸注）', ome/7.2, 'iv', false]
+    ['口服 Morphine', ome, 'mg', 0],
+    ['針劑 Morphine（IV/SC）', ome/3, 'mg', 0],
+    ['口服 Oxycodone', ome/1.5, 'mg', 0],
+    ['口服 Hydromorphone', ome/4, 'mg', 0],
+    ['針劑 Hydromorphone（IV/SC）', ome/20, 'mg', 0],
+    ['口服 Tramadol', ome/0.1, 'mg', ome/0.1>400?'超過上限 400':0],
+    ['口服 Codeine', ome/0.15, 'mg', ome/0.15>360?'超過上限 360':0],
+    ['穿皮 Fentanyl（貼片）', ome/2.4, 'patch', 0],
+    ['針劑 Fentanyl（IV 輸注）', ome/7.2, 'iv', 0],
+    ['穿皮 Buprenorphine', ome/2, 'bup', 0]
   ];
   $('out').innerHTML = rows.map(([n,v,u,cap])=>{
-    let eq='—', rd='—';
-    if(v){
-      if(u==='patch'){ eq=Math.round(v)+' mcg/hr ('+fentRound(v)+')'; rd=fentRound(v*k)+' mcg/hr'; }
-      else if(u==='iv'){ eq=(Math.round(v*10)/10)+' mcg/hr（輸注）'; rd=(Math.round(v*k*10)/10)+' mcg/hr'; }
-      else{ eq=(Math.round(v*10)/10)+' mg/日'; rd=(Math.round(v*k*10)/10)+' mg/日'; }
-    }
-    const warn = cap? '<span class="pill">超過 tramadol 上限 400</span>':'';
-    return `<tr><td>${n}${warn}</td><td>${eq}</td><td class="d">${rd}</td></tr>`;
+    let eq='—',rd='—';
+    if(v){ if(u==='patch'){eq=Math.round(v)+' mcg/hr ('+patchRound(v)+')';rd=patchRound(v*k)+' mcg/hr';}
+      else if(u==='iv'){eq=(Math.round(v*10)/10)+' mcg/hr（輸注）';rd=(Math.round(v*k*10)/10)+' mcg/hr';}
+      else if(u==='bup'){eq=(Math.round(v*10)/10)+' mcg/hr';rd=(Math.round(v*k*10)/10)+' mcg/hr';}
+      else{eq=(Math.round(v*10)/10)+' mg/日';rd=(Math.round(v*k*10)/10)+' mg/日';} }
+    const w = cap? '<span class="pill">'+cap+'</span>':'';
+    return `<tr><td>${n}${w}</td><td>${eq}</td><td class="d">${rd}</td></tr>`;
   }).join('');
 }
 function toggle(){
-  const fent=$('drug').value==='fentanyl';
-  $('oralBlock').classList.toggle('hide',fent);
+  const drug=$('drug').value, fent=drug==='fentanyl', bup=drug==='buprenorphine', oral=!fent&&!bup;
+  $('oralBlock').classList.toggle('hide',!oral);
   $('fentBlock').classList.toggle('hide',!fent);
-  if(fent){
-    const iv=$('fentRoute').value==='iv';
-    $('fentTd').classList.toggle('hide',iv);
-    $('fentIv').classList.toggle('hide',!iv);
+  $('bupBlock').classList.toggle('hide',!bup);
+  if(oral){ // 依藥物填 途徑選項（只有 morphine/hydromorphone 有 IV）
+    const cur=$('route').value; const hasIV=D[drug].iv!=null;
+    $('route').innerHTML = '<option value="po">口服 PO</option>' + (hasIV?'<option value="iv">針劑 IV／SC</option>':'');
+    if(cur==='iv'&&hasIV)$('route').value='iv';
   }
-  const route=$('route').value, drug=$('drug').value, w=$('routeWarn');
-  if(!fent && (drug==='tramadol'||drug==='oxycodone') && route==='iv'){
-    w.textContent='注意：'+(drug==='tramadol'?'tramadol':'oxycodone')+' 針劑換算與口服不同，本工具以口服為主，針劑請改選 morphine 或洽藥師。';
-    w.classList.remove('hide');
-  } else w.classList.add('hide');
+  if(fent){ const iv=$('fentRoute').value==='iv'; $('fentTd').classList.toggle('hide',iv); $('fentIv').classList.toggle('hide',!iv); }
+  $('routeWarn').classList.add('hide');
   calc();
 }
-['drug','route','dose','freq','fentDose','fentRoute','fentIvDose'].forEach(id=>$(id).addEventListener('input',toggle));
+['drug','route','dose','freq','fentDose','fentRoute','fentIvDose','bupDose'].forEach(id=>$(id).addEventListener('input',toggle));
 $('red').addEventListener('input',()=>{$('redVal').textContent=$('red').value+'%';calc();});
 toggle();
 </script>
