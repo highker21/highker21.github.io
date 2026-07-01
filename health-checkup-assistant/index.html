@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>健檢報告小幫手（雛形示範）</title>
+<style>
+:root{
+  --brand:#4A2C7A; --brand2:#6B4AA0; --accent:#149E8E; --accent2:#0f7d70;
+  --bg:#eef0f5; --card:#fff; --ink:#20242e; --sub:#6a7280; --line:#e5e8ef;
+  --crit:#c0392b; --critbg:#fdecea; --abn:#c77a0a; --abnbg:#fdf3e3; --norm:#0d8a72; --normbg:#e6f5f0;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+body{font-family:-apple-system,"PingFang TC","Noto Sans TC",system-ui,sans-serif;background:var(--bg);color:var(--ink);font-size:15px;line-height:1.55}
+.app{max-width:480px;margin:0 auto;min-height:100vh;background:var(--bg);position:relative;box-shadow:0 0 40px rgba(0,0,0,.06)}
+.view{display:none;animation:fade .25s ease}.view.on{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+.topbar{background:linear-gradient(120deg,var(--brand),var(--brand2));color:#fff;padding:14px 16px;display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:10}
+.topbar .logo{width:30px;height:30px;border-radius:8px;background:rgba(255,255,255,.16);display:flex;align-items:center;justify-content:center;font-size:16px}
+.topbar h1{font-size:16px;margin:0;font-weight:700;flex:1}
+.topbar .who{font-size:12px;opacity:.85;text-align:right;line-height:1.3}
+.pad{padding:16px}
+.btn{display:block;width:100%;border:none;border-radius:12px;padding:14px;font-size:16px;font-weight:700;cursor:pointer;font-family:inherit}
+.btn.primary{background:var(--accent);color:#fff}.btn.primary:active{background:var(--accent2)}
+.btn.brand{background:var(--brand);color:#fff}
+.btn.ghost{background:#fff;color:var(--brand);border:1.5px solid var(--line)}
+.btn.sm{padding:10px;font-size:14px;border-radius:10px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:12px;box-shadow:0 1px 3px rgba(20,20,40,.04)}
+.chip{display:inline-block;font-size:11.5px;font-weight:700;padding:2px 9px;border-radius:20px}
+.chip.crit{background:var(--critbg);color:var(--crit)}.chip.abn{background:var(--abnbg);color:var(--abn)}.chip.norm{background:var(--normbg);color:var(--norm)}
+.muted{color:var(--sub);font-size:13px}
+.badge-ai{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:700;color:var(--brand);background:#f0ebfa;border:1px solid #e0d5f4;padding:3px 9px;border-radius:20px}
+
+/* login */
+#login{background:linear-gradient(160deg,var(--brand) 0%,#3a2361 55%,#2d1b4d 100%);min-height:100vh;padding:32px 24px;color:#fff}
+#login.on{display:flex;flex-direction:column;justify-content:center}
+#login .hero{text-align:center;margin-bottom:26px}
+#login .mark{width:72px;height:72px;border-radius:20px;background:rgba(255,255,255,.14);display:flex;align-items:center;justify-content:center;font-size:38px;margin:0 auto 16px}
+#login h2{font-size:24px;margin:0 0 6px}#login p{opacity:.82;font-size:14px;margin:0}
+#login .lcard{background:#fff;color:var(--ink);border-radius:18px;padding:20px}
+#login label{font-size:12.5px;color:var(--sub);display:block;margin:10px 0 4px}
+#login input,#login select{width:100%;padding:12px;border:1.5px solid var(--line);border-radius:10px;font-size:15px;font-family:inherit}
+.tagline{text-align:center;margin-top:18px;font-size:12px;opacity:.7}
+
+/* queue */
+.stat-row{display:flex;gap:10px;margin-bottom:14px}
+.stat{flex:1;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px;text-align:center}
+.stat .n{font-size:26px;font-weight:800;line-height:1}.stat .l{font-size:11.5px;color:var(--sub);margin-top:4px}
+.stat.crit .n{color:var(--crit)}.stat.abn .n{color:var(--abn)}.stat.tot .n{color:var(--brand)}
+.qitem{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:13px 14px;margin-bottom:10px;cursor:pointer;transition:.12s}
+.qitem:active{background:#f7f5fc}
+.qitem.done{opacity:.62}
+.avatar{width:42px;height:42px;border-radius:50%;background:#efe9fa;color:var(--brand);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:16px;flex-shrink:0}
+.qitem.crit .avatar{background:var(--critbg);color:var(--crit)}
+.qitem .qmid{flex:1;min-width:0}
+.qitem .qname{font-weight:700;font-size:15.5px}
+.qitem .qsub{font-size:12px;color:var(--sub);margin-top:2px}
+.qitem .qright{text-align:right;flex-shrink:0}
+.abn-n{font-size:12px;color:var(--sub);margin-top:5px}
+.check{color:var(--norm);font-weight:800;font-size:18px}
+
+/* detail */
+.pt-head{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:12px;display:flex;gap:12px;align-items:center}
+.steps{display:flex;gap:6px;margin-bottom:14px}
+.step{flex:1;text-align:center;font-size:11px;color:var(--sub);position:relative;padding-top:22px}
+.step::before{content:attr(data-n);position:absolute;top:0;left:50%;transform:translateX(-50%);width:20px;height:20px;border-radius:50%;background:#dfe3ec;color:#fff;font-weight:800;font-size:11px;display:flex;align-items:center;justify-content:center}
+.step.on{color:var(--brand);font-weight:700}.step.on::before{background:var(--accent)}
+.step.done::before{background:var(--brand)}
+.sec-title{display:flex;align-items:center;gap:8px;margin:2px 0 10px}
+.sec-title .bar{width:5px;height:18px;border-radius:3px;background:var(--accent)}
+.sec-title h3{font-size:15.5px;margin:0;color:var(--brand)}
+.ai-banner{display:flex;gap:10px;align-items:flex-start;background:#f0ebfa;border:1px solid #e0d5f4;border-radius:12px;padding:11px 12px;margin-bottom:12px;font-size:13px}
+.ai-banner b{color:var(--brand)}
+table.labs{width:100%;border-collapse:collapse;font-size:13px}
+table.labs th{font-size:11px;color:var(--sub);text-align:left;padding:6px 4px;font-weight:600;border-bottom:1px solid var(--line)}
+table.labs td{padding:8px 4px;border-bottom:1px solid #f0f2f7;vertical-align:middle}
+tr.grp td{background:#f6f4fb;color:var(--brand);font-weight:700;font-size:12px;padding:5px 8px}
+.val{font-weight:700}
+tr.flag-crit .val{color:var(--crit)}tr.flag-high .val,tr.flag-low .val{color:var(--abn)}
+.trend{font-size:12px;color:var(--sub);white-space:nowrap}
+.trend .up,.trend .down{color:#8b90a0}
+.ref{color:var(--sub);font-size:11.5px}
+.editbox{width:100%;border:1.5px solid #e0d5f4;border-radius:12px;padding:12px;font-size:14px;font-family:inherit;line-height:1.65;color:var(--ink);background:#fdfcff;resize:vertical}
+.editbox:focus{outline:none;border-color:var(--accent)}
+.editlabel{display:flex;justify-content:space-between;align-items:center;margin-bottom:7px}
+.hitl{display:flex;gap:8px;align-items:center;background:var(--normbg);border:1px solid #bfe6db;border-radius:10px;padding:9px 11px;font-size:12.5px;color:#0a6b58;margin:12px 0}
+.btn-row{display:flex;gap:10px;margin-top:6px}
+.btn-row .btn{margin:0}
+
+/* done */
+#done{text-align:center;padding:60px 26px}
+#done .big{width:92px;height:92px;border-radius:50%;background:var(--normbg);color:var(--norm);font-size:52px;display:flex;align-items:center;justify-content:center;margin:0 auto 22px}
+#done h2{font-size:22px;margin:0 0 8px}
+.foot{text-align:center;font-size:11px;color:var(--sub);padding:20px 16px 32px;line-height:1.7}
+.backlink{display:inline-flex;align-items:center;gap:5px;color:var(--brand);font-weight:700;font-size:14px;background:none;border:none;cursor:pointer;padding:8px 0;font-family:inherit}
+.pill-note{font-size:11px;background:#fff6e6;color:#8a6100;border:1px solid #f0dca8;border-radius:8px;padding:6px 10px;margin-bottom:12px;text-align:center}
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- ===== LOGIN ===== -->
+<section id="login" class="view on">
+  <div class="hero">
+    <div class="mark">🩺</div>
+    <h2>健檢報告小幫手</h2>
+    <p>讓 AI 先讀懂報告，把時間留給醫師的判斷</p>
+  </div>
+  <div class="lcard">
+    <div style="font-weight:700;margin-bottom:2px">健檢中心醫師登入</div>
+    <div class="muted" style="font-size:12px">高雄醫學大學附設中和紀念醫院 · 健康管理中心</div>
+    <label>醫師</label>
+    <select id="docName"><option>王〇華 醫師</option><option>李〇明 醫師</option><option>陳〇如 醫師</option></select>
+    <label>今日班別</label>
+    <select><option>上午診（健檢判讀）</option><option>下午診（健檢判讀）</option></select>
+    <button class="btn primary" style="margin-top:18px" onclick="login()">登入系統</button>
+  </div>
+  <div class="tagline">⚠️ 本頁為提案示範雛形，資料皆為虛構，非真實病患</div>
+</section>
+
+<!-- ===== QUEUE ===== -->
+<section id="queue" class="view">
+  <div class="topbar">
+    <div class="logo">🩺</div>
+    <h1>今日待評報告</h1>
+    <div class="who"><span id="whoName">王〇華 醫師</span><br><span id="today"></span></div>
+  </div>
+  <div class="pad">
+    <div class="pill-note">AI 已自動整理今日報告、篩出異常並依危急程度排序，異常不漏接</div>
+    <div class="stat-row">
+      <div class="stat tot"><div class="n" id="stTot">0</div><div class="l">待評報告</div></div>
+      <div class="stat crit"><div class="n" id="stCrit">0</div><div class="l">危急</div></div>
+      <div class="stat abn"><div class="n" id="stAbn">0</div><div class="l">異常</div></div>
+    </div>
+    <div id="qlist"></div>
+    <div class="foot">＊ AI 判讀結果僅供輔助，最終以健檢中心醫師確認為準（Human-in-the-loop）</div>
+  </div>
+</section>
+
+<!-- ===== DETAIL ===== -->
+<section id="detail" class="view">
+  <div class="topbar">
+    <div class="logo" style="cursor:pointer" onclick="go('queue')">‹</div>
+    <h1>報告判讀</h1>
+    <div class="who"><span id="whoName2">王〇華 醫師</span></div>
+  </div>
+  <div class="pad" id="detailBody"></div>
+</section>
+
+<!-- ===== DONE ===== -->
+<section id="done" class="view">
+  <div class="big">✓</div>
+  <h2>已確認並送出</h2>
+  <p class="muted" id="doneMsg">個人化健檢報告與健康建議已送出</p>
+  <button class="btn primary" style="max-width:260px;margin:26px auto 0" onclick="go('queue')">返回待評清單</button>
+</section>
+
+</div>
+
+<script>
+// ================= 虛構示範資料（非真實病患） =================
+const DATA = [
+  {
+    id:'p1', name:'陳〇明', init:'陳', age:58, sex:'男', mrn:'****3271', date:'2026/07/01', sev:'crit', done:false,
+    labs:[
+      {g:'代謝 / 血糖', items:[
+        {n:'空腹血糖', en:'Glucose AC', v:285, u:'mg/dL', ref:'70–99', last:142, f:'crit'},
+        {n:'糖化血色素', en:'HbA1c', v:11.2, u:'%', ref:'< 5.7', last:8.1, f:'crit'},
+      ]},
+      {g:'血脂', items:[
+        {n:'總膽固醇', en:'T-CHOL', v:236, u:'mg/dL', ref:'< 200', last:214, f:'high'},
+        {n:'低密度脂蛋白', en:'LDL-C', v:158, u:'mg/dL', ref:'< 100', last:139, f:'high'},
+        {n:'三酸甘油酯', en:'TG', v:268, u:'mg/dL', ref:'< 150', last:198, f:'high'},
+      ]},
+      {g:'腎功能 / 尿液', items:[
+        {n:'腎絲球過濾率', en:'eGFR', v:78, u:'mL/min', ref:'≥ 90', last:88, f:'low'},
+        {n:'尿液微量白蛋白', en:'U-Alb', v:96, u:'mg/g', ref:'< 30', last:22, f:'high'},
+      ]},
+      {g:'肝功能', items:[
+        {n:'GOT', en:'AST', v:31, u:'U/L', ref:'< 40', last:28, f:'ok'},
+        {n:'GPT', en:'ALT', v:44, u:'U/L', ref:'< 40', last:35, f:'high'},
+      ]},
+    ],
+    conc:'58 歲男性，本次健檢發現「新診斷/控制不良之糖尿病」：空腹血糖 285 mg/dL、HbA1c 11.2%（去年 8.1%），較去年明顯惡化，並已出現微量白蛋白尿（U-Alb 96 mg/g，去年 22），提示早期糖尿病腎病變。合併血脂異常（LDL 158、TG 268）為心血管高風險族群。建議儘速返診啟動/加強血糖控制，並評估心腎共病。',
+    advice:'1. 【立即】兩週內至新陳代謝科門診，評估藥物調整（含考慮具心腎保護之藥物）。\n2. 飲食：減少精緻澱粉與含糖飲料，採低升糖、地中海型飲食；轉介營養師。\n3. 運動：每週 150 分鐘中等強度有氧，餐後散步有助血糖。\n4. 追蹤：3 個月後複檢 HbA1c、尿液微量白蛋白、血脂；每年眼底與足部檢查。\n5. 建議加做：頸動脈超音波、心電圖以評估心血管風險。'
+  },
+  {
+    id:'p2', name:'林〇華', init:'林', age:45, sex:'女', mrn:'****8840', date:'2026/07/01', sev:'abn', done:false,
+    labs:[
+      {g:'血脂', items:[
+        {n:'總膽固醇', en:'T-CHOL', v:245, u:'mg/dL', ref:'< 200', last:222, f:'high'},
+        {n:'低密度脂蛋白', en:'LDL-C', v:168, u:'mg/dL', ref:'< 130', last:151, f:'high'},
+        {n:'高密度脂蛋白', en:'HDL-C', v:48, u:'mg/dL', ref:'> 50', last:52, f:'low'},
+      ]},
+      {g:'肝功能 / 脂肪肝', items:[
+        {n:'GPT', en:'ALT', v:68, u:'U/L', ref:'< 35', last:41, f:'high'},
+        {n:'腹部超音波', en:'US', v:'中度脂肪肝', u:'', ref:'—', last:'輕度脂肪肝', f:'high'},
+      ]},
+      {g:'代謝 / 血糖', items:[
+        {n:'空腹血糖', en:'Glucose AC', v:104, u:'mg/dL', ref:'70–99', last:97, f:'high'},
+        {n:'身體質量指數', en:'BMI', v:27.4, u:'kg/m²', ref:'18.5–24', last:25.8, f:'high'},
+      ]},
+    ],
+    conc:'45 歲女性，本次以「代謝症候群傾向」為主：血脂異常（LDL 168、HDL 偏低）、中度脂肪肝且 ALT 上升（68），空腹血糖 104 已達糖尿病前期，BMI 27.4 且較去年上升。整體屬可逆之生活型態相關問題，及早介入可望改善。',
+    advice:'1. 生活型態介入為核心：目標 6 個月減重 5–7%。\n2. 飲食：減少含糖飲料與油炸，增加蔬果與全穀；轉介營養諮詢。\n3. 運動：每週 5 次、每次 30 分鐘中等強度有氧＋阻力訓練。\n4. 追蹤：3–6 個月複檢血脂、肝功能與腹部超音波；血糖持續偏高者做 OGTT。\n5. 若生活調整後 LDL 仍 > 160，回診評估是否需藥物。'
+  },
+  {
+    id:'p3', name:'王〇強', init:'王', age:62, sex:'男', mrn:'****1596', date:'2026/07/01', sev:'abn', done:false,
+    labs:[
+      {g:'腎功能', items:[
+        {n:'腎絲球過濾率', en:'eGFR', v:52, u:'mL/min', ref:'≥ 60', last:61, f:'low'},
+        {n:'肌酸酐', en:'Cr', v:1.5, u:'mg/dL', ref:'0.7–1.3', last:1.2, f:'high'},
+        {n:'尿酸', en:'UA', v:8.9, u:'mg/dL', ref:'< 7.2', last:7.6, f:'high'},
+      ]},
+      {g:'血壓 / 心血管', items:[
+        {n:'收縮壓', en:'SBP', v:148, u:'mmHg', ref:'< 130', last:138, f:'high'},
+        {n:'舒張壓', en:'DBP', v:92, u:'mmHg', ref:'< 80', last:86, f:'high'},
+      ]},
+      {g:'血液', items:[
+        {n:'血色素', en:'Hb', v:12.8, u:'g/dL', ref:'13–17', last:13.6, f:'low'},
+      ]},
+    ],
+    conc:'62 歲男性，腎功能較去年下降（eGFR 61→52，已達 CKD 第 3a 期），合併高尿酸（8.9）與血壓偏高（148/92），並出現輕度貧血（Hb 12.8），符合慢性腎臟病之共病表現。血壓與尿酸控制為延緩腎功能惡化之關鍵。',
+    advice:'1. 一個月內至腎臟科門診，評估 CKD 分期與病因。\n2. 血壓控制目標 < 130/80，居家自我監測。\n3. 飲食：適度蛋白質、低鹽、低普林；避免 NSAID 類止痛藥與來路不明中草藥。\n4. 尿酸偏高且已影響腎功能者，回診評估降尿酸治療。\n5. 追蹤：3 個月複檢腎功能、電解質、血色素。'
+  },
+  {
+    id:'p4', name:'張〇美', init:'張', age:51, sex:'女', mrn:'****6027', date:'2026/07/01', sev:'abn', done:false,
+    labs:[
+      {g:'甲狀腺', items:[
+        {n:'甲狀腺刺激素', en:'TSH', v:6.8, u:'µIU/mL', ref:'0.4–4.0', last:4.3, f:'high'},
+        {n:'游離甲狀腺素', en:'Free T4', v:1.0, u:'ng/dL', ref:'0.8–1.8', last:1.1, f:'ok'},
+      ]},
+      {g:'血液', items:[
+        {n:'血色素', en:'Hb', v:11.9, u:'g/dL', ref:'12–16', last:12.4, f:'low'},
+        {n:'平均紅血球體積', en:'MCV', v:76, u:'fL', ref:'80–100', last:82, f:'low'},
+      ]},
+      {g:'一般', items:[
+        {n:'空腹血糖', en:'Glucose AC', v:94, u:'mg/dL', ref:'70–99', last:92, f:'ok'},
+        {n:'低密度脂蛋白', en:'LDL-C', v:118, u:'mg/dL', ref:'< 130', last:121, f:'ok'},
+      ]},
+    ],
+    conc:'51 歲女性，TSH 6.8（Free T4 正常）符合亞臨床甲狀腺低下，較去年上升；另有小球性貧血（Hb 11.9、MCV 76），需鑑別缺鐵性貧血。其餘代謝與血脂大致穩定。整體屬需門診追蹤、非緊急之異常。',
+    advice:'1. 建議至新陳代謝/內分泌科追蹤甲狀腺功能，必要時加驗 anti-TPO 抗體；3 個月後複檢 TSH。\n2. 小球性貧血：加驗血清鐵、鐵蛋白（ferritin），評估是否缺鐵並找出原因。\n3. 均衡飲食、含鐵食物；避免與甲狀腺相關症狀混淆（疲倦、怕冷）。\n4. 其餘指標穩定，維持目前生活型態，明年例行複檢。'
+  },
+  {id:'p5', name:'吳〇芳', init:'吳', age:39, sex:'女', mrn:'****4413', date:'2026/07/01', sev:'norm', done:true,
+    labs:[{g:'一般', items:[{n:'空腹血糖',en:'Glucose AC',v:88,u:'mg/dL',ref:'70–99',last:90,f:'ok'},{n:'低密度脂蛋白',en:'LDL-C',v:102,u:'mg/dL',ref:'< 130',last:108,f:'ok'},{n:'GPT',en:'ALT',v:22,u:'U/L',ref:'< 35',last:24,f:'ok'}]}],
+    conc:'39 歲女性，本次健檢各項指標均在正常範圍，與去年相近。整體健康狀況良好。',
+    advice:'維持目前良好的生活型態與規律運動，建議明年持續例行健檢。'},
+  {id:'p6', name:'黃〇宏', init:'黃', age:47, sex:'男', mrn:'****7788', date:'2026/07/01', sev:'norm', done:true,
+    labs:[{g:'一般', items:[{n:'空腹血糖',en:'Glucose AC',v:96,u:'mg/dL',ref:'70–99',last:95,f:'ok'},{n:'血壓',en:'BP',v:'122/78',u:'mmHg',ref:'< 130/80',last:'120/76',f:'ok'},{n:'尿酸',en:'UA',v:6.4,u:'mg/dL',ref:'< 7.2',last:6.6,f:'ok'}]}],
+    conc:'47 歲男性，本次健檢無明顯異常，血糖、血壓、尿酸均正常。',
+    advice:'維持規律作息與運動，注意體重控制，明年例行複檢即可。'},
+];
+
+const SEV={crit:{t:'危急',c:'crit'},abn:{t:'異常',c:'abn'},norm:{t:'正常',c:'norm'}};
+const $=id=>document.getElementById(id);
+let curId=null;
+
+function go(v){document.querySelectorAll('.view').forEach(s=>s.classList.remove('on'));$(v).classList.add('on');window.scrollTo(0,0);}
+function login(){
+  const d=$('docName').value;$('whoName').textContent=d;$('whoName2').textContent=d;
+  const dt=new Date(2026,6,2);$('today').textContent='2026/07/02（三）';
+  renderQueue();go('queue');
+}
+function abnCount(p){let n=0;p.labs.forEach(g=>g.items.forEach(i=>{if(i.f!=='ok')n++;}));return n;}
+function renderQueue(){
+  const pend=DATA.filter(p=>!p.done);
+  $('stTot').textContent=pend.length;
+  $('stCrit').textContent=DATA.filter(p=>p.sev==='crit'&&!p.done).length;
+  $('stAbn').textContent=DATA.filter(p=>p.sev==='abn'&&!p.done).length;
+  const order={crit:0,abn:1,norm:2};
+  const sorted=[...DATA].sort((a,b)=>(a.done-b.done)||(order[a.sev]-order[b.sev]));
+  $('qlist').innerHTML=sorted.map(p=>{
+    const s=SEV[p.sev];const an=abnCount(p);
+    return `<div class="qitem ${p.sev} ${p.done?'done':''}" onclick="openPt('${p.id}')">
+      <div class="avatar">${p.init}</div>
+      <div class="qmid">
+        <div class="qname">${p.name}　<span class="muted" style="font-weight:400">${p.age}／${p.sex}</span></div>
+        <div class="qsub">病歷號 ${p.mrn}　·　檢查 ${p.date}</div>
+        <div class="abn-n">${p.done?'<span class="check">✓ 已完成</span>':`<span class="badge-ai">✦ AI 標記 ${an} 項異常</span>`}</div>
+      </div>
+      <div class="qright"><span class="chip ${s.c}">${s.t}</span></div>
+    </div>`;
+  }).join('');
+}
+function openPt(id){
+  curId=id;const p=DATA.find(x=>x.id===id);const an=abnCount(p);
+  const critN=(()=>{let n=0;p.labs.forEach(g=>g.items.forEach(i=>{if(i.f==='crit')n++;}));return n;})();
+  const rows=p.labs.map(g=>{
+    const its=g.items.map(i=>{
+      const fcls=i.f==='crit'?'flag-crit':(i.f==='high'?'flag-high':(i.f==='low'?'flag-low':''));
+      let tr='';
+      if(typeof i.v==='number'&&typeof i.last==='number'){
+        const up=i.v>i.last,fl=i.v===i.last;
+        tr=fl?'<span>→</span>':(up?`<span class="up">▲</span>`:`<span class="down">▼</span>`);
+        tr=`<span class="trend">${tr} ${i.last}</span>`;
+      }else if(i.last){tr=`<span class="trend">去年：${i.last}</span>`;}
+      const mark=i.f!=='ok'?' ⚠':'';
+      return `<tr class="${fcls}"><td><b>${i.n}</b><div class="ref">${i.en}</div></td>
+        <td><span class="val">${i.v}${i.u?' '+i.u:''}</span>${mark}</td>
+        <td class="ref">${i.ref}</td><td>${tr||'<span class="trend">—</span>'}</td></tr>`;
+    }).join('');
+    return `<tr class="grp"><td colspan="4">${g.g}</td></tr>${its}`;
+  }).join('');
+
+  $('detailBody').innerHTML=`
+    <div class="pt-head">
+      <div class="avatar" style="width:48px;height:48px;font-size:18px">${p.init}</div>
+      <div style="flex:1">
+        <div style="font-weight:800;font-size:17px">${p.name}　<span class="muted" style="font-weight:400">${p.age} 歲／${p.sex}</span></div>
+        <div class="muted" style="font-size:12px">病歷號 ${p.mrn}　·　檢查日 ${p.date}</div>
+      </div>
+      <span class="chip ${SEV[p.sev].c}">${SEV[p.sev].t}</span>
+    </div>
+
+    <div class="steps">
+      <div class="step done" data-n="✓">AI 判讀完成</div>
+      <div class="step on" data-n="2">醫師檢視</div>
+      <div class="step" data-n="3">確認送出</div>
+    </div>
+
+    <div class="sec-title"><span class="bar"></span><h3>① AI 異常比對 ＋ 危急分級</h3></div>
+    <div class="ai-banner">✦&nbsp;<div>AI 已比對標準參考值與<b>去年同項數值</b>，偵測到 <b>${an} 項異常</b>${critN?`（含 <b style="color:var(--crit)">${critN} 項危急</b>）</b>`:''}。下表 ⚠ 為異常項、▲▼ 為與去年趨勢。</div></div>
+    <div class="card" style="padding:6px 12px">
+      <table class="labs"><thead><tr><th>檢驗項目</th><th>本次結果</th><th>參考值</th><th>去年 / 趨勢</th></tr></thead>
+      <tbody>${rows}</tbody></table>
+    </div>
+
+    <div class="sec-title"><span class="bar"></span><h3>② AI 綜合結論</h3></div>
+    <div class="card">
+      <div class="editlabel"><span class="badge-ai">✦ AI 生成 · 可編輯</span><span class="muted" style="font-size:11px">結合異常項＋跨年度趨勢</span></div>
+      <textarea class="editbox" id="edConc" rows="6">${p.conc}</textarea>
+    </div>
+
+    <div class="sec-title"><span class="bar"></span><h3>③ 個人化健康建議</h3></div>
+    <div class="card">
+      <div class="editlabel"><span class="badge-ai">✦ AI 生成 · 可編輯</span><span class="muted" style="font-size:11px">依健康總結量身產出</span></div>
+      <textarea class="editbox" id="edAdv" rows="8">${p.advice}</textarea>
+    </div>
+
+    <div class="hitl">🔒&nbsp;<div><b>Human-in-the-loop</b>：以上為 AI 輔助草稿，須經您檢視、修改並確認後才會送出給受檢者。</div></div>
+
+    <div class="btn-row">
+      <button class="btn ghost sm" style="flex:.9" onclick="regen()">↻ 請 AI 重新生成</button>
+      <button class="btn primary sm" style="flex:1.4" onclick="confirmPt()">醫師確認並送出</button>
+    </div>
+    <div class="foot">＊ 示範雛形，AI 內容為預先產生之範例；正式版將串接健檢中心系統與院內結論。</div>
+  `;
+  go('detail');
+}
+function regen(){
+  const b=event.target;const o=b.textContent;b.textContent='AI 生成中…';b.disabled=true;
+  setTimeout(()=>{b.textContent=o;b.disabled=false;
+    const c=$('edConc');c.style.borderColor='var(--accent)';setTimeout(()=>c.style.borderColor='',700);
+  },900);
+}
+function confirmPt(){
+  const p=DATA.find(x=>x.id===curId);p.done=true;
+  $('doneMsg').textContent=`已將 ${p.name} 的個人化健檢報告與健康建議送出`;
+  renderQueue();go('done');
+}
+</script>
+</body>
+</html>
