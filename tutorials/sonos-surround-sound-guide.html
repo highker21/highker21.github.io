@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>環繞音效新手指南 · Sonos 導讀</title>
+<style>
+  :root{
+    --bg:#0c0d10; --bg2:#141519; --card:#17181d; --line:#2a2c33;
+    --ink:#ece7dd; --muted:#9a978f; --gold:#d9a441; --gold-soft:#f2c976;
+    --red:#c0483b; --speak:#3a3d47;
+  }
+  *{box-sizing:border-box; margin:0; padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    background:
+      radial-gradient(1200px 700px at 50% -10%, rgba(217,164,65,.10), transparent 60%),
+      radial-gradient(900px 600px at 90% 110%, rgba(192,72,59,.08), transparent 55%),
+      var(--bg);
+    color:var(--ink);
+    font-family:"Noto Sans TC","PingFang TC","Heiti TC",-apple-system,sans-serif;
+    line-height:1.85; font-size:17px; letter-spacing:.01em;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:820px; margin:0 auto; padding:0 22px 90px}
+  /* Hero */
+  .hero{padding:78px 0 40px; text-align:center; position:relative}
+  .kicker{font-size:12.5px; letter-spacing:.42em; color:var(--gold); text-transform:uppercase; font-weight:600; margin-bottom:22px}
+  h1{
+    font-family:"Songti TC","Noto Serif TC",Georgia,serif;
+    font-size:clamp(40px,8vw,68px); font-weight:700; line-height:1.08; letter-spacing:.02em;
+    background:linear-gradient(180deg,#fbf4e6 0%,#d9a441 130%);
+    -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;
+  }
+  .lede{max-width:600px; margin:26px auto 0; color:var(--muted); font-size:18px}
+  .rings{display:flex; justify-content:center; gap:9px; margin:34px 0 6px}
+  .rings i{display:block; width:9px; height:9px; border-radius:50%; background:var(--gold); opacity:.25; animation:pulse 2.4s ease-in-out infinite}
+  .rings i:nth-child(2){animation-delay:.3s}.rings i:nth-child(3){animation-delay:.6s}
+  .rings i:nth-child(4){animation-delay:.9s}.rings i:nth-child(5){animation-delay:1.2s}
+  @keyframes pulse{0%,100%{opacity:.2; transform:scale(1)}50%{opacity:1; transform:scale(1.5)}}
+  /* Sections */
+  section{margin-top:54px; animation:rise .7s both}
+  @keyframes rise{from{opacity:0; transform:translateY(18px)}to{opacity:1; transform:none}}
+  h2{
+    font-family:"Songti TC","Noto Serif TC",Georgia,serif;
+    font-size:27px; font-weight:700; color:#f6efe1; margin-bottom:8px;
+    display:flex; align-items:baseline; gap:14px;
+  }
+  h2::before{content:attr(data-n); font-size:14px; color:var(--gold); font-family:"Noto Sans TC",sans-serif; letter-spacing:.1em; font-weight:600; opacity:.85}
+  h3{font-size:19px; color:var(--gold-soft); margin:26px 0 6px; font-weight:600}
+  p{margin:12px 0; color:#ddd8ce}
+  .divider{height:1px; background:linear-gradient(90deg,transparent,var(--line),transparent); margin:4px 0 0}
+  strong{color:#fff; font-weight:600}
+  .lead-cap::first-letter{
+    font-family:"Songti TC",Georgia,serif; float:left; font-size:60px; line-height:.82;
+    padding:6px 12px 0 0; color:var(--gold);
+  }
+  /* Config diagram */
+  .configs{display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin:26px 0 8px}
+  .cfg{background:var(--card); border:1px solid var(--line); border-radius:14px; padding:18px 14px; text-align:center}
+  .cfg .n{font-family:"Songti TC",Georgia,serif; font-size:30px; color:var(--gold-soft); font-weight:700; letter-spacing:.03em}
+  .cfg .d{font-size:12.5px; color:var(--muted); margin-top:4px; min-height:32px}
+  .stage{position:relative; height:96px; margin:12px auto 0; width:120px; border:1px dashed #33353d; border-radius:10px; background:rgba(255,255,255,.015)}
+  .screen{position:absolute; top:6px; left:14px; right:14px; height:5px; border-radius:3px; background:linear-gradient(90deg,var(--gold),var(--gold-soft)); box-shadow:0 0 10px rgba(217,164,65,.5)}
+  .sofa{position:absolute; bottom:7px; left:50%; transform:translateX(-50%); width:34px; height:9px; border-radius:4px; background:#4a4d57}
+  .sp{position:absolute; width:11px; height:11px; border-radius:3px; background:var(--gold); box-shadow:0 0 8px rgba(217,164,65,.6)}
+  .sub{position:absolute; width:12px; height:12px; border-radius:50%; background:var(--red); box-shadow:0 0 9px rgba(192,72,59,.7)}
+  .hgt{position:absolute; width:9px; height:9px; border-radius:50%; background:#6fa8dc; box-shadow:0 0 8px rgba(111,168,220,.7)}
+  .legend{display:flex; flex-wrap:wrap; gap:16px; justify-content:center; margin-top:18px; font-size:12.5px; color:var(--muted)}
+  .legend span{display:inline-flex; align-items:center; gap:6px}
+  .dot{width:10px;height:10px;border-radius:3px;display:inline-block}
+  /* Callout */
+  .note{background:linear-gradient(180deg,rgba(217,164,65,.08),rgba(217,164,65,.02)); border:1px solid rgba(217,164,65,.28); border-left:3px solid var(--gold); border-radius:10px; padding:16px 20px; margin:22px 0; color:#e9e2d4; font-size:15.5px}
+  .note b{color:var(--gold-soft)}
+  /* Steps */
+  .steps{counter-reset:s; margin-top:10px}
+  .step{position:relative; padding:20px 22px 20px 66px; background:var(--card); border:1px solid var(--line); border-radius:14px; margin:14px 0}
+  .step::before{counter-increment:s; content:counter(s); position:absolute; left:20px; top:20px; width:30px; height:30px; border-radius:50%; background:linear-gradient(160deg,var(--gold),#a97a26); color:#1a1204; font-weight:700; font-family:"Songti TC",serif; display:grid; place-items:center; font-size:16px}
+  .step h3{margin:0 0 6px; color:#f6efe1}
+  /* Footer */
+  footer{margin-top:64px; padding-top:26px; border-top:1px solid var(--line); text-align:center; color:var(--muted); font-size:13px; line-height:1.9}
+  footer a{color:var(--gold); text-decoration:none; border-bottom:1px solid rgba(217,164,65,.35)}
+  .tag{display:inline-block; margin-top:2px; padding:3px 11px; border:1px solid var(--line); border-radius:20px; font-size:11.5px; letter-spacing:.05em}
+  @media(max-width:560px){
+    .configs{grid-template-columns:1fr; gap:12px}
+    .stage{width:150px; height:110px}
+    body{font-size:16px}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="hero">
+    <div class="kicker">Sonos 官方指南 · 繁中導讀</div>
+    <h1>環繞音效<br>新手指南</h1>
+    <div class="rings"><i></i><i></i><i></i><i></i><i></i></div>
+    <p class="lede">想像你坐在電影院裡，銀幕上正演一場飆車追逐戲——右邊傳來輪胎的尖銳磨擦聲，後方警笛大作。這種身歷其境的感受，靠的就是環繞音效。這篇帶你把電影院等級的體驗搬回家。</p>
+  </div>
+
+  <section>
+    <h2 data-n="01">什麼是環繞音效</h2>
+    <div class="divider"></div>
+    <p class="lead-cap">環繞音效顧名思義，就是要讓聲音「包圍」聽者，做出彷彿人在畫面中央的臨場感。電影院裡的喇叭會刻意分佈在觀眾席四周各個角度與高度，有時甚至用到<strong>多達 64 支喇叭</strong>，朝各個方向送出聲音。這種體驗不只電影院獨有——只要喇叭選對、位置擺對，家裡也能重現這種沉浸式的環繞音效。</p>
+  </section>
+
+  <section>
+    <h2 data-n="02">常見的環繞配置</h2>
+    <div class="divider"></div>
+    <p>環繞系統怎麼配，取決於房間大小、想要的聽感，以及預算。最常見的兩種是 <strong>5.1</strong> 和 <strong>7.1</strong>。這些數字代表系統裡「聲道」（聲音發送點）的數量：<strong>第一個數字是聲道數，第二個數字代表有沒有重低音喇叭</strong>。進階系統還會出現第三個數字，代表頭頂的天空聲道。</p>
+
+    <div class="configs">
+      <div class="cfg">
+        <div class="n">5.1</div>
+        <div class="d">3 前 + 2 後 + 1 重低音</div>
+        <div class="stage">
+          <div class="screen"></div>
+          <div class="sp" style="top:16px;left:14px"></div>
+          <div class="sp" style="top:16px;left:54px"></div>
+          <div class="sp" style="top:16px;right:14px"></div>
+          <div class="sp" style="bottom:26px;left:12px"></div>
+          <div class="sp" style="bottom:26px;right:12px"></div>
+          <div class="sub" style="bottom:24px;left:50%;transform:translateX(-50%)"></div>
+          <div class="sofa"></div>
+        </div>
+      </div>
+      <div class="cfg">
+        <div class="n">7.1</div>
+        <div class="d">多兩個聲道<br>補上聽感空隙</div>
+        <div class="stage">
+          <div class="screen"></div>
+          <div class="sp" style="top:16px;left:14px"></div>
+          <div class="sp" style="top:16px;left:54px"></div>
+          <div class="sp" style="top:16px;right:14px"></div>
+          <div class="sp" style="top:44px;left:8px"></div>
+          <div class="sp" style="top:44px;right:8px"></div>
+          <div class="sp" style="bottom:22px;left:16px"></div>
+          <div class="sp" style="bottom:22px;right:16px"></div>
+          <div class="sub" style="bottom:24px;left:50%;transform:translateX(-50%)"></div>
+          <div class="sofa"></div>
+        </div>
+      </div>
+      <div class="cfg">
+        <div class="n">7.1.4</div>
+        <div class="d">＋4 天空聲道<br>（Dolby Atmos）</div>
+        <div class="stage">
+          <div class="screen"></div>
+          <div class="sp" style="top:16px;left:14px"></div>
+          <div class="sp" style="top:16px;left:54px"></div>
+          <div class="sp" style="top:16px;right:14px"></div>
+          <div class="sp" style="top:44px;left:8px"></div>
+          <div class="sp" style="top:44px;right:8px"></div>
+          <div class="sp" style="bottom:22px;left:16px"></div>
+          <div class="sp" style="bottom:22px;right:16px"></div>
+          <div class="hgt" style="top:30px;left:30px"></div>
+          <div class="hgt" style="top:30px;right:30px"></div>
+          <div class="hgt" style="bottom:38px;left:34px"></div>
+          <div class="hgt" style="bottom:38px;right:34px"></div>
+          <div class="sub" style="bottom:24px;left:50%;transform:translateX(-50%)"></div>
+          <div class="sofa"></div>
+        </div>
+      </div>
+    </div>
+    <div class="legend">
+      <span><i class="dot" style="background:#d9a441"></i>喇叭聲道</span>
+      <span><i class="dot" style="background:#c0483b;border-radius:50%"></i>重低音</span>
+      <span><i class="dot" style="background:#6fa8dc;border-radius:50%"></i>天空聲道</span>
+      <span><i class="dot" style="background:#4a4d57"></i>座位</span>
+    </div>
+
+    <h3>5.1 環繞音效</h3>
+    <p>5.1 是標準配置，大多數電影的混音都以這個規格為基準。三個前置聲道（左、中、右，也可用一支聲霸取代）負責清晰對白，兩個後環繞聲道帶來包覆感，再由一顆重低音喇叭專門處理爆炸聲、低沉人聲這類低頻。對一般家庭劇院來說，三前二後就很夠用。</p>
+
+    <h3>7.1 環繞音效</h3>
+    <p>聲道愈多，沉浸感愈完整。7.1 比 5.1 多出的兩個聲道能補上聽感空隙。不過要注意，有些喇叭一支就能包辦多個聲道——例如一支聲霸同時負責左、中、右三個前置聲道；某些後環繞喇叭也能一支涵蓋多個發聲點，省下額外喇叭與大量線材。</p>
+  </section>
+
+  <section>
+    <h2 data-n="03">環繞音效真的比較好聽嗎</h2>
+    <div class="divider"></div>
+    <p>是的，尤其是看電影想要沉浸感的時候，差異很明顯。</p>
+    <h3>環繞音效 vs. 立體聲</h3>
+    <p>立體聲的聲音全來自左右兩聲道，聽車上音樂或戴耳機很棒。但看電影時，你會想要被劇情「包圍」。相較立體聲只有左右，環繞音效更立體、更有動態，聲音會從<strong>前方、上方、後方</strong>各處傳來，更貼近真實生活中聽聲音的方式。</p>
+    <h3>環繞音效 vs. 聲霸</h3>
+    <p>電視加一支聲霸，對白更清楚、音質更細緻、低頻更飽滿——但所有聲音終究只從電視前方傳出。再加上後環繞喇叭，聲音才能真正從四面八方、包括你背後傳來，形成真正的包覆感。</p>
+  </section>
+
+  <section>
+    <h2 data-n="04">電影院等級的聽感</h2>
+    <div class="divider"></div>
+    <p>再回到那場追逐戲：警用直升機盤旋在車輛上方，螺旋槳聲彷彿就在頭頂轟隆作響。要在家重現這種效果，靠的是<strong>天空聲道（高度聲道）</strong>與<strong>空間音訊</strong>技術。</p>
+    <h3>認識天空聲道</h3>
+    <p>更進階的系統，例如搭配 Dolby Atmos 的 <strong>7.1.4</strong> 配置，會多出第三個數字——代表頭頂喇叭（天空聲道）的數量。這些喇叭通常裝在房間四個角落上方，營造出「高度」的層次。聽起來喇叭很多沒錯，但透過虛擬化技術，也能用較少喇叭做出類似效果。</p>
+    <div class="note">
+      <b>環繞音效 vs. Dolby Atmos ——</b> Dolby Atmos 是一種空間音訊技術，能把聲音物件放進三維空間中自由移動定位，等於在 5.1 或 7.1 之上再加一個「頭頂」維度。聲音在房間裡移動的方式更接近真實世界，聽感也更逼真。
+    </div>
+  </section>
+
+  <section>
+    <h2 data-n="05">如何打造一套系統</h2>
+    <div class="divider"></div>
+    <p>Sonos 建議分三步走，最棒的是可以慢慢來、循序加購。</p>
+    <div class="steps">
+      <div class="step">
+        <h3>從一支聲霸開始</h3>
+        <p>聲霸一支就能做到左、中、右三個聲道的效果，省空間也省荷包，外型低調好上牆。要收進電視櫃就選「朝前發聲」的款式避免家具擋住聲波；想要真正的劇院體驗，就選支援 <strong>Dolby Atmos</strong>、配備<strong>向上發聲單體</strong>的聲霸。</p>
+      </div>
+      <div class="step">
+        <h3>加裝後環繞喇叭</h3>
+        <p>想要聲音真正從四面八方傳來，就加一對後環繞喇叭——它能放大風聲、水滴聲、咖啡廳談話聲這些讓你投入劇情的環境音細節。擺位建議在座位<strong>兩側或後方</strong>，確保側邊與向上發聲的單體前方沒有遮擋。有 WiFi 的喇叭可直接無線連上聲霸，不必拉線。</p>
+      </div>
+      <div class="step">
+        <h3>搭配重低音喇叭</h3>
+        <p>重低音喇叭讓你「感受」到聲音，也替其他喇叭分擔工作——它專門處理低頻，其他喇叭就能專心處理中頻。尺寸從小到大、功率各異，適合你的款式取決於整體配置、房間大小和預算。</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2 data-n="06">用 Sonos 帶進你家</h2>
+    <div class="divider"></div>
+    <p>了解怎麼建置之後，接下來就是最有趣的部分——動手打造你的家庭劇院。可以慢慢來：先從一支聲霸讓對白更清楚；之後加一顆重低音喇叭感受低頻震撼；再加一對後環繞喇叭，把環境音效包覆整個空間。選擇太多不知從何下手，Sonos 也有整套的環繞音效組合能直接開始。</p>
+  </section>
+
+  <footer>
+    本文為 Sonos 官方部落格文章《The Beginner's Guide to Surround Sound》之繁體中文導讀整理，供個人學習參考。<br>
+    原文出處：<a href="https://www.sonos.com/en-us/blog/beginners-guide-to-surround-sound">sonos.com/en-us/blog/beginners-guide-to-surround-sound</a><br>
+    <span class="tag">工具版本：2026-07-04</span>
+  </footer>
+
+</div>
+</body>
+</html>
