@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="zh-Hant"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>醫療院所地圖搜尋 · 高雄大醫院＋校友診所</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:"PingFang TC","Noto Sans TC",sans-serif;background:#eef1f3;color:#1c2529}
+header{background:#0d5c63;color:#fff;padding:11px 14px}
+header h1{font-size:16px}header .s{font-size:11px;opacity:.85;margin-top:2px}
+#bar{padding:9px 12px;background:#fff;border-bottom:1px solid #dde3e6}
+.tabs{display:flex;gap:6px;margin-bottom:8px}
+.tab{flex:1;text-align:center;padding:7px;border:1px solid #b9ccce;border-radius:7px;font-size:13px;color:#0d5c63;background:#f0f4f5}
+.tab.on{background:#0d5c63;color:#fff;border-color:#0d5c63;font-weight:700}
+button{background:#0d5c63;color:#fff;border:0;border-radius:7px;padding:9px 14px;font-size:14px;font-weight:600;width:100%}
+#map{height:48vh;width:100%}
+#list{padding:8px 12px 40px}
+.card{background:#fff;border:1px solid #e2e8ea;border-radius:9px;padding:10px 13px;margin:7px 0;box-shadow:0 1px 3px rgba(0,0,0,.05)}
+.card .n{font-weight:700;font-size:15px}
+.card .tag{font-size:11px;padding:1px 7px;border-radius:9px;margin-left:6px;vertical-align:1px}
+.tg-big{background:#fde2e0;color:#b5352b}.tg-al{background:#dcecfa;color:#1c5a8a}
+.card .d{color:#5a6b6e;font-size:12.5px;margin-top:2px}
+.card .dist{color:#c0632a;font-weight:700;font-size:13px;margin-top:3px}
+.card a{display:inline-block;margin-top:6px;margin-right:8px;color:#0d5c63;font-size:13px;text-decoration:none;border:1px solid #0d5c63;border-radius:6px;padding:4px 10px}
+.hint{color:#7a878a;font-size:12px;padding:8px 2px}
+.foot{color:#9aa4a7;font-size:10.5px;padding:10px 12px 34px;text-align:center;line-height:1.6}
+.legend{font-size:11px;color:#5a6b6e;margin-top:6px}
+.dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin:0 3px 0 8px;vertical-align:0}
+</style></head><body>
+<header><h1>🏥 醫療院所地圖搜尋</h1>
+<div class="s">高雄大醫院 12 家 ＋ 高醫校友診所 34 家 · 轉診找最近的一家</div></header>
+<div id="bar">
+  <div class="tabs">
+    <div class="tab on" data-f="all" onclick="filt('all',this)">全部</div>
+    <div class="tab" data-f="big" onclick="filt('big',this)">大醫院</div>
+    <div class="tab" data-f="alumni" onclick="filt('alumni',this)">校友診所</div>
+  </div>
+  <button onclick="near()">📍 找我附近的院所</button>
+  <div class="legend"><span class="dot" style="background:#d9433a"></span>大醫院<span class="dot" style="background:#2f7fc7"></span>校友診所　·　<a href="#" onclick="demo();return false" style="color:#0d5c63">▶ 示範</a></div>
+</div>
+<div id="map"></div>
+<div id="list"><div class="hint">切換上方分類看不同院所；按「找我附近」列出離你最近的幾家並標在地圖上。</div></div>
+<div class="foot">資料：高雄健保特約醫學中心/區域醫院（機構名定位）＋高醫校友診所 Google My Maps（KML 精準座標）｜地圖：OpenStreetMap｜註：高雄基層診所與國軍左營總醫院等 2 家座標陸續補上｜工具版本：2026-07-08</div>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+const DATA=[{"type": "big", "name": "長庚醫療高雄長庚紀念醫院", "full": "長庚醫療財團法人高雄長庚紀念醫院", "lat": 22.6488589, "lng": 120.3549046, "level": "醫學中心", "dept": "不分科,家醫科,內科,外科,兒科,婦產科,骨科,神經外科,泌尿科,耳鼻喉科(耳鼻", "tel": "(07)7317123", "addr": "高雄市鳥松區大埤路１２３號"}, {"type": "big", "name": "高雄榮民總醫院", "full": "高雄榮民總醫院", "lat": 22.6793808, "lng": 120.3235296, "level": "醫學中心", "dept": "家醫科,內科,外科,兒科,婦產科,骨科,神經外科,泌尿科,耳鼻喉科(耳鼻喉頭頸外", "tel": "(07)3422121", "addr": "高雄市左營區大中一路３８６號"}, {"type": "big", "name": "衛生福利部旗山醫院", "full": "衛生福利部旗山醫院", "lat": 22.8804807, "lng": 120.4830175, "level": "區域醫院", "dept": "家醫科,內科,外科,兒科,婦產科,骨科,神經外科,泌尿科,耳鼻喉科(耳鼻喉頭頸外", "tel": "(07)6613811", "addr": "高雄市旗山區大德里中學路６０號、東新街２５巷８號１－２樓"}, {"type": "big", "name": "阮綜合阮綜合醫院", "full": "阮綜合醫療社團法人阮綜合醫院", "lat": 22.6155504, "lng": 120.2979843, "level": "區域醫院", "dept": "家醫科,內科,外科,兒科,婦產科,骨科,神經外科,泌尿科,耳鼻喉科(耳鼻喉頭頸外", "tel": "(07)3351121", "addr": "高雄市苓雅區成功一路１６２號，１５６號"}, {"type": "big", "name": "高雄市立凱旋醫院", "full": "高雄市立凱旋醫院", "lat": 22.62522, "lng": 120.3244508, "level": "區域醫院", "dept": "兒科,神經科,精神科", "tel": "(07)7513171", "addr": "高雄市苓雅區凱旋二路１３０號"}, {"type": "big", "name": "高雄市立大同醫院", "full": "高雄市立大同醫院", "lat": 22.6271127, "lng": 120.2972949, "level": "區域醫院", "dept": "家醫科,內科,外科,兒科,婦產科,骨科,神經外科,泌尿科,耳鼻喉科(耳鼻喉頭頸外", "tel": "(07)2911101", "addr": "高雄市前金區中華三路６８號"}, {"type": "big", "name": "高雄市立聯合醫院", "full": "高雄市立聯合醫院", "lat": 22.6555149, "lng": 120.290878, "level": "區域醫院", "dept": "家醫科,內科,外科,兒科,婦產科,骨科,神經外科,泌尿科,耳鼻喉科(耳鼻喉頭頸外", "tel": "(07)5552565", "addr": "高雄市鼓山區中華一路９７６號"}, {"type": "big", "name": "義大醫療義大醫院", "full": "義大醫療財團法人義大醫院", "lat": 22.7659169, "lng": 120.3636471, "level": "醫學中心", "dept": "不分科,家醫科,內科,外科,兒科,婦產科,骨科,神經外科,泌尿科,耳鼻喉科(耳鼻", "tel": "(07)6150011", "addr": "高雄市燕巢區角宿里義大路１號"}, {"type": "big", "name": "國軍高雄總醫院", "full": "國軍高雄總醫院附設民眾診療服務處", "lat": 22.6266523, "lng": 120.340903, "level": "區域醫院", "dept": "家醫科,內科,外科,兒科,婦產科,骨科,神經外科,泌尿科,耳鼻喉科(耳鼻喉頭頸外", "tel": "(07)7496751", "addr": "高雄市苓雅區建軍路５號"}, {"type": "big", "name": "台灣省高雄仁愛之家附設慈惠醫院", "full": "財團法人台灣省私立高雄仁愛之家附設慈惠醫院", "lat": 22.63868, "lng": 120.39751, "level": "區域醫院", "dept": "精神科", "tel": "(07)7030315", "addr": "高雄市大寮區後庄里鳳屏一路５０９號"}, {"type": "big", "name": "高雄市立小港醫院（", "full": "高雄市立小港醫院（委託財團法人私立高雄醫學大學經營）", "lat": 22.5675141, "lng": 120.3634113, "level": "區域醫院", "dept": "家醫科,內科,外科,兒科,婦產科,骨科,泌尿科,耳鼻喉科(耳鼻喉頭頸外科),眼科", "tel": "(07)8036783", "addr": "高雄市小港區山明里山明路４８２號Ｂ１－１０樓"}, {"type": "big", "name": "高雄醫學大學附設中和紀念醫院", "full": "財團法人私立高雄醫學大學附設中和紀念醫院", "lat": 22.6477903, "lng": 120.3102392, "level": "醫學中心", "dept": "家醫科,內科,外科,兒科,婦產科,骨科,神經外科,泌尿科,耳鼻喉科(耳鼻喉頭頸外", "tel": "(07)3121101", "addr": "高雄市三民區十全一路１００號"}, {"type": "alumni", "name": "尊德診所", "lat": 22.6474497, "lng": 120.3030023, "doctor": "辛錫璋醫師", "level": "校友診所", "dept": "", "tel": "", "addr": ""}, {"type": "alumni", "name": "建工萬川診所", "lat": 22.6485417, "lng": 120.3214221, "doctor": "林昆德醫師", "level": "校友診所", "dept": "", "tel": "", "addr": ""}, {"type": "alumni", "name": "兆信內科診所", "lat": 22.6304864, "lng": 120.2999558, "doctor": "賴嘉緯醫師/顏詩容醫師", "level": "校友診所", "dept": "", "tel": "", "addr": ""}, {"type": "alumni", "name": "尚恆內科診所", "lat": 22.6564153, "lng": 120.2960279, "doctor": "黃書恆醫師", "level": "校友診所", "dept": "", "tel": "", "addr": ""}, {"type": "alumni", "name": "容康診所", "lat": 22.6308097, "lng": 120.3077469, "doctor": "黃幸儀醫師/陳怡樺醫師", "level": "校友診所", "dept": "", "tel": "", "addr": ""}, {"type": "alumni", "name": "富芯診所", "lat": 22.6289282, "lng": 120.3079842, "doctor": "戴明于醫師", "level": "校友診所", "dept": "", "tel": "", "addr": ""}, {"type": "alumni", "name": "安康診所", "lat": 22.6189275, "lng": 120.2976466, "doctor": "黃幸儀醫師/陳怡樺醫師(3507340555)", "level": "校友診所", "dept": "", "tel": "", "addr": ""}, {"type": "alumni", "name": "沐康診所", "lat": 22.6624498, "lng": 120.3118787, "doctor": "黃昱甄醫師", "level": "校友診所", "dept": "", "tel": "", "addr": ""}, {"type": "alumni", "name": "吉泰內科診所", "lat": 22.6040735, "lng": 120.3358476, "doctor": "辛世杰醫師", "level": "校友診所", "dept": "", "tel": "", "addr": ""}, {"type": "alumni", "name": "文山診所", "lat": 22.6367888, "lng": 120.3536875, "doctor": "莊立倫醫師", "level": "校友診所", "dept": "", "tel": "", "addr": ""}, {"type": "alumni", "name": "大元診所", "lat": 22.8835965, "lng": 120.4840912, "doctor": "許世傑醫師", "level": "校友診所", "dept": "", "tel": "", "addr": ""}, {"type": "alumni", "name": "柏安內科診所", "lat": 22.6581167, "lng": 120.3045967, "doctor": "郭軒彣醫師", "level": "校友診所", "dept": "", "tel": "", "addr": ""}, {"type": "alumni", "name": "嘉佑診所", "lat": 22.5980414, "lng": 120.3362626, "doctor": "蘇慕軒醫師", "level": "校友診所", "dept": "", "tel": "", "addr": ""}, {"type": "alumni", "name": "辰好診所", "lat": 22.565503, "lng": 120.351814, "doctor": "徐瑋壕醫師", "level": "校友診所", "dept": "", "tel": "", "addr": ""}, {"type": "alumni", "name": "嘉廷診所", "lat": 22.6724018, "lng": 120.3115743, "doctor": "林奕廷醫師", "level": "校友診所", "dept": "", "tel": "", "addr": ""}, {"type": "alumni", "name": "青海萬川診所", "lat": 22.6514652, "lng": 120.2896371, "doctor": "內分泌新陳代謝林昆德、黃欣寧醫師，主治糖尿病、甲狀腺疾病、三高、減重及內分泌失調/李姿慧醫師神經科，主治失眠、頭痛及腦中風預防等", "level": "校友診所", "dept": "", "tel": "", "addr": ""}, {"type": "alumni", "name": "安康診所", "lat": 22.6189275, "lng": 120.2976466, "doctor": "鄭自勝醫師、陳彦成醫師", "level": "校友診所", "dept": "", "tel": "", "addr": ""}, {"type": "alumni", "name": "祐康診所", "lat": 22.7181196, "lng": 120.2855303, "doctor": "張景翔醫師、林志豪醫師、黃聖文醫師", "level": "校友診所", "dept": "", "tel": "", "addr": ""}, {"type": "alumni", "name": "詠青診所", "lat": 22.6280168, "lng": 120.3493069, "doctor": "黃聖文醫師", "level": "校友診所", "dept": "", "tel": "", "addr": ""}, {"type": "alumni", "name": "大鵬診所", "lat": 22.569071, "lng": 120.358639, "doctor": "龔育民醫師、黃駿逸醫師、洪厚任醫師、歐吉性醫師", "level": "校友診所", "dept": "", "tel": "", "addr": ""}, {"type": "alumni", "name": "康寧診所", "lat": 22.6853, "lng": 120.3422239, "doctor": "謝孟書醫師、陳韋志醫師、洪厚任醫師", "level": "校友診所", "dept": "", "tel": "", "addr": ""}, {"type": "alumni", "name": "好心腸診所", "lat": 22.6847593, "lng": 120.3102921, "doctor": "黃駿逸醫師、洪厚任醫師", "level": "校友診所", "dept": "", "tel": "", "addr": ""}, {"type": "alumni", "name": "容康診所", "lat": 22.6308097, "lng": 120.3077469, "doctor": "鄭自勝醫師、陳彦成醫師", "level": "校友診所", "dept": "", "tel": "", "addr": ""}, {"type": "alumni", "name": "旭康診所", "lat": 22.6449072, "lng": 120.3133056, "doctor": "徐成鼎醫師、許博堯醫師", "level": "校友診所", "dept": "", "tel": "", "addr": ""}, {"type": "alumni", "name": "蘇河名診所", "lat": 22.5921939, "lng": 120.3439448, "doctor": "蘇河名醫師", "level": "校友診所", "dept": "", "tel": "", "addr": ""}, {"type": "alumni", "name": "自由心胸診所", "lat": 22.6657602, "lng": 120.3089735, "doctor": "陳盈志醫師", "level": "校友診所", "dept": "", "tel": "", "addr": ""}, {"type": "alumni", "name": "自由心胸診所", "lat": 22.6657602, "lng": 120.3089735, "doctor": "郭子右醫師", "level": "校友診所", "dept": "", "tel": "", "addr": ""}, {"type": "alumni", "name": "明港診所", "lat": 22.5664272, "lng": 120.3674282, "doctor": "", "level": "校友診所", "dept": "", "tel": "", "addr": ""}, {"type": "alumni", "name": "長清診所", "lat": 22.636766, "lng": 120.340489, "doctor": "", "level": "校友診所", "dept": "", "tel": "", "addr": ""}, {"type": "alumni", "name": "好生診所 （附設洗腎中心）", "lat": 22.6331092, "lng": 120.2959954, "doctor": "", "level": "校友診所", "dept": "", "tel": "", "addr": ""}, {"type": "alumni", "name": "岡山內科診所", "lat": 22.7893445, "lng": 120.2965977, "doctor": "", "level": "校友診所", "dept": "", "tel": "", "addr": ""}, {"type": "alumni", "name": "五福診所", "lat": 22.620517, "lng": 120.2995277, "doctor": "", "level": "校友診所", "dept": "", "tel": "", "addr": ""}, {"type": "alumni", "name": "裕生診所", "lat": 22.665522, "lng": 120.3092705, "doctor": "", "level": "校友診所", "dept": "", "tel": "", "addr": ""}, {"type": "alumni", "name": "佑鎮診所", "lat": 22.5888504, "lng": 120.319811, "doctor": "", "level": "校友診所", "dept": "", "tel": "", "addr": ""}];
+const map=L.map('map').setView([22.64,120.31],11);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© OpenStreetMap'}).addTo(map);
+let cur='all', me=null;
+DATA.forEach(d=>{
+  d.marker=L.circleMarker([d.lat,d.lng],{radius:7,weight:2,
+    color:d.type==='big'?'#b5352b':'#1c5a8a',fillColor:d.type==='big'?'#d9433a':'#2f7fc7',fillOpacity:.85});
+  const info=d.type==='big'?((d.level||'')+(d.dept?'<br>科別:'+d.dept:'')+(d.tel?'<br>☎ '+d.tel:'')):('校友診所'+(d.doctor?'<br>'+d.doctor:''));
+  d.marker.bindPopup('<b>'+d.name+'</b><br>'+info+'<br><a href="https://www.google.com/maps/dir/?api=1&destination='+d.lat+','+d.lng+'" target="_blank">導航前往</a>');
+  d.marker.addTo(map);
+});
+function filt(f,el){cur=f;document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));el.classList.add('on');
+  DATA.forEach(d=>{const show=(f==='all'||d.type===f); if(show)d.marker.addTo(map); else map.removeLayer(d.marker)});}
+function hav(a,b,c,d){const R=6371,r=x=>x*Math.PI/180;const x=Math.sin(r(c-a)/2)**2+Math.cos(r(a))*Math.cos(r(c))*Math.sin(r(d-b)/2)**2;return R*2*Math.asin(Math.sqrt(x))}
+function show(lat,lng){
+  if(me)map.removeLayer(me);
+  me=L.circleMarker([lat,lng],{radius:8,color:'#c0632a',fillColor:'#e8853f',fillOpacity:.9}).addTo(map).bindPopup('你的位置');
+  const pool=DATA.filter(d=>cur==='all'||d.type===cur);
+  const near=pool.map(d=>({...d,km:hav(lat,lng,d.lat,d.lng)})).sort((a,b)=>a.km-b.km).slice(0,6);
+  map.setView([lat,lng],12);
+  document.getElementById('list').innerHTML=near.map(d=>{
+    const tag=d.type==='big'?'<span class="tag tg-big">大醫院</span>':'<span class="tag tg-al">校友</span>';
+    const sub=d.type==='big'?((d.level||'')+(d.dept?'　'+d.dept.split(',').slice(0,4).join('、'):'')):(d.doctor||'');
+    return '<div class="card"><div class="n">'+d.name+tag+'</div><div class="d">'+sub+'</div>'+
+      '<div class="dist">📍 約 '+d.km.toFixed(1)+' 公里</div>'+
+      '<a href="https://www.google.com/maps/dir/?api=1&destination='+d.lat+','+d.lng+'" target="_blank">導航前往 ›</a>'+
+      (d.tel?'<a href="tel:'+d.tel.replace(/[^0-9]/g,'')+'">☎ 撥號</a>':'')+'</div>';
+  }).join('');
+}
+function near(){if(!navigator.geolocation){alert('此裝置不支援定位');return}
+  navigator.geolocation.getCurrentPosition(p=>show(p.coords.latitude,p.coords.longitude),()=>alert('取得定位失敗，可先按「示範」'))}
+function demo(){show(22.6393,120.3020)}
+</script></body></html>
