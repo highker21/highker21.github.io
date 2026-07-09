@@ -59,7 +59,8 @@ document.getElementById('stat').textContent=STAT0;
 const map=L.map('map',{preferCanvas:true}).setView([22.64,120.31],11);
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© OpenStreetMap'}).addTo(map);
 let cur='all',curSpec='all',me=null;
-function match(d){return (cur==='all'||d.type===cur)&&(curSpec==='all'||(d.spec&&d.spec.includes(curSpec)))}
+function match(d){const t=cur==='all'||(cur==='clinic'?(d.type==='clinic'||d.type==='alumni'):d.type===cur);
+  return t&&(curSpec==='all'||(d.spec&&d.spec.includes(curSpec)))}
 function apply(){let n=0;DATA.forEach(d=>{match(d)?(d.marker.addTo(map),n++):map.removeLayer(d.marker)});
   document.getElementById('stat').textContent=(cur==='all'&&curSpec==='all')?STAT0:`符合條件 ${n} 家 · 轉診找最近的一家`;}
 DATA.forEach(d=>{const c=COL[d.type]||COL.clinic;
