@@ -73,14 +73,27 @@ function parse(text){
     if(isLab){
       // 資料列：以 ( 開頭的行（跳過純中文續行）
       let item=null,val=null,lo=null,hi=null,org='';
+      const isVal=t=>/^[＞>＜<]?-?\d+(\.\d+)?$/.test(t)||/^\([+-]\)$/.test(t)||/^(Negative|Positive|Trace|Clear|Turbid|Cloudy|Yellow|Normal)$/i.test(t);
+      const parenHead=ln=>{if(ln[0]!=='(')return null;let d=0;
+        for(let i=0;i<ln.length;i++){if(ln[i]==='(')d++;else if(ln[i]===')'){d--;if(d===0)return{name:ln.slice(1,i),rest:ln.slice(i+1).trim()}}}
+        return null};
       for(const ln of r.split('\n')){
-        let m=ln.match(/^\((.+)\)\s+([A-Za-z][\w .\-\/]*?)\s+(Negative|Positive|Trace|＞?[<>＜]?-?[\d.]+)\s/);
-        if(!m)m=ln.match(/^\((.+?)\)\s+(＞?-?[\d.]+)\s/);
-        if(!m)continue;
-        if(m.length===4){item=m[2].trim();val=m[3]}else{item=m[1].trim();val=m[2]}
-        const rng=ln.match(/\[([^\[\]]*)\]\[([^\[\]]*)\]/);
-        if(rng){lo=rng[1];hi=rng[2]}
-        else{const b=ln.match(/[\d.]+\s*\S*\s+([\d.]+)\s+健保署計算/);if(b)lo=b[1]}
+        const ph=parenHead(ln);
+        if(!ph)continue;
+        const rng=ph.rest.match(/\[([^\[\]]*)\]\[([^\[\]]*)\]/);
+        if(rng){
+          // 型A：(英文名) 項目 值 單位 單位 [下限][上限]…（項目可中文；單位固定重複兩次，以此定位值）
+          const toks=ph.rest.slice(0,rng.index).trim().split(/\s+/);
+          if(toks.length>=4&&toks[toks.length-1]===toks[toks.length-2]){val=toks[toks.length-3];item=toks.slice(0,-3).join(' ')}
+          else{const vi=toks.findIndex(isVal);if(vi<0)continue;val=toks[vi];item=vi>0?toks.slice(0,vi).join(' '):ph.name.trim()}
+          lo=rng[1];hi=rng[2];
+        }else{
+          // 型B：(eGFR-CKD-EPI) 83.58 單位 60 健保署計算…
+          const m=ph.rest.match(/^(＞?-?[\d.]+)\s/);
+          if(!m)continue;
+          item=ph.name.trim();val=m[1];
+          const b=ph.rest.match(/[\d.]+\s*\S*\s+([\d.]+)\s+健保署計算/);if(b)lo=b[1];
+        }
         const o=ln.match(/(?:檢查|健保署計算)\s+(\S+)\s*$/);if(o)org=o[1];
         break;
       }
@@ -127,7 +140,7 @@ function render(){
     const [date,org]=key.split('｜');
     if(kind==='lab'){
       const items=labs[key].map(x=>{
-        const v=/^Negative$/i.test(x.val)?'(-)':/^Positive$/i.test(x.val)?'(+)':' '+x.val+flag(x.val,x.lo,x.hi);
+        const v=/^(Negative|\(-\))$/i.test(x.val)?'(-)':/^(Positive|\(\+\))$/i.test(x.val)?'(+)':' '+x.val+flag(x.val,x.lo,x.hi);
         return x.item+v});
       out.push(listMode?`${date} ${org}\n`+items.map(i=>'- '+i).join('\n')
                        :`${date} ${org}：${items.join('、')}`);
