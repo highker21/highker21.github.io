@@ -1,0 +1,151 @@
+<!DOCTYPE html><html lang="zh-Hant"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>雲端藥歷 → 病歷精簡格式</title>
+<style>
+:root{--accent:#0e6e6e;--accent2:#139999;--ink:#132020;--line:#d8e4e4;--soft:#f4f9f9;--bg:#eaf2f2;}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:"PingFang TC","Noto Sans TC","Microsoft JhengHei",system-ui,sans-serif;background:var(--bg);color:var(--ink);padding:14px;max-width:1000px;margin:0 auto}
+h1{font-size:1.25rem;color:var(--accent);margin-bottom:2px}
+.sub{font-size:.8rem;color:#567;margin-bottom:10px}
+textarea{width:100%;height:200px;border:1px solid var(--line);border-radius:8px;padding:10px;font:0.8rem/1.5 ui-monospace,Menlo,monospace;background:#fff;resize:vertical}
+textarea:focus{outline:2px solid var(--accent2)}
+.opts{display:flex;flex-wrap:wrap;gap:14px;margin:10px 0;font-size:.85rem;align-items:center}
+.opts label{display:flex;align-items:center;gap:4px;cursor:pointer}
+#out{width:100%;min-height:120px;border:1px solid var(--line);border-radius:8px;padding:12px;font:0.85rem/1.65 ui-monospace,Menlo,monospace;background:var(--soft);white-space:pre-wrap;word-break:break-all}
+.bar{display:flex;gap:8px;margin:8px 0;align-items:center}
+button{background:var(--accent);color:#fff;border:0;border-radius:8px;padding:8px 18px;font-size:.9rem;cursor:pointer}
+button:hover{background:var(--accent2)}
+button.ghost{background:#fff;color:var(--accent);border:1px solid var(--accent)}
+#msg{font-size:.8rem;color:var(--accent2)}
+.warn{font-size:.78rem;color:#a05a1c;margin-top:6px}
+details{margin-top:6px;font-size:.75rem;color:#678}
+.foot{margin-top:18px;font-size:.72rem;color:#789;text-align:center}
+.hi{color:#c0392b;font-weight:bold}
+</style></head><body>
+<h1>🩺 雲端藥歷 → 病歷精簡格式</h1>
+<div class="sub">把健保雲端系統的「西醫藥歷 / 檢驗結果」整段複製貼上，自動重排成可貼病歷的精簡格式。資料只在你的瀏覽器處理，不會上傳。</div>
+<textarea id="in" placeholder="在這裡貼上雲端藥歷或檢驗檢查清單…（可混貼，會自動分段）"></textarea>
+<div class="opts">
+  <label><input type="checkbox" id="oAbn" checked>標記異常值 ↑↓</label>
+  <label><input type="checkbox" id="oDx" checked>含診斷 (ICD)</label>
+  <label><input type="checkbox" id="oShort" checked>藥名精簡</label>
+  <label><input type="checkbox" id="oList">條列式（預設一行式）</label>
+</div>
+<div class="bar"><button id="copy">📋 複製結果</button><button id="clr" class="ghost">清空</button><span id="msg"></span></div>
+<div id="out">貼上後結果會出現在這裡</div>
+<div class="warn" id="warn" hidden></div>
+<details id="skipbox" hidden><summary>未解析的段落（點開檢查）</summary><pre id="skipped"></pre></details>
+<div class="foot">僅重排文字、不做醫療判斷，貼入病歷前請自行核對｜工具版本：2026-07-09</div>
+<script>
+const $=id=>document.getElementById(id);
+const FREQ='QD|QAM|QPM|BID|TID|QID|QN|HS|PRN|QOD|QW|BIW|TIW|Q\\d+H|ST|STAT|MEAL|AC|PC';
+const FORM=/^(TABLETS?|TAB|CAPSULES?|CAP|CAPS|ENTERIC[\w-]*|PROLONGED-RELEASE|EXTENDED[\w-]*|FILM[\w-]*|F\.?C\.?|SUGAR[\w-]*|ORAL|EYE|DROPS?|LOTION|OINTMENT|CREAM|GEL|SYRUP|SOLUTION|SUSPENSION|INJECTION|INJ|PATCH|SPRAY|SUPPOSITOR(Y|IES)|POWDER|GRANULES?|MICROENCAPSULATED)$/i;
+const EXTRA=/^(SR|XL|XR|CR|ER|LA|MR|DEPOT|FORTE|RETARD)$/i;
+const title=s=>s.charAt(0)+s.slice(1).toLowerCase();
+
+function shortDrug(brand){
+  const toks=brand.replace(/["＂]/g,' ').split(/\s+/).filter(Boolean);
+  let name=[],extra='',form=[];
+  for(const t of toks){
+    if(EXTRA.test(t)&&name.length){extra=t.toUpperCase();continue}
+    if(FORM.test(t)){form.push(t.toLowerCase());continue}
+    if(/^\(/.test(t)||/^\d/.test(t))break;
+    if(form.length)break;
+    name.push(title(t));
+  }
+  const dm=brand.match(/(\d+(?:\.\d+)?)\s*(MG|MCG|G|ML|IU|%)(?:\/[\w.]+)?/i);
+  const dose=dm?dm[1]+dm[2].toLowerCase():'';
+  let out=name.join(' ')+(extra?' '+extra:'')+(dose?' '+dose:'');
+  if(!dose&&form.length)out+=' '+form.slice(0,2).join(' ');
+  return out.trim()||brand;
+}
+
+function parse(text){
+  const recs=text.split(/\n(?=\d+\s+1\d{2}\/\d{2}\/\d{2})/).map(s=>s.trim()).filter(Boolean);
+  const meds={},labs={},order=[],skipped=[];
+  const freqRe=new RegExp('\\s('+FREQ+')\\s+(\\d+(?:\\.\\d+)?)\\s+(\\d+)\\s+(\\d+)');
+  for(const r of recs){
+    const h=r.match(/^\d+\s+(1\d{2}\/\d{2}\/\d{2})\s+(.*)$/m);
+    if(!h){skipped.push(r);continue}
+    const date=h[1];
+    // 院所：藥歷在首行日期後、檢驗在資料列尾端
+    const isLab=/\[[^\[\]]*\]\[[^\[\]]*\]/.test(r)||/健保署計算/.test(r);
+    if(isLab){
+      // 資料列：以 ( 開頭的行（跳過純中文續行）
+      let item=null,val=null,lo=null,hi=null,org='';
+      for(const ln of r.split('\n')){
+        let m=ln.match(/^\((.+)\)\s+([A-Za-z][\w .\-\/]*?)\s+(Negative|Positive|Trace|＞?[<>＜]?-?[\d.]+)\s/);
+        if(!m)m=ln.match(/^\((.+?)\)\s+(＞?-?[\d.]+)\s/);
+        if(!m)continue;
+        if(m.length===4){item=m[2].trim();val=m[3]}else{item=m[1].trim();val=m[2]}
+        const rng=ln.match(/\[([^\[\]]*)\]\[([^\[\]]*)\]/);
+        if(rng){lo=rng[1];hi=rng[2]}
+        else{const b=ln.match(/[\d.]+\s*\S*\s+([\d.]+)\s+健保署計算/);if(b)lo=b[1]}
+        const o=ln.match(/(?:檢查|健保署計算)\s+(\S+)\s*$/);if(o)org=o[1];
+        break;
+      }
+      if(!item){skipped.push(r);continue}
+      if(!org){const o2=r.match(/無\s+(\S+)\n門診/);org=o2?o2[1]:''}
+      const key=date+'｜'+org;
+      if(!labs[key]){labs[key]=[];order.push(['lab',key])}
+      if(!labs[key].some(x=>x.item===item))labs[key].push({item,val,lo,hi});
+    }else{
+      const fm=r.match(freqRe);
+      if(!fm){skipped.push(r);continue}
+      const org=h[2].trim();
+      const dxm=r.match(/^\d{10}\s+(.+)$/m);
+      const lines=r.split('\n');const dl=lines[lines.length-1];
+      const icd=(dl.match(/^([A-Z]\d[\dA-Z]{1,5})\s/)||[])[1]||'';
+      const pre=dl.slice(0,dl.indexOf(fm[0]));
+      const bm=pre.match(/((?:[("'＂]?[A-Z0-9][A-Z0-9()"'＂.\-\/%,;：；]*\s+)*[("'＂]?[A-Z0-9][A-Z0-9()"'＂.\-\/%,;：；]*)\s*$/);
+      const brand=bm?bm[1].trim():pre.trim();
+      const key=date+'｜'+org;
+      if(!meds[key]){meds[key]={dx:new Map(),items:[]};order.push(['med',key])}
+      if(icd&&dxm)meds[key].dx.set(icd,dxm[1].trim());
+      meds[key].items.push({brand,freq:fm[1],days:fm[3]});
+    }
+  }
+  return {meds,labs,order,skipped};
+}
+
+function flag(v,lo,hi){
+  if(!$('oAbn').checked)return '';
+  const n=parseFloat(v);if(isNaN(n))return '';
+  const pl=s=>{if(s==null)return null;s=String(s).replace(/[＞>＜<]/g,'').trim();return s&&s!=='無'?parseFloat(s):null};
+  const l=pl(lo),h=pl(hi);
+  if(l!=null&&n<l)return '↓';
+  if(h!=null&&n>h)return '↑';
+  return '';
+}
+
+function render(){
+  const t=$('in').value.trim();
+  if(!t){$('out').textContent='貼上後結果會出現在這裡';$('warn').hidden=true;$('skipbox').hidden=true;return}
+  const {meds,labs,order,skipped}=parse(t);
+  const listMode=$('oList').checked,out=[];
+  for(const [kind,key] of order){
+    const [date,org]=key.split('｜');
+    if(kind==='lab'){
+      const items=labs[key].map(x=>{
+        const v=/^Negative$/i.test(x.val)?'(-)':/^Positive$/i.test(x.val)?'(+)':' '+x.val+flag(x.val,x.lo,x.hi);
+        return x.item+v});
+      out.push(listMode?`${date} ${org}\n`+items.map(i=>'- '+i).join('\n')
+                       :`${date} ${org}：${items.join('、')}`);
+    }else{
+      const m=meds[key];
+      const dx=$('oDx').checked&&m.dx.size?`（${[...m.dx].map(([i,d])=>i+' '+d).join('；')}）`:'';
+      const items=m.items.map(x=>`${$('oShort').checked?shortDrug(x.brand):x.brand} ${x.freq}×${x.days}d`);
+      out.push(listMode?`${date} ${org}${dx}\n`+items.map(i=>'- '+i).join('\n')
+                       :`${date} ${org}${dx}：${items.join('、')}`);
+    }
+  }
+  $('out').textContent=out.join('\n')||'（無法解析，請確認貼的是雲端藥歷/檢驗清單）';
+  $('warn').hidden=!skipped.length;
+  $('warn').textContent=skipped.length?`⚠️ 有 ${skipped.length} 段未能解析，未納入結果（點下方檢查原文）`:'';
+  $('skipbox').hidden=!skipped.length;
+  $('skipped').textContent=skipped.join('\n----\n');
+}
+['input','change'].forEach(e=>{$('in').addEventListener(e,render);document.querySelectorAll('.opts input').forEach(c=>c.addEventListener(e,render))});
+$('copy').onclick=async()=>{await navigator.clipboard.writeText($('out').textContent);$('msg').textContent='已複製 ✅';setTimeout(()=>$('msg').textContent='',1500)};
+$('clr').onclick=()=>{$('in').value='';render()};
+</script></body></html>
