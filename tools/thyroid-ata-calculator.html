@@ -1,0 +1,254 @@
+<!DOCTYPE html><html lang="zh-Hant"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>甲狀腺癌 2025 ATA 風險 / TSH / RAI 輔助計算</title>
+<style>
+:root{--accent:#7b2d5e;--accent2:#a03d7a;--ink:#221820;--line:#e3d3dd;--soft:#faf4f8;--bg:#f2e9ef;--warn:#a05a1c;--hi:#c0392b;--ok:#0a7d3c;}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:"PingFang TC","Noto Sans TC","Microsoft JhengHei",system-ui,sans-serif;background:var(--bg);color:var(--ink);padding:14px;max-width:1040px;margin:0 auto;line-height:1.5}
+h1{font-size:1.22rem;color:var(--accent)}
+.sub{font-size:.8rem;color:#775;margin:2px 0 10px}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:760px){.cols{grid-template-columns:1fr}}
+label.fld{font-size:.8rem;font-weight:bold;color:var(--accent);display:block;margin-bottom:4px}
+textarea{width:100%;height:330px;border:1px solid var(--line);border-radius:8px;padding:10px;font:0.78rem/1.5 ui-monospace,Menlo,monospace;background:#fff;resize:vertical}
+textarea:focus,input:focus,select:focus{outline:2px solid var(--accent2)}
+.panel{background:#fff;border:1px solid var(--line);border-radius:8px;padding:12px}
+.panel h2{font-size:.9rem;color:var(--accent);margin-bottom:8px;border-bottom:1px solid var(--line);padding-bottom:4px}
+.grid{display:grid;grid-template-columns:auto 1fr;gap:6px 10px;align-items:center;font-size:.82rem}
+.grid select,.grid input{border:1px solid var(--line);border-radius:6px;padding:4px 6px;font-size:.82rem;background:#fff;width:100%}
+.grid .k{color:#775;white-space:nowrap}
+.bar{display:flex;gap:8px;margin:10px 0;align-items:center;flex-wrap:wrap}
+button{background:var(--accent);color:#fff;border:0;border-radius:8px;padding:8px 16px;font-size:.88rem;cursor:pointer}
+button:hover{background:var(--accent2)}
+button.ghost{background:#fff;color:var(--accent);border:1px solid var(--accent)}
+#summary{font:0.95rem/1.6 ui-monospace,Menlo,monospace;background:var(--soft);border:1px solid var(--line);border-left:5px solid var(--accent);border-radius:8px;padding:12px;white-space:pre-wrap;word-break:break-word;margin:8px 0}
+.rk{display:inline-block;padding:1px 8px;border-radius:12px;font-weight:bold;font-size:.85rem}
+.rk-low{background:#e0f2e5;color:var(--ok)} .rk-lowint{background:#fff3d6;color:#8a6d1c}
+.rk-inthigh{background:#ffe3cc;color:var(--warn)} .rk-high{background:#fbe0dc;color:var(--hi)}
+#reason{font-size:.83rem;margin-top:8px}
+#reason ul{margin:4px 0 8px 20px} #reason li{margin:2px 0}
+#reason .sec{font-weight:bold;color:var(--accent);margin-top:8px;display:block}
+.trig{color:var(--hi)} .note{color:var(--warn)}
+#msg{font-size:.8rem;color:var(--accent2)}
+details{font-size:.78rem;color:#675;margin-top:8px}
+.disc{font-size:.75rem;color:var(--warn);background:#fff8ef;border:1px solid #f0dcc0;border-radius:8px;padding:8px;margin-top:10px}
+.foot{margin-top:14px;font-size:.72rem;color:#897;text-align:center}
+</style></head><body>
+<h1>🦋 甲狀腺分化癌 · 2025 ATA 風險 / TSH / RAI 輔助計算</h1>
+<div class="sub">貼上病理報告 → 自動擷取特徵、依 2025 ATA 指引（Fig.2 復發風險分層）推算 TSH 目標與 RAI 建議。<b>擷取結果請逐項核對、可手動修正</b>；本工具僅輔助計算，不取代臨床判斷。</div>
+
+<div class="cols">
+  <div>
+    <label class="fld" for="rpt">📄 病理報告（整段貼上）</label>
+    <textarea id="rpt" placeholder="貼上甲狀腺病理報告全文…（含 Microscopic Examination、pTNM、Tumor size、Extrathyroid extension、Lymph-vascular invasion、Surgical margin、lymph node 等）"></textarea>
+    <div class="bar"><button id="clr" class="ghost">清空</button><span class="note" style="font-size:.78rem">解析後請核對右側欄位</span></div>
+  </div>
+  <div class="panel">
+    <h2>🔬 擷取特徵（可核對／修正）</h2>
+    <div class="grid">
+      <span class="k">年齡</span><input id="f_age" type="number" min="0" max="120">
+      <span class="k">性別</span><select id="f_sex"><option value="">-</option><option>女</option><option>男</option></select>
+      <span class="k">組織型態</span><select id="f_hist"><option value="PTC">乳突癌 PTC</option><option value="FTC">濾泡癌 FTC/IEFVPTC</option><option value="OTC">嗜酸性癌 OTC</option></select>
+      <span class="k">組織惡性度</span><select id="f_grade"><option value="0">古典/一般</option><option value="aggr">侵襲型亞型(tall cell/hobnail/columnar)</option><option value="high">低分化/高惡性度</option></select>
+      <span class="k">腫瘤最大徑(cm)</span><input id="f_size" type="number" step="0.1" min="0">
+      <span class="k">多發性 multifocal</span><select id="f_multi"><option value="none">單一 unifocal</option><option value="uni">單側多發</option><option value="bilat">雙側多發 &gt;1cm</option></select>
+      <span class="k">甲外侵犯 ETE</span><select id="f_ete"><option value="none">無</option><option value="micro">顯微(microscopic)</option><option value="gross">肉眼(gross/strap=T3b)</option><option value="t4">肉眼 T4(氣管/喉/食道/大血管)</option></select>
+      <span class="k">血管侵犯 LVI/VI</span><select id="f_lvi"><option value="0">無</option><option value="1">有</option></select>
+      <span class="k">切緣 margin</span><select id="f_margin"><option value="neg">陰性/free(R0)</option><option value="microant">微觀陽性·前側(R1)</option><option value="micropost">微觀陽性·後側(R1)</option><option value="gross">肉眼陽性/R2</option></select>
+      <span class="k">淋巴結轉移</span><span><input id="f_lnpos" type="number" min="0" style="width:56px" title="轉移數"> / <input id="f_lntot" type="number" min="0" style="width:56px" title="總摘除數"> <select id="f_lnloc" style="width:auto"><option value="none">N0/Nx</option><option value="N1a">N1a(中央/VI)</option><option value="N1b">N1b(側頸)</option></select></span>
+      <span class="k">轉移淋巴結最大徑(cm)</span><input id="f_lnsize" type="number" step="0.1" min="0" placeholder="不明留空">
+      <span class="k">結外侵犯 ENE</span><select id="f_ene"><option value="0">無/未提</option><option value="1">有</option></select>
+      <span class="k">遠端轉移 M</span><select id="f_m"><option value="0">M0</option><option value="1">M1</option></select>
+      <span class="k">pT / pN（報告載明）</span><span><input id="f_pt" style="width:70px" placeholder="pT3b"> <input id="f_pn" style="width:60px" placeholder="N0"></span>
+      <span class="k">分子(BRAF/TERT)</span><select id="f_mol"><option value="unknown">未檢測/未提供</option><option value="none">陰性</option><option value="braf">BRAF+</option><option value="tert">TERT+ (或雙陽)</option></select>
+    </div>
+    <div class="bar"><button id="calc">🧮 重新計算</button><span id="msg"></span></div>
+  </div>
+</div>
+
+<div id="summary">貼上病理報告後，這裡會出現一行式結論。</div>
+<div id="reason"></div>
+<div class="bar"><button id="copy">📋 複製結論</button><button id="copyfull" class="ghost">複製完整分析</button></div>
+
+<div class="disc">⚠️ <b>使用限制</b>：本工具依 2025 ATA 指引（Ringel MD, Sosa JA, et al. Thyroid 2025;35(8):841-985，Fig.2 復發風險分層＋Rec.32 RAI）自動推算，屬<b>臨床決策輔助</b>，不取代醫師判斷；請務必核對擷取特徵、依完整指引與個案情境定案。分子（BRAF/TERT/RAS）缺漏時分層為 provisional。RAI 劑量為建議範圍，實際依核醫評估、已知病灶與病人條件個別化。</div>
+<details><summary>本工具採用的 2025 ATA 分層/建議規則（依 Fig.2 · Rec.32）</summary>
+<div style="margin-top:6px">
+四層復發風險(ROR)：low &lt;10%｜low-intermediate 10–15%｜intermediate-high 16–30%｜high &gt;30%。加成原則：≥2 個 low-intermediate 因子 → 升為 intermediate-high。<br>
+<b>PTC 分層（Fig.2）：</b><br>
+• <b>High(&gt;30%)</b>：T3a+顯微ETE、T3b、或 T4；或任何 T 併：低分化/高惡性度、肉眼不全切除(R2)、cN1≥3cm、結外侵犯(ENE)、遠端轉移(M1)。<br>
+• <b>Intermediate-high(16–30%)</b>：T1/T2/T3a 併：雙側多發&gt;1cm、臨床側頸淋巴 cN1b&lt;3cm、≥2 low-int 因子、侵襲型亞型、血管侵犯。<br>
+• <b>Low-intermediate(10–15%)</b>：T3a；或 T1/T2 併：單側多發、顯微ETE、cN1a/pN1a(&gt;2mm 或 &gt;5顆)、陰性或微觀後側切緣(R1)。<br>
+• <b>Low(&lt;10%)</b>：T1/T2(≤4cm)單發、pN0 或 pN1a(≤5顆全≤2mm)、陰性或微觀前側切緣(R1)。<br>
+TSH(初始；2025 之後改依動態反應調整)：high &lt;0.1｜intermediate-high 0.1–0.5｜low-int/low 正常範圍(≈0.5–2.0)。<br>
+RAI(Rec.32)：low 不建議常規(選擇性 30–50mCi)；low-int/int-high「可考慮 consider」(30–100，最高150mCi)；high / M1「建議常規 recommend」(100–150mCi，已知病灶可更高)。<br>
+AJCC 8th(年齡分界55)：&lt;55 → M0=Stage I、M1=II；≥55 → T1-2N0M0=I、T3或N1=II、T4a=III、T4b=IVA、M1=IVB。
+</div></details>
+<div class="foot">工具版本：2026-07-10（依 ATA 2025 全文 Fig.2/Rec.32 校正）｜資料僅在瀏覽器本機處理</div>
+
+<script>
+const $=id=>document.getElementById(id);
+const maxdim=s=>{const m=(s||'').match(/([\d.]+)\s*[xX×]\s*([\d.]+)(?:\s*[xX×]\s*([\d.]+))?/);if(!m)return null;return Math.max(...[m[1],m[2],m[3]].filter(Boolean).map(parseFloat));};
+
+function parseReport(t){
+  const F={};
+  F.age=(t.match(/年齡[：:\s]*(\d{1,3})\s*歲/)||[])[1]||'';
+  F.sex=(t.match(/性別[：:\s]*([男女])/)||[])[1]||'';
+  if(/oxyphil|oncocytic|H[üu]rthle|嗜酸/i.test(t))F.hist='OTC';
+  else if(/follicular\s+(thyroid\s+)?carcinoma|IEFVPTC|濾泡癌/i.test(t)&&!/papillary\s+carcinoma/i.test(t))F.hist='FTC';
+  else F.hist='PTC';
+  if(/poorly\s*differentiat|high[- ]grade|低分化|高惡性度|高度惡性/i.test(t))F.grade='high';
+  else if(/tall\s*cell|hobnail|columnar|solid\s*variant|diffuse\s*scleros|侵襲型/i.test(t))F.grade='aggr';
+  else F.grade='0';
+  let sz=(t.match(/Tumou?r\s*size[：:\s]*([\d.]+\s*[xX×][\d.\sxX×]+)/i)||[])[1]||(t.match(/(?:^|\n)\s*[-●*]?\s*Size[：:\s]*([\d.]+\s*[xX×][\d.\sxX×]+)/i)||[])[1];
+  F.size=sz?String(maxdim(sz)):'';
+  if(/bilateral\s*multifocal|multifocal.*bilateral|雙側.*多發|兩側.*多發/i.test(t))F.multi='bilat';
+  else if(/multifocal|多發|Number[：:\s]*[2-9]/i.test(t))F.multi='uni';
+  else F.multi='none';
+  // ETE
+  const et=((t.match(/Extra[- ]?thyroid(?:al)?\s*extension[：:\s]*([^\n]*)/i)||[])[1]||'')+' '+((t.match(/Tumou?r\s*extension[：:\s]*([^\n]*)/i)||[])[1]||'');
+  const etl=et.toLowerCase();
+  const present=/present|extension|involv|侵/.test(etl)&&!/not\s*identif|absent|no\b|無|free/.test(etl);
+  if(present&&/trachea|larynx|esophag|recurrent|prevertebral|carotid|mediastin|氣管|喉|食道/.test(etl))F.ete='t4';
+  else if(present&&/gross|strap|大體|肉眼|帶狀肌/.test(etl))F.ete='gross';
+  else if(present&&/microscop|顯微/.test(etl))F.ete='micro';
+  else if(present)F.ete='micro';
+  else F.ete='none';
+  const lvi=(t.match(/(?:Lymph[- ]?)?vascular\s*invasion[：:\s]*([^\n]*)/i)||[])[1]||'';
+  F.lvi=/present|有|identified/i.test(lvi)&&!/not\s*identif|absent|無/i.test(lvi)?'1':'0';
+  const mg=(t.match(/(?:Surgical\s*)?margin[^:：\n]*[：:\s]*([^\n]*)/i)||[])[1]||'';
+  if(/gross|R2|肉眼/i.test(mg))F.margin='gross';
+  else if(/involv|positive|陽性|present/i.test(mg)&&!/free|negative|not\s|陰性/i.test(mg))F.margin=/anterior|前側/i.test(mg)?'microant':'micropost';
+  else F.margin='neg';
+  let pos=0,tot=0;const lnRe=/\((\d+)\s*\/\s*(\d+)\)/g;let m;while((m=lnRe.exec(t))){pos+=+m[1];tot+=+m[2];}
+  F.lnpos=String(pos);F.lntot=String(tot);
+  F.lnloc=pos>0?(/level\s*(II|III|IV|Vb|VB)\b|lateral|側頸/i.test(t)?'N1b':'N1a'):'none';
+  F.lnsize='';
+  F.ene=/extranodal\s*extension|\bENE\b|結外侵犯/i.test(t)?'1':'0';
+  F.m=/\bM1\b|distant\s*met|遠端轉移/i.test(t)?'1':'0';
+  const tn=t.match(/\(?\s*[ryp]*T(\w+)\s*N([\dxX]\w*)\s*(M\d)?\s*\)?/);
+  F.pt=tn?'pT'+tn[1]:'';F.pn=tn?'N'+tn[2]:'';
+  if(/TERT[^a-z]*(mutant|positive|\+|突變|V\d)/i.test(t))F.mol='tert';
+  else if(/BRAF[^a-z]*(V600E|mutant|positive|\+|突變)/i.test(t))F.mol='braf';
+  else if(/BRAF|TERT|RAS/i.test(t)&&/wild|negative|陰性|not\s*detect/i.test(t))F.mol='none';
+  else F.mol='unknown';
+  return F;
+}
+function fill(F){for(const k of ['age','sex','hist','grade','size','multi','ete','lvi','margin','lnpos','lntot','lnloc','lnsize','ene','m','pt','pn','mol'])$('f_'+k).value=F[k]??'';}
+function readF(){return{age:+$('f_age').value||null,sex:$('f_sex').value,hist:$('f_hist').value,grade:$('f_grade').value,
+  size:parseFloat($('f_size').value)||null,multi:$('f_multi').value,ete:$('f_ete').value,lvi:$('f_lvi').value==='1',
+  margin:$('f_margin').value,lnpos:+$('f_lnpos').value||0,lntot:+$('f_lntot').value||0,lnloc:$('f_lnloc').value,
+  lnsize:parseFloat($('f_lnsize').value)||null,ene:$('f_ene').value==='1',m:$('f_m').value==='1',
+  pt:$('f_pt').value.trim(),pn:$('f_pn').value.trim(),mol:$('f_mol').value};}
+
+function Tstage(F){
+  if(F.ete==='t4')return{t:'T4',t4:true,t4b:/prevertebral|carotid|mediastin/i.test($('rpt').value||'')};
+  if(F.ete==='gross')return{t:'T3b',t4:false};
+  const s=F.size;let t='Tx';
+  if(F.pt){const m=F.pt.match(/T(\w+)/i);if(m)t='T'+m[1];}
+  else if(s!=null){t=s<=1?'T1a':s<=2?'T1b':s<=4?'T2':'T3a';}
+  return{t,t4:false,t3a:/T3a/.test(t)||(s!=null&&s>4)};
+}
+function deriveN(F){if(F.pn)return F.pn.replace(/^N?/,'N');if(F.lnpos>0)return F.lnloc==='N1b'?'N1b':'N1a';if(F.lntot>0)return'N0';return'Nx';}
+function ajcc(F){const T=Tstage(F);const N=deriveN(F);const age=F.age;if(age==null)return{stage:'?'};
+  if(age<55)return{stage:F.m?'II':'I'};
+  if(F.m)return{stage:'IVB'};
+  if(T.t4&&T.t4b)return{stage:'IVA'};
+  if(T.t4)return{stage:'III'};
+  if(/T3/.test(T.t)||/N1/.test(N))return{stage:'II'};
+  return{stage:'I'};}
+
+// ==== ATA 2025 Fig.2 risk engine (PTC) ====
+function risk(F){
+  const hi=[],ih=[],li=[];
+  const T=Tstage(F), gt4=F.size!=null&&F.size>4, T3a=gt4&&F.ete!=='gross'&&F.ete!=='t4';
+  // HIGH
+  if(F.ete==='t4')hi.push('肉眼甲外侵犯 T4（氣管/喉/食道/大血管等）');
+  else if(F.ete==='gross')hi.push('肉眼甲外侵犯 gross ETE（T3b，帶狀肌）');
+  if(T3a&&F.ete==='micro')hi.push('T3a（>4cm）併顯微甲外侵犯');
+  if(F.grade==='high')hi.push('低分化 / 高惡性度組織');
+  if(F.margin==='gross')hi.push('肉眼不全切除（R2）');
+  if(F.ene)hi.push('淋巴結外侵犯（ENE）');
+  if(F.m)hi.push('遠端轉移（M1）');
+  if(F.lnpos>0&&F.lnsize!=null&&F.lnsize>=3)hi.push('轉移淋巴結 ≥3 cm（cN1 ≥3cm）');
+  // INTERMEDIATE-HIGH
+  if(F.multi==='bilat')ih.push('雙側多發 > 1 cm');
+  if(F.lnloc==='N1b'&&!(F.lnsize>=3))ih.push('臨床側頸淋巴結轉移 cN1b（<3cm）');
+  if(F.grade==='aggr')ih.push('侵襲型組織亞型（tall cell / hobnail / columnar 等）');
+  if(F.lvi)ih.push('血管侵犯（vascular invasion）');
+  // LOW-INTERMEDIATE
+  if(F.multi==='uni')li.push('單側多發 multifocality');
+  if(F.ete==='micro'&&!T3a)li.push('顯微甲外侵犯 microscopic ETE');
+  if(F.lnloc==='N1a'&&(F.lnpos>5||(F.lnsize!=null&&F.lnsize>0.2)))li.push('中央區淋巴結轉移 pN1a（>5顆 或 >2mm）');
+  if(F.margin==='micropost')li.push('微觀陽性後側切緣（R1）');
+  if(T3a&&F.ete!=='micro')li.push('T3a（腫瘤 >4cm，腺內）');
+  // molecular (adjunct, note only — not a Fig.2 tier factor by itself)
+  let molNote='';
+  if(F.mol==='tert')molNote='TERT（±BRAF）為高危分子，常上調風險——請結合臨床判讀。';
+  else if(F.mol==='braf')molNote='BRAF V600E 為分子高危因子之一，需結合其他特徵判讀。';
+  let tier;
+  if(hi.length)tier='high';
+  else if(ih.length)tier='inthigh';
+  else if(li.length>=2)tier='inthigh';
+  else if(li.length===1)tier='lowint';
+  else tier='low';
+  const map={low:['低風險 (Low, <10%)','rk-low','Low risk'],lowint:['低-中風險 (Low-intermediate, 10–15%)','rk-lowint','Low-intermediate risk'],
+    inthigh:['中-高風險 (Intermediate-high, 16–30%)','rk-inthigh','Intermediate-high risk'],high:['高風險 (High, >30%)','rk-high','High risk']};
+  return{tier,label:map[tier][0],cls:map[tier][1],short:map[tier][2],hi,ih,li,additive:(!hi.length&&!ih.length&&li.length>=2),molNote};
+}
+const tshGoal=t=>t==='high'?'< 0.1 mU/L':t==='inthigh'?'0.1–0.5 mU/L':'正常範圍（≈0.5–2.0 mU/L）';
+const raiShort=t=>t==='high'?'Recommend 100–150 mCi':t==='inthigh'?'Consider（100–150 mCi）':t==='lowint'?'Consider（30–100 mCi）':'Not routinely recommended';
+const raiLong=t=>t==='high'?'建議常規（recommend）：輔助治療＋殘餘消融，100–150 mCi（3.7–5.55 GBq；已知病灶/遠端轉移可更高）':
+  t==='inthigh'?'可考慮（may be considered）：輔助治療，30–100 mCi，較高風險端可至 150 mCi':
+  t==='lowint'?'可考慮（may be considered）：多數可不做；若做為選擇性輔助，30–100 mCi':
+  '不建議常規（not routinely recommended）；若選擇性殘餘消融，低劑量 30–50 mCi';
+
+function run(){
+  const F=readF();
+  if(F.age==null&&!$('rpt').value.trim()){$('summary').textContent='貼上病理報告後，這裡會出現一行式結論。';$('reason').innerHTML='';return;}
+  const R=risk(F),S=ajcc(F),T=Tstage(F),N=deriveN(F),Mst=F.m?'M1':'M0';
+  const histName={PTC:'Papillary Thyroid Cancer',FTC:'Follicular Thyroid Cancer',OTC:'Oncocytic Thyroid Cancer'}[F.hist];
+  const tnm=`(p${T.t} p${N.replace(/^N/,'N')} ${Mst})`;
+  const stageTxt=S.stage&&S.stage!=='?'?`stage ${S.stage}`:'stage ?';
+  $('summary').textContent=`${histName}, ${tnm}, ${stageTxt}, ${R.short}, TSH goal ${tshGoal(R.tier)}, RAI ${raiShort(R.tier)}`;
+
+  const g={0:'古典/一般',aggr:'侵襲型亞型',high:'低分化/高惡性度'}[F.grade];
+  const eteT={none:'無',micro:'顯微',gross:'肉眼(T3b)',t4:'肉眼 T4'}[F.ete];
+  const mgT={neg:'陰性',microant:'微觀陽性·前側',micropost:'微觀陽性·後側',gross:'肉眼陽性(R2)'}[F.margin];
+  const multiT={none:'單一',uni:'單側多發',bilat:'雙側多發>1cm'}[F.multi];
+  let h=`<span class="sec">1. 腫瘤特徵</span><ul>`;
+  h+=`<li>組織型態：${histName}（${g}）</li>`;
+  h+=`<li>腫瘤最大徑：${F.size!=null?F.size+' cm':'（未擷取，請補）'}；${multiT}</li>`;
+  h+=`<li>甲外侵犯 ETE：${eteT}；血管侵犯：${F.lvi?'有':'無'}；切緣：${mgT}${F.ene?'；ENE：有':''}</li>`;
+  h+=`<li>淋巴結：${F.lnpos}/${F.lntot}${F.lnpos>0?'（'+F.lnloc+(F.lnsize?'，最大 '+F.lnsize+'cm':'')+'）':'（N0/Nx）'}；遠端轉移：${Mst}</li>`;
+  h+=`<li>分子：${{unknown:'未提供',none:'陰性',braf:'BRAF+',tert:'TERT+/雙陽'}[F.mol]}</li></ul>`;
+
+  h+=`<span class="sec">2. 風險分層</span> <span class="rk ${R.cls}">${R.label}</span><ul>`;
+  R.hi.forEach(x=>h+=`<li class="trig">▲ 高風險因子：${x}</li>`);
+  R.ih.forEach(x=>h+=`<li>■ 中-高風險因子：${x}</li>`);
+  R.li.forEach(x=>h+=`<li>· 低-中風險因子：${x}</li>`);
+  if(R.additive)h+=`<li class="note">↑ 加成原則：≥2 個 low-intermediate 因子 → 升為 intermediate-high</li>`;
+  if(!R.hi.length&&!R.ih.length&&!R.li.length)h+=`<li>無明確升風險因子 → 低風險</li>`;
+  if(R.molNote)h+=`<li class="note">分子：${R.molNote}</li>`;
+  h+=`<li>AJCC 8th 分期：${F.age!=null?F.age+' 歲'+(F.age<55?'（<55）':'（≥55）'):'年齡?'} → <b>Stage ${S.stage}</b>（${Mst}${/N1/.test(N)?'、'+N:''}${T.t4?'、'+T.t:''}）</li></ul>`;
+
+  h+=`<span class="sec">3. 治療建議</span><ul>`;
+  h+=`<li>TSH 目標（初始）：<b>${tshGoal(R.tier)}</b>（2025 ATA 之後改依動態反應調整：excellent→正常範圍、incomplete→below normal）</li>`;
+  h+=`<li>放射碘 RAI：<b>${raiLong(R.tier)}</b></li></ul>`;
+
+  const cons=[];
+  if(F.mol==='unknown')cons.push('分子資料（BRAF/TERT/RAS）缺漏，風險分層為 provisional。');
+  if(F.size==null)cons.push('未擷取到腫瘤大小，請確認。');
+  if(F.age==null)cons.push('未擷取到年齡，AJCC 分期無法計算。');
+  if(F.lnpos>0&&F.lnsize==null)cons.push('轉移淋巴結大小未填——是否 ≥3cm(→高風險) 或 >2mm(→低中風險) 會影響分層，請補。');
+  if(F.m)cons.push('M 分期常為臨床判定，請確認遠端轉移狀態。');
+  if(cons.length)h+=`<span class="sec note">備註 / Constraints</span><ul>`+cons.map(c=>`<li class="note">${c}</li>`).join('')+`</ul>`;
+  $('reason').innerHTML=h;
+  window._fullText=$('summary').textContent+'\n\n'+$('reason').innerText;
+}
+$('rpt').addEventListener('input',()=>{fill(parseReport($('rpt').value));run();});
+document.querySelectorAll('.grid input,.grid select').forEach(e=>e.addEventListener('change',run));
+$('calc').onclick=run;
+$('clr').onclick=()=>{$('rpt').value='';run();};
+$('copy').onclick=async()=>{await navigator.clipboard.writeText($('summary').textContent);$('msg').textContent='已複製結論 ✅';setTimeout(()=>$('msg').textContent='',1500);};
+$('copyfull').onclick=async()=>{await navigator.clipboard.writeText(window._fullText||$('summary').textContent);$('msg').textContent='已複製完整分析 ✅';setTimeout(()=>$('msg').textContent='',1500);};
+</script></body></html>
