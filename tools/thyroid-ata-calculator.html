@@ -33,9 +33,28 @@ button.ghost{background:#fff;color:var(--accent);border:1px solid var(--accent)}
 details{font-size:.78rem;color:#675;margin-top:8px}
 .disc{font-size:.75rem;color:var(--warn);background:#fff8ef;border:1px solid #f0dcc0;border-radius:8px;padding:8px;margin-top:10px}
 .foot{margin-top:14px;font-size:.72rem;color:#897;text-align:center}
+.histbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:8px 0}
+#pname{border:1px solid var(--line);border-radius:6px;padding:7px 9px;font-size:.85rem;width:190px}
+#pname:focus{outline:2px solid var(--accent2)}
+#histList{display:flex;gap:6px;flex-wrap:wrap;margin:4px 0 10px}
+.hchip{display:inline-flex;align-items:center;gap:6px;background:#fff;border:1px solid var(--accent);border-radius:16px;padding:4px 4px 4px 12px;font-size:.8rem}
+.hchip .hload{display:inline-flex;align-items:center;gap:6px;cursor:pointer}
+.hchip .hname{font-weight:bold;color:var(--accent)} .hchip .hdate{color:#897;font-size:.72rem}
+.hchip.active{background:var(--accent)} .hchip.active .hname,.hchip.active .hdate{color:#fff}
+.hchip .hdel{background:none;color:#a05a1c;border:0;padding:0 5px;font-size:.9rem;cursor:pointer;line-height:1}
+.hchip .hdel:hover{background:#f0d0c0;border-radius:50%} .hchip.active .hdel{color:#ffd9c0}
+.muted{color:#897;font-size:.8rem}
 </style></head><body>
 <h1>🦋 甲狀腺分化癌 · 2025 ATA 風險 / TSH / RAI 輔助計算</h1>
-<div class="sub">貼上病理報告 → 自動擷取特徵、依 2025 ATA 指引（Fig.2 復發風險分層）推算 TSH 目標與 RAI 建議。<b>擷取結果請逐項核對、可手動修正</b>；本工具僅輔助計算，不取代臨床判斷。</div>
+<div class="sub">貼上病理報告 → 自動擷取特徵、依 2025 ATA 指引（Fig.2 復發風險分層）推算 TSH 目標與 RAI 建議。<b>擷取結果請逐項核對、可手動修正</b>；本工具僅輔助計算，不取代臨床判斷。資料只在本機瀏覽器儲存、不上傳。</div>
+
+<div class="histbar">
+  <input id="pname" placeholder="姓名 / 病歷號（存檔用）">
+  <button id="save">💾 儲存到歷史</button>
+  <button id="newp" class="ghost">＋ 新病人（清空）</button>
+  <span id="msg2"></span>
+</div>
+<div id="histList"></div>
 
 <div class="cols">
   <div>
@@ -275,4 +294,46 @@ $('calc').onclick=run;
 $('clr').onclick=()=>{$('rpt').value='';run();};
 $('copy').onclick=async()=>{await navigator.clipboard.writeText($('summary').textContent);$('msg').textContent='已複製結論 ✅';setTimeout(()=>$('msg').textContent='',1500);};
 $('copyfull').onclick=async()=>{await navigator.clipboard.writeText(window._fullText||$('summary').textContent);$('msg').textContent='已複製完整分析 ✅';setTimeout(()=>$('msg').textContent='',1500);};
+
+// ---- 病人歷史暫存（本機 localStorage，可切換不同病人）----
+const HKEY='thyroidHistory_v1';let activeId=null;
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const loadHist=()=>{try{return JSON.parse(localStorage.getItem(HKEY))||[]}catch(e){return[]}};
+const saveHist=a=>localStorage.setItem(HKEY,JSON.stringify(a));
+const nowStr=()=>{const d=new Date(),p=n=>String(n).padStart(2,'0');return `${d.getFullYear()}/${p(d.getMonth()+1)}/${p(d.getDate())} ${p(d.getHours())}:${p(d.getMinutes())}`;};
+const FIELDS=['f_age','f_sex','f_hist','f_variant','f_grade','f_size','f_multi','f_ete','f_lvi','f_margin','f_lnpos','f_lntot','f_lnloc','f_lnsize','f_ene','f_m','f_pt','f_pn','f_mol'];
+const snapFields=()=>{const o={};FIELDS.forEach(id=>o[id]=$(id).value);return o;};
+const restoreFields=o=>{if(o)FIELDS.forEach(id=>{if(o[id]!=null)$(id).value=o[id];});};
+function renderHist(){
+  const arr=loadHist(),box=$('histList');box.innerHTML='';
+  if(!arr.length){box.innerHTML='<span class="muted">尚無暫存——輸入姓名後按「儲存到歷史」，之後可在這裡切換不同病人。</span>';return;}
+  for(const it of arr){
+    const chip=document.createElement('div');chip.className='hchip'+(it.id===activeId?' active':'');
+    const load=document.createElement('span');load.className='hload';
+    load.innerHTML=`<span class="hname">${esc(it.name||'未命名')}</span><span class="hdate">${esc(it.date||'')}</span>`;
+    load.onclick=()=>loadItem(it.id);
+    const del=document.createElement('button');del.className='hdel';del.textContent='✕';del.title='刪除這筆';
+    del.onclick=e=>{e.stopPropagation();delItem(it.id);};
+    chip.appendChild(load);chip.appendChild(del);box.appendChild(chip);
+  }
+}
+function saveCurrent(){
+  const name=$('pname').value.trim();
+  if(!name){$('msg2').textContent='請先填姓名/病歷號';setTimeout(()=>$('msg2').textContent='',1800);$('pname').focus();return;}
+  if(!$('rpt').value.trim()){$('msg2').textContent='沒有報告內容可存';setTimeout(()=>$('msg2').textContent='',1800);return;}
+  const arr=loadHist(),existing=arr.find(x=>x.name===name);
+  const rec={id:existing?existing.id:'p'+Date.now(),name,report:$('rpt').value,fields:snapFields(),date:nowStr()};
+  activeId=rec.id;const na=arr.filter(x=>x.name!==name);na.unshift(rec);saveHist(na);renderHist();
+  $('msg2').textContent=existing?'已更新 ✅':'已儲存 ✅';setTimeout(()=>$('msg2').textContent='',1600);
+}
+function loadItem(id){
+  const it=loadHist().find(x=>x.id===id);if(!it)return;
+  $('pname').value=it.name||'';$('rpt').value=it.report||'';
+  fill(parseReport($('rpt').value));restoreFields(it.fields);
+  activeId=id;run();renderHist();
+  $('msg2').textContent='已載入：'+(it.name||'未命名');setTimeout(()=>$('msg2').textContent='',1600);
+}
+function delItem(id){saveHist(loadHist().filter(x=>x.id!==id));if(activeId===id)activeId=null;renderHist();}
+function newPatient(){$('pname').value='';$('rpt').value='';FIELDS.forEach(id=>{const el=$(id);el.value=(el.tagName==='SELECT')?el.options[0].value:'';});activeId=null;run();renderHist();$('pname').focus();}
+$('save').onclick=saveCurrent;$('newp').onclick=newPatient;renderHist();
 </script></body></html>
