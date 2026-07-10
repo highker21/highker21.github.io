@@ -44,6 +44,13 @@ details{font-size:.78rem;color:#675;margin-top:8px}
 .hchip .hdel{background:none;color:#a05a1c;border:0;padding:0 5px;font-size:.9rem;cursor:pointer;line-height:1}
 .hchip .hdel:hover{background:#f0d0c0;border-radius:50%} .hchip.active .hdel{color:#ffd9c0}
 .muted{color:#897;font-size:.8rem}
+@media print{
+  body{background:#fff;padding:8px;max-width:100%}
+  .histbar,#histList,.cols,.bar,details,.foot{display:none!important}
+  #summary{border:1px solid #999;background:#fff}
+  h1{font-size:16pt} #reason{font-size:11pt}
+  .rk{border:1px solid #999}
+}
 </style></head><body>
 <h1>🦋 甲狀腺分化癌 · 2025 ATA 風險 / TSH / RAI 輔助計算</h1>
 <div class="sub">貼上病理報告 → 自動擷取特徵、依 2025 ATA 指引（Fig.2 復發風險分層）推算 TSH 目標與 RAI 建議。<b>擷取結果請逐項核對、可手動修正</b>；本工具僅輔助計算，不取代臨床判斷。資料只在本機瀏覽器儲存、不上傳。</div>
@@ -89,6 +96,7 @@ details{font-size:.78rem;color:#675;margin-top:8px}
 <div id="summary">貼上病理報告後，這裡會出現一行式結論。</div>
 <div id="reason"></div>
 <div class="bar"><button id="copy">📋 複製結論</button><button id="copyfull" class="ghost">複製完整分析</button></div>
+<div class="bar"><span class="muted">匯出：</span><button id="expWord" class="ghost">📝 Word</button><button id="expExcel" class="ghost">📊 Excel</button><button id="expCSV" class="ghost">🧾 CSV</button><button id="expPDF" class="ghost">📄 PDF</button><button id="expPrint" class="ghost">🖨 列印</button></div>
 
 <div class="disc">⚠️ <b>使用限制</b>：本工具依 2025 ATA 指引（Ringel MD, Sosa JA, et al. Thyroid 2025;35(8):841-985，Fig.2 復發風險分層＋Rec.32 RAI）自動推算，屬<b>臨床決策輔助</b>，不取代醫師判斷；請務必核對擷取特徵、依完整指引與個案情境定案。分子（BRAF/TERT/RAS）缺漏時分層為 provisional。RAI 劑量為建議範圍，實際依核醫評估、已知病灶與病人條件個別化。</div>
 <details><summary>本工具採用的 2025 ATA 分層/建議規則（依 Fig.2 · Rec.32）</summary>
@@ -287,8 +295,19 @@ function run(){
   if(cons.length)h+=`<span class="sec note">備註 / Constraints</span><ul>`+cons.map(c=>`<li class="note">${c}</li>`).join('')+`</ul>`;
   $('reason').innerHTML=h;
   window._fullText=$('summary').textContent+'\n\n'+$('reason').innerText;
+  window._exp={name:$('pname').value.trim(),summary:$('summary').textContent,reasonHtml:$('reason').innerHTML,rows:[
+    ['姓名/病歷號',$('pname').value.trim()],['年齡',F.age??''],['性別',F.sex],
+    ['組織型態',histName],['組織亞型/特色',F.variant],['組織惡性度',g],
+    ['腫瘤最大徑(cm)',F.size??''],['多發',multiT],['甲外侵犯ETE',eteT],
+    ['血管侵犯LVI',F.lvi?'有':'無'],['切緣',mgT],['淋巴結(轉移/總)',F.lnpos+'/'+F.lntot],
+    ['N分區',F.lnloc],['轉移節點最大(cm)',F.lnsize??''],['結外侵犯ENE',F.ene?'有':'無'],
+    ['遠端轉移M',Mst],['pT',T.t],['pN',N],['AJCC分期',S.stage],
+    ['ATA復發風險',R.short+'／'+R.label],['TSH目標',tshGoal(R.tier)],['RAI建議',raiLong(R.tier)],
+    ['一行式結論',$('summary').textContent],
+  ]};
 }
 $('rpt').addEventListener('input',()=>{fill(parseReport($('rpt').value));run();});
+$('pname').addEventListener('input',run);
 document.querySelectorAll('.grid input,.grid select').forEach(e=>e.addEventListener('change',run));
 $('calc').onclick=run;
 $('clr').onclick=()=>{$('rpt').value='';run();};
@@ -336,4 +355,17 @@ function loadItem(id){
 function delItem(id){saveHist(loadHist().filter(x=>x.id!==id));if(activeId===id)activeId=null;renderHist();}
 function newPatient(){$('pname').value='';$('rpt').value='';FIELDS.forEach(id=>{const el=$(id);el.value=(el.tagName==='SELECT')?el.options[0].value:'';});activeId=null;run();renderHist();$('pname').focus();}
 $('save').onclick=saveCurrent;$('newp').onclick=newPatient;renderHist();
+
+// ---- 匯出 Word / Excel / CSV / PDF / 列印 ----
+function dl(name,mime,content){const b=new Blob([content],{type:mime});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),1500);}
+function fname(ext){const d=new Date(),p=n=>String(n).padStart(2,'0');const nm=(window._exp&&window._exp.name||'病人').replace(/[\\/:*?"<>|\s]/g,'')||'病人';return `甲狀腺ATA_${nm}_${d.getFullYear()}${p(d.getMonth()+1)}${p(d.getDate())}.${ext}`;}
+const csvCell=s=>{s=String(s==null?'':s);return /[",\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s;};
+function needExp(){if(!window._exp){$('msg').textContent='請先貼上報告';setTimeout(()=>$('msg').textContent='',1500);return false;}return true;}
+function expCSV(){if(!needExp())return;const body=window._exp.rows.map(r=>csvCell(r[0])+','+csvCell(r[1])).join('\r\n');dl(fname('csv'),'text/csv;charset=utf-8','﻿項目,內容\r\n'+body);}
+function tableHtml(){return `<table border="1" cellspacing="0" cellpadding="4" style="border-collapse:collapse;font-family:sans-serif;font-size:12pt"><tr><th align="left">項目</th><th align="left">內容</th></tr>`+window._exp.rows.map(r=>`<tr><td>${esc(r[0])}</td><td>${esc(r[1])}</td></tr>`).join('')+`</table>`;}
+function expExcel(){if(!needExp())return;const html=`<html xmlns:x="urn:schemas-microsoft-com:office:excel"><head><meta charset="utf-8"><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>ATA</x:Name></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body>${tableHtml()}</body></html>`;dl(fname('xls'),'application/vnd.ms-excel;charset=utf-8',html);}
+function expWord(){if(!needExp())return;const doc=`<html xmlns:w="urn:schemas-microsoft-com:office:word"><head><meta charset="utf-8"><title>甲狀腺ATA報告</title></head><body style="font-family:'Microsoft JhengHei','PMingLiU',serif;font-size:12pt"><h2 style="color:#7b2d5e">甲狀腺分化癌 · 2025 ATA 評估報告</h2><p style="font-size:13pt"><b>${esc(window._exp.summary)}</b></p>${window._exp.reasonHtml}<hr><p style="font-size:9pt;color:#a05a1c">本工具依 2025 ATA 指引（Thyroid 2025;35(8):841-985，Fig.2/Rec.32）輔助計算，不取代臨床判斷；請核對後定案。</p></body></html>`;dl(fname('doc'),'application/msword;charset=utf-8',doc);}
+$('expCSV').onclick=expCSV;$('expExcel').onclick=expExcel;$('expWord').onclick=expWord;
+$('expPDF').onclick=()=>{$('msg').textContent='列印視窗→選「另存為 PDF」';setTimeout(()=>$('msg').textContent='',2500);window.print();};
+$('expPrint').onclick=()=>window.print();
 </script></body></html>
