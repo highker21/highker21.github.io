@@ -7,6 +7,9 @@
 body{font-family:"PingFang TC","Noto Sans TC","Microsoft JhengHei",system-ui,sans-serif;background:var(--bg);color:var(--ink);padding:14px;max-width:1000px;margin:0 auto}
 h1{font-size:1.25rem;color:var(--accent);margin-bottom:2px}
 .sub{font-size:.8rem;color:#567;margin-bottom:10px}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:640px){.cols{grid-template-columns:1fr}}
+.col label{font-size:.82rem;font-weight:bold;color:var(--accent);display:block;margin-bottom:4px}
 textarea{width:100%;height:200px;border:1px solid var(--line);border-radius:8px;padding:10px;font:0.8rem/1.5 ui-monospace,Menlo,monospace;background:#fff;resize:vertical}
 textarea:focus{outline:2px solid var(--accent2)}
 .opts{display:flex;flex-wrap:wrap;gap:14px;margin:10px 0;font-size:.85rem;align-items:center}
@@ -16,32 +19,60 @@ textarea:focus{outline:2px solid var(--accent2)}
 button{background:var(--accent);color:#fff;border:0;border-radius:8px;padding:8px 18px;font-size:.9rem;cursor:pointer}
 button:hover{background:var(--accent2)}
 button.ghost{background:#fff;color:var(--accent);border:1px solid var(--accent)}
-#msg{font-size:.8rem;color:var(--accent2)}
+#msg,#msg2{font-size:.8rem;color:var(--accent2)}
 .warn{font-size:.78rem;color:#a05a1c;margin-top:6px}
 details{margin-top:6px;font-size:.75rem;color:#678}
 .foot{margin-top:18px;font-size:.72rem;color:#789;text-align:center}
 .hi{color:#c0392b;font-weight:bold}
+.histbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:8px 0}
+#pname{border:1px solid var(--line);border-radius:6px;padding:7px 9px;font-size:.85rem;width:180px}
+#pname:focus{outline:2px solid var(--accent2)}
+#histList{display:flex;gap:6px;flex-wrap:wrap;margin:4px 0 12px}
+.hchip{display:inline-flex;align-items:center;gap:6px;background:#fff;border:1px solid var(--accent);border-radius:16px;padding:4px 4px 4px 12px;font-size:.8rem}
+.hchip .hload{display:inline-flex;align-items:center;gap:6px;cursor:pointer}
+.hchip .hname{font-weight:bold;color:var(--accent)}
+.hchip .hdate{color:#789;font-size:.72rem}
+.hchip.active{background:var(--accent);}
+.hchip.active .hname,.hchip.active .hdate{color:#fff}
+.hchip .hdel{background:none;color:#a05a1c;border:0;padding:0 5px;font-size:.9rem;cursor:pointer;border-radius:50%;line-height:1}
+.hchip .hdel:hover{background:#f0d0c0}
+.hchip.active .hdel{color:#ffd9c0}
+.muted{color:#789;font-size:.8rem}
 </style></head><body>
 <h1>🩺 雲端藥歷 → 病歷精簡格式</h1>
-<div class="sub">把健保雲端系統的「西醫藥歷 / 檢驗結果」整段複製貼上，自動重排成可貼病歷的精簡格式。資料只在你的瀏覽器處理，不會上傳。</div>
-<textarea id="in" placeholder="在這裡貼上雲端藥歷或檢驗檢查清單…（可混貼，會自動分段）"></textarea>
+<div class="sub">把健保雲端系統的「西醫藥歷」與「檢驗結果」分別貼到下面兩欄，自動重排成可貼病歷的精簡格式。可用歷史記錄快速切換不同病人。<b>資料只在你的瀏覽器本機處理與儲存，不會上傳。</b></div>
+
+<div class="histbar">
+  <input id="pname" placeholder="姓名 / 病歷號（存檔用）">
+  <button id="save">💾 儲存到歷史</button>
+  <button id="newp" class="ghost">＋ 新病人（清空）</button>
+  <span id="msg2"></span>
+</div>
+<div id="histList"></div>
+
+<div class="cols">
+  <div class="col"><label>💊 用藥資訊（西醫藥歷）</label><textarea id="inMed" placeholder="在這裡貼上雲端西醫藥歷…"></textarea></div>
+  <div class="col"><label>🩸 抽血資料（檢驗結果）</label><textarea id="inLab" placeholder="在這裡貼上雲端檢驗結果…"></textarea></div>
+</div>
+
 <div class="opts">
   <label><input type="checkbox" id="oAbn" checked>標記異常值 ↑↓</label>
   <label><input type="checkbox" id="oDx" checked>含診斷 (ICD)</label>
   <label><input type="checkbox" id="oShort" checked>藥名精簡</label>
   <label><input type="checkbox" id="oList">條列式（預設一行式）</label>
 </div>
-<div class="bar"><button id="copy">📋 複製結果</button><button id="clr" class="ghost">清空</button><span id="msg"></span></div>
+<div class="bar"><button id="copy">📋 複製結果</button><button id="clr" class="ghost">清空輸入</button><span id="msg"></span></div>
 <div id="out">貼上後結果會出現在這裡</div>
 <div class="warn" id="warn" hidden></div>
 <details id="skipbox" hidden><summary>未解析的段落（點開檢查）</summary><pre id="skipped"></pre></details>
-<div class="foot">僅重排文字、不做醫療判斷，貼入病歷前請自行核對｜工具版本：2026-07-09</div>
+<div class="foot">僅重排文字、不做醫療判斷，貼入病歷前請自行核對｜歷史記錄存於本機瀏覽器（localStorage）｜工具版本：2026-07-10</div>
 <script>
 const $=id=>document.getElementById(id);
 const FREQ='QD|QAM|QPM|BID|TID|QID|QN|HS|PRN|QOD|QW|BIW|TIW|Q\\d+H|ST|STAT|MEAL|AC|PC';
 const FORM=/^(TABLETS?|TAB|CAPSULES?|CAP|CAPS|ENTERIC[\w-]*|PROLONGED-RELEASE|EXTENDED[\w-]*|FILM[\w-]*|F\.?C\.?|SUGAR[\w-]*|ORAL|EYE|DROPS?|LOTION|OINTMENT|CREAM|GEL|SYRUP|SOLUTION|SUSPENSION|INJECTION|INJ|PATCH|SPRAY|SUPPOSITOR(Y|IES)|POWDER|GRANULES?|MICROENCAPSULATED)$/i;
 const EXTRA=/^(SR|XL|XR|CR|ER|LA|MR|DEPOT|FORTE|RETARD)$/i;
 const title=s=>s.charAt(0)+s.slice(1).toLowerCase();
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 
 function shortDrug(brand){
   const toks=brand.replace(/["＂]/g,' ').split(/\s+/).filter(Boolean);
@@ -132,7 +163,7 @@ function flag(v,lo,hi){
 }
 
 function render(){
-  const t=$('in').value.trim();
+  const t=($('inMed').value+'\n'+$('inLab').value).trim();
   if(!t){$('out').textContent='貼上後結果會出現在這裡';$('warn').hidden=true;$('skipbox').hidden=true;return}
   const {meds,labs,order,skipped}=parse(t);
   const listMode=$('oList').checked,out=[];
@@ -158,7 +189,60 @@ function render(){
   $('skipbox').hidden=!skipped.length;
   $('skipped').textContent=skipped.join('\n----\n');
 }
-['input','change'].forEach(e=>{$('in').addEventListener(e,render);document.querySelectorAll('.opts input').forEach(c=>c.addEventListener(e,render))});
+
+/* ---------- 歷史記錄（本機 localStorage，可切換不同病人） ---------- */
+const HKEY='emrHistory_v1';
+let activeId=null;
+const loadHist=()=>{try{return JSON.parse(localStorage.getItem(HKEY))||[]}catch(e){return[]}};
+const saveHist=a=>localStorage.setItem(HKEY,JSON.stringify(a));
+function nowStr(){const d=new Date(),p=n=>String(n).padStart(2,'0');return `${d.getFullYear()}/${p(d.getMonth()+1)}/${p(d.getDate())} ${p(d.getHours())}:${p(d.getMinutes())}`}
+
+function renderHist(){
+  const arr=loadHist(),box=$('histList');box.innerHTML='';
+  if(!arr.length){box.innerHTML='<span class="muted">尚無歷史記錄——輸入姓名後按「儲存到歷史」，之後可在這裡快速切換。</span>';return}
+  for(const it of arr){
+    const chip=document.createElement('div');chip.className='hchip'+(it.id===activeId?' active':'');
+    const load=document.createElement('span');load.className='hload';
+    load.innerHTML=`<span class="hname">${esc(it.name||'未命名')}</span><span class="hdate">${esc(it.date||'')}</span>`;
+    load.onclick=()=>loadItem(it.id);
+    const del=document.createElement('button');del.className='hdel';del.textContent='✕';del.title='刪除這筆';
+    del.onclick=e=>{e.stopPropagation();delItem(it.id)};
+    chip.appendChild(load);chip.appendChild(del);box.appendChild(chip);
+  }
+}
+function saveCurrent(){
+  const name=$('pname').value.trim();
+  if(!name){$('msg2').textContent='請先填姓名/病歷號';setTimeout(()=>$('msg2').textContent='',1800);$('pname').focus();return}
+  if(!$('inMed').value.trim()&&!$('inLab').value.trim()){$('msg2').textContent='兩欄都是空的，沒東西可存';setTimeout(()=>$('msg2').textContent='',1800);return}
+  const arr=loadHist();
+  const existing=arr.find(x=>x.name===name);
+  const rec={id:existing?existing.id:'p'+Date.now(),name,med:$('inMed').value,lab:$('inLab').value,date:nowStr()};
+  activeId=rec.id;
+  const na=arr.filter(x=>x.name!==name);na.unshift(rec);saveHist(na);renderHist();
+  $('msg2').textContent=existing?'已更新 ✅':'已儲存 ✅';setTimeout(()=>$('msg2').textContent='',1600);
+}
+function loadItem(id){
+  const it=loadHist().find(x=>x.id===id);if(!it)return;
+  $('pname').value=it.name||'';$('inMed').value=it.med||'';$('inLab').value=it.lab||'';
+  activeId=id;render();renderHist();
+  $('msg2').textContent='已載入：'+(it.name||'未命名');setTimeout(()=>$('msg2').textContent='',1600);
+}
+function delItem(id){
+  saveHist(loadHist().filter(x=>x.id!==id));
+  if(activeId===id)activeId=null;
+  renderHist();
+}
+function newPatient(){
+  $('pname').value='';$('inMed').value='';$('inLab').value='';activeId=null;render();renderHist();$('pname').focus();
+}
+
+['input','change'].forEach(e=>{
+  $('inMed').addEventListener(e,render);$('inLab').addEventListener(e,render);
+  document.querySelectorAll('.opts input').forEach(c=>c.addEventListener(e,render));
+});
 $('copy').onclick=async()=>{await navigator.clipboard.writeText($('out').textContent);$('msg').textContent='已複製 ✅';setTimeout(()=>$('msg').textContent='',1500)};
-$('clr').onclick=()=>{$('in').value='';render()};
+$('clr').onclick=()=>{$('inMed').value='';$('inLab').value='';render()};
+$('save').onclick=saveCurrent;
+$('newp').onclick=newPatient;
+renderHist();
 </script></body></html>
