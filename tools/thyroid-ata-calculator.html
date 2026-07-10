@@ -121,6 +121,10 @@ function parseReport(t){
   const F={};
   F.age=(t.match(/年齡[：:\s]*(\d{1,3})\s*歲/)||[])[1]||'';
   F.sex=(t.match(/性別[：:\s]*([男女])/)||[])[1]||'';
+  // 姓名 / 病歷號（自動抓取，供暫存命名）
+  const nm=(t.match(/(?:病人姓名|姓名)[：:\s]*([^\s　（(0-9]{1,10})/)||[])[1]||'';
+  const mrn=(t.match(/病歷號(?:碼)?[：:\s]*([\w\-]+)/)||[])[1]||'';
+  F.pname=[nm,mrn].filter(Boolean).join(' ');
   // 組織型態：以「癌」的診斷判定，避免良性 oncocytic change/adenoma、follicular nodular disease 誤判
   if(/papillary\s+(thyroid\s+)?carcinoma/i.test(t))F.hist='PTC';
   else if(/(oncocytic|oxyphil|H[üu]rthle\s*cell)\s+(thyroid\s+)?carcinoma/i.test(t))F.hist='OTC';
@@ -306,7 +310,7 @@ function run(){
     ['一行式結論',$('summary').textContent],
   ]};
 }
-$('rpt').addEventListener('input',()=>{fill(parseReport($('rpt').value));run();});
+$('rpt').addEventListener('input',()=>{const F=parseReport($('rpt').value);fill(F);if(F.pname&&!$('pname').value.trim())$('pname').value=F.pname;run();});
 $('pname').addEventListener('input',run);
 document.querySelectorAll('.grid input,.grid select').forEach(e=>e.addEventListener('change',run));
 $('calc').onclick=run;
