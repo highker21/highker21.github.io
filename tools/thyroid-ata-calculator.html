@@ -94,43 +94,58 @@ function parseReport(t){
   const F={};
   F.age=(t.match(/年齡[：:\s]*(\d{1,3})\s*歲/)||[])[1]||'';
   F.sex=(t.match(/性別[：:\s]*([男女])/)||[])[1]||'';
-  if(/oxyphil|oncocytic|H[üu]rthle|嗜酸/i.test(t))F.hist='OTC';
-  else if(/follicular\s+(thyroid\s+)?carcinoma|IEFVPTC|濾泡癌/i.test(t)&&!/papillary\s+carcinoma/i.test(t))F.hist='FTC';
+  // 組織型態：以「癌」的診斷判定，避免良性 oncocytic change/adenoma、follicular nodular disease 誤判
+  if(/papillary\s+(thyroid\s+)?carcinoma/i.test(t))F.hist='PTC';
+  else if(/(oncocytic|oxyphil|H[üu]rthle\s*cell)\s+(thyroid\s+)?carcinoma/i.test(t))F.hist='OTC';
+  else if(/follicular\s+(thyroid\s+)?carcinoma|IEFVPTC/i.test(t))F.hist='FTC';
   else F.hist='PTC';
   if(/poorly\s*differentiat|high[- ]grade|低分化|高惡性度|高度惡性/i.test(t))F.grade='high';
   else if(/tall\s*cell|hobnail|columnar|solid\s*variant|diffuse\s*scleros|侵襲型/i.test(t))F.grade='aggr';
   else F.grade='0';
-  // 組織亞型/特色（顯示用）
+  // 組織亞型/特色（顯示用）：只從「Histologic type:」那行判定，避免報告他處良性 oncocytic 描述干擾
+  const htLines=(t.match(/Histologic\s*type[：:\s]*[^\n]+/ig)||[]).join(' ')
+    || (t.match(/(?:papillary|follicular|oncocytic)\s+(?:thyroid\s+)?carcinoma[,，][^\n.。]*/i)||[])[0] || '';
   const vlist=[[/poorly\s*differentiat\w*/i,'poorly differentiated'],[/anaplastic/i,'anaplastic'],
     [/tall\s*cell/i,'tall cell variant'],[/hobnail/i,'hobnail variant'],[/columnar\s*cell/i,'columnar cell variant'],
     [/solid\s*(variant|pattern)/i,'solid variant'],[/diffuse\s*scleros\w*/i,'diffuse sclerosing variant'],
     [/(?:encapsulated\s*)?follicular\s*variant/i,'follicular variant'],[/oncocytic|H[üu]rthle/i,'oncocytic'],
     [/classic|conventional/i,'classic']];
-  F.variant='';for(const[re,name]of vlist){if(re.test(t)){F.variant=name;break;}}
+  F.variant='';for(const[re,name]of vlist){if(re.test(htLines)){F.variant=name;break;}}
   let sz=(t.match(/Tumou?r\s*size[：:\s]*([\d.]+\s*[xX×][\d.\sxX×]+)/i)||[])[1]||(t.match(/(?:^|\n)\s*[-●*]?\s*Size[：:\s]*([\d.]+\s*[xX×][\d.\sxX×]+)/i)||[])[1];
   F.size=sz?String(maxdim(sz)):'';
   if(/bilateral\s*multifocal|multifocal.*bilateral|雙側.*多發|兩側.*多發/i.test(t))F.multi='bilat';
   else if(/multifocal|多發|Number[：:\s]*[2-9]/i.test(t))F.multi='uni';
   else F.multi='none';
-  // ETE
-  const et=((t.match(/Extra[- ]?thyroid(?:al)?\s*extension[：:\s]*([^\n]*)/i)||[])[1]||'')+' '+((t.match(/Tumou?r\s*extension[：:\s]*([^\n]*)/i)||[])[1]||'');
-  const etl=et.toLowerCase();
-  const present=/present|extension|involv|侵/.test(etl)&&!/not\s*identif|absent|no\b|無|free/.test(etl);
-  if(present&&/trachea|larynx|esophag|recurrent|prevertebral|carotid|mediastin|氣管|喉|食道/.test(etl))F.ete='t4';
-  else if(present&&/gross|strap|大體|肉眼|帶狀肌/.test(etl))F.ete='gross';
-  else if(present&&/microscop|顯微/.test(etl))F.ete='micro';
-  else if(present)F.ete='micro';
+  // ETE：抓所有葉的 ETE 行，取最重（t4 > gross > micro）；報告常直接寫「grossly/microscopically to <構造>」而非"present"
+  const eteLines=((t.match(/Extra[- ]?thyroid(?:al)?\s*extension[：:\s]*[^\n]*/ig)||[]).concat(t.match(/Tumou?r\s*extension[：:\s]*[^\n]*/ig)||[])).join(' ').toLowerCase();
+  const eteNeg=/not\s*identif|absent|no\s*(extra|evidence)|not\s*present|free\b|無|未見/.test(eteLines);
+  const eteHas=/strap|trachea|larynx|esophag|perithyroid|soft\s*tissue|recurrent|prevertebral|carotid|mediastin|grossly|microscop|present|involv|侵|氣管|喉|食道|帶狀肌/.test(eteLines);
+  if(/trachea|larynx|esophag|recurrent|prevertebral|carotid|mediastin|氣管|喉|食道/.test(eteLines))F.ete='t4';
+  else if(/gross|strap|大體|肉眼|帶狀肌/.test(eteLines))F.ete='gross';
+  else if(eteHas&&!eteNeg)F.ete='micro';
   else F.ete='none';
   const lvi=(t.match(/(?:Lymph[- ]?)?vascular\s*invasion[：:\s]*([^\n]*)/i)||[])[1]||'';
   F.lvi=/present|有|identified/i.test(lvi)&&!/not\s*identif|absent|無/i.test(lvi)?'1':'0';
-  const mg=(t.match(/(?:Surgical\s*)?margin[^:：\n]*[：:\s]*([^\n]*)/i)||[])[1]||'';
-  if(/gross|R2|肉眼/i.test(mg))F.margin='gross';
-  else if(/involv|positive|陽性|present/i.test(mg)&&!/free|negative|not\s|陰性/i.test(mg))F.margin=/anterior|前側/i.test(mg)?'microant':'micropost';
-  else F.margin='neg';
-  let pos=0,tot=0;const lnRe=/\((\d+)\s*\/\s*(\d+)\)/g;let m;while((m=lnRe.exec(t))){pos+=+m[1];tot+=+m[2];}
+  // 切緣：抓所有 margin 行，取最差(gross>positive>neg)；"uninvolved" 不可誤判為陽性
+  const mgLines=(t.match(/(?:Surgical\s*)?margin[^:\n]*[：:][^\n]*/ig)||[]);
+  F.margin='neg';
+  for(const ln of mgLines){
+    if(/gross|R2|肉眼/i.test(ln)){F.margin='gross';break;}
+    if(/\binvolved\b|positive|陽性|R1/i.test(ln)&&!/uninvolved|not\s*involved|free|negative|陰性/i.test(ln))F.margin=/anterior|前側/i.test(ln)?'microant':'micropost';
+  }
+  // 淋巴結：只從「Pathologic Diagnosis」段計數(避免與 Microscopic 段重複)，排除副甲/軟組織；依「陽性」節點所在區判 N1a/N1b
+  const dxSec=t.split(/Gross\s*Examination|Microscopic\s*Examination/i)[0]||t;
+  let pos=0,tot=0,n1b=false;
+  dxSec.split('\n').forEach(ln=>{
+    if(/parathyroid|副甲/i.test(ln))return;
+    const m=ln.match(/\((\d+)\s*\/\s*(\d+)\)/);
+    if(m&&/lymph\s*node|\bLN\b|metastatic|malignancy|淋巴/i.test(ln)){pos+=+m[1];tot+=+m[2];
+      if(+m[1]>0&&/level\s*(II|III|IV|Vb|VB)\b|lateral|側頸/i.test(ln))n1b=true;}
+  });
   F.lnpos=String(pos);F.lntot=String(tot);
-  F.lnloc=pos>0?(/level\s*(II|III|IV|Vb|VB)\b|lateral|側頸/i.test(t)?'N1b':'N1a'):'none';
-  F.lnsize='';
+  F.lnloc=pos>0?(n1b?'N1b':'N1a'):'none';
+  const lm=t.match(/largest\s*metastatic\s*(?:deposit|node|focus)[^\d]*([\d.]+)\s*cm/i);
+  F.lnsize=lm?lm[1]:'';
   F.ene=/extranodal\s*extension|\bENE\b|結外侵犯/i.test(t)?'1':'0';
   F.m=/\bM1\b|distant\s*met|遠端轉移/i.test(t)?'1':'0';
   const tn=t.match(/\(?\s*[ryp]*T(\w+)\s*N([\dxX]\w*)\s*(M\d)?\s*\)?/);
