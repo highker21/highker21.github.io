@@ -1,0 +1,169 @@
+<!DOCTYPE html><html lang="zh-Hant"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Dexamethasone 抑制試驗 · 服藥與抽血流程衛教</title>
+<style>
+:root{--blue:#1a3b6e;--blue2:#2c5aa0;--bg:#f4f6fa;--card:#fff;--line:#dde3ec;--ink:#1f2733;--muted:#5a6675;--warn:#b54708;--warnbg:#fff7ed;--ok:#0a7d3c;--pill:#e8f0fe;}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,"PingFang TC","Noto Sans TC",sans-serif;background:var(--bg);color:var(--ink);line-height:1.6;font-size:16px}
+.wrap{max-width:780px;margin:0 auto;padding:16px}
+h1{font-size:1.3rem;color:var(--blue);margin:.2em 0}
+h2{font-size:1.05rem;color:var(--blue);border-left:4px solid var(--blue2);padding-left:8px;margin:1.1em 0 .5em}
+.note{font-size:.86rem;color:var(--muted)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;margin:12px 0;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.tabs{display:flex;gap:8px;margin:10px 0;flex-wrap:wrap}
+.tab{flex:1;min-width:150px;text-align:center;padding:12px 8px;border-radius:10px;border:1px solid var(--line);background:#fff;cursor:pointer;font-weight:700;color:var(--muted)}
+.tab.active{background:var(--blue);color:#fff;border-color:var(--blue)}
+.tab small{display:block;font-weight:500;font-size:.75rem;opacity:.85;margin-top:2px}
+label{display:block;font-size:.9rem;color:var(--muted);margin:.6em 0 .2em}
+input[type=date],select{width:100%;max-width:280px;padding:10px;border:1px solid var(--line);border-radius:8px;font-size:1rem;background:#fff}
+.opts{display:flex;gap:16px;flex-wrap:wrap;margin:6px 0}
+.opts label{display:flex;align-items:center;gap:6px;cursor:pointer;font-size:.95rem;color:var(--ink);margin:0}
+table{width:100%;border-collapse:collapse;margin:.5em 0}
+th,td{border:1px solid var(--line);padding:9px;text-align:center;font-size:.95rem}
+th{background:#eef2f8;color:var(--blue)}
+.step{display:flex;gap:12px;align-items:flex-start;margin:10px 0}
+.step .n{flex:0 0 30px;height:30px;border-radius:50%;background:var(--blue);color:#fff;font-weight:800;display:flex;align-items:center;justify-content:center}
+.step .b{flex:1}
+.big{font-size:1.1rem;font-weight:800;color:var(--blue2)}
+.hl{background:var(--pill);border-radius:6px;padding:1px 6px;font-weight:700;color:var(--blue)}
+.pillbox{display:inline-block;background:#fff4e6;border:1px solid #f0c79a;border-radius:8px;padding:2px 8px;margin:2px;font-weight:700;color:#8a4b12}
+.draw{background:#e6f6ec;border:1px solid #9ad3ae;border-radius:8px;padding:2px 8px;font-weight:700;color:var(--ok)}
+.warn{background:var(--warnbg);border:1px solid #f0c79a;border-radius:10px;padding:12px;color:var(--warn);font-size:.9rem;margin:10px 0}
+.hide{display:none}
+footer{font-size:.8rem;color:var(--muted);text-align:center;margin:18px 0}
+.btn{background:var(--blue);color:#fff;border:none;border-radius:10px;padding:11px 20px;font-size:1rem;font-weight:700;cursor:pointer}
+.btn:hover{background:var(--blue2)}
+@media print{
+  @page{size:A4 portrait;margin:10mm}
+  .no-print{display:none!important}
+  body{background:#fff;font-size:12pt}
+  .card{box-shadow:none;break-inside:avoid}
+  .tab:not(.active){display:none}
+  .tabs{margin:0 0 6px}
+}
+</style></head><body>
+<div class="wrap">
+<h1>💊🩸 Dexamethasone 抑制試驗 · 服藥與抽血流程</h1>
+<p class="note">這項檢查是評估你的腎上腺「皮質醇（cortisol）」分泌能不能被 Dexamethasone 壓下來，用來協助診斷（如庫欣氏症 Cushing's 等）。醫師會為你選擇下面其中一種；請依醫師指示，並照這張單子按時服藥、準時抽血。</p>
+
+<div class="tabs no-print">
+  <div class="tab active" data-t="on" onclick="selT('on')">Overnight<small>睡前 1mg，隔天抽血</small></div>
+  <div class="tab" data-t="low" onclick="selT('low')">Low Dose<small>0.5mg Q6H×2天</small></div>
+  <div class="tab" data-t="high" onclick="selT('high')">High Dose<small>2mg Q6H×2天</small></div>
+</div>
+
+<!-- ===== Overnight ===== -->
+<div id="on">
+  <div class="card">
+    <h2>Overnight（隔夜）Dexamethasone 抑制試驗</h2>
+    <div class="step"><div class="n">1</div><div class="b">檢查<b>前一天晚上 11 點（23:00）</b>，吃 <span class="pillbox">Dexamethasone 1 mg</span>（1 顆／依醫師開立）。</div></div>
+    <div class="step"><div class="n">2</div><div class="b"><b>隔天早上 8 點（08:00）</b>準時到醫院／檢驗，抽血檢查 <span class="draw">ACTH＋Cortisol</span>。</div></div>
+    <p class="note">重點：睡前吃藥、隔天一早 8 點抽血。時間要準，因為皮質醇有日夜變化。</p>
+  </div>
+  <div class="card no-print">
+    <h2>幫我排日期</h2>
+    <label>預定「抽血」的日期（早上 8 點那天）</label>
+    <input type="date" id="onDate" onchange="calc()">
+    <div id="onOut" style="margin-top:10px"></div>
+  </div>
+</div>
+
+<!-- ===== Low Dose ===== -->
+<div id="low" class="hide">
+  <div class="card">
+    <h2>Low Dose（低劑量）Dexamethasone 抑制試驗</h2>
+    <div class="step"><div class="n">1</div><div class="b">連續<b>兩天</b>，每 6 小時（Q6H）吃 <span class="pillbox">Dexamethasone 0.5 mg</span> 一次。</div></div>
+    <div class="step"><div class="n">2</div><div class="b">吃藥時間可選一組固定時段（<b>四選一整天照這組</b>）：</div></div>
+    <div class="opts" style="margin-left:42px">
+      <label><input type="radio" name="lowT" value="A" checked onchange="calc()"> 05、11、17、23 點</label>
+      <label><input type="radio" name="lowT" value="B" onchange="calc()"> 06、12、18、24 點（24點＝午夜12點）</label>
+    </div>
+    <div class="step"><div class="n">3</div><div class="b">吃滿兩天後，<b>第三天早上 8 點（08:00）</b>抽血 <span class="draw">ACTH＋Cortisol</span>。</div></div>
+    <p class="note">重點：一天 4 次、固定時段、連吃 2 天；第 3 天早上 8 點抽血。這個檢查很依賴「按時吃藥」，請盡量準時、不要漏。</p>
+  </div>
+  <div class="card no-print">
+    <h2>幫我排日期與時間</h2>
+    <label>預定「抽血」的日期（第三天早上 8 點）</label>
+    <input type="date" id="lowDate" onchange="calc()">
+    <div id="lowOut" style="margin-top:10px"></div>
+  </div>
+</div>
+
+<!-- ===== High Dose ===== -->
+<div id="high" class="hide">
+  <div class="card">
+    <h2>High Dose（高劑量）Dexamethasone 抑制試驗</h2>
+    <div class="step"><div class="n">1</div><div class="b">連續<b>兩天</b>，每 6 小時（Q6H）吃 <span class="pillbox">Dexamethasone 2 mg</span> 一次。</div></div>
+    <div class="step"><div class="n">2</div><div class="b">吃藥時間可選一組固定時段：</div></div>
+    <div class="opts" style="margin-left:42px">
+      <label><input type="radio" name="highT" value="A" checked onchange="calc()"> 05、11、17、23 點</label>
+      <label><input type="radio" name="highT" value="B" onchange="calc()"> 06、12、18、24 點（24點＝午夜12點）</label>
+    </div>
+    <div class="step"><div class="n">3</div><div class="b">吃滿兩天後，<b>第三天早上 8 點（08:00）</b>抽血 <span class="draw">ACTH＋Cortisol</span>。</div></div>
+    <p class="note">重點：與低劑量流程相同，只是每次劑量是 2 mg。一天 4 次、連吃 2 天、第 3 天早上 8 點抽血。</p>
+  </div>
+  <div class="card no-print">
+    <h2>幫我排日期與時間</h2>
+    <label>預定「抽血」的日期（第三天早上 8 點）</label>
+    <input type="date" id="highDate" onchange="calc()">
+    <div id="highOut" style="margin-top:10px"></div>
+  </div>
+</div>
+
+<div class="card">
+  <h2>共同注意事項</h2>
+  <ul style="margin:.3em 0;padding-left:1.3em">
+    <li><b>按時、按劑量服藥</b>：這個檢查的準確度很依賴準時吃藥，請盡量固定時間、不要漏、不要自行增減。</li>
+    <li><b>漏藥／吐出／延誤要記下並告知醫師</b>：可能影響判讀，嚴重時需重做。</li>
+    <li><b>抽血時間很重要</b>：一律<b>早上 8 點</b>準時，因為 ACTH／Cortisol 有明顯日夜變化。</li>
+    <li>建議<b>記錄每次實際服藥時間</b>，抽血時交給醫護。</li>
+    <li>正在服用的其他藥物（尤其類固醇、部分抗癲癇／精神科藥、女性荷爾蒙）請先告知醫師，可能影響結果。</li>
+    <li>如檢驗單另有<b>空腹</b>或其他要求，請依指示。</li>
+    <li>服藥期間如有明顯不適（心悸、嚴重失眠、情緒起伏等）請告知醫師。</li>
+  </ul>
+  <div class="warn">⚠️ 本單張僅供衛教與流程提醒，實際劑量、時段與是否進行檢查，一律以盧醫師的指示為準。</div>
+</div>
+
+<div class="no-print" style="text-align:center;margin:14px 0">
+  <button class="btn" onclick="window.print()">🖨 列印這張衛教單（A4）</button>
+</div>
+
+<footer>
+  高雄醫學大學附設高醫岡山醫院　內分泌新陳代謝科<br>
+  <span style="color:#aab">工具版本：2026-07-11</span>
+</footer>
+</div>
+
+<script>
+const $=id=>document.getElementById(id);
+function selT(t){['on','low','high'].forEach(id=>$(id).classList.toggle('hide',id!==t));document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('active',x.dataset.t===t));}
+const W=['日','一','二','三','四','五','六'];
+function addDays(d,n){const x=new Date(d);x.setDate(x.getDate()+n);return x;}
+function fmt(d){return `${d.getFullYear()}/${String(d.getMonth()+1).padStart(2,'0')}/${String(d.getDate()).padStart(2,'0')}（週${W[d.getDay()]}）`;}
+const timesA=['05:00（清晨5點）','11:00（上午11點）','17:00（下午5點）','23:00（晚上11點）'];
+const timesB=['06:00（早上6點）','12:00（中午12點）','18:00（傍晚6點）','24:00（午夜12點）'];
+
+function calc(){
+  // Overnight
+  const ov=$('onDate').value;
+  if(ov){const draw=new Date(ov+'T00:00:00');const pill=addDays(draw,-1);
+    $('onOut').innerHTML=`<table><tr><th>時間點</th><th>做什麼</th></tr>
+      <tr><td>${fmt(pill)}<br>晚上 <b>23:00</b></td><td><span class="pillbox">吃 Dexamethasone 1 mg</span></td></tr>
+      <tr><td>${fmt(draw)}<br>早上 <b>08:00</b></td><td><span class="draw">抽血 ACTH＋Cortisol</span></td></tr></table>`;}
+  else $('onOut').innerHTML='';
+  // Low / High
+  [['low','0.5 mg'],['high','2 mg']].forEach(([k,dose])=>{
+    const v=$(k+'Date').value;const out=$(k+'Out');
+    if(!v){out.innerHTML='';return;}
+    const opt=(document.querySelector(`input[name="${k}T"]:checked`)||{}).value||'A';
+    const times=opt==='A'?timesA:timesB;
+    const draw=new Date(v+'T00:00:00');const d1=addDays(draw,-2),d2=addDays(draw,-1);
+    const pillCells=t=>times.map(x=>`<span class="pillbox">${x}</span>`).join(' ');
+    out.innerHTML=`<p class="note">每次吃 <b>Dexamethasone ${dose}</b>，一天 4 次（${opt==='A'?'05/11/17/23':'06/12/18/24'} 點）：</p>
+      <table><tr><th>日期</th><th>當天 4 次服藥時間</th></tr>
+      <tr><td><b>第 1 天</b><br>${fmt(d1)}</td><td style="text-align:left">${pillCells()}</td></tr>
+      <tr><td><b>第 2 天</b><br>${fmt(d2)}</td><td style="text-align:left">${pillCells()}</td></tr>
+      <tr><td><b>第 3 天</b><br>${fmt(draw)}</td><td><span class="draw">早上 08:00 抽血 ACTH＋Cortisol</span>（當天不用再吃藥）</td></tr></table>`;
+  });
+}
+</script></body></html>
