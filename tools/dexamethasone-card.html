@@ -1,106 +1,65 @@
 <!DOCTYPE html><html lang="zh-Hant"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Dexamethasone 抑制試驗 · 衛教圖卡</title>
+<title>Dexamethasone 抑制試驗 · 衛教圖卡（忘形流）</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <style>
-:root{--ink:#1a1c1a;--sub:#6b6f6a;--line:#e4e0d6;--accent:#0f6e64;--accent2:#c05a2e;--paper:#f8f5ee;--faint:#928e83;}
+:root{--ink:#1b1f1d;--sub:#5f655f;--line:#e6e2d8;--accent:#0f6e64;--hot:#c0562c;--paper:#faf8f2;--card:#fff;--faint:#9a978c;}
 *{box-sizing:border-box;margin:0;padding:0}
-body{background:#e7e3da;font-family:"PingFang TC","Noto Sans TC","Microsoft JhengHei",sans-serif;color:var(--ink);
-  display:flex;justify-content:center;padding:24px 12px;-webkit-font-smoothing:antialiased}
-.card{width:800px;max-width:100%;background:var(--paper);padding:60px 58px 44px;position:relative}
-.kicker{font-size:14px;letter-spacing:.32em;color:var(--accent);font-weight:700;margin-bottom:22px}
-.kicker::before{content:"";display:inline-block;width:30px;height:2px;background:var(--accent);vertical-align:middle;margin-right:12px;margin-bottom:4px}
-h1{font-size:60px;font-weight:900;line-height:1.02;letter-spacing:-.01em;margin-bottom:6px}
-.zh{font-size:20px;font-weight:400;color:var(--sub);letter-spacing:.04em;margin-bottom:6px}
-.lead{font-size:15px;color:var(--faint);line-height:1.7;margin:16px 0 4px;max-width:600px}
-.rule{height:1px;background:var(--line);margin:30px 0}
-.test{display:grid;grid-template-columns:56px 1fr;gap:20px;padding:22px 0;border-top:1px solid var(--line)}
-.test:first-of-type{border-top:none}
-.no{font-size:44px;font-weight:900;color:var(--accent);line-height:.9;letter-spacing:-.03em}
-.tname{font-size:24px;font-weight:800;margin-bottom:2px}
-.ten{font-size:13px;color:var(--faint);letter-spacing:.06em;font-weight:600;text-transform:uppercase;margin-bottom:14px}
-.flow{display:flex;align-items:baseline;flex-wrap:wrap;gap:6px 4px;font-size:16px;color:#33352f}
-.dose{font-size:19px;font-weight:900;color:var(--ink)}
-.hot{color:var(--accent2);font-weight:900}
-.arrow{color:var(--faint);font-weight:700;margin:0 6px}
-.tag{display:inline-block;background:var(--ink);color:var(--paper);font-size:13px;font-weight:800;letter-spacing:.05em;padding:3px 10px;border-radius:2px}
-.mini{font-size:13.5px;color:var(--sub);margin-top:8px;line-height:1.6}
-.times{margin-top:38px;background:#f0ece2;padding:20px 22px}
-.times .h{font-size:13px;letter-spacing:.16em;font-weight:800;color:var(--accent);margin-bottom:10px}
-.times .row{font-size:15.5px;color:#33352f;margin:5px 0}
-.times b{font-weight:900;color:var(--ink);font-variant-numeric:tabular-nums}
-.care{margin-top:34px}
-.care .h{font-size:13px;letter-spacing:.16em;font-weight:800;color:var(--faint);margin-bottom:12px}
-.care ul{list-style:none}
-.care li{position:relative;padding-left:22px;font-size:14px;color:#3a3c36;line-height:1.6;margin:7px 0}
-.care li::before{content:"";position:absolute;left:0;top:9px;width:7px;height:7px;background:var(--accent);border-radius:50%}
-.care li b{color:var(--ink);font-weight:800}
-footer{margin-top:40px;padding-top:16px;border-top:2px solid var(--ink);display:flex;justify-content:space-between;align-items:flex-end;font-size:12px;color:var(--faint)}
-footer .org{font-weight:800;color:var(--ink);font-size:13px}
-.no-print{text-align:center;margin:18px 0}
-.no-print button{background:var(--ink);color:var(--paper);border:0;padding:11px 24px;font-size:15px;font-weight:700;border-radius:4px;cursor:pointer}
-@media print{@page{size:A4 portrait;margin:0}body{background:#fff;padding:0}.card{width:210mm;min-height:297mm;padding:20mm 18mm}.no-print{display:none!important}}
-@media(max-width:520px){.card{padding:40px 26px}h1{font-size:44px}.test{grid-template-columns:44px 1fr;gap:14px}.no{font-size:34px}}
+body{background:#eceae2;font-family:"PingFang TC","Noto Sans TC","Microsoft JhengHei",sans-serif;color:var(--ink);padding:24px 12px;-webkit-font-smoothing:antialiased}
+.sheet{max-width:900px;margin:0 auto;background:var(--paper);padding:44px 40px 30px}
+.head{text-align:center;border-bottom:2px solid var(--ink);padding-bottom:16px;margin-bottom:6px}
+.kick{font-size:12px;letter-spacing:.34em;color:var(--accent);font-weight:800;margin-bottom:10px}
+.head h1{font-size:34px;font-weight:900;letter-spacing:-.01em;line-height:1.1}
+.head .zh{font-size:14px;color:var(--sub);margin-top:6px;letter-spacing:.05em}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:18px}
+.c{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px 16px;display:flex;flex-direction:column;
+   align-items:center;text-align:center;justify-content:flex-start;min-height:172px;position:relative}
+.c .n{position:absolute;top:10px;left:14px;font-size:14px;font-weight:900;color:#cfcabb}
+.c i{font-size:36px;color:var(--accent);margin:10px 0 12px}
+.c.hot i{color:var(--hot)}
+.c .t{font-size:16px;font-weight:800;line-height:1.4}
+.c .t b{color:var(--hot)}
+.c .t .a{color:var(--accent)}
+.c.lead{grid-column:span 3;flex-direction:row;gap:20px;justify-content:flex-start;text-align:left;min-height:auto;background:var(--ink);border:none}
+.c.lead i{color:var(--paper);font-size:30px;margin:0}
+.c.lead .t{color:var(--paper);font-size:17px;font-weight:600;line-height:1.6}
+.c.lead .t b{color:#7fd8cc}
+.foot{margin-top:16px;text-align:center;font-size:11px;color:var(--faint);line-height:1.7;border-top:1px solid var(--line);padding-top:12px}
+.foot b{color:var(--sub)}
+.bar{text-align:center;margin:16px 0}
+.bar button{background:var(--ink);color:var(--paper);border:0;padding:11px 24px;font-size:15px;font-weight:700;border-radius:6px;cursor:pointer}
+@media print{@page{size:A4 portrait;margin:8mm}body{background:#fff;padding:0}.sheet{max-width:100%;padding:4mm}.no-print{display:none!important}.c{break-inside:avoid}}
+@media(max-width:640px){.grid{grid-template-columns:repeat(2,1fr)}.c.lead{grid-column:span 2}}
+@media(max-width:420px){.grid{grid-template-columns:1fr}.c.lead{grid-column:span 1}}
 </style></head><body>
-<div>
-<div class="card" id="card">
-  <div class="kicker">內分泌新陳代謝科　·　檢查衛教</div>
-  <h1>Dexamethasone<br>抑制試驗</h1>
-  <div class="zh">地塞米松抑制試驗　·　服藥與抽血流程</div>
-  <div class="lead">評估腎上腺「皮質醇（Cortisol）」能不能被壓下來。吃完 Dexamethasone 後，隔天<b>早上 8 點</b>抽 <b>ACTH ＋ Cortisol</b>。醫師會為你選擇其中一種。</div>
-
-  <div class="rule"></div>
-
-  <div class="test">
-    <div class="no">01</div>
-    <div>
-      <div class="tname">隔夜 <span style="font-weight:400;color:var(--sub);font-size:18px">Overnight</span></div>
-      <div class="ten">1 mg · 一次</div>
-      <div class="flow"><span>前一晚</span><span class="hot">23:00</span><span>吃</span><span class="dose">1&nbsp;mg</span><span class="arrow">→</span><span>隔天</span><span class="hot">08:00</span><span class="tag">抽血</span></div>
-      <div class="mini">睡前吃一顆，隔天一早八點抽血。最單純、最快。</div>
-    </div>
+<div class="sheet" id="sheet">
+  <div class="head">
+    <div class="kick">內分泌新陳代謝科　·　檢查衛教</div>
+    <h1>Dexamethasone 抑制試驗</h1>
+    <div class="zh">地塞米松抑制試驗　·　吃藥與抽血，一張圖看懂</div>
   </div>
+  <div class="grid">
+    <div class="c lead"><i class="fa-solid fa-vial-circle-check"></i><div class="t">這個檢查是看你的腎上腺「皮質醇（Cortisol）」<b>壓不壓得下來</b>——吃完 Dexamethasone，隔天抽血看結果。醫師會幫你選下面三種做法的其中一種。</div></div>
 
-  <div class="test">
-    <div class="no">02</div>
-    <div>
-      <div class="tname">低劑量 <span style="font-weight:400;color:var(--sub);font-size:18px">Low Dose</span></div>
-      <div class="ten">0.5 mg · 每 6 小時 · 連 2 天</div>
-      <div class="flow"><span class="dose">0.5&nbsp;mg</span><span>每 6 小時一次</span><span class="arrow">×</span><span>連吃</span><span class="dose">2&nbsp;天</span><span class="arrow">→</span><span>第 3 天</span><span class="hot">08:00</span><span class="tag">抽血</span></div>
-      <div class="mini">一天 4 次、固定時段（見下方），吃滿兩天，第三天早上八點抽血。</div>
-    </div>
+    <div class="c"><span class="n">01</span><i class="fa-solid fa-moon"></i><div class="t">Overnight：檢查<span class="a">前一晚 23:00</span>睡前吃 <b>1 mg</b></div></div>
+    <div class="c hot"><span class="n">02</span><i class="fa-solid fa-syringe"></i><div class="t">隔天<b>早上 8:00</b> 抽血<br>（ACTH ＋ Cortisol）</div></div>
+    <div class="c"><span class="n">03</span><i class="fa-solid fa-pills"></i><div class="t">低劑量 <b>0.5 mg</b> ／ 高劑量 <b>2 mg</b><br>每 6 小時吃一次</div></div>
+
+    <div class="c"><span class="n">04</span><i class="fa-solid fa-clock"></i><div class="t">時段固定一組：<br><span class="a">05·11·17·23</span> 或 <span class="a">06·12·18·24</span> 點</div></div>
+    <div class="c"><span class="n">05</span><i class="fa-solid fa-calendar-days"></i><div class="t">一天 4 次，<b>連吃 2 天</b></div></div>
+    <div class="c hot"><span class="n">06</span><i class="fa-solid fa-droplet"></i><div class="t"><b>第 3 天早上 8:00</b> 抽血<br>（ACTH ＋ Cortisol）</div></div>
+
+    <div class="c"><span class="n">07</span><i class="fa-solid fa-stopwatch"></i><div class="t"><b>按時、按劑量吃</b>——這檢查很依賴準時服藥</div></div>
+    <div class="c"><span class="n">08</span><i class="fa-solid fa-triangle-exclamation"></i><div class="t">漏藥、吐出、延誤 → <b>記下來、告訴醫師</b></div></div>
+    <div class="c"><span class="n">09</span><i class="fa-solid fa-sun"></i><div class="t">抽血<b>一律早上 8 點</b>準時——皮質醇有日夜變化</div></div>
+
+    <div class="c"><span class="n">10</span><i class="fa-solid fa-prescription-bottle-medical"></i><div class="t">其他在吃的藥（類固醇等）<b>先告訴醫師</b></div></div>
+    <div class="c"><span class="n">11</span><i class="fa-solid fa-pen-to-square"></i><div class="t"><b>記錄每次吃藥時間</b>，抽血時交給醫護</div></div>
+    <div class="c"><span class="n">12</span><i class="fa-solid fa-user-doctor"></i><div class="t">實際劑量與檢查，<b>一律以醫師指示為準</b></div></div>
   </div>
-
-  <div class="test">
-    <div class="no">03</div>
-    <div>
-      <div class="tname">高劑量 <span style="font-weight:400;color:var(--sub);font-size:18px">High Dose</span></div>
-      <div class="ten">2 mg · 每 6 小時 · 連 2 天</div>
-      <div class="flow"><span class="dose">2&nbsp;mg</span><span>每 6 小時一次</span><span class="arrow">×</span><span>連吃</span><span class="dose">2&nbsp;天</span><span class="arrow">→</span><span>第 3 天</span><span class="hot">08:00</span><span class="tag">抽血</span></div>
-      <div class="mini">流程與低劑量相同，每次劑量改成 2 mg。</div>
-    </div>
+  <div class="foot">
+    高醫岡山醫院　內分泌新陳代謝科　｜　<b>本圖卡僅供衛教與流程提醒，不取代醫師判斷</b>　｜　2026.07
   </div>
-
-  <div class="times">
-    <div class="h">每 6 小時 · 吃藥時段（任選一組，整天照這組）</div>
-    <div class="row"><b>05 → 11 → 17 → 23</b>　（清晨5・上午11・下午5・晚上11）</div>
-    <div class="row"><b>06 → 12 → 18 → 24</b>　（早上6・中午12・傍晚6・午夜12）</div>
-  </div>
-
-  <div class="care">
-    <div class="h">要記得的四件事</div>
-    <ul>
-      <li><b>準時、按劑量</b>——這個檢查的準確度，很依賴你有沒有按時吃藥。</li>
-      <li><b>漏藥、吐出、延誤</b>——記下來、告訴醫師，嚴重時要重做。</li>
-      <li><b>抽血一律早上 8 點</b>——皮質醇有日夜變化，時間錯了結果就不準。</li>
-      <li><b>其他用藥先講</b>——類固醇、部分抗癲癇/精神科藥、女性荷爾蒙可能影響結果。</li>
-    </ul>
-  </div>
-
-  <footer>
-    <div><span class="org">高醫岡山醫院　內分泌新陳代謝科</span><br>本圖卡僅供衛教與流程提醒，實際劑量與檢查以醫師指示為準</div>
-    <div>2026.07</div>
-  </footer>
 </div>
-<div class="no-print"><button onclick="window.print()">🖨 列印 / 存成 PDF（A4）</button></div>
-</div>
+<div class="bar no-print"><button onclick="window.print()">🖨 列印 / 存成 PDF（A4）</button></div>
 </body></html>
