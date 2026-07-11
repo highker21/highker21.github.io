@@ -5,61 +5,95 @@
 <style>
 :root{--ink:#1b1f1d;--sub:#5f655f;--line:#e6e2d8;--accent:#0f6e64;--hot:#c0562c;--paper:#faf8f2;--card:#fff;--faint:#9a978c;}
 *{box-sizing:border-box;margin:0;padding:0}
-body{background:#eceae2;font-family:"PingFang TC","Noto Sans TC","Microsoft JhengHei",sans-serif;color:var(--ink);padding:24px 12px;-webkit-font-smoothing:antialiased}
-.sheet{max-width:900px;margin:0 auto;background:var(--paper);padding:44px 40px 30px}
-.head{text-align:center;border-bottom:2px solid var(--ink);padding-bottom:16px;margin-bottom:6px}
-.kick{font-size:12px;letter-spacing:.34em;color:var(--accent);font-weight:800;margin-bottom:10px}
-.head h1{font-size:34px;font-weight:900;letter-spacing:-.01em;line-height:1.1}
-.head .zh{font-size:14px;color:var(--sub);margin-top:6px;letter-spacing:.05em}
-.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:18px}
-.c{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px 16px;display:flex;flex-direction:column;
-   align-items:center;text-align:center;justify-content:flex-start;min-height:172px;position:relative}
+body{background:#eceae2;font-family:"PingFang TC","Noto Sans TC","Microsoft JhengHei",sans-serif;color:var(--ink);padding:20px 12px;-webkit-font-smoothing:antialiased}
+.tabs{max-width:900px;margin:0 auto 14px;display:flex;gap:8px}
+.tab{flex:1;text-align:center;padding:12px 6px;border-radius:10px;border:1px solid var(--line);background:#fff;cursor:pointer;font-weight:800;color:var(--sub);font-size:15px}
+.tab small{display:block;font-weight:500;font-size:11px;color:var(--faint);margin-top:2px}
+.tab.active{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.tab.active small{color:#9fd8ce}
+.sheet{max-width:900px;margin:0 auto;background:var(--paper);padding:40px 38px 26px}
+.head{text-align:center;border-bottom:2px solid var(--ink);padding-bottom:15px;margin-bottom:4px}
+.kick{font-size:12px;letter-spacing:.34em;color:var(--accent);font-weight:800;margin-bottom:9px}
+.head h1{font-size:31px;font-weight:900;letter-spacing:-.01em;line-height:1.1}
+.head .zh{font-size:14px;color:var(--sub);margin-top:6px;letter-spacing:.04em}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px}
+.c{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px 15px;display:flex;flex-direction:column;
+   align-items:center;text-align:center;justify-content:flex-start;min-height:168px;position:relative}
 .c .n{position:absolute;top:10px;left:14px;font-size:14px;font-weight:900;color:#cfcabb}
-.c i{font-size:36px;color:var(--accent);margin:10px 0 12px}
+.c i{font-size:35px;color:var(--accent);margin:10px 0 12px}
 .c.hot i{color:var(--hot)}
-.c .t{font-size:16px;font-weight:800;line-height:1.4}
-.c .t b{color:var(--hot)}
-.c .t .a{color:var(--accent)}
-.c.lead{grid-column:span 3;flex-direction:row;gap:20px;justify-content:flex-start;text-align:left;min-height:auto;background:var(--ink);border:none}
-.c.lead i{color:var(--paper);font-size:30px;margin:0}
-.c.lead .t{color:var(--paper);font-size:17px;font-weight:600;line-height:1.6}
+.c .t{font-size:16px;font-weight:800;line-height:1.42}
+.c .t b{color:var(--hot)} .c .t .a{color:var(--accent)}
+.c.lead{grid-column:span 3;flex-direction:row;gap:18px;justify-content:flex-start;text-align:left;min-height:auto;background:var(--ink);border:none}
+.c.lead i{color:var(--paper);font-size:28px;margin:0;flex:0 0 auto}
+.c.lead .t{color:var(--paper);font-size:16.5px;font-weight:600;line-height:1.6}
 .c.lead .t b{color:#7fd8cc}
-.foot{margin-top:16px;text-align:center;font-size:11px;color:var(--faint);line-height:1.7;border-top:1px solid var(--line);padding-top:12px}
+.foot{margin-top:15px;text-align:center;font-size:11px;color:var(--faint);line-height:1.7;border-top:1px solid var(--line);padding-top:11px}
 .foot b{color:var(--sub)}
 .bar{text-align:center;margin:16px 0}
 .bar button{background:var(--ink);color:var(--paper);border:0;padding:11px 24px;font-size:15px;font-weight:700;border-radius:6px;cursor:pointer}
-@media print{@page{size:A4 portrait;margin:8mm}body{background:#fff;padding:0}.sheet{max-width:100%;padding:4mm}.no-print{display:none!important}.c{break-inside:avoid}}
-@media(max-width:640px){.grid{grid-template-columns:repeat(2,1fr)}.c.lead{grid-column:span 2}}
-@media(max-width:420px){.grid{grid-template-columns:1fr}.c.lead{grid-column:span 1}}
+@media print{@page{size:A4 portrait;margin:8mm}body{background:#fff;padding:0}.tabs,.no-print{display:none!important}.sheet{max-width:100%;padding:4mm}.c{break-inside:avoid}}
+@media(max-width:640px){.grid{grid-template-columns:repeat(2,1fr)}.c.lead{grid-column:span 2}.tabs{flex-wrap:wrap}.tab{min-width:30%}}
+@media(max-width:420px){.grid{grid-template-columns:1fr}.c.lead{grid-column:span 1;flex-direction:column;text-align:center}}
 </style></head><body>
+<div class="tabs no-print">
+  <div class="tab active" data-v="on" onclick="setV('on')">Overnight<small>睡前 1mg，隔天抽血</small></div>
+  <div class="tab" data-v="low" onclick="setV('low')">Low Dose<small>0.5mg Q6H×2天</small></div>
+  <div class="tab" data-v="high" onclick="setV('high')">High Dose<small>2mg Q6H×2天</small></div>
+</div>
 <div class="sheet" id="sheet">
   <div class="head">
     <div class="kick">內分泌新陳代謝科　·　檢查衛教</div>
-    <h1>Dexamethasone 抑制試驗</h1>
-    <div class="zh">地塞米松抑制試驗　·　吃藥與抽血，一張圖看懂</div>
+    <h1 id="h1">Dexamethasone 抑制試驗</h1>
+    <div class="zh" id="zh"></div>
   </div>
-  <div class="grid">
-    <div class="c lead"><i class="fa-solid fa-vial-circle-check"></i><div class="t">這個檢查是看你的腎上腺「皮質醇（Cortisol）」<b>壓不壓得下來</b>——吃完 Dexamethasone，隔天抽血看結果。醫師會幫你選下面三種做法的其中一種。</div></div>
-
-    <div class="c"><span class="n">01</span><i class="fa-solid fa-moon"></i><div class="t">Overnight：檢查<span class="a">前一晚 23:00</span>睡前吃 <b>1 mg</b></div></div>
-    <div class="c hot"><span class="n">02</span><i class="fa-solid fa-syringe"></i><div class="t">隔天<b>早上 8:00</b> 抽血<br>（ACTH ＋ Cortisol）</div></div>
-    <div class="c"><span class="n">03</span><i class="fa-solid fa-pills"></i><div class="t">低劑量 <b>0.5 mg</b> ／ 高劑量 <b>2 mg</b><br>每 6 小時吃一次</div></div>
-
-    <div class="c"><span class="n">04</span><i class="fa-solid fa-clock"></i><div class="t">時段固定一組：<br><span class="a">05·11·17·23</span> 或 <span class="a">06·12·18·24</span> 點</div></div>
-    <div class="c"><span class="n">05</span><i class="fa-solid fa-calendar-days"></i><div class="t">一天 4 次，<b>連吃 2 天</b></div></div>
-    <div class="c hot"><span class="n">06</span><i class="fa-solid fa-droplet"></i><div class="t"><b>第 3 天早上 8:00</b> 抽血<br>（ACTH ＋ Cortisol）</div></div>
-
-    <div class="c"><span class="n">07</span><i class="fa-solid fa-stopwatch"></i><div class="t"><b>按時、按劑量吃</b>——這檢查很依賴準時服藥</div></div>
-    <div class="c"><span class="n">08</span><i class="fa-solid fa-triangle-exclamation"></i><div class="t">漏藥、吐出、延誤 → <b>記下來、告訴醫師</b></div></div>
-    <div class="c"><span class="n">09</span><i class="fa-solid fa-sun"></i><div class="t">抽血<b>一律早上 8 點</b>準時——皮質醇有日夜變化</div></div>
-
-    <div class="c"><span class="n">10</span><i class="fa-solid fa-prescription-bottle-medical"></i><div class="t">其他在吃的藥（類固醇等）<b>先告訴醫師</b></div></div>
-    <div class="c"><span class="n">11</span><i class="fa-solid fa-pen-to-square"></i><div class="t"><b>記錄每次吃藥時間</b>，抽血時交給醫護</div></div>
-    <div class="c"><span class="n">12</span><i class="fa-solid fa-user-doctor"></i><div class="t">實際劑量與檢查，<b>一律以醫師指示為準</b></div></div>
-  </div>
-  <div class="foot">
-    高醫岡山醫院　內分泌新陳代謝科　｜　<b>本圖卡僅供衛教與流程提醒，不取代醫師判斷</b>　｜　2026.07
-  </div>
+  <div class="grid" id="grid"></div>
+  <div class="foot">高醫岡山醫院　內分泌新陳代謝科　｜　<b>本圖卡僅供衛教與流程提醒，不取代醫師判斷</b>　｜　2026.07</div>
 </div>
-<div class="bar no-print"><button onclick="window.print()">🖨 列印 / 存成 PDF（A4）</button></div>
-</body></html>
+<div class="bar no-print"><button onclick="window.print()">🖨 列印目前這版 / 存成 PDF（A4）</button></div>
+<script>
+const care=[
+  {i:'fa-stopwatch',t:'<b>按時、按劑量吃</b>——這檢查很依賴準時服藥'},
+  {i:'fa-triangle-exclamation',t:'漏藥、吐出、延誤 → <b>記下來、告訴醫師</b>'},
+  {i:'fa-sun',t:'抽血<b>一律早上 8 點</b>準時——皮質醇有日夜變化'},
+  {i:'fa-prescription-bottle-medical',t:'其他在吃的藥（類固醇等）<b>先告訴醫師</b>'},
+  {i:'fa-pen-to-square',t:'<b>記錄每次吃藥時間</b>，抽血時交給醫護'},
+  {i:'fa-user-doctor',t:'實際劑量與檢查，<b>一律以醫師指示為準</b>'},
+];
+const V={
+  on:{zh:'隔夜版 Overnight　·　最單純的一種',
+    lead:{i:'fa-moon',t:'最<b>單純</b>的一種——睡前吃一次 Dexamethasone，隔天一早抽血看你的皮質醇壓不壓得下來。'},
+    flow:[
+      {i:'fa-moon',t:'檢查<span class="a">前一晚 23:00</span>睡前吃 <b>1 mg</b>（一顆）'},
+      {i:'fa-syringe',hot:1,t:'隔天<b>早上 8:00</b> 抽血<br>（ACTH ＋ Cortisol）'},
+      {i:'fa-circle-check',t:'就這一次——<b>不用連續吃</b>'},
+    ],careN:[2,3,5]},
+  low:{zh:'低劑量版 Low Dose　·　0.5 mg × 2 天',
+    lead:{i:'fa-pills',t:'低劑量版——<b>0.5 mg 每 6 小時</b>吃一次、連吃 2 天，第 3 天早上抽血。'},
+    flow:[
+      {i:'fa-pills',t:'每 6 小時吃 <b>0.5 mg</b> 一次'},
+      {i:'fa-clock',t:'時段固定一組：<br><span class="a">05·11·17·23</span> 或 <span class="a">06·12·18·24</span> 點'},
+      {i:'fa-calendar-days',t:'一天 4 次，<b>連吃 2 天</b>'},
+      {i:'fa-droplet',hot:1,t:'<b>第 3 天早上 8:00</b> 抽血<br>（ACTH ＋ Cortisol）'},
+    ],careN:[0,1,2,3,4,5]},
+  high:{zh:'高劑量版 High Dose　·　2 mg × 2 天',
+    lead:{i:'fa-pills',t:'高劑量版——<b>2 mg 每 6 小時</b>吃一次、連吃 2 天，第 3 天早上抽血。流程與低劑量相同，只是劑量加大。'},
+    flow:[
+      {i:'fa-pills',t:'每 6 小時吃 <b>2 mg</b> 一次'},
+      {i:'fa-clock',t:'時段固定一組：<br><span class="a">05·11·17·23</span> 或 <span class="a">06·12·18·24</span> 點'},
+      {i:'fa-calendar-days',t:'一天 4 次，<b>連吃 2 天</b>'},
+      {i:'fa-droplet',hot:1,t:'<b>第 3 天早上 8:00</b> 抽血<br>（ACTH ＋ Cortisol）'},
+    ],careN:[0,1,2,3,4,5]},
+};
+function setV(k){
+  const v=V[k];
+  document.getElementById('zh').textContent=v.zh;
+  document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.dataset.v===k));
+  let h=`<div class="c lead"><i class="fa-solid ${v.lead.i}"></i><div class="t">${v.lead.t}</div></div>`;
+  let n=0;
+  const cards=[...v.flow, ...v.careN.map(x=>care[x])];
+  cards.forEach(c=>{n++;h+=`<div class="c ${c.hot?'hot':''}"><span class="n">${String(n).padStart(2,'0')}</span><i class="fa-solid ${c.i}"></i><div class="t">${c.t}</div></div>`;});
+  document.getElementById('grid').innerHTML=h;
+}
+setV('on');
+</script></body></html>
