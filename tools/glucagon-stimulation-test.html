@@ -1,0 +1,194 @@
+<!DOCTYPE html><html lang="zh-Hant"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>升糖素刺激試驗（Glucagon Stimulation Test）· C-peptide 衛教＋判讀</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+:root{--blue:#1a3b6e;--blue2:#2c5aa0;--bg:#f4f6fa;--ink:#1f2733;--muted:#5a6675;--line:#dde3ec;--ok:#0a7d3c;--warn:#b54708;--warnbg:#fff7ed;
+  --met:#b23a1e;--metbg:#fdf1ec;--nobg:#eaf7ee;
+  --cink:#1b1f1d;--csub:#5f655f;--cline:#e6e2d8;--accent:#0f6e64;--hot:#c0562c;--paper:#faf8f2;--card:#fff;--faint:#9a978c;}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,"PingFang TC","Noto Sans TC",sans-serif;background:var(--bg);color:var(--ink);line-height:1.6;font-size:16px}
+.wrap{max-width:820px;margin:0 auto;padding:16px}
+h1{font-size:1.32rem;color:var(--blue)}
+h2{font-size:1.05rem;color:var(--blue);border-left:4px solid var(--blue2);padding-left:8px;margin:1.1em 0 .5em}
+.note{font-size:.86rem;color:var(--muted)}
+.lead-intro{background:#eef2f8;border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin:12px 0;font-size:.95rem}
+.lead-intro b{color:var(--blue)}
+.toolcard{background:#fff;border:1px solid var(--line);border-radius:12px;padding:16px;margin:12px 0}
+.step{display:flex;gap:12px;align-items:flex-start;margin:11px 0}
+.step .n{flex:0 0 30px;height:30px;border-radius:50%;background:var(--blue);color:#fff;font-weight:800;display:flex;align-items:center;justify-content:center;font-size:.95rem}
+.step .ic{color:var(--blue2);font-size:1.05rem;margin-right:2px}
+.pillbox{display:inline-block;background:#fff4e6;border:1px solid #f0c79a;border-radius:8px;padding:2px 8px;font-weight:700;color:#8a4b12}
+.draw{display:inline-block;background:#e6f6ec;border:1px solid #9ad3ae;border-radius:8px;padding:2px 8px;font-weight:700;color:var(--ok)}
+/* 計算機 */
+.cpin{display:flex;gap:14px;flex-wrap:wrap}
+.cpin label{display:block;font-size:.9rem;color:var(--muted);margin:0 0 .2em}
+.cpin .fld{flex:1;min-width:150px}
+.cpin input{width:100%;padding:11px;border:1px solid var(--line);border-radius:9px;font-size:1.05rem}
+.critrow{display:flex;gap:11px;align-items:flex-start;padding:9px 0;border-top:1px dashed var(--line)}
+.critrow:first-child{border-top:0}
+.b{flex:0 0 auto;font-size:.8rem;font-weight:800;border-radius:20px;padding:3px 11px;white-space:nowrap;margin-top:2px}
+.b.met{background:var(--metbg);color:var(--met);border:1px solid #e6b8a8}
+.b.no{background:var(--nobg);color:var(--ok);border:1px solid #a6d7b6}
+.b.pend{background:#eef1f5;color:var(--muted);border:1px solid var(--line)}
+.verdict{margin-top:12px;border-radius:11px;padding:13px 15px;font-weight:800;font-size:1.02rem}
+.verdict span{display:block;font-weight:500;font-size:.86rem;margin-top:3px;opacity:.9}
+.verdict.met{background:var(--metbg);border:1.5px solid #d98b72;color:var(--met)}
+.verdict.no{background:var(--nobg);border:1.5px solid #8ecaa0;color:var(--ok)}
+.verdict.pend{background:#eef1f5;border:1px solid var(--line);color:var(--muted);font-weight:600}
+.warn{background:var(--warnbg);border:1px solid #f0c79a;border-radius:10px;padding:11px;color:var(--warn);font-size:.88rem;margin:8px 0}
+.prbar{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:16px 0}
+.btn{background:var(--blue);color:#fff;border:0;border-radius:9px;padding:11px 20px;font-size:.98rem;font-weight:700;cursor:pointer}
+.btn.g{background:var(--accent)} .btn:hover{opacity:.92}
+/* ===== 忘形流圖卡 ===== */
+#cardSec{background:#eceae2;margin-top:22px;border-top:1px solid var(--line);padding:20px 10px}
+.sheet{max-width:820px;margin:0 auto;background:var(--paper);padding:34px 32px 22px}
+.chead{text-align:center;border-bottom:2px solid var(--cink);padding-bottom:13px}
+.kick{font-size:12px;letter-spacing:.3em;color:var(--accent);font-weight:800;margin-bottom:8px}
+.chead h3{font-size:25px;font-weight:900;color:var(--cink);line-height:1.15}
+.chead .zh{font-size:13.5px;color:var(--csub);margin-top:5px}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:11px;margin-top:15px}
+.c{background:var(--card);border:1px solid var(--cline);border-radius:14px;padding:18px 13px;display:flex;flex-direction:column;align-items:center;text-align:center;min-height:158px;position:relative;color:var(--cink)}
+.c .cn{position:absolute;top:9px;left:12px;font-size:13px;font-weight:900;color:#cfcabb}
+.c i{font-size:32px;color:var(--accent);margin:9px 0 11px}
+.c.hot i{color:var(--hot)}
+.c .ct{font-size:15px;font-weight:800;line-height:1.42}
+.c .ct b{color:var(--hot)} .c .ct .a{color:var(--accent)}
+.c.lead{grid-column:span 3;flex-direction:row;gap:16px;justify-content:flex-start;text-align:left;min-height:auto;background:var(--cink);border:none}
+.c.lead i{color:var(--paper);font-size:26px;margin:0;flex:0 0 auto}
+.c.lead .ct{color:var(--paper);font-size:15.5px;font-weight:600;line-height:1.55}
+.c.lead .ct b{color:#7fd8cc}
+.cfoot{margin-top:13px;text-align:center;font-size:10.5px;color:var(--faint);border-top:1px solid var(--cline);padding-top:10px}
+footer{font-size:.8rem;color:var(--muted);text-align:center;margin:16px 0}
+@media print{
+  @page{size:A4 portrait;margin:9mm}
+  .no-print{display:none!important}
+  body{background:#fff;font-size:12pt}
+  .toolcard,.lead-intro{break-inside:avoid}
+  body.mode-card .wrap>*:not(#cardSec){display:none!important}
+  body.mode-card #cardSec{background:none!important;padding:0!important;border:none!important;margin:0!important}
+  body.mode-card .sheet{max-width:100%;padding:2mm}
+  body.mode-all #cardSec{background:none!important;padding:0!important;border:none!important;break-before:page}
+  body.mode-all .sheet{max-width:100%;padding:2mm}
+  .c{break-inside:avoid}
+}
+@media(max-width:640px){.grid{grid-template-columns:repeat(2,1fr)}.c.lead{grid-column:span 2}}
+@media(max-width:420px){.grid{grid-template-columns:1fr}.c.lead{grid-column:span 1;flex-direction:column;text-align:center}}
+</style></head><body>
+<div class="wrap">
+<h1>💉🩸 升糖素刺激試驗 Glucagon Stimulation Test</h1>
+<p class="note">評估胰島 β 細胞的胰島素分泌能力（用 C-胜肽 C-peptide 代表）· 協助診斷第 1 型糖尿病</p>
+
+<div class="lead-intro">
+升糖素刺激試驗，是我們用來看「你的胰臟還能分泌多少胰島素」的檢查。原理很直接：<b>先抽一次基礎的 C-胜肽（C-peptide），打一針升糖素（glucagon）去『刺激』胰島素分泌，6 分鐘後再抽一次</b>。如果刺激後 C-peptide 還是叫不太出來，代表胰島素分泌已經明顯不足——這就是我們判斷是不是第 1 型糖尿病的重要依據。
+</div>
+
+<div class="toolcard">
+  <h2>檢查流程（3 步）</h2>
+  <div class="step"><div class="n">1</div><div><span class="ic"><i class="fa-solid fa-droplet"></i></span> <b>空腹</b>先抽<b>第一次</b> C-peptide（＝基礎值 / 0 分鐘）<span class="draw">抽血 ①</span></div></div>
+  <div class="step"><div class="n">2</div><div><span class="ic"><i class="fa-solid fa-syringe"></i></span> 靜脈注射一針 <span class="pillbox">升糖素 Glucagon</span>（刺激胰島素分泌）</div></div>
+  <div class="step"><div class="n">3</div><div><span class="ic"><i class="fa-solid fa-stopwatch"></i></span> 打完後<b>整整 6 分鐘</b>，再抽<b>第二次</b> C-peptide <span class="draw">抽血 ②</span></div></div>
+  <p class="note">兩次數值（0 分、6 分）交給醫師判讀。整個過程大約 15～30 分鐘。</p>
+</div>
+
+<div class="toolcard">
+  <h2>C-peptide 判讀輔助</h2>
+  <p class="note">輸入兩次數值（單位 ng/mL），自動比對三條診斷標準。<b>三項符合任一</b>即符合第 1 型糖尿病診斷。</p>
+  <div class="cpin" style="margin:10px 0">
+    <div class="fld"><label>0 分鐘（空腹）C-peptide（ng/mL）</label><input type="number" step="0.01" min="0" id="cp0" inputmode="decimal" placeholder="例：0.42" oninput="evalCP()"></div>
+    <div class="fld"><label>6 分鐘（刺激後）C-peptide（ng/mL）</label><input type="number" step="0.01" min="0" id="cp6" inputmode="decimal" placeholder="例：1.5" oninput="evalCP()"></div>
+  </div>
+  <div id="cpOut"></div>
+  <p class="note" style="margin-top:10px">※ 若你的報告單位是 nmol/L，1 ng/mL ≈ 0.33 nmol/L（換算後再輸入）。</p>
+</div>
+
+<div class="toolcard">
+  <h2>注意事項</h2>
+  <ul style="margin:.2em 0;padding-left:1.3em;font-size:.94rem">
+    <li>檢查前<b>需空腹</b>（依醫師指示的空腹時間）。</li>
+    <li>打完升糖素<b>可能會噁心、想吐或肚子不適</b>——這是常見反應、通常很快過去，不用緊張；若很不舒服告訴醫護。</li>
+    <li><b>第二次（6 分鐘）抽完才算完成</b>，中途請不要離開。</li>
+    <li>有<b>嗜鉻細胞瘤、胰島素瘤</b>病史，或正在服用特殊藥物（含乙型阻斷劑等），請<b>先告訴醫師</b>。</li>
+    <li>檢查結果與最終診斷，一律以<b>醫師綜合判讀</b>為準。</li>
+  </ul>
+  <div class="warn">⚠️ 本工具僅供衛教與判讀輔助，不取代醫師的臨床判斷；實際檢查與診斷以盧醫師指示為準。</div>
+</div>
+
+<div class="prbar no-print">
+  <button class="btn g" onclick="pr('card')">🖨 只印衛教圖卡（A4）</button>
+  <button class="btn" onclick="pr('all')">🖨 印全部（流程＋圖卡）</button>
+</div>
+
+<footer>高醫岡山醫院　內分泌新陳代謝科　｜　工具版本：2026-07-11（流程衛教＋C-peptide 判讀＋忘形流衛教圖卡・可分別列印）</footer>
+</div>
+
+<!-- ===== 忘形流衛教圖卡 ===== -->
+<section id="cardSec">
+  <div class="sheet">
+    <div class="chead">
+      <div class="kick">內分泌新陳代謝科　·　檢查衛教</div>
+      <h3>升糖素刺激試驗 Glucagon Stimulation Test</h3>
+      <div class="zh">看胰臟還能分泌多少胰島素（C-peptide）　·　協助診斷第 1 型糖尿病</div>
+    </div>
+    <div class="grid" id="cGrid"></div>
+    <div class="cfoot">高醫岡山醫院　內分泌新陳代謝科　｜　本圖卡僅供衛教與流程提醒，不取代醫師判斷　｜　2026.07</div>
+  </div>
+</section>
+
+<script>
+const $=id=>document.getElementById(id);
+
+// ── C-peptide 判讀 ──
+function crit(label,state,detail){
+  const badge = state===true?'<span class="b met">符合</span>':state===false?'<span class="b no">不符合</span>':'<span class="b pend">待輸入</span>';
+  return `<div class="critrow">${badge}<div><b>${label}</b><br><span class="note">${detail}</span></div></div>`;
+}
+function evalCP(){
+  const r0=$('cp0').value, r6=$('cp6').value;
+  const v0=r0===''?null:parseFloat(r0);
+  const v6=r6===''?null:parseFloat(r6);
+  const out=$('cpOut');
+  if(v0===null && v6===null){out.innerHTML='';return;}
+  const c1=(v0===null)?null:(v0<0.5);
+  const c2=(v6===null)?null:(v6<1.8);
+  let delta=null,c3=null;
+  if(v0!==null && v6!==null){delta=Math.round((v6-v0)*100)/100; c3=delta<0.7;}
+  const rows=[
+    crit('① 空腹（0 分）C-peptide &lt; 0.5 ng/mL', c1, v0!==null?`你的 0 分值 = <b>${v0}</b> ng/mL`:'請輸入 0 分值'),
+    crit('② 刺激後（6 分）C-peptide &lt; 1.8 ng/mL', c2, v6!==null?`你的 6 分值 = <b>${v6}</b> ng/mL`:'請輸入 6 分值'),
+    crit('③ （6 分 − 0 分）差值 &lt; 0.7 ng/mL', c3, delta!==null?`差值 = <b>${delta}</b> ng/mL`:'需 0 分與 6 分兩個值'),
+  ];
+  const anyMet=[c1,c2,c3].some(x=>x===true);
+  const allEval=[c1,c2,c3].every(x=>x!==null);
+  let verdict;
+  if(anyMet) verdict='<div class="verdict met">✅ 符合「第 1 型糖尿病」的診斷標準<span>三條標準符合任一即成立——代表胰島素分泌已明顯不足。最終診斷仍由醫師綜合判讀。</span></div>';
+  else if(allEval) verdict='<div class="verdict no">三項皆不符合<span>C-peptide 儲備尚足，較不像胰島素依賴型；請由醫師結合臨床綜合判讀。</span></div>';
+  else verdict='<div class="verdict pend">把 0 分與 6 分兩個值都填上，才能完整判讀。</div>';
+  out.innerHTML=rows.join('')+verdict;
+}
+
+// ── 忘形流圖卡 ──
+const cards=[
+  {lead:1,i:'fa-flask-vial',t:'這檢查看你的胰臟還能『擠出』多少胰島素（用 <b>C-peptide</b> 代表）——幫我們判斷是不是<b>第 1 型糖尿病</b>。'},
+  {i:'fa-droplet',t:'先<span class="a">空腹</span>抽<b>第一次</b>血<br>（C-peptide 基礎值，0 分）'},
+  {i:'fa-syringe',hot:1,t:'打一針<b>升糖素 glucagon</b><br>（刺激胰島素分泌）'},
+  {i:'fa-stopwatch',hot:1,t:'剛好<b>6 分鐘</b>後<br>再抽<b>第二次</b>血'},
+  {i:'fa-user-doctor',t:'兩次數值交給醫師判讀<br>（叫不出來＝<b>胰島素不足</b>）'},
+  {i:'fa-utensils',t:'檢查前<b>需空腹</b><br>（依醫師指示時間）'},
+  {i:'fa-face-dizzy',t:'打完可能<b>噁心、想吐</b><br>——通常一下就過，別緊張'},
+  {i:'fa-hourglass-half',t:'<b>抽完第二次才算完成</b><br>中途請不要離開'},
+  {i:'fa-comment-medical',t:'有嗜鉻細胞瘤／胰島素瘤病史、或在吃特殊藥，<b>先告訴醫師</b>'},
+  {i:'fa-stethoscope',t:'結果與診斷，<b>一律以醫師判讀為準</b>'},
+];
+(function(){
+  let h='',n=0;
+  cards.forEach(c=>{
+    if(c.lead){h+=`<div class="c lead"><i class="fa-solid ${c.i}"></i><div class="ct">${c.t}</div></div>`;return;}
+    n++;h+=`<div class="c ${c.hot?'hot':''}"><span class="cn">${String(n).padStart(2,'0')}</span><i class="fa-solid ${c.i}"></i><div class="ct">${c.t}</div></div>`;
+  });
+  $('cGrid').innerHTML=h;
+})();
+
+function pr(mode){document.body.classList.remove('mode-card','mode-all');document.body.classList.add(mode==='card'?'mode-card':'mode-all');window.print();}
+window.addEventListener('afterprint',()=>document.body.classList.remove('mode-card','mode-all'));
+</script></body></html>
