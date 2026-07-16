@@ -155,19 +155,28 @@ function parse(text){
 }
 
 /* ---------- 「整頁全選貼上」格式（雲端西醫藥歷整頁）：每筆以日期開頭、跨行、ICD 被換行拆開、項次黏在藥品代碼尾 ---------- */
-function isFullPage(t){return /^\s*1\d{2}\/\d{2}\/\d{2}\s/m.test(t)&&!/^\d+\s+1\d{2}\/\d{2}\/\d{2}/m.test(t);}
+// 訊號式偵測：整頁貼上時「含日期的行」多半不含用法+三數字（藥資訊在後續換行的列）；相容「日期開頭」與「項次+日期開頭」兩變體
+function isFullPage(t){
+  if(/就醫日期[\s\S]{0,40}主診斷/.test(t))return true;
+  const dl=(t.match(/^.*1\d{2}\/\d{2}\/\d{2}.*$/mg)||[]);
+  if(!dl.length)return false;
+  const wrapped=dl.filter(l=>!/(?:QD|QAM|QPM|BID|TID|QID|QN|HS|PRN|QOD)[A-Z]*\s+\d+\s+\d+\s+\d+/.test(l)).length;
+  return wrapped>=Math.ceil(dl.length*0.5);
+}
+// 從表頭抓病人姓名：身分證號： X000***000○○○民 YY/MM/DD 性別
+function extractPatientName(t){const m=t.match(/身分證號[：:\s]*[A-Z][0-9A-Z*]+\s*([一-鿿]{2,4})\s*民/);return m?m[1]:'';}
 function parseFullPage(text){
-  const chunks=text.split(/\n(?=\s*1\d{2}\/\d{2}\/\d{2}\s)/);
+  const chunks=text.split(/\n(?=\s*(?:\d+\s+)?1\d{2}\/\d{2}\/\d{2}\s)/);
   const meds={},order=[],skipped=[];
   const freqRe=/\s((?:QD|QAM|QPM|QDS|BID|TID|QID|QN|HS|PRN|QOD|QW|BIW|TIW|Q\d+H|ST|STAT)(?:PC|AC|HS)?)\s+(\d+(?:\.\d+)?)\s+(\d+)\s+(\d+)(?:\s|$)/;
   for(const c of chunks){
     const joined=c.replace(/\s*\n\s*/g,' ').replace(/\s+/g,' ').trim();
-    if(!/^1\d{2}\/\d{2}\/\d{2}\s/.test(joined))continue;
-    const date=joined.match(/^(1\d{2}\/\d{2}\/\d{2})/)[1];
-    const orgM=joined.match(/^1\d{2}\/\d{2}\/\d{2}\s+([一-鿿]+)/);
+    if(!/^(?:\d+\s+)?1\d{2}\/\d{2}\/\d{2}\s/.test(joined))continue;   // 略過表頭/雜訊段
+    const date=joined.match(/^(?:\d+\s+)?(1\d{2}\/\d{2}\/\d{2})/)[1];  // 可含前置項次
+    const orgM=joined.match(/^(?:\d+\s+)?1\d{2}\/\d{2}\/\d{2}\s+([一-鿿]+)/);
     const org=orgM?orgM[1]:'';
-    // 主診斷 ICD 被換行拆開：I1+0→I10、J0+69→J06.9、M7+910→M79.10、E7+849→E78.49
-    const dxM=joined.match(/([一-鿿][一-鿿（）()／\-]*?)([A-Z]\d)\s+(\d+)\s/);
+    // 主診斷：診斷名+ICD。相容①ICD被換行拆開(高血壓I1↵0→I10) ②診斷名與碼分行(肝細胞癌↵C220→C22.0、B181→B18.1)
+    const dxM=joined.match(/([一-鿿][一-鿿（）()／\-]*?)\s*([A-Z]\d)\s*(\d{0,4})(?=[\s一-鿿])/);
     let icd='',dxName='';
     if(dxM){dxName=dxM[1];icd=(dxM[2]+dxM[3]).replace(/^([A-Z]\d{2})(\d+)$/,'$1.$2');}
     const fm=joined.match(freqRe);
@@ -217,6 +226,8 @@ function render(){
   const medText=$('inMed').value.trim(),labText=$('inLab').value.trim();
   if(!medText&&!labText){$('out').textContent='貼上後結果會出現在這裡';$('warn').hidden=true;$('skipbox').hidden=true;return}
   const {meds,labs,order,skipped}=parseAll(medText,labText);
+  // 姓名欄空時，自動從表頭帶入病人姓名（不覆蓋使用者已輸入）
+  if(!$('pname').value.trim()){const nm=extractPatientName(medText)||extractPatientName(labText);if(nm)$('pname').value=nm;}
   const listMode=$('oList').checked,out=[];
   for(const [kind,key] of order){
     const [date,org]=key.split('｜');
@@ -235,10 +246,12 @@ function render(){
     }
   }
   $('out').textContent=out.join('\n')||'（無法解析，請確認貼的是雲端藥歷/檢驗清單）';
-  $('warn').hidden=!skipped.length;
-  $('warn').textContent=skipped.length?`⚠️ 有 ${skipped.length} 段未能解析，未納入結果（點下方檢查原文）`:'';
-  $('skipbox').hidden=!skipped.length;
-  $('skipped').textContent=skipped.join('\n----\n');
+  // 過濾雲端系統表頭/導覽/病人資訊列，不當成「未解析」警告
+  const realSkipped=skipped.filter(s=>!/NHI MediCloud|健保醫療資訊雲端|身分證號|摘要.病人資訊|就醫日期[\s\S]{0,20}來源|使用指南|本頁注意事項|篩選器|預防接種/.test(s));
+  $('warn').hidden=!realSkipped.length;
+  $('warn').textContent=realSkipped.length?`⚠️ 有 ${realSkipped.length} 段未能解析，未納入結果（點下方檢查原文）`:'';
+  $('skipbox').hidden=!realSkipped.length;
+  $('skipped').textContent=realSkipped.join('\n----\n');
 }
 
 /* ---------- 歷史記錄（本機 localStorage，可切換不同病人） ---------- */
