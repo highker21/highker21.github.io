@@ -65,11 +65,12 @@ details{margin-top:6px;font-size:.75rem;color:#678}
 <div id="out">貼上後結果會出現在這裡</div>
 <div class="warn" id="warn" hidden></div>
 <details id="skipbox" hidden><summary>未解析的段落（點開檢查）</summary><pre id="skipped"></pre></details>
-<div class="foot">僅重排文字、不做醫療判斷，貼入病歷前請自行核對｜歷史記錄存於本機瀏覽器（localStorage）｜工具版本：2026-07-10</div>
+<div class="foot">僅重排文字、不做醫療判斷，貼入病歷前請自行核對｜歷史記錄存於本機瀏覽器（localStorage）｜工具版本：2026-07-16（支援雲端藥歷「整頁全選貼上」）</div>
 <script>
 const $=id=>document.getElementById(id);
 const FREQ='QD|QAM|QPM|BID|TID|QID|QN|HS|PRN|QOD|QW|BIW|TIW|Q\\d+H|ST|STAT|MEAL|AC|PC';
-const FORM=/^(TABLETS?|TAB|CAPSULES?|CAP|CAPS|ENTERIC[\w-]*|PROLONGED-RELEASE|EXTENDED[\w-]*|FILM[\w-]*|F\.?C\.?|SUGAR[\w-]*|ORAL|EYE|DROPS?|LOTION|OINTMENT|CREAM|GEL|SYRUP|SOLUTION|SUSPENSION|INJECTION|INJ|PATCH|SPRAY|SUPPOSITOR(Y|IES)|POWDER|GRANULES?|MICROENCAPSULATED)$/i;
+const FORM=/^(TABLETS?|TAB|CAPSULES?|CAP|CAPS|ENTERIC[\w-]*|PROLONGED-RELEASE|EXTENDED[\w-]*|FILM[\w-]*|F\.?C\.?|SUGAR[\w-]*|ORAL|EYE|DROPS?|LOTION|OINTMENT|CREAM|GEL|SYRUP|SOLUTION|SUSPENSION|MIXTURE|LIQUID|EFFERVESCENT|INJECTION|INJ|PATCH|PLASTER|SPRAY|SUPPOSITOR(Y|IES)|POWDER|GRANULES?|S\.?R\.?M\.?C\.?|MICROENCAPSULATED)$/i;
+const CONTAINER=/^(LIQUID|MIXTURE|SOLUTION|SYRUP|SUSPENSION|DROPS?)$/i;
 const EXTRA=/^(SR|XL|XR|CR|ER|LA|MR|DEPOT|FORTE|RETARD)$/i;
 const title=s=>s.charAt(0)+s.slice(1).toLowerCase();
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -84,8 +85,9 @@ function shortDrug(brand){
     if(form.length)break;
     name.push(title(t));
   }
-  const dm=brand.match(/(\d+(?:\.\d+)?)\s*(MG|MCG|G|ML|IU|%)(?:\/[\w.]+)?/i);
+  const dm=brand.match(/(\d+(?:\.\d+)?(?:\/\d+(?:\.\d+)?)?)\s*(MG|MCG|G|ML|IU|%)/i);
   const dose=dm?dm[1]+dm[2].toLowerCase():'';
+  if(!name.length)return brand.replace(/["＂]/g,'').replace(/\s+/g,' ').trim(); // 退化(容器型如 Brown Mixture)→回完整品牌
   let out=name.join(' ')+(extra?' '+extra:'')+(dose?' '+dose:'');
   if(!dose&&form.length)out+=' '+form.slice(0,2).join(' ');
   return out.trim()||brand;
@@ -152,6 +154,55 @@ function parse(text){
   return {meds,labs,order,skipped};
 }
 
+/* ---------- 「整頁全選貼上」格式（雲端西醫藥歷整頁）：每筆以日期開頭、跨行、ICD 被換行拆開、項次黏在藥品代碼尾 ---------- */
+function isFullPage(t){return /^\s*1\d{2}\/\d{2}\/\d{2}\s/m.test(t)&&!/^\d+\s+1\d{2}\/\d{2}\/\d{2}/m.test(t);}
+function parseFullPage(text){
+  const chunks=text.split(/\n(?=\s*1\d{2}\/\d{2}\/\d{2}\s)/);
+  const meds={},order=[],skipped=[];
+  const freqRe=/\s((?:QD|QAM|QPM|QDS|BID|TID|QID|QN|HS|PRN|QOD|QW|BIW|TIW|Q\d+H|ST|STAT)(?:PC|AC|HS)?)\s+(\d+(?:\.\d+)?)\s+(\d+)\s+(\d+)(?:\s|$)/;
+  for(const c of chunks){
+    const joined=c.replace(/\s*\n\s*/g,' ').replace(/\s+/g,' ').trim();
+    if(!/^1\d{2}\/\d{2}\/\d{2}\s/.test(joined))continue;
+    const date=joined.match(/^(1\d{2}\/\d{2}\/\d{2})/)[1];
+    const orgM=joined.match(/^1\d{2}\/\d{2}\/\d{2}\s+([一-鿿]+)/);
+    const org=orgM?orgM[1]:'';
+    // 主診斷 ICD 被換行拆開：I1+0→I10、J0+69→J06.9、M7+910→M79.10、E7+849→E78.49
+    const dxM=joined.match(/([一-鿿][一-鿿（）()／\-]*?)([A-Z]\d)\s+(\d+)\s/);
+    let icd='',dxName='';
+    if(dxM){dxName=dxM[1];icd=(dxM[2]+dxM[3]).replace(/^([A-Z]\d{2})(\d+)$/,'$1.$2');}
+    const fm=joined.match(freqRe);
+    if(!fm){skipped.push(joined);continue}
+    // pre＝用法用量前的字串；砍掉診斷、ATC3名稱、複方註記Y，剩 成分名稱+藥品名稱
+    let pre=joined.slice(0,joined.indexOf(fm[0]));
+    if(dxM)pre=pre.slice(dxM.index+dxM[0].length);
+    const am=pre.match(/^[一-鿿][^）)]*[）)]\s*/);        // 中文ATC3(含英文gloss括號)
+    if(am)pre=pre.slice(am[0].length);else pre=pre.replace(/^[A-Za-z]+\s+/,''); // 英文ATC3(如 Psycholeptics)
+    pre=pre.replace(/^Y\s+/,'');                                   // 複方註記
+    const toks=pre.split(/\s+/).filter(Boolean);
+    // 藥品名稱起點＝第一個 FORM 詞(TABLETS/CAPSULES/F.C./Plaster…)的前一 token；廠商(引號內)在 FORM 之後不會被誤選；成分名稱不含 FORM 詞
+    const fi=toks.findIndex(t=>FORM.test(t.replace(/["＂]/g,'')));
+    let bi;
+    if(fi<0)bi=toks.length-1;
+    else if(fi===0)bi=0;
+    else if(CONTAINER.test(toks[fi].replace(/["＂]/g,''))&&/^[A-Z][a-z]/.test(toks[fi-1]))bi=fi; // 容器型且前token為成分尾→不回退
+    else bi=fi-1;
+    const brand=toks.slice(Math.max(0,bi)).join(' ');
+    const key=date+'｜'+org;
+    if(!meds[key]){meds[key]={dx:new Map(),items:[]};order.push(['med',key])}
+    if(icd)meds[key].dx.set(icd,dxName);
+    meds[key].items.push({brand,freq:fm[1],days:fm[3]});
+  }
+  return {meds,labs:{},order,skipped};
+}
+function parseAll(medText,labText){
+  if(medText&&isFullPage(medText)){
+    const res=parseFullPage(medText);
+    if(labText){const lr=parse(labText);Object.assign(res.labs,lr.labs);for(const o of lr.order)if(o[0]==='lab')res.order.push(o);res.skipped.push(...lr.skipped);}
+    return res;
+  }
+  return parse(((medText||'')+'\n'+(labText||'')).trim());
+}
+
 function flag(v,lo,hi){
   if(!$('oAbn').checked)return '';
   const n=parseFloat(v);if(isNaN(n))return '';
@@ -163,9 +214,9 @@ function flag(v,lo,hi){
 }
 
 function render(){
-  const t=($('inMed').value+'\n'+$('inLab').value).trim();
-  if(!t){$('out').textContent='貼上後結果會出現在這裡';$('warn').hidden=true;$('skipbox').hidden=true;return}
-  const {meds,labs,order,skipped}=parse(t);
+  const medText=$('inMed').value.trim(),labText=$('inLab').value.trim();
+  if(!medText&&!labText){$('out').textContent='貼上後結果會出現在這裡';$('warn').hidden=true;$('skipbox').hidden=true;return}
+  const {meds,labs,order,skipped}=parseAll(medText,labText);
   const listMode=$('oList').checked,out=[];
   for(const [kind,key] of order){
     const [date,org]=key.split('｜');
