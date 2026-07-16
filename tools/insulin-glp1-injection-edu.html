@@ -1,0 +1,138 @@
+<!DOCTYPE html><html lang="zh-Hant"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="author" content="盧子文醫師 - Dr. Lu Tz-Wen">
+<title>胰島素 · 腸泌素 打針衛教（忘形流圖卡＋詳細版）</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+:root{--ink:#1b1f1d;--sub:#5f655f;--line:#e6e2d8;--accent:#0f6e64;--hot:#c0562c;--paper:#faf8f2;--card:#fff;--faint:#9a978c;}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#eceae2;font-family:"PingFang TC","Noto Sans TC","Microsoft JhengHei",sans-serif;color:var(--ink);padding:20px 12px;-webkit-font-smoothing:antialiased}
+.tabs{max-width:900px;margin:0 auto 14px;display:flex;gap:8px}
+.tab{flex:1;text-align:center;padding:12px 6px;border-radius:10px;border:1px solid var(--line);background:#fff;cursor:pointer;font-weight:800;color:var(--sub);font-size:16px}
+.tab small{display:block;font-weight:500;font-size:11px;color:var(--faint);margin-top:2px}
+.tab.active{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.tab.active small{color:#9fd8ce}
+.sheet{max-width:900px;margin:0 auto;background:var(--paper);padding:38px 36px 24px}
+.head{text-align:center;border-bottom:2px solid var(--ink);padding-bottom:15px;margin-bottom:4px}
+.kick{font-size:12px;letter-spacing:.32em;color:var(--accent);font-weight:800;margin-bottom:9px}
+.head h1{font-size:30px;font-weight:900;letter-spacing:-.01em;line-height:1.1}
+.head .zh{font-size:14px;color:var(--sub);margin-top:6px;letter-spacing:.04em}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px}
+.c{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px 15px;display:flex;flex-direction:column;align-items:center;text-align:center;justify-content:flex-start;min-height:170px;position:relative}
+.c .n{position:absolute;top:10px;left:14px;font-size:14px;font-weight:900;color:#cfcabb}
+.c i{font-size:35px;color:var(--accent);margin:10px 0 12px}
+.c.hot i{color:var(--hot)}
+.c .t{font-size:16px;font-weight:800;line-height:1.42}
+.c .t b{color:var(--hot)} .c .t .a{color:var(--accent)}
+.c.lead{grid-column:span 3;flex-direction:row;gap:18px;justify-content:flex-start;text-align:left;min-height:auto;background:var(--ink);border:none}
+.c.lead i{color:var(--paper);font-size:28px;margin:0;flex:0 0 auto}
+.c.lead .t{color:var(--paper);font-size:16.5px;font-weight:600;line-height:1.6}
+.c.lead .t b{color:#7fd8cc}
+.detail{margin-top:22px;border-top:2px dashed var(--line);padding-top:18px}
+.detail h2{font-size:18px;color:var(--accent);margin:16px 0 8px;border-left:4px solid var(--accent);padding-left:11px}
+.detail h2:first-child{margin-top:0}
+.detail ul{margin:0 0 4px 4px;font-size:14.5px;line-height:1.75;list-style:none}
+.detail li{padding-left:16px;position:relative;margin-bottom:3px}
+.detail li:before{content:"‧";color:var(--accent);position:absolute;left:2px;font-weight:900}
+.detail b{color:var(--ink)} .detail .hot{color:var(--hot);font-weight:800}
+.foot{margin-top:16px;text-align:center;font-size:11px;color:var(--faint);line-height:1.7;border-top:1px solid var(--line);padding-top:11px}
+.foot b{color:var(--sub)}
+.bar{text-align:center;margin:16px 0;display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.bar button{background:var(--ink);color:var(--paper);border:0;padding:11px 22px;font-size:15px;font-weight:700;border-radius:6px;cursor:pointer}
+.bar button.ghost{background:#fff;color:var(--ink);border:1px solid var(--ink)}
+.view.hidden{display:none}
+@media print{@page{size:A4 portrait;margin:8mm}body{background:#fff;padding:0}.tabs,.no-print{display:none!important}.sheet{max-width:100%;padding:4mm}.c{break-inside:avoid}.detail{break-inside:avoid}}
+@media(max-width:640px){.grid{grid-template-columns:repeat(2,1fr)}.c.lead{grid-column:span 2}}
+@media(max-width:420px){.grid{grid-template-columns:1fr}.c.lead{grid-column:span 1;flex-direction:column;text-align:center}}
+</style></head><body>
+<div class="tabs no-print">
+  <div class="tab active" data-v="ins" onclick="setV('ins')">💉 胰島素<small>Insulin</small></div>
+  <div class="tab" data-v="glp1" onclick="setV('glp1')">💧 腸泌素<small>GLP-1 RA</small></div>
+</div>
+<div class="sheet" id="sheet">
+  <div class="head">
+    <div class="kick">內分泌新陳代謝科　·　打針衛教</div>
+    <h1 id="h1"></h1>
+    <div class="zh" id="zh"></div>
+  </div>
+  <div class="grid" id="grid"></div>
+  <div class="detail view" id="detail"></div>
+  <div class="foot">高醫岡山醫院　內分泌新陳代謝科　｜　<b>本圖卡僅供衛教與流程提醒，不取代醫師判斷；劑量、時機與各藥品保存天數請依醫師指示及藥品仿單</b>　｜　2026.07</div>
+</div>
+<div class="bar no-print">
+  <button onclick="window.print()">🖨 列印目前這版 / 存 PDF（A4）</button>
+  <button class="ghost" id="tgl" onclick="toggleDetail()">顯示詳細版 ▾</button>
+</div>
+<script>
+const V={
+ ins:{h1:'胰島素 打針 7 要點',zh:'Insulin　·　糖尿病自我照護，一看就懂',
+  lead:{i:'fa-syringe',t:'胰島素是<b>皮下注射</b>——打對部位、換新針頭、抓對時機，血糖控制更穩、也更安全。'},
+  flow:[
+   {i:'fa-location-dot',t:'部位<span class="a">輪替</span>：腹、大腿、上臂、臀，<b>每次換位置</b>'},
+   {i:'fa-syringe',t:'每次換<span class="a">新針頭</span>，用一次就丟、<b>不重複用</b>'},
+   {i:'fa-thumbtack',t:'短針<span class="a">垂直 90°</span>，推到底<b>停 10 秒</b>再拔'},
+   {i:'fa-clock',t:'<b>速效</b>餐前 15 分、<b>長效</b>每天固定同一時間'},
+   {i:'fa-snowflake',t:'未開封<span class="a">冰 2–8°C</span>、開封後<b>室溫約 28 天</b>'},
+   {i:'fa-heart-pulse',hot:1,t:'<b>低血糖</b>：吃 15 克糖，休息 15 分鐘再測'},
+   {i:'fa-rotate',t:'忘記打：距下劑久可補，<b>接近就跳過、勿加倍</b>'},
+  ],
+  detail:`
+   <h2>注射部位與輪替</h2><ul>
+    <li>可注射：腹部（肚臍 5 公分以外）、大腿外側、上臂外側、臀部外上方；腹部吸收最快最穩定。</li>
+    <li>每次換不同位置，同區內每針間隔約 1 指幅；避免長期同一點反覆打，以免<span class="hot">脂肪增生硬塊</span>影響吸收。</li></ul>
+   <h2>正確注射步驟</h2><ul>
+    <li>洗手、酒精消毒待乾 → 裝<b>新針頭</b> → 筆針先<b>排氣 2 單位</b>（見藥滴）。</li>
+    <li>短針（4–6mm）多可垂直 90°、免捏皮；較瘦或長針則捏皮。推到底<b>停約 10 秒</b>再拔，勿揉；針頭丟<b>耐刺容器</b>。</li></ul>
+   <h2>注射時機</h2><ul>
+    <li>速效胰島素：餐前約 15 分鐘（隨餐）。長效基礎胰島素：每天固定時間一次。預混型：依醫囑餐前。</li></ul>
+   <h2>藥品保存</h2><ul>
+    <li>未開封冷藏 2–8°C，勿冷凍、勿靠出風口；使用中（開封）多數可室溫（≤25–30°C）約 28 天，部分品項不同（依仿單）。</li>
+    <li>避免高溫、陽光直射、結冰；結冰或變色即丟棄。外出以保冷袋，收納前拔掉針頭。</li></ul>
+   <h2>低血糖處理</h2><ul>
+    <li>徵兆：發抖、冒冷汗、心悸、頭暈、飢餓、無力。</li>
+    <li><b>15/15 法則</b>：吃 15 克糖（含糖飲半罐／方糖 3 顆／葡萄糖片），休息 15 分再測；未改善再一次。意識不清<span class="hot">勿餵食</span>，立即送醫／119。</li></ul>
+   <h2>忘記打／何時聯絡團隊</h2><ul>
+    <li>基礎胰島素：距下劑久可補；接近下劑則跳過、勿加倍。不確定先量血糖並諮詢。</li>
+    <li>反覆低血糖、注射處紅腫硬塊久不消、生病期間血糖不穩，請聯絡醫療團隊。</li></ul>`},
+ glp1:{h1:'腸泌素 打針 7 要點',zh:'GLP-1 腸泌素　·　一看就懂',
+  lead:{i:'fa-droplet',t:'腸泌素（GLP-1）多為<b>每週一次</b>皮下注射——固定同一天、劑量由低漸增，腸胃不適多會慢慢改善。'},
+  flow:[
+   {i:'fa-location-dot',t:'皮下注射，腹、大腿、上臂<b>輪替換位置</b>'},
+   {i:'fa-calendar-week',t:'<span class="a">週劑量</span>：每週<b>固定同一天</b>，不必配三餐'},
+   {i:'fa-syringe',t:'每次換<span class="a">新針頭</span>，打完拔針再收'},
+   {i:'fa-snowflake',t:'未開封<span class="a">冷藏</span>，開封後依仿單室溫保存'},
+   {i:'fa-utensils',hot:1,t:'會<b>噁心</b>：少量多餐、清淡、慢慢吃'},
+   {i:'fa-arrow-trend-up',t:'劑量<span class="a">由低漸增</span>，腸胃不適多會減輕'},
+   {i:'fa-rotate',t:'忘記打：<b>2 天內</b>想起可補，超過等下次'},
+  ],
+  detail:`
+   <h2>注射部位與方式</h2><ul>
+    <li>皮下注射於腹部、大腿、上臂，輪替換位置；每次換<b>新針頭</b>、用完拔針再收。</li>
+    <li>胰島素與腸泌素可同一天分開不同部位施打，但<b>不可混於同一針筒</b>。</li></ul>
+   <h2>注射時機</h2><ul>
+    <li>週劑量（如 semaglutide／dulaglutide／tirzepatide）：每週<b>固定同一天</b>，不需配合三餐。</li>
+    <li>日劑量（如 liraglutide）：每天固定時間。</li></ul>
+   <h2>藥品保存</h2><ul>
+    <li>未開封冷藏 2–8°C；開封／使用中依各品項仿單（部分可室溫數週），避免高溫、陽光直射、結冰。</li></ul>
+   <h2>腸胃反應處理</h2><ul>
+    <li>常見噁心、嘔吐、腹瀉、食慾降低，多隨時間<b>減輕</b>。</li>
+    <li>減緩：<b>少量多餐、清淡、慢慢吃、避免油膩</b>；劑量由低漸增。持續嘔吐脫水或<span class="hot">劇烈腹痛（警覺胰臟炎）</span>請就醫。</li></ul>
+   <h2>忘記打／何時聯絡團隊</h2><ul>
+    <li>週劑量：距原定日<b>2 天內</b>想起可補打；超過則跳過、等下次固定日。日劑量當天想起可補。</li>
+    <li>持續噁心嘔吐、體重快速下降、注射處久不消腫，請聯絡醫療團隊。</li></ul>`},
+};
+let showDetail=false;
+function render(){
+  const k=document.querySelector('.tab.active').dataset.v,v=V[k];
+  document.getElementById('h1').textContent=v.h1;
+  document.getElementById('zh').textContent=v.zh;
+  let h=`<div class="c lead"><i class="fa-solid ${v.lead.i}"></i><div class="t">${v.lead.t}</div></div>`;
+  v.flow.forEach((c,idx)=>{h+=`<div class="c ${c.hot?'hot':''}"><span class="n">${String(idx+1).padStart(2,'0')}</span><i class="fa-solid ${c.i}"></i><div class="t">${c.t}</div></div>`;});
+  document.getElementById('grid').innerHTML=h;
+  document.getElementById('detail').innerHTML=v.detail;
+  document.getElementById('detail').classList.toggle('hidden',!showDetail);
+}
+function setV(k){document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.dataset.v===k));render();}
+function toggleDetail(){showDetail=!showDetail;document.getElementById('tgl').textContent=showDetail?'隱藏詳細版 ▴':'顯示詳細版 ▾';render();}
+render();
+</script></body></html>
