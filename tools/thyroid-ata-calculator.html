@@ -111,7 +111,7 @@ TSH(初始；2025 之後改依動態反應調整)：high &lt;0.1｜intermediate-
 RAI(Rec.32)：low 不建議常規(選擇性 30–50mCi)；low-int/int-high「可考慮 consider」(30–100，最高150mCi)；high / M1「建議常規 recommend」(100–150mCi，已知病灶可更高)。<br>
 AJCC 8th(年齡分界55)：&lt;55 → M0=Stage I、M1=II；≥55 → T1-2N0M0=I、T3或N1=II、T4a=III、T4b=IVA、M1=IVB。
 </div></details>
-<div class="foot">工具版本：2026-07-10（依 ATA 2025 全文 Fig.2/Rec.32 校正）｜資料僅在瀏覽器本機處理</div>
+<div class="foot">工具版本：2026-07-16（多發／雙側病灶取最大腫瘤徑；依 ATA 2025 全文 Fig.2/Rec.32 校正）｜資料僅在瀏覽器本機處理</div>
 
 <script>
 const $=id=>document.getElementById(id);
@@ -142,10 +142,16 @@ function parseReport(t){
     [/(?:encapsulated\s*)?follicular\s*variant/i,'follicular variant'],[/oncocytic|H[üu]rthle/i,'oncocytic'],
     [/classic|conventional/i,'classic']];
   F.variant='';for(const[re,name]of vlist){if(re.test(htLines)){F.variant=name;break;}}
-  let sz=(t.match(/Tumou?r\s*size[：:\s]*([\d.]+\s*[xX×][\d.\sxX×]+)/i)||[])[1]||(t.match(/(?:^|\n)\s*[-●*]?\s*Size[：:\s]*([\d.]+\s*[xX×][\d.\sxX×]+)/i)||[])[1];
-  F.size=sz?String(maxdim(sz)):'';
-  if(/bilateral\s*multifocal|multifocal.*bilateral|雙側.*多發|兩側.*多發/i.test(t))F.multi='bilat';
-  else if(/multifocal|多發|Number[：:\s]*[2-9]/i.test(t))F.multi='uni';
+  // 腫瘤最大徑：抓「所有」Tumor size / Size 行，多發時取「最大顆的最大徑」（原本只 match 第一顆＝bug）
+  let sizes=[];
+  for(const m of t.matchAll(/Tumou?r\s*size[：:\s]*([\d.]+\s*[xX×][\d.\sxX×]+)/ig)){const d=maxdim(m[1]);if(d!=null)sizes.push(d);}
+  if(!sizes.length)for(const m of t.matchAll(/(?:^|\n)\s*[-●*]?\s*Size[：:\s]*([\d.]+\s*[xX×][\d.\sxX×]+)/ig)){const d=maxdim(m[1]);if(d!=null)sizes.push(d);}
+  F.size=sizes.length?String(Math.max(...sizes)):'';
+  // 多發性：≥2 顆腫瘤或報告明述多發即多發；左右葉皆有腫瘤＝雙側（雙側且最大>1cm 才計為高風險 bilat）
+  const multiFoci=sizes.length>=2||/bilateral\s*multifocal|multifocal|多發|multiple\s+(?:classic\s+|invasive\s+|foci|papillary|carcinoma|PTC|tumou?rs?)|Number[：:\s]*[2-9]/i.test(t);
+  const bilateral=/bilateral\s*multifocal|multifocal.*bilateral|雙側.*多發|兩側.*多發/i.test(t)||(/right\s*lobe/i.test(t)&&/left\s*lobe/i.test(t)&&multiFoci);
+  if(bilateral&&sizes.length&&Math.max(...sizes)>1)F.multi='bilat';
+  else if(multiFoci)F.multi='uni';
   else F.multi='none';
   // ETE：抓所有葉的 ETE 行，取最重（t4 > gross > micro）；報告常直接寫「grossly/microscopically to <構造>」而非"present"
   const eteLines=((t.match(/Extra[- ]?thyroid(?:al)?\s*extension[：:\s]*[^\n]*/ig)||[]).concat(t.match(/Tumou?r\s*extension[：:\s]*[^\n]*/ig)||[])).join(' ').toLowerCase();
