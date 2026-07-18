@@ -41,8 +41,17 @@ body{background:#eceae2;font-family:"PingFang TC","Noto Sans TC","Microsoft Jhen
 .bar button{background:var(--ink);color:var(--paper);border:0;padding:11px 22px;font-size:15px;font-weight:700;border-radius:6px;cursor:pointer}
 .bar button.ghost{background:#fff;color:var(--ink);border:1px solid var(--ink)}
 .view.hidden{display:none}
-@media print{@page{size:A4 portrait;margin:8mm}body{background:#fff;padding:0}.tabs,.no-print{display:none!important}.sheet{max-width:100%;padding:4mm}.c{break-inside:avoid}.detail{break-inside:avoid}}
-@media(max-width:640px){.grid{grid-template-columns:repeat(2,1fr)}.c.lead{grid-column:span 2}}
+.qrs{margin-top:22px;border-top:2px dashed var(--line);padding-top:16px}
+.qrs h3{font-size:16px;color:var(--accent);margin:0 0 10px;border-left:4px solid var(--accent);padding-left:11px}
+.qrgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.qrc{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 8px 10px;text-align:center}
+.qrc img{width:92px;height:92px;image-rendering:pixelated}
+.qrc .qn{font-size:14px;font-weight:800;margin-top:4px}
+.qrc .qe{font-size:11px;color:var(--sub)}
+.qrc .qs{display:inline-block;font-size:10px;color:var(--faint);background:var(--paper);border:1px solid var(--line);border-radius:999px;padding:1px 7px;margin-top:3px}
+.qrnote{font-size:11px;color:var(--faint);margin-top:8px;text-align:center}
+@media print{@page{size:A4 portrait;margin:8mm}body{background:#fff;padding:0}.tabs,.no-print{display:none!important}.sheet{max-width:100%;padding:4mm}.c{break-inside:avoid}.detail{break-inside:avoid}.qrs,.qrc{break-inside:avoid}}
+@media(max-width:640px){.grid{grid-template-columns:repeat(2,1fr)}.c.lead{grid-column:span 2}.qrgrid{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:420px){.grid{grid-template-columns:1fr}.c.lead{grid-column:span 1;flex-direction:column;text-align:center}}
 </style></head><body>
 <div class="tabs no-print">
@@ -57,7 +66,8 @@ body{background:#eceae2;font-family:"PingFang TC","Noto Sans TC","Microsoft Jhen
   </div>
   <div class="grid" id="grid"></div>
   <div class="detail view" id="detail"></div>
-  <div class="foot">高醫岡山醫院　內分泌新陳代謝科　｜　<b>本圖卡僅供衛教與流程提醒，不取代醫師判斷；劑量、時機與各藥品保存天數請依醫師指示及藥品仿單</b>　｜　2026.07</div>
+  <div class="qrs" id="qrs"></div>
+  <div class="foot">高醫岡山醫院　內分泌新陳代謝科　｜　<b>本圖卡僅供衛教與流程提醒，不取代醫師判斷；劑量、時機與各藥品保存天數請依醫師指示及藥品仿單</b>　｜　工具版本：2026-07-18</div>
 </div>
 <div class="bar no-print">
   <button onclick="window.print()">🖨 列印目前這版 / 存 PDF（A4）</button>
@@ -93,7 +103,15 @@ const V={
     <li><b>15/15 法則</b>：吃 15 克糖（含糖飲半罐／方糖 3 顆／葡萄糖片），休息 15 分再測；未改善再一次。意識不清<span class="hot">勿餵食</span>，立即送醫／119。</li></ul>
    <h2>忘記打／何時聯絡團隊</h2><ul>
     <li>基礎胰島素：距下劑久可補；接近下劑則跳過、勿加倍。不確定先量血糖並諮詢。</li>
-    <li>反覆低血糖、注射處紅腫硬塊久不消、生病期間血糖不穩，請聯絡醫療團隊。</li></ul>`},
+    <li>反覆低血糖、注射處紅腫硬塊久不消、生病期間血糖不穩，請聯絡醫療團隊。</li></ul>`,
+  qr:[
+   {n:'諾胰保',e:'Tresiba',s:'長效',img:'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIQAAACEAQAAAAB5P74KAAABC0lEQVR4nM2WsY1YMQxDn4Lrnze4/cf6G9ATMMVPk+CKnA0EUWULMC1RlOUpv9v+wZ/2bz0zszabtdfMrGMcW9Y4gO1FhLMIWwizTnE+ADCLjt+5/UvPQjF3OA3hyd7QnOJMB/y12eBzhkPbNkV8l6c8L+DZnQLr8TAvqqmVqKmH8dBEbBrfop3mJdlMNxS2h31KCxZrJDnPi1pNCFf8+FYcJFzE07QSKSan+qGttCXhip9IQSrGG35eBUbpTTxJWpMiF/xoMdaAx3369jslYG/6YsC+r+ra+byaF8x2QyBX82LhLnv8+1Nfep4uiOHzcl5M3DvsnM5TamtpGtsL/QAKr4yO9Tz/2b/lJxTEyZHKPp/KAAAAAElFTkSuQmCC'},
+   {n:'糖德仕',e:'Toujeo',s:'長效',img:'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIQAAACEAQAAAAB5P74KAAABCUlEQVR4nM2WwU0FQQxDX764Ox1s/2VtB04F5rBcQEKgjITIMRp5PI6TTIXPMS++xt9mqqpreqqpql7jKMHMJVrJls8blLgmBaJ09tJbrfxw5kc+ADc9ch/hhL7AGMJW53qEeWJA9w6HJIkVFCWJtzhSsC07jrTGwVhGFsR7nMiSZBM44SPFOJHtA31AwhijZM9HiUMidKDPC2oapjHpdX8REevxDyf+sRFGtg70eUHn1mUEQ+3fhSMT25YP6hVhh8RCJ/6xQLYMeI+TJKAoyr4vnn2B7gZa3s9nJXiuoTD4aF+Q0t1Tv7/9m0wZTPb+eTJtRjLyds4T5aNQ4XD+IAhY7Pur/tm/5R3pFsTFbXBXLAAAAABJRU5ErkJggg=='},
+   {n:'諾胰得',e:'Ryzodeg',s:'雙效預混',img:'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIQAAACEAQAAAAB5P74KAAABC0lEQVR4nM2WQa4dIQwEi6fsmxvM/Y81N2ifoLKYZJHoLxJGisIKWaJoN9iw5NcxH34f/zay1trMsOeZnnKi7GQNRF8oXJvOSi5Y+5TzDYBJd/df7f4l54IkLzmyy4TZyKnPywU/lDCQ+4yDqrb5OTvlJEkNNabnnBKp9OEdc8SUWkk45ySqaVFf5AVAY5T2VM+HhmbPwAo5vYcYSg0J5YUeinvfGbhKj/WAMdL0hT/YxCc70rw6d0yt4gt/bsa5r2GvrBf+5LnHIuS4Tj8UizNM5LjPIxCTpyO+8CcKTIBy7M/zXuxxZFb+fNWXkdsNTbnecS5wpkzPfY7GtDZv+09AIzmvr/Wf/Vu+A/+dxwbQjGBWAAAAAElFTkSuQmCC'},
+   {n:'諾和瑞',e:'NovoRapid',s:'速效',img:'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIQAAACEAQAAAAB5P74KAAABEklEQVR4nM2WMU4AMQwEx4h+/YP7/7Pyg/ULluKgAFGAT0KkSWIpo2TtlVPh85gXvo6/jVRVTw8FVdVrjhL6XMWgZHufVyjh61xcUHrAAThM6F+84ntOp8W4H3FCp49oEbY6Vwr0vhnQ2XFIktjoY7nlSJIJtiLvOYljiVhy9IAjJCexxJ6D5RDb99XWvuB0u3VBzTrvrxzaKg8qsfYFiYIVJIwf6BM5QsjyE316uskYhrU+LxxiDwDi2usjB3CSkAf6GCXExmKtT6UBfDtf3vaL2+SAZeWRL0C5J+3r5+4X77Vs8L6jVdOjCVP6+alvI9YBy/v6uSNFa8aM9/VMjNERrcxWnztROFGQ1/mqf/ZveQOX9r6yQR8AMwAAAABJRU5ErkJggg=='},
+   {n:'優泌樂 Mix50',e:'Humalog Mix50',s:'預混',img:'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIQAAACEAQAAAAB5P74KAAABF0lEQVR4nM2WvW1DQQyDPxnuqQ28/1hvA2oCprCLJHZh6wFBVN0J0B8p6a7CT5kLv+VvNVXV1TBNVfXSD1Eio8hSIq8zrAbNTN+PZypt1MgfWr3QHIeYj62+yRVC0+BuwhbnSoEelwEdW76ShERWkmTJF1EEAWJY836FClSYHiit+To0jauwSPZ83QZXTNs9b0d/ksggSCLHe5yNnPAAe4szSe7DShRr70fWvX/ixCfyUZSA4lP4yHaSJIIz+SAcE1la43MB21S7Dsyx7x9sxU7MqfkKuD0Ncr9fxXM+j3bGEifwUYLp9g1rjc8VSrSG21DvR3+t8TiHnOBz74UZTTO93fOX+z6l6ajxOb7kJCb7+ap/9m/5AujqyA+nJzv7AAAAAElFTkSuQmCC'},
+   {n:'爽胰達',e:'Soliqua',s:'複方：胰島素＋腸泌素',img:'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIQAAACEAQAAAAB5P74KAAABEklEQVR4nM2WQYrlQAxDnz+9l2+Q+x+rbiCfQLMIDd0fBqYdaMabBEOqVJKsVIXvNS/e63c7VdU1Pd1UVS/XIUpkLCQl8hphNe1rwFQ/O2mETP/wq6/1cT/KrR/v/taJaS5jiLfrVAo+oQzobPVKEhOk+3Wtu0KCHDna6z6QwjDTnC0/JEJCDoI1HoJlmSS2n/CDJWzJz+ZCnPEluIbZ8+MA3HC0xkOIE4Qs9v554aYm584OtvnzgnMZgGaoPT9gQmzfnl770EriREEP+ClON0ydYh7oniRIkZVHcwESCEl7/7xQwiEjMHifzyVgdJr6993/0jG3/Gv/3J2mRzLys/9p4jg8yh9AUsBinz/1n91b/gCaV77MxWDw3wAAAABJRU5ErkJggg=='},
+  ]},
  glp1:{h1:'腸泌素 打針 7 要點',zh:'GLP-1 腸泌素　·　一看就懂',
   lead:{i:'fa-droplet',t:'腸泌素（GLP-1）多為<b>每週一次</b>皮下注射——固定同一天、劑量由低漸增，腸胃不適多會慢慢改善。'},
   flow:[
@@ -119,7 +137,12 @@ const V={
     <li>減緩：<b>少量多餐、清淡、慢慢吃、避免油膩</b>；劑量由低漸增。持續嘔吐脫水或<span class="hot">劇烈腹痛（警覺胰臟炎）</span>請就醫。</li></ul>
    <h2>忘記打／何時聯絡團隊</h2><ul>
     <li>週劑量：距原定日<b>2 天內</b>想起可補打；超過則跳過、等下次固定日。日劑量當天想起可補。</li>
-    <li>持續噁心嘔吐、體重快速下降、注射處久不消腫，請聯絡醫療團隊。</li></ul>`},
+    <li>持續噁心嘔吐、體重快速下降、注射處久不消腫，請聯絡醫療團隊。</li></ul>`,
+  qr:[
+   {n:'胰妥讚',e:'Ozempic',s:'週劑量',img:'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIQAAACEAQAAAAB5P74KAAABEElEQVR4nM2WTW5EMQiDP0azd27w7n+sdwNzAneRLvq36BCpKqsECQtsIKnw2frBV/tbT1Wt7mI1VbWGOESJkAApkWc4TygR+qKhdFZpF33LL0Z991y6RL8a9dGeEJapwCJMea4U6P3SoHuqV5IEhJUkQ72IJEXCSeQ5jsFIGMnj/nmAtOwOaq6a6kUCUWSjZFzXgxWWQZepHutOtmI24YAfYiPQPvkAB0WxiOUD3TeGSMDjfJ648LWARlxz3WWQSRJywo/83j+IE34UYu28DuY0SYSNFTGvC9ir3tJJ/yh7uJAy5+cBtbikDl36fdSPHq8bLM/7Z3vqlrpN++w9dUx8sn+2XjhR0Hy+6p/9W94AGYrQDAfLfPgAAAAASUVORK5CYII='},
+   {n:'猛健樂',e:'Mounjaro',s:'週劑量',img:'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIQAAACEAQAAAAB5P74KAAABE0lEQVR4nM2WMXJEMQhDHzvbixv4/sf6NxAnUIrdFMmkCX8mExpjCmzJAlzhq82D7/a3karqYeihqnqZhyiR0Kfr9Q2ruTRSmuotrud7dad/dfqPkTPSzM08MRdjgHibp1Kg92ZA15afAENr9HK3uLq7QZMLera4CCSOsCWv9VOpNDCBErPnB3Cj4QRGS36IBVbCC9sS15ODVSnTI7Svi/EBUnho798rIcjCyM663ntSnjOGgX3/MTYKDrL2/eeIFhXQ6Nrz42BZNhZrfoiw5ISAss+TJApWFLHlhwCyA5ZY6/mBEmBEY/B+7iCJEIFu6BDgArDMuTcvOpUZM97q+TUvPC7Ryuz5ASRFCtr3n/pn/5YPzHG2iU9ibKkAAAAASUVORK5CYII='},
+   {n:'爽胰達',e:'Soliqua',s:'複方：胰島素＋腸泌素',img:'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIQAAACEAQAAAAB5P74KAAABEklEQVR4nM2WQYrlQAxDnz+9l2+Q+x+rbiCfQLMIDd0fBqYdaMabBEOqVJKsVIXvNS/e63c7VdU1Pd1UVS/XIUpkLCQl8hphNe1rwFQ/O2mETP/wq6/1cT/KrR/v/taJaS5jiLfrVAo+oQzobPVKEhOk+3Wtu0KCHDna6z6QwjDTnC0/JEJCDoI1HoJlmSS2n/CDJWzJz+ZCnPEluIbZ8+MA3HC0xkOIE4Qs9v554aYm584OtvnzgnMZgGaoPT9gQmzfnl770EriREEP+ClON0ydYh7oniRIkZVHcwESCEl7/7xQwiEjMHifzyVgdJr6993/0jG3/Gv/3J2mRzLys/9p4jg8yh9AUsBinz/1n91b/gCaV77MxWDw3wAAAABJRU5ErkJggg=='},
+  ]},
 };
 let showDetail=false;
 function render(){
@@ -131,6 +154,10 @@ function render(){
   document.getElementById('grid').innerHTML=h;
   document.getElementById('detail').innerHTML=v.detail;
   document.getElementById('detail').classList.toggle('hidden',!showDetail);
+  let q=`<h3>📺 打針教學影片｜用手機相機掃 QR code 即可觀看</h3><div class="qrgrid">`;
+  v.qr.forEach(x=>{q+=`<div class="qrc"><img src="${x.img}" alt="${x.e} 教學影片 QR code"><div class="qn">${x.n}</div><div class="qe">${x.e}</div><div class="qs">${x.s}</div></div>`;});
+  q+=`</div><div class="qrnote">影片來源：高醫藥學部藥事行政組　｜　找不到您使用的藥品？請洽診間醫師或藥師</div>`;
+  document.getElementById('qrs').innerHTML=q;
 }
 function setV(k){document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.dataset.v===k));render();}
 function toggleDetail(){showDetail=!showDetail;document.getElementById('tgl').textContent=showDetail?'隱藏詳細版 ▴':'顯示詳細版 ▾';render();}
