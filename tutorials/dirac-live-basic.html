@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Dirac Live 音場校正 基礎操作教學（電腦版＋手機版）</title>
+<style>
+:root{
+  --ink:#1a2330; --soft:#5e6b7a; --line:#e6e9ef; --bg:#0e1726; --page:#f4f6fa; --card:#fff;
+  --acc:#e8602c; --acc2:#f08a3c; --accbg:#fdeee6;
+  --blue:#1f6feb; --bluebg:#e9f1fd; --teal:#0f9d8c; --tealbg:#e3f6f2;
+  --warn:#c0392b; --warnbg:#fdecea; --tip:#9a6a12; --tipbg:#fbf3df;
+  --shadow:0 1px 2px rgba(10,20,40,.05),0 12px 30px rgba(10,20,40,.08);
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--page);color:var(--ink);
+ font-family:"PingFang TC","Noto Sans TC",-apple-system,"Segoe UI",sans-serif;line-height:1.75;font-size:16px;}
+.wrap{max-width:800px;margin:0 auto;padding:0 16px 70px;}
+header.hero{background:radial-gradient(120% 120% at 80% 0%,#21314d 0%,#0e1726 60%);color:#fff;
+ padding:34px 22px 30px;border-radius:0 0 24px 24px;box-shadow:var(--shadow);}
+header.hero .ey{font-size:12.5px;letter-spacing:2px;color:var(--acc2);font-weight:700;text-transform:uppercase;}
+header.hero h1{margin:6px 0 8px;font-size:25px;line-height:1.3;}
+header.hero p{margin:0;font-size:14px;color:#b9c4d4;}
+header.hero .meta{margin-top:14px;display:flex;gap:8px;flex-wrap:wrap;}
+header.hero .meta span{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);border-radius:999px;padding:4px 12px;font-size:12.5px;}
+
+.intro{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px 18px;margin:18px 0;box-shadow:var(--shadow);font-size:15px;color:#33404f;}
+.intro b{color:var(--acc);}
+
+h2.sec{font-size:13px;letter-spacing:1.5px;color:var(--acc);text-transform:uppercase;margin:30px 4px 4px;font-weight:800;}
+
+.prep{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:6px 18px 14px;box-shadow:var(--shadow);}
+.prep ul{list-style:none;padding:0;margin:10px 0 4px;}
+.prep li{position:relative;padding:7px 0 7px 30px;border-bottom:1px solid #f0f2f6;font-size:14.5px;}
+.prep li:last-child{border-bottom:none;}
+.prep li::before{content:"✓";position:absolute;left:2px;top:7px;color:var(--teal);font-weight:800;}
+.prep li.no::before{content:"✕";color:var(--warn);}
+.prep li b{color:var(--ink);}
+
+.step{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px 18px 14px;margin:14px 0;box-shadow:var(--shadow);position:relative;}
+.step .num{position:absolute;top:-14px;left:16px;width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--acc),var(--acc2));color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:17px;box-shadow:0 4px 10px rgba(232,96,44,.4);}
+.step h3{margin:10px 0 8px;font-size:18px;}
+.step p{margin:7px 0;font-size:15px;color:#33404f;}
+.step ul{margin:7px 0;padding-left:20px;font-size:14.5px;color:#33404f;}
+.step li{margin:4px 0;}
+.callout{border-radius:10px;padding:9px 13px;margin:10px 0;font-size:14px;}
+.c-key{background:var(--accbg);border-left:4px solid var(--acc);color:#8a3415;}
+.c-warn{background:var(--warnbg);border-left:4px solid var(--warn);color:#8a261c;}
+.c-tip{background:var(--tipbg);border-left:4px solid #d9a93b;color:#6f4e0e;}
+.callout b{color:inherit;}
+table.price{width:100%;border-collapse:collapse;font-size:14px;margin:8px 0;}
+table.price td{border:1px solid #e3e8ee;padding:6px 9px;}
+table.price td:first-child{background:#f6f8fb;}
+table.price td:last-child{font-weight:700;color:var(--acc);white-space:nowrap;text-align:right;}
+.result{background:linear-gradient(135deg,var(--tealbg),#eef9f6);border:1px solid #bce8df;border-radius:16px;padding:16px 18px;margin:18px 0;}
+.result h3{margin:0 0 8px;color:#0b7567;font-size:18px;}
+.result p{margin:6px 0;font-size:15px;color:#28504a;}
+code{background:#eef1f4;padding:1px 6px;border-radius:5px;font-size:13.5px;}
+footer.src{font-size:12.5px;color:#7d8794;line-height:1.7;margin-top:26px;border-top:1px dashed var(--line);padding-top:16px;}
+footer.src b{color:var(--ink);}
+.ver{text-align:center;font-size:12px;color:#9aa4af;margin-top:10px;}
+
+.shot{width:100%;border-radius:12px;border:1px solid var(--line);margin:10px 0 4px;box-shadow:0 2px 8px rgba(10,20,40,.10);display:block;}
+.cap{font-size:12.5px;color:#8a95a2;margin:2px 2px 8px;text-align:center;}
+.vlink{display:inline-flex;align-items:center;gap:6px;background:var(--accbg);color:#8a3415;border:1px solid #f3c9b4;border-radius:999px;padding:6px 14px;font-size:13px;font-weight:700;text-decoration:none;margin-top:8px;}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+@media(max-width:560px){.two{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+<header class="hero">
+  <div class="ey">DIRAC LIVE · 基礎操作篇</div>
+  <h1>Dirac Live 音場校正 基礎篇</h1>
+  <p>電腦版 & 手機版一次搞懂，音場校正不求人</p>
+  <div class="meta"><span>🎚 示範機：Onkyo TX-RZ70</span><span>🎙 UMIK-1</span><span>⏱ 電腦版8步＋手機版</span></div>
+</header>
+<div class="wrap">
+
+  <div class="intro">
+    這支教你<b>自己動手用 Dirac Live 做喇叭音場校正</b>，不用花錢請專家。分兩種做法——<b>電腦版</b>（較完整、可自訂曲線）與<b>手機 App 版</b>（快速、免拉線）。示範擴大機為 <b>Onkyo TX-RZ70</b>。這是<b>基礎操作篇</b>；想深入調曲線看下方「調教篇」。
+  </div>
+
+  <h2 class="sec">開始前的準備</h2>
+  <div class="prep"><ul>
+    <li><b>電腦版</b>：校正麥克風 <b>MiniDSP UMIK-1</b> ＋ 筆電 ＋ 擴大機</li>
+    <li><b>手機版</b>：擴大機<b>附贈的麥克風</b> ＋ 手機</li>
+    <li>電腦／手機要跟擴大機<b>在同一個網域（同一個 Wi-Fi）</b></li>
+    <li>盡量安靜的房間（環境太吵會校正失敗）</li>
+    <li class="no">別用會發出雜音的環境，測量時保持安靜</li>
+  </ul></div>
+  <img class="shot" src="assets/dirac-live/b01-equip.jpg" alt="電腦版所需：UMIK-1 麥克風、筆電、Onkyo TX-RZ70 擴大機" loading="lazy"><div class="cap">電腦版所需：UMIK-1 麥克風、筆電、Onkyo TX-RZ70 擴大機</div>
+
+  <h2 class="sec">電腦版 操作步驟</h2>
+  <div class="step"><div class="num">1</div><h3>下載並開啟 Dirac Live，選擇裝置</h3><p>到官網下載並開啟 Dirac Live。確認<b>電腦與擴大機在同一網域</b>，選擇要校正的裝置（本例 Onkyo TX-RZ70）。</p><img class="shot" src="assets/dirac-live/b02-download.jpg" alt="官網下載 Dirac Live" loading="lazy"><div class="cap">官網下載 Dirac Live</div><img class="shot" src="assets/dirac-live/b03-device.jpg" alt="軟體中選擇你的擴大機" loading="lazy"><div class="cap">軟體中選擇你的擴大機</div></div><div class="step"><div class="num">2</div><h3>載入麥克風校正檔（關鍵）</h3><div class="callout c-key"><b>重要：</b>先到 MiniDSP 網站下載<b>該麥克風型號的校正檔</b>，載入後可修正麥克風生產公差、讓測量更準。</div></div><div class="step"><div class="num">3</div><h3>設定測量級別與喇叭配置</h3><p>點「繼續」到<b>測量級別（Measurement Level）</b>，選麥克風平台，接著選<b>喇叭配置</b>（聲道數）。</p><img class="shot" src="assets/dirac-live/b04-speaker.jpg" alt="選擇喇叭配置" loading="lazy"><div class="cap">選擇喇叭配置</div></div><div class="step"><div class="num">4</div><h3>選聆聽位置、房間大小，開始測量</h3><p>選<b>最佳聆聽位置</b>與<b>房間大小</b>。本例用 <b>3 點測量</b>，依畫面指示<b>移動麥克風到三個位置</b>各測一次。</p><img class="shot" src="assets/dirac-live/b05-measure.jpg" alt="依指示移動麥克風做多點測量" loading="lazy"><div class="cap">依指示移動麥克風做多點測量</div></div><div class="step"><div class="num">5</div><h3>傳送結果到擴大機</h3><p>系統計算後，按完成把<b>測量結果傳送到擴大機</b>，測量即完成。</p><img class="shot" src="assets/dirac-live/b06-send.jpg" alt="測量結果傳送到擴大機" loading="lazy"><div class="cap">測量結果傳送到擴大機</div></div><div class="step"><div class="num">6</div><h3>用「儲存槽」一次設好多套模式</h3><img class="shot" src="assets/dirac-live/b07-slots.jpg" alt="RZ70 有 3 個儲存槽，可存不同曲線" loading="lazy"><div class="cap">RZ70 有 3 個儲存槽，可存不同曲線</div><div class="callout c-tip"><b>儲存槽玩法：</b>Onkyo RZ70 有 3 個槽（每台擴大機數量不同）。可存不同曲線一鍵切換，例如：<br>・槽 1：標準校正　・槽 2：低音加重（看電影）　・槽 3：其他模式</div><p>調整完一鍵套用，音場校正完成。可切換 <b>Dirac 開關</b>比較校正前後差別。</p></div>
+
+  <h2 class="sec">手機 App 版（快速、免拉線）</h2>
+  <div class="step"><div class="num">7</div><h3>裝 App、開始程序、插麥克風</h3><p>因示範機是 RZ70，需同時裝 <b>Onkyo Controller App</b> ＋ <b>Dirac Live App</b>。選 <b>Listening Mode</b> → 開始程序 → 把<b>附贈麥克風插進擴大機</b> → 確認喇叭配置。</p><img class="shot" src="assets/dirac-live/b08-phone.jpg" alt="手機 App 版：插入附贈麥克風" loading="lazy"><div class="cap">手機 App 版：插入附贈麥克風</div></div><div class="step"><div class="num">8</div><h3>選測量方式、自動分析套用</h3><div class="callout c-warn"><b>校正時會發出較大音量，屬正常</b>，別被嚇到。</div><p>系統跑完會<b>自動推薦校正曲線</b>，點按鈕即套用，全程約幾分鐘。</p></div>
+
+  <h2 class="sec">校正失敗？常見原因與解法</h2>
+  <div class="step" style="padding-top:16px">
+    <table class="price">
+      <tr><td>環境太吵 / 測量音太小</td><td style="color:var(--ink);font-weight:400;text-align:left">挑夜深人靜校正；或把主音量調高</td></tr>
+      <tr><td>重低音 / 主音量太大聲</td><td style="color:var(--ink);font-weight:400;text-align:left">把重低音或主音量調小</td></tr>
+    </table>
+  <img class="shot" src="assets/dirac-live/b09-fail.jpg" alt="失敗時系統會顯示原因，照著調即可" loading="lazy"><div class="cap">失敗時系統會顯示原因，照著調即可</div>
+    <div class="callout c-warn"><b>⚠️ 容易誤判的雷（主講親身踩到）：</b>就算擺位正確，只要<b>某聲道的線忘了插</b>（如天空聲道），系統也會跳「訊噪比／水平過低」。看到這提示<b>先檢查是不是漏插線</b>，別只顧著降環境音。</div>
+    <a class="vlink" href="https://youtu.be/Oy1wVOe-jO8" target="_blank" rel="noopener">▶ 觀看原始影片（釪環數位音響）</a>
+  </div>
+  
+<footer class="src">來源影片：《Dirac Live 全攻略》手機 &amp; 電腦版教學一次搞懂（釪環數位音響，2025-05-29）｜<a href="https://youtu.be/Oy1wVOe-jO8">youtu.be/Oy1wVOe-jO8</a><br>本頁為影片圖文整理，操作以實機畫面與 Dirac 官方說明為準。</footer>
+<div class="ver">工具版本：2026-07-22</div>
+</div>
+</body>
+</html>

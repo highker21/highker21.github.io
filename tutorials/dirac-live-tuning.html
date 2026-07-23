@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Dirac Live 空間校正 調教篇（電腦版）</title>
+<style>
+:root{
+  --ink:#1a2330; --soft:#5e6b7a; --line:#e6e9ef; --bg:#0e1726; --page:#f4f6fa; --card:#fff;
+  --acc:#e8602c; --acc2:#f08a3c; --accbg:#fdeee6;
+  --blue:#1f6feb; --bluebg:#e9f1fd; --teal:#0f9d8c; --tealbg:#e3f6f2;
+  --warn:#c0392b; --warnbg:#fdecea; --tip:#9a6a12; --tipbg:#fbf3df;
+  --shadow:0 1px 2px rgba(10,20,40,.05),0 12px 30px rgba(10,20,40,.08);
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--page);color:var(--ink);
+ font-family:"PingFang TC","Noto Sans TC",-apple-system,"Segoe UI",sans-serif;line-height:1.75;font-size:16px;}
+.wrap{max-width:800px;margin:0 auto;padding:0 16px 70px;}
+header.hero{background:radial-gradient(120% 120% at 80% 0%,#21314d 0%,#0e1726 60%);color:#fff;
+ padding:34px 22px 30px;border-radius:0 0 24px 24px;box-shadow:var(--shadow);}
+header.hero .ey{font-size:12.5px;letter-spacing:2px;color:var(--acc2);font-weight:700;text-transform:uppercase;}
+header.hero h1{margin:6px 0 8px;font-size:25px;line-height:1.3;}
+header.hero p{margin:0;font-size:14px;color:#b9c4d4;}
+header.hero .meta{margin-top:14px;display:flex;gap:8px;flex-wrap:wrap;}
+header.hero .meta span{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);border-radius:999px;padding:4px 12px;font-size:12.5px;}
+
+.intro{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px 18px;margin:18px 0;box-shadow:var(--shadow);font-size:15px;color:#33404f;}
+.intro b{color:var(--acc);}
+
+h2.sec{font-size:13px;letter-spacing:1.5px;color:var(--acc);text-transform:uppercase;margin:30px 4px 4px;font-weight:800;}
+
+.prep{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:6px 18px 14px;box-shadow:var(--shadow);}
+.prep ul{list-style:none;padding:0;margin:10px 0 4px;}
+.prep li{position:relative;padding:7px 0 7px 30px;border-bottom:1px solid #f0f2f6;font-size:14.5px;}
+.prep li:last-child{border-bottom:none;}
+.prep li::before{content:"✓";position:absolute;left:2px;top:7px;color:var(--teal);font-weight:800;}
+.prep li.no::before{content:"✕";color:var(--warn);}
+.prep li b{color:var(--ink);}
+
+.step{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px 18px 14px;margin:14px 0;box-shadow:var(--shadow);position:relative;}
+.step .num{position:absolute;top:-14px;left:16px;width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--acc),var(--acc2));color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:17px;box-shadow:0 4px 10px rgba(232,96,44,.4);}
+.step h3{margin:10px 0 8px;font-size:18px;}
+.step p{margin:7px 0;font-size:15px;color:#33404f;}
+.step ul{margin:7px 0;padding-left:20px;font-size:14.5px;color:#33404f;}
+.step li{margin:4px 0;}
+.callout{border-radius:10px;padding:9px 13px;margin:10px 0;font-size:14px;}
+.c-key{background:var(--accbg);border-left:4px solid var(--acc);color:#8a3415;}
+.c-warn{background:var(--warnbg);border-left:4px solid var(--warn);color:#8a261c;}
+.c-tip{background:var(--tipbg);border-left:4px solid #d9a93b;color:#6f4e0e;}
+.callout b{color:inherit;}
+table.price{width:100%;border-collapse:collapse;font-size:14px;margin:8px 0;}
+table.price td{border:1px solid #e3e8ee;padding:6px 9px;}
+table.price td:first-child{background:#f6f8fb;}
+table.price td:last-child{font-weight:700;color:var(--acc);white-space:nowrap;text-align:right;}
+.result{background:linear-gradient(135deg,var(--tealbg),#eef9f6);border:1px solid #bce8df;border-radius:16px;padding:16px 18px;margin:18px 0;}
+.result h3{margin:0 0 8px;color:#0b7567;font-size:18px;}
+.result p{margin:6px 0;font-size:15px;color:#28504a;}
+code{background:#eef1f4;padding:1px 6px;border-radius:5px;font-size:13.5px;}
+footer.src{font-size:12.5px;color:#7d8794;line-height:1.7;margin-top:26px;border-top:1px dashed var(--line);padding-top:16px;}
+footer.src b{color:var(--ink);}
+.ver{text-align:center;font-size:12px;color:#9aa4af;margin-top:10px;}
+
+.shot{width:100%;border-radius:12px;border:1px solid var(--line);margin:10px 0 4px;box-shadow:0 2px 8px rgba(10,20,40,.10);display:block;}
+.cap{font-size:12.5px;color:#8a95a2;margin:2px 2px 8px;text-align:center;}
+.vlink{display:inline-flex;align-items:center;gap:6px;background:var(--accbg);color:#8a3415;border:1px solid #f3c9b4;border-radius:999px;padding:6px 14px;font-size:13px;font-weight:700;text-decoration:none;margin-top:8px;}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+@media(max-width:560px){.two{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+<header class="hero">
+  <div class="ey">DIRAC LIVE · 調教篇</div>
+  <h1>Dirac Live 空間校正 調教篇</h1>
+  <p>測完之後，那條頻率曲線到底怎麼調</p>
+  <div class="meta"><span>🎚 示範機：NAD N10 / C658</span><span>🎙 UMIK-1</span><span>🎛 曲線微調實戰</span></div>
+</header>
+<div class="wrap">
+
+  <div class="intro">
+    這是 Dirac Live <b>電腦版的「調教篇」</b>——重點不在怎麼測量（基礎篇已教），而在<b>測完之後那條頻率曲線要怎麼調</b>，以及<b>付費升級</b>值不值得。示範為 <b>NAD</b> 系列（N10 串流綜擴、C658 串流 DAC/前級）＋ <b>MiniDSP UMIK-1</b> 麥克風。
+  </div>
+
+  <h2 class="sec">先搞懂：要不要付費升級？</h2>
+  <div class="step"><div class="num">1</div><h3>99 美金升級＝校正頻寬全開</h3><img class="shot" src="assets/dirac-live/t01-upgrade.jpg" alt="官網 $99 升級選項" loading="lazy"><div class="cap">官網 $99 升級選項</div><p>免費版只校正 <b>20 Hz–500 Hz</b>（低頻段）；付 <b>US$99</b> 升級後，校正範圍變成 <b>20 Hz–20 kHz（全頻段）</b>，並可<b>外接更好的麥克風</b>。</p>
+      <div class="callout c-tip">對認真調音色的人，全頻段升級才能連中高頻一起校正、也才用得到下面的曲線微調。</div></div><div class="step"><div class="num">2</div><h3>推薦麥克風 MiniDSP UMIK-1（約 US$75）</h3><img class="shot" src="assets/dirac-live/t02-umik.jpg" alt="Dirac 官方推薦的 UMIK-1，約 US$75" loading="lazy"><div class="cap">Dirac 官方推薦的 UMIK-1，約 US$75</div><p>麥克風生產有公差，官網可下載<b>該支麥克風的校正檔</b>，讓測量數值更準。</p></div>
+
+  <h2 class="sec">測量（與基礎篇相同，快速帶過）</h2>
+  <div class="step"><div class="num">3</div><h3>開軟體、選裝置、載入麥克風校正檔</h3><p>開啟 Dirac Live，裝置會出現在畫面正中央，點選它（本例 NAD N10/M10）。在麥克風上<b>按右鍵 → Load from file</b> 載入校正檔，下方頻率曲線就會顯示它做的補償。</p><img class="shot" src="assets/dirac-live/t03-device.jpg" alt="選擇 NAD 裝置" loading="lazy"><div class="cap">選擇 NAD 裝置</div><img class="shot" src="assets/dirac-live/t04-loadcal.jpg" alt="右鍵 Load from file 載入麥克風校正檔" loading="lazy"><div class="cap">右鍵 Load from file 載入麥克風校正檔</div></div><div class="step"><div class="num">4</div><h3>調測量音量：綠色才 OK</h3><img class="shot" src="assets/dirac-live/t05-volume.jpg" alt="左＝擴大機音量、右＝麥克風靈敏度，音量條要進綠色" loading="lazy"><div class="cap">左＝擴大機音量、右＝麥克風靈敏度，音量條要進綠色</div><div class="callout c-key"><b>音量條要到<span style="color:#0f9d8c">綠色</span>才 OK</b>，紅色代表太大聲。環境吵→靈敏度調小＋擴大機開大；環境安靜→靈敏度開高＋擴大機關小。</div></div><div class="step"><div class="num">5</div><h3>皇帝位 vs 寬廣模式</h3><img class="shot" src="assets/dirac-live/t06-sweetspot.jpg" alt="依聆聽範圍選皇帝位或寬廣模式" loading="lazy"><div class="cap">依聆聽範圍選皇帝位或寬廣模式</div><p>差別在<b>測量點數</b>：點越多、涵蓋區域越大，區域內音色越一致（方便從書桌走到沙發聲音都差不多）。單人聆聽選<b>皇帝位</b>即可。之後依指示完成多點測量（本例 8 點）。</p></div>
+
+  <h2 class="sec">核心：測完之後，曲線怎麼調</h2>
+  <div class="step"><div class="num">6</div><h3>先看校正後的頻率曲線</h3><img class="shot" src="assets/dirac-live/t07-curve.jpg" alt="把左右聲道 group 起來，粗線＝校正後你會聽到的音色" loading="lazy"><div class="cap">把左右聲道 group 起來，粗線＝校正後你會聽到的音色</div><p>把左右聲道<b>群組（group）</b>起來，畫面上<b>較粗的線</b>就是校正完後你實際會聽到的音色。</p></div><div class="step"><div class="num">7</div><h3>為什麼校正後「低音變少」？（其實是變準）</h3><img class="shot" src="assets/dirac-live/t08-bass86.jpg" alt="校正前在 86 Hz 附近比校正後高出十幾 dB" loading="lazy"><div class="cap">校正前在 86 Hz 附近比校正後高出十幾 dB</div><p>很多人反映校正後低頻變少。看圖：校正前在 <b>86 Hz</b> 附近比校正後<b>高了十幾 dB</b>，能量差很多。</p>
+      <div class="callout c-key">那不是變少，是<b>變平順、變準</b>。以前的低音「很洶湧但含糊」，校正後是<b>乾淨清晰的低頻</b>。這是正常且正確的結果。</div></div><div class="step"><div class="num">8</div><h3>想要低音更有力：在對的頻率做突起</h3><img class="shot" src="assets/dirac-live/t09-bassbump.jpg" alt="小書架喇叭可在 80 Hz 做 6–7 dB 突起" loading="lazy"><div class="cap">小書架喇叭可在 80 Hz 做 6–7 dB 突起</div><p>若嫌低頻力度不夠，可在曲線上做突起——但<b>要看喇叭的低音能力</b>：</p>
+      <ul><li>小書架喇叭：在 <b>80 Hz</b> 做 <b>+6～7 dB</b> 突起，就很有感</li>
+      <li>喇叭低頻只到 60–70 Hz：<b>別在 30 Hz 做突起</b>，喇叭根本發不出來，白調</li></ul>
+      <div class="callout c-tip">想還原？按重置鍵就回到原始數值。</div></div><div class="step"><div class="num">9</div><h3>覺得不夠亮／人聲不夠突出：調中高頻</h3><img class="shot" src="assets/dirac-live/t10-highcut.jpg" alt="Dirac 預設會把高頻適度衰減以減少長聽疲勞" loading="lazy"><div class="cap">Dirac 預設會把高頻適度衰減以減少長聽疲勞</div><p>校正預設會把<b>高音適度衰減</b>（1 kHz 之後有一點下斜），讓長時間聆聽不疲勞。若你喜歡<b>明亮、銳利</b>的音色：</p>
+      <ul><li>把 1 kHz 之後那段<b>拉回 0 dB</b></li>
+      <li>在 <b>1 kHz</b> 做 <b>+2～3 dB</b> 突起 → <b>人聲更明顯</b></li>
+      <li>在 <b>5 kHz</b> 做 <b>+2～3 dB</b> 突起 → <b>空間感更好</b>、音色更現代銳利</li></ul></div>
+
+  <h2 class="sec">存檔與套用</h2>
+  <div class="step"><div class="num">10</div><h3>存多組音色預設（依音樂類型切換）</h3><img class="shot" src="assets/dirac-live/t11-presets.jpg" alt="NAD N10 可存 5 組音色預設，命名 Test1/Test2…" loading="lazy"><div class="cap">NAD N10 可存 5 組音色預設，命名 Test1/Test2…</div><p>NAD N10 可存 <b>5 組</b>音色預設，可針對不同音樂類型各調一套，命名後儲存（如 Test1、Test2）。</p></div><div class="step"><div class="num">11</div><h3>務必存原始專案（Save Project）</h3><div class="callout c-key"><b>量好資料後，左上角三橫槓 → Save Project 把原始測量存起來。</b>之後想改數值，用 <b>Load Project</b> 叫回原始資料即可，<b>不必重新測量一次</b>。</div></div><div class="step"><div class="num">12</div><h3>在 BluOS 選用你調好的預設</h3><img class="shot" src="assets/dirac-live/t12-bluos.jpg" alt="BluOS → Audio Settings 選 Test1／Test2" loading="lazy"><div class="cap">BluOS → Audio Settings 選 Test1／Test2</div><p>進 BluOS，在機器設定旁就有 Dirac 空間校正選項（Audio Settings），選擇你存好的 Test1／Test2 即可。</p><a class="vlink" href="https://youtu.be/Vsyfg7QiHko" target="_blank" rel="noopener">▶ 觀看原始影片（迎家音響）</a></div>
+<footer class="src">來源影片：【迎家教學】Dirac Live 空間校正 調教篇［電腦版本］（迎家音響，2020-03-26）｜<a href="https://youtu.be/Vsyfg7QiHko">youtu.be/Vsyfg7QiHko</a><br>本頁為影片圖文整理，操作以實機畫面與 Dirac 官方說明為準。</footer>
+<div class="ver">工具版本：2026-07-22</div>
+</div>
+</body>
+</html>

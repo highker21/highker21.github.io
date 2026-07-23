@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>音響基本觀念 — 建立好，話術免疫</title>
+<style>
+:root{
+  --ink:#1a2330; --soft:#5e6b7a; --line:#e6e9ef; --bg:#0e1726; --page:#f4f6fa; --card:#fff;
+  --acc:#e8602c; --acc2:#f08a3c; --accbg:#fdeee6;
+  --blue:#1f6feb; --bluebg:#e9f1fd; --teal:#0f9d8c; --tealbg:#e3f6f2;
+  --warn:#c0392b; --warnbg:#fdecea; --tip:#9a6a12; --tipbg:#fbf3df;
+  --shadow:0 1px 2px rgba(10,20,40,.05),0 12px 30px rgba(10,20,40,.08);
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--page);color:var(--ink);
+ font-family:"PingFang TC","Noto Sans TC",-apple-system,"Segoe UI",sans-serif;line-height:1.75;font-size:16px;}
+.wrap{max-width:800px;margin:0 auto;padding:0 16px 70px;}
+header.hero{background:radial-gradient(120% 120% at 80% 0%,#21314d 0%,#0e1726 60%);color:#fff;
+ padding:34px 22px 30px;border-radius:0 0 24px 24px;box-shadow:var(--shadow);}
+header.hero .ey{font-size:12.5px;letter-spacing:2px;color:var(--acc2);font-weight:700;text-transform:uppercase;}
+header.hero h1{margin:6px 0 8px;font-size:25px;line-height:1.3;}
+header.hero p{margin:0;font-size:14px;color:#b9c4d4;}
+header.hero .meta{margin-top:14px;display:flex;gap:8px;flex-wrap:wrap;}
+header.hero .meta span{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);border-radius:999px;padding:4px 12px;font-size:12.5px;}
+
+.intro{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px 18px;margin:18px 0;box-shadow:var(--shadow);font-size:15px;color:#33404f;}
+.intro b{color:var(--acc);}
+
+h2.sec{font-size:13px;letter-spacing:1.5px;color:var(--acc);text-transform:uppercase;margin:30px 4px 4px;font-weight:800;}
+
+.prep{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:6px 18px 14px;box-shadow:var(--shadow);}
+.prep ul{list-style:none;padding:0;margin:10px 0 4px;}
+.prep li{position:relative;padding:7px 0 7px 30px;border-bottom:1px solid #f0f2f6;font-size:14.5px;}
+.prep li:last-child{border-bottom:none;}
+.prep li::before{content:"✓";position:absolute;left:2px;top:7px;color:var(--teal);font-weight:800;}
+.prep li.no::before{content:"✕";color:var(--warn);}
+.prep li b{color:var(--ink);}
+
+.step{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px 18px 14px;margin:14px 0;box-shadow:var(--shadow);position:relative;}
+.step .num{position:absolute;top:-14px;left:16px;width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--acc),var(--acc2));color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:17px;box-shadow:0 4px 10px rgba(232,96,44,.4);}
+.step h3{margin:10px 0 8px;font-size:18px;}
+.step p{margin:7px 0;font-size:15px;color:#33404f;}
+.step ul{margin:7px 0;padding-left:20px;font-size:14.5px;color:#33404f;}
+.step li{margin:4px 0;}
+.callout{border-radius:10px;padding:9px 13px;margin:10px 0;font-size:14px;}
+.c-key{background:var(--accbg);border-left:4px solid var(--acc);color:#8a3415;}
+.c-warn{background:var(--warnbg);border-left:4px solid var(--warn);color:#8a261c;}
+.c-tip{background:var(--tipbg);border-left:4px solid #d9a93b;color:#6f4e0e;}
+.callout b{color:inherit;}
+table.price{width:100%;border-collapse:collapse;font-size:14px;margin:8px 0;}
+table.price td{border:1px solid #e3e8ee;padding:6px 9px;}
+table.price td:first-child{background:#f6f8fb;}
+table.price td:last-child{font-weight:700;color:var(--acc);white-space:nowrap;text-align:right;}
+.result{background:linear-gradient(135deg,var(--tealbg),#eef9f6);border:1px solid #bce8df;border-radius:16px;padding:16px 18px;margin:18px 0;}
+.result h3{margin:0 0 8px;color:#0b7567;font-size:18px;}
+.result p{margin:6px 0;font-size:15px;color:#28504a;}
+code{background:#eef1f4;padding:1px 6px;border-radius:5px;font-size:13.5px;}
+footer.src{font-size:12.5px;color:#7d8794;line-height:1.7;margin-top:26px;border-top:1px dashed var(--line);padding-top:16px;}
+footer.src b{color:var(--ink);}
+.ver{text-align:center;font-size:12px;color:#9aa4af;margin-top:10px;}
+
+.shot{width:100%;border-radius:12px;border:1px solid var(--line);margin:10px 0 4px;box-shadow:0 2px 8px rgba(10,20,40,.10);display:block;}
+.cap{font-size:12.5px;color:#8a95a2;margin:2px 2px 8px;text-align:center;}
+.vlink{display:inline-flex;align-items:center;gap:6px;background:var(--accbg);color:#8a3415;border:1px solid #f3c9b4;border-radius:999px;padding:6px 14px;font-size:13px;font-weight:700;text-decoration:none;margin-top:8px;}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+@media(max-width:560px){.two{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+<header class="hero">
+  <div class="ey">音響基本觀念 · 話術免疫</div>
+  <h1>玩音響很簡單：基本觀念建立好，各種話術都免疫</h1>
+  <p>不會違反物理法則的，原理都不難——10 個核心觀念一次講清楚</p>
+  <div class="meta"><span>🔊 喇叭與聲音</span><span>🔌 器材/線材/電源</span><span>🧭 錢花在刀口上</span></div>
+</header>
+<div class="wrap">
+
+  <div class="intro">
+    這篇把音響的<b>基本物理觀念</b>整理清楚。觀念建立好，面對各種行銷話術就能免疫——<b>不會違反物理法則的，都不難懂</b>。整理自網友分享 + 逐點詳解。
+  </div>
+
+  <h2 class="sec">一、喇叭與聲音行為</h2>
+
+  <div class="step"><div class="num">1</div><h3>好喇叭的頻響：軸向平順 + 離軸順</h3>
+    <ul>
+      <li><b>軸向平順</b>＝正對你的直達聲頻率曲線平直（低中高均衡、不轟不尖）→ 決定音色準不準。</li>
+      <li><b>離軸順</b>＝往旁邊角度量到的曲線也平順、跟著正軸慢慢滾降、沒有奇怪凹凸 → 決定房間反射聲會不會搗亂。</li>
+    </ul>
+    <div class="callout c-key"><b>先看這個，比看價格準：</b>Harman 大規模聽感研究的結論就是「軸向平直＋指向性平順」幾乎能預測一支喇叭好不好聽。</div>
+  </div>
+
+  <div class="step"><div class="num">2</div><h3>好的直達聲是寶貴的</h3>
+    <p>直達聲＝最早到耳朵、還沒被牆反射的那份聲音。大腦用「最先到的聲音」判斷<b>音像定位與音色</b>（優先效應／哈斯效應）。所以乾淨準確的直達聲，是一切的地基。</p>
+  </div>
+
+  <div class="step"><div class="num">3</div><h3>不要為了反射聲去動直達聲 ⇒ 中高頻不要做 DRC</h3>
+    <p>你在皇帝位量到的曲線＝直達＋反射混在一起。中高頻的反射讓曲線看起來坑坑巴巴，但若用 DRC 硬「拉平」它，等於<b>為了修反射，把本來很好的直達聲弄歪</b>。</p>
+    <div class="callout c-tip"><b>正確做法：</b>中高頻的反射用<b>吸音、擺位</b>處理，不要用 EQ 硬修；DRC 真正該修的是<b>低頻</b>（見第 5 點）。Dirac ART／Live 的正確用法也是「低頻大修、中高頻輕手」。</div>
+  </div>
+
+  <div class="step"><div class="num">4</div><h3>聲波有擴散角度，不像雷射光束</h3>
+    <p>喇叭聲是散開的，不是一束光。不同喇叭「擴散廣／窄」不同：</p>
+    <ul>
+      <li><b>擴散廣</b>：反射多、包圍感強、空間感大，但更吃房間。</li>
+      <li><b>擴散窄（指向性強）</b>：直達聲多、定位精準、較不受房間影響。</li>
+    </ul>
+    <p>沒有對錯 → <b>選你喜歡、房間適合的擴散特性就好。</b></p>
+  </div>
+
+  <div class="step"><div class="num">5</div><h3>低頻會跟空間交互作用 ⇒ 每個空間都是獨立事件</h3>
+    <p>低頻波長很長（100Hz≈3.4 公尺、20Hz≈17 公尺），跟房間尺寸相當 → 形成<b>駐波／房間模態</b>：某些頻率爆量、某些被抵消，完全取決於房間大小＋喇叭與聆聽位置。</p>
+    <div class="callout c-warn"><b>推論：</b>同一對喇叭在每個房間低頻都不一樣，<b>別人的設定不能照抄</b>。低頻是「房間問題」，要靠擺位、低頻陷阱、DRC 修低頻、多顆超低音去解。</div>
+  </div>
+
+  <div class="step"><div class="num">6</div><h3>擺位原則：不影響家庭和諧、起居便利</h3>
+    <p>聲學最佳位置常跟「好住、好看、家人能接受」衝突。<b>先顧生活，再在可接受範圍內找最好的位置。</b>系統在家裡的話，這條比什麼都重要。</p>
+  </div>
+
+  <h2 class="sec">二、器材、線材、電源</h2>
+  <div class="intro" style="border-left:4px solid var(--warn);background:var(--warnbg);">
+    ⚠️ 以下是<b>工程／實證派</b>的立場，<b>有量測與盲測支持、方向正確</b>，但也是音響圈<b>爭議最大</b>的地方（另一派憑主觀聽感堅持有差）。以下照工程共識說明，知道有爭議即可。
+  </div>
+
+  <div class="step"><div class="num">7</div><h3>差異大的話，不用看價格也能輕易聽出來</h3>
+    <p>真正大的差異（換喇叭、換房間、改擺位）→ 一聽就知道。反過來，若一個「差異」<b>要先知道哪個比較貴才聽得出來</b>，多半是心理作用（腦補／月暈效應）。這就是為什麼強調<b>盲聽</b>——蓋掉價格再聽，很多「差異」就消失了。</p>
+  </div>
+
+  <div class="step"><div class="num">8</div><h3>電線（喇叭線）：重點是合規範，不影響聲音</h3>
+    <p>喇叭線只要<b>線徑夠粗（配合長度、電阻夠低）、做工正常</b>，任務就完成了。超過規範，再貴的線在盲測下聽不出差別。重點是「夠格」，不是「多貴」。</p>
+  </div>
+
+  <div class="step"><div class="num">9</div><h3>訊號線：合乎使用條件、正規品牌、按規範做</h3>
+    <p>訊號線（RCA／XLR）同理：<b>類型對（阻抗、屏蔽）、長度合適、正規品牌做工正常</b>，訊號就正確傳過去。屏蔽夠、接頭好，比玄學材料重要；規範達標後，昂貴發燒線不會再帶來聽得出的改善。</p>
+  </div>
+
+  <div class="step"><div class="num">10</div><h3>電源處理：除了濾直流與雜訊，其他多半浪費錢</h3>
+    <ul>
+      <li><b>有意義：</b>濾除市電直流偏壓（會讓變壓器嗡嗡叫）、濾除高頻雜訊／干擾（RFI／EMI）。</li>
+      <li><b>多半浪費：</b>昂貴「電源再生器」、玄學電源線、號稱提升動態/音場的處理器——因為器材<b>自己的電源供應本來就會穩壓</b>，外面再疊通常沒有可量測／可盲聽的改善。</li>
+    </ul>
+  </div>
+
+  <div class="result">
+    <h3>總結：錢花在刀口上</h3>
+    <p><b>喇叭 &gt; 房間聲學／擺位 &gt; 訊源</b>，這幾個是「大差異、聽得出、值得投資」的；<b>線材／電源處理過了「合規範」門檻之後，CP 值急速下降</b>。基本觀念建立好，就不會被話術牽著走。</p>
+  </div>
+
+  <footer class="src">
+    整理自網友分享（#玩音響很簡單）＋逐點詳解｜整理：盧醫師專屬助理｜日期：2026-07-23<br>
+    <b>免責：</b>器材/線材/電源部分為工程實證派觀點，音響圈存在主觀聽感的不同立場；本文供建立基本物理觀念參考。
+  </footer>
+  <div class="ver">工具版本：2026-07-23</div>
+
+</div>
+</body>
+</html>
