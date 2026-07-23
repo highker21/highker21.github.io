@@ -205,10 +205,29 @@ footer.note {
   font-size: 13px;
   color: var(--muted);
 }
+figure.shot {
+  margin: 22px 0 26px;
+}
+figure.shot img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border: 1px solid var(--table-border);
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+}
+figure.shot figcaption {
+  margin-top: 8px;
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.55;
+  text-align: center;
+}
 @media print {
   nav.toc, .print-hint { display: none; }
   .layout { display: block; max-width: none; }
   article { font-size: 11pt; }
+  figure.shot img { box-shadow: none; }
 }
 
 </style>
@@ -423,6 +442,7 @@ Dirac Live 介面。</p>
 </section>
 <section id="phase-0--為什麼要這樣校正" class="level2">
 <h2>Phase 0 — 為什麼要這樣校正</h2>
+<figure class="shot"><img src="assets/dirac-art/p0-theater.jpg" alt="講者在專屬視聽室以量測麥克風校正 in-wall 環繞系統"><figcaption>講者的實際場景：一間 in-wall／in-ceiling 的專屬視聽室，正以量測麥克風進行校正——本教學所有畫面皆取自此片。</figcaption></figure>
 <section id="dirac-art-跟一般-dirac-live-差在哪" class="level3">
 <h3>Dirac ART 跟一般 Dirac Live 差在哪？</h3>
 <ul>
@@ -495,6 +515,7 @@ LFE</strong>。如果你給它的下潛頻率超過喇叭能力 →
 </section>
 <section id="12-麥克風校正檔擺放" class="level3">
 <h3>1.2 麥克風校正檔擺放</h3>
+<figure class="shot"><img src="assets/dirac-art/p1-mic.jpg" alt="量測麥克風架設於主聆位頭部高度"><figcaption>量測麥克風架在腳架上、對準主聆位頭部高度，麥克風膠囊朝天花板（垂直入射校正檔）。</figcaption></figure>
 <ul>
 <li>麥克風<strong>直立</strong>（vertical）擺放 → 使用 <strong>「0°」
 校正檔</strong></li>
@@ -505,6 +526,7 @@ LFE</strong>。如果你給它的下潛頻率超過喇叭能力 →
 </section>
 <section id="13-rew-前置量測流程" class="level3">
 <h3>1.3 REW 前置量測流程</h3>
+<figure class="shot"><img src="assets/dirac-art/p1-rew-fr.jpg" alt="REW 量測到的各聲道頻率響應曲線"><figcaption>REW 掃頻後的頻率響應：先看整體房間曲線，找出低頻駐波（peaks／dips）與各聲道的落差，作為後續分組與 Bass Support 的判斷依據。</figcaption></figure>
 <pre><code>1. REW &gt; Preferences
    - 選 Audio output: 你的 Storm Audio / AVR
    - 選 Mic: UMIK-1（載入正確角度校正檔）
@@ -521,6 +543,7 @@ LFE</strong>。如果你給它的下潛頻率超過喇叭能力 →
 </section>
 <section id="14-喇叭實際能力的近場量測" class="level3">
 <h3>1.4 喇叭實際能力的「近場量測」</h3>
+<figure class="shot"><img src="assets/dirac-art/p1-rew-speakers.jpg" alt="各喇叭近場量測疊圖，判斷各聲道實際延伸能力"><figcaption>各喇叭近場量測疊圖：看每支喇叭「真正能下潛到哪」與有效輸出範圍，決定 crossover 與哪些聲道該交給 sub／Bass Support 分擔。</figcaption></figure>
 <blockquote>
 <p>💡 <strong>要點</strong>：在主聆位量到的響應 = 喇叭 ×
 房間。<strong>不能用這個去判斷喇叭本身能下潛到哪</strong>。</p>
@@ -571,6 +594,7 @@ alignment</strong>（脈衝對齊）時，sub 高頻雜訊會干擾演算法判�
 <h2>Phase 2 — Dirac Live 初始化</h2>
 <section id="21-啟動專案" class="level3">
 <h3>2.1 啟動專案</h3>
+<figure class="shot"><img src="assets/dirac-art/p2-channel.jpg" alt="Dirac Live 聲道偵測與選擇畫面"><figcaption>Dirac Live 啟動後的聲道總覽：確認處理器回報的每個聲道（含 sub 與 Atmos 天空聲道）都被正確偵測、命名無誤，再進入量測。</figcaption></figure>
 <pre><code>1. 處理器（Storm/Denon/Marantz）切到 Dirac 校正模式
 2. PC 開 Dirac Live → New Calibration
 3. 選擇處理器型號
@@ -583,6 +607,7 @@ bug，遇到滿意的就不再升級。</p>
 </section>
 <section id="22-訊噪比管理30-db-rule" class="level3">
 <h3>2.2 訊噪比管理（+30 dB rule）</h3>
+<figure class="shot"><img src="assets/dirac-art/p2-level.jpg" alt="Dirac Live 量測電平設定對話框，顯示 -12 dBFS"><figcaption>量測電平設定：講者以底部的訊號電平表確認掃頻音量比環境噪音高出約 +30 dB（畫面示 −12 dBFS），確保量測乾淨、不被背景噪音污染。</figcaption></figure>
 <p><strong>目標</strong>：測試訊號要比房間背景噪音<strong>高 30
 dB</strong></p>
 <p>實際操作：</p>
@@ -625,6 +650,7 @@ SPL 不穩），保留更多 headroom 給 Dirac 演算法分析。</p>
 <h2>Phase 3 — 17 點麥克風測量法</h2>
 <section id="31-第一個測量點--主聆位最關鍵" class="level3">
 <h3>3.1 第一個測量點 = 主聆位（最關鍵）</h3>
+<figure class="shot"><img src="assets/dirac-art/p3-sweetspot.jpg" alt="Dirac Live 主聆位測量點示意圖"><figcaption>第一個測量點務必落在主聆位（皇帝位）頭部正中央——Dirac 以此為權重最高的基準點，之後 16 點都是圍繞它擴散。</figcaption></figure>
 <blockquote>
 <p>🎯
 <strong>第一個測量點是整個校正的「參考點」</strong>。所有其他測量點都圍繞它定位。</p>
@@ -640,6 +666,7 @@ SPL 不穩），保留更多 headroom 給 Dirac 演算法分析。</p>
 </section>
 <section id="32-後續-16-點圍繞頭部的立方體" class="level3">
 <h3>3.2 後續 16 點：圍繞頭部的「立方體」</h3>
+<figure class="shot"><img src="assets/dirac-art/p3-curve.jpg" alt="多點測量後的各聲道量測曲線"><figcaption>逐點測量累積後，Dirac 顯示各聲道的量測曲線族；點數越多、涵蓋範圍越合理，模型對聆聽區的估計就越穩健。</figcaption></figure>
 <p><strong>核心規則</strong>：</p>
 <ul>
 <li>想像一個<strong>約 60 cm 邊長的立方體</strong>（半徑 ~30
@@ -740,6 +767,7 @@ sweep，慢慢來。</p>
 </section>
 <section id="42-喇叭分組speaker-groups" class="level3">
 <h3>4.2 喇叭分組（Speaker Groups）</h3>
+<figure class="shot"><img src="assets/dirac-art/p4-groups.jpg" alt="Dirac ART Filter Design 的 Speaker Groups 分組畫面"><figcaption>ART 的核心畫面：把聲道歸入不同 Speaker Group（前方、環繞、天空、sub…），ART 才能跨喇叭協同分配低頻能量——這是 ART 與傳統 Dirac Live 最大的差異所在。</figcaption></figure>
 <p>Dirac ART 會自動建議 grouping，但要手動微調：</p>
 <table>
 <thead>
@@ -785,6 +813,7 @@ level。</p>
 </section>
 <section id="43-target-curves目標曲線" class="level3">
 <h3>4.3 Target Curves（目標曲線）</h3>
+<figure class="shot"><img src="assets/dirac-art/p4-target.jpg" alt="Dirac Live 目標曲線（Target Curve）編輯畫面"><figcaption>目標曲線編輯：拖曳控制點設定期望的房間曲線（通常低頻略抬、高頻緩降的「house curve」）；ART 會朝此目標做校正，而非把曲線硬拉成一直線。</figcaption></figure>
 <p><strong>選擇</strong>：</p>
 <ul>
 <li>Dirac 預設曲線（從高頻緩降）</li>
@@ -1009,6 +1038,7 @@ slot；Denon/Marantz 通常 3 slot)。</p>
 </section>
 <section id="53-講者實測結果範例" class="level3">
 <h3>5.3 講者實測結果範例</h3>
+<figure class="shot"><img src="assets/dirac-art/p4-beforeafter.jpg" alt="校正前後頻率響應對比曲線"><figcaption>校正前後對比：可見低頻駐波被壓平、整體曲線更貼近目標曲線且各聲道一致性提升——這就是 ART 校正生效的視覺證據。</figcaption></figure>
 <p><strong>校正前 LFE</strong>：30–60 Hz 大量殘響、Waterfall
 圖中能量集中在 30–60 Hz 拖很久</p>
 <p><strong>校正後 LFE</strong>：能量均勻分布全頻段；30 Hz 起 group delay
@@ -1106,6 +1136,7 @@ dB</strong>。</p>
 </section>
 <section id="toolbox-storm-audio-專屬第二段精修流程" class="level2">
 <h2>🧰 Storm Audio 專屬：第二段精修流程</h2>
+<figure class="shot"><img src="assets/dirac-art/p4-storm.jpg" alt="Storm Audio 處理器各聲道電平與延遲設定畫面"><figcaption>回到 Storm Audio 處理器端：在套用 Dirac 濾波之後，於處理器的聲道管理頁做電平／延遲的第二段精修（例如後排補強），完成最後聆聽驗收。</figcaption></figure>
 <p>Storm Audio 用戶可以：</p>
 <ol type="1">
 <li><strong>Duplicate profile</strong> 把校正結果複製一份</li>
@@ -1255,7 +1286,7 @@ Stormio。內容已對技術名詞、操作步驟、推薦數值做交叉驗證�
 </section>
 <footer class="note">
 本教學 HTML 為盧醫師助理依 <a href="https://www.youtube.com/watch?v=ajcLuwpYLJk">原片</a>（法文逐字稿 17,223 字 · 1 小時 34 分）整理為繁中結構化教學。<br>
-產出時間：2026-06-07 · pandoc 3.9 渲染 · 純單檔 HTML，無外部相依，可離線開啟或列印為 PDF。
+產出時間：2026-06-07 · 2026-07-23 增補原片操作截圖（assets/dirac-art/，共 12 張）· pandoc 3.9 渲染。
 </footer>
 </article>
 </div>
