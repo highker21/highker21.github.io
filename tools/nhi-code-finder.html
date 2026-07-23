@@ -83,7 +83,7 @@ function setTab(t){
     : '輸入品名／成分／ATC／代碼，例：metformin　膜衣錠　C09　甲狀腺素';
   $('note').innerHTML = t==='proc'
     ? '健保<b>診療項目（處置）代碼</b>與支付點數（健保支付標準・醫療服務給付項目）。點數為健保支付點數（1 點≈0.9 元浮動）。'
-    : '健保<b>藥品代碼（10 碼國家健保藥碼，非院內碼）</b>與支付價。資料為現行西藥給付品項；支付價 0.00 多為不分列價/參考品項。中藥、特材另有資料集。';
+    : '健保<b>藥品代碼（10 碼國家健保藥碼，非院內碼）</b>與<b>健保價（支付價，元/單位）</b>，見最右欄。臨床常用藥多有價；顯示「—」者為<b>不分列價/參考品項</b>（健保無單一品項藥價，約占 7 成）。中藥、特材另有資料集。';
   $('thead').innerHTML = t==='proc'
     ? '<th style="width:108px">健保碼</th><th>診療項目名稱</th><th style="width:96px">支付點數</th>'
     : '<th style="width:118px">健保藥碼</th><th>品名</th><th>成分／規格</th><th style="width:96px">ATC</th><th style="width:84px">健保價</th>';
@@ -119,7 +119,7 @@ function render(){
     rows=shown.map(d=>{
       const nm=`${hl(d.z,toks)}${d.e?`<div class="en">${hl(d.e,toks)}</div>`:''}`;
       const ing=`${hl(d.i||'',toks)}${d.s?` <span class="muted">/ ${esc(d.s)}</span>`:''}${d.f?` <span class="muted">· ${esc(d.f)}</span>`:''}`;
-      const price=(d.p&&d.p!=='0.00')?d.p:'<span class="muted">—</span>';
+      const price=(d.p&&d.p!=='0.00')?d.p+'<span class="muted" style="font-weight:400"> 元</span>':'<span class="muted" title="不分列價／參考品項，健保無單一品項藥價">—</span>';
       return `<tr><td class="code">${d.c}</td><td>${nm}</td><td class="ing">${ing}</td><td class="atc">${hl(d.a||'',toks)}</td><td class="pt">${price}</td></tr>`;
     }).join('');
   }
