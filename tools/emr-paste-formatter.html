@@ -65,10 +65,10 @@ details{margin-top:6px;font-size:.75rem;color:#678}
 <div id="out">貼上後結果會出現在這裡</div>
 <div class="warn" id="warn" hidden></div>
 <details id="skipbox" hidden><summary>未解析的段落（點開檢查）</summary><pre id="skipped"></pre></details>
-<div class="foot">僅重排文字、不做醫療判斷，貼入病歷前請自行核對｜歷史記錄存於本機瀏覽器（localStorage）｜工具版本：2026-07-16（支援雲端藥歷「整頁全選貼上」）</div>
+<div class="foot">僅重排文字、不做醫療判斷，貼入病歷前請自行核對｜歷史記錄存於本機瀏覽器（localStorage）｜工具版本：2026-07-23（新增複合用法碼 QDAMPC/QDAMAC 與每N日 Q2D 等解析）</div>
 <script>
 const $=id=>document.getElementById(id);
-const FREQ='QD|QAM|QPM|BID|TID|QID|QN|HS|PRN|QOD|QW|BIW|TIW|Q\\d+H|ST|STAT|MEAL|AC|PC';
+const FREQ='QD|QAM|QPM|QDS|BID|TID|QID|QN|HS|PRN|QOD|QW|BIW|TIW|Q\\d+[HD]|ST|STAT|MEAL|AC|PC';
 const FORM=/^(TABLETS?|TAB|CAPSULES?|CAP|CAPS|ENTERIC[\w-]*|PROLONGED-RELEASE|EXTENDED[\w-]*|FILM[\w-]*|F\.?C\.?|SUGAR[\w-]*|ORAL|EYE|DROPS?|LOTION|OINTMENT|CREAM|GEL|SYRUP|SOLUTION|SUSPENSION|MIXTURE|LIQUID|EFFERVESCENT|INJECTION|INJ|PATCH|PLASTER|SPRAY|SUPPOSITOR(Y|IES)|POWDER|GRANULES?|S\.?R\.?M\.?C\.?|MICROENCAPSULATED)$/i;
 const CONTAINER=/^(LIQUID|MIXTURE|SOLUTION|SYRUP|SUSPENSION|DROPS?)$/i;
 const EXTRA=/^(SR|XL|XR|CR|ER|LA|MR|DEPOT|FORTE|RETARD)$/i;
@@ -96,7 +96,7 @@ function shortDrug(brand){
 function parse(text){
   const recs=text.split(/\n(?=\d+\s+1\d{2}\/\d{2}\/\d{2})/).map(s=>s.trim()).filter(Boolean);
   const meds={},labs={},order=[],skipped=[];
-  const freqRe=new RegExp('\\s('+FREQ+')\\s+(\\d+(?:\\.\\d+)?)\\s+(\\d+)\\s+(\\d+)');
+  const freqRe=new RegExp('\\s((?:'+FREQ+')(?:AM|PM|NOON|N|AC|PC|HS|MC)*)\\s+(\\d+(?:\\.\\d+)?)\\s+(\\d+)\\s+(\\d+)');
   for(const r of recs){
     const h=r.match(/^\d+\s+(1\d{2}\/\d{2}\/\d{2})\s+(.*)$/m);
     if(!h){skipped.push(r);continue}
@@ -168,7 +168,7 @@ function extractPatientName(t){const m=t.match(/身分證號[：:\s]*[A-Z][0-9A-
 function parseFullPage(text){
   const chunks=text.split(/\n(?=\s*(?:\d+\s+)?1\d{2}\/\d{2}\/\d{2}\s)/);
   const meds={},order=[],skipped=[];
-  const freqRe=/\s((?:QD|QAM|QPM|QDS|BID|TID|QID|QN|HS|PRN|QOD|QW|BIW|TIW|Q\d+H|ST|STAT)(?:PC|AC|HS)?)\s+(\d+(?:\.\d+)?)\s+(\d+)\s+(\d+)(?:\s|$)/;
+  const freqRe=/\s((?:QD|QAM|QPM|QDS|BID|TID|QID|QN|HS|PRN|QOD|QW|BIW|TIW|Q\d+[HD]|ST|STAT)(?:AM|PM|NOON|N|AC|PC|HS|MC)*)\s+(\d+(?:\.\d+)?)\s+(\d+)\s+(\d+)(?:\s|$)/;
   for(const c of chunks){
     const joined=c.replace(/\s*\n\s*/g,' ').replace(/\s+/g,' ').trim();
     if(!/^(?:\d+\s+)?1\d{2}\/\d{2}\/\d{2}\s/.test(joined))continue;   // 略過表頭/雜訊段
