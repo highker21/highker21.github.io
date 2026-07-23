@@ -65,13 +65,14 @@ details{margin-top:6px;font-size:.75rem;color:#678}
 <div id="out">貼上後結果會出現在這裡</div>
 <div class="warn" id="warn" hidden></div>
 <details id="skipbox" hidden><summary>未解析的段落（點開檢查）</summary><pre id="skipped"></pre></details>
-<div class="foot">僅重排文字、不做醫療判斷，貼入病歷前請自行核對｜歷史記錄存於本機瀏覽器（localStorage）｜工具版本：2026-07-23（新增複合用法碼 QDAMPC/QDAMAC 與每N日 Q2D 等解析）</div>
+<div class="foot">僅重排文字、不做醫療判斷，貼入病歷前請自行核對｜歷史記錄存於本機瀏覽器（localStorage）｜工具版本：2026-07-23b（新增複合用法碼 QDAMPC/QDAMAC、每N日 Q2D 解析；藥名濾除 TM/® 商標標記）</div>
 <script>
 const $=id=>document.getElementById(id);
 const FREQ='QD|QAM|QPM|QDS|BID|TID|QID|QN|HS|PRN|QOD|QW|BIW|TIW|Q\\d+[HD]|ST|STAT|MEAL|AC|PC';
 const FORM=/^(TABLETS?|TAB|CAPSULES?|CAP|CAPS|ENTERIC[\w-]*|PROLONGED-RELEASE|EXTENDED[\w-]*|FILM[\w-]*|F\.?C\.?|SUGAR[\w-]*|ORAL|EYE|DROPS?|LOTION|OINTMENT|CREAM|GEL|SYRUP|SOLUTION|SUSPENSION|MIXTURE|LIQUID|EFFERVESCENT|INJECTION|INJ|PATCH|PLASTER|SPRAY|SUPPOSITOR(Y|IES)|POWDER|GRANULES?|S\.?R\.?M\.?C\.?|MICROENCAPSULATED)$/i;
 const CONTAINER=/^(LIQUID|MIXTURE|SOLUTION|SYRUP|SUSPENSION|DROPS?)$/i;
 const EXTRA=/^(SR|XL|XR|CR|ER|LA|MR|DEPOT|FORTE|RETARD)$/i;
+const TM=/^(®|™|TM|\(TM\)|\(R\)|®™)$/i;   // 商標標記，藥名擷取時濾除
 const title=s=>s.charAt(0)+s.slice(1).toLowerCase();
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 
@@ -79,6 +80,7 @@ function shortDrug(brand){
   const toks=brand.replace(/["＂]/g,' ').split(/\s+/).filter(Boolean);
   let name=[],extra='',form=[];
   for(const t of toks){
+    if(TM.test(t))continue;                 // 跳過商標標記(TM/®/™)
     if(EXTRA.test(t)&&name.length){extra=t.toUpperCase();continue}
     if(FORM.test(t)){form.push(t.toLowerCase());continue}
     if(/^\(/.test(t)||/^\d/.test(t))break;
@@ -194,7 +196,7 @@ function parseFullPage(text){
     if(fi<0)bi=toks.length-1;
     else if(fi===0)bi=0;
     else if(CONTAINER.test(toks[fi].replace(/["＂]/g,''))&&/^[A-Z][a-z]/.test(toks[fi-1]))bi=fi; // 容器型且前token為成分尾→不回退
-    else bi=fi-1;
+    else {bi=fi-1;while(bi>0&&TM.test(toks[bi]))bi--;}  // FORM 前若為商標標記(TM/®)則再往前取真正品牌名
     const brand=toks.slice(Math.max(0,bi)).join(' ');
     const key=date+'｜'+org;
     if(!meds[key]){meds[key]={dx:new Map(),items:[]};order.push(['med',key])}
