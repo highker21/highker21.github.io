@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh-Hant"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Dirac Live 空間校正 全流程實機教學（Onkyo RZ30）</title>
+<style>
+:root{
+  --ink:#1a2330; --soft:#5e6b7a; --line:#e6e9ef; --bg:#0e1726; --page:#f4f6fa; --card:#fff;
+  --acc:#e8602c; --acc2:#f08a3c; --accbg:#fdeee6;
+  --blue:#1f6feb; --bluebg:#e9f1fd; --teal:#0f9d8c; --tealbg:#e3f6f2;
+  --warn:#c0392b; --warnbg:#fdecea; --tip:#9a6a12; --tipbg:#fbf3df;
+  --shadow:0 1px 2px rgba(10,20,40,.05),0 12px 30px rgba(10,20,40,.08);
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--page);color:var(--ink);
+ font-family:"PingFang TC","Noto Sans TC",-apple-system,"Segoe UI",sans-serif;line-height:1.75;font-size:16px;}
+.wrap{max-width:800px;margin:0 auto;padding:0 16px 70px;}
+header.hero{background:radial-gradient(120% 120% at 80% 0%,#21314d 0%,#0e1726 60%);color:#fff;
+ padding:34px 22px 30px;border-radius:0 0 24px 24px;box-shadow:var(--shadow);}
+header.hero .ey{font-size:12.5px;letter-spacing:2px;color:var(--acc2);font-weight:700;text-transform:uppercase;}
+header.hero h1{margin:6px 0 8px;font-size:25px;line-height:1.3;}
+header.hero p{margin:0;font-size:14px;color:#b9c4d4;}
+header.hero .meta{margin-top:14px;display:flex;gap:8px;flex-wrap:wrap;}
+header.hero .meta span{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);border-radius:999px;padding:4px 12px;font-size:12.5px;}
+
+.intro{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px 18px;margin:18px 0;box-shadow:var(--shadow);font-size:15px;color:#33404f;}
+.intro b{color:var(--acc);}
+
+h2.sec{font-size:13px;letter-spacing:1.5px;color:var(--acc);text-transform:uppercase;margin:30px 4px 4px;font-weight:800;}
+
+.prep{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:6px 18px 14px;box-shadow:var(--shadow);}
+.prep ul{list-style:none;padding:0;margin:10px 0 4px;}
+.prep li{position:relative;padding:7px 0 7px 30px;border-bottom:1px solid #f0f2f6;font-size:14.5px;}
+.prep li:last-child{border-bottom:none;}
+.prep li::before{content:"✓";position:absolute;left:2px;top:7px;color:var(--teal);font-weight:800;}
+.prep li.no::before{content:"✕";color:var(--warn);}
+.prep li b{color:var(--ink);}
+
+.step{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px 18px 14px;margin:14px 0;box-shadow:var(--shadow);position:relative;}
+.step .num{position:absolute;top:-14px;left:16px;width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--acc),var(--acc2));color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:17px;box-shadow:0 4px 10px rgba(232,96,44,.4);}
+.step h3{margin:10px 0 8px;font-size:18px;}
+.step p{margin:7px 0;font-size:15px;color:#33404f;}
+.step ul{margin:7px 0;padding-left:20px;font-size:14.5px;color:#33404f;}
+.step li{margin:4px 0;}
+.callout{border-radius:10px;padding:9px 13px;margin:10px 0;font-size:14px;}
+.c-key{background:var(--accbg);border-left:4px solid var(--acc);color:#8a3415;}
+.c-warn{background:var(--warnbg);border-left:4px solid var(--warn);color:#8a261c;}
+.c-tip{background:var(--tipbg);border-left:4px solid #d9a93b;color:#6f4e0e;}
+.callout b{color:inherit;}
+table.price{width:100%;border-collapse:collapse;font-size:14px;margin:8px 0;}
+table.price td{border:1px solid #e3e8ee;padding:6px 9px;}
+table.price td:first-child{background:#f6f8fb;}
+table.price td:last-child{font-weight:700;color:var(--acc);white-space:nowrap;text-align:right;}
+.result{background:linear-gradient(135deg,var(--tealbg),#eef9f6);border:1px solid #bce8df;border-radius:16px;padding:16px 18px;margin:18px 0;}
+.result h3{margin:0 0 8px;color:#0b7567;font-size:18px;}
+.result p{margin:6px 0;font-size:15px;color:#28504a;}
+code{background:#eef1f4;padding:1px 6px;border-radius:5px;font-size:13.5px;}
+footer.src{font-size:12.5px;color:#7d8794;line-height:1.7;margin-top:26px;border-top:1px dashed var(--line);padding-top:16px;}
+footer.src b{color:var(--ink);}
+.ver{text-align:center;font-size:12px;color:#9aa4af;margin-top:10px;}
+
+.shot{width:100%;border-radius:12px;border:1px solid var(--line);margin:10px 0 4px;box-shadow:0 2px 8px rgba(10,20,40,.10);display:block;}
+.cap{font-size:12.5px;color:#8a95a2;margin:2px 2px 8px;text-align:center;}
+.vlink{display:inline-flex;align-items:center;gap:6px;background:var(--accbg);color:#8a3415;border:1px solid #f3c9b4;border-radius:999px;padding:6px 14px;font-size:13px;font-weight:700;text-decoration:none;margin-top:8px;}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+@media(max-width:560px){.two{grid-template-columns:1fr;}}
+
+.shot{width:100%;border-radius:12px;border:1px solid var(--line);margin:10px 0 4px;box-shadow:0 2px 8px rgba(10,20,40,.10);display:block;}
+.cap{font-size:12.5px;color:#8a95a2;margin:2px 2px 8px;text-align:center;}
+</style></head><body>
+<header class="hero">
+  <div class="ey">DIRAC LIVE · 實機全流程</div>
+  <h1>Dirac Live 空間校正 全流程實機教學</h1>
+  <p>用擴大機內建麥克風跑完整套校正（示範：Onkyo RZ30．5.1.2）</p>
+  <div class="meta"><span>🎚 Onkyo RZ30</span><span>🎙 內建麥克風／UMIK-1</span><span>⏱ 8 步驟</span></div>
+</header>
+<div class="wrap">
+
+  <div class="intro">
+    用<b>擴大機內建麥克風</b>直接跑完 Dirac Live 空間校正的實機全流程（示範機：<b>Onkyo RZ30</b>，5.1.2 系統）。只要一台電腦＋麥克風就能做。整理自台北博仕音響教學影片。
+  </div>
+
+  <h2 class="sec">開始前</h2>
+  <div class="prep"><ul>
+    <li>支援 Dirac 的擴大機（本例 Onkyo RZ30，隨機附麥克風）＋一台電腦</li>
+    <li>麥克風：附的就能用；<b>UMIK-1</b> 精準度更高（原廠建議，需另匯入其校正檔）</li>
+    <li class="no"><b>環境務必安靜</b>——投影機運轉聲等噪音會影響測量</li>
+  </ul></div>
+  <img class="shot" src="assets/dirac-live-onkyo/01-setup.jpg" alt="示範系統：Onkyo RZ30 + Dirac Live" loading="lazy"><div class="cap">示範系統：Onkyo RZ30 + Dirac Live</div>
+
+  <h2 class="sec">操作全流程</h2>
+  <div class="step"><div class="num">1</div><h3>接麥克風、開始 Dirac</h3><p>把麥克風接頭插進擴大機的 <b>Setup Mic</b> 孔，接上後畫面會出現「Start Dirac」，即可進到電腦端 App。</p></div><div class="step"><div class="num">2</div><h3>麥克風擺法（關鍵，錯了高頻會歪）</h3><img class="shot" src="assets/dirac-live-onkyo/02-mic.jpg" alt="麥克風頭朝上 90 度，不可對著喇叭" loading="lazy"><div class="cap">麥克風頭朝上 90 度，不可對著喇叭</div><div class="callout c-key"><b>UMIK-1 擺法要注意：</b>麥克風<b>頭朝上、垂直 90 度</b>；<b>不要把頭對著喇叭</b>（否則高頻會偏掉很多）。</div></div><div class="step"><div class="num">3</div><h3>選裝置/麥克風</h3><img class="shot" src="assets/dirac-live-onkyo/03-micselect.jpg" alt="App 中選麥克風；內建的顯示為 Micly" loading="lazy"><div class="cap">App 中選麥克風；內建的顯示為 Micly</div><p>進 App 後選麥克風：內建的會顯示「Micly」；若用 UMIK-1 需<b>另下載並匯入它的校正檔</b>才能測。</p></div><div class="step"><div class="num">4</div><h3>確認聲道配置、拉麥克風增益</h3><img class="shot" src="assets/dirac-live-onkyo/04-512.jpg" alt="本例為 5.1.2 聲道配置" loading="lazy"><div class="cap">本例為 5.1.2 聲道配置</div><img class="shot" src="assets/dirac-live-onkyo/05-level.jpg" alt="逐一測各喇叭，音量別進到紅色（失真）" loading="lazy"><div class="cap">逐一測各喇叭，音量別進到紅色（失真）</div><div class="callout c-warn"><b>兩個重點：</b>① 空間要安靜，可把測試音量調到<b>蓋過環境噪音</b>；② 拉麥克風增益/音量時<b>不要出現紅色波形</b>（代表失真、器材受不了），慢慢往上調。</div></div><div class="step"><div class="num">5</div><h3>選聆聽範圍、多點測量</h3><p>測量範圍分<b>集中（皇帝位）／較寬／更大範圍</b>。單人示範選<b>集中</b>。接著依畫面在<b>人耳高度附近</b>的多個點（左前/左後/左上/主位…）逐一測量。</p><div class="callout c-tip">那些測量點對應不同身高/頭部位置，<b>別放奇怪的地方</b>，維持在人耳高度、聆聽區附近即可。</div></div><div class="step"><div class="num">6</div><h3>看自動目標曲線 —「低音變小」是正常的</h3><img class="shot" src="assets/dirac-live-onkyo/06-curve.jpg" alt="Dirac 自動生成的目標曲線" loading="lazy"><div class="cap">Dirac 自動生成的目標曲線</div><div class="callout c-key"><b>校正後覺得低音變小？</b>低音<b>沒有消失</b>——是 Dirac 把空間造成的「轟隆感」修乾淨了，低頻變得清晰。這是正常且正確的結果。</div></div><div class="step"><div class="num">7</div><h3>依喜好微調曲線</h3><img class="shot" src="assets/dirac-live-onkyo/07-curveedit.jpg" alt="手動微調：低頻/高頻依喜好加減" loading="lazy"><div class="cap">手動微調：低頻/高頻依喜好加減</div><ul>
+      <li>想要電影衝擊感 → <b>把 100Hz 以下拉高 3～5 dB</b>（低音有力＋Dirac 的清晰度兼得）</li>
+      <li>喜歡喇叭原本的高頻細節 → <b>把右側（高頻）曲線拉高約 5 dB</b></li>
+      <li>Dirac 會自動處理中低頻那段的空間問題</li>
+      </ul><div class="callout c-tip"><b>Bass Control</b>（需另購）比較適合<b>多顆超低音</b>的系統（例如 4 顆低音）才划算。</div></div><div class="step"><div class="num">8</div><h3>存進擴大機、匯出濾波器</h3><img class="shot" src="assets/dirac-live-onkyo/08-export.jpg" alt="命名後存入擴大機槽位、匯出濾波器" loading="lazy"><div class="cap">命名後存入擴大機槽位、匯出濾波器</div><p>把調好的濾波器<b>存進擴大機的槽位</b>（每台槽數不同，2～3 個），命名（如 Dirac One）後<b>匯出濾波器</b>即完成。</p><div class="callout c-warn">⚠️ <b>每重跑一次 Dirac，前一次的校正會被覆蓋刪除</b>，記得存不同槽位。</div></div>
+  <footer class="src">
+    來源影片：Dirac Live 空間校正全流程教學 Onkyo RZ30（台北博仕音響 AMA VLOG，2026-01-16）｜整理：2026-07-23<br>
+    本頁為影片圖文整理，操作以實機畫面與 Dirac 官方說明為準。這支示範的是 <b>Dirac Live</b>（標準版）實機全流程；進階的 <b>Dirac ART（主動房間處理）</b>另見本站 Dirac ART 系列教學。
+  </footer>
+  <div class="ver">工具版本：2026-07-23</div>
+
+</div></body></html>
