@@ -205,6 +205,7 @@
     <div>
       <label>放射碘劑量 (mCi) <span style="color:#c53030">*</span></label>
       <input id="rai_dose" type="number" placeholder="例：30 / 100 / 150" min="1" step="1" required>
+      <div id="ataHint" style="display:none;font-size:.8rem;color:#7b2d5e;background:#fbeef5;border-radius:6px;padding:6px 9px;margin-top:5px;line-height:1.5"></div>
     </div>
     <div>
       <label>預計吃放射碘日期（必須是 Tue 或 Fri） <span style="color:#c53030">*</span></label>
@@ -802,6 +803,29 @@ function exportDocx() {
   document.body.removeChild(a);
   URL.revokeObjectURL(url);
 }
+
+// ---- 從甲狀腺 ATA 計算機帶入（localStorage，同網域本機傳遞）----
+(function(){
+  try{
+    const raw=localStorage.getItem('rai_prefill');
+    if(!raw)return;
+    const p=JSON.parse(raw);
+    if(!p.ts||Date.now()-p.ts>300000){localStorage.removeItem('rai_prefill');return;} // 逾5分鐘不套用
+    const set=(id,v)=>{const el=document.getElementById(id);if(el&&v)el.value=v;};
+    set('patient_name',p.name);
+    set('patient_id',p.mrn);
+    set('patient_age',p.age);
+    if(p.sex){const s=document.getElementById('patient_sex');if(s)s.value=p.sex;}
+    // 只顯示 ATA 劑量「建議」提示，不自動填死 rai_dose（實際 mCi 由核醫評估）
+    const hint=document.getElementById('ataHint');
+    if(hint&&(p.rai||p.risk)){
+      hint.innerHTML='💡 由甲狀腺 ATA 計算機帶入：'+(p.risk?'復發風險 <b>'+p.risk+'</b>；':'')+(p.rai?'建議劑量 <b>'+p.rai+'</b>':'')+'<br>（實際 mCi 請依核醫評估填入上方欄位）';
+      hint.style.display='block';
+    }
+    localStorage.removeItem('rai_prefill'); // 用完即焚，避免下一位病人誤帶
+    if(typeof updateComputed==='function'){try{updateComputed();}catch(e){}}
+  }catch(e){}
+})();
 </script>
 </body>
 </html>

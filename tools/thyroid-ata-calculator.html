@@ -97,6 +97,7 @@ details{font-size:.78rem;color:#675;margin-top:8px}
 <div id="reason"></div>
 <div class="bar"><button id="copy">📋 複製結論</button><button id="copyfull" class="ghost">複製完整分析</button></div>
 <div class="bar"><span class="muted">匯出：</span><button id="expWord" class="ghost">📝 Word</button><button id="expExcel" class="ghost">📊 Excel</button><button id="expCSV" class="ghost">🧾 CSV</button><button id="expPDF" class="ghost">📄 PDF</button><button id="expPrint" class="ghost">🖨 列印</button></div>
+<div class="bar"><button id="toRAI">☢️ 帶入碘 131 排程單</button><span class="note" style="font-size:.78rem">自動帶病人資料＋ATA 劑量建議到排程單</span></div>
 
 <div class="disc">⚠️ <b>使用限制</b>：本工具依 2025 ATA 指引（Ringel MD, Sosa JA, et al. Thyroid 2025;35(8):841-985，Fig.2 復發風險分層＋Rec.32 RAI）自動推算，屬<b>臨床決策輔助</b>，不取代醫師判斷；請務必核對擷取特徵、依完整指引與個案情境定案。分子（BRAF/TERT/RAS）缺漏時分層為 provisional。RAI 劑量為建議範圍，實際依核醫評估、已知病灶與病人條件個別化。</div>
 <details><summary>本工具採用的 2025 ATA 分層/建議規則（依 Fig.2 · Rec.32）</summary>
@@ -111,7 +112,7 @@ TSH(初始；2025 之後改依動態反應調整)：high &lt;0.1｜intermediate-
 RAI(Rec.32)：low 不建議常規(選擇性 30–50mCi)；low-int/int-high「可考慮 consider」(30–100，最高150mCi)；high / M1「建議常規 recommend」(100–150mCi，已知病灶可更高)。<br>
 AJCC 8th(年齡分界55)：&lt;55 → M0=Stage I、M1=II；≥55 → T1-2N0M0=I、T3或N1=II、T4a=III、T4b=IVA、M1=IVB。
 </div></details>
-<div class="foot">工具版本：2026-07-24（修正淋巴結「( x / y )」括號內含空格時無法解析，如 0/6；沿用多發取最大腫瘤徑、ATA 2025 Fig.2/Rec.32 校正）｜資料僅在瀏覽器本機處理</div>
+<div class="foot">工具版本：2026-07-24b（新增「☢️ 帶入碘131排程單」一鍵串接：自動帶病人資料＋ATA劑量建議到 RAI-scheduler；沿用淋巴結括號空格修正、多發取最大腫瘤徑、ATA 2025 Fig.2/Rec.32）｜資料僅在瀏覽器本機處理</div>
 
 <script>
 const $=id=>document.getElementById(id);
@@ -378,4 +379,19 @@ function expWord(){if(!needExp())return;const doc=`<html xmlns:w="urn:schemas-mi
 $('expCSV').onclick=expCSV;$('expExcel').onclick=expExcel;$('expWord').onclick=expWord;
 $('expPDF').onclick=()=>{$('msg').textContent='列印視窗→選「另存為 PDF」';setTimeout(()=>$('msg').textContent='',2500);window.print();};
 $('expPrint').onclick=()=>window.print();
+
+// ---- 帶入碘131排程單（RAI-scheduler）：本機 localStorage 傳遞，病人資料不進網址 ----
+$('toRAI').onclick=()=>{
+  if(!window._exp){$('msg').textContent='請先貼上報告、算出結果再帶入';setTimeout(()=>$('msg').textContent='',2000);return;}
+  const rows=Object.fromEntries(window._exp.rows.map(r=>[r[0],r[1]]));
+  // 姓名/病歷號拆分：pname 常為「姓名 病歷號」，末段像病歷號(英數)則拆出
+  const pn=(window._exp.name||'').trim();
+  let name=pn,mrn='';
+  const m=pn.match(/^(.*?)[\s　]+([A-Za-z]?\d[\w\-]*)$/);
+  if(m){name=m[1].trim();mrn=m[2].trim();}
+  const payload={name,mrn,age:rows['年齡']||'',sex:rows['性別']||'',rai:rows['RAI建議']||'',risk:rows['ATA復發風險']||'',ts:Date.now()};
+  try{localStorage.setItem('rai_prefill',JSON.stringify(payload));}catch(e){}
+  window.open('RAI-scheduler.html','_blank');
+  $('msg').textContent='已帶入排程單（新分頁）';setTimeout(()=>$('msg').textContent='',2000);
+};
 </script></body></html>
