@@ -65,7 +65,7 @@ details{margin-top:6px;font-size:.75rem;color:#678}
 <div id="out">貼上後結果會出現在這裡</div>
 <div class="warn" id="warn" hidden></div>
 <details id="skipbox" hidden><summary>未解析的段落（點開檢查）</summary><pre id="skipped"></pre></details>
-<div class="foot">僅重排文字、不做醫療判斷，貼入病歷前請自行核對｜歷史記錄存於本機瀏覽器（localStorage）｜工具版本：2026-07-23b（新增複合用法碼 QDAMPC/QDAMAC、每N日 Q2D 解析；藥名濾除 TM/® 商標標記）</div>
+<div class="foot">僅重排文字、不做醫療判斷，貼入病歷前請自行核對｜歷史記錄存於本機瀏覽器（localStorage）｜工具版本：2026-07-24（抽血與藥物結果分區顯示【用藥】/【抽血】；沿用複合用法碼 QDAMPC/QDAMAC、Q2D、藥名濾除 TM/® 商標標記）</div>
 <script>
 const $=id=>document.getElementById(id);
 const FREQ='QD|QAM|QPM|QDS|BID|TID|QID|QN|HS|PRN|QOD|QW|BIW|TIW|Q\\d+[HD]|ST|STAT|MEAL|AC|PC';
@@ -230,24 +230,28 @@ function render(){
   const {meds,labs,order,skipped}=parseAll(medText,labText);
   // 姓名欄空時，自動從表頭帶入病人姓名（不覆蓋使用者已輸入）
   if(!$('pname').value.trim()){const nm=extractPatientName(medText)||extractPatientName(labText);if(nm)$('pname').value=nm;}
-  const listMode=$('oList').checked,out=[];
+  const listMode=$('oList').checked,medOut=[],labOut=[];
   for(const [kind,key] of order){
     const [date,org]=key.split('｜');
     if(kind==='lab'){
       const items=labs[key].map(x=>{
         const v=/^(Negative|\(-\))$/i.test(x.val)?'(-)':/^(Positive|\(\+\))$/i.test(x.val)?'(+)':' '+x.val+flag(x.val,x.lo,x.hi);
         return x.item+v});
-      out.push(listMode?`${date} ${org}\n`+items.map(i=>'- '+i).join('\n')
+      labOut.push(listMode?`${date} ${org}\n`+items.map(i=>'- '+i).join('\n')
                        :`${date} ${org}：${items.join('、')}`);
     }else{
       const m=meds[key];
       const dx=$('oDx').checked&&m.dx.size?`（${[...m.dx].map(([i,d])=>i+' '+d).join('；')}）`:'';
       const items=m.items.map(x=>`${$('oShort').checked?shortDrug(x.brand):x.brand} ${x.freq}×${x.days}d`);
-      out.push(listMode?`${date} ${org}${dx}\n`+items.map(i=>'- '+i).join('\n')
+      medOut.push(listMode?`${date} ${org}${dx}\n`+items.map(i=>'- '+i).join('\n')
                        :`${date} ${org}${dx}：${items.join('、')}`);
     }
   }
-  $('out').textContent=out.join('\n')||'（無法解析，請確認貼的是雲端藥歷/檢驗清單）';
+  // 抽血與藥物分區：兩類都有時各加標題分開；單一類別維持原樣
+  const both=medOut.length&&labOut.length,sections=[];
+  if(medOut.length)sections.push((both?'【用藥】\n':'')+medOut.join('\n'));
+  if(labOut.length)sections.push((both?'【抽血】\n':'')+labOut.join('\n'));
+  $('out').textContent=sections.join('\n\n')||'（無法解析，請確認貼的是雲端藥歷/檢驗清單）';
   // 過濾雲端系統表頭/導覽/病人資訊列，不當成「未解析」警告
   const realSkipped=skipped.filter(s=>!/NHI MediCloud|健保醫療資訊雲端|身分證號|摘要.病人資訊|就醫日期[\s\S]{0,20}來源|使用指南|本頁注意事項|篩選器|預防接種/.test(s));
   $('warn').hidden=!realSkipped.length;
