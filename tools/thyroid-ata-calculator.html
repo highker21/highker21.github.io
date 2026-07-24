@@ -111,7 +111,7 @@ TSH(初始；2025 之後改依動態反應調整)：high &lt;0.1｜intermediate-
 RAI(Rec.32)：low 不建議常規(選擇性 30–50mCi)；low-int/int-high「可考慮 consider」(30–100，最高150mCi)；high / M1「建議常規 recommend」(100–150mCi，已知病灶可更高)。<br>
 AJCC 8th(年齡分界55)：&lt;55 → M0=Stage I、M1=II；≥55 → T1-2N0M0=I、T3或N1=II、T4a=III、T4b=IVA、M1=IVB。
 </div></details>
-<div class="foot">工具版本：2026-07-16（多發／雙側病灶取最大腫瘤徑；依 ATA 2025 全文 Fig.2/Rec.32 校正）｜資料僅在瀏覽器本機處理</div>
+<div class="foot">工具版本：2026-07-24（修正淋巴結「( x / y )」括號內含空格時無法解析，如 0/6；沿用多發取最大腫瘤徑、ATA 2025 Fig.2/Rec.32 校正）｜資料僅在瀏覽器本機處理</div>
 
 <script>
 const $=id=>document.getElementById(id);
@@ -175,7 +175,7 @@ function parseReport(t){
   let pos=0,tot=0,n1b=false;
   dxSec.split('\n').forEach(ln=>{
     if(/parathyroid|副甲/i.test(ln))return;
-    const m=ln.match(/\((\d+)\s*\/\s*(\d+)\)/);
+    const m=ln.match(/\(\s*(\d+)\s*\/\s*(\d+)\s*\)/);
     if(m&&/lymph\s*node|\bLN\b|metastatic|malignancy|淋巴/i.test(ln)){pos+=+m[1];tot+=+m[2];
       if(+m[1]>0&&/level\s*(II|III|IV|Vb|VB)\b|lateral|側頸/i.test(ln))n1b=true;}
   });
