@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Marantz Cinema 40 × DALI · Dirac ART 專屬調音手冊</title>
+<style>
+:root{
+ --ink:#1a2330; --soft:#5e6b7a; --line:#e6e9ef; --page:#f4f6fa; --card:#fff;
+ --acc:#e8602c; --acc2:#f08a3c; --accbg:#fdeee6;
+ --blue:#1f6feb; --bluebg:#e9f1fd; --teal:#0f9d8c; --tealbg:#e3f6f2;
+ --warn:#c0392b; --warnbg:#fdecea; --tip:#9a6a12; --tipbg:#fbf3df;
+ --shadow:0 1px 2px rgba(10,20,40,.05),0 12px 30px rgba(10,20,40,.08);
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--page);color:var(--ink);
+ font-family:"PingFang TC","Noto Sans TC",-apple-system,"Segoe UI",sans-serif;line-height:1.75;font-size:16px;}
+.wrap{max-width:820px;margin:0 auto;padding:0 16px 70px;}
+header.hero{background:radial-gradient(120% 120% at 80% 0%,#21314d 0%,#0e1726 60%);color:#fff;
+ padding:34px 22px 30px;border-radius:0 0 24px 24px;box-shadow:var(--shadow);}
+header.hero .ey{font-size:12.5px;letter-spacing:2px;color:var(--acc2);font-weight:700;text-transform:uppercase;}
+header.hero h1{margin:6px 0 8px;font-size:24px;line-height:1.35;}
+header.hero p{margin:0;font-size:14px;color:#b9c4d4;}
+header.hero .meta{margin-top:14px;display:flex;gap:8px;flex-wrap:wrap;}
+header.hero .meta span{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);border-radius:999px;padding:4px 12px;font-size:12.5px;}
+.intro{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px 18px;margin:18px 0;box-shadow:var(--shadow);font-size:15px;color:#33404f;}
+.intro b{color:var(--acc);}
+h2.sec{font-size:13px;letter-spacing:1.5px;color:var(--acc);text-transform:uppercase;margin:32px 4px 6px;font-weight:800;}
+.step{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px 18px 14px;margin:16px 0;box-shadow:var(--shadow);position:relative;}
+.step .num{position:absolute;top:-14px;left:16px;min-width:34px;height:34px;padding:0 8px;border-radius:17px;background:linear-gradient(135deg,var(--acc),var(--acc2));color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:16px;box-shadow:0 4px 10px rgba(232,96,44,.4);}
+.step h3{margin:12px 0 8px;font-size:18px;}
+.step p{margin:7px 0;font-size:15px;color:#33404f;}
+.step ul{margin:7px 0;padding-left:20px;font-size:14.5px;color:#33404f;}
+.step li{margin:4px 0;}
+.callout{border-radius:10px;padding:10px 13px;margin:10px 0;font-size:14px;}
+.c-key{background:var(--accbg);border-left:4px solid var(--acc);color:#8a3415;}
+.c-warn{background:var(--warnbg);border-left:4px solid var(--warn);color:#8a261c;}
+.c-tip{background:var(--tipbg);border-left:4px solid #d9a93b;color:#6f4e0e;}
+.c-ok{background:var(--tealbg);border-left:4px solid var(--teal);color:#0b6f62;}
+.callout b{color:inherit;}
+table{width:100%;border-collapse:collapse;font-size:13.5px;margin:10px 0;}
+th,td{border:1px solid #e3e8ee;padding:7px 9px;text-align:left;vertical-align:top;}
+th{background:#f6f8fb;font-weight:700;}
+td.c,th.c{text-align:center;}
+.big{font-weight:800;color:var(--acc);}
+code{background:#eef1f4;padding:1px 6px;border-radius:5px;font-size:13.5px;}
+.tocbox{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 18px;margin:16px 0;box-shadow:var(--shadow);font-size:14px;}
+.tocbox b{color:var(--acc);}
+.tocbox ol{margin:6px 0;padding-left:22px;}
+.tocbox li{margin:2px 0;}
+.final{background:linear-gradient(135deg,var(--tealbg),#eef9f6);border:1px solid #bce8df;border-radius:16px;padding:16px 18px;margin:20px 0;}
+.final h3{margin:0 0 8px;color:#0b7567;font-size:18px;}
+footer.src{font-size:12.5px;color:#7d8794;line-height:1.7;margin-top:28px;border-top:1px dashed var(--line);padding-top:16px;}
+footer.src b{color:var(--ink);}
+.ver{text-align:center;font-size:12px;color:#9aa4af;margin-top:10px;}
+@media print{ body{background:#fff;font-size:12.5px;} .step{box-shadow:none;} header.hero{background:#0e1726 !important;-webkit-print-color-adjust:exact;print-color-adjust:exact;} }
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="hero">
+  <div class="ey">DIRAC LIVE ART · 專屬調音手冊</div>
+  <h1>Marantz Cinema 40 × DALI Phantom<br>Dirac ART 調音手冊</h1>
+  <p>為盧醫師的實際器材客製 — 全套 DALI Phantom 嵌入式（4.2.2）＋雙 DALI SUB。依 HCFR David Davrous 的 94 分鐘 ART 教學方法，對應你的系統逐步簡化。</p>
+  <div class="meta"><span>🔊 4.2.2 配置</span><span>🎯 Dirac Live ART</span><span>⏱ 整套約 2 小時</span></div>
+</header>
+
+<div class="intro">
+本手冊是「照著做」的操作序：從<b>基礎 Bass Management</b> → <b>SUB 背板</b> → <b>Dirac 初始化</b> → <b>17 點測量</b> → <b>Speaker Groups</b> → <b>Bass Support</b> → <b>Target Curve</b> → <b>Correction Window</b> → <b>驗證與微調</b>。所有數值都已按你喇叭的官方規格＋安全餘裕算好，照填即可；每步的「為什麼」也一併寫上，方便你判斷要不要偏離。
+</div>
+
+<div class="tocbox">
+<b>你的系統</b>
+<table>
+<tr><th>角色</th><th>型號</th><th class="c">官方下潛(±3dB)</th></tr>
+<tr><td>前主聲道 ×2</td><td>DALI Phantom M-375</td><td class="c">57 Hz</td></tr>
+<tr><td>側環繞 ×2</td><td>DALI Phantom M-80 A</td><td class="c">48 Hz</td></tr>
+<tr><td>天空 ×2</td><td>DALI Phantom H-80</td><td class="c">46 Hz</td></tr>
+<tr><td>超低音 ×2</td><td>DALI SUB C-8 D</td><td class="c">33 Hz</td></tr>
+<tr><td>處理器</td><td>Marantz Cinema 40（9.4ch）</td><td class="c">—</td></tr>
+</table>
+配置 = <b>4.2.2</b>（前 L/R＋側環繞 L/R＋天空 ×2＋雙 SUB）。<b>無中置</b>（走 phantom center）、<b>目前無後環繞</b> → 影片的「Center 群組」「後排補強」對你先不適用，流程更單純。
+</div>
+
+<div class="callout c-warn" style="font-size:14.5px">
+<b>⚠️ 前提：三層授權要疊起來。</b>Cinema 40 自 2025-10 起支援 Dirac Live ART，但需 <code>Room Correction</code> → <code>Bass Control</code> → <code>ART（US$299）</code> 三個都啟用，才能做 Bass Support。校正前先確認三個都亮；沒有 ART 就只能做傳統 Dirac Live（僅修頻響、無主動低頻相消）。
+</div>
+<div class="callout c-ok" style="font-size:14.5px">
+<b>✅ 可跳過「用 REW 量喇叭」那步。</b>影片花 30 分鐘量每支喇叭真實下潛，只為安全設 Bass Support 下限——這已用官方數據幫你算好（下方各表已含安全餘裕），不必自己跑 REW。要追求極致才另外實測。
+</div>
+
+<h2 class="sec">Part A · 進 Dirac 之前的硬體設定</h2>
+
+<div class="step"><div class="num">1</div><h3>基礎 Bass Management（Cinema 40 本體）</h3>
+<ul>
+<li><b>全部喇叭設「Small」</b>（含前主聲道 M-375）。嵌入式喇叭低頻交給 SUB 最穩。</li>
+<li><b>Crossover 統一 80 Hz</b>（THX 標準，高於任何一支下潛下限、安全）。80 Hz 以下全給雙 SUB。</li>
+<li>路徑：設定選單 → 喇叭組態(Speaker Config) → 分頻(Crossovers)。⚠️喇叭沒設 Small，crossover 不會生效。</li>
+</ul>
+<div class="callout c-tip">這層是傳統 bass management，跟 ART 的 Bass Support 是<b>兩件事、要疊在一起</b>：先用 80Hz 把低頻導到 SUB，ART 再讓主喇叭在安全範圍內協同補低頻、相消駐波。</div>
+</div>
+
+<div class="step"><div class="num">2</div><h3>雙 SUB C-8 D 背板設定（背板只當「不擋路」）</h3>
+<p><b>接線一定用「LFE 輸入」，不是 LINE INPUT。</b>從 Cinema 40 的 Subwoofer Pre Out 各拉一條 RCA 到每台 SUB 的 LFE 孔；Cinema 40 設雙 sub（SW1→一台、SW2→另一台）。走 LFE 時背板 crossover 交給擴大機控制。</p>
+<table>
+<tr><th>背板控制</th><th class="c">建議值</th><th>說明</th></tr>
+<tr><td>CROSSOVER 旋鈕</td><td class="c"><b>轉到最大 120 Hz</b></td><td>走 LFE 時不作用，轉到底避免擋低頻；真正 crossover 在 Cinema 40 設 80 Hz</td></tr>
+<tr><td>VOLUME 旋鈕</td><td class="c"><b>中間（12 點鐘）</b></td><td>粗調，精細音量靠 Dirac＋Cinema 40 sub trim 自動對齊</td></tr>
+<tr><td>POWER MODE</td><td class="c"><b>AUTO</b></td><td>有訊號自動開；若很輕的低頻開頭會漏（醒太慢）→ 改 ON</td></tr>
+<tr><td>PHASE</td><td class="c"><b>0°</b></td><td>交給 Dirac 做時間對齊</td></tr>
+</table>
+<div class="callout c-key"><b>前後兩台四項全設一樣。</b>同型號、給 Dirac 一致起始條件最好；兩台距離差造成的時間差，ART 會自動用 delay 精細對齊，比背板手動 0/180 精準太多——不用一台 0、一台 180。</div>
+<p style="font-size:13.5px;color:var(--soft)"><b>Phase 0/180 是什麼：</b>SUB 推空氣的方向時機相對主喇叭（0°同向、180°反向）。擺不同位置→低頻到耳朵有時間差→交接點可能相加(飽滿)或相消(變薄)。沒跑校正的土法是 0/180 各聽、選飽滿的；你跑 ART → 放 0° 交給 Dirac。</p>
+</div>
+
+<h2 class="sec">Part B · Dirac 量測</h2>
+
+<div class="step"><div class="num">3</div><h3>Dirac 初始化：訊噪比與電平</h3>
+<ul>
+<li><b>訊噪比 +30 dB</b>：關冷氣、除濕機、家人別進來。Dirac 會即時顯示背景噪音；校正訊號要比它高約 30 dB（例：背景 −44 dB → 訊號約 −14 dB）。</li>
+<li><b>各聲道 Level 對齊</b>：主聲道對到約 −14 dB（±2 dB 內即可）；<b>SUB 比主聲道高 5–10 dB</b>（例 mains −14 → subs −6~−8），留 headroom 給演算法。</li>
+<li>用 Marantz 隨附校正麥克風接電腦跑 Dirac Live app（連 Cinema 40）。找到滿意的 Dirac 版本就<b>記下版號、別亂升級</b>。</li>
+</ul>
+</div>
+
+<div class="step"><div class="num">4</div><h3>17 點測量走位（你一人聽 → 集中皇帝位）</h3>
+<div class="callout c-key"><b>第 1 點 = 主聆位（皇帝位），是整個校正的參考點：</b>麥克風高度 ≈ 耳朵坐姿高度（100–110 cm）、距頭枕往前約 15 cm、<b>直立朝天</b>（配 90° 校正檔）。</div>
+<p>其餘 16 點：以你的頭為中心，想像一個<b>約 60 cm 邊長的立方體</b>，均勻散布、每點座標都不同。你一人聽 → <b>集中主聆位立方體</b>（別為多人擴散、會犧牲皇帝位）。建議 <b>17 點</b>（品質甜蜜點）。</p>
+<div class="callout c-warn"><b>測完務必把麥克風放回第 1 點原位</b>——校正前後比對要同一點才有意義。並先 <code>Save</code> 一份（進 Filter Design 前存檔，防當機重測）。</div>
+</div>
+
+<h2 class="sec">Part C · Filter Design（ART 核心）</h2>
+
+<div class="step"><div class="num">5</div><h3>Speaker Groups（你是 4 組）</h3>
+<table>
+<tr><th>群組</th><th>包含</th><th>說明</th></tr>
+<tr><td>G1 前主聲道</td><td>Front L / R（M-375）</td><td>主力，會協同補低頻</td></tr>
+<tr><td>G2 側環繞</td><td>Surround L / R（M-80A）</td><td>同型合一組</td></tr>
+<tr><td>G3 天空</td><td>Top L / R（H-80）</td><td>Atmos 喇叭合一組</td></tr>
+<tr><td>G4 超低音</td><td>SUB C-8 D ×2</td><td>主力 LFE 來源</td></tr>
+</table>
+</div>
+
+<div class="step"><div class="num">6</div><h3>Bass Support（ART 核心設定）</h3>
+<p><b>6-1　Lower Frequency（從幾 Hz 開始支援低頻，已含安全餘裕）</b></p>
+<table>
+<tr><th>群組</th><th class="c">官方下潛</th><th class="c">建議填入</th><th>理由</th></tr>
+<tr><td>G1 前置</td><td class="c">57 Hz</td><td class="c"><b>70 Hz</b></td><td>留餘裕，別逼 M-375 推它推不動的頻段</td></tr>
+<tr><td>G2 環繞</td><td class="c">48 Hz</td><td class="c"><b>60 Hz</b></td><td>同理留餘裕</td></tr>
+<tr><td>G3 天空</td><td class="c">46 Hz</td><td class="c"><b>60 Hz</b></td><td>天空喇叭崁頂，保守</td></tr>
+<tr><td>G4 SUB</td><td class="c">33 Hz</td><td class="c"><b>25 Hz</b></td><td>主力低頻，可低；嫌薄再勾 Infra-bass</td></tr>
+</table>
+<div class="callout c-warn"><b>⚠️ 紅線：Lower Frequency 寧可設高、不要設低。</b>設太低＝逼嵌入式喇叭發它能力外的低頻 → 失真、定位糊，激進的話<b>傷單體</b>。上表偏保守，先照跑；要更激進務必先做第 9 步失真檢查。</div>
+<p>Upper Frequency（支援上限）各群組留 <b>150 Hz</b>；LFE 上限可設 120 或 150 Hz。</p>
+
+<p style="margin-top:16px"><b>6-2　Support Level（dB，反直覺！「負越大＝支援越多」）</b></p>
+<p style="font-size:13.5px;color:var(--soft)">口訣：數字越接近 0 支援越少，−24 比 −6 支援更強。以下為 HCFR 推薦值、已移除你沒有的 Center：</p>
+<table>
+<tr><th>支援者 ↓＼被支援 →</th><th class="c">G1 前置</th><th class="c">G2 環繞</th><th class="c">G3 天空</th><th class="c">G4 SUB</th></tr>
+<tr><td>G1 前置</td><td class="c">−5</td><td class="c">−5</td><td class="c">−5</td><td class="c">−18</td></tr>
+<tr><td>G2 環繞</td><td class="c">−6</td><td class="c">−9</td><td class="c">依情況</td><td class="c">−18</td></tr>
+<tr><td>G3 天空</td><td class="c">−6</td><td class="c">−12</td><td class="c">−18</td><td class="c">−18</td></tr>
+<tr><td>G4 SUB</td><td class="c">−5</td><td class="c">−5</td><td class="c">−4</td><td class="c">自己</td></tr>
+</table>
+<p style="font-size:13.5px;color:var(--soft)">SUB 是主力 LFE（被支援者最重要，故給 −18 強支援）。這是起點值，跑完看第 9 步再微調。</p>
+</div>
+
+<div class="step"><div class="num">7</div><h3>Target Curve（目標曲線）</h3>
+<div class="callout c-ok"><b>最省事：直接載入 StormAudio 官方目標曲線。</b>Dirac 支援匯入現成 <code>.targetcurve</code>（各廠牌通用，含 Marantz）。StormAudio 官網 <a href="https://www.stormaudio.com/tools-guides/" target="_blank">Tools &amp; Guides</a> 免費提供 <code>StormAudio-DL-Targets.zip</code>，內含 3 條：<b>LCR Cinema</b>／<b>Surround Cinema</b>／<b>Subwoofer Cinema</b>。在「設定目標/Set Target」頁對各 group 載入：前置→LCR、環繞與天空→Surround、SUB→Subwoofer。Cinema 取向（低頻飽滿、高頻自然滾降），看電影很讚。</div>
+<p><b>或手動畫一條溫和 house curve：</b>低頻 20–80 Hz 緩抬 +3~4 dB、中頻大致平直、高頻從約 1 kHz 起緩降到 20 kHz 約 −3 dB（自然、保留 DALI 音色）。以下是<b>依你 DALI＋雙 SUB 的專屬微調</b>：</p>
+<p><b>7-1　想要「低頻更有力」— 靠 SUB，不要在前置硬拉</b></p>
+<ul>
+<li>❌ 別學一般教學「在前置 80 Hz 做 +6~7 dB 突起」——你 80 Hz 以下已全交給 SUB，在前置曲線那段硬拉<b>沒意義</b>。</li>
+<li>✅ 正解：target curve 的 <b>20–80 Hz 段緩抬 +3~5 dB（斜坡狀）</b>，由能下潛 33 Hz 的雙 SUB 發力，才推得動、有力不糊。還想更猛：SUB 群組 level 再 +2 dB。</li>
+</ul>
+<div class="callout c-warn"><b>抬完必做低頻失真檢查（第 9 步）</b>——低頻硬灌太多，SUB 會失真變「嗡嗡聲」而不是「有力」。失真拉高就把抬升量收回一點。</div>
+<p><b>7-2　想要「高頻好聽＋空間感」— 針對性小突起，別整段拉高</b></p>
+<div class="callout c-warn"><b>你的 DALI 軟半球高音延伸本來就好，「整段拉高」會刺、久聽累。</b>Dirac 在 1 kHz 後微降是刻意防疲勞。要通透靠<b>針對性小突起</b>：覺得悶→1 kHz 後那段拉回接近 0 dB；要空間感→5 kHz 做 +2 dB；人聲更清楚→1 kHz 做 +2 dB。上限 +2~3 dB，超過就刺。</div>
+<div class="callout c-tip"><b>存多版 AB 聽：</b>Cinema 40 有多個 slot，建議存 ①中性版（Dirac 原始）②低頻+高頻微抬版，同段音樂/電影切換比對。<b>數字是起點，耳朵是裁判。</b></div>
+</div>
+
+<div class="step"><div class="num">8</div><h3>Correction Window（校正頻寬）— 你做過吸音，建議收窄</h3>
+<p>你這間做過<b>隔音＋吸音工程</b>，中高頻的房間影響已被動處理掉大半。因此建議：</p>
+<ul>
+<li><b>把 correction window 收窄到 20 Hz – 500 Hz</b>，讓 Dirac 專注修最棘手的低頻駐波，中高頻保留 DALI 原始音色（避免「Dirac 味」太重）。</li>
+<li>另存一版<b>全頻（20 Hz–20 kHz）</b>對照，兩版都聽、選喜歡的。</li>
+</ul>
+</div>
+
+<h2 class="sec">Part D · 驗證與微調</h2>
+
+<div class="step"><div class="num">9</div><h3>計算 → 匯出 → 驗證</h3>
+<ul>
+<li>按 <b>Calculate</b>，看模擬：Spread 越窄越好、SUB 群組曲線接近 target。OK 就 Export 到 Marantz slot（通常 3 個 slot，可存全頻/窄頻/house curve 三版比較）。</li>
+<li>麥克風放回主聆位第 1 點 → 用 REW 量校正後，看 4 指標：<b>頻率響應</b>線性、<b>相位</b>在 30–120 Hz 拉直、<b>群延遲</b>從 30 Hz 起接近 0、<b>瀑布圖</b>低頻乾淨不拖尾。</li>
+</ul>
+<div class="callout c-warn"><b>⚠️ 失真檢查（別跳過）：</b>ART 讓主喇叭多發低頻，可能拉高失真。REW 量 LFE distortion：20 Hz &lt; 1%、100 Hz 起 &lt; 0.2%。若整段失真拉高 → 回第 6 步把 Lower Frequency 調高、Support Level 往 0 靠（放寬）。</div>
+</div>
+
+<div class="step"><div class="num">10</div><h3>處理器端微調 + 聆聽驗收</h3>
+<ul>
+<li>複製 Dirac profile 保留原版；用 REW SPL meter（Z weighting）＋ 400 Hz–4 kHz 粉紅噪音，以左前置為參考，各聲道 trim 調到 ±0.1 dB。<b>SUB 不要動</b>（會破壞 ART 成果）。</li>
+<li>你目前<b>無後環繞</b>，影片的「後排 +2.5~3 dB 補強」先略過；未來加購後環繞（同型 M-80A）再套用。</li>
+</ul>
+<table>
+<tr><th>聆聽驗收片單</th><th>測試重點</th></tr>
+<tr><td>Blade Runner 2049 開頭</td><td>極低頻暴擊 + Atmos 空間感</td></tr>
+<tr><td>Ready Player One 賽車</td><td>低頻動態 + Atmos 物件移動</td></tr>
+<tr><td>John Wick 霰彈槍</td><td>短促低頻衝擊，校正後應乾淨俐落不拖泥</td></tr>
+</table>
+</div>
+
+<div class="final">
+<h3>📌 一句話流程</h3>
+<p>確認 ART 授權亮 → 全喇叭 Small／crossover 80Hz → SUB 背板照第 2 步 → +30dB 訊噪比＋電平對齊 → 一人聽做 17 點集中皇帝位 → 4 組分組 → Bass Support 照第 6 步填（下限寧高勿低）→ Target 載 StormAudio 官方曲線或畫 house curve → Correction Window 收 20–500Hz → 算完做失真檢查 → 對照多版選耳朵喜歡的。<b>整套約 2 小時。</b></p>
+</div>
+
+<footer class="src">
+<b>專屬對象：</b>盧醫師 Marantz Cinema 40 ＋ 全套 DALI Phantom 嵌入式（4.2.2）＋雙 DALI SUB C-8 D。<br>
+<b>方法依據：</b>HCFR David Davrous《Dirac ART 完整校正》94 分鐘教學（<a href="https://www.youtube.com/watch?v=ajcLuwpYLJk">原片</a>），對應你的實際器材簡化；喇叭下潛取自 DALI 官網（±3dB），Bass Support 下限已加安全餘裕。<br>
+<b>相關：</b>通用版 <a href="dirac-live-tuning.html">Dirac Live 調教篇</a>／<a href="dirac-art-full-calibration.html">Dirac ART 完整校正教學</a>。實際校正以你機器上的失真檢查為最終依據。
+<div class="ver">工具版本：2026-07-25</div>
+</footer>
+</div>
+</body>
+</html>
