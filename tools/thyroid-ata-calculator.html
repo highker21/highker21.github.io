@@ -112,7 +112,7 @@ TSH(初始；2025 之後改依動態反應調整)：high &lt;0.1｜intermediate-
 RAI(Rec.32)：low 不建議常規(選擇性 30–50mCi)；low-int/int-high「可考慮 consider」(30–100，最高150mCi)；high / M1「建議常規 recommend」(100–150mCi，已知病灶可更高)。<br>
 AJCC 8th(年齡分界55)：&lt;55 → M0=Stage I、M1=II；≥55 → T1-2N0M0=I、T3或N1=II、T4a=III、T4b=IVA、M1=IVB。
 </div></details>
-<div class="foot">工具版本：2026-07-24b（新增「☢️ 帶入碘131排程單」一鍵串接：自動帶病人資料＋ATA劑量建議到 RAI-scheduler；沿用淋巴結括號空格修正、多發取最大腫瘤徑、ATA 2025 Fig.2/Rec.32）｜資料僅在瀏覽器本機處理</div>
+<div class="foot">工具版本：2026-07-28（<b>分期判讀修正</b>：① ETE 比對前先移除否定子句——「No strap muscle invasion」不再被誤判為侵犯帶狀肌；② AJCC 8th：T3b 需「肉眼」侵犯帶狀肌，顯微 ETE 不升 T 期；③ 報告載明的 pT 優先於工具推導，兩者不一致時明確提示；④ 支援「Tumor size: 2.8 cm in greatest dimension」單一最大徑寫法。沿用 7/24b 碘131 排程單串接、淋巴結括號空格修正、多發取最大腫瘤徑、ATA 2025 Fig.2/Rec.32）｜資料僅在瀏覽器本機處理</div>
 
 <script>
 const $=id=>document.getElementById(id);
@@ -147,6 +147,10 @@ function parseReport(t){
   let sizes=[];
   for(const m of t.matchAll(/Tumou?r\s*size[：:\s]*([\d.]+\s*[xX×][\d.\sxX×]+)/ig)){const d=maxdim(m[1]);if(d!=null)sizes.push(d);}
   if(!sizes.length)for(const m of t.matchAll(/(?:^|\n)\s*[-●*]?\s*Size[：:\s]*([\d.]+\s*[xX×][\d.\sxX×]+)/ig)){const d=maxdim(m[1]);if(d!=null)sizes.push(d);}
+  // ⚠️ 上面兩條都要求「長x寬x高」，但報告也常只寫單一最大徑：
+  //    "Tumor size: 2.8 cm in greatest dimension."
+  //    以前這種寫法抓不到 → size 落空 → 分期退成 Tx、風險被低估（往不安全的方向錯）。
+  if(!sizes.length)for(const m of t.matchAll(/Tumou?r\s*size[：:\s]*([\d.]+)\s*cm/ig)){const d=parseFloat(m[1]);if(!isNaN(d))sizes.push(d);}
   F.size=sizes.length?String(Math.max(...sizes)):'';
   // 多發性：≥2 顆腫瘤或報告明述多發即多發；左右葉皆有腫瘤＝雙側（雙側且最大>1cm 才計為高風險 bilat）
   const multiFoci=sizes.length>=2||/bilateral\s*multifocal|multifocal|多發|multiple\s+(?:classic\s+|invasive\s+|foci|papillary|carcinoma|PTC|tumou?rs?)|Number[：:\s]*[2-9]/i.test(t);
@@ -155,11 +159,29 @@ function parseReport(t){
   else if(multiFoci)F.multi='uni';
   else F.multi='none';
   // ETE：抓所有葉的 ETE 行，取最重（t4 > gross > micro）；報告常直接寫「grossly/microscopically to <構造>」而非"present"
-  const eteLines=((t.match(/Extra[- ]?thyroid(?:al)?\s*extension[：:\s]*[^\n]*/ig)||[]).concat(t.match(/Tumou?r\s*extension[：:\s]*[^\n]*/ig)||[])).join(' ').toLowerCase();
-  const eteNeg=/not\s*identif|absent|no\s*(extra|evidence)|not\s*present|free\b|無|未見/.test(eteLines);
+  const eteRaw=((t.match(/Extra[- ]?thyroid(?:al)?\s*extension[：:\s]*[^\n]*/ig)||[]).concat(t.match(/Tumou?r\s*extension[：:\s]*[^\n]*/ig)||[])).join(' ').toLowerCase();
+  // ⚠️ 先把「否定子句」拿掉再做關鍵字比對。
+  //    報告常在同一行既肯定又否定，例如：
+  //      "present, microscopically to perithyroid soft tissue. No strap muscle invasion is revealed by desmin stain."
+  //    舊版只看句中有沒有 strap，這句照樣命中 → 誤判 gross ETE → T3b。
+  //    實際踩過：0.8cm、顯微 ETE、desmin 證實未侵犯帶狀肌，病理科下 pT1a，工具卻報 pT3b
+  //    → High risk → TSH<0.1 → RAI 100–150mCi。與切緣那段已防 "uninvolved" 是同一類問題。
+  //    子句以逗號/句號/分號為界，避免把後面真正的陽性描述一起吃掉
+  //    （"no strap muscle invasion, but gross extension into trachea" 仍要判 T4）。
+  const dropNeg=s=>s
+    .replace(/\bno\s+(?:evidence\s+of\s+)?[a-z\s-]*?(?:invasion|involvement|extension)[^.;,]*/g,' ')
+    .replace(/\b(?:not|non)[\s-]?(?:identified|present|involved|seen|revealed|noted)[^.;,]*/g,' ')
+    .replace(/\bwithout\s+[^.;,]*/g,' ')
+    .replace(/\bfree\s+of\s+[^.;,]*/g,' ')
+    .replace(/(?:未見|未發現|無)[^。；;,]*/g,' ');
+  const eteLines=dropNeg(eteRaw);
+  const eteNeg=/not\s*identif|absent|no\s*(extra|evidence)|not\s*present|free\b|無|未見/.test(eteRaw)&&!/present|involv|侵/.test(eteLines);
   const eteHas=/strap|trachea|larynx|esophag|perithyroid|soft\s*tissue|recurrent|prevertebral|carotid|mediastin|grossly|microscop|present|involv|侵|氣管|喉|食道|帶狀肌/.test(eteLines);
   if(/trachea|larynx|esophag|recurrent|prevertebral|carotid|mediastin|氣管|喉|食道/.test(eteLines))F.ete='t4';
-  else if(/gross|strap|大體|肉眼|帶狀肌/.test(eteLines))F.ete='gross';
+  // AJCC 8th：T3b 限「肉眼」侵犯帶狀肌。單看到 strap 不夠，要有 gross/肉眼的字樣，
+  // 或明確寫成侵犯帶狀肌；顯微鏡下的侵犯不算（第 8 版已把顯微 ETE 移出 T 分期）。
+  else if(/gross|大體|肉眼/.test(eteLines)&&/strap|帶狀肌/.test(eteLines))F.ete='gross';
+  else if(/gross|大體|肉眼/.test(eteLines)&&!/microscop|顯微/.test(eteLines))F.ete='gross';
   else if(eteHas&&!eteNeg)F.ete='micro';
   else F.ete='none';
   const lvi=(t.match(/(?:Lymph[- ]?)?vascular\s*invasion[：:\s]*([^\n]*)/i)||[])[1]||'';
@@ -201,13 +223,32 @@ function readF(){return{age:+$('f_age').value||null,sex:$('f_sex').value,hist:$(
   lnsize:parseFloat($('f_lnsize').value)||null,ene:$('f_ene').value==='1',m:$('f_m').value==='1',
   pt:$('f_pt').value.trim(),pn:$('f_pn').value.trim(),mol:$('f_mol').value};}
 
-function Tstage(F){
-  if(F.ete==='t4')return{t:'T4',t4:true,t4b:/prevertebral|carotid|mediastin/i.test($('rpt').value||'')};
+// 由 ETE 與大小推導 T（沒有載明 pT 時才用）
+function Tinferred(F){
+  const t4b=/prevertebral|carotid|mediastin/i.test($('rpt').value||'');
+  if(F.ete==='t4')return{t:'T4',t4:true,t4b};
   if(F.ete==='gross')return{t:'T3b',t4:false};
-  const s=F.size;let t='Tx';
-  if(F.pt){const m=F.pt.match(/T(\w+)/i);if(m)t='T'+m[1];}
-  else if(s!=null){t=s<=1?'T1a':s<=2?'T1b':s<=4?'T2':'T3a';}
-  return{t,t4:false,t3a:/T3a/.test(t)||(s!=null&&s>4)};
+  const s=F.size;
+  // AJCC 8th：顯微 ETE 已完全移出 T 分期，不升期，所以這裡只看大小
+  const t=s!=null?(s<=1?'T1a':s<=2?'T1b':s<=4?'T2':'T3a'):'Tx';
+  return{t,t4:false,t3a:/T3a/.test(t)};
+}
+function Tstage(F){
+  // ⚠️ 報告載明的 pT 優先於任何推導值。
+  //    舊版在讀 F.pt 之前就先 return T3b/T4，等於「推測覆蓋病理科的判讀」——
+  //    實際踩過：報告寫 (pT1aN0)，工具仍輸出 pT3b（第 208 行的 F.pt 分支永遠到不了）。
+  const inf=Tinferred(F);
+  if(F.pt){
+    const m=F.pt.match(/T(\w+)/i);
+    if(m){
+      const t='T'+m[1];
+      return{t,t4:/T4/i.test(t),
+             t4b:/T4b/i.test(t)||(/T4/i.test(t)&&inf.t4b),
+             t3a:/T3a/i.test(t),
+             conflict:(t.toUpperCase()!==inf.t.toUpperCase()&&inf.t!=='Tx')?inf.t:null};
+    }
+  }
+  return inf;
 }
 function deriveN(F){if(F.pn)return F.pn.replace(/^N?/,'N');if(F.lnpos>0)return F.lnloc==='N1b'?'N1b':'N1a';if(F.lntot>0)return'N0';return'Nx';}
 function ajcc(F){const T=Tstage(F);const N=deriveN(F);const age=F.age;if(age==null)return{stage:'?'};
@@ -291,7 +332,10 @@ function run(){
   if(R.additive)h+=`<li class="note">↑ 加成原則：≥2 個 low-intermediate 因子 → 升為 intermediate-high</li>`;
   if(!R.hi.length&&!R.ih.length&&!R.li.length)h+=`<li>無明確升風險因子 → 低風險</li>`;
   if(R.molNote)h+=`<li class="note">分子：${R.molNote}</li>`;
-  h+=`<li>AJCC 8th 分期：${F.age!=null?F.age+' 歲'+(F.age<55?'（<55）':'（≥55）'):'年齡?'} → <b>Stage ${S.stage}</b>（${Mst}${/N1/.test(N)?'、'+N:''}${T.t4?'、'+T.t:''}）</li></ul>`;
+  h+=`<li>AJCC 8th 分期：${F.age!=null?F.age+' 歲'+(F.age<55?'（<55）':'（≥55）'):'年齡?'} → <b>Stage ${S.stage}</b>（${Mst}${/N1/.test(N)?'、'+N:''}${T.t4?'、'+T.t:''}）</li>`;
+  // 報告載明的 pT 與工具推導不一致時要講出來，不要默默選一個
+  if(T.conflict)h+=`<li class="trig">▲ 分期不一致：採用報告載明的 <b>${T.t}</b>；工具由 ETE／大小推導為 ${T.conflict}。請人工確認何者正確。</li>`;
+  h+=`</ul>`;
 
   h+=`<span class="sec">3. 治療建議</span><ul>`;
   h+=`<li>TSH 目標（初始）：<b>${tshGoal(R.tier)}</b>（2025 ATA 之後改依動態反應調整：excellent→正常範圍、incomplete→below normal）</li>`;
