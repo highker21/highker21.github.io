@@ -127,6 +127,10 @@ footer.src b{color:var(--ink);}
 <div class="step"><div class="num">4</div><h3>17 點測量走位（你一人聽 → 集中皇帝位）</h3>
 <div class="callout c-key"><b>第 1 點 = 主聆位（皇帝位），是整個校正的參考點：</b>麥克風高度 ≈ 耳朵坐姿高度（100–110 cm）、距頭枕往前約 15 cm、<b>直立朝天</b>（配 90° 校正檔）。</div>
 <p>其餘 16 點：以你的頭為中心，想像一個<b>約 60 cm 邊長的立方體</b>，均勻散布、每點座標都不同。你一人聽 → <b>集中主聆位立方體</b>（別為多人擴散、會犧牲皇帝位）。建議 <b>17 點</b>（品質甜蜜點）。</p>
+<div class="callout c-tip"><b>17 點 vs 9 點：建議做一次對比實驗（2026-07-31 修訂）</b><br>
+Dirac 原廠的邏輯是「<b>喇叭數＋1</b>」——你 8 支喇叭 → 理想值是 <b>9 點</b>；軟體最低要求 6–9 點。本手冊原本建議的 17 點是「品質甜蜜點」，兩者並不衝突，但值得實測比較。<br>
+丹爸（調過數十套系統）的實務警告是：<b>量太多點，資料量過大時系統可能直接 crash</b>；而且以兩聲道而言，<b>量太多反而會失去活力</b>。<br>
+<b>做法</b>：Cinema 40 有 3 個 Preset，剛好夠。先跑 <b>9 點</b>存一個、再跑 <b>17 點</b>存一個，同一段音樂直接 A/B 聽——<b>以你的耳朵為準</b>，不必迷信點數。</div>
 <div class="callout c-warn"><b>測完務必把麥克風放回第 1 點原位</b>——校正前後比對要同一點才有意義。並先 <code>Save</code> 一份（進 Filter Design 前存檔，防當機重測）。</div>
 </div>
 
@@ -149,9 +153,14 @@ footer.src b{color:var(--ink);}
 <tr><td>G1 前置</td><td class="c">57 Hz</td><td class="c"><b>70 Hz</b></td><td>留餘裕，別逼 M-375 推它推不動的頻段</td></tr>
 <tr><td>G2 環繞</td><td class="c">48 Hz</td><td class="c"><b>60 Hz</b></td><td>同理留餘裕</td></tr>
 <tr><td>G3 天空</td><td class="c">46 Hz</td><td class="c"><b>60 Hz</b></td><td>天空喇叭崁頂，保守</td></tr>
-<tr><td>G4 SUB</td><td class="c">33 Hz</td><td class="c"><b>25 Hz</b></td><td>主力低頻，可低；嫌薄再勾 Infra-bass</td></tr>
+<tr><td>G4 SUB</td><td class="c">33 Hz</td><td class="c"><b>25 Hz</b></td><td>主力低頻，可低。<b>Infra-bass 先不用勾</b>——見下方說明</td></tr>
 </table>
 <div class="callout c-warn"><b>⚠️ 紅線：Lower Frequency 寧可設高、不要設低。</b>設太低＝逼嵌入式喇叭發它能力外的低頻 → 失真、定位糊，激進的話<b>傷單體</b>。上表偏保守，先照跑；要更激進務必先做第 9 步失真檢查。</div>
+<div class="callout c-tip"><b>關於 Infra-bass 這個勾選項（2026-07-31 修訂）</b><br>
+ART 介面上那個 Infra-bass 核取方塊，作用是把 <b>20 Hz 以下</b>的極低頻<b>不經處理直接放行</b>，讓低頻延伸到器材能力極限。<br>
+但 <b>SUB C-8 D 的官方下潛是 33 Hz</b>——20 Hz 以下你的器材本來就發不出來，<b>勾了不會有感</b>。<br>
+原廠與丹爸都建議：要放進 ART 的超低音，最好能下潛到 20 Hz 且<b>在 20 Hz 仍維持約 100 dB</b> 輸出。這是未來換 SUB 時的選購門檻，不是現在的問題。</div>
+
 <p>Upper Frequency（支援上限）各群組留 <b>150 Hz</b>；LFE 上限可設 120 或 150 Hz。</p>
 
 <p style="margin-top:16px"><b>6-2　Support Level（dB，反直覺！「負越大＝支援越多」）</b></p>
@@ -166,7 +175,30 @@ footer.src b{color:var(--ink);}
 <p style="font-size:13.5px;color:var(--soft)">SUB 是主力 LFE（被支援者最重要，故給 −18 強支援）。這是起點值，跑完看第 9 步再微調。</p>
 </div>
 
-<div class="step"><div class="num">7</div><h3>Target Curve（目標曲線）</h3>
+<div class="step"><div class="num">7</div><h3>ART 其他必看設定（2026-07-31 新增）</h3>
+
+<div class="callout c-key"><b>LFE Reference —— 你沒有中置，這項要特別設</b><br>
+這項決定 LFE 訊號校正後<b>要對準哪一支喇叭的時間</b>；設哪支，超低音的定位就會靠向那邊。<br>
+一般系統的最佳選擇是<b>中置</b>——但<b>你走 phantom center、沒有實體中置</b>。Dirac 原廠對這個情況的回答是：<b>設在左或右揚聲器都可以</b>。<br>
+⚠️ 這項先前手冊沒寫，你可能一直是預設值。校正時記得確認它不是指到你沒有的中置。</div>
+
+<div class="callout c-tip"><b>snapshot（快照）—— 保住你滿意的那次結果</b><br>
+Dirac 之所以叫 <b>Dirac Live</b>，是因為運算要<b>送到瑞典的伺服器</b>去算。副作用是：<b>即使參數一模一樣，兩次算出來的結果也可能不同</b>。想回到之前某次特別滿意的設定，沒有快照就回不去。<br>
+而且 <b>Cinema 40 只有 3 個 Preset</b>（StormAudio 有 20 個），保存空間很緊——快照是額外一層，而且可以用來<b>比對不同參數各自算出來的結果</b>，不必每次重算。<br>
+<b>建議</b>：每次算出滿意的結果就立刻存快照，尤其是在動任何參數之前。</div>
+
+<div class="callout c-tip"><b>Fsiso —— 看到不用動它</b><br>
+控制面板上有一串叫 <code>Fsiso</code> 的字母，它是 <b>ART 的最高處理頻段</b>（整個系統的上限），<b>預設 150 Hz</b>。<br>
+有趣的是——連 Dirac 原廠代表自己都忘記那是哪幾個字的縮寫了。<br>
+<b>一般情況不需要改</b>，維持 150 Hz 即可。列在這裡只是讓你知道那是什麼，不用去調它。</div>
+
+<div class="callout c-warn"><b>⚠️ Cinema 40 的 ART 支援點數上限是 98 點</b><br>
+ART 內部有個「支援點數」（原廠叫 <code>CROSS TERMS</code>）的概念——<b>每一組喇叭去支援另一組，就會消耗點數</b>，總量有限。<br>
+<b>Denon 與 Marantz 一律固定 98 點</b>，不管機器多高階，因為受 DSP 板算力限制；StormAudio 則有 400 多點。<br>
+你是 4 組互相支援的配置，<b>有沒有可能撞到上限，要實跑才知道</b>。校正時如果發現某些支援設定沒生效、或 ART 自動砍掉某些項目，先往這個方向想。<br>
+真的撞到的話，處理方式是<b>用 Spread 判斷哪些支援值得留</b>：某個群組加進去若 Spread 沒變窄，就把點數省下來給別人。</div>
+
+<h3>Target Curve（目標曲線）</h3>
 <div class="callout c-ok"><b>最省事：直接載入 StormAudio 官方目標曲線。</b>Dirac 支援匯入現成 <code>.targetcurve</code>（各廠牌通用，含 Marantz）。StormAudio 官網 <a href="https://www.stormaudio.com/tools-guides/" target="_blank">Tools &amp; Guides</a> 免費提供 <code>StormAudio-DL-Targets.zip</code>，內含 3 條：<b>LCR Cinema</b>／<b>Surround Cinema</b>／<b>Subwoofer Cinema</b>。在「設定目標/Set Target」頁對各 group 載入：前置→LCR、環繞與天空→Surround、SUB→Subwoofer。Cinema 取向（低頻飽滿、高頻自然滾降），看電影很讚。</div>
 <p><b>或手動畫一條溫和 house curve：</b>低頻 20–80 Hz 緩抬 +3~4 dB、中頻大致平直、高頻從約 1 kHz 起緩降到 20 kHz 約 −3 dB（自然、保留 DALI 音色）。以下是<b>依你 DALI＋雙 SUB 的專屬微調</b>：</p>
 <p><b>7-1　想要「低頻更有力」— 靠 SUB，不要在前置硬拉</b></p>
@@ -220,7 +252,25 @@ footer.src b{color:var(--ink);}
 <b>專屬對象：</b>盧醫師 Marantz Cinema 40 ＋ 全套 DALI Phantom 嵌入式（4.2.2）＋雙 DALI SUB C-8 D。<br>
 <b>方法依據：</b>HCFR David Davrous《Dirac ART 完整校正》94 分鐘教學（<a href="https://www.youtube.com/watch?v=ajcLuwpYLJk">原片</a>），對應你的實際器材簡化；喇叭下潛取自 DALI 官網（±3dB），Bass Support 下限已加安全餘裕。<br>
 <b>相關：</b>通用版 <a href="dirac-live-tuning.html">Dirac Live 調教篇</a>／<a href="dirac-art-full-calibration.html">Dirac ART 完整校正教學</a>。實際校正以你機器上的失真檢查為最終依據。
-<div class="ver">工具版本：2026-07-25</div>
+<div class="ver">工具版本：2026-07-31</div>
+<h3>本次修訂依據（2026-07-31）</h3>
+<div class="callout c-tip">
+本次修訂依據丹爸 2026-01-26 影片《Dirac 原廠與美國 DRC 名家的 ART 技術對談》整理而成，
+內容為 <b>Dirac 原廠代表 Joss</b> 與 <b>Magic Beans 作者 Joe N-Tell</b> 的問答，
+完整整理見站上 <a href="dirac-art-interview.html">Dirac ART 原廠技術對談重點整理</a>。<br><br>
+<b>本次改了什麼：</b>
+<ul>
+<li><b>新增</b>「ART 其他必看設定」一節：LFE Reference（你沒中置該怎麼設）、snapshot、Fsiso、98 點支援上限</li>
+<li><b>修正</b> Infra-bass 的建議——你的 SUB 下潛 33 Hz，勾了不會有感</li>
+<li><b>補充</b> 17 點 vs 9 點的對比實驗建議（原廠邏輯是喇叭數＋1）</li>
+</ul>
+<b>經核對後維持不變的：</b>Support Level 的方向（−24 比 −6 支援更強）與官方文件一致；
+Lower Frequency「寧可設高不要設低」的邏輯，與原廠「防止小喇叭被灌進撐不住的低頻」一致。<br><br>
+<b>刻意沒有套用的一條：</b>丹爸建議「超低音支援上限不要拉到 150 Hz、不要坐滿」，
+前提是<b>主喇叭低頻下潛夠好</b>。你的 M-375 下潛 57 Hz 不屬於這一類，
+因此本手冊<b>維持 150 Hz</b> 不變。
+</div>
+
 </footer>
 </div>
 </body>
