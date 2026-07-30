@@ -91,7 +91,7 @@ Promise.resolve([JSON.parse(document.getElementById('icddata').textContent),JSON
   (SEM.abbr||[]).forEach(a=>{a.dx=expandPx(a.px); a.lc=a.a.toLowerCase();});
   $('loading').style.display='none'; $('tbl').style.display='';
   const cov=j.meta;
-  $('ft').innerHTML=`索引：${DATA.length.toLocaleString()} 筆可申報 ICD-10-CM ｜ 主訴 ${SEM.complaints.length} 項＋斷詞詞庫 ｜ ${j.meta.rw_basis} ｜ 版本 ${j.meta.version} (${j.meta.built})<br>資料來源：衛生福利部／中央健康保險署「ICD-10-CM・ICD-10-PCS 2023 中文版」＋健保署「Tw-DRG 分類表・適用權重表 3.4 版」（data.gov.tw／健保署開放資料）。RW 為近似值僅供參考；診斷碼中文名以官方檔為準，部分官方原檔字元有亂碼。工具版本：${j.meta.built}`;
+  $('ft').innerHTML=`索引：${DATA.length.toLocaleString()} 筆可申報 ICD-10-CM ｜ 主訴 ${SEM.complaints.length} 項＋斷詞詞庫 ｜ ${j.meta.rw_basis} ｜ 版本 ${j.meta.version} (${j.meta.built})<br>資料來源：衛生福利部／中央健康保險署「ICD-10-CM・ICD-10-PCS 2023 中文版」＋健保署「Tw-DRG 分類表・適用權重表 3.4 版」（data.gov.tw／健保署開放資料）。RW 為近似值僅供參考；診斷碼中文名以官方檔為準，部分官方原檔字元有亂碼。工具版本：2026-07-30（名稱直接命中優先排序）`;
   const pq=new URLSearchParams(location.search).get('q')||'';
   if(pq){$('q').value=pq;}
   render(pq);
@@ -179,10 +179,26 @@ function render(q){
   if(onlyrw && res.length===0 && merged.size>0){ res=[...merged.values()]; noRwShown=true; }
   // 排序：同側優先(soft) → RW 由高到低
   const lat=ex.lat;
+  // ⭐ 名稱直接命中優先（2026-07-30 修）
+  // 原本只依 RW 由高到低排，結果打「血便」時 K92.1 黑便排到第 62 名、
+  // 前面全是大腸癌等高權重鑑別診斷——使用者的感受是「查不到這個診斷」。
+  // 名稱直接命中＝使用者指名要的那一個，應該排在鑑別展開之前；
+  // 鑑別診斷仍照 RW 由高到低列在後面，DRG 權重排序的原意不變。
+  const qLit = litToks.length>0;
+  const nameHit = x => qLit && litToks.every(t=>(x.d.z+' '+(x.d.e||'')+' '+x.d.c).toLowerCase().includes(t));
+  const nameExact = x => qLit && x.d.z.replace(/[，,、（(].*$/,'').toLowerCase()===q.trim().toLowerCase();
+  // 主訴同義詞也算「使用者指名的那一個」：官方 ICD 中文名不一定用臨床慣用語，
+  // 例如打「血便」時，K92.1 的官方名是「黑便」、字面上比不中，就會被埋在
+  // 幾十個高權重癌症底下。用主訴自帶的同義詞把對應的症狀碼拉上來。
+  const synToks = [...new Set(cps.flatMap(c=>[c.cc,...(c.syn||[])]).map(t=>String(t||'').toLowerCase()).filter(t=>t.length>1))];
+  const synHit = x => synToks.length>0 && synToks.some(t=>(x.d.z+' '+(x.d.e||'')).toLowerCase().includes(t));
   res.sort((a,b)=>{
     if(trauma){const sa=/^[ST]/.test(a.d.c)?0:1, sb=/^[ST]/.test(b.d.c)?0:1; if(sa!==sb)return sa-sb;}  // 外傷模式：急性外傷碼(S/T)優先
+    const ea=nameExact(a)?0:1, eb=nameExact(b)?0:1; if(ea!==eb)return ea-eb;   // ① 名稱完全相同
+    const na=nameHit(a)?0:1,  nb=nameHit(b)?0:1;  if(na!==nb)return na-nb;     // ② 名稱含查詢字
+    const sa2=synHit(a)?0:1, sb2=synHit(b)?0:1;   if(sa2!==sb2)return sa2-sb2;  // ③ 名稱含主訴同義詞
     if(lat){const la=a.d.z.includes(lat)?0:1, lb_=b.d.z.includes(lat)?0:1; if(la!==lb_)return la-lb_;}
-    return (b.d.r==null?-1:b.d.r)-(a.d.r==null?-1:a.d.r);
+    return (b.d.r==null?-1:b.d.r)-(a.d.r==null?-1:a.d.r);                       // ④ 其餘照 RW 由高到低
   });
 
   // 展開/斷詞提示列（直接搜尋不顯示斷詞）
