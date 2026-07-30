@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>檔案快速合併成 PDF</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+  :root{
+    --accent:#0e6e6e; --ink:#132020; --line:#d8e4e4; --soft:#f4f9f9; --bg:#eaf2f2;
+    --warn:#b4540a; --warnbg:#fff4e8; --good:#0a7d43; --goodbg:#eafaf0; --muted:#5f7070;
+  }
+  *{box-sizing:border-box;}
+  body{font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;
+    color:var(--ink); background:var(--bg); margin:0; padding:0 16px 60px; line-height:1.7;}
+  .wrap{max-width:1000px; margin:0 auto;}
+  h1{font-size:23px; margin:22px 0 4px;}
+  .sub{color:var(--muted); font-size:14px; margin-bottom:16px;}
+  .card{background:#fff; border:1px solid var(--line); border-radius:10px; padding:16px 18px; margin:14px 0;}
+  .privacy{background:var(--goodbg); border-color:#b5e3c8; font-size:14px;}
+  .privacy b{color:var(--good);}
+
+  /* 拖放區 */
+  #drop{border:2px dashed #9ec4c4; border-radius:12px; background:var(--soft);
+    padding:34px 20px; text-align:center; cursor:pointer; transition:.15s;}
+  #drop:hover,#drop.over{background:#e6f4f4; border-color:var(--accent);}
+  #drop i{font-size:34px; color:var(--accent); display:block; margin-bottom:10px;}
+  #drop .big{font-size:16px; font-weight:600;}
+  #drop .small{color:var(--muted); font-size:13px; margin-top:6px;}
+
+  /* 清單 */
+  #list{list-style:none; padding:0; margin:0; display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(168px,1fr)); gap:12px;}
+  #list li{background:#fff; border:1px solid var(--line); border-radius:9px; padding:9px;
+    position:relative; cursor:grab;}
+  #list li.drag{opacity:.35;}
+  #list li.over{outline:2px solid var(--accent); outline-offset:1px;}
+  .thumb{width:100%; height:128px; background:var(--soft); border:1px solid var(--line);
+    border-radius:5px; display:flex; align-items:center; justify-content:center; overflow:hidden;}
+  .thumb img{max-width:100%; max-height:100%; display:block;}
+  .thumb .ph{color:#9ec4c4; font-size:30px;}
+  .idx{position:absolute; top:4px; left:4px; background:var(--accent); color:#fff;
+    font-size:11.5px; min-width:20px; height:20px; line-height:20px; text-align:center;
+    border-radius:10px; padding:0 6px; font-weight:600;}
+  .badge{position:absolute; top:4px; right:4px; background:#31555588; color:#fff;
+    font-size:10.5px; border-radius:9px; padding:1px 7px;}
+  .fname{font-size:12px; margin-top:7px; word-break:break-all; line-height:1.45;
+    max-height:3em; overflow:hidden;}
+  .meta{font-size:11px; color:var(--muted); margin-top:2px;}
+  .ops{display:flex; gap:5px; margin-top:7px;}
+  .ops button{flex:1; border:1px solid var(--line); background:#fff; border-radius:5px;
+    padding:4px 0; cursor:pointer; font-size:12px; color:var(--ink);}
+  .ops button:hover{background:var(--soft); border-color:var(--accent);}
+  .ops button.del:hover{background:#fdecec; border-color:#c33; color:#c33;}
+  .range{width:100%; margin-top:6px; font-size:11.5px; padding:3px 5px;
+    border:1px solid var(--line); border-radius:4px;}
+
+  /* 設定 */
+  .row{display:flex; flex-wrap:wrap; gap:16px; align-items:center;}
+  label.opt{font-size:14px; display:flex; align-items:center; gap:6px;}
+  select,input[type=text]{border:1px solid var(--line); border-radius:6px; padding:6px 9px;
+    font-size:14px; font-family:inherit;}
+  #go{background:var(--accent); color:#fff; border:0; border-radius:8px;
+    padding:13px 26px; font-size:16px; font-weight:600; cursor:pointer;}
+  #go:hover{background:#0b5a5a;}
+  #go:disabled{background:#9ec4c4; cursor:not-allowed;}
+  .ghost{background:#fff; color:var(--accent); border:1px solid var(--accent);
+    border-radius:8px; padding:9px 16px; font-size:14px; cursor:pointer;}
+  .ghost:hover{background:var(--soft);}
+
+  #msg{margin-top:12px; font-size:14px;}
+  #msg .err{background:var(--warnbg); border:1px solid #f0c69a; color:var(--warn);
+    padding:9px 13px; border-radius:7px;}
+  #msg .ok{background:var(--goodbg); border:1px solid #b5e3c8; color:var(--good);
+    padding:9px 13px; border-radius:7px;}
+  #bar{height:6px; background:var(--line); border-radius:3px; overflow:hidden;
+    margin-top:10px; display:none;}
+  #bar div{height:100%; width:0; background:var(--accent); transition:width .2s;}
+  footer{color:var(--muted); font-size:12.5px; margin-top:34px; padding-top:12px;
+    border-top:1px solid var(--line);}
+  .hint{font-size:13px; color:var(--muted);}
+  code{background:var(--soft); padding:1px 5px; border-radius:4px; font-size:12.5px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <h1><i class="fa-regular fa-file-pdf" style="color:var(--accent)"></i> 檔案快速合併成 PDF</h1>
+  <div class="sub">把多個 PDF 與圖片，依你排的順序合併成一份 PDF。可拖拉排序、旋轉、指定頁碼範圍。</div>
+
+  <div class="card privacy">
+    <b><i class="fa-solid fa-lock"></i> 檔案不會上傳</b>——全部在你的瀏覽器裡處理，關掉頁面就沒了。沒有伺服器、沒有第三方 API，可離線使用（第一次載入後）。處理病歷、報告、同意書都適用。
+  </div>
+
+  <div id="drop">
+    <i class="fa-solid fa-cloud-arrow-up"></i>
+    <div class="big">把檔案拖進來，或點這裡選擇</div>
+    <div class="small">支援 PDF、JPG、PNG、WebP、GIF、BMP　·　可一次選多個　·　也可以直接 Ctrl/⌘+V 貼上圖片</div>
+    <input type="file" id="picker" multiple accept="application/pdf,image/*" style="display:none">
+  </div>
+
+  <div class="card" id="listCard" style="display:none">
+    <div class="row" style="justify-content:space-between; margin-bottom:12px;">
+      <div><b id="count">0</b> 個檔案 <span class="hint">· 拖拉縮圖可調整順序</span></div>
+      <button class="ghost" id="clear"><i class="fa-regular fa-trash-can"></i> 全部清除</button>
+    </div>
+    <ul id="list"></ul>
+  </div>
+
+  <div class="card" id="optCard" style="display:none">
+    <div class="row">
+      <label class="opt">頁面尺寸
+        <select id="size">
+          <option value="keep">保持原尺寸（推薦）</option>
+          <option value="a4">全部統一成 A4</option>
+          <option value="letter">全部統一成 Letter</option>
+        </select>
+      </label>
+      <label class="opt">圖片邊界
+        <select id="margin">
+          <option value="0">無邊界（滿版）</option>
+          <option value="24" selected>小邊界</option>
+          <option value="48">大邊界</option>
+        </select>
+      </label>
+      <label class="opt">檔名
+        <input type="text" id="outname" value="合併檔案" size="16">.pdf
+      </label>
+    </div>
+    <div class="row" style="margin-top:16px;">
+      <button id="go"><i class="fa-solid fa-object-group"></i> 合併並下載</button>
+      <span class="hint" id="est"></span>
+    </div>
+    <div id="bar"><div></div></div>
+    <div id="msg"></div>
+  </div>
+
+  <div class="card">
+    <b>使用說明</b>
+    <ul style="margin:8px 0 0; padding-left:22px; font-size:14px;">
+      <li><b>排序</b>：直接拖拉縮圖。左上角數字就是合併後的順序。</li>
+      <li><b>頁碼範圍</b>（只有 PDF 有）：填 <code>1-3,5,8-</code> 這種寫法。留空＝全部頁面。<code>8-</code> 代表第 8 頁到最後。</li>
+      <li><b>旋轉</b>：每按一次轉 90°，PDF 會整份一起轉。</li>
+      <li><b>頁面尺寸</b>：混合 PDF 與圖片時，「保持原尺寸」會讓每頁維持自己的大小；要印出來裝訂建議選 A4。</li>
+    </ul>
+  </div>
+
+  <footer>
+    工具版本：2026-07-30（首版：PDF＋圖片合併、拖拉排序、旋轉、頁碼範圍、A4 統一）<br>
+    純前端處理，檔案不離開你的裝置。合併結果請自行確認頁數與順序無誤。
+  </footer>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script>
+const PDFJS_OK = (() => {
+  try { pdfjsLib.GlobalWorkerOptions.workerSrc =
+    'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js'; return true; }
+  catch(e) { return false; }
+})();
+
+const SIZES = { a4:[595.28,841.89], letter:[612,792] };
+let items = [];          // {id,file,kind,name,size,pages,rot,range,thumb}
+let seq = 0;
+
+const $ = s => document.querySelector(s);
+const drop=$('#drop'), picker=$('#picker'), list=$('#list');
+
+/* ---------- 加入檔案 ---------- */
+drop.addEventListener('click', ()=>picker.click());
+picker.addEventListener('change', e=>addFiles(e.target.files));
+['dragenter','dragover'].forEach(ev=>drop.addEventListener(ev, e=>{
+  e.preventDefault(); drop.classList.add('over');}));
+['dragleave','drop'].forEach(ev=>drop.addEventListener(ev, e=>{
+  e.preventDefault(); drop.classList.remove('over');}));
+drop.addEventListener('drop', e=>addFiles(e.dataTransfer.files));
+document.addEventListener('paste', e=>{
+  const fs=[...(e.clipboardData?.files||[])];
+  if(fs.length) addFiles(fs);
+});
+
+async function addFiles(fileList){
+  const fs=[...fileList];
+  for(const f of fs){
+    const isPdf = f.type==='application/pdf' || /\.pdf$/i.test(f.name);
+    const isImg = f.type.startsWith('image/');
+    if(!isPdf && !isImg){ flash(`跳過「${f.name}」——不是 PDF 或圖片`, 'err'); continue; }
+    const it={ id:++seq, file:f, kind:isPdf?'pdf':'img', name:f.name,
+               size:f.size, pages:null, rot:0, range:'', thumb:null };
+    items.push(it); render();
+    makeThumb(it);                       // 非同步補縮圖，不擋 UI
+  }
+  render();
+}
+
+async function makeThumb(it){
+  try{
+    if(it.kind==='img'){
+      it.thumb = URL.createObjectURL(it.file);
+      it.pages = 1;
+    } else {
+      const buf = await it.file.arrayBuffer();
+      // 頁數用 pdf-lib（可靠），縮圖用 pdf.js（可能失敗，失敗就算了）
+      try{
+        const doc = await PDFLib.PDFDocument.load(buf, {ignoreEncryption:true});
+        it.pages = doc.getPageCount();
+      }catch(e){ it.pages='?'; it.bad = e.message; }
+      if(PDFJS_OK){
+        try{
+          const pdf = await pdfjsLib.getDocument({data:buf.slice(0)}).promise;
+          const pg = await pdf.getPage(1);
+          const vp = pg.getViewport({scale:1});
+          const sc = Math.min(300/vp.width, 300/vp.height);
+          const v2 = pg.getViewport({scale:sc});
+          const cv = document.createElement('canvas');
+          cv.width=v2.width; cv.height=v2.height;
+          await pg.render({canvasContext:cv.getContext('2d'), viewport:v2}).promise;
+          it.thumb = cv.toDataURL('image/jpeg',0.7);
+        }catch(e){ /* 縮圖失敗不影響合併 */ }
+      }
+    }
+  }catch(e){ it.bad = e.message; }
+  render();
+}
+
+/* ---------- 畫面 ---------- */
+function render(){
+  $('#listCard').style.display = items.length?'block':'none';
+  $('#optCard').style.display  = items.length?'block':'none';
+  $('#count').textContent = items.length;
+  list.innerHTML='';
+  items.forEach((it,i)=>{
+    const li=document.createElement('li');
+    li.draggable=true; li.dataset.id=it.id;
+    const kb = it.size>1048576 ? (it.size/1048576).toFixed(1)+' MB'
+                               : Math.max(1,Math.round(it.size/1024))+' KB';
+    li.innerHTML = `
+      <span class="idx">${i+1}</span>
+      <span class="badge">${it.kind==='pdf' ? (it.pages!=null?it.pages+' 頁':'PDF') : '圖片'}</span>
+      <div class="thumb">${ it.thumb
+          ? `<img src="${it.thumb}" style="transform:rotate(${it.rot}deg)">`
+          : `<span class="ph"><i class="fa-regular ${it.kind==='pdf'?'fa-file-pdf':'fa-image'}"></i></span>` }</div>
+      <div class="fname" title="${esc(it.name)}">${esc(it.name)}</div>
+      <div class="meta">${kb}${it.rot?` · 轉 ${it.rot}°`:''}${it.bad?' · ⚠️ 讀取異常':''}</div>
+      <div class="ops">
+        <button data-a="rot" title="旋轉 90°"><i class="fa-solid fa-rotate-right"></i></button>
+        <button data-a="up" title="往前"><i class="fa-solid fa-arrow-left"></i></button>
+        <button data-a="down" title="往後"><i class="fa-solid fa-arrow-right"></i></button>
+        <button data-a="del" class="del" title="移除"><i class="fa-regular fa-trash-can"></i></button>
+      </div>
+      ${ it.kind==='pdf'
+         ? `<input class="range" data-a="range" placeholder="頁碼範圍，如 1-3,5（空=全部）" value="${esc(it.range)}">`
+         : '' }`;
+    li.querySelectorAll('button').forEach(b=>b.onclick=ev=>{
+      ev.stopPropagation(); act(it.id, b.dataset.a);
+    });
+    const r=li.querySelector('input[data-a=range]');
+    if(r) r.oninput = ()=>{ it.range = r.value; updateEst(); };
+    list.appendChild(li);
+  });
+  wireDrag();
+  updateEst();
+}
+const esc = s => String(s).replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+function act(id,a){
+  const i = items.findIndex(x=>x.id===id); if(i<0) return;
+  if(a==='del'){ items.splice(i,1); }
+  else if(a==='rot'){ items[i].rot=(items[i].rot+90)%360; }
+  else if(a==='up' && i>0){ [items[i-1],items[i]]=[items[i],items[i-1]]; }
+  else if(a==='down' && i<items.length-1){ [items[i+1],items[i]]=[items[i],items[i+1]]; }
+  render();
+}
+$('#clear').onclick = ()=>{ items=[]; render(); $('#msg').innerHTML=''; };
+
+/* 拖拉排序 */
+let dragId=null;
+function wireDrag(){
+  list.querySelectorAll('li').forEach(li=>{
+    li.ondragstart = e=>{ dragId=+li.dataset.id; li.classList.add('drag');
+      e.dataTransfer.effectAllowed='move'; e.dataTransfer.setData('text/plain',''); };
+    li.ondragend   = ()=>{ dragId=null; list.querySelectorAll('li').forEach(x=>
+      x.classList.remove('drag','over')); };
+    li.ondragover  = e=>{ e.preventDefault(); if(+li.dataset.id!==dragId) li.classList.add('over'); };
+    li.ondragleave = ()=> li.classList.remove('over');
+    li.ondrop      = e=>{
+      e.preventDefault(); li.classList.remove('over');
+      const to=+li.dataset.id; if(dragId==null||to===dragId) return;
+      const from=items.findIndex(x=>x.id===dragId), at=items.findIndex(x=>x.id===to);
+      const [m]=items.splice(from,1); items.splice(at,0,m); render();
+    };
+  });
+}
+
+/* ---------- 頁碼範圍解析 ---------- */
+// 回傳 0-based 頁索引陣列；語法錯誤或超界丟 Error
+function parseRange(txt, total){
+  if(!txt || !txt.trim()) return [...Array(total).keys()];
+  const out=[];
+  for(const part of txt.split(/[,，]/)){
+    const t=part.trim(); if(!t) continue;
+    const m = t.match(/^(\d+)\s*(-)?\s*(\d+)?$/);
+    if(!m) throw new Error(`看不懂「${t}」`);
+    const a=+m[1];
+    const b = m[2] ? (m[3]?+m[3]:total) : a;
+    if(a<1||b>total||a>b) throw new Error(`「${t}」超出範圍（此檔共 ${total} 頁）`);
+    for(let p=a;p<=b;p++) out.push(p-1);
+  }
+  return out;
+}
+
+function updateEst(){
+  let n=0, unknown=false;
+  for(const it of items){
+    if(it.kind==='img'){ n++; continue; }
+    if(typeof it.pages!=='number'){ unknown=true; continue; }
+    try{ n += parseRange(it.range, it.pages).length; }
+    catch(e){ unknown=true; }
+  }
+  $('#est').textContent = items.length
+    ? `預計輸出 ${n} 頁${unknown?'（部分檔案待確認）':''}`
+    : '';
+}
+
+/* ---------- 合併 ---------- */
+$('#go').onclick = async ()=>{
+  const btn=$('#go'), bar=$('#bar'), fill=bar.firstElementChild;
+  $('#msg').innerHTML=''; btn.disabled=true; bar.style.display='block'; fill.style.width='0';
+  try{
+    const out = await PDFLib.PDFDocument.create();
+    const mode = $('#size').value;
+    const mg   = +$('#margin').value;
+    let done=0, pageCount=0;
+
+    for(const it of items){
+      const buf = await it.file.arrayBuffer();
+
+      if(it.kind==='img'){
+        let img;
+        const isPng = it.file.type==='image/png' || /\.png$/i.test(it.name);
+        try{
+          img = isPng ? await out.embedPng(buf) : await out.embedJpg(buf);
+        }catch(e){
+          // WebP/GIF/BMP 或格式不符 → 先用 canvas 轉成 PNG
+          img = await out.embedPng(await toPngBytes(it.file));
+        }
+        let w=img.width, h=img.height;
+        if(it.rot%180===90) [w,h]=[h,w];
+        let pw,ph;
+        if(mode==='keep'){ pw=w+mg*2; ph=h+mg*2; }
+        else{
+          const [a,b]=SIZES[mode];
+          [pw,ph] = (w>h) ? [b,a] : [a,b];       // 橫圖自動橫向
+        }
+        const page = out.addPage([pw,ph]);
+        const box = Math.min((pw-mg*2)/w, (ph-mg*2)/h);
+        const dw=w*box, dh=h*box;
+        const cx=(pw-dw)/2, cy=(ph-dh)/2;
+        // 依旋轉角度換算繪製原點
+        const r=it.rot%360;
+        const opt={ width:(r%180===90)?dh:dw, height:(r%180===90)?dw:dh,
+                    rotate:PDFLib.degrees(r) };
+        if(r===0)        page.drawImage(img,{x:cx, y:cy, ...opt});
+        else if(r===90)  page.drawImage(img,{x:cx+dw, y:cy, ...opt});
+        else if(r===180) page.drawImage(img,{x:cx+dw, y:cy+dh, ...opt});
+        else             page.drawImage(img,{x:cx, y:cy+dh, ...opt});
+        pageCount++;
+      } else {
+        const src = await PDFLib.PDFDocument.load(buf, {ignoreEncryption:true});
+        const total = src.getPageCount();
+        const idx = parseRange(it.range, total);
+        const copied = await out.copyPages(src, idx);
+        for(const p of copied){
+          if(it.rot) p.setRotation(PDFLib.degrees(
+            ((p.getRotation().angle||0) + it.rot) % 360));
+          if(mode!=='keep'){
+            const [a,b]=SIZES[mode];
+            const {width:cw,height:ch}=p.getSize();
+            p.setSize(...(cw>ch?[b,a]:[a,b]));   // 只調頁框，不縮內容
+          }
+          out.addPage(p); pageCount++;
+        }
+      }
+      done++; fill.style.width = Math.round(done/items.length*100)+'%';
+    }
+
+    if(pageCount===0) throw new Error('沒有任何頁面可以輸出——請確認頁碼範圍');
+
+    const bytes = await out.save();
+    let fn = ($('#outname').value||'合併檔案').replace(/[\/\\:*?"<>|]/g,'_');
+    if(!/\.pdf$/i.test(fn)) fn+='.pdf';
+    const url = URL.createObjectURL(new Blob([bytes],{type:'application/pdf'}));
+    const a=document.createElement('a'); a.href=url; a.download=fn; a.click();
+    setTimeout(()=>URL.revokeObjectURL(url), 4000);
+    flash(`<i class="fa-solid fa-circle-check"></i> 完成：${items.length} 個檔案 → <b>${esc(fn)}</b>，共 <b>${pageCount}</b> 頁（${(bytes.length/1048576).toFixed(2)} MB）`, 'ok');
+  }catch(e){
+    flash(`<i class="fa-solid fa-circle-exclamation"></i> 合併失敗：${esc(e.message)}`, 'err');
+  }finally{
+    btn.disabled=false; setTimeout(()=>{bar.style.display='none';}, 600);
+  }
+};
+
+// WebP / GIF / BMP → PNG bytes（pdf-lib 只吃 PNG/JPG）
+function toPngBytes(file){
+  return new Promise((res,rej)=>{
+    const img=new Image(), u=URL.createObjectURL(file);
+    img.onload=()=>{
+      const c=document.createElement('canvas');
+      c.width=img.naturalWidth; c.height=img.naturalHeight;
+      c.getContext('2d').drawImage(img,0,0);
+      URL.revokeObjectURL(u);
+      c.toBlob(b=> b ? b.arrayBuffer().then(res) : rej(new Error('圖片轉換失敗')), 'image/png');
+    };
+    img.onerror=()=>{ URL.revokeObjectURL(u); rej(new Error('這個圖片格式讀不出來')); };
+    img.src=u;
+  });
+}
+
+function flash(html, cls){
+  $('#msg').innerHTML = `<div class="${cls}">${html}</div>`;
+}
+</script>
+</body>
+</html>
