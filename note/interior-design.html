@@ -53,8 +53,8 @@ let cache = null;
 
 async function load() {
   if (cache) return cache;
-  $('m').className = 'msg ok'; $('m').textContent = '下載中（約 3.7 MB）…';
-  const r = await fetch('interior-design.enc.json?v=b2e71bc555', { cache: 'force-cache' });
+  $('m').className = 'msg ok'; $('m').textContent = '下載中（約 4.9 MB）…';
+  const r = await fetch('interior-design.enc.json?v=e9b8a17b94', { cache: 'force-cache' });
   if (!r.ok) throw new Error('讀取失敗 HTTP ' + r.status);
   cache = await r.json();
   return cache;
