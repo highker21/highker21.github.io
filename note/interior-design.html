@@ -45,7 +45,7 @@
 </div>
 
 <script>
-// 內容以 AES-256-GCM 加密存在 citizen-judge.enc.json，金鑰由密碼經 PBKDF2-SHA256（60 萬次）導出。
+// 內容以 AES-256-GCM 加密存在 interior-design.enc.json，金鑰由密碼經 PBKDF2-SHA256（60 萬次）導出。
 // 沒有密碼就只有密文——這不是「用 JS 蓋一層輸入框」的假保護。
 const $ = id => document.getElementById(id);
 const b64 = s => Uint8Array.from(atob(s), c => c.charCodeAt(0));
@@ -53,8 +53,8 @@ let cache = null;
 
 async function load() {
   if (cache) return cache;
-  $('m').className = 'msg ok'; $('m').textContent = '下載中（約 0.5 MB）…';
-  const r = await fetch('interior-design.enc.json', { cache: 'force-cache' });
+  $('m').className = 'msg ok'; $('m').textContent = '下載中（約 3.7 MB）…';
+  const r = await fetch('interior-design.enc.json?v=b2e71bc555', { cache: 'force-cache' });
   if (!r.ok) throw new Error('讀取失敗 HTTP ' + r.status);
   cache = await r.json();
   return cache;
