@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>門診常用診斷碼快查</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+  :root{--accent:#0f6e64;--ink:#132020;--line:#d8e4e4;--soft:#f4f9f9;--bg:#eaf2f2;--muted:#5f7070;
+        --good:#0a7d43;--goodbg:#eafaf0;--hot:#c0562c;}
+  *{box-sizing:border-box;}
+  body{font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;color:var(--ink);
+       background:var(--bg);margin:0;padding:0 14px 70px;line-height:1.65;}
+  .wrap{max-width:960px;margin:0 auto;}
+  h1{font-size:22px;margin:20px 0 3px;}
+  .sub{color:var(--muted);font-size:14px;margin-bottom:14px;}
+  .sub a{color:var(--accent);}
+  .searchbar{position:sticky;top:0;background:var(--bg);padding:10px 0 8px;z-index:20;}
+  #q{width:100%;border:2px solid var(--accent);border-radius:10px;padding:13px 15px;font-size:17px;
+     font-family:inherit;background:#fff;}
+  #q:focus{outline:none;box-shadow:0 0 0 3px rgba(15,110,100,.15);}
+  .hint{font-size:13px;color:var(--muted);margin-top:6px;}
+  .nav{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 4px;}
+  .nav a{font-size:13px;color:var(--accent);text-decoration:none;border:1px solid var(--line);
+         background:#fff;border-radius:99px;padding:4px 11px;}
+  .nav a:hover{border-color:var(--accent);}
+  h2{font-size:15px;letter-spacing:.05em;color:var(--muted);margin:26px 0 10px;padding-bottom:6px;
+     border-bottom:1px solid var(--line);}
+  h2 i{color:var(--accent);margin-right:6px;}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:9px;}
+  .row{background:#fff;border:1px solid var(--line);border-left:4px solid var(--accent);
+       border-radius:8px;padding:9px 11px;cursor:pointer;transition:.12s;position:relative;}
+  .row:hover{border-color:var(--accent);box-shadow:0 2px 8px rgba(0,0,0,.07);}
+  .row.z{border-left-color:var(--hot);}
+  .code{font-weight:700;color:var(--accent);font-size:15.5px;letter-spacing:.02em;}
+  .row.z .code{color:var(--hot);}
+  .zh{font-size:14px;margin-top:1px;}
+  .en{font-size:11.5px;color:var(--muted);margin-top:2px;line-height:1.35;}
+  .copied{position:absolute;inset:0;background:var(--goodbg);border-radius:6px;display:flex;
+          align-items:center;justify-content:center;color:var(--good);font-weight:700;font-size:14px;}
+  .none{background:#fff;border:1px dashed var(--line);border-radius:8px;padding:24px;
+        text-align:center;color:var(--muted);font-size:14px;}
+  .none a{color:var(--accent);}
+  footer{color:var(--muted);font-size:12.5px;margin-top:36px;padding-top:12px;border-top:1px solid var(--line);}
+  .tip{background:#fff;border:1px solid var(--line);border-radius:9px;padding:11px 14px;
+       font-size:13.5px;color:var(--muted);margin:12px 0 4px;}
+  .tip b{color:var(--ink);}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1><i class="fa-solid fa-list-check" style="color:var(--accent)"></i> 門診常用診斷碼快查</h1>
+  <div class="sub">依門診使用頻率整理，不依 DRG 權重排序。點一下就複製代碼。
+    <a href="icd10-cmi-mapper.html">要依權重找主診斷 → 用另一支</a></div>
+
+  <div class="searchbar">
+    <input id="q" placeholder="打中文、代碼或口語都可以：看報告 / 打疫苗 / 甲亢 / E11.9 / DM" autocomplete="off">
+    <div class="hint" id="cnt"></div>
+  </div>
+
+  <div class="tip">
+    <b>為什麼另外做一支？</b>另一支「主訴 → 診斷碼」是依 Tw-DRG 權重排序、用來找高 CMI 的主診斷；
+    但門診天天在打的 <b>Z 碼沒有住院權重</b>，在那支永遠排最後面。這支就是專門放這些的。
+  </div>
+
+  <nav class="nav" id="nav"></nav>
+  <div id="list"></div>
+
+  <footer>
+    收錄 124 個代碼，全部取自衛生福利部中央健康保險署「ICD-10-CM/PCS 2023 中文版」，
+    並已排除 USE≠1 的不可申報父層代碼（例如 N18.3、K21.0、E78.4）。<br>
+    代碼與中文名以官方檔為準；此表為個人門診速查用，實際申報請依當次病況與健保規範判斷。<br>
+    工具版本：2026-07-30（首版）
+  </footer>
+</div>
+
+<script>
+const DATA=[{"cat": "行政・預防・諮詢", "icon": "fa-clipboard-list", "items": [{"c": "Z09", "z": "來院接受惡性腫瘤以外病況完整治療後之追蹤檢查", "e": "Encounter for follow-up examination after completed treatment for conditions other than malignant neoplasm", "a": "看報告 追蹤 回診 複診 治療後追蹤 報告 抽血報告 聽報告"}, {"c": "Z08", "z": "來院接受惡性腫瘤完整治療後之追蹤檢查", "e": "Encounter for follow-up examination after completed treatment for malignant neoplasm", "a": "癌症追蹤 腫瘤追蹤 看報告"}, {"c": "Z23", "z": "來院接受疫苗接種", "e": "Encounter for immunization", "a": "打疫苗 疫苗 接種 預防針 流感疫苗 新冠疫苗 肺炎鏈球菌 帶狀皰疹"}, {"c": "Z00.00", "z": "來院接受一般醫學檢查無異常發現", "e": "Encounter for general adult medical examination without abnormal findings", "a": "健檢 一般檢查 體檢 成人健檢 無異常"}, {"c": "Z00.01", "z": "來院接受一般醫學檢查伴有異常發現", "e": "Encounter for general adult medical examination with abnormal findings", "a": "健檢異常 體檢異常"}, {"c": "Z01.89", "z": "來院接受其他特定之特殊檢查", "e": "Encounter for other specified special examinations", "a": "其他檢查 抽血檢查 檢驗"}, {"c": "Z13.1", "z": "來院接受糖尿病篩檢", "e": "Encounter for screening for diabetes mellitus", "a": "糖尿病篩檢 血糖篩檢"}, {"c": "Z71.3", "z": "飲食諮詢與監測", "e": "Dietary counseling and surveillance", "a": "飲食諮詢 營養諮詢 衛教 飲食衛教"}, {"c": "Z71.82", "z": "運動諮詢", "e": "Exercise counseling", "a": "運動諮詢 運動衛教"}, {"c": "Z71.89", "z": "其他特定之諮詢", "e": "Other specified counseling", "a": "諮詢 衛教 其他諮詢 說明"}, {"c": "Z71.9", "z": "諮詢，未明示", "e": "Counseling, unspecified", "a": "諮詢 未明示諮詢"}, {"c": "Z79.4", "z": "長期（現在之）服用胰島素", "e": "Long term (current) use of insulin", "a": "長期胰島素 打胰島素 胰島素治療中 打針 insulin"}, {"c": "Z79.84", "z": "長期(現存)使用口服降糖藥治療", "e": "Long term (current) use of oral hypoglycemic drugs", "a": "長期口服降血糖藥 吃血糖藥 降糖藥"}, {"c": "Z79.899", "z": "長期 （現在之）藥物治療", "e": "Other long term (current) drug therapy", "a": "長期用藥 長期服藥 慢性處方"}, {"c": "Z76.0", "z": "重複開立處方", "e": "Encounter for issue of repeat prescription", "a": "領藥 拿藥 慢性處方箋 領處方"}, {"c": "Z51.81", "z": "來院接受治療性藥物值監測", "e": "Encounter for therapeutic drug level monitoring", "a": "藥物監測 藥物濃度 監測"}, {"c": "Z72.0", "z": "菸草", "e": "Tobacco use", "a": "抽菸 吸菸 菸癮"}]}, {"cat": "糖尿病", "icon": "fa-droplet", "items": [{"c": "E11.9", "z": "第二型糖尿病，未伴有併發症", "e": "Type 2 diabetes mellitus without complications", "a": "DM 第二型糖尿病 糖尿病 糖尿 T2DM 二型 血糖"}, {"c": "E11.65", "z": "第二型糖尿病，伴有高血糖", "e": "Type 2 diabetes mellitus with hyperglycemia", "a": "高血糖 血糖高 控制不良"}, {"c": "E11.69", "z": "第二型糖尿病，伴有其他特定併發症", "e": "Type 2 diabetes mellitus with other specified complication", "a": "其他併發症"}, {"c": "E11.8", "z": "第二型糖尿病，伴有未明示之併發症", "e": "Type 2 diabetes mellitus with unspecified complications", "a": "未明示併發症"}, {"c": "E11.21", "z": "第二型糖尿病，伴有糖尿病的腎臟病變", "e": "Type 2 diabetes mellitus with diabetic nephropathy", "a": "糖尿病腎病變 DKD"}, {"c": "E11.22", "z": "第二型糖尿病，糖尿病的慢性腎臟疾病", "e": "Type 2 diabetes mellitus with diabetic chronic kidney disease", "a": "糖尿病腎臟病 CKD 腎病變"}, {"c": "E11.319", "z": "第二型糖尿病，伴有糖尿病的視網膜病變，未伴有黃斑部水腫", "e": "Type 2 diabetes mellitus with unspecified diabetic retinopathy without macular edema", "a": "視網膜病變 DR 眼底"}, {"c": "E11.311", "z": "第二型糖尿病，伴有糖尿病的視網膜病變，伴有黃斑部水腫", "e": "Type 2 diabetes mellitus with unspecified diabetic retinopathy with macular edema", "a": "視網膜病變 黃斑部水腫"}, {"c": "E11.40", "z": "第二型糖尿病，伴有糖尿病的神經病變", "e": "Type 2 diabetes mellitus with diabetic neuropathy, unspecified", "a": "神經病變 DPN 麻"}, {"c": "E11.42", "z": "第二型糖尿病，伴有糖尿病的多發神經病變", "e": "Type 2 diabetes mellitus with diabetic polyneuropathy", "a": "多發性神經病變 手麻腳麻"}, {"c": "E11.43", "z": "第二型糖尿病，伴有糖尿病的自主(多發)神經病變", "e": "Type 2 diabetes mellitus with diabetic autonomic (poly)neuropathy", "a": "自主神經病變"}, {"c": "E11.51", "z": "第二型糖尿病，伴有糖尿病的周邊血管病變，未伴有壞疽", "e": "Type 2 diabetes mellitus with diabetic peripheral angiopathy without gangrene", "a": "周邊血管病變 PAD"}, {"c": "E11.621", "z": "第二型糖尿病，伴有足部潰瘍", "e": "Type 2 diabetes mellitus with foot ulcer", "a": "糖尿病足 足部潰瘍 傷口"}, {"c": "E11.630", "z": "第二型糖尿病，伴有牙周疾病", "e": "Type 2 diabetes mellitus with periodontal disease", "a": "牙周病"}, {"c": "E11.649", "z": "第二型糖尿病，伴有低血糖，未伴有昏迷", "e": "Type 2 diabetes mellitus with hypoglycemia without coma", "a": "低血糖 無昏迷"}, {"c": "E11.10", "z": "第二型糖尿病，伴有酮酸中毒，未伴有昏迷", "e": "Type 2 diabetes mellitus with ketoacidosis without coma", "a": "酮酸中毒 DKA"}, {"c": "E11.00", "z": "第二型糖尿病，伴有高滲透壓，未伴有非酮病之高血糖-高滲透壓的昏迷", "e": "Type 2 diabetes mellitus with hyperosmolarity without nonketotic hyperglycemic-hyperosmolar coma (NKHHC)", "a": "高滲透壓 HHS"}, {"c": "E10.9", "z": "第一型糖尿病，未伴有併發症", "e": "Type 1 diabetes mellitus without complications", "a": "第一型糖尿病 T1DM 一型"}, {"c": "E10.65", "z": "第一型糖尿病，伴有高血糖", "e": "Type 1 diabetes mellitus with hyperglycemia", "a": "第一型 高血糖"}, {"c": "E13.9", "z": "其他特定糖尿病，未伴有併發症", "e": "Other specified diabetes mellitus without complications", "a": "其他特定糖尿病 次發性糖尿病"}, {"c": "R73.03", "z": "糖尿病前期", "e": "Prediabetes", "a": "糖尿病前期 prediabetes 前期"}, {"c": "R73.01", "z": "空腹血糖異常", "e": "Impaired fasting glucose", "a": "空腹血糖異常 IFG"}, {"c": "R73.02", "z": "葡萄糖耐受不良(口服)", "e": "Impaired glucose tolerance (oral)", "a": "葡萄糖耐量異常 IGT"}, {"c": "E16.2", "z": "低血糖", "e": "Hypoglycemia, unspecified", "a": "低血糖"}]}, {"cat": "甲狀腺", "icon": "fa-shield-heart", "items": [{"c": "E03.9", "z": "甲狀腺低下", "e": "Hypothyroidism, unspecified", "a": "甲狀腺低下 甲低 甲狀腺功能低下 hypothyroidism 低下"}, {"c": "E03.8", "z": "其他特定甲狀腺低下", "e": "Other specified hypothyroidism", "a": "其他甲狀腺低下"}, {"c": "E06.3", "z": "自體免疫的甲狀腺炎", "e": "Autoimmune thyroiditis", "a": "橋本 自體免疫甲狀腺炎 慢性甲狀腺炎"}, {"c": "E05.00", "z": "毒性瀰漫性甲狀腺腫，未伴有甲狀腺毒性危象或風暴", "e": "Thyrotoxicosis with diffuse goiter without thyrotoxic crisis or storm", "a": "甲狀腺亢進 甲亢 Graves 葛瑞夫茲"}, {"c": "E05.90", "z": "未明示之甲狀腺毒症，未伴有甲狀腺毒性危象或風暴", "e": "Thyrotoxicosis, unspecified without thyrotoxic crisis or storm", "a": "甲狀腺毒症 甲亢"}, {"c": "E05.10", "z": "毒性單一甲狀腺結節，未伴有甲狀腺毒性危象或風暴", "e": "Thyrotoxicosis with toxic single thyroid nodule without thyrotoxic crisis or storm", "a": "毒性單結節"}, {"c": "E05.20", "z": "毒性多結節性甲狀腺腫，未伴有甲狀腺毒性危象或風暴", "e": "Thyrotoxicosis with toxic multinodular goiter without thyrotoxic crisis or storm", "a": "毒性多結節"}, {"c": "E04.1", "z": "非毒性單一甲狀腺結節", "e": "Nontoxic single thyroid nodule", "a": "甲狀腺結節 單結節 結節"}, {"c": "E04.2", "z": "非毒性多結節性甲狀腺腫", "e": "Nontoxic multinodular goiter", "a": "多結節性甲狀腺腫 多結節"}, {"c": "E04.0", "z": "非毒性瀰漫性甲狀腺腫", "e": "Nontoxic diffuse goiter", "a": "甲狀腺腫 瀰漫性 goiter"}, {"c": "E04.9", "z": "非毒性甲狀腺腫", "e": "Nontoxic goiter, unspecified", "a": "甲狀腺腫 未明示"}, {"c": "E89.0", "z": "手術後甲狀腺低下", "e": "Postprocedural hypothyroidism", "a": "術後甲狀腺低下 治療後低下"}, {"c": "C73", "z": "甲狀腺惡性腫瘤", "e": "Malignant neoplasm of thyroid gland", "a": "甲狀腺癌 惡性腫瘤"}, {"c": "D34", "z": "甲狀腺良性腫瘤", "e": "Benign neoplasm of thyroid gland", "a": "甲狀腺良性腫瘤 良性"}, {"c": "R94.6", "z": "甲狀腺功能檢查結果異常", "e": "Abnormal results of thyroid function studies", "a": "甲狀腺功能異常 檢查異常"}]}, {"cat": "血脂・肥胖・代謝", "icon": "fa-weight-scale", "items": [{"c": "E78.5", "z": "高血脂症", "e": "Hyperlipidemia, unspecified", "a": "高血脂 血脂高 高脂血症 三高 血油"}, {"c": "E78.00", "z": "純高膽固醇血症", "e": "Pure hypercholesterolemia, unspecified", "a": "高膽固醇 膽固醇高"}, {"c": "E78.1", "z": "純高三酸甘油酯血症", "e": "Pure hyperglyceridemia", "a": "高三酸甘油酯 TG高"}, {"c": "E78.2", "z": "混合型高血脂症", "e": "Mixed hyperlipidemia", "a": "混合型高血脂"}, {"c": "E78.49", "z": "其他高血脂症", "e": "Other hyperlipidemia", "a": "其他高血脂"}, {"c": "E66.9", "z": "肥胖", "e": "Obesity, unspecified", "a": "肥胖 obesity"}, {"c": "E66.01", "z": "起因於熱量過多的病態性(重度)肥胖", "e": "Morbid (severe) obesity due to excess calories", "a": "病態性肥胖 重度肥胖 BMI高"}, {"c": "E66.09", "z": "其他起因於熱量過多的肥胖", "e": "Other obesity due to excess calories", "a": "其他過重肥胖"}, {"c": "E66.3", "z": "體重過重", "e": "Overweight", "a": "過重 overweight"}, {"c": "E88.81", "z": "新陳代謝症候群", "e": "Metabolic syndrome", "a": "代謝症候群 metabolic syndrome"}, {"c": "E79.0", "z": "高尿酸血症未伴有關節炎及痛風石", "e": "Hyperuricemia without signs of inflammatory arthritis and tophaceous disease", "a": "高尿酸 尿酸高"}]}, {"cat": "骨骼・鈣磷・副甲狀腺", "icon": "fa-bone", "items": [{"c": "M81.0", "z": "老年性骨質疏鬆症未伴有病理性骨折", "e": "Age-related osteoporosis without current pathological fracture", "a": "骨質疏鬆 骨鬆 疏鬆 osteoporosis 骨頭疏鬆"}, {"c": "M85.80", "z": "未明示部位其他特定骨密度及構造疾患", "e": "Other specified disorders of bone density and structure, unspecified site", "a": "骨密度異常 骨量減少 骨鬆前期 osteopenia"}, {"c": "E55.9", "z": "維生素D缺乏", "e": "Vitamin D deficiency, unspecified", "a": "維生素D缺乏 缺D"}, {"c": "E21.0", "z": "原發性副甲狀腺亢進", "e": "Primary hyperparathyroidism", "a": "原發性副甲狀腺亢進"}, {"c": "E21.1", "z": "續發性副甲狀腺亢進，他處未歸類者", "e": "Secondary hyperparathyroidism, not elsewhere classified", "a": "續發性副甲狀腺亢進"}, {"c": "E21.3", "z": "副甲狀腺亢進", "e": "Hyperparathyroidism, unspecified", "a": "副甲狀腺亢進"}, {"c": "E20.9", "z": "副甲狀腺低下", "e": "Hypoparathyroidism, unspecified", "a": "副甲狀腺低下"}, {"c": "E83.52", "z": "高血鈣症", "e": "Hypercalcemia", "a": "高血鈣 鈣高"}, {"c": "E83.51", "z": "低血鈣症", "e": "Hypocalcemia", "a": "低血鈣 鈣低"}]}, {"cat": "腎上腺・腦垂體", "icon": "fa-brain", "items": [{"c": "E27.1", "z": "原發性腎上腺皮質功能不足", "e": "Primary adrenocortical insufficiency", "a": "腎上腺功能不全 愛迪生 Addison"}, {"c": "E27.40", "z": "腎上腺皮質功能不足", "e": "Unspecified adrenocortical insufficiency", "a": "腎上腺皮質功能不全 未明示"}, {"c": "E24.9", "z": "庫欣氏症候群", "e": "Cushing's syndrome, unspecified", "a": "庫欣 Cushing 皮質醇過高"}, {"c": "E26.09", "z": "其他原發性高醛固酮症", "e": "Other primary hyperaldosteronism", "a": "原發性醛固酮增多 PA"}, {"c": "E22.0", "z": "肢端肥大症及腦下腺的巨人症", "e": "Acromegaly and pituitary gigantism", "a": "肢端肥大 acromegaly"}, {"c": "E22.1", "z": "高泌乳素血症", "e": "Hyperprolactinemia", "a": "高泌乳素血症 泌乳素高 prolactin"}, {"c": "E23.0", "z": "腦下腺功能低下", "e": "Hypopituitarism", "a": "腦垂體功能低下"}, {"c": "E23.2", "z": "尿崩症", "e": "Diabetes insipidus", "a": "尿崩症 DI"}, {"c": "D35.2", "z": "腦下腺良性腫瘤", "e": "Benign neoplasm of pituitary gland", "a": "腦垂體腫瘤 良性"}, {"c": "E27.5", "z": "腎上腺髓質功能亢進", "e": "Adrenomedullary hyperfunction", "a": "腎上腺髓質功能亢進 嗜鉻細胞瘤"}]}, {"cat": "電解質・營養・貧血", "icon": "fa-flask", "items": [{"c": "E87.1", "z": "低滲壓及低血鈉", "e": "Hypo-osmolality and hyponatremia", "a": "低血鈉 鈉低 hyponatremia"}, {"c": "E87.0", "z": "高滲壓及高血鈉", "e": "Hyperosmolality and hypernatremia", "a": "高血鈉 鈉高"}, {"c": "E87.5", "z": "高血鉀症", "e": "Hyperkalemia", "a": "高血鉀 鉀高 hyperkalemia"}, {"c": "E87.6", "z": "低血鉀症", "e": "Hypokalemia", "a": "低血鉀 鉀低 hypokalemia"}, {"c": "E83.42", "z": "低血鎂症", "e": "Hypomagnesemia", "a": "低血鎂 鎂低"}, {"c": "D50.9", "z": "缺鐵性貧血", "e": "Iron deficiency anemia, unspecified", "a": "缺鐵性貧血 貧血 IDA"}, {"c": "D51.0", "z": "內因子缺乏所致的維生素Ｂ12缺乏性貧血", "e": "Vitamin B12 deficiency anemia due to intrinsic factor deficiency", "a": "惡性貧血 B12"}, {"c": "E53.8", "z": "其他特定維生素B群缺乏症", "e": "Deficiency of other specified B group vitamins", "a": "B12缺乏 維生素B群缺乏"}, {"c": "E56.9", "z": "維生素缺乏症", "e": "Vitamin deficiency, unspecified", "a": "維生素缺乏"}]}, {"cat": "常見共病", "icon": "fa-heart-pulse", "items": [{"c": "I10", "z": "本態性(原發性)高血壓", "e": "Essential (primary) hypertension", "a": "高血壓 血壓高 HTN 三高 blood pressure"}, {"c": "N18.30", "z": "慢性腎臟疾病stage 3", "e": "Chronic kidney disease, stage 3 unspecified", "a": "CKD3 慢性腎病 第三期"}, {"c": "N18.4", "z": "第四期慢性腎臟疾病(重度)", "e": "Chronic kidney disease, stage 4 (severe)", "a": "CKD4 第四期"}, {"c": "N18.5", "z": "第五期慢性腎臟疾病", "e": "Chronic kidney disease, stage 5", "a": "CKD5 第五期"}, {"c": "N18.9", "z": "慢性腎臟疾病", "e": "Chronic kidney disease, unspecified", "a": "慢性腎臟病 CKD 腎功能不良 腎不好"}, {"c": "N18.6", "z": "末期腎疾病", "e": "End stage renal disease", "a": "末期腎病 洗腎 透析 ESRD"}, {"c": "K21.00", "z": "胃食道逆流性疾病伴有食道炎未伴有出血", "e": "Gastro-esophageal reflux disease with esophagitis, without bleeding", "a": "胃食道逆流 GERD 逆流"}, {"c": "K21.9", "z": "胃食道逆性疾病未伴有食道炎", "e": "Gastro-esophageal reflux disease without esophagitis", "a": "胃食道逆流 無食道炎"}, {"c": "E11.22", "z": "第二型糖尿病，糖尿病的慢性腎臟疾病", "e": "Type 2 diabetes mellitus with diabetic chronic kidney disease", "a": "糖尿病腎臟病"}, {"c": "K76.0", "z": "脂肪肝(變化)，他處未歸類者", "e": "Fatty (change of) liver, not elsewhere classified", "a": "脂肪肝 fatty liver"}, {"c": "G47.33", "z": "阻塞性睡眠呼吸中止 (成人) (小兒)", "e": "Obstructive sleep apnea (adult) (pediatric)", "a": "睡眠呼吸中止 OSA"}]}, {"cat": "常見症狀", "icon": "fa-notes-medical", "items": [{"c": "R53.83", "z": "其他疲勞", "e": "Other fatigue", "a": "疲倦 累 倦怠 fatigue"}, {"c": "R63.4", "z": "體重異常減輕", "e": "Abnormal weight loss", "a": "體重減輕 變瘦 體重下降"}, {"c": "R63.5", "z": "體重異常增加", "e": "Abnormal weight gain", "a": "體重增加 變胖"}, {"c": "R63.0", "z": "厭食", "e": "Anorexia", "a": "食慾不振 沒胃口"}, {"c": "R35.0", "z": "頻尿", "e": "Frequency of micturition", "a": "頻尿 多尿"}, {"c": "R63.1", "z": "過度口渴", "e": "Polydipsia", "a": "煩渴 口渴 多喝水"}, {"c": "R51.9", "z": "頭痛", "e": "Headache, unspecified", "a": "頭痛"}, {"c": "R42", "z": "頭暈及目眩", "e": "Dizziness and giddiness", "a": "頭暈 暈眩 dizzy"}, {"c": "R00.2", "z": "心悸", "e": "Palpitations", "a": "心悸 心跳快 palpitation"}, {"c": "R61", "z": "全身性多汗症", "e": "Generalized hyperhidrosis", "a": "多汗 盜汗 流汗"}, {"c": "R11.0", "z": "噁心", "e": "Nausea", "a": "噁心 想吐"}, {"c": "R10.9", "z": "腹痛", "e": "Unspecified abdominal pain", "a": "腹痛 肚子痛"}, {"c": "R50.9", "z": "發燒", "e": "Fever, unspecified", "a": "發燒 發熱 fever"}, {"c": "R60.0", "z": "局部性水腫", "e": "Localized edema", "a": "水腫 腳腫 局部水腫"}, {"c": "R60.9", "z": "水腫", "e": "Edema, unspecified", "a": "水腫 全身水腫"}, {"c": "R73.9", "z": "高血糖", "e": "Hyperglycemia, unspecified", "a": "高血糖 血糖異常"}, {"c": "K92.1", "z": "黑便", "e": "Melena", "a": "黑便 血便 解黑便 柏油便 melena"}, {"c": "K92.0", "z": "吐血", "e": "Hematemesis", "a": "吐血 hematemesis"}]}];
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+$('#nav').innerHTML=DATA.map((c,i)=>`<a href="#c${i}">${esc(c.cat)} <span style="color:var(--muted)">${c.items.length}</span></a>`).join('');
+
+function card(it){
+  const isZ=it.c.startsWith('Z');
+  return `<div class="row${isZ?' z':''}" data-c="${esc(it.c)}">
+    <div class="code">${esc(it.c)}</div>
+    <div class="zh">${esc(it.z)}</div>
+    <div class="en">${esc(it.e)}</div></div>`;
+}
+function render(q){
+  q=(q||'').trim().toLowerCase();
+  let shown=0;
+  const html=DATA.map((c,i)=>{
+    const items=c.items.filter(it=>!q ||
+      (it.c+' '+it.z+' '+it.e+' '+it.a).toLowerCase().includes(q));
+    if(!items.length) return '';
+    shown+=items.length;
+    return `<h2 id="c${i}"><i class="fa-solid ${c.icon}"></i>${esc(c.cat)}</h2>
+            <div class="grid">${items.map(card).join('')}</div>`;
+  }).join('');
+  $('#list').innerHTML = html ||
+    `<div class="none">這裡沒有「${esc(q)}」。<br>這份是門診常用清單、不是全表；
+      要查完整 7 萬多筆請用 <a href="icd10-cmi-mapper.html">主訴 → 診斷碼</a>。</div>`;
+  $('#cnt').textContent = q ? `符合 ${shown} 個` : `共 ${DATA.reduce((s,c)=>s+c.items.length,0)} 個，Z 碼（行政／預防／諮詢）排在最前面`;
+  $('#nav').style.display = q ? 'none' : '';
+}
+$('#q').addEventListener('input',e=>render(e.target.value));
+// ⚠️ navigator.clipboard 在非 HTTPS、或分頁沒有焦點時會直接 reject。
+//    原本只寫 .then() 的話，失敗時**什麼都不會發生**——使用者以為沒點到，
+//    會一直重複點。所以要有備援寫法，而且不論成敗都要給回饋。
+function copyText(t){
+  if(navigator.clipboard && window.isSecureContext) return navigator.clipboard.writeText(t);
+  return new Promise((res,rej)=>{
+    const ta=document.createElement('textarea');
+    ta.value=t; ta.style.cssText='position:fixed;top:-999px;opacity:0';
+    document.body.appendChild(ta); ta.select();
+    try{ document.execCommand('copy') ? res() : rej(new Error('execCommand 失敗')); }
+    catch(err){ rej(err); }
+    finally{ ta.remove(); }
+  });
+}
+function flash(r,msg,ok){
+  const d=document.createElement('div');
+  d.className='copied'; d.textContent=msg;
+  if(!ok){ d.style.background='#fff4e8'; d.style.color='#b4540a'; }
+  r.appendChild(d); setTimeout(()=>d.remove(), ok?750:1800);
+}
+$('#list').addEventListener('click',e=>{
+  const r=e.target.closest('.row'); if(!r) return;
+  const code=r.dataset.c;
+  copyText(code).then(()=>flash(r,'已複製 '+code,true))
+                .catch(()=>flash(r,code+'（請手動複製）',false));
+});
+render('');
+$('#q').focus();
+</script>
+</body>
+</html>
