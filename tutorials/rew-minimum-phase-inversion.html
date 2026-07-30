@@ -59,10 +59,7 @@ body {
   gap: 36px;
   padding: 24px;
 }
-@media (max-width: 900px) {
-  .layout { grid-template-columns: 1fr; padding: 16px; }
-  nav.toc { position: static; max-height: none; border-right: none; padding: 0; }
-}
+
 nav.toc {
   position: sticky;
   top: 16px;
@@ -209,6 +206,13 @@ footer.note {
   article { font-size: 11pt; }
 }
 
+
+
+/* 手機版覆寫必須放最後，否則會被後面的基礎規則蓋掉 */
+@media (max-width: 900px) {
+  .layout { grid-template-columns: 1fr; padding: 16px; }
+  nav.toc { position: static; max-height: none; border-right: none; padding: 0; }
+}
 </style>
 </head><body>
 <div class="layout">

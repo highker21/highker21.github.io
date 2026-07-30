@@ -59,10 +59,7 @@ body {
   gap: 36px;
   padding: 24px;
 }
-@media (max-width: 900px) {
-  .layout { grid-template-columns: 1fr; padding: 16px; }
-  nav.toc { position: static; max-height: none; border-right: none; padding: 0; }
-}
+
 nav.toc {
   position: sticky;
   top: 16px;
@@ -207,7 +204,16 @@ footer.note {
   nav.toc, .print-hint { display: none; }
   .layout { display: block; max-width: none; }
   article { font-size: 11pt; }
-}</style>
+}
+
+/* ⚠️ 這段必須放在最後：原本它排在 nav.toc 基礎規則「之前」，
+   同權重下後出現者勝，導致手機版的 position:static 覆寫失效、側欄仍是 sticky
+   並佔滿一整屏，把內文擠到下面看起來像重疊。 */
+@media (max-width: 900px) {
+  .layout { grid-template-columns: 1fr; padding: 16px; }
+  nav.toc { position: static; max-height: none; border-right: none; padding: 0; }
+}
+</style>
 </head><body>
 <div class="layout">
 <nav class="toc">
