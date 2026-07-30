@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PDF 頁面另存圖片（PNG／JPG）</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+  :root{
+    --accent:#0e6e6e; --ink:#132020; --line:#d8e4e4; --soft:#f4f9f9; --bg:#eaf2f2;
+    --warn:#b4540a; --warnbg:#fff4e8; --good:#0a7d43; --goodbg:#eafaf0; --muted:#5f7070;
+  }
+  *{box-sizing:border-box;}
+  body{font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;
+    color:var(--ink); background:var(--bg); margin:0; padding:0 16px 60px; line-height:1.7;}
+  .wrap{max-width:1000px; margin:0 auto;}
+  h1{font-size:23px; margin:22px 0 4px;}
+  .sub{color:var(--muted); font-size:14px; margin-bottom:16px;}
+  .card{background:#fff; border:1px solid var(--line); border-radius:10px; padding:16px 18px; margin:14px 0;}
+  .privacy{background:var(--goodbg); border-color:#b5e3c8; font-size:14px;}
+  .privacy b{color:var(--good);}
+  .backlink{font-size:13px; color:var(--accent); text-decoration:none;}
+  .backlink:hover{text-decoration:underline;}
+
+  /* 拖放區 */
+  #drop{border:2px dashed #9ec4c4; border-radius:12px; background:var(--soft);
+    padding:34px 20px; text-align:center; cursor:pointer; transition:.15s;}
+  #drop:hover,#drop.over{background:#e6f4f4; border-color:var(--accent);}
+  #drop i{font-size:34px; color:var(--accent); display:block; margin-bottom:10px;}
+  #drop .big{font-size:16px; font-weight:600;}
+  #drop .small{color:var(--muted); font-size:13px; margin-top:6px;}
+
+  /* 頁面清單 */
+  #list{list-style:none; padding:0; margin:0; display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:12px;}
+  #list li{background:#fff; border:1px solid var(--line); border-radius:9px; padding:8px;
+    position:relative; cursor:pointer; transition:.12s;}
+  #list li:hover{border-color:var(--accent);}
+  #list li.on{border-color:var(--accent); box-shadow:0 0 0 2px rgba(14,110,110,.18);}
+  #list li.on .thumb{background:#fff;}
+  #list li:not(.on){opacity:.5;}
+  .thumb{width:100%; height:150px; background:var(--soft); border:1px solid var(--line);
+    border-radius:5px; display:flex; align-items:center; justify-content:center; overflow:hidden;}
+  .thumb img{max-width:100%; max-height:100%; display:block; box-shadow:0 1px 4px rgba(0,0,0,.14);}
+  .thumb .ph{color:#9ec4c4; font-size:26px;}
+  .idx{position:absolute; top:3px; left:3px; background:var(--accent); color:#fff;
+    font-size:11.5px; min-width:22px; height:20px; line-height:20px; text-align:center;
+    border-radius:10px; padding:0 6px; font-weight:600;}
+  .tick{position:absolute; top:3px; right:3px; width:20px; height:20px; border-radius:50%;
+    background:#fff; border:1px solid var(--line); color:transparent;
+    font-size:11px; line-height:19px; text-align:center;}
+  li.on .tick{background:var(--accent); border-color:var(--accent); color:#fff;}
+  .fname{font-size:11px; color:var(--muted); margin-top:6px; word-break:break-all;
+    line-height:1.4; max-height:2.8em; overflow:hidden;}
+  .dim{font-size:11px; color:var(--muted);}
+  .one{width:100%; margin-top:6px; border:1px solid var(--line); background:#fff;
+    border-radius:5px; padding:4px 0; cursor:pointer; font-size:12px; color:var(--ink);}
+  .one:hover{background:var(--soft); border-color:var(--accent);}
+
+  /* 設定 */
+  .row{display:flex; flex-wrap:wrap; gap:16px; align-items:center;}
+  label.opt{font-size:14px; display:flex; align-items:center; gap:6px;}
+  select,input[type=text]{border:1px solid var(--line); border-radius:6px; padding:6px 9px;
+    font-size:14px; font-family:inherit;}
+  input[type=range]{vertical-align:middle;}
+  #go{background:var(--accent); color:#fff; border:0; border-radius:8px;
+    padding:13px 26px; font-size:16px; font-weight:600; cursor:pointer;}
+  #go:hover{background:#0b5a5a;}
+  #go:disabled{background:#9ec4c4; cursor:not-allowed;}
+  .ghost{background:#fff; color:var(--accent); border:1px solid var(--accent);
+    border-radius:8px; padding:7px 14px; font-size:13.5px; cursor:pointer;}
+  .ghost:hover{background:var(--soft);}
+
+  #msg{margin-top:12px; font-size:14px;}
+  #msg .err{background:var(--warnbg); border:1px solid #f0c69a; color:var(--warn);
+    padding:9px 13px; border-radius:7px;}
+  #msg .ok{background:var(--goodbg); border:1px solid #b5e3c8; color:var(--good);
+    padding:9px 13px; border-radius:7px;}
+  #bar{height:6px; background:var(--line); border-radius:3px; overflow:hidden;
+    margin-top:10px; display:none;}
+  #bar div{height:100%; width:0; background:var(--accent); transition:width .2s;}
+  footer{color:var(--muted); font-size:12.5px; margin-top:34px; padding-top:12px;
+    border-top:1px solid var(--line);}
+  .hint{font-size:13px; color:var(--muted);}
+  code{background:var(--soft); padding:1px 5px; border-radius:4px; font-size:12.5px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <h1><i class="fa-regular fa-images" style="color:var(--accent)"></i> PDF 頁面另存圖片</h1>
+  <div class="sub">把 PDF 的每一頁轉成 PNG 或 JPG。可挑頁、選解析度，單張下載或整批打包 ZIP。
+    <a class="backlink" href="pdf-merge.html">（要反過來合併成 PDF？用這個 →）</a></div>
+
+  <div class="card privacy">
+    <b><i class="fa-solid fa-lock"></i> 檔案不會上傳</b>——全部在你的瀏覽器裡處理，關掉頁面就沒了。沒有伺服器、沒有第三方 API，可離線使用（第一次載入後）。處理病歷、報告、期刊全文都適用。
+  </div>
+
+  <div id="drop">
+    <i class="fa-solid fa-file-arrow-up"></i>
+    <div class="big">把 PDF 拖進來，或點這裡選擇</div>
+    <div class="small">可一次選多個 PDF　·　有密碼保護的 PDF 會提示輸入密碼</div>
+    <input type="file" id="picker" multiple accept="application/pdf" style="display:none">
+  </div>
+
+  <div class="card" id="listCard" style="display:none">
+    <div class="row" style="justify-content:space-between; margin-bottom:12px;">
+      <div><b id="count">0</b> <span class="hint">· 點縮圖可切換要不要轉存</span></div>
+      <div class="row" style="gap:8px">
+        <button class="ghost" id="all">全選</button>
+        <button class="ghost" id="none">全不選</button>
+        <button class="ghost" id="clear"><i class="fa-regular fa-trash-can"></i> 清除</button>
+      </div>
+    </div>
+    <div class="row" style="margin-bottom:12px">
+      <label class="opt">依頁碼選取
+        <input type="text" id="range" placeholder="例：1-3,5,8-" size="14">
+      </label>
+      <button class="ghost" id="applyRange">套用</button>
+      <span class="hint"><code>8-</code> 代表第 8 頁到最後。多個 PDF 時，頁碼是各自的頁碼。</span>
+    </div>
+    <ul id="list"></ul>
+  </div>
+
+  <div class="card" id="optCard" style="display:none">
+    <div class="row">
+      <label class="opt">格式
+        <select id="fmt">
+          <option value="png">PNG（無損，適合圖表、文字）</option>
+          <option value="jpg">JPG（檔案小，適合照片、掃描件）</option>
+        </select>
+      </label>
+      <label class="opt">解析度
+        <select id="dpi">
+          <option value="96">96 DPI（螢幕看、貼簡報）</option>
+          <option value="150" selected>150 DPI（一般，推薦）</option>
+          <option value="300">300 DPI（列印、投稿）</option>
+          <option value="600">600 DPI（放大細看，檔案很大）</option>
+        </select>
+      </label>
+      <label class="opt" id="qWrap" style="display:none">JPG 品質
+        <input type="range" id="q" min="50" max="100" value="90" step="5">
+        <span id="qVal" class="hint">90</span>
+      </label>
+      <label class="opt" id="bgWrap">背景
+        <select id="bg">
+          <option value="white" selected>白底</option>
+          <option value="transparent">透明（僅 PNG）</option>
+        </select>
+      </label>
+    </div>
+    <div class="row" style="margin-top:12px">
+      <label class="opt">檔名
+        <input type="text" id="prefix" placeholder="留空＝用原始 PDF 檔名" size="20">
+      </label>
+      <span class="hint">輸出會是 <code>檔名-p01.png</code>、<code>檔名-p02.png</code>…</span>
+    </div>
+    <div class="row" style="margin-top:16px;">
+      <button id="go"><i class="fa-solid fa-download"></i> 轉存並下載</button>
+      <span class="hint" id="est"></span>
+    </div>
+    <div id="bar"><div></div></div>
+    <div id="msg"></div>
+  </div>
+
+  <div class="card">
+    <b>使用說明</b>
+    <ul style="margin:8px 0 0; padding-left:22px; font-size:14px;">
+      <li><b>挑頁</b>：直接點縮圖切換。也可以用「依頁碼選取」填 <code>1-3,5,8-</code> 一次選一批。</li>
+      <li><b>單張下載</b>：每張縮圖下方有「下載這頁」，只要一張就不用整批跑。</li>
+      <li><b>整批</b>：選 2 頁以上按「轉存並下載」會打包成一個 ZIP；只選 1 頁就直接下載圖片。</li>
+      <li><b>解析度怎麼挑</b>：貼簡報／傳 LINE 用 150 DPI 就夠；要列印或投稿用 300 DPI。600 DPI 的 A4 單頁 PNG 可能超過 10 MB。</li>
+      <li><b>透明背景</b>：只有 PNG 支援，而且多數 PDF 本身就有白色底色、轉出來仍是白的——這選項只對背景真的留空的 PDF 有效。</li>
+      <li><b>轉出的是「列印外觀」</b>：所以 PDF 裡的註解便利貼、螢光筆這類「本來就不會印出來」的東西不會出現在圖片上。正文、表格、圖表、填好的表單欄位都會照常呈現。</li>
+    </ul>
+  </div>
+
+  <footer>
+    工具版本：2026-07-30（首版：挑頁轉存 PNG／JPG、96–600 DPI、單張下載與 ZIP 打包）<br>
+    純前端處理，檔案不離開你的裝置。轉存後請自行確認頁數與內容無誤。
+  </footer>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script>
+const $=s=>document.querySelector(s);
+function libsReady(){
+  if(!window.pdfjsLib){ err('PDF 函式庫載入失敗，請檢查網路後重新整理。'); return false; }
+  pdfjsLib.GlobalWorkerOptions.workerSrc=
+    'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+  return true;
+}
+function err(h){ $('#msg').innerHTML=`<div class="err"><i class="fa-solid fa-triangle-exclamation"></i> ${h}</div>`; }
+function ok(h){ $('#msg').innerHTML=`<div class="ok"><i class="fa-solid fa-circle-check"></i> ${h}</div>`; }
+
+// ── 狀態：pages 是攤平的頁面清單（多個 PDF 也共用一份） ──────────────
+let pages=[];   // {doc, docName, base, pno, w, h, sel, thumb}
+
+// ⚠️ 瀏覽器 canvas 有面積上限，超過會得到「全黑」或「空白」圖片，而且**不會拋錯**
+//    ——所以一定要自己先夾住，不能等它出事。iOS Safari 的上限低很多（2^24 px）。
+const IS_IOS = /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+               (navigator.platform==='MacIntel' && navigator.maxTouchPoints>1);
+const MAX_SIDE=12000, MAX_AREA = IS_IOS ? 16.7e6 : 36e6;
+
+// ⚠️⚠️ 一定要用 intent:'print' 而不是預設的 'display'。
+//    pdf.js 的 display 渲染靠 requestAnimationFrame 分段推進，而瀏覽器在
+//    **分頁切到背景時會凍結 rAF** → render 的 promise 永遠不 resolve，
+//    既不報錯也沒有進度，使用者只會看到進度條卡在那裡（2026-07-30 實測踩到）。
+//    print intent 不走 rAF，切走分頁照樣跑完；對「把頁面另存成圖」來說語意也更正確。
+const INTENT='print';
+function safeScale(w,h,scale){
+  let s=scale;
+  s=Math.min(s, MAX_SIDE/w, MAX_SIDE/h, Math.sqrt(MAX_AREA/(w*h)));
+  return Math.max(0.1, s);
+}
+
+async function addFiles(files){
+  if(!libsReady()) return;
+  const pdfs=[...files].filter(f=>f.type==='application/pdf'||/\.pdf$/i.test(f.name));
+  const skipped=[...files].length-pdfs.length;
+  if(!pdfs.length){ err('請選擇 PDF 檔。'+(skipped?'（已略過非 PDF 的檔案）':'')); return; }
+  $('#msg').innerHTML='';
+  for(const f of pdfs){
+    try{
+      const buf=await f.arrayBuffer();
+      let doc;
+      try{
+        doc=await pdfjsLib.getDocument({data:buf}).promise;
+      }catch(e){
+        if(e && e.name==='PasswordException'){
+          const pw=prompt(`「${f.name}」有密碼保護，請輸入密碼：`);
+          if(pw===null) continue;
+          doc=await pdfjsLib.getDocument({data:buf, password:pw}).promise;
+        } else throw e;
+      }
+      const base=f.name.replace(/\.pdf$/i,'');
+      for(let i=1;i<=doc.numPages;i++){
+        const page=await doc.getPage(i);
+        const v=page.getViewport({scale:1});
+        pages.push({doc, docName:f.name, base, pno:i, w:v.width, h:v.height, sel:true, thumb:null});
+      }
+    }catch(e){
+      err(`「${f.name}」讀取失敗：${e.message||e}`);
+    }
+  }
+  if(skipped) err(`已略過 ${skipped} 個非 PDF 的檔案。`);
+  render();
+  thumbs();
+}
+
+function render(){
+  const multi=new Set(pages.map(p=>p.docName)).size>1;
+  $('#list').innerHTML=pages.map((p,i)=>`
+    <li class="${p.sel?'on':''}" data-i="${i}">
+      <div class="idx">${p.pno}</div><div class="tick">✓</div>
+      <div class="thumb">${p.thumb?`<img src="${p.thumb}">`:'<span class="ph"><i class="fa-regular fa-file"></i></span>'}</div>
+      ${multi?`<div class="fname">${p.docName}</div>`:''}
+      <div class="dim">${Math.round(p.w)}×${Math.round(p.h)} pt</div>
+      <button class="one" data-one="${i}">下載這頁</button>
+    </li>`).join('');
+  const n=pages.filter(p=>p.sel).length;
+  $('#count').textContent=`共 ${pages.length} 頁，已選 ${n} 頁`;
+  $('#listCard').style.display=pages.length?'':'none';
+  $('#optCard').style.display=pages.length?'':'none';
+  $('#go').disabled=!n;
+  estimate();
+}
+
+// 縮圖逐張畫（低解析、不阻塞）
+async function thumbs(){
+  for(const p of pages){
+    if(p.thumb) continue;
+    try{
+      const page=await p.doc.getPage(p.pno);
+      const v=page.getViewport({scale:Math.min(0.45, 220/p.w)});
+      const c=document.createElement('canvas');
+      c.width=Math.max(1,Math.round(v.width)); c.height=Math.max(1,Math.round(v.height));
+      const cx=c.getContext('2d');
+      cx.fillStyle='#fff'; cx.fillRect(0,0,c.width,c.height);
+      await page.render({canvasContext:cx, viewport:v, intent:INTENT}).promise;
+      p.thumb=c.toDataURL('image/jpeg',0.7);
+      p.ink=inkRatio(cx,c.width,c.height);   // 供檔案大小預估校準用
+      render();
+    }catch(e){ /* 單頁縮圖失敗不影響轉存，維持佔位圖 */ }
+  }
+}
+
+// 量「有多少比例的像素不是白的」——文字頁約 5%、照片/掃描件可到 50% 以上。
+// PNG 的體積幾乎由內容多寡決定，不是由像素數決定，所以預估一定要看這個。
+function inkRatio(cx,w,h){
+  const d=cx.getImageData(0,0,w,h).data;
+  let k=0,n=0;
+  for(let i=0;i<d.length;i+=4*17){ n++; if(d[i]<235||d[i+1]<235||d[i+2]<235) k++; }
+  return n? k/n*100 : 5;
+}
+
+// 依設定把某頁畫成 canvas
+async function renderPage(p){
+  const dpi=+$('#dpi').value, fmt=$('#fmt').value;
+  const want=dpi/72;
+  const scale=safeScale(p.w,p.h,want);
+  const page=await p.doc.getPage(p.pno);
+  const v=page.getViewport({scale});
+  const c=document.createElement('canvas');
+  c.width=Math.round(v.width); c.height=Math.round(v.height);
+  const cx=c.getContext('2d');
+  // JPG 不支援透明，一律鋪白底；PNG 選透明才留空
+  const transparent = fmt==='png' && $('#bg').value==='transparent';
+  if(!transparent){ cx.fillStyle='#fff'; cx.fillRect(0,0,c.width,c.height); }
+  await page.render({canvasContext:cx, viewport:v, intent:INTENT}).promise;
+  return {canvas:c, clamped: scale < want-1e-6};
+}
+
+function toBlob(canvas){
+  const fmt=$('#fmt').value, q=+$('#q').value/100;
+  return new Promise(res=>canvas.toBlob(res, fmt==='jpg'?'image/jpeg':'image/png',
+                                        fmt==='jpg'?q:undefined));
+}
+function outName(p){
+  const pre=$('#prefix').value.trim();
+  const ext=$('#fmt').value==='jpg'?'jpg':'png';
+  const base=(pre||p.base).replace(/[\/\\:*?"<>|]/g,'_');
+  return `${base}-p${String(p.pno).padStart(2,'0')}.${ext}`;
+}
+function save(blob,name){
+  const u=URL.createObjectURL(blob), a=document.createElement('a');
+  a.href=u; a.download=name; a.click();
+  setTimeout(()=>URL.revokeObjectURL(u),4000);
+}
+
+function estimate(){
+  const sel=pages.filter(p=>p.sel);
+  if(!sel.length){ $('#est').textContent=''; return; }
+  const k=+$('#dpi').value/72;
+  const p0=sel[0], s0=safeScale(p0.w,p0.h,k);
+  const dim=`${Math.round(p0.w*s0)}×${Math.round(p0.h*s0)} px`;
+  const mixed = sel.some(p=>Math.abs(p.w-p0.w)>1||Math.abs(p.h-p0.h)>1);
+  // ⚠️ 這裡刻意「不預估檔案大小」。實測兩份 A4 文件，同樣是 150 DPI PNG：
+  //    文字稿 6 頁 1.8MB、彩色簡報 6 頁 1.3MB，但簡報的「非白像素比例」是文字稿的 3 倍——
+  //    PNG 體積取決於畫面細節複雜度，不是著墨多寡（整片色塊幾乎不佔空間）。
+  //    任何便宜的啟發式都會差到一個數量級，寧可不寫，也不要給一個會誤導人調錯設定的數字。
+  //    轉完之後會顯示「實際」大小，那個才是真的。
+  $('#est').textContent = `每頁約 ${dim}${mixed?'（各頁尺寸不一，這是第一頁）':''}　·　共 ${sel.length} 頁`
+    + (+$('#dpi').value>=600 ? '　·　600 DPI 檔案會明顯變大、也比較久' : '');
+}
+
+// ── 事件 ────────────────────────────────────────────────
+$('#drop').onclick=()=>$('#picker').click();
+$('#picker').onchange=e=>{ addFiles(e.target.files); e.target.value=''; };
+['dragenter','dragover'].forEach(t=>$('#drop').addEventListener(t,e=>{
+  e.preventDefault(); $('#drop').classList.add('over'); }));
+['dragleave','drop'].forEach(t=>$('#drop').addEventListener(t,e=>{
+  e.preventDefault(); $('#drop').classList.remove('over'); }));
+$('#drop').addEventListener('drop',e=>addFiles(e.dataTransfer.files));
+
+$('#list').onclick=e=>{
+  const one=e.target.closest('[data-one]');
+  if(one){ e.stopPropagation(); downloadOne(+one.dataset.one); return; }
+  const li=e.target.closest('li[data-i]');
+  if(!li) return;
+  pages[+li.dataset.i].sel=!pages[+li.dataset.i].sel;
+  render();
+};
+$('#all').onclick =()=>{ pages.forEach(p=>p.sel=true);  render(); };
+$('#none').onclick=()=>{ pages.forEach(p=>p.sel=false); render(); };
+$('#clear').onclick=()=>{ pages=[]; $('#msg').innerHTML=''; render(); };
+
+$('#applyRange').onclick=()=>{
+  const txt=$('#range').value.trim();
+  if(!txt){ err('請先填頁碼範圍，例如 <code>1-3,5,8-</code>。'); return; }
+  const maxOf={}; pages.forEach(p=>maxOf[p.docName]=Math.max(maxOf[p.docName]||0,p.pno));
+  let bad=false;
+  const want={};
+  for(const name in maxOf){
+    const set=new Set();
+    for(const part of txt.split(',')){
+      const t=part.trim(); if(!t) continue;
+      let m;
+      if((m=t.match(/^(\d+)$/)))            set.add(+m[1]);
+      else if((m=t.match(/^(\d+)\s*-$/)))   { for(let i=+m[1];i<=maxOf[name];i++) set.add(i); }
+      else if((m=t.match(/^-\s*(\d+)$/)))   { for(let i=1;i<=+m[1];i++) set.add(i); }
+      else if((m=t.match(/^(\d+)\s*-\s*(\d+)$/))){
+        const [a,b]=[+m[1],+m[2]]; for(let i=Math.min(a,b);i<=Math.max(a,b);i++) set.add(i);
+      } else bad=true;
+    }
+    want[name]=set;
+  }
+  if(bad){ err('頁碼範圍看不懂，請用 <code>1-3,5,8-</code> 這種寫法。'); return; }
+  pages.forEach(p=>p.sel=want[p.docName].has(p.pno));
+  const n=pages.filter(p=>p.sel).length;
+  render();
+  if(!n) err('這個範圍沒有選到任何頁面，請確認頁碼。');
+  else ok(`已依範圍選取 ${n} 頁。`);
+};
+
+$('#fmt').onchange=()=>{
+  const jpg=$('#fmt').value==='jpg';
+  $('#qWrap').style.display=jpg?'':'none';
+  $('#bgWrap').style.display=jpg?'none':'';
+  estimate();
+};
+$('#q').oninput=()=>{ $('#qVal').textContent=$('#q').value; estimate(); };
+$('#dpi').onchange=estimate;
+
+async function downloadOne(i){
+  const p=pages[i];
+  try{
+    const {canvas,clamped}=await renderPage(p);
+    const blob=await toBlob(canvas);
+    if(!blob) throw new Error('產生圖片失敗');
+    save(blob, outName(p));
+    ok(`已下載 ${outName(p)}（${(blob.size/1048576).toFixed(2)} MB）`
+       + (clamped?'　⚠️ 這頁尺寸太大，解析度已自動下修以避免瀏覽器產生空白圖。':''));
+  }catch(e){ err(`第 ${p.pno} 頁轉存失敗：${e.message||e}`); }
+}
+
+$('#go').onclick=async()=>{
+  const sel=pages.filter(p=>p.sel);
+  if(!sel.length) return;
+  $('#go').disabled=true; $('#msg').innerHTML='';
+  $('#bar').style.display=''; $('#bar>div').style.width='0';
+  let clampedN=0, failed=[];
+  try{
+    if(sel.length===1){
+      const {canvas,clamped}=await renderPage(sel[0]);
+      const blob=await toBlob(canvas);
+      if(!blob) throw new Error('產生圖片失敗');
+      save(blob, outName(sel[0]));
+      $('#bar>div').style.width='100%';
+      ok(`已下載 ${outName(sel[0])}（${(blob.size/1048576).toFixed(2)} MB）`
+         + (clamped?'　⚠️ 解析度已自動下修。':''));
+    }else{
+      if(!window.JSZip) throw new Error('打包函式庫載入失敗，請檢查網路後重新整理（或改用每頁的「下載這頁」）');
+      const zip=new JSZip(); let total=0;
+      for(let i=0;i<sel.length;i++){
+        const p=sel[i];
+        try{
+          const {canvas,clamped}=await renderPage(p);
+          if(clamped) clampedN++;
+          const blob=await toBlob(canvas);
+          if(!blob) throw new Error('canvas 產生圖片失敗');
+          total+=blob.size;
+          zip.file(outName(p), blob);
+        }catch(e){ failed.push(p.pno); }
+        $('#bar>div').style.width=((i+1)/sel.length*92)+'%';
+        await new Promise(r=>setTimeout(r,0));   // 讓進度條有機會更新
+      }
+      const done=sel.length-failed.length;
+      if(!done) throw new Error('所有頁面都轉存失敗');
+      const out=await zip.generateAsync({type:'blob'});
+      $('#bar>div').style.width='100%';
+      const pre=$('#prefix').value.trim();
+      save(out, `${(pre||sel[0].base).replace(/[\/\\:*?"<>|]/g,'_')}-圖片.zip`);
+      let m=`已打包 ${done} 張圖片下載（ZIP 約 ${(out.size/1048576).toFixed(1)} MB）`;
+      if(clampedN) m+=`　⚠️ 其中 ${clampedN} 頁尺寸太大、解析度已自動下修。`;
+      if(failed.length) m+=`　⚠️ 第 ${failed.join('、')} 頁轉存失敗，未收進 ZIP。`;
+      (failed.length?err:ok)(m);
+    }
+  }catch(e){
+    err(`轉存失敗：${e.message||e}`);
+  }finally{
+    $('#go').disabled=false;
+    setTimeout(()=>{ $('#bar').style.display='none'; },1200);
+  }
+};
+
+render();
+</script>
+</body>
+</html>

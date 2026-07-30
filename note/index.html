@@ -30,6 +30,14 @@
   .meta{ display:flex; flex-wrap:wrap; gap:.4rem .5rem; margin:0; padding:0; list-style:none; }
   .meta li{ font-size:.78rem; color:var(--muted); background:rgba(47,164,231,.1);
             border-radius:99px; padding:.15rem .6rem; white-space:nowrap; }
+  .group{ font-size:1rem; letter-spacing:.06em; color:var(--muted); font-weight:600;
+           margin:2rem 0 .85rem; padding-bottom:.4rem; border-bottom:1px solid var(--line); }
+  .group:first-of-type{ margin-top:.5rem; }
+  .jump{ display:flex; flex-wrap:wrap; gap:.45rem; margin:0 0 .5rem; }
+  .jump a{ font-size:.82rem; color:var(--accent); text-decoration:none; border:1px solid var(--line);
+           border-radius:99px; padding:.28rem .75rem; background:var(--card); }
+  .jump a:hover{ border-color:var(--accent); }
+  .jump a span{ color:var(--muted); margin-left:.35rem; }
   .pending{ border-left-color:var(--muted); opacity:.72; }
   .pending h2{ color:var(--muted); }
   footer{ margin-top:2.5rem; padding-top:1.25rem; border-top:1px solid var(--line);
@@ -46,29 +54,9 @@
     <p class="lead">把買了卻看不完的線上課程，整理成可以真的讀完的筆記。每份都是自足的單一 HTML——離線可讀、可搜尋、待辦可勾選且會記住狀態。</p>
     <p class="lead" style="margin-top:.6rem">內容源自已購買的付費課程，因此以 AES-256 加密存放、需密碼閱讀。</p>
   </header>
-  <a class="card" href="rice-cake.html">
-    <h2>島嶼粿事：循著節氣炊製傳統米食</h2>
-    <p class="src">學籽 · 雙口呂文化廚房</p>
-    <ul class="meta">
-      <li>4 單元</li>
-      <li>約 1.2 萬字</li>
-      <li>22 個可執行要點</li>
-      <li>1 組隨堂測驗</li>
-      <li>🔒 需密碼</li>
-      <li>2026-07-30</li>
-    </ul>
-  </a>
-  <a class="card" href="gelato-advanced.html">
-    <h2>Double V 義式冰淇淋全新升級</h2>
-    <p class="src">學籽 · Willson 陳謙璿</p>
-    <ul class="meta">
-      <li>14 單元</li>
-      <li>約 4.6 萬字</li>
-      <li>83 個可執行要點</li>
-      <li>🔒 需密碼</li>
-      <li>2026-07-30</li>
-    </ul>
-  </a>
+  <nav class="jump"><a href="#parenting">親職與兒童發展<span>2</span></a><a href="#health">身心與健康<span>2</span></a><a href="#home">居家與生活<span>2</span></a><a href="#food">料理與甜點<span>3</span></a><a href="#music">音樂<span>2</span></a><a href="#humanity">人文與思辨<span>2</span></a><a href="#tech">科技與職涯<span>1</span></a></nav>
+
+  <h2 class="group" id="parenting">親職與兒童發展</h2>
   <a class="card" href="language-play.html">
     <h2>與你好好玩轉孩子的成長天賦課</h2>
     <p class="src">學籽 · 語言治療師好好老師</p>
@@ -77,6 +65,56 @@
       <li>約 7.4 萬字</li>
       <li>126 個可執行要點</li>
       <li>2 組隨堂測驗</li>
+      <li>🔒 需密碼</li>
+      <li>2026-07-30</li>
+    </ul>
+  </a>
+  <a class="card" href="child-emotion.html">
+    <h2>陪伴孩子的情緒學習成長課</h2>
+    <p class="src">學籽 · 童雋哲等臨床治療師</p>
+    <ul class="meta">
+      <li>47 單元</li>
+      <li>約 19.5 萬字</li>
+      <li>259 個可執行要點</li>
+      <li>🔒 需密碼</li>
+      <li>2026-07-30</li>
+    </ul>
+  </a>
+
+  <h2 class="group" id="health">身心與健康</h2>
+  <a class="card" href="fascia-restore.html">
+    <h2>阿銘師的空間結構還原術</h2>
+    <p class="src">學籽 · 黃獻銘中醫師</p>
+    <ul class="meta">
+      <li>37 單元</li>
+      <li>約 11.9 萬字</li>
+      <li>169 個可執行要點</li>
+      <li>🔒 需密碼</li>
+      <li>2026-07-30</li>
+    </ul>
+  </a>
+  <a class="card" href="inner-power.html">
+    <h2>內心的力量（心靈成長課程）</h2>
+    <p class="src">Teachable · mentorandy</p>
+    <ul class="meta">
+      <li>18 單元</li>
+      <li>約 3.2 萬字</li>
+      <li>22 張講義圖</li>
+      <li>82 個可執行要點</li>
+      <li>🔒 需密碼</li>
+      <li>2026-07-25</li>
+    </ul>
+  </a>
+
+  <h2 class="group" id="home">居家與生活</h2>
+  <a class="card" href="interior-design.html">
+    <h2>減法裝修Ｘ預算解析Ｘ格局美學</h2>
+    <p class="src">學籽 · 朱俞君設計師</p>
+    <ul class="meta">
+      <li>43 單元</li>
+      <li>約 10.2 萬字</li>
+      <li>198 個可執行要點</li>
+      <li>5 組隨堂測驗</li>
       <li>🔒 需密碼</li>
       <li>2026-07-30</li>
     </ul>
@@ -93,52 +131,8 @@
       <li>2026-07-30</li>
     </ul>
   </a>
-  <a class="card" href="fascia-restore.html">
-    <h2>阿銘師的空間結構還原術</h2>
-    <p class="src">學籽 · 黃獻銘中醫師</p>
-    <ul class="meta">
-      <li>37 單元</li>
-      <li>約 11.9 萬字</li>
-      <li>169 個可執行要點</li>
-      <li>🔒 需密碼</li>
-      <li>2026-07-30</li>
-    </ul>
-  </a>
-  <a class="card" href="interior-design.html">
-    <h2>減法裝修Ｘ預算解析Ｘ格局美學</h2>
-    <p class="src">學籽 · 朱俞君設計師</p>
-    <ul class="meta">
-      <li>43 單元</li>
-      <li>約 10.2 萬字</li>
-      <li>198 個可執行要點</li>
-      <li>5 組隨堂測驗</li>
-      <li>🔒 需密碼</li>
-      <li>2026-07-30</li>
-    </ul>
-  </a>
-  <a class="card" href="philosophy-11.html">
-    <h2>紀金慶游哲學：11 堂哲學思辨課</h2>
-    <p class="src">學籽 · 紀金慶</p>
-    <ul class="meta">
-      <li>62 單元</li>
-      <li>約 17.2 萬字</li>
-      <li>166 個可執行要點</li>
-      <li>14 組隨堂測驗</li>
-      <li>🔒 需密碼</li>
-      <li>2026-07-30</li>
-    </ul>
-  </a>
-  <a class="card" href="child-emotion.html">
-    <h2>陪伴孩子的情緒學習成長課</h2>
-    <p class="src">學籽 · 童雋哲等臨床治療師</p>
-    <ul class="meta">
-      <li>47 單元</li>
-      <li>約 19.5 萬字</li>
-      <li>259 個可執行要點</li>
-      <li>🔒 需密碼</li>
-      <li>2026-07-30</li>
-    </ul>
-  </a>
+
+  <h2 class="group" id="food">料理與甜點</h2>
   <a class="card" href="gelato.html">
     <h2>世界冰淇淋亞軍手作 Gelato</h2>
     <p class="src">學籽 · Willson 陳謙璿</p>
@@ -151,47 +145,31 @@
       <li>2026-07-30</li>
     </ul>
   </a>
-
-  <a class="card" href="inner-power.html">
-    <h2>內心的力量（心靈成長課程）</h2>
-    <p class="src">Teachable · mentorandy</p>
+  <a class="card" href="gelato-advanced.html">
+    <h2>Double V 義式冰淇淋全新升級</h2>
+    <p class="src">學籽 · Willson 陳謙璿</p>
     <ul class="meta">
-      <li>18 單元</li>
-      <li>約 3.2 萬字</li>
-      <li>22 張講義圖</li>
-      <li>82 個可執行要點</li>
+      <li>14 單元</li>
+      <li>約 4.6 萬字</li>
+      <li>83 個可執行要點</li>
       <li>🔒 需密碼</li>
-      <li>2026-07-25</li>
+      <li>2026-07-30</li>
+    </ul>
+  </a>
+  <a class="card" href="rice-cake.html">
+    <h2>島嶼粿事：循著節氣炊製傳統米食</h2>
+    <p class="src">學籽 · 雙口呂文化廚房</p>
+    <ul class="meta">
+      <li>4 單元</li>
+      <li>約 1.2 萬字</li>
+      <li>22 個可執行要點</li>
+      <li>1 組隨堂測驗</li>
+      <li>🔒 需密碼</li>
+      <li>2026-07-30</li>
     </ul>
   </a>
 
-  <a class="card" href="citizen-judge.html">
-    <h2>《當司法遇到心理學》國民法官上任，然後呢？</h2>
-    <p class="src">泛科學院 · 黃致豪律師</p>
-    <ul class="meta">
-      <li>13 單元</li>
-      <li>6 小時 54 分</li>
-      <li>約 12.5 萬字</li>
-      <li>71 個可執行要點</li>
-      <li>🔒 需密碼</li>
-      <li>2026-07-26</li>
-    </ul>
-  </a>
-
-  <a class="card" href="pansci-ai.html">
-    <h2>AI 斜槓新手村：從零開始與 AI 一起副業大冒險</h2>
-    <p class="src">泛科學院 · 莊哲昀 AJ Chuang</p>
-    <ul class="meta">
-      <li>36 單元</li>
-      <li>6 小時 15 分</li>
-      <li>約 20.8 萬字</li>
-      <li>144 張操作截圖</li>
-      <li>216 個可執行要點</li>
-      <li>🔒 需密碼</li>
-      <li>2026-07-26</li>
-    </ul>
-  </a>
-
+  <h2 class="group" id="music">音樂</h2>
   <a class="card" href="piano-clinic.html">
     <h2>鋼琴技巧急診室</h2>
     <p class="src">好和弦 NiceChord · 官大為 Wiwi</p>
@@ -205,7 +183,6 @@
       <li>2026-07-26</li>
     </ul>
   </a>
-
   <a class="card" href="improv-101.html">
     <h2>即興幼幼班</h2>
     <p class="src">好和弦 NiceChord · 官大為 Wiwi</p>
@@ -220,9 +197,51 @@
     </ul>
   </a>
 
+  <h2 class="group" id="humanity">人文與思辨</h2>
+  <a class="card" href="philosophy-11.html">
+    <h2>紀金慶游哲學：11 堂哲學思辨課</h2>
+    <p class="src">學籽 · 紀金慶</p>
+    <ul class="meta">
+      <li>62 單元</li>
+      <li>約 17.2 萬字</li>
+      <li>166 個可執行要點</li>
+      <li>14 組隨堂測驗</li>
+      <li>🔒 需密碼</li>
+      <li>2026-07-30</li>
+    </ul>
+  </a>
+  <a class="card" href="citizen-judge.html">
+    <h2>《當司法遇到心理學》國民法官上任，然後呢？</h2>
+    <p class="src">泛科學院 · 黃致豪律師</p>
+    <ul class="meta">
+      <li>13 單元</li>
+      <li>6 小時 54 分</li>
+      <li>約 12.5 萬字</li>
+      <li>71 個可執行要點</li>
+      <li>🔒 需密碼</li>
+      <li>2026-07-26</li>
+    </ul>
+  </a>
+
+  <h2 class="group" id="tech">科技與職涯</h2>
+  <a class="card" href="pansci-ai.html">
+    <h2>AI 斜槓新手村：從零開始與 AI 一起副業大冒險</h2>
+    <p class="src">泛科學院 · 莊哲昀 AJ Chuang</p>
+    <ul class="meta">
+      <li>36 單元</li>
+      <li>6 小時 15 分</li>
+      <li>約 20.8 萬字</li>
+      <li>144 張操作截圖</li>
+      <li>216 個可執行要點</li>
+      <li>🔒 需密碼</li>
+      <li>2026-07-26</li>
+    </ul>
+  </a>
+
+
   <footer>
     <p>筆記由逐字稿重新編寫，非影片內容重製；僅供個人複習使用。</p>
-    <p>頁面版本：2026-07-26</p>
+    <p>頁面版本：2026-07-30</p>
   </footer>
 </div>
 </body>
