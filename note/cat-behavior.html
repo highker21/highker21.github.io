@@ -53,8 +53,8 @@ let cache = null;
 
 async function load() {
   if (cache) return cache;
-  $('m').className = 'msg ok'; $('m').textContent = '下載中（約 3.7 MB）…';
-  const r = await fetch('cat-behavior.enc.json?v=16d415b666', { cache: 'force-cache' });
+  $('m').className = 'msg ok'; $('m').textContent = '下載中（約 3.8 MB）…';
+  const r = await fetch('cat-behavior.enc.json?v=79c1a66744', { cache: 'force-cache' });
   if (!r.ok) throw new Error('讀取失敗 HTTP ' + r.status);
   cache = await r.json();
   return cache;
