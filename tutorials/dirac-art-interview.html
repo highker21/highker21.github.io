@@ -1,0 +1,804 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dirac ART 原廠技術對談重點整理</title>
+<style>
+/* Dirac ART Tutorial — clean tech-doc style */
+* { box-sizing: border-box; }
+:root {
+  --bg: #fafafa;
+  --fg: #1a1a1a;
+  --muted: #6a6a6a;
+  --accent: #1e6dd8;
+  --accent-soft: #e7f0ff;
+  --warn-bg: #fff7e6;
+  --warn-border: #f4a83a;
+  --tip-bg: #e9f7ef;
+  --tip-border: #2eb872;
+  --note-bg: #f4f0ff;
+  --note-border: #8466d8;
+  --code-bg: #f1f3f5;
+  --table-border: #d8d8d8;
+  --th-bg: #f0f4fa;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #16181c;
+    --fg: #e8e8e8;
+    --muted: #9aa0a6;
+    --accent: #5aa9ff;
+    --accent-soft: #1c2840;
+    --warn-bg: #3a2a10;
+    --warn-border: #d99033;
+    --tip-bg: #14301f;
+    --tip-border: #3ea870;
+    --note-bg: #251a3a;
+    --note-border: #9a85e6;
+    --code-bg: #20232a;
+    --table-border: #333a44;
+    --th-bg: #232830;
+  }
+}
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang TC", "Noto Sans TC", "Helvetica Neue", Arial, sans-serif;
+  font-size: 16.5px;
+  line-height: 1.75;
+  margin: 0;
+  padding: 0;
+}
+.layout {
+  display: grid;
+  grid-template-columns: 280px minmax(0, 1fr);
+  max-width: 1280px;
+  margin: 0 auto;
+  gap: 36px;
+  padding: 24px;
+}
+@media (max-width: 900px) {
+  .layout { grid-template-columns: 1fr; padding: 16px; }
+  nav.toc { position: static; max-height: none; border-right: none; padding: 0; }
+}
+nav.toc {
+  position: sticky;
+  top: 16px;
+  align-self: start;
+  max-height: calc(100vh - 32px);
+  overflow-y: auto;
+  font-size: 14.5px;
+  border-right: 1px solid var(--table-border);
+  padding-right: 12px;
+}
+nav.toc h2 {
+  font-size: 14px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 4px 0 12px;
+}
+nav.toc ul { list-style: none; padding-left: 0; margin: 0; }
+nav.toc li { margin: 4px 0; }
+nav.toc a {
+  color: var(--fg);
+  text-decoration: none;
+  display: block;
+  padding: 4px 8px;
+  border-radius: 6px;
+}
+nav.toc a:hover { background: var(--accent-soft); color: var(--accent); }
+nav.toc ul ul { padding-left: 16px; font-size: 13.5px; }
+nav.toc ul ul a { color: var(--muted); }
+nav.toc ul ul ul { padding-left: 14px; font-size: 13px; }
+article { min-width: 0; }
+article h1 {
+  font-size: 32px;
+  margin: 12px 0 8px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+article h2 {
+  font-size: 24px;
+  margin: 40px 0 12px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--accent-soft);
+  font-weight: 700;
+}
+article h3 {
+  font-size: 19px;
+  margin: 28px 0 10px;
+  font-weight: 600;
+  color: var(--accent);
+}
+article h4 {
+  font-size: 16.5px;
+  margin: 20px 0 8px;
+  font-weight: 600;
+}
+article p { margin: 12px 0; }
+article a { color: var(--accent); text-decoration: none; border-bottom: 1px solid transparent; }
+article a:hover { border-bottom-color: var(--accent); }
+article strong { color: var(--fg); font-weight: 700; }
+article ul, article ol { padding-left: 26px; margin: 12px 0; }
+article li { margin: 4px 0; }
+article hr {
+  border: 0;
+  border-top: 1px solid var(--table-border);
+  margin: 36px 0;
+}
+article code {
+  font-family: "SF Mono", Menlo, Consolas, monospace;
+  background: var(--code-bg);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.9em;
+}
+article pre {
+  background: var(--code-bg);
+  border-radius: 8px;
+  padding: 14px 16px;
+  overflow-x: auto;
+  font-size: 14px;
+  line-height: 1.55;
+}
+article pre code { background: none; padding: 0; }
+article blockquote {
+  margin: 16px 0;
+  padding: 12px 18px;
+  background: var(--note-bg);
+  border-left: 4px solid var(--note-border);
+  border-radius: 0 8px 8px 0;
+  color: var(--fg);
+}
+article blockquote p { margin: 6px 0; }
+/* Callout box detection via leading emoji */
+article blockquote p:first-child:has(strong:first-child) { font-weight: 600; }
+article blockquote:has(p:first-child > strong:first-of-type) {
+  /* default — purple note */
+}
+article table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 16px 0;
+  font-size: 15px;
+  overflow-x: auto;
+  display: block;
+}
+@media (min-width: 900px) {
+  article table { display: table; }
+}
+article th, article td {
+  border: 1px solid var(--table-border);
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+article th { background: var(--th-bg); font-weight: 600; }
+article tr:nth-child(2n) td { background: rgba(0,0,0,0.018); }
+@media (prefers-color-scheme: dark) {
+  article tr:nth-child(2n) td { background: rgba(255,255,255,0.025); }
+}
+.meta-card {
+  background: var(--accent-soft);
+  border-left: 4px solid var(--accent);
+  border-radius: 0 8px 8px 0;
+  padding: 14px 18px;
+  margin: 16px 0 24px;
+  font-size: 14.5px;
+}
+.meta-card p { margin: 4px 0; }
+footer.note {
+  margin-top: 56px;
+  padding-top: 20px;
+  border-top: 1px solid var(--table-border);
+  color: var(--muted);
+  font-size: 13.5px;
+  line-height: 1.6;
+}
+.print-hint {
+  margin: 12px 0 4px;
+  font-size: 13px;
+  color: var(--muted);
+}
+@media print {
+  nav.toc, .print-hint { display: none; }
+  .layout { display: block; max-width: none; }
+  article { font-size: 11pt; }
+}</style>
+</head><body>
+<div class="layout">
+<nav class="toc">
+<h2>目錄</h2>
+<ul>
+<li><a href="#為什麼這篇值得讀"
+id="toc-為什麼這篇值得讀">為什麼這篇值得讀</a></li>
+<li><a href="#這項技術現在的普及狀況"
+id="toc-這項技術現在的普及狀況">這項技術現在的普及狀況</a></li>
+<li><a href="#art-到底在做什麼" id="toc-art-到底在做什麼">ART
+到底在做什麼</a>
+<ul>
+<li><a href="#帶來的三個好處"
+id="toc-帶來的三個好處">帶來的三個好處</a></li>
+</ul></li>
+<li><a href="#part-1-量測" id="toc-part-1-量測">Part 1 — 量測</a>
+<ul>
+<li><a href="#要量幾個點原廠說喇叭數1"
+id="toc-要量幾個點原廠說喇叭數1">1.1
+要量幾個點？原廠說「喇叭數＋1」</a></li>
+<li><a href="#麥克風要放哪裡" id="toc-麥克風要放哪裡">1.2
+麥克風要放哪裡</a></li>
+<li><a href="#有第二排第三排座位怎麼辦"
+id="toc-有第二排第三排座位怎麼辦">1.3
+有第二排、第三排座位怎麼辦</a></li>
+</ul></li>
+<li><a href="#part-2-rt60-與中高頻" id="toc-part-2-rt60-與中高頻">Part 2
+— RT60 與中高頻</a>
+<ul>
+<li><a href="#art-有預設的-rt60-值嗎沒有"
+id="toc-art-有預設的-rt60-值嗎沒有">2.1 ART 有預設的 RT60
+值嗎？沒有</a></li>
+<li><a href="#為什麼只處理到-150hz中高頻卻變好了"
+id="toc-為什麼只處理到-150hz中高頻卻變好了">2.2 為什麼只處理到
+150Hz，中高頻卻變好了</a></li>
+</ul></li>
+<li><a href="#part-3-進階操作" id="toc-part-3-進階操作">Part 3 —
+進階操作</a>
+<ul>
+<li><a href="#快照snapshot省下重算的時間"
+id="toc-快照snapshot省下重算的時間">3.1
+快照（snapshot）：省下重算的時間</a></li>
+<li><a href="#喇叭群組分離" id="toc-喇叭群組分離">3.2
+喇叭群組分離</a></li>
+<li><a href="#定位會不會被搶走" id="toc-定位會不會被搶走">3.3
+定位會不會被搶走？</a></li>
+</ul></li>
+<li><a href="#part-4-lfe-與超低音" id="toc-part-4-lfe-與超低音">Part 4 —
+LFE 與超低音</a>
+<ul>
+<li><a href="#lfe-reference-是什麼" id="toc-lfe-reference-是什麼">4.1
+LFE Reference 是什麼</a></li>
+<li><a href="#方向性低頻" id="toc-方向性低頻">4.2 方向性低頻</a></li>
+<li><a href="#超低音該聚在一起還是分開"
+id="toc-超低音該聚在一起還是分開">4.3
+超低音該聚在一起還是分開？</a></li>
+<li><a href="#開孔式與密閉式可以混用嗎可以"
+id="toc-開孔式與密閉式可以混用嗎可以">4.4
+開孔式與密閉式可以混用嗎？可以</a></li>
+<li><a href="#hz-以下的極低頻infrabass"
+id="toc-hz-以下的極低頻infrabass">4.5 20Hz
+以下的極低頻（Infrabass）</a></li>
+</ul></li>
+<li><a href="#part-5-參數詳解" id="toc-part-5-參數詳解">Part 5 —
+參數詳解</a>
+<ul>
+<li><a href="#support-level支援強度" id="toc-support-level支援強度">5.1
+Support Level（支援強度）</a></li>
+<li><a href="#fslfrequency-support-low支援頻率下限"
+id="toc-fslfrequency-support-low支援頻率下限">5.2 FSL（Frequency Support
+Low，支援頻率下限）</a></li>
+<li><a href="#fsisoart-的最高處理頻段"
+id="toc-fsisoart-的最高處理頻段">5.3 Fsiso：ART 的最高處理頻段</a></li>
+<li><a href="#cross-termsart-的支援點數"
+id="toc-cross-termsart-的支援點數">5.4 CROSS TERMS：ART
+的「支援點數」</a></li>
+<li><a href="#哪些喇叭該支援哪些" id="toc-哪些喇叭該支援哪些">5.5
+哪些喇叭該支援哪些？</a></li>
+<li><a href="#spread離散度" id="toc-spread離散度">5.6
+Spread（離散度）</a></li>
+<li><a href="#增加支援喇叭數量就能減少衰減時間嗎"
+id="toc-增加支援喇叭數量就能減少衰減時間嗎">5.7
+增加支援喇叭數量，就能減少衰減時間嗎？</a></li>
+</ul></li>
+<li><a href="#重點回顧" id="toc-重點回顧">重點回顧</a></li>
+<li><a href="#資料來源與說明"
+id="toc-資料來源與說明">資料來源與說明</a></li>
+</ul>
+</nav>
+<article>
+<blockquote>
+<p>本篇整理自丹爸（丹爸YT紀）2026-01-26 影片《美國 DRC 大咖 Joe
+也服了？台灣丹爸深度解析瑞典 Dirac 原廠與美國 DRC 名家的 ART
+技術對談》，全長 42 分 32 秒。 內容為 <strong>Dirac 原廠代表
+Joss</strong> 與 <strong>Magic Beans 軟體作者 Joe N-Tell</strong>
+的技術對談重點，加上丹爸兩年來調校數十套系統的實務經驗。</p>
+</blockquote>
+<section id="為什麼這篇值得讀" class="level2">
+<h2>為什麼這篇值得讀</h2>
+<p>站上原本六篇 Dirac
+教學講的是<strong>怎麼操作</strong>（量測流程、曲線微調、Cinema 40
+客製步驟）。這一篇不同，講的是<strong>為什麼這樣設計</strong>——ART
+的運作原理、各項參數背後的邏輯，以及原廠自己怎麼解釋那些說明書上沒寫清楚的東西。</p>
+<p>先把最重要的三件事講在前面：</p>
+<ol type="1">
+<li><strong>ART 的作動範圍只有
+20Hz–150Hz</strong>，卻會讓中高頻也變好。原因在下面第 4 點。</li>
+<li><strong>量測點數不是越多越好</strong>——原廠說「喇叭數＋1」，但實務上會撞到系統上限，而且兩聲道系統量太多點反而失去活力。</li>
+<li><strong>Support Level 是負值</strong>（-6 / -18 /
+-24dB），數字越小代表支援越強，這個方向很容易搞反。</li>
+</ol>
+<p>本片完整涵蓋 22 個 ART 技術問題，以下是原始清單：</p>
+<p><img src="assets/dirac-art-interview/05.jpg"
+alt="本片完整議題清單畫面，左欄列出第1–11點（最佳測量位置數量、最佳麥克風擺放位置、單人與多人座位優化、ART預設RT60值、ART更改低頻對中高頻的影響、ART如何減少衰減時間、如何使用快照、快速分離喇叭群組、FSL是否等同高通分頻、ART如何維持指定喇叭定位、LFE參考值），右欄列出第12–22點（ART是否支援方向性低頻、超低音分組或分開處理、ART可否混合開孔與密閉式超低音、低於20Hz的極低頻、Support Level支援強度、哪些喇叭應該支援哪些、如何設置FSL、什麼是Fsiso、交叉項濾波限制、分析Spread、增加支援喇叭是否能減少衰減時間）。" />
+<em>（影片 22:30）</em></p>
+</section>
+<section id="這項技術現在的普及狀況" class="level2">
+<h2>這項技術現在的普及狀況</h2>
+<p>ART 在風暴（StormAudio）處理器獨佔 19 個月之後，Dirac
+決定下放到其他品牌：</p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>品牌／機種</th>
+<th>狀態</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>StormAudio</td>
+<td>最早獨佔，共 19 個月</td>
+</tr>
+<tr>
+<td>Denon、Marantz</td>
+<td>已支援</td>
+</tr>
+<tr>
+<td>Monoprice Monolith HTP-1</td>
+<td>已支援（ART 為 <strong>US$299</strong> 付費授權，可單買或與 Dirac
+Live Bass Control 綁售）</td>
+</tr>
+<tr>
+<td>Onkyo、miniDSP 等</td>
+<td>陸續加入</td>
+</tr>
+</tbody>
+</table>
+<p>丹爸的判斷是「勢不可擋」，未來市面上多數處理器都會用上 ART。</p>
+<p><img src="assets/dirac-art-interview/01.jpg"
+alt="MiniDSP 前後面板實機照，前面板可見輸入音壓 -10.0dB、Dolby Atmos 9.1.6 聆聽模式顯示；後面板為16組XLR平衡輸出；底部標示相容 Dolby Atmos、Dolby Vision、DTS:X、Dirac、HDMI、LDAC。用來說明 Dirac ART 技術正從風暴處理器獨佔，逐漸下放到 Denon、Marantz、Monoprice Monolith HTP-1，以及未來的 Onkyo、MiniDSP 等品牌設備。" />
+<em>（影片 0:17）</em></p>
+</section>
+<section id="art-到底在做什麼" class="level2">
+<h2>ART 到底在做什麼</h2>
+<p>簡單說：<strong>ART
+讓系統中指定的揚聲器，除了發出你要聽的直接音之外，同時發出反向的能量波</strong>，去中和空間裡造成駐波與
+SBIR（Speaker Boundary Interference
+Response，喇叭邊界干涉）的反射音。</p>
+<p>原理上像降噪耳機，但實際做的事情複雜得多——它會針對不同位置與頻率做多麥克風量測，計算出空間的頻率與時域回應聲學模型，再據此校正反射與殘留能量。</p>
+<p>原廠自己的比喻是：<strong>ART
+像在拼一幅聲音拼圖</strong>，用現場所有指定的揚聲器，拼出你需要的聲音。</p>
+<section id="帶來的三個好處" class="level3">
+<h3>帶來的三個好處</h3>
+<ol type="1">
+<li><strong>不必再堆厚重的聲學材料</strong>，能維持視聽空間的美觀（ART
+只建議房間裡保留必要的吸音處理）</li>
+<li><strong>駐波與 SBIR 被解決後，喇叭的實力才能完整發揮</strong></li>
+<li>低頻能量受控後，中高頻的細節會自然浮現</li>
+</ol>
+<p><img src="assets/dirac-art-interview/02.jpg"
+alt="一間僅用沙發、地毯、木質面板裝潢的居家視聽室，沒有安裝厚重的吸音棉或聲學擴散板，仍設有主喇叭、環繞喇叭與超低音。用來說明 ART 的優點之二：只建議在房間中設置沙發、地毯等常見清晰音材質，玩家不再需要為了控制聲學問題而犧牲空間美觀。" />
+<em>（影片 2:41）</em></p>
+<hr />
+</section>
+</section>
+<section id="part-1-量測" class="level2">
+<h2>Part 1 — 量測</h2>
+<section id="要量幾個點原廠說喇叭數1" class="level3">
+<h3>1.1 要量幾個點？原廠說「喇叭數＋1」</h3>
+<p>Dirac
+量測的目的不是聽每一個點的聲音，而是了解房間裡的<strong>波前（Wave
+Front）</strong>——聲波傳導時，一個波接一個波的前端傳遞狀況。</p>
+<p>原廠的理想值是<strong>揚聲器數量再加 1</strong>。以丹爸視聽室的 26
+支喇叭為例，理想是量 27 點。軟體本身則要求<strong>至少 6 到 9
+個位置</strong>，覆蓋主聆聽區。</p>
+<p>樣本數不足會怎樣？演算法對房間波前的理解不夠，結果就是<strong>補償過度或補償不足</strong>。</p>
+<blockquote>
+<p><strong>丹爸經驗談：27 點實務上做不到，而且不一定更好。</strong></p>
+<p>第一，Dirac 給的傳輸頻寬是固定的，資料量太大<strong>系統會直接
+crash</strong>。</p>
+<p>第二，所有校正技術最終都要回到聽感。以兩聲道系統來說，為了保存空間特性，<strong>量太多點聲音反而會失去活力</strong>。</p>
+</blockquote>
+</section>
+<section id="麥克風要放哪裡" class="level3">
+<h3>1.2 麥克風要放哪裡</h3>
+<p><strong>MLP（Main Listening
+Position，皇帝位）必須量得非常精準</strong>——放在你實際坐的位置、耳朵的高度，不能馬虎。</p>
+<p>第 2 到第 9
+點呢？<strong>放在「耳朵可能出現的位置」</strong>。想像你看電影時身體會左右移動、前後靠，就在
+MLP 周圍 <strong>60
+公分</strong>範圍內模擬那些姿勢去量。順序無所謂，重點是收集足夠的資料讓系統理解波前。</p>
+</section>
+<section id="有第二排第三排座位怎麼辦" class="level3">
+<h3>1.3 有第二排、第三排座位怎麼辦</h3>
+<p>原廠建議的順序是：</p>
+<ol type="1">
+<li>先乖乖照 MLP（通常是第一排中間）做 60 公分範圍內的 9 點量測</li>
+<li><strong>先 Save 成一個 Preset</strong> ——
+這是「獨樂樂」的設定，一個人聽最好</li>
+<li>用相同的資料繼續往下量，把麥克風放到第二排、第三排，增加樣本數</li>
+<li>量完再存一個 Preset —— 這是「眾樂樂」的設定</li>
+</ol>
+<p>不同機種能存的 Preset 數量差很多：StormAudio 有 20 組，Denon 與
+Marantz 目前是 3 組。</p>
+<blockquote>
+<p><strong>丹爸經驗談</strong>：如果真的有第二、三排座位，他認為<strong>應該連揚聲器配置一起改</strong>——設置第二組、甚至第三組側環繞。StormAudio
+的處理器對任何聲道都可以用一對、兩對甚至三對揚聲器來達成，這樣每一排的包覆感與環繞聽感才會好。</p>
+</blockquote>
+<hr />
+</section>
+</section>
+<section id="part-2-rt60-與中高頻" class="level2">
+<h2>Part 2 — RT60 與中高頻</h2>
+<section id="art-有預設的-rt60-值嗎沒有" class="level3">
+<h3>2.1 ART 有預設的 RT60 值嗎？沒有</h3>
+<p>RT60 是<strong>混響時間</strong>（reverberance
+time）：室內音源停止發聲後，迴音音壓降低 60dB 所需的時間。</p>
+<p>Dirac 實驗室裡確實希望把 RT60
+壓得越低越好，甚至想做到「不加任何聲學材料，也能打造出等同實體吸音處理的衰減特性」。</p>
+<p><strong>但 Dirac 並不會刻意強調要做到多低的 RT60。</strong>
+圖表裡那個 RT60 數值<strong>只是參考值</strong>。ART
+真正要改善的是整個音場與響應，不是達到某個特定的混響時間。</p>
+<blockquote>
+<p><strong>丹爸經驗談：兩聲道與多聲道玩家的偏好剛好相反。</strong></p>
+<ul>
+<li><strong>兩聲道</strong>玩家傾向 RT60
+<strong>高一點</strong>，帶來比較豐潤、有包圍感的音場</li>
+<li><strong>多聲道</strong>玩家因為喇叭多，<strong>較低的 RT60</strong>
+能帶來更明確穩定的音場，細節也更豐富</li>
+</ul>
+<p>做法是：第一次調完先聽，再根據聽感修正 ART 參數。</p>
+</blockquote>
+</section>
+<section id="為什麼只處理到-150hz中高頻卻變好了" class="level3">
+<h3>2.2 為什麼只處理到 150Hz，中高頻卻變好了</h3>
+<p>這是很多人的疑問。ART 的作動範圍明明是 <strong>20Hz 到 150Hz</strong>
+的低頻段。</p>
+<p>答案是：<strong>當低頻能量在空間中停留的時間受到控制，它就不會去屏蔽中頻與高頻</strong>。低頻不再糊住整個空間，150Hz
+以上的細節自然大量浮現。</p>
+<hr />
+</section>
+</section>
+<section id="part-3-進階操作" class="level2">
+<h2>Part 3 — 進階操作</h2>
+<section id="快照snapshot省下重算的時間" class="level3">
+<h3>3.1 快照（snapshot）：省下重算的時間</h3>
+<p>Dirac 只要動一個設定，基本上就會要求你按 <strong>Calculate</strong>
+重新計算，而且非常花時間。</p>
+<p>更關鍵的是——<strong>它叫 Dirac Live
+是有原因的</strong>：資料要送到瑞典的資料庫去運算。所以<strong>即使參數完全相同，兩次算出來的結果也可能不一樣</strong>。想回到原本一模一樣的設定？沒辦法，因為每次計算都是即時的。</p>
+<p><strong>快照就是為了解決這件事</strong>：把算完的結果原封不動保存下來，之後可以快速叫回，也能用來比對不同參數各自算出來的結果。</p>
+</section>
+<section id="喇叭群組分離" class="level3">
+<h3>3.2 喇叭群組分離</h3>
+<p>ART
+裡可以把喇叭按用途分群（前置、環繞、超低音等），方便做細部校正與參數管理。</p>
+<p><strong>什麼時候該拆開？</strong></p>
+<ul>
+<li><strong>天空聲道的喇叭有大有小</strong> → 大小支要拆開</li>
+<li><strong>距離差異過大的喇叭不宜同群</strong> ——
+因為與聆聽位置距離不同，單體的離軸效應不同，量測結果可能差很多，需要各自設定該有的
+ART 參數</li>
+</ul>
+</section>
+<section id="定位會不會被搶走" class="level3">
+<h3>3.3 定位會不會被搶走？</h3>
+<p>Joe
+問了一個好問題：既然所有喇叭都同時在發聲（不管直接音還是反向音），怎麼維持指定喇叭的定位？左前聲道要怎麼還是左前聲道的聲音？</p>
+<p><strong>Joss
+的回應</strong>：藉由群組控制與支援強度的調整，讓聲音的拼圖在準確的時間內到達準確的聆聽位置，聽覺定位就不會被其他喇叭搶走。這也呼應了前面——<strong>量測點越多，ART
+對波前理解越完整，定位就越精準</strong>。</p>
+<p>⚠️ <strong>Joss 特別提醒</strong>：對單一揚聲器下了<strong>過高的 ART
+支援強度</strong>，反而可能造成定位模糊。因為它的直接音與反向音要同時輸出。</p>
+<blockquote>
+<p><strong>丹爸經驗談</strong>：如果主揚聲器的低頻下潛不錯，<strong>強烈建議超低音的支援上限不要拉到
+150Hz、不要坐滿</strong>。好處有兩個：超低音本身更輕鬆，而且你對超低音位置的指向性感知會更低。</p>
+</blockquote>
+<hr />
+</section>
+</section>
+<section id="part-4-lfe-與超低音" class="level2">
+<h2>Part 4 — LFE 與超低音</h2>
+<section id="lfe-reference-是什麼" class="level3">
+<h3>4.1 LFE Reference 是什麼</h3>
+<p><strong>LFE 參考值決定 LFE
+訊號校正後的相位</strong>——也就是到達聆聽位置的時間要對準哪一支揚聲器。</p>
+<p>設定在前置就跟著前置，設定在中置就跟著中置，<strong>超低音的定位會跑到那邊去</strong>。</p>
+<ul>
+<li><strong>一般最佳選擇：中置揚聲器</strong></li>
+<li><strong>若使用虛擬中置（Phantom
+Center）</strong>、系統中沒有實體中置：設在左或右揚聲器都可以</li>
+</ul>
+</section>
+<section id="方向性低頻" class="level3">
+<h3>4.2 方向性低頻</h3>
+<p>意思是在分頻點之後，把低頻交給指定的超低音執行——把一個聲道的聲音切開，分頻點以上給某支揚聲器，以下給某支超低音，接近分音的概念。</p>
+<p><strong>Joss 說怎麼做</strong>：在 ART
+中指定某支超低音去支援那支揚聲器。例如左揚聲器分頻點設在 50Hz，50Hz
+以下拉一支專屬超低音，針對 20–50Hz 與它結合。</p>
+<blockquote>
+<p><strong>丹爸經驗談</strong>：這個「沒經驗，從來沒這樣做過」，但值得嘗試。代價是那支超低音要專門服務某一支揚聲器，<strong>就沒辦法再參與超低音群組的工作</strong>。</p>
+</blockquote>
+</section>
+<section id="超低音該聚在一起還是分開" class="level3">
+<h3>4.3 超低音該聚在一起還是分開？</h3>
+<p><strong>Joss
+的回應</strong>：如果各支超低音的位置與響應差異很大，<strong>建議分開處理</strong>。</p>
+<p>分開之後它們仍然會<strong>協力完成同一條目標曲線</strong>——主要發聲仍是主超低音，其他超低音從旁支援。而且每一支都可以精細設定<strong>支援範圍</strong>與<strong>支援強度</strong>，達成目標會更輕鬆，對環境的影響也更小。</p>
+</section>
+<section id="開孔式與密閉式可以混用嗎可以" class="level3">
+<h3>4.4 開孔式與密閉式可以混用嗎？可以</h3>
+<p><strong>Joss 的回應</strong>：ART
+會根據每一支揚聲器（含超低音）的<strong>實際響應特性</strong>與要達成的目標曲線，個別設定它需要的濾波器，權衡每一支能帶來的貢獻——<strong>不是齊頭式地讓所有超低音做同樣的事</strong>。</p>
+<p>所以不同種類的超低音可以整合。</p>
+<p><img src="assets/dirac-art-interview/03.jpg"
+alt="左側為一對並排的書架喇叭型超低音，右側為單顆黑色箱體超低音，兩者外型與驅動單體結構明顯不同。對應 Joss 回答「ART 是否能混合開孔式與密閉式超低音一起使用」：答案是可以，因為 ART 會根據每一支超低音的實際響應特性與要達成的目標曲線，個別為它設計專屬濾波器，而不是齊頭式地要求所有超低音做同樣的事。" />
+<em>（影片 21:43）</em></p>
+<blockquote>
+<p><strong>丹爸經驗談：超低音多多益善。</strong></p>
+<p>既然是拿所有超低音去達成同一條目標曲線，<strong>不必擔心超低音變多低頻就會過量</strong>——低頻的多寡不是由數量決定，是由<strong>目標曲線</strong>決定的。數量多反而能讓房間裡的低頻響應更平衡。</p>
+<p><strong>但選擇很重要</strong>：既然 ART 支援頻段是
+20–150Hz，超低音必須能下潛到 20Hz，而且<strong>建議在 20Hz 仍維持 100dB
+的輸出</strong>，放進 ART 系統才真的有幫助。</p>
+</blockquote>
+<p><img src="assets/dirac-art-interview/04.jpg"
+alt="SPL 頻率響應量測曲線圖（橫軸 2Hz–465Hz），紅線標示 SUB5、SUB1 兩顆超低音的響應曲線在低頻端明顯不同，兩者約在 10Hz 附近交會後於 20Hz 以上趨於一致並維持約 110dB 平坦輸出。畫面字幕「建議在20Hz」對應丹爸經驗談：選超低音要能下潛到 20Hz，且在 20Hz 仍要維持約 100dB 輸出音壓，這樣的超低音放進 ART 系統才真正有幫助。" />
+<em>（影片 22:05）</em></p>
+</section>
+<section id="hz-以下的極低頻infrabass" class="level3">
+<h3>4.5 20Hz 以下的極低頻（Infrabass）</h3>
+<p>如果你的超低音（或主喇叭）能低到 20Hz 以下，ART
+裡會出現一個<strong>核取方塊</strong>。勾選之後，20Hz
+以下的極低頻會<strong>不經處理直接放行</strong>，讓低頻持續往下延伸到你的器材能力極限。</p>
+<hr />
+</section>
+</section>
+<section id="part-5-參數詳解" class="level2">
+<h2>Part 5 — 參數詳解</h2>
+<section id="support-level支援強度" class="level3">
+<h3>5.1 Support Level（支援強度）</h3>
+<p>概念是：<strong>這支揚聲器要拿出多少力量去幫助別人</strong>。</p>
+<p><strong>它是負值</strong>——例如 -6、-18、-24dB。原廠文件的標稱值是
+<strong>-18dB</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>設定</th>
+<th>效果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>-24dB</strong></td>
+<td>該支援群組<strong>貢獻更多</strong></td>
+</tr>
+<tr>
+<td><strong>-18dB</strong></td>
+<td>標稱值</td>
+</tr>
+<tr>
+<td><strong>-6dB</strong></td>
+<td>該支援群組<strong>貢獻較少</strong></td>
+</tr>
+</tbody>
+</table>
+<p>⚠️ 這個方向很容易搞反。設定入口在 Dirac Live 視窗右側 LFE
+群組的「…」符號。</p>
+<p>Joss
+在訪談中提到，<strong>維持預設的負值設定基本上是蠻安全的</strong>，可以先照預設值走再視聽感調整。</p>
+</section>
+<section id="fslfrequency-support-low支援頻率下限" class="level3">
+<h3>5.2 FSL（Frequency Support Low，支援頻率下限）</h3>
+<p>控制<strong>支援範圍的最低頻率</strong>——這支喇叭要往下支援別人到哪一個頻率為止。</p>
+<p>Joe 直接問了：<strong>FSL 是不是就等於高通分頻？</strong></p>
+<p><strong>Joss 的回答是否定的。</strong> FSL
+<strong>不是傳統的分頻點</strong>，不是「這個頻率以下就直接砍掉」，而是<strong>在該頻段以下做漸進式滾降</strong>。它控制的是這支喇叭在
+ART 裡支援別人的<strong>頻段底線</strong>。</p>
+<p>實際用途是<strong>防止小喇叭被灌進它撐不住的低頻</strong>。所以喇叭分群時要照能力分——<strong>小喇叭跟小喇叭一組</strong>、大喇叭跟大喇叭一組，各自設定合適的支援下限。</p>
+</section>
+<section id="fsisoart-的最高處理頻段" class="level3">
+<h3>5.3 Fsiso：ART 的最高處理頻段</h3>
+<p>這個要跟 FSL 分清楚——<strong>它們是相反的兩端</strong>。</p>
+<p>控制面板上有一串叫 <strong>Fsiso</strong>
+的字母，它是個縮寫，但<strong>連 Joss
+自己都忘記是哪幾個字的縮寫了</strong>。</p>
+<p>實務上可以把它理解為 <strong>ART
+的最高處理頻段</strong>，而且是<strong>整個系統的</strong>最高處理頻段。</p>
+<p><strong>預設 150Hz，通常不需要改。</strong>
+大多數落地／書架揚聲器做到 150Hz 都沒問題。</p>
+</section>
+<section id="cross-termsart-的支援點數" class="level3">
+<h3>5.4 CROSS TERMS：ART 的「支援點數」</h3>
+<p>Joss 向 Joe 解釋了這個專有名詞，台灣玩家給它的名字是 <strong>ART
+的支援點數</strong>。</p>
+<p>概念像遊戲裡的行動點數：<strong>每執行一項支援任務就會消耗一定點數</strong>，而總點數是有限的。</p>
+<table>
+<thead>
+<tr>
+<th>機種</th>
+<th>支援點數</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Denon、Marantz</td>
+<td><strong>固定 98 點</strong>（不論機器多高階，受 DSP 板限制）</td>
+</tr>
+<tr>
+<td>StormAudio</td>
+<td>最多 <strong>400 多點</strong></td>
+</tr>
+</tbody>
+</table>
+<p>這個數字來自機器內 <strong>DSP 板的算力</strong>，不是軟體限制。</p>
+<blockquote>
+<p>這也是為什麼 5.6 的 Spread
+分析特別重要——<strong>點數有限時，你必須判斷哪個支援群組值得留、哪個該省下來</strong>。</p>
+</blockquote>
+</section>
+<section id="哪些喇叭該支援哪些" class="level3">
+<h3>5.5 哪些喇叭該支援哪些？</h3>
+<p>這件事要看現場的揚聲器陣容而定，但有兩個原則：</p>
+<ul>
+<li><strong>左、右聲道通常是陣容中最大支的</strong>，可以拿出力量支援別人<strong>到中頻</strong>。ART
+裡的<strong>預設值是 50Hz</strong>。</li>
+<li><strong>中置揚聲器建議專心做自己的事、不去支援別人。</strong>
+因為中置在前場約佔 <strong>75%
+的用量</strong>，本身工作已經很重，讓它專注反而音色較不受影響。</li>
+</ul>
+<p>這一點是 Joe 與 Joss 兩人共同的看法。</p>
+<p><img src="assets/dirac-art-interview/06.jpg"
+alt="實際視聽室器材照，左側為五單體落地式主喇叭，中間為六角形箱體超低音，右側為多單體中置聲道喇叭，畫面標題「17.哪些喇叭應該支援哪些？」。對應內容：左右聲道通常是陣容中最大支的喇叭，可以拿出力量支援其他喇叭到中頻（ART 預設支援上限為 50Hz）；中置聲道因為前場約佔75%用量、本身工作已經很重，建議專心做好自己的事、不去支援別人，音色較不受影響。" />
+<em>（影片 24:39）</em></p>
+</section>
+<section id="spread離散度" class="level3">
+<h3>5.6 Spread（離散度）</h3>
+<p>Spread
+用來觀察分析<strong>不同量測位置之間，頻率與相位的一致性</strong>。</p>
+<ul>
+<li><strong>Spread 越窄</strong> → 各聆聽點聽到的差異越小</li>
+<li><strong>Spread 越肥大</strong> → 各位置之間差異越大</li>
+</ul>
+<p><strong>怎麼用它做決策</strong>：當 ART
+的支援點數有限時，把某個群組加進去貢獻給別人，到底有沒有好處？看
+Spread。</p>
+<ul>
+<li>放下去 Spread 變窄 → 有幫助，留著</li>
+<li>放下去完全沒改善 → 省下來，讓它去幫別的喇叭</li>
+</ul>
+</section>
+<section id="增加支援喇叭數量就能減少衰減時間嗎" class="level3">
+<h3>5.7 增加支援喇叭數量，就能減少衰減時間嗎？</h3>
+<p>Joe 的最後一問，<strong>Joss 的回答是「Yes and No」</strong>。</p>
+<p>關鍵不在數量，而在<strong>你是不是用了正確的喇叭去支援</strong>。合適的支援喇叭確實能改變低頻能量分佈與衰減行為；但<strong>配置不當也可能產生相位干涉等反效果</strong>。</p>
+<blockquote>
+<p><strong>Joss
+強調：揚聲器良好的擺位，絕對是一切設置的基礎。</strong></p>
+</blockquote>
+<blockquote>
+<p><strong>丹爸補充一個容易被忽略的陷阱</strong>：對稱的擺位可能造成<strong>對稱的問題</strong>。在一個左右對稱的空間裡，兩側牆面距離一模一樣，左邊喇叭有的問題右邊也會有——這一點從量測曲線就看得出來，兩邊的問題會長得一樣。</p>
+</blockquote>
+<hr />
+</section>
+</section>
+<section id="重點回顧" class="level2">
+<h2>重點回顧</h2>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>主題</th>
+<th>結論</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>量測點數</td>
+<td>原廠理想＝喇叭數＋1；軟體要求至少 6–9 點；<strong>實務上量太多會
+crash，兩聲道還可能失去活力</strong></td>
+</tr>
+<tr>
+<td>麥克風位置</td>
+<td>MLP 要極精準；其餘點放在 MLP 周圍 <strong>60
+公分</strong>、耳朵可能出現的位置</td>
+</tr>
+<tr>
+<td>多排座位</td>
+<td>先存「獨樂樂」Preset，再往後排加量測存「眾樂樂」Preset</td>
+</tr>
+<tr>
+<td>RT60</td>
+<td><strong>只是參考值</strong>，ART
+目標是音場與響應而非特定混響時間；兩聲道偏好高、多聲道偏好低</td>
+</tr>
+<tr>
+<td>中高頻變好</td>
+<td>低頻能量受控後不再屏蔽中高頻</td>
+</tr>
+<tr>
+<td>snapshot</td>
+<td>Dirac Live
+每次運算結果可能不同，<strong>快照是唯一能原封保存結果的方法</strong></td>
+</tr>
+<tr>
+<td>LFE Reference</td>
+<td>決定 LFE
+相位對準哪支喇叭；<strong>一般選中置</strong>，虛擬中置時選左或右</td>
+</tr>
+<tr>
+<td>超低音</td>
+<td>響應差異大就分開處理；可混用開孔與密閉式；<strong>多多益善，但要能在
+20Hz 維持 100dB</strong></td>
+</tr>
+<tr>
+<td>Support Level</td>
+<td><strong>負值</strong>，-24dB 貢獻多、-18dB 標稱、-6dB 貢獻少</td>
+</tr>
+<tr>
+<td><strong>FSL</strong></td>
+<td>支援<strong>下限</strong>，<strong>不是</strong>高通分頻，是漸進式滾降；小喇叭要小心別超過負荷</td>
+</tr>
+<tr>
+<td><strong>Fsiso</strong></td>
+<td>ART 的<strong>最高</strong>處理頻段（與 FSL 相反端），預設
+<strong>150Hz</strong>，通常不用改</td>
+</tr>
+<tr>
+<td><strong>CROSS TERMS</strong></td>
+<td>支援點數；Denon/Marantz 固定 <strong>98 點</strong>、StormAudio
+<strong>400 多點</strong>，受 DSP 算力限制</td>
+</tr>
+<tr>
+<td>誰支援誰</td>
+<td>左右聲道最大支可支援到中頻（預設
+<strong>50Hz</strong>）；<strong>中置佔前場 75%
+用量，建議不支援別人</strong></td>
+</tr>
+<tr>
+<td>Spread</td>
+<td>越窄越好；用它判斷某個支援群組該不該留</td>
+</tr>
+<tr>
+<td>支援喇叭越多越好？</td>
+<td><strong>Yes and No</strong>——關鍵是用對喇叭，擺位才是基礎</td>
+</tr>
+</tbody>
+</table>
+<hr />
+</section>
+<section id="資料來源與說明" class="level2">
+<h2>資料來源與說明</h2>
+<ul>
+<li><strong>影片</strong>：丹爸YT紀《美國 DRC 大咖 Joe
+也服了？台灣丹爸深度解析瑞典 Dirac 原廠與美國 DRC 名家的 ART
+技術對談》（2026-01-26，42:32）　<a
+href="https://youtu.be/rAE6u9Stb3o">YouTube</a></li>
+<li><strong>對談雙方</strong>：Dirac 原廠代表 Joss ｜ <a
+href="https://magicbeansaudio.com/">Magic Beans</a> 軟體作者 Joe
+N-Tell</li>
+<li><strong>官方文件</strong>：<a
+href="https://www.dirac.com/live/dirac-live-active-room-treatment/">Dirac
+Live ART 說明</a>、<a
+href="https://helpdesk.dirac.com/en/dirac-art/How-to-ART-Channel-Group-and-Support-Settings-8382">ART
+Channel Group and Support Settings</a></li>
+</ul>
+<blockquote>
+<p><strong>關於本篇的整理方式</strong>：影片沒有字幕，逐字稿以語音辨識產生後，專有名詞逐一比對官方文件與影片內建字幕校正（例如
+Support Level 的標稱值、F-support Low 的正確寫法、機種型號）。
+<strong>丹爸的實務經驗談一律標示為引用框</strong>，與 Dirac
+原廠說法分開，方便讀者分辨哪些是官方立場、哪些是玩家實測心得。
+部分人名（Joss）依影片內建字幕寫法，未能進一步查得完整姓名。</p>
+</blockquote>
+<p>工具版本：2026-07-31</p>
+</section>
+</article>
+</div>
+</body></html>
