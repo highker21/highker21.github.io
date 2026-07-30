@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>回診日期計算機（28／56／84／91 天）</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+  :root{
+    --accent:#0e6e6e; --ink:#132020; --line:#d8e4e4; --soft:#f4f9f9; --bg:#eaf2f2;
+    --muted:#5f7070;
+    --warn:#b4540a; --warnbg:#fff4e8;
+    --holi:#b03030; --holibg:#fdeeee;
+    --wk:#8a6d1f;  --wkbg:#fdf8e6;
+    --good:#0a7d43; --goodbg:#eafaf0;
+  }
+  *{box-sizing:border-box;}
+  body{font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;
+    color:var(--ink); background:var(--bg); margin:0; padding:0 16px 60px; line-height:1.7;}
+  .wrap{max-width:860px; margin:0 auto;}
+  h1{font-size:22px; margin:22px 0 4px;}
+  .sub{color:var(--muted); font-size:14px; margin-bottom:16px;}
+  .card{background:#fff; border:1px solid var(--line); border-radius:10px;
+    padding:16px 18px; margin:14px 0;}
+
+  .row{display:flex; flex-wrap:wrap; gap:14px; align-items:flex-end;}
+  label.f{display:flex; flex-direction:column; gap:5px; font-size:13.5px; color:var(--muted);}
+  input[type=date],input[type=number]{border:1px solid var(--line); border-radius:7px;
+    padding:9px 11px; font-size:16px; font-family:inherit; color:var(--ink);}
+  button{background:var(--accent); color:#fff; border:0; border-radius:8px;
+    padding:10px 18px; font-size:15px; font-weight:600; cursor:pointer; font-family:inherit;}
+  button:hover{background:#0b5a5a;}
+  .ghost{background:#fff; color:var(--accent); border:1px solid var(--accent);}
+  .ghost:hover{background:var(--soft);}
+
+  table{border-collapse:collapse; width:100%; margin:6px 0; font-size:14px;}
+  th,td{border:1px solid var(--line); padding:9px 10px; text-align:left; vertical-align:top;}
+  th{background:var(--soft); font-weight:600; font-size:13px;}
+  td.n{white-space:nowrap;}
+  tr.holi td{background:var(--holibg);}
+  tr.wk td{background:var(--wkbg);}
+  .tag{display:inline-block; font-size:12px; border-radius:10px; padding:1px 9px;
+    font-weight:600; white-space:nowrap;}
+  .tag.ok{background:var(--goodbg); color:var(--good);}
+  .tag.h{background:#f7d4d4; color:var(--holi);}
+  .tag.w{background:#f7edcd; color:var(--wk);}
+  .tag.q{background:#e6e6e6; color:#555;}
+  .big{font-size:16px; font-weight:600;}
+  .roc{color:var(--muted); font-size:12.5px;}
+  .alt{font-size:12.5px; color:var(--accent);}
+
+  .note{background:var(--warnbg); border:1px solid #f0c69a; border-radius:8px;
+    padding:11px 14px; font-size:13.5px; margin:12px 0;}
+  .note b{color:var(--warn);}
+  .legend{font-size:12.5px; color:var(--muted); margin-top:8px;}
+  footer{color:var(--muted); font-size:12.5px; margin-top:30px; padding-top:12px;
+    border-top:1px solid var(--line);}
+  @media print{
+    body{background:#fff; padding:0;} .card{border:none; padding:0;}
+    .noprint{display:none !important;} table{font-size:12px;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <h1><i class="fa-regular fa-calendar-check" style="color:var(--accent)"></i> 回診日期計算機</h1>
+  <div class="sub">輸入起算日，算出 28／56／84／91 天後的日期，並標出是否落在<b>國定假日</b>或<b>週末</b>。</div>
+
+  <div class="card noprint">
+    <div class="row">
+      <label class="f">起算日（通常是今天／看診日）
+        <input type="date" id="d0">
+      </label>
+      <label class="f">另外加算（選填，天）
+        <input type="number" id="extra" min="1" max="3650" placeholder="例如 180">
+      </label>
+      <button id="go"><i class="fa-solid fa-calculator"></i> 計算</button>
+      <button class="ghost" id="today">回到今天</button>
+      <button class="ghost" id="copy"><i class="fa-regular fa-copy"></i> 複製結果</button>
+      <button class="ghost" onclick="window.print()"><i class="fa-solid fa-print"></i> 列印</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div id="head" class="big" style="margin-bottom:10px"></div>
+    <table id="out"></table>
+    <div class="legend">
+      <span class="tag ok">可看診</span>＝平日
+      <span class="tag w">週末</span>＝週六或週日
+      <span class="tag h">國定假日</span>＝含連假補假日
+      <span class="tag q">資料未涵蓋</span>＝超出假日表範圍，未判斷
+      <br>遇到假日或週末時，右欄會提供**前一個上班日**與**後一個上班日**供選擇。
+    </div>
+    <div id="warn"></div>
+  </div>
+
+  <div class="card noprint">
+    <b>為什麼是 28／56／84／91 天</b>
+    <ul style="margin:8px 0 0; padding-left:22px; font-size:14px;">
+      <li><b>28 天</b>＝4 週（一個月份的處方）</li>
+      <li><b>56 天</b>＝8 週（兩個月份）</li>
+      <li><b>84 天</b>＝12 週（三個月份，慢性處方箋常用）</li>
+      <li><b>91 天</b>＝13 週（滿一季；有些排程以季為單位）</li>
+    </ul>
+    <div style="margin-top:8px; font-size:13.5px; color:var(--muted)">
+      84 天與 91 天都列出來，是因為「三個月」在不同情境下的算法不同——依 12 週或依整季，差 7 天。
+    </div>
+  </div>
+
+  <footer>
+    工具版本：2026-07-30（首版：28／56／84／91 天＋自訂天數，標示國定假日與週末，並建議前後上班日）<br>
+    <b>國定假日資料涵蓋範圍：2026-01-01 ～ 2027-12-31</b>，依行政院人事行政總處「政府行政機關辦公日曆表」115／116 年版整理（含連假補假日；2025 下半年起已無補班制度）。<br>
+    超出上述範圍的日期，工具只算週末、<b>不會判斷國定假日</b>，並會明確標示「資料未涵蓋」——請自行查證。<br>
+    純前端計算，不傳送任何資料。日期關乎看診與領藥，請以實際門診公告為準。
+  </footer>
+</div>
+
+<script>
+/* 國定假日表（含連假補假日）。來源：行政院人事行政總處 政府行政機關辦公日曆表 115／116 年版。
+   ⚠️ 只涵蓋 2026-01-01 ～ 2027-12-31；超出範圍時 UI 會標示「資料未涵蓋」而不是假裝是平日。 */
+const HOLIDAYS = {
+  // ── 2026（民國115）──
+  '2026-01-01':'開國紀念日',
+  '2026-02-14':'春節連假',   '2026-02-15':'小年夜',     '2026-02-16':'除夕',
+  '2026-02-17':'春節',       '2026-02-18':'春節',       '2026-02-19':'春節',
+  '2026-02-20':'春節補假',   '2026-02-21':'春節補假',   '2026-02-22':'春節補假',
+  '2026-02-27':'和平紀念日補假', '2026-02-28':'和平紀念日', '2026-03-01':'和平紀念日補假',
+  '2026-04-03':'兒童節補假', '2026-04-04':'兒童節',
+  '2026-04-05':'民族掃墓節', '2026-04-06':'民族掃墓節補假',
+  '2026-05-01':'勞動節',     '2026-05-02':'勞動節補假', '2026-05-03':'勞動節補假',
+  '2026-06-19':'端午節',     '2026-06-20':'端午節補假', '2026-06-21':'端午節補假',
+  '2026-09-25':'中秋節',     '2026-09-26':'中秋節補假', '2026-09-27':'中秋節補假',
+  '2026-09-28':'教師節',
+  '2026-10-09':'國慶日補假', '2026-10-10':'國慶日',     '2026-10-11':'國慶日補假',
+  '2026-10-24':'光復節補假', '2026-10-25':'臺灣光復節', '2026-10-26':'光復節補假',
+  '2026-12-25':'行憲紀念日', '2026-12-26':'行憲紀念日補假', '2026-12-27':'行憲紀念日補假',
+  // ── 2027（民國116）──
+  '2027-01-01':'開國紀念日', '2027-01-02':'開國紀念日連假', '2027-01-03':'開國紀念日連假',
+  '2027-02-04':'小年夜',     '2027-02-05':'除夕',
+  '2027-02-06':'春節',       '2027-02-07':'春節',       '2027-02-08':'春節',
+  '2027-02-09':'春節補假',   '2027-02-10':'春節補假',
+  '2027-02-27':'和平紀念日連假', '2027-02-28':'和平紀念日', '2027-03-01':'和平紀念日補假',
+  '2027-04-03':'兒童節連假', '2027-04-04':'兒童節',
+  '2027-04-05':'民族掃墓節', '2027-04-06':'民族掃墓節補假',
+  '2027-04-30':'勞動節補假', '2027-05-01':'勞動節',     '2027-05-02':'勞動節連假',
+  '2027-06-09':'端午節',
+  '2027-09-15':'中秋節',
+  '2027-09-28':'教師節',
+  '2027-10-09':'國慶日連假', '2027-10-10':'國慶日',     '2027-10-11':'國慶日補假',
+  '2027-10-23':'光復節連假', '2027-10-24':'光復節連假', '2027-10-25':'臺灣光復節',
+  '2027-12-24':'行憲紀念日補假', '2027-12-25':'行憲紀念日', '2027-12-26':'行憲紀念日連假',
+  '2027-12-31':'開國紀念日補假（117 年元旦適逢週六）',
+};
+const COVER_FROM = '2026-01-01', COVER_TO = '2027-12-31';
+const WD = ['日','一','二','三','四','五','六'];
+const BASE = [
+  {d:28, label:'1 個月', hint:'4 週'},
+  {d:56, label:'2 個月', hint:'8 週'},
+  {d:84, label:'3 個月', hint:'12 週'},
+  {d:91, label:'3 個月', hint:'13 週／滿一季'},
+];
+
+const $ = s => document.querySelector(s);
+const iso = dt => `${dt.getFullYear()}-${String(dt.getMonth()+1).padStart(2,'0')}-${String(dt.getDate()).padStart(2,'0')}`;
+const addDays = (dt,n) => { const x = new Date(dt.getTime()); x.setDate(x.getDate()+n); return x; };
+const roc = dt => `民國 ${dt.getFullYear()-1911} 年 ${dt.getMonth()+1} 月 ${dt.getDate()} 日`;
+const inCover = s => s >= COVER_FROM && s <= COVER_TO;
+
+// 分類：holiday / weekend / work / unknown（超出假日表範圍）
+function classify(dt){
+  const s = iso(dt), dow = dt.getDay();
+  if (HOLIDAYS[s]) return {kind:'holiday', name:HOLIDAYS[s]};
+  if (dow === 0 || dow === 6) return {kind:'weekend', name: dow===0 ? '週日' : '週六'};
+  if (!inCover(s)) return {kind:'unknown', name:'假日資料未涵蓋'};
+  return {kind:'work', name:'平日'};
+}
+const isOff = dt => ['holiday','weekend'].includes(classify(dt).kind);
+
+// 找前／後一個上班日（最多找 30 天，避免長連假找不到）
+function nearestWork(dt, dir){
+  for (let i=1;i<=30;i++){
+    const c = addDays(dt, dir*i);
+    if (!isOff(c)) return {dt:c, gap:i};
+  }
+  return null;
+}
+
+function render(){
+  const v = $('#d0').value;
+  if (!v){ $('#out').innerHTML=''; $('#head').textContent='請先選擇起算日'; $('#warn').innerHTML=''; return; }
+  const d0 = new Date(v + 'T00:00:00');
+  if (isNaN(d0)){ $('#head').textContent='日期格式不正確'; return; }
+
+  const rows = BASE.slice();
+  const ex = parseInt($('#extra').value, 10);
+  if (Number.isFinite(ex) && ex > 0) rows.push({d:ex, label:`自訂 ${ex} 天`, hint:`約 ${(ex/7).toFixed(1)} 週`});
+
+  const c0 = classify(d0);
+  $('#head').innerHTML = `起算日：<b>${v}（${WD[d0.getDay()]}）</b>` +
+    `<span class="roc">　${roc(d0)}</span>` +
+    (c0.kind==='holiday' ? `　<span class="tag h">起算日本身是${c0.name}</span>` : '');
+
+  let html = `<tr><th>間隔</th><th>日期</th><th>星期</th><th>民國</th><th>狀態</th><th>若不能看診</th></tr>`;
+  let anyOff = false, anyUnknown = false;
+
+  for (const r of rows){
+    const dt = addDays(d0, r.d), c = classify(dt);
+    const cls = c.kind==='holiday' ? 'holi' : (c.kind==='weekend' ? 'wk' : '');
+    let tag = `<span class="tag ok">可看診</span>`;
+    if (c.kind==='holiday') tag = `<span class="tag h">${c.name}</span>`;
+    else if (c.kind==='weekend') tag = `<span class="tag w">${c.name}</span>`;
+    else if (c.kind==='unknown') tag = `<span class="tag q">資料未涵蓋</span>`;
+
+    let alt = '—';
+    if (c.kind==='holiday' || c.kind==='weekend'){
+      anyOff = true;
+      const p = nearestWork(dt,-1), n = nearestWork(dt,+1);
+      const bits = [];
+      if (p) bits.push(`提前 ${p.gap} 天 → <b>${iso(p.dt)}</b>（${WD[p.dt.getDay()]}）`);
+      if (n) bits.push(`延後 ${n.gap} 天 → <b>${iso(n.dt)}</b>（${WD[n.dt.getDay()]}）`);
+      alt = `<span class="alt">${bits.join('<br>')}</span>`;
+    }
+    if (c.kind==='unknown') anyUnknown = true;
+
+    html += `<tr class="${cls}"><td class="n"><b>${r.label}</b><br><span class="roc">${r.d} 天・${r.hint}</span></td>` +
+            `<td class="n big">${iso(dt)}</td><td class="n">${WD[dt.getDay()]}</td>` +
+            `<td class="n roc">${roc(dt)}</td><td class="n">${tag}</td><td>${alt}</td></tr>`;
+  }
+  $('#out').innerHTML = html;
+
+  const notes = [];
+  if (anyOff) notes.push('有日期落在<b>國定假日或週末</b>，已於最右欄列出前後最近的上班日；實際門診時段仍請依院所公告。');
+  if (anyUnknown) notes.push(`有日期<b>超出國定假日資料範圍</b>（目前只到 ${COVER_TO}），該列只判斷了週末，<b>國定假日未判斷</b>，請自行查證。`);
+  $('#warn').innerHTML = notes.length ? `<div class="note">${notes.map(n=>'<div>⚠️ '+n+'</div>').join('')}</div>` : '';
+}
+
+$('#go').onclick = render;
+$('#d0').onchange = render;
+$('#extra').oninput = render;
+$('#today').onclick = () => { $('#d0').value = iso(new Date()); render(); };
+$('#copy').onclick = async () => {
+  const t = [...document.querySelectorAll('#out tr')].map(tr =>
+    [...tr.children].map(td => td.innerText.replace(/\s*\n\s*/g,' ').trim()).join('\t')).join('\n');
+  try { await navigator.clipboard.writeText($('#head').innerText + '\n' + t);
+        $('#copy').innerHTML = '<i class="fa-solid fa-check"></i> 已複製';
+        setTimeout(()=>$('#copy').innerHTML='<i class="fa-regular fa-copy"></i> 複製結果', 1800); }
+  catch(e){ alert('複製失敗，請手動選取表格'); }
+};
+
+$('#d0').value = iso(new Date());
+render();
+</script>
+</body>
+</html>
