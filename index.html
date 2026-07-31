@@ -8878,7 +8878,22 @@
 
 
       <h1 class="title toc-ignore">Highker’s homepage for teaching</h1>
-      <h4 class="date">Update: 2025-05-16</h4>
+      <h4 class="date" id="last-update">Update: 2026-07-31</h4>
+      <script>
+        // 自動顯示本站最後一次 commit 的日期（台灣時間），免得又忘了手動改。
+        // 抓不到（離線／GitHub API 限流）就靜默保留上面寫死的日期。
+        (function () {
+          fetch('https://api.github.com/repos/highker21/highker21.github.io/commits?per_page=1')
+            .then(function (r) { return r.ok ? r.json() : Promise.reject(r.status); })
+            .then(function (c) {
+              var d = c && c[0] && c[0].commit && c[0].commit.committer && c[0].commit.committer.date;
+              if (!d) return;
+              document.getElementById('last-update').textContent =
+                'Update: ' + new Date(d).toLocaleDateString('sv-SE', { timeZone: 'Asia/Taipei' });
+            })
+            .catch(function () { /* 保留寫死的日期 */ });
+        })();
+      </script>
 
     </div>
 
