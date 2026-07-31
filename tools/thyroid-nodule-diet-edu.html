@@ -1,0 +1,309 @@
+<!DOCTYPE html><html lang="zh-Hant"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="author" content="盧子文醫師 - Dr. Lu Tz-Wen">
+<meta name="description" content="甲狀腺結節飲食與生活衛教（實證版・6 國語言）。依 2024 ATA 指引整理，破除十字花科與豆製品的錯誤禁忌，可列印 A4。">
+<title>甲狀腺結節 飲食與生活衛教（實證版・6 國語言）</title>
+<style>
+:root{
+  --ink:#1b1f1d;--sub:#5f655f;--line:#e6e2d8;--paper:#faf8f2;--card:#fff;--faint:#9a978c;
+  --ok:#27ae60;--mod:#e67e22;--warn:#c0392b;--doc:#2c3e50;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#eceae2;font-family:"PingFang TC","Noto Sans TC","Microsoft JhengHei","Sukhumvit Set",sans-serif;color:var(--ink);padding:20px 12px;-webkit-font-smoothing:antialiased}
+
+/* 語言切換 */
+.tabs{max-width:900px;margin:0 auto 14px;display:flex;gap:6px;flex-wrap:wrap}
+.tab{flex:1 1 130px;text-align:center;padding:10px 6px;border-radius:10px;border:1px solid var(--line);background:#fff;cursor:pointer;font-weight:800;color:var(--sub);font-size:15px;line-height:1.3}
+.tab small{display:block;font-weight:500;font-size:10.5px;color:var(--faint);margin-top:2px}
+.tab.active{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.tab.active small{color:#b9c7c3}
+
+/* 單張 */
+.sheet{max-width:900px;margin:0 auto;background:var(--paper);padding:34px 34px 22px}
+.head{border-bottom:2px solid var(--warn);padding-bottom:12px;margin-bottom:6px}
+.kick{font-size:12px;letter-spacing:.3em;color:var(--sub);font-weight:800;margin-bottom:8px}
+.head h1{font-size:27px;font-weight:900;line-height:1.2;color:var(--warn)}
+
+.sec{margin-top:18px;background:var(--card);border:1px solid var(--line);border-left:6px solid var(--ok);border-radius:12px;padding:15px 18px 14px}
+.sec.mod{border-left-color:var(--mod)}
+.sec.warn{border-left-color:var(--warn)}
+.sec.doc{border-left-color:var(--doc)}
+.sec h2{font-size:17px;font-weight:900;color:var(--ok);margin-bottom:8px;line-height:1.35}
+.sec.mod h2{color:var(--mod)}
+.sec.warn h2{color:var(--warn)}
+.sec.doc h2{color:var(--doc)}
+.sec ul{list-style:none}
+.sec li{position:relative;padding-left:17px;margin-bottom:6px;font-size:15px;line-height:1.72}
+.sec li:last-child{margin-bottom:0}
+.sec li:before{content:"‧";position:absolute;left:3px;font-weight:900;color:var(--ok)}
+.sec.mod li:before{color:var(--mod)}
+.sec.warn li:before{color:var(--warn)}
+.sec.doc li:before{color:var(--doc)}
+.sec b{font-weight:800}
+.sec .why{display:block;margin-top:2px;font-size:13px;color:var(--sub);line-height:1.6}
+
+.note{margin-top:16px;font-size:12.5px;color:var(--sub);line-height:1.7;font-style:italic}
+.foot{margin-top:14px;text-align:center;font-size:11px;color:var(--faint);line-height:1.75;border-top:1px solid var(--line);padding-top:11px}
+.foot b{color:var(--sub)}
+
+.bar{text-align:center;margin:16px 0;display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.bar button{background:var(--ink);color:var(--paper);border:0;padding:11px 22px;font-size:15px;font-weight:700;border-radius:6px;cursor:pointer}
+.bar button.ghost{background:#fff;color:var(--ink);border:1px solid var(--ink)}
+
+/* 常見誤解（只在中文版顯示） */
+.myth{max-width:900px;margin:16px auto 0;background:#fff;border:1px solid var(--line);border-radius:12px;padding:18px 20px}
+.myth h3{font-size:16px;color:var(--doc);margin-bottom:10px;border-left:4px solid var(--doc);padding-left:10px}
+.myth table{width:100%;border-collapse:collapse;font-size:14px}
+.myth th,.myth td{border-bottom:1px solid var(--line);padding:9px 8px;text-align:left;vertical-align:top;line-height:1.65}
+.myth th{background:var(--paper);font-weight:800;color:var(--sub);font-size:13px}
+.myth td.x{color:var(--warn);font-weight:700;white-space:nowrap}
+.myth td.o{color:var(--ok);font-weight:700}
+.myth .wrap{overflow-x:auto}
+
+/* ⚠️ media query 一律放在所有基礎規則之後（同權重後者勝） */
+@media print{
+  @page{size:A4 portrait;margin:10mm}
+  body{background:#fff;padding:0}
+  .tabs,.bar,.no-print{display:none!important}
+  .sheet{max-width:100%;padding:0}
+  .sec,.myth{break-inside:avoid}
+  .myth{border:0;padding:14px 0 0}
+}
+@media (max-width:640px){
+  body{padding:12px 8px}
+  .sheet{padding:22px 18px 18px}
+  .head h1{font-size:22px}
+  .tab{flex:1 1 calc(50% - 6px);font-size:14px}
+  .sec{padding:13px 14px 12px}
+  .sec li{font-size:14.5px}
+  .myth{padding:14px 14px}
+  .myth table{font-size:13px}
+}
+</style></head><body>
+
+<div class="tabs no-print" id="tabs"></div>
+
+<div class="sheet" id="sheet">
+  <div class="head">
+    <div class="kick" id="kick">內分泌新陳代謝科　·　實證衛教</div>
+    <h1 id="h1"></h1>
+  </div>
+  <div id="secs"></div>
+  <div class="note" id="note"></div>
+  <div class="foot">
+    高雄醫學大學附設中和紀念醫院　內分泌新陳代謝科　｜
+    <b>本單張為一般性衛教，不取代醫師對您個別狀況的判斷</b>　｜　工具版本：2026-07-31
+  </div>
+</div>
+
+<div class="myth no-print" id="myth"></div>
+
+<div class="bar no-print">
+  <button onclick="window.print()">🖨 列印目前語言 / 存 PDF（A4）</button>
+</div>
+
+<script>
+/* 內容來源：knowledge/patient-education/thyroid_nodule_diet/typst_evidence_v5_multilang.typ
+   依 2024 ATA 指引整理的實證版本 */
+const L = {
+ 'zh-TW':{tab:'🇹🇼 繁體中文',tabsub:'Traditional Chinese',
+  kick:'內分泌新陳代謝科　·　實證衛教',
+  h1:'🦋 甲狀腺結節 飲食與生活衛教',
+  secs:[
+   {c:'',t:'✅ 推薦做的',items:[
+    '<b>均衡飲食</b>：充足蛋白質、蔬果、全穀',
+    '<b>規律運動 ＋ 體重管理</b><span class="why">肥胖與甲狀腺癌風險相關</span>',
+    '<b>充足睡眠</b>（7–8 小時／天）',
+    '<b>戒菸</b>（含二手菸）<span class="why">與 Graves’ 眼病、甲狀腺癌風險相關</span>']},
+   {c:'mod',t:'⚠️ 適度即可（依個人狀況）',items:[
+    '<b>酒精</b>：女性 1 杯／日、男性 2 杯／日以內',
+    '<b>高碘食物</b>（海帶、紫菜、海蜇、昆布、干貝）<span class="why">依您的甲狀腺功能狀況，醫師會個別說明限制程度</span>',
+    '<b>十字花科蔬菜</b>（花椰菜、高麗菜、大白菜、青江菜等）<span class="why">煮熟可正常食用，僅避免長期大量生食</span>',
+    '<b>大豆／豆漿／豆腐</b><span class="why">台灣屬食鹽碘化族群，正常食用無虞，不需特別禁止</span>']},
+   {c:'warn',t:'🚨 警示症狀 → 立刻回診',items:[
+    '結節在短時間內明顯變大',
+    '聲音持續沙啞超過 2 週',
+    '吞嚥困難或頸部壓迫感',
+    '出現心悸、體重急遽變化、不明原因顫抖']},
+   {c:'doc',t:'👨‍⚕️ 醫師提醒',items:[
+    '<b>定期超音波追蹤</b>（依醫師指示，多為 6–12 個月）',
+    '若服用甲狀腺藥物（如 Eltroxin）：<b>空腹服用</b>，與食物間隔 30–60 分鐘',
+    '甲狀腺藥物與鈣／鐵補充劑<b>間隔 4 小時以上</b>',
+    '一般飲食原則之外，您的<b>個別狀況請與醫師討論</b>']}],
+  note:'本衛教單依 2024 年美國甲狀腺學會（ATA）指引整理，個別化建議請依主治醫師判斷。'},
+
+ 'en':{tab:'🇺🇸 English',tabsub:'English',
+  kick:'Endocrinology & Metabolism　·　Evidence-based',
+  h1:'🦋 Thyroid Nodule — Diet & Lifestyle Guide',
+  secs:[
+   {c:'',t:'✅ Recommended',items:[
+    '<b>Balanced diet</b> — adequate protein, vegetables, whole grains',
+    '<b>Regular exercise + weight management</b><span class="why">Obesity is associated with increased thyroid cancer risk</span>',
+    '<b>Adequate sleep</b> (7–8 hours per night)',
+    '<b>Quit smoking</b> (including secondhand smoke)<span class="why">Linked to Graves’ eye disease and thyroid cancer risk</span>']},
+   {c:'mod',t:'⚠️ In moderation (depends on your status)',items:[
+    '<b>Alcohol</b>: ≤ 1 drink/day (women), ≤ 2 drinks/day (men)',
+    '<b>High-iodine foods</b> (kelp, nori, jellyfish, kombu, scallops)<span class="why">Your doctor will advise based on your thyroid function</span>',
+    '<b>Cruciferous vegetables</b> (cauliflower, cabbage, bok choy, etc.)<span class="why">Cooked is fine — only avoid large amounts raw over the long term</span>',
+    '<b>Soy / soy milk / tofu</b><span class="why">Safe in an iodine-sufficient population; no need to restrict</span>']},
+   {c:'warn',t:'🚨 Warning signs → see a doctor immediately',items:[
+    'Nodule rapidly enlarging',
+    'Persistent hoarseness lasting more than 2 weeks',
+    'Difficulty swallowing or a sense of neck pressure',
+    'Palpitations, sudden weight change, or unexplained tremor']},
+   {c:'doc',t:'👨‍⚕️ Doctor’s Notes',items:[
+    '<b>Regular ultrasound follow-up</b> (as directed — usually every 6–12 months)',
+    'Thyroid medication (e.g. Eltroxin): take <b>on an empty stomach</b>, 30–60 min before food',
+    '<b>Separate by at least 4 hours</b> from calcium / iron supplements',
+    'Beyond these general principles, <b>discuss your individual situation with your doctor</b>']}],
+  note:'Based on the 2024 American Thyroid Association (ATA) guidelines. Personalized recommendations come from your treating physician.'},
+
+ 'id':{tab:'🇮🇩 Indonesia',tabsub:'Bahasa Indonesia',
+  kick:'Endokrinologi & Metabolisme　·　Berbasis Bukti',
+  h1:'🦋 Nodul Tiroid — Panduan Diet & Gaya Hidup',
+  secs:[
+   {c:'',t:'✅ Direkomendasikan',items:[
+    '<b>Diet seimbang</b> — protein, sayur, biji-bijian utuh',
+    '<b>Olahraga teratur + manajemen berat badan</b><span class="why">Obesitas meningkatkan risiko kanker tiroid</span>',
+    '<b>Tidur cukup</b> (7–8 jam per malam)',
+    '<b>Berhenti merokok</b> (termasuk asap rokok pasif)<span class="why">Terkait penyakit mata Graves’ dan risiko kanker tiroid</span>']},
+   {c:'mod',t:'⚠️ Secukupnya (sesuai kondisi Anda)',items:[
+    '<b>Alkohol</b>: ≤ 1 gelas/hari (wanita), ≤ 2 gelas/hari (pria)',
+    '<b>Makanan tinggi yodium</b> (kelp, nori, ubur-ubur, kombu, kerang)<span class="why">Dokter akan memberi saran sesuai fungsi tiroid Anda</span>',
+    '<b>Sayuran cruciferous</b> (kembang kol, kubis, bok choy)<span class="why">Yang dimasak tidak masalah; hindari mentah dalam jumlah besar jangka panjang</span>',
+    '<b>Kedelai / susu kedelai / tahu</b><span class="why">Aman untuk populasi dengan yodium cukup, tidak perlu dibatasi</span>']},
+   {c:'warn',t:'🚨 Tanda peringatan → segera ke dokter',items:[
+    'Nodul membesar dengan cepat',
+    'Suara serak menetap lebih dari 2 minggu',
+    'Kesulitan menelan atau rasa tertekan di leher',
+    'Jantung berdebar, perubahan berat badan mendadak, tremor tanpa sebab jelas']},
+   {c:'doc',t:'👨‍⚕️ Catatan Dokter',items:[
+    '<b>USG rutin</b> (sesuai anjuran dokter — biasanya setiap 6–12 bulan)',
+    'Obat tiroid (mis. Eltroxin): diminum saat <b>perut kosong</b>, 30–60 menit sebelum makan',
+    '<b>Berjarak minimal 4 jam</b> dari suplemen kalsium / zat besi',
+    'Selain prinsip umum ini, <b>diskusikan kondisi pribadi Anda dengan dokter</b>']}],
+  note:'Berdasarkan pedoman American Thyroid Association (ATA) 2024. Rekomendasi personal berasal dari dokter Anda.'},
+
+ 'vi':{tab:'🇻🇳 Tiếng Việt',tabsub:'Vietnamese',
+  kick:'Nội tiết & Chuyển hóa　·　Dựa trên bằng chứng',
+  h1:'🦋 Nhân Tuyến Giáp — Hướng Dẫn Ăn Uống & Lối Sống',
+  secs:[
+   {c:'',t:'✅ Khuyến nghị',items:[
+    '<b>Ăn uống cân bằng</b> — đủ đạm, rau, ngũ cốc nguyên hạt',
+    '<b>Tập thể dục đều + quản lý cân nặng</b><span class="why">Béo phì làm tăng nguy cơ ung thư tuyến giáp</span>',
+    '<b>Ngủ đủ</b> (7–8 giờ mỗi đêm)',
+    '<b>Bỏ thuốc lá</b> (kể cả hút thuốc thụ động)<span class="why">Liên quan bệnh mắt Graves’ và nguy cơ ung thư tuyến giáp</span>']},
+   {c:'mod',t:'⚠️ Vừa phải (tùy tình trạng cá nhân)',items:[
+    '<b>Rượu bia</b>: ≤ 1 ly/ngày (nữ), ≤ 2 ly/ngày (nam)',
+    '<b>Thực phẩm giàu i-ốt</b> (tảo bẹ, rong biển, sứa, kombu, sò điệp)<span class="why">Bác sĩ sẽ tư vấn theo chức năng tuyến giáp của bạn</span>',
+    '<b>Rau họ cải</b> (súp lơ, bắp cải, cải thìa)<span class="why">Nấu chín thì không vấn đề; chỉ tránh ăn sống số lượng lớn kéo dài</span>',
+    '<b>Đậu nành / sữa đậu / đậu phụ</b><span class="why">An toàn với dân số đủ i-ốt, không cần kiêng</span>']},
+   {c:'warn',t:'🚨 Triệu chứng cảnh báo → khám ngay',items:[
+    'Nhân to lên nhanh trong thời gian ngắn',
+    'Khàn giọng kéo dài hơn 2 tuần',
+    'Khó nuốt hoặc cảm giác chèn ép vùng cổ',
+    'Hồi hộp, thay đổi cân nặng đột ngột, run tay không rõ nguyên nhân']},
+   {c:'doc',t:'👨‍⚕️ Lời dặn của bác sĩ',items:[
+    '<b>Theo dõi siêu âm định kỳ</b> (theo chỉ định — thường mỗi 6–12 tháng)',
+    'Thuốc tuyến giáp (như Eltroxin): uống lúc <b>bụng đói</b>, trước ăn 30–60 phút',
+    '<b>Cách ít nhất 4 giờ</b> với canxi / sắt',
+    'Ngoài các nguyên tắc chung, <b>hãy thảo luận tình trạng riêng của bạn với bác sĩ</b>']}],
+  note:'Dựa trên hướng dẫn của Hiệp hội Tuyến giáp Hoa Kỳ (ATA) 2024. Tư vấn cá nhân do bác sĩ điều trị đưa ra.'},
+
+ 'th':{tab:'🇹🇭 ภาษาไทย',tabsub:'Thai',
+  kick:'ต่อมไร้ท่อและเมแทบอลิซึม　·　อิงหลักฐานเชิงประจักษ์',
+  h1:'🦋 ก้อนต่อมไทรอยด์ — แนวทางอาหารและการใช้ชีวิต',
+  secs:[
+   {c:'',t:'✅ แนะนำให้ทำ',items:[
+    '<b>อาหารสมดุล</b> — โปรตีน ผัก ธัญพืชเต็มเมล็ดเพียงพอ',
+    '<b>ออกกำลังกายสม่ำเสมอ + จัดการน้ำหนัก</b><span class="why">ภาวะอ้วนสัมพันธ์กับความเสี่ยงมะเร็งไทรอยด์ที่สูงขึ้น</span>',
+    '<b>นอนหลับเพียงพอ</b> (7–8 ชั่วโมงต่อคืน)',
+    '<b>งดบุหรี่</b> (รวมถึงควันบุหรี่มือสอง)<span class="why">สัมพันธ์กับโรคตาจาก Graves’ และความเสี่ยงมะเร็งไทรอยด์</span>']},
+   {c:'mod',t:'⚠️ พอประมาณ (ตามสภาพแต่ละบุคคล)',items:[
+    '<b>แอลกอฮอล์</b>: ≤ 1 แก้ว/วัน (หญิง), ≤ 2 แก้ว/วัน (ชาย)',
+    '<b>อาหารไอโอดีนสูง</b> (สาหร่ายทะเล โนริ แมงกะพรุน คอมบุ หอยเชลล์)<span class="why">แพทย์จะแนะนำตามผลการทำงานของต่อมไทรอยด์ของท่าน</span>',
+    '<b>ผักตระกูลกะหล่ำ</b> (ดอกกะหล่ำ กะหล่ำปลี ผักกาดเขียว)<span class="why">ปรุงสุกแล้วรับประทานได้ตามปกติ หลีกเลี่ยงเฉพาะการกินดิบจำนวนมากต่อเนื่อง</span>',
+    '<b>ถั่วเหลือง / น้ำเต้าหู้ / เต้าหู้</b><span class="why">ปลอดภัยในประชากรที่ได้รับไอโอดีนเพียงพอ ไม่จำเป็นต้องงด</span>']},
+   {c:'warn',t:'🚨 อาการเตือน → พบแพทย์ทันที',items:[
+    'ก้อนโตขึ้นเร็วในเวลาสั้น',
+    'เสียงแหบต่อเนื่องนานกว่า 2 สัปดาห์',
+    'กลืนลำบากหรือรู้สึกแน่นบริเวณคอ',
+    'ใจสั่น น้ำหนักเปลี่ยนแปลงรวดเร็ว มือสั่นโดยไม่ทราบสาเหตุ']},
+   {c:'doc',t:'👨‍⚕️ ข้อแนะนำจากแพทย์',items:[
+    '<b>ตรวจอัลตราซาวด์ตามนัด</b> (ตามคำสั่งแพทย์ — มักทุก 6–12 เดือน)',
+    'ยาไทรอยด์ (เช่น Eltroxin): รับประทาน<b>ขณะท้องว่าง</b> 30–60 นาทีก่อนอาหาร',
+    '<b>ห่างจากแคลเซียม / ธาตุเหล็กอย่างน้อย 4 ชั่วโมง</b>',
+    'นอกเหนือจากหลักการทั่วไป <b>โปรดปรึกษาแพทย์เกี่ยวกับสภาพเฉพาะของท่าน</b>']}],
+  note:'อ้างอิงตามแนวทางของสมาคมต่อมไทรอยด์แห่งสหรัฐอเมริกา (ATA) ปี 2024 คำแนะนำเฉพาะบุคคลให้เป็นไปตามแพทย์ผู้รักษา'},
+
+ 'tl':{tab:'🇵🇭 Filipino',tabsub:'Tagalog',
+  kick:'Endocrinology at Metabolism　·　Batay sa Ebidensya',
+  h1:'🦋 Thyroid Nodule — Gabay sa Pagkain at Pamumuhay',
+  secs:[
+   {c:'',t:'✅ Inirerekomenda',items:[
+    '<b>Balanseng pagkain</b> — sapat na protina, gulay, whole grains',
+    '<b>Regular na ehersisyo + pamamahala ng timbang</b><span class="why">Ang labis na timbang ay may kaugnayan sa mas mataas na panganib ng thyroid cancer</span>',
+    '<b>Sapat na tulog</b> (7–8 oras kada gabi)',
+    '<b>Pagtigil sa paninigarilyo</b> (pati second-hand smoke)<span class="why">Kaugnay ng Graves’ eye disease at panganib ng kanser sa thyroid</span>']},
+   {c:'mod',t:'⚠️ Katamtaman lamang (depende sa inyong kalagayan)',items:[
+    '<b>Alak</b>: ≤ 1 baso/araw (babae), ≤ 2 baso/araw (lalaki)',
+    '<b>Pagkaing mataas sa iodine</b> (kelp, nori, dikya, kombu, scallops)<span class="why">Ang doktor ang magpapayo batay sa inyong thyroid function</span>',
+    '<b>Cruciferous na gulay</b> (cauliflower, repolyo, pechay)<span class="why">Kapag lutong-luto ay OK; iwasan lang ang hilaw na malaking dami sa mahabang panahon</span>',
+    '<b>Soy / soy milk / tokwa</b><span class="why">Ligtas para sa populasyong sapat ang iodine, hindi kailangang ipagbawal</span>']},
+   {c:'warn',t:'🚨 Babala → magpatingin agad sa doktor',items:[
+    'Mabilis na lumalaki ang nodule',
+    'Tuloy-tuloy na pamamalat nang higit sa 2 linggo',
+    'Hirap lumunok o pakiramdam ng presyon sa leeg',
+    'Palpitations, biglaang pagbabago ng timbang, hindi maipaliwanag na panginginig']},
+   {c:'doc',t:'👨‍⚕️ Paalala ng Doktor',items:[
+    '<b>Regular na ultrasound follow-up</b> (ayon sa doktor — kadalasan tuwing 6–12 buwan)',
+    'Gamot sa thyroid (hal. Eltroxin): inumin sa <b>walang laman na tiyan</b>, 30–60 minuto bago kumain',
+    '<b>Hindi bababa sa 4 na oras</b> ang pagitan mula sa calcium / iron supplements',
+    'Bukod sa pangkalahatang prinsipyo, <b>talakayin ang inyong personal na kalagayan sa inyong doktor</b>']}],
+  note:'Batay sa 2024 American Thyroid Association (ATA) guidelines. Ang personal na payo ay mula sa inyong doktor.'}
+};
+
+/* 只在中文版顯示：舊版紙本衛教單常見的錯誤禁忌 */
+const MYTH = `
+<h3>常被誤傳的禁忌——實證上不成立</h3>
+<div class="wrap"><table>
+<tr><th>常見說法</th><th>實證上怎麼看</th></tr>
+<tr><td class="x">十字花科蔬菜要忌口</td>
+    <td>致甲狀腺腫物質（goitrogen）在<b>烹煮後大幅失活</b>，且需長期大量生食才可能有影響。<b>煮熟正常吃即可。</b></td></tr>
+<tr><td class="x">豆漿、豆腐不能吃</td>
+    <td>在<b>碘攝取充足</b>的族群（台灣食鹽已碘化），大豆製品不影響甲狀腺功能。<b>不需禁止。</b>唯服用甲狀腺素者建議與藥物間隔開。</td></tr>
+<tr><td class="x">要吃「消結散腫」的食物</td>
+    <td><b>沒有任何食物能讓結節縮小。</b>飲食的角色是維持整體健康，不是治療結節。</td></tr>
+<tr><td class="x">辛辣、蔥蒜要完全避免</td>
+    <td>與甲狀腺結節<b>無實證關聯</b>，不需特別禁食。</td></tr>
+<tr><td class="x">所有海帶紫菜一律禁止</td>
+    <td>要不要限碘<b>取決於您的甲狀腺功能</b>（甲亢、橋本氏、準備接受碘-131 治療的處理方式各不相同），由醫師個別判斷。</td></tr>
+</table></div>`;
+
+const $ = id => document.getElementById(id);
+const KEYS = Object.keys(L);
+let cur = 'zh-TW';
+
+function render(k){
+  cur = k;
+  const d = L[k];
+  document.documentElement.lang = (k === 'zh-TW') ? 'zh-Hant' : k;
+  $('kick').textContent = d.kick;
+  $('h1').textContent = d.h1;
+  $('secs').innerHTML = d.secs.map(s =>
+    `<div class="sec ${s.c}"><h2>${s.t}</h2><ul>${s.items.map(i=>`<li>${i}</li>`).join('')}</ul></div>`
+  ).join('');
+  $('note').textContent = d.note;
+  $('myth').innerHTML = (k === 'zh-TW') ? MYTH : '';
+  $('myth').style.display = (k === 'zh-TW') ? '' : 'none';
+  [...$('tabs').children].forEach(t => t.classList.toggle('active', t.dataset.k === k));
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+$('tabs').innerHTML = KEYS.map(k =>
+  `<div class="tab" data-k="${k}">${L[k].tab}<small>${L[k].tabsub}</small></div>`
+).join('');
+[...$('tabs').children].forEach(t => t.onclick = () => render(t.dataset.k));
+render('zh-TW');
+</script>
+</body></html>
