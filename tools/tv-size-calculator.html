@@ -140,7 +140,9 @@
     <div class="warn" style="margin-top:14px">
       <b>怎麼用</b><br>
       點吋數 → 相機打開後<b>慢慢平移手機</b>讓它認出牆面 → 電視會出現，用手指拖到定位、雙指可旋轉。
-      模型是<b>螢幕實際尺寸＋0.8 公分邊框</b>，厚度抓 5.5 公分，可以直接比對牆面或電視櫃夠不夠。
+      模型是<b>螢幕實際尺寸＋0.8 公分邊框</b>，厚度抓 5.5 公分，可以直接比對牆面或電視櫃夠不夠。<br>
+      <b>120 吋以上</b>市面上多半是投影布幕而不是電視，但同樣是 16:9，拿來比大小一樣準——
+      200 吋寬達 4.4 公尺，通常要退到房間另一頭才看得完整。
     </div>
   </div>
 
@@ -194,7 +196,7 @@
   }
 
   // 市售常見吋數，找最接近的
-  var COMMON = [24,32,40,43,45,48,50,55,58,60,65,70,75,77,83,85,86,98];
+  var COMMON = [24,32,40,43,45,48,50,55,58,60,65,70,75,77,83,85,86,98,100,120,150,200];
   function nearest(inch){
     var best = COMMON[0], gap = Math.abs(inch - best);
     for (var i = 1; i < COMMON.length; i++){
@@ -245,7 +247,7 @@
 
   // ③ AR：iOS 的 AR Quick Look
   (function buildAR(){
-    var AR_SIZES = [32,43,50,55,65,75,85];
+    var AR_SIZES = [32,43,50,55,65,75,85,120,150,200];
     // 電視圖示（inline SVG → data URI，不外連）
     var ICON = 'data:image/svg+xml;utf8,' + encodeURIComponent(
       '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" ' +
