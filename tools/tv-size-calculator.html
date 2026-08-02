@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>電視尺寸換算（16:9）</title>
+<style>
+  :root{
+    --accent:#0e6e6e; --bg:#f6f8f8; --card:#fff; --text:#2b2b2b;
+    --muted:#6b7676; --line:#dfe6e6; --warn:#8a5a00; --warnbg:#fff8e8;
+  }
+  *{box-sizing:border-box;}
+  body{
+    font-family:"PingFang TC","Noto Sans TC","Heiti TC",sans-serif;
+    background:var(--bg); color:var(--text); margin:0;
+    padding:24px 16px 60px; line-height:1.7; font-size:16px;
+  }
+  .wrap{max-width:680px; margin:0 auto;}
+  h1{font-size:22px; margin:0 0 4px; border-bottom:3px solid var(--accent); padding-bottom:10px;}
+  .sub{color:var(--muted); font-size:14px; margin:0 0 20px;}
+  .card{
+    background:var(--card); border:1px solid var(--line); border-radius:12px;
+    padding:18px 16px; margin:0 0 16px;
+  }
+  .card h2{font-size:16px; margin:0 0 12px; color:var(--accent);}
+  label{display:block; font-size:14px; color:var(--muted); margin:0 0 6px;}
+  .row{display:flex; gap:10px; align-items:stretch; flex-wrap:wrap;}
+  input[type=number]{
+    flex:1 1 140px; min-width:0; font-size:20px; padding:12px 14px;
+    border:2px solid var(--line); border-radius:9px; background:#fff;
+    color:var(--text); font-family:inherit;
+  }
+  input[type=number]:focus{outline:none; border-color:var(--accent);}
+  select{
+    flex:0 0 auto; font-size:16px; padding:12px 10px; border:2px solid var(--line);
+    border-radius:9px; background:#fff; color:var(--text); font-family:inherit;
+  }
+  .out{
+    margin-top:14px; padding:16px; background:#eef5f5; border-radius:10px;
+    border:1px solid #cfe0e0;
+  }
+  .big{font-size:34px; font-weight:700; color:var(--accent); line-height:1.25;}
+  .big small{font-size:16px; font-weight:400; color:var(--muted);}
+  .detail{font-size:14px; color:var(--muted); margin-top:8px;}
+  .warn{
+    background:var(--warnbg); border:1px solid #e8d5a8; border-left:4px solid #d9a441;
+    border-radius:8px; padding:12px 14px; font-size:14px; color:var(--warn); margin:14px 0 0;
+  }
+  .warn b{color:#6b4500;}
+  table{border-collapse:collapse; width:100%; font-size:14px; margin-top:6px;}
+  th,td{border:1px solid var(--line); padding:7px 9px; text-align:right;}
+  th{background:#eef3f3; text-align:center; font-weight:600;}
+  td:first-child{text-align:center; font-weight:600; color:var(--accent);}
+  .note{font-size:13px; color:var(--muted); margin-top:10px;}
+  .formula{
+    font-size:13px; color:var(--muted); background:#f2f5f5; border-radius:8px;
+    padding:10px 12px; margin-top:10px;
+  }
+  footer{
+    text-align:center; color:var(--muted); font-size:12px;
+    margin-top:28px; padding-top:14px; border-top:1px solid var(--line);
+  }
+  @media (max-width:600px){
+    body{padding:16px 12px 48px; font-size:15px;}
+    h1{font-size:19px;}
+    .big{font-size:30px;}
+    input[type=number]{font-size:19px; flex:1 1 100%;}
+    select{flex:1 1 100%;}
+    table{font-size:13px;}
+    th,td{padding:6px 5px;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <h1>電視尺寸換算（16:9）</h1>
+  <p class="sub">量一個邊，換算成幾吋。也可以反過來，先選吋數再看要留多寬的位置。</p>
+
+  <div class="card">
+    <h2>① 量到的長度 → 幾吋</h2>
+    <label>你量到的是哪一邊、多長？</label>
+    <div class="row">
+      <input type="number" id="len" placeholder="例如 121.8" step="0.1" min="0" inputmode="decimal">
+      <select id="unit">
+        <option value="1">公分</option>
+        <option value="2.54">英吋</option>
+      </select>
+      <select id="side">
+        <option value="w">橫的（寬）</option>
+        <option value="h">直的（高）</option>
+      </select>
+    </div>
+    <div class="out">
+      <div class="big" id="inchOut">— <small>吋</small></div>
+      <div class="detail" id="detailOut">輸入數字就會即時換算</div>
+    </div>
+    <div class="warn">
+      <b>⚠️ 量的時候只量「會亮的畫面」</b><br>
+      電視標示的吋數算的是<b>螢幕可視區</b>的對角線，不含外框跟底座。連黑邊一起量進去，算出來會偏大 —— 現在的窄邊框大約多算 0.5～1 吋，老電視的粗邊框可能多算 2 吋以上。
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>② 幾吋 → 需要多大位置</h2>
+    <label>選一個吋數，看它的實際寬高</label>
+    <div class="row">
+      <input type="number" id="inch" placeholder="例如 55" step="0.5" min="0" inputmode="decimal">
+      <select id="unit2">
+        <option value="1">用公分顯示</option>
+        <option value="2.54">用英吋顯示</option>
+      </select>
+    </div>
+    <div class="out">
+      <div class="big" id="sizeOut">— <small>寬 × 高</small></div>
+      <div class="detail" id="distOut"></div>
+    </div>
+    <div class="note">這是<b>螢幕本身</b>的尺寸。實際機身通常再寬 1～3 公分，買前記得幫電視櫃留餘裕。</div>
+  </div>
+
+  <div class="card">
+    <h2>常見尺寸對照</h2>
+    <table>
+      <thead>
+        <tr><th>吋</th><th>寬 (cm)</th><th>高 (cm)</th><th>建議觀看距離 (m)</th></tr>
+      </thead>
+      <tbody id="tbl"></tbody>
+    </table>
+    <div class="note">觀看距離取對角線的 1.2～1.6 倍（4K 內容的常見建議，看得到細節又不會太有壓迫感）。1080p 片源建議再坐遠一些。</div>
+    <div class="formula">
+      算法：16:9 的螢幕，寬 : 高 : 對角線 = 16 : 9 : √337。<br>
+      所以 <b>對角線 = 寬 × √337 ÷ 16 ≈ 寬 × 1.1473</b>，再除以 2.54 就是吋數。
+    </div>
+  </div>
+
+  <footer>工具版本：2026-08-02</footer>
+</div>
+
+<script>
+(function(){
+  var K = Math.sqrt(337);            // 寬:高:對角線 = 16:9:√337
+  var DIAG_PER_W = K / 16;           // 對角線 / 寬
+  var DIAG_PER_H = K / 9;            // 對角線 / 高
+  var CM = 2.54;
+
+  function $(id){ return document.getElementById(id); }
+  function r(n, d){ var p = Math.pow(10, d === undefined ? 1 : d); return Math.round(n * p) / p; }
+
+  // ① 長度 → 吋
+  function calcInch(){
+    var v = parseFloat($('len').value);
+    var unit = parseFloat($('unit').value);   // 1=cm, 2.54=inch輸入
+    var side = $('side').value;
+    if (!(v > 0)) {
+      $('inchOut').innerHTML = '— <small>吋</small>';
+      $('detailOut').textContent = '輸入數字就會即時換算';
+      return;
+    }
+    var cm = v * unit;                                  // 統一成公分
+    var diagCm = side === 'w' ? cm * DIAG_PER_W : cm * DIAG_PER_H;
+    var inch = diagCm / CM;
+    var w = side === 'w' ? cm : diagCm / DIAG_PER_W;
+    var h = side === 'h' ? cm : w * 9 / 16;
+    $('inchOut').innerHTML = r(inch, 1) + ' <small>吋</small>';
+    $('detailOut').innerHTML =
+      '對角線 ' + r(diagCm, 1) + ' 公分　|　寬 ' + r(w, 1) + ' × 高 ' + r(h, 1) + ' 公分'
+      + '<br>最接近的市售規格：<b>' + nearest(inch) + ' 吋</b>';
+  }
+
+  // 市售常見吋數，找最接近的
+  var COMMON = [24,32,40,43,45,48,50,55,58,60,65,70,75,77,83,85,86,98];
+  function nearest(inch){
+    var best = COMMON[0], gap = Math.abs(inch - best);
+    for (var i = 1; i < COMMON.length; i++){
+      var g = Math.abs(inch - COMMON[i]);
+      if (g < gap){ gap = g; best = COMMON[i]; }
+    }
+    return best;
+  }
+
+  // ② 吋 → 寬高
+  function calcSize(){
+    var inch = parseFloat($('inch').value);
+    var unit = parseFloat($('unit2').value);   // 1=顯示cm, 2.54=顯示inch
+    if (!(inch > 0)) {
+      $('sizeOut').innerHTML = '— <small>寬 × 高</small>';
+      $('distOut').textContent = '';
+      return;
+    }
+    var diagCm = inch * CM;
+    var w = diagCm / DIAG_PER_W;
+    var h = w * 9 / 16;
+    var label = unit === 1 ? '公分' : '英吋';
+    $('sizeOut').innerHTML =
+      r(w / unit, 1) + ' × ' + r(h / unit, 1) + ' <small>' + label + '</small>';
+    $('distOut').innerHTML =
+      '對角線 ' + r(diagCm, 1) + ' 公分（' + r(inch, 1) + ' 吋）<br>'
+      + '建議觀看距離：<b>' + r(diagCm * 1.2 / 100, 2) + ' ～ ' + r(diagCm * 1.6 / 100, 2) + ' 公尺</b>';
+  }
+
+  // 對照表
+  (function buildTable(){
+    var rows = [32,43,50,55,65,75,85].map(function(i){
+      var diag = i * CM, w = diag / DIAG_PER_W, h = w * 9 / 16;
+      return '<tr><td>' + i + '</td><td>' + r(w, 1) + '</td><td>' + r(h, 1) + '</td><td>'
+           + r(diag * 1.2 / 100, 2) + ' – ' + r(diag * 1.6 / 100, 2) + '</td></tr>';
+    });
+    $('tbl').innerHTML = rows.join('');
+  })();
+
+  ['len','unit','side'].forEach(function(id){
+    $(id).addEventListener('input', calcInch);
+    $(id).addEventListener('change', calcInch);
+  });
+  ['inch','unit2'].forEach(function(id){
+    $(id).addEventListener('input', calcSize);
+    $(id).addEventListener('change', calcSize);
+  });
+})();
+</script>
+</body>
+</html>
