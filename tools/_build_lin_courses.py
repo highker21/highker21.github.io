@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
-"""從四門課的 course.json 產生彙整頁，所有數字與章節標題都讀原始資料，不手抄。
+"""從各門課的 course.json 產生彙整頁，所有數字與章節標題都讀原始資料，不手抄。
 
 用法：python3 tools/_build_lin_courses.py
-每次執行都會即時抓取四個站台的 course.json，所以林醫師更新課程後重跑一次即可同步。
+每次執行都會即時抓取各站台的 course.json，所以林醫師更新課程後重跑一次即可同步。
+新課上線時，把專案代號加進 COURSES 即可。
 """
 import json, html, pathlib, urllib.request
 
@@ -26,6 +27,7 @@ COURSES = [
     ("gym-course",             "#b5651d", "🏋️"),
     ("tarot-course",           "#6b5b95", "🔮"),
     ("thinking-habits-course", "#2c6e91", "🧠"),
+    ("belief-economy",          "#a4703c", "💎"),
 ]
 
 def esc(s): return html.escape(str(s))
