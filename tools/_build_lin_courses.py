@@ -36,10 +36,25 @@ COURSES = [
 
 def esc(s): return html.escape(str(s))
 
+
+def cn_num(n):
+    """把課程數轉成中文數字，避免文案寫死「四門」之後忘了改。"""
+    d = "零一二三四五六七八九"
+    if n < 10:
+        return d[n]
+    if n < 20:
+        return "十" + (d[n % 10] if n % 10 else "")
+    return d[n // 10] + "十" + (d[n % 10] if n % 10 else "")
+
 cards = []
+names = []
+n_evidence = 0
 for proj, color, emoji in COURSES:
     d = load(proj)
     s, m, chs = d["config"]["site"], d["meta"], d["chapters"]
+    names.append(s["name"])
+    if m.get("evidence_checked"):
+        n_evidence += 1
 
     # 副標：把 "課名 — 副標" 的破折號後半取出
     title = s["title"]
@@ -83,12 +98,19 @@ for proj, color, emoji in COURSES:
     <a class="go" href="{esc(s["url"])}" target="_blank" rel="noopener">前往課程 →</a>
   </article>""")
 
-today = "2026-07-31"   # 產出日期；此檔為靜態頁，數字隨下次重跑腳本更新
+import datetime
+today = datetime.date.today().isoformat()   # 產出日期，每次重跑自動更新
+N = cn_num(len(COURSES))                    # 課程數（中文），文案一律用它，不要寫死
+NE = cn_num(n_evidence)                     # 有做實證查核的課程數
+EV_TXT = ("每一門都標了該說法在文獻裡的實證強度"
+          if n_evidence == len(COURSES)
+          else f"其中{NE}門還標了該說法在文獻裡的實證強度")
+name_list = "、".join(names)
 
 page = f"""<!DOCTYPE html><html lang="zh-Hant"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>林協霆醫師 線上課程彙整</title>
-<meta name="description" content="林協霆醫師製作的四門免費自學課程彙整：喜馬拉雅瑜伽全書、高效健身訓練系統、塔羅解讀課程、思考習慣實證課。含章節大綱與規模對照。">
+<meta name="description" content="林協霆醫師製作的{N}門免費自學課程彙整：{name_list}。含章節大綱與規模對照。">
 <style>
 :root{{--ink:#1b1f1d;--sub:#5f655f;--line:#e6e2d8;--paper:#faf8f2;--card:#fff;--faint:#9a978c;--accent:#0f6e64;}}
 *{{box-sizing:border-box;margin:0;padding:0}}
@@ -156,22 +178,22 @@ details[open] summary:before{{content:"▾ ";}}
   <div class="kick">課程彙整</div>
   <h1>林協霆醫師 線上課程</h1>
   <p class="lede">
-    四門<b>免費的自學型課程</b>，共通做法是把 YouTube 上散落的優質影片依知識依賴順序重新編排，
-    每個單元附上可自測的判準；其中三門還標了該說法在文獻裡的實證強度，
+    {N}門<b>免費的自學型課程</b>，共通做法是把 YouTube 上散落的優質影片依知識依賴順序重新編排，
+    每個單元附上可自測的判準；{EV_TXT}，
     <b>包括對課程自己不利的結論也照實寫</b>。以下數字讀自各站的 <code>course.json</code>。
   </p>
 </div>
 {"".join(cards)}
 
 <div class="foot">
-  <b>關於這頁</b>　由盧子文醫師整理，方便一次看完四門課的規模與大綱再決定從哪門開始。
+  <b>關於這頁</b>　由盧子文醫師整理，方便一次看完{N}門課的規模與大綱再決定從哪門開始。
   課程內容與著作權屬林協霆醫師與各影片原上傳者，本頁僅提供索引與連結。<br>
   <b>數字怎麼來的</b>　章節標題、單元數、影片數與時長皆讀自各課程站台的 <code>course.json</code>，非人工抄寫。
-  上表四門一律採同一組欄位以便橫向比較：教學單元取 <code>lesson_units</code>、影片取 <code>video_unique</code>（不重複計）。<br>
-  <b>為什麼跟課程自己的文案對不起來</b>　各站文案採計方式不同，因此會有小差異，兩邊都沒錯：
+  上表{N}門一律採同一組欄位以便橫向比較：教學單元取 <code>lesson_units</code>、影片取 <code>video_unique</code>（不重複計）。<br>
+  <b>為什麼跟課程自己的文案對不起來</b>　各站文案採計方式不同，因此會有小差異，兩邊都沒錯（以下舉三例）：
   瑜伽寫 630 支是含重複播放的片段（不重複為 601）；健身寫 316 支是只算動作示範影片（全課不重複為 378）；
   思考課寫 83 個思考動作是不含「開始之前」那 2 個說明單元（教學單元合計 84）。<br>
-  <b>署名說明</b>　四個課程站台本身未標示作者姓名，此處的作者資訊來自盧醫師提供。<br>
+  <b>署名說明</b>　各課程站台本身未標示作者姓名，此處的作者資訊來自盧醫師提供。<br>
   資料擷取日期：{today}　｜　工具版本：{today}
 </div>
 
