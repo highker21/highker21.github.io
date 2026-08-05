@@ -31,6 +31,7 @@ COURSES = [
     ("deep-focus-course",       "#3f5d7d", "🎯"),
     ("photo-course",            "#8a6d9e", "📷"),
     ("ai-workflow-course",      "#3a7d7b", "⚙️"),
+    ("longevity-course",        "#7a9e5b", "🧬"),
 ]
 
 def esc(s): return html.escape(str(s))
