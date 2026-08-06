@@ -163,7 +163,7 @@ function setTab(t){
     : '健保<b>藥品代碼（10 碼國家健保藥碼，非院內碼）</b>與<b>健保價（支付價，元/單位）</b>，見最右欄。臨床常用藥多有價；顯示「—」者為<b>不分列價/參考品項</b>（健保無單一品項藥價，約占 7 成）。中藥、特材另有資料集。';
   $('thead').innerHTML = t==='proc'
     ? '<th style="width:108px">健保碼</th><th>診療項目名稱</th><th style="width:96px">支付點數</th>'
-    : '<th style="width:118px">健保藥碼</th><th>品名</th><th>成分／規格</th><th style="width:96px">ATC</th><th style="width:84px">健保價</th><th style="width:60px">仿單</th><th style="width:60px">外觀</th><th style="width:104px">給付規定</th>';
+    : '<th style="width:118px">健保藥碼</th><th>品名</th><th>成分／規格</th><th style="width:96px">ATC</th><th style="width:84px">健保價</th><th style="width:60px">仿單</th><th style="width:104px">外觀</th><th style="width:104px">給付規定</th>';
   render();
 }
 
@@ -286,7 +286,10 @@ function render(){
       const price=(d.p&&d.p!=='0.00')?d.p+'<span class="muted" style="font-weight:400"> 元</span>':'<span class="muted" title="不分列價／參考品項，健保無單一品項藥價">—</span>';
       const ins=d.l?`<a class="ins" href="https://lmspiq.fda.gov.tw/web/DRPIQ/DRPIQ1000Result?licId=${d.l}" target="_blank" rel="noopener" title="開啟食藥署許可證頁（新分頁）：適應症、劑型、包裝、藥商">仿單</a>`:'<span class="muted">—</span>';
       const su=shapeUrl(d.l);
-      const shp=su?`<a class="ins" href="${su}" target="_blank" rel="noopener" title="開啟食藥署藥品外觀（新分頁）。約半數品項食藥署未放圖，會導回查詢首頁">外觀</a>`:'<span class="muted" title="此證別無外觀對照">—</span>';
+      const fda=su?`<a class="ins" href="${su}" target="_blank" rel="noopener" title="食藥署藥品外觀（新分頁）。約半數品項未放圖，會導回查詢首頁">署</a>`:'<span class="muted" title="此證別無外觀對照">—</span>';
+      // 藥臺灣是「用藥錠上的刻印反查」，跟健保碼無法對接，只能當手邊有實體藥錠時的備援入口
+      const dtw=`<a class="ins" href="https://drugtw.com/figure" target="_blank" rel="noopener" title="藥臺灣：手邊有實體藥錠時，輸入錠面刻印的英文或數字查外觀">藥臺灣</a>`;
+      const shp=`${fda} <span class="muted">/</span> ${dtw}`;
       return `<tr><td class="code">${d.c}</td><td>${nm}</td><td class="ing">${ing}</td><td class="atc">${hl(d.a||'',toks)}</td><td class="pt">${price}</td><td class="pt">${ins}</td><td class="pt">${shp}</td><td>${ruleCell(d)}</td></tr>`;
     }).join('');
   }
