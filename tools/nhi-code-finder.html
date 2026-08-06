@@ -120,6 +120,18 @@ footer{color:#9a93a8;font-size:12px;margin-top:16px;text-align:center;}
 <script>
 let DATA=null, RULES=null, TAB='drug';
 const $=id=>document.getElementById(id);
+// 藥品外觀：食藥署的網址是「證別中文＋第 N 號」，licId 前 2 碼即證別。
+// 對照表是逐一開許可證頁核對出來的，不是猜的。這 5 種涵蓋資料 99% 品項。
+// ⚠️ 實測抽樣 200 筆，只有約 46% 的品項食藥署有放外觀圖，其餘會導回查詢首頁——
+//    這是對方資料的缺口，不是連結錯誤，所以欄位標示要講清楚。
+const LICPRE={'01':'衛署藥製字','02':'衛署藥輸字','12':'內衛藥製字','51':'衛部藥製字','52':'衛部藥輸字'};
+function shapeUrl(l){
+  if(!l||l.length!==8)return '';
+  const pre=LICPRE[l.slice(0,2)], no=l.slice(2);
+  if(!pre||!/^\d{6}$/.test(no))return '';
+  return 'https://mcp.fda.gov.tw/im_shape/'+encodeURIComponent(pre+'第'+no+'號');
+}
+
 Promise.resolve(JSON.parse(document.getElementById('nhidata').textContent)).then(j=>{
   DATA=j;
   // 給付規定條文另外載入，失敗也不影響主功能（欄位會退成純章節代碼）
@@ -151,7 +163,7 @@ function setTab(t){
     : '健保<b>藥品代碼（10 碼國家健保藥碼，非院內碼）</b>與<b>健保價（支付價，元/單位）</b>，見最右欄。臨床常用藥多有價；顯示「—」者為<b>不分列價/參考品項</b>（健保無單一品項藥價，約占 7 成）。中藥、特材另有資料集。';
   $('thead').innerHTML = t==='proc'
     ? '<th style="width:108px">健保碼</th><th>診療項目名稱</th><th style="width:96px">支付點數</th>'
-    : '<th style="width:118px">健保藥碼</th><th>品名</th><th>成分／規格</th><th style="width:96px">ATC</th><th style="width:84px">健保價</th><th style="width:82px">仿單/外觀</th><th style="width:104px">給付規定</th>';
+    : '<th style="width:118px">健保藥碼</th><th>品名</th><th>成分／規格</th><th style="width:96px">ATC</th><th style="width:84px">健保價</th><th style="width:60px">仿單</th><th style="width:60px">外觀</th><th style="width:104px">給付規定</th>';
   render();
 }
 
@@ -272,11 +284,13 @@ function render(){
       const nm=`${hl(d.z,toks)}${d.e?`<div class="en">${hl(d.e,toks)}</div>`:''}`;
       const ing=`${hl(d.i||'',toks)}${d.s?` <span class="muted">/ ${esc(d.s)}</span>`:''}${d.f?` <span class="muted">· ${esc(d.f)}</span>`:''}`;
       const price=(d.p&&d.p!=='0.00')?d.p+'<span class="muted" style="font-weight:400"> 元</span>':'<span class="muted" title="不分列價／參考品項，健保無單一品項藥價">—</span>';
-      const ins=d.l?`<a class="ins" href="https://lmspiq.fda.gov.tw/web/DRPIQ/DRPIQ1000Result?licId=${d.l}" target="_blank" rel="noopener" title="開啟食藥署許可證頁（新分頁）。該頁含「仿單／外盒標籤／藥品外觀」分頁">仿單/外觀</a>`:'<span class="muted" title="此品項無對應仿單連結">—</span>';
-      return `<tr><td class="code">${d.c}</td><td>${nm}</td><td class="ing">${ing}</td><td class="atc">${hl(d.a||'',toks)}</td><td class="pt">${price}</td><td class="pt">${ins}</td><td>${ruleCell(d)}</td></tr>`;
+      const ins=d.l?`<a class="ins" href="https://lmspiq.fda.gov.tw/web/DRPIQ/DRPIQ1000Result?licId=${d.l}" target="_blank" rel="noopener" title="開啟食藥署許可證頁（新分頁）：適應症、劑型、包裝、藥商">仿單</a>`:'<span class="muted">—</span>';
+      const su=shapeUrl(d.l);
+      const shp=su?`<a class="ins" href="${su}" target="_blank" rel="noopener" title="開啟食藥署藥品外觀（新分頁）。約半數品項食藥署未放圖，會導回查詢首頁">外觀</a>`:'<span class="muted" title="此證別無外觀對照">—</span>';
+      return `<tr><td class="code">${d.c}</td><td>${nm}</td><td class="ing">${ing}</td><td class="atc">${hl(d.a||'',toks)}</td><td class="pt">${price}</td><td class="pt">${ins}</td><td class="pt">${shp}</td><td>${ruleCell(d)}</td></tr>`;
     }).join('');
   }
-  const cols=TAB==='proc'?3:7;
+  const cols=TAB==='proc'?3:8;
   $('rows').innerHTML=rows||`<tr><td colspan="${cols}" class="hint" style="padding:24px;text-align:center">無符合項目，換個關鍵字試試。</td></tr>`;
 }
 </script>
