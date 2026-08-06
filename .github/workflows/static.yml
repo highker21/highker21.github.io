@@ -41,6 +41,3 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
-        with:
-          # 站台約 431MB，預設 10 分鐘上限不夠，放寬到 30 分鐘
-          timeout: 1800000
