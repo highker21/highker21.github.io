@@ -112,7 +112,7 @@ TSH(初始；2025 之後改依動態反應調整)：high &lt;0.1｜intermediate-
 RAI(Rec.32)：low 不建議常規(選擇性 30–50mCi)；low-int/int-high「可考慮 consider」(30–100，最高150mCi)；high / M1「建議常規 recommend」(100–150mCi，已知病灶可更高)。<br>
 AJCC 8th(年齡分界55)：&lt;55 → M0=Stage I、M1=II；≥55 → T1-2N0M0=I、T3或N1=II、T4a=III、T4b=IVA、M1=IVB。
 </div></details>
-<div class="foot">工具版本：2026-07-28（<b>分期判讀修正</b>：① ETE 比對前先移除否定子句——「No strap muscle invasion」不再被誤判為侵犯帶狀肌；② AJCC 8th：T3b 需「肉眼」侵犯帶狀肌，顯微 ETE 不升 T 期；③ 報告載明的 pT 優先於工具推導，兩者不一致時明確提示；④ 支援「Tumor size: 2.8 cm in greatest dimension」單一最大徑寫法。沿用 7/24b 碘131 排程單串接、淋巴結括號空格修正、多發取最大腫瘤徑、ATA 2025 Fig.2/Rec.32）｜資料僅在瀏覽器本機處理</div>
+<div class="foot">工具版本：2026-08-06（<b>ENE／M 否定語誤判修正</b>：報告寫 「Extranodal extension of lymph node: <b>not identified</b>」時，舊版只比對關鍵字有無出現，會把結外侵犯判成「有」→ 直接推到 High risk；現改為取冒號後的判讀文字再比對正反。遠端轉移同樣處理，並修正「pT2N1bM1」這種分期字串黏在一起時抓不到 M1 的問題。沿用 7/28 ETE 否定子句移除、T3b 需肉眼侵犯帶狀肌、報告 pT 優先、單一最大徑寫法，及碘131 排程單串接、ATA 2025 Fig.2/Rec.32）｜資料僅在瀏覽器本機處理</div>
 
 <script>
 const $=id=>document.getElementById(id);
@@ -206,8 +206,23 @@ function parseReport(t){
   F.lnloc=pos>0?(n1b?'N1b':'N1a'):'none';
   const lm=t.match(/largest\s*metastatic\s*(?:deposit|node|focus)[^\d]*([\d.]+)\s*cm/i);
   F.lnsize=lm?lm[1]:'';
-  F.ene=/extranodal\s*extension|\bENE\b|結外侵犯/i.test(t)?'1':'0';
-  F.m=/\bM1\b|distant\s*met|遠端轉移/i.test(t)?'1':'0';
+  // ENE / M：只看「有沒有出現這個詞」是不夠的，要看那一行的結論。
+  //   實際踩過（2026-08-06 使用者回報）：報告寫
+  //     "Extranodal extension of lymph node: not identified."
+  //   舊版只 test 關鍵字 → 命中 → ENE 判成「有」→ 直接推到 High risk。
+  //   這與 ETE 那段防「同句先肯定後否定」、切緣那段防 "uninvolved" 是同一類問題。
+  //   做法：抓出該關鍵字所在的整行，取冒號後的「判讀」部分再比對正反。
+  const verdictOf=ln=>{const p=ln.split(/[：:]/);return p.length>1?p.slice(1).join(':'):ln;};
+  const POS=/present|identified|positive|involv|\byes\b|\(\s*\+\s*\)|有|陽性/i;
+  const NEG=/not\s*identif|not\s*present|not\s*seen|absent|negative|\bno\b|\bnone\b|free\b|without|無|未見|未發現|陰性/i;
+  const decide=(lines)=>lines.some(ln=>{const v=verdictOf(ln);return POS.test(v)&&!NEG.test(v);})?'1':'0';
+  const eneLines=t.match(/(?:extra[-\s]?nodal\s*extension|\bENE\b|結外侵犯)[^\n]*/ig)||[];
+  F.ene=decide(eneLines);
+  // 遠端轉移：staging 字串裡明寫 M1 最可靠；否則同樣要看敘述行的結論
+  //   （"distant metastasis: not identified" 舊版會誤判成 M1）
+  const mLines=t.match(/(?:distant\s*met\w*|遠端轉移)[^\n]*/ig)||[];
+  //   ⚠️ M1 常黏在分期字串裡（"pT2N1bM1"），單用 \bM1\b 抓不到——b 與 M 之間沒有詞界。
+  F.m=(/\bM1\b/.test(t)||/[TN][\dxX][a-z]?M1\b/i.test(t))?'1':decide(mLines);
   const tn=t.match(/\(?\s*[ryp]*T(\w+)\s*N([\dxX]\w*)\s*(M\d)?\s*\)?/);
   F.pt=tn?'pT'+tn[1]:'';F.pn=tn?'N'+tn[2]:'';
   if(/TERT[^a-z]*(mutant|positive|\+|突變|V\d)/i.test(t))F.mol='tert';
