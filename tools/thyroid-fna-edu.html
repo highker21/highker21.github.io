@@ -1,0 +1,338 @@
+<!DOCTYPE html><html lang="zh-Hant"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="author" content="盧子文醫師 - Dr. Lu Tz-Wen">
+<meta name="description" content="甲狀腺超音波導引細針抽吸（FNA）檢查衛教，6 國語言。檢查前準備、檢查中配合、壓迫止血時間、返家注意與急診警訊，可列印 A4 給病人帶回。">
+<title>甲狀腺細針抽吸 FNA 檢查衛教（6 國語言）</title>
+<style>
+:root{
+  --ink:#1b1f1d;--sub:#5f655f;--line:#e6e2d8;--paper:#faf8f2;--card:#fff;--faint:#9a978c;
+  --ok:#27ae60;--mod:#e67e22;--warn:#c0392b;--doc:#2c3e50;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#eceae2;font-family:"PingFang TC","Noto Sans TC","Microsoft JhengHei","Sukhumvit Set",sans-serif;color:var(--ink);padding:20px 12px;-webkit-font-smoothing:antialiased}
+
+/* 語言切換 */
+.tabs{max-width:900px;margin:0 auto 14px;display:flex;gap:6px;flex-wrap:wrap}
+.tab{flex:1 1 130px;text-align:center;padding:10px 6px;border-radius:10px;border:1px solid var(--line);background:#fff;cursor:pointer;font-weight:800;color:var(--sub);font-size:15px;line-height:1.3}
+.tab small{display:block;font-weight:500;font-size:10.5px;color:var(--faint);margin-top:2px}
+.tab.active{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.tab.active small{color:#b9c7c3}
+
+/* 單張 */
+.sheet{max-width:900px;margin:0 auto;background:var(--paper);padding:34px 34px 22px}
+.langbadge{display:inline-block;background:var(--doc);color:#fff;font-size:13px;font-weight:800;letter-spacing:.02em;padding:5px 13px;border-radius:999px;margin-bottom:12px;line-height:1.5}
+.head{border-bottom:2px solid var(--doc);padding-bottom:12px;margin-bottom:6px}
+.kick{font-size:12px;letter-spacing:.3em;color:var(--sub);font-weight:800;margin-bottom:8px}
+.head h1{font-size:26px;font-weight:900;line-height:1.25;color:var(--doc)}
+
+.sec{margin-top:18px;background:var(--card);border:1px solid var(--line);border-left:6px solid var(--ok);border-radius:12px;padding:15px 18px 14px}
+.sec.mod{border-left-color:var(--mod)}
+.sec.warn{border-left-color:var(--warn)}
+.sec.doc{border-left-color:var(--doc)}
+.sec h2{font-size:17px;font-weight:900;color:var(--ok);margin-bottom:8px;line-height:1.35}
+.sec.mod h2{color:var(--mod)}
+.sec.warn h2{color:var(--warn)}
+.sec.doc h2{color:var(--doc)}
+.sec ul{list-style:none}
+.sec li{position:relative;padding-left:17px;margin-bottom:6px;font-size:15px;line-height:1.72}
+.sec li:last-child{margin-bottom:0}
+.sec li:before{content:"‧";position:absolute;left:3px;font-weight:900;color:var(--ok)}
+.sec.mod li:before{color:var(--mod)}
+.sec.warn li:before{color:var(--warn)}
+.sec.doc li:before{color:var(--doc)}
+.sec b{font-weight:800}
+.sec .why{display:block;margin-top:2px;font-size:13px;color:var(--sub);line-height:1.6}
+
+/* 最重要的那一條：3 小時內不可熱食 */
+.alert{margin-top:16px;background:#fdecea;border:2px solid var(--warn);border-radius:12px;padding:14px 18px;font-size:15.5px;font-weight:800;color:var(--warn);line-height:1.7}
+.alert .sm{display:block;font-weight:600;font-size:13.5px;color:#8e2f22;margin-top:4px;line-height:1.65}
+
+.note{margin-top:16px;font-size:12.5px;color:var(--sub);line-height:1.7;font-style:italic}
+.hotline{margin-top:14px;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 16px;text-align:center;font-size:14.5px;line-height:1.75}
+.hotline b{font-size:18px;color:var(--doc);letter-spacing:.02em}
+.hotline span{display:block;font-size:12.5px;color:var(--sub);margin-top:2px}
+.foot{margin-top:14px;text-align:center;font-size:11px;color:var(--faint);line-height:1.75;border-top:1px solid var(--line);padding-top:11px}
+.foot b{color:var(--sub)}
+
+.bar{text-align:center;margin:16px 0;display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.bar button{background:var(--ink);color:var(--paper);border:0;padding:11px 22px;font-size:15px;font-weight:700;border-radius:6px;cursor:pointer}
+
+/* 常見問題（只在中文版顯示） */
+.qa{max-width:900px;margin:16px auto 0;background:#fff;border:1px solid var(--line);border-radius:12px;padding:18px 20px}
+.qa h3{font-size:16px;color:var(--doc);margin-bottom:10px;border-left:4px solid var(--doc);padding-left:10px}
+.qa table{width:100%;border-collapse:collapse;font-size:14px}
+.qa th,.qa td{border-bottom:1px solid var(--line);padding:9px 8px;text-align:left;vertical-align:top;line-height:1.65}
+.qa th{background:var(--paper);font-weight:800;color:var(--sub);font-size:13px}
+.qa td.q{font-weight:700;color:var(--doc);white-space:nowrap}
+.qa .wrap{overflow-x:auto}
+
+/* ⚠️ media query 一律放在所有基礎規則之後（同權重後者勝） */
+/* 列印：目標是「一張 A4 印完」。壓縮過的行高與間距是實測調出來的——
+   2026-08-12 第一版列印時諮詢專線與頁尾會溢到第 2 頁，
+   實際 print-to-pdf 出來才看得到，螢幕上完全正常。 */
+@media print{
+  @page{size:A4 portrait;margin:9mm}
+  body{background:#fff;padding:0}
+  .tabs,.bar,.no-print{display:none!important}
+  .sheet{max-width:100%;padding:0}
+  .langbadge{margin-bottom:7px;padding:3px 11px;font-size:11.5px}
+  .head{padding-bottom:8px;margin-bottom:2px}
+  .kick{margin-bottom:5px;font-size:11px}
+  .head h1{font-size:20px}
+  .sec{margin-top:9px;padding:9px 13px 8px;border-radius:9px}
+  .sec h2{font-size:14.5px;margin-bottom:5px}
+  .sec li{font-size:12.8px;line-height:1.5;margin-bottom:3px;padding-left:14px}
+  .sec .why{font-size:11.3px;line-height:1.45;margin-top:1px}
+  .alert{margin-top:10px;padding:9px 13px;font-size:13.5px;line-height:1.5}
+  .alert .sm{font-size:11.8px;line-height:1.45;margin-top:3px}
+  .note{margin-top:8px;font-size:10.8px;line-height:1.5}
+  .hotline{margin-top:8px;padding:7px 12px;font-size:12.5px;line-height:1.5}
+  .hotline b{font-size:16px}
+  .hotline span{font-size:11px}
+  .foot{margin-top:8px;padding-top:7px;font-size:9.5px;line-height:1.5}
+  .sec,.alert,.hotline{break-inside:avoid}
+}
+@media (max-width:640px){
+  body{padding:12px 8px}
+  .sheet{padding:22px 18px 18px}
+  .head h1{font-size:21px}
+  .langbadge{font-size:12px;padding:4px 11px}
+  .tab{flex:1 1 calc(50% - 6px);font-size:14px}
+  .sec{padding:13px 14px 12px}
+  .sec li{font-size:14.5px}
+  .alert{padding:12px 14px;font-size:15px}
+  .hotline b{font-size:17px}
+  .qa{padding:14px 14px}
+  .qa table{font-size:13px}
+  .qa td.q{white-space:normal}
+}
+</style></head><body>
+
+<div class="tabs no-print" id="tabs"></div>
+
+<div class="sheet" id="sheet">
+  <div class="langbadge" id="langbadge"></div>
+  <div class="head">
+    <div class="kick" id="kick"></div>
+    <h1 id="h1"></h1>
+  </div>
+  <div id="secs"></div>
+  <div class="alert" id="alert"></div>
+  <div class="note" id="note"></div>
+  <div class="hotline" id="hotline"></div>
+  <div class="foot">
+    高醫附設高醫岡山醫院　內分泌新陳代謝科　｜
+    <b>本單張為一般性衛教，不取代醫師對您個別狀況的判斷</b>　｜　工具版本：2026-08-12
+  </div>
+</div>
+
+<div class="qa no-print" id="qa"></div>
+
+<div class="bar no-print">
+  <button onclick="window.print()">🖨 列印目前語言 / 存 PDF（A4）</button>
+</div>
+
+<script>
+/* 內容來源：knowledge/medical/endocrinology/patient-education/fna-multilang/
+   （source.md + fna-multilang.html，2026-05-06 六語言原稿，本頁沿用其譯文） */
+const L = {
+ 'zh-TW':{badge:'🇹🇼　繁體中文　·　Traditional Chinese　·　台灣',tab:'🇹🇼 繁體中文',tabsub:'台灣　Traditional Chinese',
+  kick:'內分泌新陳代謝科　·　檢查衛教',
+  h1:'甲狀腺超音波導引細針抽吸（FNA）檢查衛教',
+  secs:[
+   {c:'',t:'① 檢查前準備',items:[
+    '可以正常吃飯，<b>但不要吃太飽</b>',
+    '請穿<b>無領子的寬鬆上衣</b>，脖子不要戴項鍊或飾品',
+    '若有<b>洗腎、肝硬化、血液疾病</b>，或正在服用<b>抗凝血藥</b>（如 aspirin、warfarin、Xarelto、Eliquis），檢查前一定要告訴醫師<span class="why">請勿自行停藥。要不要停、停幾天，由醫師依您的狀況決定</span>']},
+   {c:'doc',t:'② 檢查當下',items:[
+    '平躺在檢查床，肩下會墊枕頭、<b>頸部會後仰</b>',
+    '抽吸過程中<b>請勿咳嗽、吞口水、講話</b>',
+    '若不舒服請<b>舉手示意</b>，不要出聲']},
+   {c:'mod',t:'③ 檢查後（離開診間前）',items:[
+    '傷口只有針孔大小，用手指<b>緊壓 15 分鐘</b>避免出血',
+    '如有<b>洗腎、肝硬化、血液疾病</b>者，緊壓時間延長為 <b>20 分鐘</b>',
+    '請在檢查室外候診區<b>休息 20 分鐘</b>，<b>醫師確認無出血才可離院</b>']},
+   {c:'warn',t:'④ 返家注意事項',items:[
+    '當天<b>勿用力咳嗽、勿劇烈運動</b>。一般沐浴可以',
+    '若穿刺部位<b>腫脹、出血、異常疼痛 → 冰敷 10 分鐘</b>',
+    '若<b>呼吸困難、吞嚥困難、症狀持續惡化 → 立即至急診</b>',
+    '<b>2 週後</b>請預約回診，由醫師說明檢查結果']}],
+  alert:'⚠️ 返家後 3 小時內，勿吃熱燙食物或液體！<span class="sm">熱會使血管擴張，可能造成穿刺處出血。溫的、涼的都可以，只要不是熱燙的。</span>',
+  note:'本單張說明的是一般流程。您的凝血狀況、結節位置與顆數不同，醫師可能會給不一樣的指示，以醫師當面交代的為準。',
+  hotline:'諮詢專線 <b>07-626-1000</b><span>高醫附設高醫岡山醫院　內分泌新陳代謝科</span>'},
+
+ 'en':{badge:'🇬🇧　英文　·　English',tab:'🇬🇧 English',tabsub:'英文　English',
+  kick:'Endocrinology & Metabolism　·　Patient Information',
+  h1:'Thyroid Ultrasound-Guided Fine-Needle Aspiration (FNA) — Patient Information',
+  secs:[
+   {c:'',t:'① Before the Procedure',items:[
+    'You may eat normally, <b>but do not eat too much</b>.',
+    'Please wear a <b>loose, collarless top</b>, and do not wear necklaces or neck accessories.',
+    'If you have <b>kidney disease (on dialysis), liver cirrhosis, blood disorders</b>, or are taking <b>blood thinners</b> (aspirin, warfarin, Xarelto, Eliquis, etc.), please inform the doctor <b>BEFORE</b> the procedure.<span class="why">Do not stop the medication on your own. Your doctor will decide whether and for how long it should be held.</span>']},
+   {c:'doc',t:'② During the Procedure',items:[
+    'Lie flat on the bed. A pillow will be placed under your shoulders so your <b>neck tilts back</b>.',
+    'Do <b>NOT cough, swallow, or speak</b> during the needle aspiration.',
+    '<b>Raise your hand</b> if you feel any discomfort — please do not speak.']},
+   {c:'mod',t:'③ Right After the Procedure',items:[
+    'The wound is the size of a needle hole. Press the site firmly with your finger for <b>15 minutes</b> to prevent bleeding.',
+    'If you have <b>kidney, liver, or blood disease</b>, press for <b>20 minutes</b>.',
+    'Please <b>rest 20 minutes</b> in the waiting area. You may leave only after <b>the doctor confirms there is no bleeding</b>.']},
+   {c:'warn',t:'④ At-Home Care',items:[
+    'Avoid <b>vigorous coughing or strenuous exercise</b> on the same day. Bathing is fine.',
+    'If the puncture site becomes <b>swollen, bleeds, or hurts unusually → apply a cold pack for 10 minutes</b>.',
+    'If you experience <b>difficulty breathing, difficulty swallowing, or worsening symptoms → go to the Emergency Room immediately</b>.',
+    'Make a follow-up appointment with your doctor in <b>2 weeks</b> to discuss the result.']}],
+  alert:'⚠️ For 3 hours after the procedure, do NOT eat hot food or drink hot liquids!<span class="sm">Heat dilates blood vessels and may cause bleeding at the puncture site. Warm or cold is fine — just not hot.</span>',
+  note:'This sheet describes the general procedure. Depending on your clotting status and the location and number of nodules, your doctor may give different instructions — always follow what your doctor tells you in person.',
+  hotline:'Hotline <b>07-626-1000</b><span>KMU Kangshan Hospital — Endocrinology &amp; Metabolism</span>'},
+
+ 'vi':{badge:'🇻🇳　越南文　·　Tiếng Việt　·　Vietnamese',tab:'🇻🇳 Tiếng Việt',tabsub:'越南文　Vietnamese',
+  kick:'Khoa Nội tiết　·　Hướng dẫn cho người bệnh',
+  h1:'Hướng dẫn chọc hút tế bào tuyến giáp bằng kim nhỏ (FNA) dưới siêu âm',
+  secs:[
+   {c:'',t:'① Trước khi thực hiện',items:[
+    'Có thể ăn uống bình thường, <b>nhưng không nên ăn quá no</b>.',
+    'Xin mặc <b>áo rộng, không cổ</b> và không đeo dây chuyền hoặc đồ trang sức ở cổ.',
+    'Nếu bạn đang <b>chạy thận, xơ gan, mắc bệnh máu</b> hoặc đang uống <b>thuốc chống đông máu</b> (aspirin, warfarin, Xarelto, Eliquis...), hãy báo cho bác sĩ <b>TRƯỚC</b> khi thực hiện.<span class="why">Không tự ý ngưng thuốc. Bác sĩ sẽ quyết định có ngưng hay không và ngưng bao lâu.</span>']},
+   {c:'doc',t:'② Trong khi thực hiện',items:[
+    'Nằm thẳng trên giường. Bác sĩ sẽ đặt gối dưới vai để <b>cổ ngửa ra sau</b>.',
+    '<b>KHÔNG ho, KHÔNG nuốt, KHÔNG nói</b> trong khi đang chọc hút.',
+    'Nếu khó chịu, hãy <b>giơ tay ra hiệu</b> — xin đừng nói.']},
+   {c:'mod',t:'③ Ngay sau khi thực hiện',items:[
+    'Vết thương chỉ nhỏ bằng đầu kim. Dùng ngón tay <b>ấn chặt 15 phút</b> để tránh chảy máu.',
+    'Nếu bạn <b>chạy thận, xơ gan hoặc bệnh máu</b>, hãy ấn trong <b>20 phút</b>.',
+    'Xin <b>nghỉ ngơi 20 phút</b> ở phòng chờ. Chỉ rời bệnh viện khi <b>bác sĩ xác nhận không chảy máu</b>.']},
+   {c:'warn',t:'④ Chăm sóc tại nhà',items:[
+    'Tránh <b>ho mạnh hoặc vận động gắng sức</b> trong ngày hôm đó. Có thể tắm bình thường.',
+    'Nếu chỗ chọc hút <b>bị sưng, chảy máu hoặc đau bất thường → chườm lạnh 10 phút</b>.',
+    'Nếu bạn <b>khó thở, khó nuốt hoặc triệu chứng nặng hơn → đến phòng cấp cứu ngay</b>.',
+    'Đặt lịch tái khám với bác sĩ sau <b>2 tuần</b> để nghe kết quả.']}],
+  alert:'⚠️ Trong vòng 3 giờ sau thủ thuật, KHÔNG ăn hoặc uống đồ nóng!<span class="sm">Nhiệt độ cao làm giãn mạch máu và có thể gây chảy máu tại chỗ chọc. Đồ ấm hoặc lạnh đều được — chỉ cần không nóng.</span>',
+  note:'Tờ hướng dẫn này mô tả quy trình chung. Tùy tình trạng đông máu, vị trí và số lượng nhân giáp, bác sĩ có thể dặn khác — hãy làm theo lời bác sĩ dặn trực tiếp.',
+  hotline:'Đường dây hỗ trợ <b>07-626-1000</b><span>Bệnh viện Cương Sơn (Kangshan) trực thuộc ĐH Y Cao Hùng — Khoa Nội tiết</span>'},
+
+ 'tl':{badge:'🇵🇭　菲律賓文　·　Tagalog　·　Filipino',tab:'🇵🇭 Tagalog',tabsub:'菲律賓文　Filipino',
+  kick:'Endocrinology　·　Impormasyon para sa Pasyente',
+  h1:'Patnubay para sa Thyroid Ultrasound-Guided Fine-Needle Aspiration (FNA)',
+  secs:[
+   {c:'',t:'① Bago ang Pagsusuri',items:[
+    'Maaari kayong kumain ng normal, <b>ngunit huwag kumain ng sobra</b>.',
+    'Magsuot ng <b>maluwang at walang kuwelyong damit</b>. Huwag magsuot ng kuwintas o alahas sa leeg.',
+    'Kung kayo ay <b>nagda-dialysis, may liver cirrhosis, may blood disorder</b>, o umiinom ng <b>blood thinner</b> (aspirin, warfarin, Xarelto, Eliquis, atbp.), sabihin sa doktor <b>BAGO</b> ang procedure.<span class="why">Huwag ihinto ang gamot nang kusa. Ang doktor ang magpapasya kung kailangan itong ihinto at kung gaano katagal.</span>']},
+   {c:'doc',t:'② Habang Ginagawa',items:[
+    'Hihiga kayo nang patag. Maglalagay ng unan sa ilalim ng inyong balikat upang <b>ang leeg ay nakaungit pataas</b>.',
+    '<b>Huwag umubo, huwag lumunok, at huwag magsalita</b> habang ginagawa ang aspiration.',
+    '<b>Itaas ang kamay</b> kung kayo ay nakakaramdam ng kakaiba — huwag magsalita.']},
+   {c:'mod',t:'③ Pagkatapos ng Procedure',items:[
+    'Ang sugat ay kasing-liit lamang ng butas ng karayom. <b>Idiin nang mariin ang puwesto gamit ang daliri sa loob ng 15 minuto</b> upang maiwasan ang pagdurugo.',
+    'Kung kayo ay <b>nagda-dialysis o may sakit sa atay/dugo</b>, idiin sa loob ng <b>20 minuto</b>.',
+    'Mangyaring <b>magpahinga ng 20 minuto</b> sa waiting area. Maaari lamang kayong umalis kapag <b>napatunayan ng doktor na walang pagdurugo</b>.']},
+   {c:'warn',t:'④ Pangangalaga sa Bahay',items:[
+    'Iwasan ang <b>malakas na pag-ubo at matinding ehersisyo</b> sa araw na iyon. OK ang paliligo.',
+    'Kung ang puwesto ng karayom ay <b>namamaga, dumudugo, o masakit nang hindi normal → maglagay ng cold pack ng 10 minuto</b>.',
+    'Kung kayo ay <b>nahihirapan huminga, nahihirapan lumunok, o lumalala ang sintomas → pumunta agad sa Emergency Room</b>.',
+    'Magpa-appointment sa inyong doktor pagkalipas ng <b>2 linggo</b> upang malaman ang resulta.']}],
+  alert:'⚠️ Sa loob ng 3 oras pagkatapos ng procedure, HUWAG kumain o uminom ng mainit!<span class="sm">Nakakapagpalapad ng ugat ang init at maaaring magdulot ng pagdurugo sa puwesto ng karayom. Maligamgam o malamig ay OK — basta hindi mainit.</span>',
+  note:'Ang sheet na ito ay naglalarawan ng pangkalahatang proseso. Depende sa inyong clotting status at sa lokasyon at bilang ng nodule, maaaring iba ang bilin ng inyong doktor — sundin ang personal na bilin ng doktor.',
+  hotline:'Hotline <b>07-626-1000</b><span>KMU Kangshan Hospital — Endocrinology</span>'},
+
+ 'th':{badge:'🇹🇭　泰文　·　ภาษาไทย　·　Thai',tab:'🇹🇭 ภาษาไทย',tabsub:'泰文　Thai',
+  kick:'แผนกต่อมไร้ท่อ　·　คำแนะนำสำหรับผู้ป่วย',
+  h1:'คำแนะนำการเจาะดูดเซลล์ต่อมไทรอยด์ด้วยเข็มขนาดเล็ก (FNA) ภายใต้คลื่นเสียงความถี่สูง',
+  secs:[
+   {c:'',t:'① ก่อนการตรวจ',items:[
+    'สามารถรับประทานอาหารได้ตามปกติ <b>แต่อย่ารับประทานมากเกินไป</b>',
+    'กรุณาสวม<b>เสื้อหลวม คอกว้าง</b> และห้ามสวมสร้อยคอหรือเครื่องประดับที่คอ',
+    'หากท่านมีประวัติ <b>ฟอกไต ตับแข็ง โรคเลือด</b> หรือกำลังรับประทาน <b>ยาต้านการแข็งตัวของเลือด</b> (เช่น aspirin, warfarin, Xarelto, Eliquis) กรุณาแจ้งแพทย์<b>ก่อน</b>เริ่มการตรวจ<span class="why">ห้ามหยุดยาเอง แพทย์จะเป็นผู้พิจารณาว่าต้องหยุดหรือไม่ และหยุดกี่วัน</span>']},
+   {c:'doc',t:'② ระหว่างการตรวจ',items:[
+    'นอนราบบนเตียง แพทย์จะวางหมอนใต้ไหล่เพื่อให้<b>คอเงยขึ้น</b>',
+    '<b>ห้ามไอ ห้ามกลืนน้ำลาย ห้ามพูด</b> ในขณะที่กำลังเจาะดูด',
+    'หากรู้สึกไม่สบาย ให้<b>ยกมือขึ้น</b>เพื่อแจ้งแพทย์ — กรุณาอย่าพูด']},
+   {c:'mod',t:'③ หลังการตรวจ (ทันที)',items:[
+    'แผลมีขนาดเล็กเท่ารูเข็ม ใช้นิ้ว<b>กดบริเวณที่เจาะอย่างแน่น 15 นาที</b> เพื่อป้องกันเลือดออก',
+    'หากท่าน<b>ฟอกไต ตับแข็ง หรือเป็นโรคเลือด</b> ให้กดเป็นเวลา <b>20 นาที</b>',
+    'กรุณา<b>พักอย่างน้อย 20 นาที</b> ที่บริเวณรอตรวจ ออกจากโรงพยาบาลได้เมื่อ<b>แพทย์ยืนยันว่าไม่มีเลือดออก</b>']},
+   {c:'warn',t:'④ การดูแลที่บ้าน',items:[
+    'หลีกเลี่ยง<b>การไอแรงและการออกกำลังกายอย่างหนัก</b>ในวันเดียวกัน อาบน้ำได้ตามปกติ',
+    'หากบริเวณที่เจาะ <b>บวม เลือดออก หรือเจ็บผิดปกติ → ประคบเย็น 10 นาที</b>',
+    'หากมี <b>หายใจลำบาก กลืนลำบาก หรืออาการแย่ลง → รีบไปห้องฉุกเฉินทันที</b>',
+    'นัดพบแพทย์อีกครั้งใน <b>2 สัปดาห์</b> เพื่อฟังผลการตรวจ']}],
+  alert:'⚠️ ภายใน 3 ชั่วโมงหลังการตรวจ ห้ามรับประทานอาหารหรือเครื่องดื่มที่ร้อน!<span class="sm">ความร้อนทำให้หลอดเลือดขยายและอาจทำให้เลือดออกบริเวณที่เจาะ อุ่นหรือเย็นได้ ขอเพียงไม่ร้อน</span>',
+  note:'เอกสารนี้อธิบายขั้นตอนทั่วไป ขึ้นอยู่กับภาวะการแข็งตัวของเลือด ตำแหน่งและจำนวนก้อน แพทย์อาจให้คำแนะนำที่ต่างออกไป — กรุณาปฏิบัติตามที่แพทย์สั่งโดยตรง',
+  hotline:'โทร <b>07-626-1000</b><span>โรงพยาบาลคังซานในเครือมหาวิทยาลัยแพทย์เกาสง — แผนกต่อมไร้ท่อ</span>'},
+
+ 'id':{badge:'🇮🇩　印尼文　·　Bahasa Indonesia　·　Indonesian',tab:'🇮🇩 Bahasa Indonesia',tabsub:'印尼文　Indonesian',
+  kick:'Endokrinologi　·　Informasi untuk Pasien',
+  h1:'Panduan Aspirasi Jarum Halus (FNA) Tiroid dengan Bantuan USG',
+  secs:[
+   {c:'',t:'① Sebelum Pemeriksaan',items:[
+    'Anda boleh makan seperti biasa, <b>tetapi jangan makan terlalu kenyang</b>.',
+    'Kenakan <b>pakaian longgar tanpa kerah</b>, dan jangan memakai kalung atau perhiasan di leher.',
+    'Jika Anda menjalani <b>cuci darah, sirosis hati, gangguan darah</b>, atau sedang mengonsumsi <b>obat pengencer darah</b> (aspirin, warfarin, Xarelto, Eliquis, dll.), harap beri tahu dokter <b>SEBELUM</b> pemeriksaan.<span class="why">Jangan menghentikan obat sendiri. Dokter yang akan memutuskan perlu dihentikan atau tidak, dan berapa lama.</span>']},
+   {c:'doc',t:'② Selama Pemeriksaan',items:[
+    'Berbaringlah terlentang. Bantal akan diletakkan di bawah bahu sehingga <b>leher menengadah ke belakang</b>.',
+    '<b>JANGAN batuk, JANGAN menelan, dan JANGAN berbicara</b> selama proses aspirasi.',
+    '<b>Angkat tangan</b> jika merasa tidak nyaman — jangan berbicara.']},
+   {c:'mod',t:'③ Segera Setelah Pemeriksaan',items:[
+    'Luka hanya sebesar lubang jarum. <b>Tekan kuat lokasi tusukan dengan jari selama 15 menit</b> untuk mencegah perdarahan.',
+    'Jika Anda menjalani <b>cuci darah, sirosis hati, atau memiliki gangguan darah</b>, tekan selama <b>20 menit</b>.',
+    'Mohon <b>beristirahat 20 menit</b> di ruang tunggu. Anda baru boleh pulang setelah <b>dokter memastikan tidak ada perdarahan</b>.']},
+   {c:'warn',t:'④ Perawatan di Rumah',items:[
+    'Hindari <b>batuk keras dan olahraga berat</b> pada hari yang sama. Mandi diperbolehkan.',
+    'Jika lokasi tusukan <b>bengkak, berdarah, atau nyeri tidak biasa → kompres dingin selama 10 menit</b>.',
+    'Jika Anda mengalami <b>kesulitan bernapas, kesulitan menelan, atau gejala memburuk → segera ke Unit Gawat Darurat</b>.',
+    'Buatlah janji temu kontrol dengan dokter dalam <b>2 minggu</b> untuk mendengar hasilnya.']}],
+  alert:'⚠️ Dalam 3 jam setelah pemeriksaan, JANGAN makan atau minum yang panas!<span class="sm">Panas dapat melebarkan pembuluh darah dan menyebabkan perdarahan di lokasi tusukan. Hangat atau dingin boleh — asalkan tidak panas.</span>',
+  note:'Lembar ini menjelaskan prosedur umum. Tergantung kondisi pembekuan darah Anda serta lokasi dan jumlah nodul, dokter mungkin memberikan instruksi berbeda — ikuti apa yang dokter sampaikan langsung kepada Anda.',
+  hotline:'Hotline <b>07-626-1000</b><span>RS KMU Kangshan, afiliasi Universitas Kedokteran Kaohsiung — Endokrinologi</span>'}
+};
+
+/* 只在中文版顯示：門診最常被問到的幾題 */
+const QA = `
+<h3>門診最常被問到的幾題</h3>
+<div class="wrap"><table>
+<tr><th>問題</th><th>回答</th></tr>
+<tr><td class="q">會不會很痛？</td>
+    <td>用的針比抽血的針還細。多數人形容是<b>痠脹感</b>而不是刺痛，過程約幾秒鐘。真的很緊張可以先告訴醫師。</td></tr>
+<tr><td class="q">要不要禁食？</td>
+    <td><b>不用禁食</b>，正常吃就好，只要別吃太飽。這不是全身麻醉的檢查。</td></tr>
+<tr><td class="q">做完可以自己開車回家嗎？</td>
+    <td>沒有麻醉、不影響意識，<b>原則上可以</b>。但請務必先在候診區<b>休息滿 20 分鐘</b>、經醫師確認沒有出血再走。</td></tr>
+<tr><td class="q">在吃阿斯匹靈／抗凝血藥要停嗎？</td>
+    <td><b>不要自己停。</b>停藥可能有中風或血栓的風險，要不要停、停幾天，由醫師依您的狀況決定。<b>但一定要在檢查前主動告訴醫師。</b></td></tr>
+<tr><td class="q">為什麼要等 2 週？</td>
+    <td>抽到的細胞要送病理科製片、染色、由病理科醫師判讀。這段時間是必要的，不是報告被延誤。</td></tr>
+<tr><td class="q">報告說「檢體不足」怎麼辦？</td>
+    <td>結節位置深、囊性成分多或血液太多時都可能發生，<b>不代表結果不好</b>。醫師會評估要不要再做一次或改用其他方式追蹤。</td></tr>
+<tr><td class="q">為什麼有的結節不用抽？</td>
+    <td>是否需要抽吸取決於<b>結節大小與超音波特徵</b>，不是只看大小。有些結節只需定期追蹤，這是依指引判斷的結果。</td></tr>
+</table></div>`;
+
+const $ = id => document.getElementById(id);
+const KEYS = Object.keys(L);
+
+function render(k){
+  const d = L[k];
+  document.documentElement.lang = (k === 'zh-TW') ? 'zh-Hant' : k;
+  $('langbadge').textContent = d.badge;
+  $('kick').textContent = d.kick;
+  $('h1').textContent = d.h1;
+  $('secs').innerHTML = d.secs.map(s =>
+    `<div class="sec ${s.c}"><h2>${s.t}</h2><ul>${s.items.map(i=>`<li>${i}</li>`).join('')}</ul></div>`
+  ).join('');
+  $('alert').innerHTML = d.alert;
+  $('note').textContent = d.note;
+  $('hotline').innerHTML = d.hotline;
+  $('qa').innerHTML = (k === 'zh-TW') ? QA : '';
+  $('qa').style.display = (k === 'zh-TW') ? '' : 'none';
+  [...$('tabs').children].forEach(t => t.classList.toggle('active', t.dataset.k === k));
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+$('tabs').innerHTML = KEYS.map(k =>
+  `<div class="tab" data-k="${k}">${L[k].tab}<small>${L[k].tabsub}</small></div>`
+).join('');
+[...$('tabs').children].forEach(t => t.onclick = () => render(t.dataset.k));
+render('zh-TW');
+</script>
+</body></html>
