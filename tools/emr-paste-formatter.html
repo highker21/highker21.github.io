@@ -14,7 +14,11 @@ textarea{width:100%;height:200px;border:1px solid var(--line);border-radius:8px;
 textarea:focus{outline:2px solid var(--accent2)}
 .opts{display:flex;flex-wrap:wrap;gap:14px;margin:10px 0;font-size:.85rem;align-items:center}
 .opts label{display:flex;align-items:center;gap:4px;cursor:pointer}
-#out{width:100%;min-height:120px;border:1px solid var(--line);border-radius:8px;padding:12px;font:0.85rem/1.65 ui-monospace,Menlo,monospace;background:var(--soft);white-space:pre-wrap;word-break:break-all}
+.outbox{width:100%;min-height:120px;border:1px solid var(--line);border-radius:8px;padding:12px;font:0.85rem/1.65 ui-monospace,Menlo,monospace;background:var(--soft);white-space:pre-wrap;word-break:break-all}
+.outhead{display:flex;align-items:center;gap:8px;margin-bottom:4px}
+.outhead label{flex:1}
+button.mini{padding:3px 10px;font-size:.75rem;border-radius:6px}
+.dedup{font-size:.72rem;color:#789;margin-top:4px}
 .bar{display:flex;gap:8px;margin:8px 0;align-items:center}
 button{background:var(--accent);color:#fff;border:0;border-radius:8px;padding:8px 18px;font-size:.9rem;cursor:pointer}
 button:hover{background:var(--accent2)}
@@ -60,12 +64,24 @@ details{margin-top:6px;font-size:.75rem;color:#678}
   <label><input type="checkbox" id="oDx" checked>含診斷 (ICD)</label>
   <label><input type="checkbox" id="oShort" checked>藥名精簡</label>
   <label><input type="checkbox" id="oList">條列式（預設一行式）</label>
+  <label><input type="checkbox" id="oDedup" checked>重複用藥只留最新一筆</label>
+  <label><input type="checkbox" id="oSplitOrg" checked>門診／藥局分開</label>
 </div>
-<div class="bar"><button id="copy">📋 複製結果</button><button id="clr" class="ghost">清空輸入</button><span id="msg"></span></div>
-<div id="out">貼上後結果會出現在這裡</div>
+<div class="bar"><button id="copy">📋 複製全部</button><button id="clr" class="ghost">清空輸入</button><span id="msg"></span></div>
+<div class="cols">
+  <div class="col">
+    <div class="outhead"><label>💊 用藥</label><button id="copyMed" class="ghost mini">複製用藥</button></div>
+    <div id="outMed" class="outbox">貼上後結果會出現在這裡</div>
+    <div class="dedup" id="dedupNote"></div>
+  </div>
+  <div class="col">
+    <div class="outhead"><label>🩸 抽血</label><button id="copyLab" class="ghost mini">複製抽血</button></div>
+    <div id="outLab" class="outbox">貼上後結果會出現在這裡</div>
+  </div>
+</div>
 <div class="warn" id="warn" hidden></div>
 <details id="skipbox" hidden><summary>未解析的段落（點開檢查）</summary><pre id="skipped"></pre></details>
-<div class="foot">僅重排文字、不做醫療判斷，貼入病歷前請自行核對｜歷史記錄存於本機瀏覽器（localStorage）｜工具版本：2026-08-13b（① 用法用量帶給藥途徑碼 QDPO/HSPCPO 時整筆漏解析 ② 多字品牌名被截斷，改以「第一個全大寫 token」定位 ③ 複方成分「；」與複方劑量 5mg/20mg 解析）</div>
+<div class="foot">僅重排文字、不做醫療判斷，貼入病歷前請自行核對｜歷史記錄存於本機瀏覽器（localStorage）｜工具版本：2026-08-13c（用藥與抽血拆成兩個輸出框、各自可複製；重複用藥只留最新一筆；門診（開立）與藥局（調劑）分段）</div>
 <script>
 const $=id=>document.getElementById(id);
 const FREQ='QD|QAM|QPM|QDS|BID|TID|QID|QN|HS|PRN|QOD|QW|BIW|TIW|Q\\d+[HD]|ST|STAT|MEAL|AC|PC';
@@ -170,7 +186,7 @@ function parse(text){
       }
       if(!item){skipped.push(r);continue}
       if(!org){const o2=r.match(/無\s+(\S+)\n門診/);org=o2?o2[1]:''}
-      const key=date+'｜'+org;
+      const key=date+'｜'+org+'｜';
       if(!labs[key]){labs[key]=[];order.push(['lab',key])}
       if(!labs[key].some(x=>x.item===item))labs[key].push({item,val,lo,hi});
     }else{
@@ -183,10 +199,10 @@ function parse(text){
       const pre=dl.slice(0,dl.indexOf(fm[0]));
       const bm=pre.match(/((?:[("'＂]?[A-Z0-9][A-Z0-9()"'＂.\-\/%,;：；]*\s+)*[("'＂]?[A-Z0-9][A-Z0-9()"'＂.\-\/%,;：；]*)\s*$/);
       const brand=bm?bm[1].trim():pre.trim();
-      const key=date+'｜'+org;
+      const key=date+'｜'+org+'｜';
       if(!meds[key]){meds[key]={dx:new Map(),items:[]};order.push(['med',key])}
       if(icd&&dxm)meds[key].dx.set(icd,dxm[1].trim());
-      meds[key].items.push({brand,freq:fm[1],days:fm[3]});
+      meds[key].items.push({brand,freq:fm[1],days:fm[3],atc7:''});
     }
   }
   return {meds,labs,order,skipped};
@@ -213,8 +229,11 @@ function parseFullPage(text){
     const joined=c.replace(/\s*\n\s*/g,' ').replace(/\s+/g,' ').trim();
     if(!/^(?:\d+\s+)?1\d{2}\/\d{2}\/\d{2}\s/.test(joined))continue;   // 略過表頭/雜訊段
     const date=joined.match(/^(?:\d+\s+)?(1\d{2}\/\d{2}\/\d{2})/)[1];  // 可含前置項次
-    const orgM=joined.match(/^(?:\d+\s+)?1\d{2}\/\d{2}\/\d{2}\s+([一-鿿]+)/);
+    // 來源在雲端頁面是三行（院所名／就醫類別／院所代碼），整頁貼上後變成三個相鄰欄位。
+    // 第二段就是就醫類別（門診／藥局／住院／急診），拿到它才分得開「開立」與「調劑」。
+    const orgM=joined.match(/^(?:\d+\s+)?1\d{2}\/\d{2}\/\d{2}\s+([一-鿿]+)(?:\s+([一-鿿]{2,4})\s+\d{6,})?/);
     const org=orgM?orgM[1]:'';
+    const otype=(orgM&&orgM[2])?orgM[2]:'';
     // 主診斷：診斷名+ICD。相容①ICD被換行拆開(高血壓I1↵0→I10) ②診斷名與碼分行(肝細胞癌↵C220→C22.0、B181→B18.1)
     const dxM=joined.match(/([一-鿿][一-鿿（）()／\-]*?)\s*([A-Z]\d)\s*(\d{0,4})(?=[\s一-鿿])/);
     let icd='',dxName='';
@@ -245,10 +264,14 @@ function parseFullPage(text){
     if(ci>=0)bi=ci;
     else {const ie=ingredientEnd(toks);if(ie>=0&&ie<bi)bi=ie;}
     const brand=toks.slice(Math.max(0,bi)).join(' ');
-    const key=date+'｜'+org;
+    // 用法用量之後那一段有 ATC5名稱／ATC5代碼／ATC7代碼／藥品代碼，抓 ATC7 當去重的依據
+    // （比藥名可靠：同成分不同廠牌的品名不一樣，ATC7 一樣）
+    const post=joined.slice(joined.indexOf(fm[0])+fm[0].length);
+    const atc7=(post.match(/\b([A-Z]\d{2}[A-Z]{2}\d{2})\b/)||[])[1]||'';
+    const key=date+'｜'+org+'｜'+otype;
     if(!meds[key]){meds[key]={dx:new Map(),items:[]};order.push(['med',key])}
     if(icd)meds[key].dx.set(icd,dxName);
-    meds[key].items.push({brand,freq:fm[1],days:fm[3]});
+    meds[key].items.push({brand,freq:fm[1],days:fm[3],atc7});
   }
   return {meds,labs:{},order,skipped};
 }
@@ -273,13 +296,38 @@ function flag(v,lo,hi){
 
 function render(){
   const medText=$('inMed').value.trim(),labText=$('inLab').value.trim();
-  if(!medText&&!labText){$('out').textContent='貼上後結果會出現在這裡';$('warn').hidden=true;$('skipbox').hidden=true;return}
+  const blank='貼上後結果會出現在這裡';
+  if(!medText&&!labText){$('outMed').textContent=blank;$('outLab').textContent=blank;
+    $('dedupNote').textContent='';$('warn').hidden=true;$('skipbox').hidden=true;return}
   const {meds,labs,order,skipped}=parseAll(medText,labText);
   // 姓名欄空時，自動從表頭帶入病人姓名（不覆蓋使用者已輸入）
   if(!$('pname').value.trim()){const nm=extractPatientName(medText)||extractPatientName(labText);if(nm)$('pname').value=nm;}
-  const listMode=$('oList').checked,medOut=[],labOut=[];
+  const listMode=$('oList').checked;
+
+  /* 重複用藥只留最新一筆：同一支藥（ATC7 優先，沒有就用精簡藥名）在不同日期重複出現時，
+     只保留日期最新的那一筆。日期是民國 YYY/MM/DD 補零格式，字串比大小即可正確排序。
+     ⚠️ 只比對藥物本身、不含院所——換院所拿同一支藥仍算同一支，否則等於沒去重。 */
+  const keepAt=new Map(), dropped=[];
+  if($('oDedup').checked){
+    for(const [kind,key] of order){
+      if(kind!=='med')continue;
+      const date=key.split('｜')[0];
+      for(const it of meds[key].items){
+        const k=it.atc7||shortDrug(it.brand);
+        if(!keepAt.has(k)||date>keepAt.get(k))keepAt.set(k,date);
+      }
+    }
+  }
+  const keepItem=(it,date)=>{
+    if(!$('oDedup').checked)return true;
+    const k=it.atc7||shortDrug(it.brand);
+    if(keepAt.get(k)===date)return true;
+    dropped.push(k); return false;
+  };
+
+  const medRx=[],medPh=[],labOut=[];
   for(const [kind,key] of order){
-    const [date,org]=key.split('｜');
+    const [date,org,otype]=key.split('｜');
     if(kind==='lab'){
       const items=labs[key].map(x=>{
         const v=/^(Negative|\(-\))$/i.test(x.val)?'(-)':/^(Positive|\(\+\))$/i.test(x.val)?'(+)':' '+x.val+flag(x.val,x.lo,x.hi);
@@ -288,17 +336,32 @@ function render(){
                        :`${date} ${org}：${items.join('、')}`);
     }else{
       const m=meds[key];
+      const kept=m.items.filter(x=>keepItem(x,date));
+      if(!kept.length)continue;                       // 整次就醫的藥都被較新的取代 → 整段不印
       const dx=$('oDx').checked&&m.dx.size?`（${[...m.dx].map(([i,d])=>i+' '+d).join('；')}）`:'';
-      const items=m.items.map(x=>`${$('oShort').checked?shortDrug(x.brand):x.brand} ${x.freq}×${x.days}d`);
-      medOut.push(listMode?`${date} ${org}${dx}\n`+items.map(i=>'- '+i).join('\n')
-                       :`${date} ${org}${dx}：${items.join('、')}`);
+      const items=kept.map(x=>`${$('oShort').checked?shortDrug(x.brand):x.brand} ${x.freq}×${x.days}d`);
+      const line=listMode?`${date} ${org}${dx}\n`+items.map(i=>'- '+i).join('\n')
+                        :`${date} ${org}${dx}：${items.join('、')}`;
+      // 來源的就醫類別若是「藥局」＝調劑而非開立，分開列（雲端沒有帶原開立院所，無法掛回）
+      ($('oSplitOrg').checked&&otype==='藥局'?medPh:medRx).push(line);
     }
   }
-  // 抽血與藥物分區：兩類都有時各加標題分開；單一類別維持原樣
-  const both=medOut.length&&labOut.length,sections=[];
-  if(medOut.length)sections.push((both?'【用藥】\n':'')+medOut.join('\n'));
-  if(labOut.length)sections.push((both?'【抽血】\n':'')+labOut.join('\n'));
-  $('out').textContent=sections.join('\n\n')||'（無法解析，請確認貼的是雲端藥歷/檢驗清單）';
+
+  const medSections=[];
+  if($('oSplitOrg').checked&&medRx.length&&medPh.length){
+    medSections.push('【醫療院所（開立）】\n'+medRx.join('\n'));
+    medSections.push('【藥局（調劑）】\n'+medPh.join('\n'));
+  }else{
+    const all=medRx.concat(medPh);
+    if(all.length)medSections.push(all.join('\n'));
+  }
+  const medStr=medSections.join('\n\n');
+  const labStr=labOut.join('\n');
+  $('outMed').textContent=medStr||(medText?'（無法解析，請確認貼的是雲端西醫藥歷）':blank);
+  $('outLab').textContent=labStr||(labText?'（無法解析，請確認貼的是雲端檢驗結果）':blank);
+  const nd=new Set(dropped).size;
+  $('dedupNote').textContent=nd?`已隱藏 ${dropped.length} 筆重複用藥（${nd} 種藥，各只留最新一次）`:'';
+
   // 過濾雲端系統表頭/導覽/病人資訊列，不當成「未解析」警告
   const realSkipped=skipped.filter(s=>!/NHI MediCloud|健保醫療資訊雲端|身分證號|摘要.病人資訊|就醫日期[\s\S]{0,20}來源|使用指南|本頁注意事項|篩選器|預防接種/.test(s));
   $('warn').hidden=!realSkipped.length;
@@ -357,7 +420,18 @@ function newPatient(){
   $('inMed').addEventListener(e,render);$('inLab').addEventListener(e,render);
   document.querySelectorAll('.opts input').forEach(c=>c.addEventListener(e,render));
 });
-$('copy').onclick=async()=>{await navigator.clipboard.writeText($('out').textContent);$('msg').textContent='已複製 ✅';setTimeout(()=>$('msg').textContent='',1500)};
+const doCopy=async(txt,label)=>{
+  try{await navigator.clipboard.writeText(txt)}catch(e){
+    const ta=document.createElement('textarea');ta.value=txt;ta.style.cssText='position:fixed;top:-9999px';
+    document.body.appendChild(ta);ta.select();try{document.execCommand('copy')}catch(e2){}ta.remove();
+  }
+  $('msg').textContent='已複製'+label+' ✅';setTimeout(()=>$('msg').textContent='',1500);
+};
+const outText=id=>{const t=$(id).textContent;return /^（|^貼上後結果/.test(t)?'':t};
+$('copy').onclick=()=>{const a=outText('outMed'),b=outText('outLab');
+  doCopy([a&&(b?'【用藥】\n'+a:a),b&&(a?'【抽血】\n'+b:b)].filter(Boolean).join('\n\n'),'全部')};
+$('copyMed').onclick=()=>doCopy(outText('outMed'),'用藥');
+$('copyLab').onclick=()=>doCopy(outText('outLab'),'抽血');
 $('clr').onclick=()=>{$('inMed').value='';$('inLab').value='';render()};
 $('save').onclick=saveCurrent;
 $('newp').onclick=newPatient;
