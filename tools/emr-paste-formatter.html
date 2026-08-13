@@ -65,7 +65,7 @@ details{margin-top:6px;font-size:.75rem;color:#678}
 <div id="out">貼上後結果會出現在這裡</div>
 <div class="warn" id="warn" hidden></div>
 <details id="skipbox" hidden><summary>未解析的段落（點開檢查）</summary><pre id="skipped"></pre></details>
-<div class="foot">僅重排文字、不做醫療判斷，貼入病歷前請自行核對｜歷史記錄存於本機瀏覽器（localStorage）｜工具版本：2026-08-13（修正多字品牌名被截斷：改以「第一個全大寫 token」定位藥品名稱，AVODART SOFT CAPSULES／Harnalidge D／SUPER SALOON／DETRUSITOL SR／DOXABEN XL 皆已正確）</div>
+<div class="foot">僅重排文字、不做醫療判斷，貼入病歷前請自行核對｜歷史記錄存於本機瀏覽器（localStorage）｜工具版本：2026-08-13b（① 用法用量帶給藥途徑碼 QDPO/HSPCPO 時整筆漏解析 ② 多字品牌名被截斷，改以「第一個全大寫 token」定位 ③ 複方成分「；」與複方劑量 5mg/20mg 解析）</div>
 <script>
 const $=id=>document.getElementById(id);
 const FREQ='QD|QAM|QPM|QDS|BID|TID|QID|QN|HS|PRN|QOD|QW|BIW|TIW|Q\\d+[HD]|ST|STAT|MEAL|AC|PC';
@@ -83,12 +83,14 @@ function skipAtc3(toks){
   while(i<toks.length&&(/[一-鿿]/.test(toks[i])||/^[A-Za-z][A-Za-z-]*[sS]$/.test(toks[i])))i++;
   return i;
 }
-// 成分名稱結束的位置：成分名本體＋鹽類字尾（Hcl／Sodium／Besylate…）
+// 成分名稱結束的位置：成分名本體＋鹽類字尾（Hcl／Sodium／Besylate…）。
+// 複方藥的成分名是用「；」串起來的（Amlodipine Besylate；Atorvastatin Calcium），
+// 所以碰到含分隔符的 token 要繼續吃，連同它後面那個字（另一個成分的本體）。
 function ingredientEnd(toks){
   let i=skipAtc3(toks);
   if(i>=toks.length)return -1;
   i++;
-  while(i<toks.length&&SALT.test(toks[i]))i++;
+  while(i<toks.length&&(SALT.test(toks[i])||/[；;+]/.test(toks[i])||/[；;+]/.test(toks[i-1])))i++;
   return i;
 }
 // 品牌名起點：優先抓「FORM 詞之前的第一個全大寫 token」。雲端藥歷的藥品名稱欄幾乎都是全大寫
@@ -115,8 +117,14 @@ function shortDrug(brand){
     if(form.length)break;
     name.push(title(t));
   }
-  const dm=brand.match(/(\d+(?:\.\d+)?(?:\/\d+(?:\.\d+)?)?)\s*(MG|MCG|G|ML|IU|%)/i);
-  const dose=dm?dm[1]+dm[2].toLowerCase():'';
+  // 複方藥的劑量是「5mg/20mg」這種兩段式，單位在每一段後面（不是 5/20mg），
+  // 只抓第一段會漏掉另一個成分的劑量——Caduet 的 atorvastatin 劑量臨床上要看得到。
+  const U='(?:MG|MCG|G|ML|IU|%)';
+  let dm=brand.match(new RegExp('(\\d+(?:\\.\\d+)?\\s*'+U+'(?:\\s*\\/\\s*\\d+(?:\\.\\d+)?\\s*'+U+')+)','i'));
+  if(!dm)dm=brand.match(new RegExp('(\\d+(?:\\.\\d+)?(?:\\/\\d+(?:\\.\\d+)?)?\\s*'+U+')','i'));
+  // 有些品項劑量不帶單位（CONCOR 1.25(鋁箔/膠箔)），寧可原樣顯示數字也不要自己補單位
+  if(!dm)dm=brand.match(/\s(\d+(?:\.\d+)?)(?=\s|\(|（|$)/);
+  const dose=dm?dm[1].replace(/\s+/g,'').toLowerCase():'';
   if(!name.length)return brand.replace(/["＂]/g,'').replace(/\s+/g,' ').trim(); // 退化(容器型如 Brown Mixture)→回完整品牌
   let out=name.join(' ')+(extra?' '+extra:'')+(dose?' '+dose:'');
   if(!dose&&form.length)out+=' '+form.slice(0,2).join(' ');
@@ -198,7 +206,9 @@ function extractPatientName(t){const m=t.match(/身分證號[：:\s]*[A-Z][0-9A-
 function parseFullPage(text){
   const chunks=text.split(/\n(?=\s*(?:\d+\s+)?1\d{2}\/\d{2}\/\d{2}\s)/);
   const meds={},order=[],skipped=[];
-  const freqRe=/\s((?:QD|QAM|QPM|QDS|BID|TID|QID|QN|HS|PRN|QOD|QW|BIW|TIW|Q\d+[HD]|ST|STAT)(?:AM|PM|NOON|N|AC|PC|HS|MC)*)\s+(\d+(?:\.\d+)?)\s+(\d+)\s+(\d+)(?:\s|$)/;
+  // ⚠️ 用法用量碼後面可能接給藥途徑碼（QDPO＝QD 口服、HSPCPO＝HS+PC+PO）。
+  //    漏掉途徑碼不是抓錯藥名，而是**整筆比對不到、整段掉進「未解析的段落」**。
+  const freqRe=/\s((?:QD|QAM|QPM|QDS|BID|TID|QID|QN|HS|PRN|QOD|QW|BIW|TIW|Q\d+[HD]|ST|STAT)(?:AM|PM|NOON|N|AC|PC|HS|MC)*(?:PO|IV|IM|SC|SL|SUB|TOP|INH|IF|PR|PV|OU|OD|OS|AU|AD|AS|NA|NG|IA|ID|IT|GT|EX|SUP)?)\s+(\d+(?:\.\d+)?)\s+(\d+)\s+(\d+)(?:\s|$)/;
   for(const c of chunks){
     const joined=c.replace(/\s*\n\s*/g,' ').replace(/\s+/g,' ').trim();
     if(!/^(?:\d+\s+)?1\d{2}\/\d{2}\/\d{2}\s/.test(joined))continue;   // 略過表頭/雜訊段
@@ -214,6 +224,7 @@ function parseFullPage(text){
     // pre＝用法用量前的字串；砍掉診斷、ATC3名稱、複方註記Y，剩 成分名稱+藥品名稱
     let pre=joined.slice(0,joined.indexOf(fm[0]));
     if(dxM)pre=pre.slice(dxM.index+dxM[0].length);
+    pre=pre.trim();   // ⚠️ 切完診斷後開頭必留一個空白，不 trim 的話底下三個 ^ 錨定的規則全部靜默失效
     const am=pre.match(/^[一-鿿][^）)]*[）)]\s*/);        // 中文ATC3(含英文gloss括號)
     if(am)pre=pre.slice(am[0].length);else pre=pre.replace(/^[A-Za-z]+\s+/,''); // 英文ATC3(如 Psycholeptics)
     pre=pre.replace(/^Y\s+/,'');                                   // 複方註記
