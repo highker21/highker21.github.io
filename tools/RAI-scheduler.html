@@ -572,7 +572,7 @@ function render() {
     html += `<li>當日不必抽血、不必返診（抽血改在住院當天第 2 針後）。</li>`;
     html += `</ol>`;
     html += `<div class="section-title">🏥 入院日 + 住院打 Thyrogen 第 2 針（${fmt(c.admit)}，提前 1 天）</div><ol>`;
-    html += `<li>請於上午 11:00 直接住院報到（午餐自理），<strong>不另行通知</strong>。</li>`;
+    html += `<li>請於上午 09:00～10:00 直接住院報到（午餐自理），<strong>不另行通知</strong>。</li>`;
     html += `<li>住院手續：攜帶「住院許可證」至 B、C 棟一樓「入出院服務中心」辦理。</li>`;
     html += `<li>至啟川 14EN 內分泌新陳代謝病房報到。</li>`;
     html += `<li>住院開立：「人工合成甲促素」(Thyrogen) 1 支。</li>`;
@@ -588,7 +588,7 @@ function render() {
   if (c.mode === 'C' || c.mode === 'D') {
     const dose_thy = c.mode === 'C' ? '1/2 支' : '1 支';
     html += `<div class="section-title">🏥 住院當天（${fmt(c.admit)}，提前 1 天）</div><ol>`;
-    html += `<li>請於上午 11:00 直接住院報到（午餐自理），<strong>不另行通知</strong>。</li>`;
+    html += `<li>請於上午 09:00～10:00 直接住院報到（午餐自理），<strong>不另行通知</strong>。</li>`;
     html += `<li>住院手續：攜帶「住院許可證」至 B、C 棟一樓「入出院服務中心」辦理。</li>`;
     html += `<li>至啟川 14EN 內分泌新陳代謝病房報到。</li>`;
     html += `<li>住院開立：「人工合成甲促素」(Thyrogen) 1 支。</li>`;
