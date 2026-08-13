@@ -65,14 +65,42 @@ details{margin-top:6px;font-size:.75rem;color:#678}
 <div id="out">貼上後結果會出現在這裡</div>
 <div class="warn" id="warn" hidden></div>
 <details id="skipbox" hidden><summary>未解析的段落（點開檢查）</summary><pre id="skipped"></pre></details>
-<div class="foot">僅重排文字、不做醫療判斷，貼入病歷前請自行核對｜歷史記錄存於本機瀏覽器（localStorage）｜工具版本：2026-07-24（抽血與藥物結果分區顯示【用藥】/【抽血】；沿用複合用法碼 QDAMPC/QDAMAC、Q2D、藥名濾除 TM/® 商標標記）</div>
+<div class="foot">僅重排文字、不做醫療判斷，貼入病歷前請自行核對｜歷史記錄存於本機瀏覽器（localStorage）｜工具版本：2026-08-13（修正多字品牌名被截斷：改以「第一個全大寫 token」定位藥品名稱，AVODART SOFT CAPSULES／Harnalidge D／SUPER SALOON／DETRUSITOL SR／DOXABEN XL 皆已正確）</div>
 <script>
 const $=id=>document.getElementById(id);
 const FREQ='QD|QAM|QPM|QDS|BID|TID|QID|QN|HS|PRN|QOD|QW|BIW|TIW|Q\\d+[HD]|ST|STAT|MEAL|AC|PC';
 const FORM=/^(TABLETS?|TAB|CAPSULES?|CAP|CAPS|ENTERIC[\w-]*|PROLONGED-RELEASE|EXTENDED[\w-]*|FILM[\w-]*|F\.?C\.?|SUGAR[\w-]*|ORAL|EYE|DROPS?|LOTION|OINTMENT|CREAM|GEL|SYRUP|SOLUTION|SUSPENSION|MIXTURE|LIQUID|EFFERVESCENT|INJECTION|INJ|PATCH|PLASTER|SPRAY|SUPPOSITOR(Y|IES)|POWDER|GRANULES?|S\.?R\.?M\.?C\.?|MICROENCAPSULATED)$/i;
 const CONTAINER=/^(LIQUID|MIXTURE|SOLUTION|SYRUP|SUSPENSION|DROPS?)$/i;
 const EXTRA=/^(SR|XL|XR|CR|ER|LA|MR|DEPOT|FORTE|RETARD)$/i;
+const FORMMOD=/^(SOFT|HARD|COATED|CHEWABLE|DISPERSIBLE|DELAYED|CONTROLLED|SUSTAINED|IMMEDIATE|MODIFIED|GASTRO-RESISTANT)$/i;  // 劑型的修飾詞，接在 FORM 詞前
 const TM=/^(®|™|TM|\(TM\)|\(R\)|®™)$/i;   // 商標標記，藥名擷取時濾除
+// 鹽類/水合物字尾：接在成分名後面仍屬「成分名稱」欄，不是品牌名的開頭
+const SALT=/^(HCL|HBR|Hydrochloride|Hydrobromide|Sodium|Potassium|Calcium|Magnesium|Zinc|Iron|Ferrous|Maleate|Tartrate|Bitartrate|Besylate|Besilate|Mesylate|Mesilate|Fumarate|Succinate|Citrate|Acetate|Sulfate|Sulphate|Phosphate|Nitrate|Bromide|Chloride|Carbonate|Bicarbonate|Gluconate|Lactate|Oxalate|Stearate|Palmitate|Valerate|Propionate|Dipropionate|Furoate|Xinafoate|Trihydrate|Dihydrate|Monohydrate|Hemihydrate|Anhydrous|Na|K|Ca|Mg|\+|\/|And)$/i;
+const CAPS=/^[A-Z][A-Z0-9.\-]+$/;   // 全大寫商品名（至少兩字，排除 "D" 這種單字母品牌尾碼）
+// 略過開頭的 ATC3 類別名：中文，或英文複數型（Urologicals／Psycholeptics 一律 s 結尾，學名 INN 幾乎不會）
+function skipAtc3(toks){
+  let i=0;
+  while(i<toks.length&&(/[一-鿿]/.test(toks[i])||/^[A-Za-z][A-Za-z-]*[sS]$/.test(toks[i])))i++;
+  return i;
+}
+// 成分名稱結束的位置：成分名本體＋鹽類字尾（Hcl／Sodium／Besylate…）
+function ingredientEnd(toks){
+  let i=skipAtc3(toks);
+  if(i>=toks.length)return -1;
+  i++;
+  while(i<toks.length&&SALT.test(toks[i]))i++;
+  return i;
+}
+// 品牌名起點：優先抓「FORM 詞之前的第一個全大寫 token」。雲端藥歷的藥品名稱欄幾乎都是全大寫
+// 商品名（EYESMIN／BOKEY／NORVASC／AVODART），而成分名稱欄是 Title-case 學名，這個訊號比
+// 「FORM 前一格」可靠得多，也不會被 SUPER SALOON、DETRUSITOL SR 這種多字品牌截斷。
+function brandStart(toks,fi){
+  for(let j=skipAtc3(toks);j<toks.length&&(fi<0||j<fi);j++){
+    const t=toks[j].replace(/["＂()（）]/g,'');
+    if(CAPS.test(t)&&!FORM.test(t)&&!EXTRA.test(t)&&!FORMMOD.test(t))return j;
+  }
+  return -1;
+}
 const title=s=>s.charAt(0)+s.slice(1).toLowerCase();
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 
@@ -82,7 +110,7 @@ function shortDrug(brand){
   for(const t of toks){
     if(TM.test(t))continue;                 // 跳過商標標記(TM/®/™)
     if(EXTRA.test(t)&&name.length){extra=t.toUpperCase();continue}
-    if(FORM.test(t)){form.push(t.toLowerCase());continue}
+    if(FORM.test(t)||FORMMOD.test(t)){form.push(t.toLowerCase());continue}   // SOFT CAPSULES 這種兩字劑型，SOFT 也算劑型不是藥名
     if(/^\(/.test(t)||/^\d/.test(t))break;
     if(form.length)break;
     name.push(title(t));
@@ -197,6 +225,14 @@ function parseFullPage(text){
     else if(fi===0)bi=0;
     else if(CONTAINER.test(toks[fi].replace(/["＂]/g,''))&&/^[A-Z][a-z]/.test(toks[fi-1]))bi=fi; // 容器型且前token為成分尾→不回退
     else {bi=fi-1;while(bi>0&&TM.test(toks[bi]))bi--;}  // FORM 前若為商標標記(TM/®)則再往前取真正品牌名
+    // ⚠️ 只靠 FORM 回退一格，遇到「品牌名不只一個 token」就會把品牌前段當成成分名切掉，例如
+    //    Dutasteride AVODART SOFT CAPSULES 0.5MG → 只剩 SOFT CAPSULES 0.5MG（SOFT 也是劑型詞）
+    //    Tamsulosin Hcl Harnalidge D tablets 0.2mg → 只剩 D tablets 0.2mg
+    //    Tolterodine L-Tartrate DETRUSITOL SR PROLONGED-RELEASE… → 只剩 SR PROLONGED-RELEASE…
+    //    改以「第一個全大寫 token」定位品牌名；沒有全大寫（Harnalidge 這種）才退回成分名長度推估。
+    const ci=brandStart(toks,fi);
+    if(ci>=0)bi=ci;
+    else {const ie=ingredientEnd(toks);if(ie>=0&&ie<bi)bi=ie;}
     const brand=toks.slice(Math.max(0,bi)).join(' ');
     const key=date+'｜'+org;
     if(!meds[key]){meds[key]={dx:new Map(),items:[]};order.push(['med',key])}
