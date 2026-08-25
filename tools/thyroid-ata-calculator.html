@@ -143,18 +143,38 @@ function parseReport(t){
     [/(?:encapsulated\s*)?follicular\s*variant/i,'follicular variant'],[/oncocytic|H[üu]rthle/i,'oncocytic'],
     [/classic|conventional/i,'classic']];
   F.variant='';for(const[re,name]of vlist){if(re.test(htLines)){F.variant=name;break;}}
-  // 腫瘤最大徑：抓「所有」Tumor size / Size 行，多發時取「最大顆的最大徑」（原本只 match 第一顆＝bug）
-  let sizes=[];
-  for(const m of t.matchAll(/Tumou?r\s*size[：:\s]*([\d.]+\s*[xX×][\d.\sxX×]+)/ig)){const d=maxdim(m[1]);if(d!=null)sizes.push(d);}
-  if(!sizes.length)for(const m of t.matchAll(/(?:^|\n)\s*[-●*]?\s*Size[：:\s]*([\d.]+\s*[xX×][\d.\sxX×]+)/ig)){const d=maxdim(m[1]);if(d!=null)sizes.push(d);}
-  // ⚠️ 上面兩條都要求「長x寬x高」，但報告也常只寫單一最大徑：
-  //    "Tumor size: 2.8 cm in greatest dimension."
-  //    以前這種寫法抓不到 → size 落空 → 分期退成 Tx、風險被低估（往不安全的方向錯）。
-  if(!sizes.length)for(const m of t.matchAll(/Tumou?r\s*size[：:\s]*([\d.]+)\s*cm/ig)){const d=parseFloat(m[1]);if(!isNaN(d))sizes.push(d);}
+  // 腫瘤最大徑：三種寫法「全部都跑」，最後取最大顆的最大徑。
+  // ⚠️ 2026-08-25 使用者回報並實跑重現：原本三段是**互斥**的（前一段有值就不往下找），
+  //    於是 Gross 段的「- Size: 0.4 x 0.3 x 0.3 cm」（該段只描述了其中一顆）一命中，
+  //    Microscopic 段的「Tumor size: 1.6 cm in greatest dimension」整段被跳過 →
+  //    **1.6 從未被讀到**，兩顆腫瘤只看到小的那顆，分期（pT1b→pT1a）與風險同時被低估。
+  //    這與下面 ETE、ENE 兩處註解記的是同一類錯：**往不安全的方向錯**。
+  //    修法：三段都收集，取最大；並分別記下 Gross / Microscopic 的來源以便提示不一致。
+  let sizes=[],grossSizes=[],microSizes=[];
+  for(const m of t.matchAll(/Tumou?r\s*size[：:\s]*([\d.]+\s*[xX×][\d.\sxX×]+)/ig)){const d=maxdim(m[1]);if(d!=null){sizes.push(d);microSizes.push(d);}}
+  for(const m of t.matchAll(/(?:^|\n)\s*[-●*]?\s*Size[：:\s]*([\d.]+\s*[xX×][\d.\sxX×]+)/ig)){const d=maxdim(m[1]);if(d!=null){sizes.push(d);grossSizes.push(d);}}
+  for(const m of t.matchAll(/Tumou?r\s*size[：:\s]*([\d.]+)\s*cm/ig)){const d=parseFloat(m[1]);if(!isNaN(d)){sizes.push(d);microSizes.push(d);}}
   F.size=sizes.length?String(Math.max(...sizes)):'';
+  // Gross 與 Microscopic 對不起來時要講出來（本次事故就是這一型），不要默默取一個值
+  F._warn=[];
+  if(grossSizes.length&&microSizes.length){
+    const g=Math.max(...grossSizes),mi=Math.max(...microSizes);
+    if(g!==mi)F._warn.push('Gross 最大 '+g+' cm 與 Microscopic 最大 '+mi+' cm 不一致，已採用較大者 '+Math.max(...sizes)+' cm，請核對原始報告');
+  }
   // 多發性：≥2 顆腫瘤或報告明述多發即多發；左右葉皆有腫瘤＝雙側（雙側且最大>1cm 才計為高風險 bilat）
-  const multiFoci=sizes.length>=2||/bilateral\s*multifocal|multifocal|多發|multiple\s+(?:classic\s+|invasive\s+|foci|papillary|carcinoma|PTC|tumou?rs?)|Number[：:\s]*[2-9]/i.test(t);
-  const bilateral=/bilateral\s*multifocal|multifocal.*bilateral|雙側.*多發|兩側.*多發/i.test(t)||(/right\s*lobe/i.test(t)&&/left\s*lobe/i.test(t)&&multiFoci);
+  // ⚠️ 2026-08-25 同一件事故補三個訊號（原本只認阿拉伯數字 Number: 2-9，三個都漏）：
+  //    ① 分期字串括號內的病灶數：pT1b(2)、pT1a(m)
+  //    ② Gross 的英文數量詞：Number: two / three / multiple
+  //    ③ 診斷欄左右葉各自寫了 carcinoma（本例即為此）
+  const fociParen=(t.match(/p?T\d[a-z]?\s*\(\s*(\d+|m)\s*\)/i)||[])[1];
+  const fociByParen=!!fociParen&&(fociParen.toLowerCase()==='m'||parseInt(fociParen,10)>=2);
+  const fociByWord=/Number[：:\s]*(two|three|four|five|multiple|several)/i.test(t);
+  const posCa=ln=>/carcinoma/i.test(ln)&&!/negative|not\s*identified|not\s*present|free\s*of/i.test(ln);
+  const rptLines=t.split(/\n/);
+  const rightCa=rptLines.some(ln=>/(^|[\s,，])right($|[\s,，])|右葉/i.test(ln)&&posCa(ln));
+  const leftCa =rptLines.some(ln=>/(^|[\s,，])left($|[\s,，])|左葉/i.test(ln)&&posCa(ln));
+  const multiFoci=sizes.length>=2||fociByParen||fociByWord||(rightCa&&leftCa)||/bilateral\s*multifocal|multifocal|多發|multiple\s+(?:classic\s+|invasive\s+|foci|papillary|carcinoma|PTC|tumou?rs?)|Number[：:\s]*[2-9]/i.test(t);
+  const bilateral=/bilateral\s*multifocal|multifocal.*bilateral|雙側.*多發|兩側.*多發/i.test(t)||(rightCa&&leftCa)||(/right\s*lobe/i.test(t)&&/left\s*lobe/i.test(t)&&multiFoci);
   if(bilateral&&sizes.length&&Math.max(...sizes)>1)F.multi='bilat';
   else if(multiFoci)F.multi='uni';
   else F.multi='none';
@@ -376,7 +396,8 @@ function run(){
     ['一行式結論',$('summary').textContent],
   ]};
 }
-$('rpt').addEventListener('input',()=>{const F=parseReport($('rpt').value);fill(F);if(F.pname&&!$('pname').value.trim())$('pname').value=F.pname;run();});
+$('rpt').addEventListener('input',()=>{const F=parseReport($('rpt').value);fill(F);if(F.pname&&!$('pname').value.trim())$('pname').value=F.pname;// 解析警示要看得到：Gross/Micro 尺寸不一致這種事，靜靜取一個值正是 2026-08-25 那次低估的成因
+$('msg').textContent=(F._warn&&F._warn.length)?('⚠️ '+F._warn.join('；')):'';run();});
 $('pname').addEventListener('input',run);
 document.querySelectorAll('.grid input,.grid select').forEach(e=>e.addEventListener('change',run));
 $('calc').onclick=run;
