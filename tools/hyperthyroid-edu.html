@@ -40,6 +40,39 @@ code { background: #f3f4f6; padding: 1px 5px; border-radius: 3px; font-family: "
 blockquote { border-left: 4px solid #93c5fd; padding: 6px 12px; color: #1e3a8a; background: #eff6ff; margin: 10px 0; font-size: 12.5px; }
 hr { border: none; border-top: 1px solid #cbd5e1; margin: 20px 0; }
 </style>
+<style>
+.tabbar{position:sticky;top:0;z-index:50;background:#fafafa;display:flex;flex-wrap:wrap;gap:6px;padding:10px 0;border-bottom:2px solid #1e40af;margin-bottom:8px}
+.tabbtn{font-size:14px;padding:7px 12px;border:1.5px solid #1e40af;border-radius:8px;background:#fff;color:#1e40af;cursor:pointer}
+.tabbtn.active{background:#1e40af;color:#fff;font-weight:700}
+.lang-panel{display:none}
+.lang-panel.active{display:block}
+.printrow{text-align:right;margin:10px 0}
+.printbtn{font-size:14px;padding:8px 14px;border:none;border-radius:8px;background:#1e40af;color:#fff;cursor:pointer}
+.printbtn:active{opacity:.8}
+#cover-note{font-size:12px;color:#555}
+@media print{
+  .no-print,.tabbar,#cover{display:none!important}
+  .lang-panel{display:none!important}
+  .lang-panel.active{display:block!important}
+  body{background:#fff;padding:0}
+  .lang-panel h1{page-break-before:avoid}
+}
+@media (max-width:480px){.tabbtn{font-size:12.5px;padding:6px 9px}}
+</style>
+<script>
+function showLang(c){
+  document.querySelectorAll('.lang-panel').forEach(function(p){p.classList.toggle('active',p.id==='panel-'+c);});
+  document.querySelectorAll('.tabbtn').forEach(function(b){b.classList.toggle('active',b.dataset.lang===c);});
+  try{localStorage.setItem('hyperedu-lang',c);}catch(e){}
+  window.scrollTo(0,0);
+}
+document.addEventListener('DOMContentLoaded',function(){
+  var c='zh';
+  try{c=localStorage.getItem('hyperedu-lang')||'zh';}catch(e){}
+  if(!document.getElementById('panel-'+c))c='zh';
+  showLang(c);
+});
+</script>
 </head>
 <body>
 <header id="title-block-header">
@@ -55,16 +88,10 @@ Edition</strong> 適用於台灣多元文化臨床照護｜For multicultural cli
 care in Taiwan</p>
 </blockquote>
 <hr />
-<h2 id="語言索引-language-index">📑 語言索引 / Language Index</h2>
-<ol type="1">
-<li>🇹🇼 <strong>繁體中文 / Taiwan Traditional Chinese</strong></li>
-<li>🇺🇸 <strong>English</strong></li>
-<li>🇻🇳 <strong>Tiếng Việt / Vietnamese</strong></li>
-<li>🇮🇩 <strong>Bahasa Indonesia / Indonesian</strong></li>
-<li>🇹🇭 <strong>ภาษาไทย / Thai</strong></li>
-<li>🇵🇭 <strong>Filipino / Tagalog</strong></li>
-</ol>
-<hr />
+
+<div class="tabbar no-print" id="tabbar"><button class="tabbtn" data-lang="zh" onclick="showLang('zh')">🇹🇼 中文</button><button class="tabbtn" data-lang="en" onclick="showLang('en')">🇺🇸 English</button><button class="tabbtn" data-lang="vi" onclick="showLang('vi')">🇻🇳 Tiếng Việt</button><button class="tabbtn" data-lang="id" onclick="showLang('id')">🇮🇩 Indonesia</button><button class="tabbtn" data-lang="th" onclick="showLang('th')">🇹🇭 ไทย</button><button class="tabbtn" data-lang="tl" onclick="showLang('tl')">🇵🇭 Tagalog</button></div>
+<div class="lang-panel" id="panel-zh">
+<div class="printrow no-print"><button class="printbtn" onclick="window.print()">🖨️ 列印此頁</button></div>
 <h1 id="繁體中文-taiwan-traditional-chinese">🇹🇼 繁體中文 / Taiwan
 Traditional Chinese</h1>
 <h2 id="甲狀腺機能亢進衛教單">甲狀腺機能亢進衛教單</h2>
@@ -372,7 +399,11 @@ D、警覺顆粒球缺乏的發燒症狀</strong>。其他細節我們會在門�
 American Thyroid Association Guidelines
 與台灣甲狀腺學會共識。個別治療請依您的主治醫師指示。</p>
 </blockquote>
-<hr />
+
+<div class="printrow no-print"><button class="printbtn" onclick="window.print()">🖨️ 列印此頁</button></div>
+</div>
+<div class="lang-panel" id="panel-en">
+<div class="printrow no-print"><button class="printbtn" onclick="window.print()">🖨️ Print</button></div>
 <h1 id="english">🇺🇸 English</h1>
 <h2 id="hyperthyroidism-patient-education">Hyperthyroidism Patient
 Education</h2>
@@ -769,7 +800,11 @@ American Thyroid Association Guidelines and the consensus of the Taiwan
 Thyroid Association. Individual treatment should follow your attending
 physician’s instructions.</p>
 </blockquote>
-<hr />
+
+<div class="printrow no-print"><button class="printbtn" onclick="window.print()">🖨️ Print</button></div>
+</div>
+<div class="lang-panel" id="panel-vi">
+<div class="printrow no-print"><button class="printbtn" onclick="window.print()">🖨️ In trang này</button></div>
 <h1 id="tiếng-việt-vietnamese">🇻🇳 Tiếng Việt / Vietnamese</h1>
 <h2 id="phiếu-giáo-dục-bệnh-nhân-về-cường-giáp">Phiếu giáo dục bệnh nhân
 về cường giáp</h2>
@@ -1151,7 +1186,11 @@ American Thyroid Association Guidelines và sự đồng thuận của Hiệp h�
 Tuyến giáp Đài Loan. Điều trị cá nhân xin vui lòng tuân theo chỉ dẫn của
 bác sĩ điều trị của bạn.</p>
 </blockquote>
-<hr />
+
+<div class="printrow no-print"><button class="printbtn" onclick="window.print()">🖨️ In trang này</button></div>
+</div>
+<div class="lang-panel" id="panel-id">
+<div class="printrow no-print"><button class="printbtn" onclick="window.print()">🖨️ Cetak</button></div>
 <h1 id="bahasa-indonesia-indonesian">🇮🇩 Bahasa Indonesia /
 Indonesian</h1>
 <h2 id="lembar-edukasi-pasien-hipertiroidisme">Lembar Edukasi Pasien
@@ -1569,7 +1608,11 @@ dan frekuensi pemantauan mengacu pada 2016 American Thyroid Association
 Guidelines dan konsensus Perhimpunan Tiroid Taiwan. Untuk pengobatan
 individu, harap ikuti instruksi dokter penanggung jawab Anda.</p>
 </blockquote>
-<hr />
+
+<div class="printrow no-print"><button class="printbtn" onclick="window.print()">🖨️ Cetak</button></div>
+</div>
+<div class="lang-panel" id="panel-th">
+<div class="printrow no-print"><button class="printbtn" onclick="window.print()">🖨️ พิมพ์</button></div>
 <h1 id="ภาษาไทย-thai">🇹🇭 ภาษาไทย / Thai</h1>
 <h2 id="เอกสารใหความรผปวยเรอง-ภาวะตอมไทรอยดทำงานเกน-hyperthyroidism">เอกสารให้ความรู้ผู้ป่วยเรื่อง
 ภาวะต่อมไทรอยด์ทำงานเกิน (Hyperthyroidism)</h2>
@@ -1951,7 +1994,11 @@ RAI หรือการผ่าตัด)</li>
 Guidelines และฉันทามติของสมาคมไทรอยด์แห่งไต้หวัน สำหรับการรักษาเฉพาะบุคคล
 โปรดปฏิบัติตามคำแนะนำของแพทย์ผู้รักษาของคุณ</p>
 </blockquote>
-<hr />
+
+<div class="printrow no-print"><button class="printbtn" onclick="window.print()">🖨️ พิมพ์</button></div>
+</div>
+<div class="lang-panel" id="panel-tl">
+<div class="printrow no-print"><button class="printbtn" onclick="window.print()">🖨️ I-print</button></div>
 <h1 id="filipino-tagalog">🇵🇭 Filipino / Tagalog</h1>
 <h2 id="gabay-sa-edukasyon-ng-pasyente-para-sa-hyperthyroidism">Gabay sa
 Edukasyon ng Pasyente para sa Hyperthyroidism</h2>
@@ -2395,5 +2442,8 @@ sa instruksyon ng iyong attending physician.</p>
 <p>📝 整理：盧子文醫師助理｜翻譯引擎：Gemini 2.5 Flash + Gemma 4
 31B｜2026-06-10</p>
 </blockquote>
+<div class="printrow no-print"><button class="printbtn" onclick="window.print()">🖨️ I-print</button></div>
+</div>
+<div class="no-print" style="text-align:right;color:#888;font-size:10.5px;margin-top:18px">工具版本：2026-08-27</div>
 </body>
 </html>
