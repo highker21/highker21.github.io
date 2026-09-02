@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<title>醛固酮高能症與低能症 — Block 課教學講義</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="description" content="原發性醛固酮症從病生理到臨床決策：依 Harrison 22e、Williams 15e 與 2025 Endocrine Society 指引整理的教學講義">
+<style>
+:root{
+  --ink:#1a2330; --soft:#5e6b7a; --line:#e6e9ef; --page:#f4f6fa; --card:#fff;
+  --acc:#e8602c; --acc2:#f08a3c; --accbg:#fdeee6;
+  --blue:#1f6feb; --bluebg:#e9f1fd; --teal:#0f9d8c; --tealbg:#e3f6f2;
+  --warn:#c0392b; --warnbg:#fdecea; --tip:#9a6a12; --tipbg:#fbf3df;
+  --shadow:0 1px 2px rgba(10,20,40,.05),0 12px 30px rgba(10,20,40,.08);
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--page);color:var(--ink);
+ font-family:"PingFang TC","Noto Sans TC",-apple-system,"Segoe UI",sans-serif;line-height:1.8;font-size:16px;}
+.wrap{max-width:820px;margin:0 auto;padding:0 16px 70px;}
+header.hero{background:radial-gradient(120% 120% at 80% 0%,#21314d 0%,#0e1726 60%);color:#fff;
+ padding:34px 22px 30px;border-radius:0 0 24px 24px;box-shadow:var(--shadow);}
+header.hero .ey{font-size:12.5px;letter-spacing:2px;color:var(--acc2);font-weight:700;}
+header.hero h1{margin:6px 0 10px;font-size:25px;line-height:1.35;}
+header.hero p{margin:0;font-size:14px;color:#b9c4d4;}
+header.hero .meta{margin-top:14px;display:flex;gap:8px;flex-wrap:wrap;}
+header.hero .meta span{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);border-radius:999px;padding:4px 12px;font-size:12.5px;}
+main{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:8px 22px 24px;margin:18px 0;box-shadow:var(--shadow);}
+main h2{font-size:21px;margin:34px 0 10px;padding-top:14px;border-top:1px solid var(--line);color:#16304d;}
+main h2:first-of-type{border-top:none;margin-top:16px;}
+main h3{font-size:17px;margin:22px 0 8px;color:#22405f;}
+main p{margin:10px 0;color:#2b3644;}
+main ul,main ol{padding-left:22px;margin:10px 0;}
+main li{margin:6px 0;}
+main strong{color:#0f2c4a;}
+main hr{border:none;border-top:1px solid var(--line);margin:26px 0;}
+main em{color:var(--soft);font-style:normal;font-size:14px;}
+.callout{border-radius:10px;padding:12px 15px;margin:14px 0;font-size:15px;}
+.c-key{background:var(--accbg);border-left:4px solid var(--acc);color:#7d3416;}
+.c-key strong{color:#7d3416;}
+.c-key p{margin:6px 0;color:inherit;}
+ol li strong{color:#0f2c4a;}
+footer{color:var(--soft);font-size:13px;text-align:center;padding:6px 10px 0;line-height:1.7;}
+footer a{color:var(--blue);}
+@media(max-width:560px){
+  body{font-size:15.5px;}
+  header.hero{padding:26px 16px 24px;}
+  header.hero h1{font-size:21px;}
+  .wrap{padding:0 12px 50px;}
+  main{padding:6px 15px 18px;}
+  main h2{font-size:19px;}
+  main h3{font-size:16px;}
+}
+</style>
+</head>
+<body>
+<header class="hero">
+  <div class="wrap" style="padding-bottom:0">
+    <div class="ey">BLOCK 課教學講義</div>
+    <h1>醛固酮高能症與低能症<br>從病生理到 2026 年的臨床決策</h1>
+    <p>依 Harrison 22 版（ch.398）、Williams 15 版（ch.14）與 2025 年 9 月 Endocrine Society 指引整理</p>
+    <div class="meta">
+      <span>原發性醛固酮症</span><span>先天性腎上腺增生</span><span>Bartter / Gitelman</span><span>2026 更新</span>
+    </div>
+  </div>
+</header>
+<div class="wrap">
+<main>
+
+<h2 id="這份講義想解決什麼">這份講義想解決什麼</h2>
+<p>高血壓的病人很多，但真正被找出原因的很少。原發性醛固酮症（primary
+aldosteronism,
+PA）是內分泌性高血壓裡最常見的一種，在系統性篩檢下，盛行率落在所有高血壓患者的
+5% 到
+12%——這個數字比多數人以為的高一個級距。問題出在我們過去的抓法：等到病人出現低血鉀才想到它。而
+Williams 15 版寫得很直白，<strong>72% 的 PA
+病人血鉀是正常的</strong>。等症狀，等不到。</p>
+<p>所以這份講義的主軸只有一句話：<strong>把「什麼時候該懷疑、怎麼證明、然後怎麼處理」這條路走完整</strong>。</p>
+<hr />
+<h2
+id="一先把地基打穩腎上腺與醛固酮">一、先把地基打穩：腎上腺與醛固酮</h2>
+<h3 id="三層皮質三類荷爾蒙">1-1 三層皮質、三類荷爾蒙</h3>
+<p>腎上腺皮質由外而內分三層，口訣是 GFR 對應 salt、sugar、sex：</p>
+<ul>
+<li><strong>絲球帶（zona glomerulosa）</strong>，佔
+15%，製造醛固酮（aldosterone），受 renin-angiotensin 系統調控</li>
+<li><strong>束狀帶（zona fasciculata）</strong>，佔
+75%，製造皮質醇（cortisol），受 ACTH 調控</li>
+<li><strong>網狀帶（zona reticularis）</strong>，佔
+10%，製造雄性素（androgen）</li>
+</ul>
+<p>這裡有一組數字值得記住：醛固酮一天只分泌 100 到 150 微克，皮質醇是 10
+到 20
+毫克，兩者差了一百倍。但醛固酮對血壓與血鉀的影響完全不成比例地大——這是我們後面所有討論的起點。</p>
+<h3 id="醛固酮的藥物動力學三個數字">1-2
+醛固酮的藥物動力學：三個數字</h3>
+<p>第一，每天分泌 100 到 150
+微克。第二，循環中只有一半與蛋白結合，比皮質醇的九成以上低很多，所以游離態比例高、作用快。第三，經肝臟一次通過就滅活超過
+75%，半衰期只有十幾二十分鐘。</p>
+<p>意思就是說：抽血的時機與姿勢對數值的影響會很大，這也是後面檢查前準備那麼講究的原因。</p>
+<h3 id="一個關鍵機轉礦物皮質素受體為什麼不會被皮質醇灌爆">1-3
+一個關鍵機轉：礦物皮質素受體為什麼不會被皮質醇灌爆</h3>
+<p>礦物皮質素受體（mineralocorticoid receptor,
+MR）其實不挑食——皮質醇與醛固酮對它的親和力幾乎相同，而血中皮質醇的濃度高出約一千倍。那腎臟為什麼不會整天被皮質醇佔滿？</p>
+<p>答案是 <strong>11β-hydroxysteroid dehydrogenase type
+2（11β-HSD2）</strong>，它在腎小管把皮質醇就地轉成沒有活性的可體松（cortisone）。</p>
+<p>這個守門機制一旦失效，就會出現一組很有意思的病：甘草酸（licorice）抑制這個酵素，或先天性的表觀性礦物皮質素過多症（apparent
+mineralocorticoid excess,
+AME），臨床表現看起來完全像醛固酮過多，但抽血的醛固酮反而是低的。<strong>看到低血鉀高血壓卻兩個荷爾蒙都低，就要往這裡想。</strong></p>
+<h3 id="ras-系統記住這個迴路後面的鑑別都靠它">1-4 RAS
+系統：記住這個迴路，後面的鑑別都靠它</h3>
+<p>腎灌流壓下降、交感神經興奮、緻密斑（macula
+densa）偵測到腎小管鈉減少——這三個訊號讓腎絲球旁細胞釋出腎素（renin）；腎素把肝臟製造的血管收縮素原切成
+Ang I，肺臟的 ACE 再切成 Ang
+II，刺激絲球帶分泌醛固酮。另外血鉀上升會直接刺激醛固酮，ANP
+與多巴胺則抑制它。</p>
+<p>醛固酮的作用一句話講完：<strong>留鈉、排鉀、排氫</strong>。所以過多的時候會看到高血壓、低血鉀、代謝性鹼中毒這組三聯徵。</p>
+<p>而這是一個負回饋迴路——這就是為什麼「醛固酮高、腎素低」代表源頭在腎上腺（原發），「醛固酮高、腎素也高」代表源頭在腎素（次發）。</p>
+<hr />
+<h2
+id="二先天性腎上腺增生看圖推不要背">二、先天性腎上腺增生：看圖推，不要背</h2>
+<p>先天性腎上腺增生（congenital adrenal hyperplasia,
+CAH）的所有臨床表現，都可以從「哪個酵素被擋住、上游堆積的前驅物往哪條旁路溢流」推出來。這裡只講與血壓有關的三型對比。</p>
+<p><strong>第一個，21-hydroxylase 缺乏（CYP21A2）</strong>——最常見，約
+1:10,000。皮質醇與醛固酮兩條路都斷，所以會腎上腺功能不全，嚴重者新生兒期就失鹽危象；堆積的
+17-OH progesterone
+往雄性素那條路走，女嬰男性化。<strong>注意這一型不會高血壓</strong>，因為礦物皮質素是缺的。新生兒篩檢驗的就是
+17-OHP。</p>
+<p><strong>第二個，11β-hydroxylase
+缺乏（CYP11B1）</strong>——阻斷點往下移一格。皮質醇一樣做不出來、雄性素一樣過多，但關鍵差異在左邊：<strong>去氧皮質酮（DOC）堆積</strong>，而
+DOC
+本身就有礦物皮質素活性，所以這一型會出現<strong>低血鉀性高血壓</strong>。</p>
+<p><strong>第三個，17α-hydroxylase
+缺乏（CYP17A1）</strong>——阻斷在最上游的橫向路徑，皮質醇與雄性素都做不出來，主要表現是<strong>青春期不發育</strong>。有意思的是腎上腺危象反而少見，因為皮質酮（corticosterone）堆積、有足夠的糖皮質素活性撐著；而左邊整條礦物皮質素路被上游推著走，DOC
+與皮質酮大量堆積，結果同樣是<strong>低腎素性高血壓加低血鉀</strong>。</p>
+<p>所以考試最愛考的對比是這個：<strong>同樣是 CAH，21-OH
+缺乏會掉血壓、失鈉；11β-OH 與 17α-OH
+缺乏反而高血壓、低血鉀。而後兩者的分野在性徵——11β 是男性化，17α
+是不發育。</strong></p>
+<div class="callout c-key">
+<p><strong>2026 更新</strong>：治療端新增口服 CRF1 受體拮抗劑
+<strong>crinecerfont</strong>，已獲核准用於典型
+CAH，可降低為了壓制雄性素所需的糖皮質素劑量。生化監測以 androstenedione
+與 testosterone 為主；若把 17-OHP
+壓到正常人的正常範圍，反而提示治療過量。</p>
+</div>
+<hr />
+<h2
+id="三原發性醛固酮症四個階段走完">三、原發性醛固酮症：四個階段走完</h2>
+<h3 id="該懷疑誰這一段-2026-年有爭議兩邊都要知道">3-1 該懷疑誰（這一段
+2026 年有爭議，兩邊都要知道）</h3>
+<p>傳統的高風險族群是：高血壓合併低血鉀（自發或利尿劑誘發）、頑固性高血壓、腎上腺偶發瘤合併高血壓、年輕發病、嚴重高血壓（≥160/100）、以及任何懷疑次發性高血壓的時候。2026
+年新增一項值得注意：<strong>高血壓合併睡眠呼吸中止</strong>。</p>
+<p>那到底該篩誰？這裡指引與教科書並不一致，<strong>我們兩邊都講</strong>：</p>
+<ul>
+<li><strong>2025 年 Endocrine Society
+指引</strong>主張所有高血壓病人都應篩檢，理由是系統性篩檢下盛行率有 5%
+到 12%</li>
+<li><strong>Harrison 22
+版的演算法</strong>仍保留四個觸發條件：三種藥以上仍難控制、低血鉀、腎上腺腫塊、40
+歲前發病或早發家族史</li>
+<li><strong>Williams 15 版</strong>從另一個角度支持廣篩：72%
+的病人血鉀正常，等低血鉀就來不及</li>
+</ul>
+<p>這是還在移動中的臨床判斷，不是一個標準答案。各位在臨床上會遇到不同老師採不同做法，重要的是知道兩邊的理由。</p>
+<p>臨床上還有兩個實用線索：因為 reset osmostat
+的關係，<strong>血鈉常落在正常偏高</strong>；慢性低血鉀的病人有六成會有深部腎囊腫。另外提醒，<strong>週期性麻痺在白種人罕見，但在亞洲族群並不少見</strong>——這一點對我們特別重要。</p>
+<h3 id="怎麼篩案例偵測">3-2 怎麼篩：案例偵測</h3>
+<p>方法是早晨、坐姿、活動後抽血，同時測血漿醛固酮濃度（PAC）與血漿腎素活性（PRA
+或 PRC）。</p>
+<p>判讀的切點，Williams 15 版用的是：<strong>PRA 小於 1.0 ng/mL/h 且 PAC
+大於 10 ng/dL，就要懷疑</strong>。舊版慣用的 PAC ≥15 加上 ARR ≥20
+仍可作參考，但門檻已經放寬。</p>
+<p>用比值分三路，這是整堂課的骨架：</p>
+<ol type="1">
+<li><strong>PAC 高、PRA 也高，比值 ≤10</strong> →
+次發性醛固酮症，源頭在腎素（腎血管疾病、利尿劑、腎素瘤、惡性高血壓、主動脈縮窄）</li>
+<li><strong>PAC 高、PRA 被壓制，比值 ≥20</strong> →
+原發性醛固酮症，往下做確認</li>
+<li><strong>兩個都低</strong> → 不是醛固酮過多，要想
+CAH（11β、17α）、外源性礦物皮質素、Cushing、Liddle 症候群、AME</li>
+</ol>
+<h3 id="檢查前準備這一段-2026-年整個放寬了">3-3 檢查前準備：這一段 2026
+年整個放寬了</h3>
+<p>這是全部內容裡觀念變動最大的一頁，請把舊的做法換掉。</p>
+<p>過去我們教「檢查前所有干擾藥都要停」。Williams 15
+版的新原則是：<strong>只要腎素仍被壓制、而且 PAC 大於
+10，任何藥物都不會造成偽陽性，可以直接往下做確認試驗。</strong></p>
+<p>具體怎麼做：</p>
+<ul>
+<li><strong>先把血鉀補到正常</strong>——這一條沒變，因為低血鉀本身會抑制醛固酮分泌，造成低估</li>
+<li><strong>鈉的攝取放開來吃</strong>，不要限鈉</li>
+<li><strong>MR
+拮抗劑（spironolactone、eplerenone）</strong>：如果病人吃著藥、腎素卻仍被壓制，代表受體沒有被完全阻斷，那麼案例偵測、確認試驗甚至腎上腺靜脈取樣都可以照做，<strong>不必停藥</strong>；只有在腎素沒被壓制時才需要停藥，而且要停滿
+<strong>6 週</strong>（舊版一律停 4 週的說法已不適用）</li>
+<li><strong>ACEI／ARB</strong>：會拉高腎素，所以測得到腎素不能排除
+PA；但 PRA 小於 1.0 仍高度懷疑</li>
+<li><strong>真正要留意的是 β-blocker</strong>：它把腎素壓得更低，造成
+ARR 偽性升高（偽陽性）</li>
+<li>鈣離子阻斷劑與 α1 阻斷劑對判讀影響最小，需要換藥時用它們——verapamil
+緩釋劑、hydralazine、prazosin／doxazosin／terazosin</li>
+</ul>
+<h3 id="怎麼確認證明關不掉">3-4 怎麼確認：證明「關不掉」</h3>
+<p>篩檢陽性之後，要證明醛固酮的分泌是自主的、壓不下去的。擇一即可：</p>
+<ul>
+<li><strong>生理食鹽水輸注試驗</strong>：坐姿、4 小時輸注 2 公升 0.9%
+食鹽水，結束抽 PAC。正常人會壓到 5 ng/dL 以下；PA 病人壓不到 10 以下；5
+到 10 之間是灰色地帶</li>
+<li><strong>口服鈉負荷試驗</strong>：高鈉飲食三天（目標每天 5000
+毫克鈉），第三天收 24 小時尿液，<strong>尿液醛固酮大於 12 微克/24
+小時</strong>即符合自主分泌（敏感度 96%、特異度
+93%）；要確認鈉補夠了，尿鈉需超過 200 mEq/24 小時</li>
+<li><strong>Captopril 挑戰試驗</strong>：門診較方便，服藥後 0、1、2
+小時抽血，PAC 壓不到 30% 且腎素仍低，或測後 ARR 仍大於 35</li>
+<li><strong>Fludrocortisone 抑制試驗</strong>：Williams 15
+版明講<strong>多數中心已不再使用</strong>（QT
+離散度增加、左心室功能惡化的風險）</li>
+</ul>
+<p><strong>可以略過確認試驗的情況</strong>：病人有高血壓、<strong>自發性</strong>低血鉀，且
+PA 表現明顯（PAC &gt;20 ng/dL、PRA &lt;1.0）。Harrison 22
+版的說法一致：明顯的低血鉀性高血壓加上強陽性 ARR
+與醛固酮升高，通常不需要確認試驗。</p>
+<h3 id="怎麼定位結構與功能要分開證明">3-5
+怎麼定位：結構與功能要分開證明</h3>
+<p>這一段的核心觀念只有一句：<strong>影像回答的是「有沒有腫瘤」，不是「醛固酮從哪裡來」。</strong></p>
+<p><strong>腎上腺電腦斷層</strong>的角色是排除大顆、懷疑腎上腺皮質癌的腫瘤，以及看解剖。它對亞型定位有多不可靠？Williams
+15 版給了量化的數字：</p>
+<ul>
+<li>與腎上腺靜脈取樣對照，CT 的準確度只有 <strong>53%</strong></li>
+<li>若照 CT 決定，<strong>22%</strong>
+的病人會被錯誤排除在手術之外、<strong>25%</strong>
+可能接受不必要或錯邊的手術</li>
+<li>在手術治癒的單側 PA 病人裡，有 <strong>28%</strong>
+影像根本沒顯示病灶</li>
+</ul>
+<p><strong>腎上腺靜脈取樣（adrenal venous sampling, AVS）</strong>
+才是亞型鑑別的黃金標準，也是想開刀的病人最關鍵的一步。判讀分兩步，而且<strong>兩套
+protocol 的數字不同，不可以混用</strong>：</p>
+<ul>
+<li><strong>以 cosyntropin 持續輸注（Mayo／Williams 15
+版）</strong>：成功取樣＝腎上腺靜脈對下腔靜脈的皮質醇比值
+≥5:1；側化＝皮質醇校正後的醛固酮比值 ≥4:1（3 到 4
+之間是灰色地帶）。這套的敏感度 95%、特異度 98.6%</li>
+<li><strong>非刺激下</strong>：成功取樣＝皮質醇 ≥2
+倍；側化＝lateralization index ≥2</li>
+</ul>
+<p>另外補一個實用工具：<strong>對側抑制指數</strong>（對側腎上腺的 A/C
+比值除以下腔靜脈的 A/C 比值）。小於 1
+支持單側病灶；比值落在灰色地帶時可以救援判讀；<strong>小於 0.47
+可預測術後高血鉀</strong>。</p>
+<div class="callout c-key">
+<p><strong>2026 更新｜NP-59 已經退場</strong>：這個核醫掃描在 Harrison
+22 版與 Williams 15
+版的相關章節（ch.398、ch.14）均未再提及，臨床上不會再遇到。AVS
+做不到、有禁忌或結果不明確時，目前的替代方案是功能性正子造影：<strong>¹¹C-metomidate
+PET-CT</strong>（在 dexamethasone 抑制下，預測術後成效的準確度與 AVS
+相當），以及 <strong>⁶⁸Ga-pentixafor</strong>（CXCR4 配體，百例研究與
+AVS 一致率九成）。</p>
+<p>這裡兩本教科書的立場不同，<strong>我們兩邊都講</strong>：Harrison 22
+版稱 metomidate 已被驗證為 AVS 的非侵入性替代；Williams 15
+版則明講它<strong>不會取代 AVS</strong>——效能次佳、需要 dexamethasone
+前處理、對醛固酮合成酶的特異性不足，而且 ¹¹C 半衰期只有 20
+分鐘，醫院必須自備迴旋加速器。</p>
+</div>
+<p><strong>什麼情況可以不定位就直接開刀？</strong> 年齡小於 35
+歲、高度懷疑典型單側腺瘤者——具體條件是自發性低血鉀、ARR 陽性、PAC 大於
+30 ng/dL，加上 CT 顯示單側低 Hounsfield units 的腫瘤。這群病人可以省略
+AVS 直接手術，2025 年指引也保留了這個例外。</p>
+<hr />
+<h2 id="四亞型與遺傳學13-版到-15-版最大的改變">四、亞型與遺傳學：13 版到
+15 版最大的改變</h2>
+<h3 id="分布最多的不是腺瘤">4-1 分布：最多的不是腺瘤</h3>
+<ul>
+<li><strong>雙側特發性增生（IHA）約 60%</strong></li>
+<li><strong>醛固酮分泌腺瘤（APA）約 35%</strong></li>
+<li>其餘是零頭：單側原發性腎上腺增生 2%、會分泌醛固酮的腎上腺皮質癌不到
+1%、家族性、異位分泌</li>
+</ul>
+<p>為什麼這個比例重要？因為它直接決定治療：<strong>APA 開刀可能治癒，IHA
+開刀沒有用、只能吃藥</strong>。我們費那麼大工夫做定位，就是為了分開這兩群人。</p>
+<p>APA 就是舊稱的 Conn 症候群：單側、女性是男性的兩倍、好發 30 到 50
+歲、左側較多；大小通常 1 公分上下，很少超過 3 公分；生化異常的程度比 IHA
+明顯。</p>
+<div class="callout c-key">
+<p><strong>15 版新分類</strong>：單側病灶依大小再分為 <strong>APA（≥10
+mm）</strong> 與 <strong>APM（aldosterone-producing micronodule，&lt;10
+mm）</strong>，後者舊稱 APCC，更名依 HISTALDO 共識（2021）與 WHO 2022
+內分泌腫瘤分類。這個分類很實用——它解釋了為什麼有些病人影像看起來像雙側增生或完全正常，AVS
+卻明確側化：來源可能就是這些看不見的微結節。</p>
+</div>
+<h3 id="體細胞突變新版必須知道的一段">4-2
+體細胞突變：新版必須知道的一段</h3>
+<p><strong>超過九成的 APA 可以找到體細胞驅動突變</strong>，這是 13 版到
+15 版之間本主題最大的科學進展：</p>
+<ul>
+<li><strong>KCNJ5</strong>（內向整流鉀離子通道
+GIRK4）——最常見；<strong>亞洲族群比例更高</strong>，典型是年輕女性、腫瘤較大</li>
+<li><strong>CACNA1D</strong>（電位依賴型 L-type
+鈣通道）——相反，腫瘤較小、常見於男性與較年長者</li>
+<li><strong>ATP1A1</strong>（Na⁺/K⁺-ATPase）、<strong>ATP2B3</strong>（Ca²⁺-ATPase）</li>
+<li><strong>CTNNB1</strong>（β-catenin）——可合併懷孕或更年期相關的表現</li>
+</ul>
+<p>共同機轉是一致的：細胞膜去極化 → 鈣離子內流增加 →
+CYP11B2（醛固酮合成酶）表現上升 → 自主性醛固酮分泌。這解釋了為什麼 APA
+常常是單側、體積小卻功能很強，也是未來分子影像（例如 CXCR4
+示蹤劑）與標靶治療的基礎。</p>
+<p><strong>請與家族性（germline）分清楚</strong>：上面講的是腫瘤內的體細胞突變，不會遺傳。家族性高醛固酮症的分型是：FH-I
+就是 GRA（CYP11B2/CYP11B1 嵌合基因）、<strong>FH-II 是 CLCN2
+氯離子通道</strong>、FH-III 是 germline KCNJ5、<strong>FH-IV 是
+CACNA1H</strong>。</p>
+<hr />
+<h2 id="五治療手術與藥物">五、治療：手術與藥物</h2>
+<h3 id="手術">5-1 手術</h3>
+<p>單側病灶做腹腔鏡腎上腺切除：低血鉀 100%
+矯正，血壓幾乎全部改善，但<strong>長期完全治癒率是 30% 到
+60%</strong>——術後仍需服藥的最主要原因是合併存在的原發性高血壓。</p>
+<p>術後有兩件事要盯：因為慢性抑制對側 RAA
+軸，可能出現暫時性低醛固酮症，<strong>術後四週要每週追蹤血鉀</strong>，並採寬鬆的鈉飲食；術後高血鉀的發生率約
+6% 到 10%，年紀大、腎功能較差者風險高（前面提到的對側抑制指數小於 0.47
+可以事先預測）。</p>
+<h3 id="藥物治療目標現在是兩條不是一條">5-2
+藥物：治療目標現在是兩條，不是一條</h3>
+<p>生活型態是基礎：每日鈉小於 100
+mEq、維持理想體重、戒菸、規律有氧運動。</p>
+<p><strong>Spironolactone</strong> 用了五十年，仍是第一線。從每天 12.5
+至 25 毫克開始，必要時可加到 400 毫克。</p>
+<p>治療目標請記住現在有兩條：</p>
+<ol type="1">
+<li>血鉀維持在<strong>正常偏高</strong>，而且不需要另外補充鉀離子</li>
+<li><strong>腎素不再被壓制（PRA &gt;1 ng/mL/h）</strong></li>
+</ol>
+<p>第二條是 15 版新增的，依據是一個 602 人的世代研究：接受 MR
+拮抗劑治療但腎素仍被壓制的病人，心血管事件風險並沒有下降——那是<strong>劑量不足</strong>的警訊，藥等於白吃。</p>
+<p>時間感也要建立：低血鉀矯正得很快，但<strong>血壓要 4 到 8
+週</strong>才改善；穩定數月後常可減量到每天 25 至 50
+毫克。副作用來自它對受體的非選擇性：男性女乳、勃起功能障礙、性慾下降，女性月經不規則。兩個交互作用要記：它會延長
+digoxin 的半衰期；避免併用水楊酸類（干擾活性代謝物的腎小管排泌）。</p>
+<p><strong>Eplerenone</strong> 是選擇性 MR
+拮抗劑，對雄性素受體的親和力只有 spironolactone
+的千分之一，所以沒有那些性荷爾蒙副作用。用法注意兩點：半衰期短需一天兩次，且效價較低，常需每天
+200 至 300 毫克才達標（FDA 對高血壓的核准上限是 100 毫克）。</p>
+<p>頭對頭隨機試驗的結論很實用：<strong>降壓效果 spironolactone
+較佳，但男性女乳 21% 對 5%、女性乳房疼痛 21% 對
+0%</strong>——這就是臨床上取捨的依據。</p>
+<p>IHA 的病人通常需要第二線藥物，首選是<strong>低劑量
+thiazide</strong>（對抗容積過載），但要盯血鉀。</p>
+<p>至於
+GRA，確診後以生理劑量糖皮質素治療即可矯正血壓與血鉀，兒童要小心醫源性
+Cushing 與生長遲滯，建議用短效的 prednisone 或 hydrocortisone；MR
+拮抗劑在這群病人可能同樣有效，而且避免抑制下視丘-腦垂體-腎上腺軸。</p>
+<h3 id="年的新藥醛固酮合成酶抑制劑">5-3 2026
+年的新藥：醛固酮合成酶抑制劑</h3>
+<p><strong>Baxdrostat（商品名 Baxfendy）於 2026 年 5 月獲 FDA
+核准，是第一個口服的醛固酮合成酶（CYP11B2）抑制劑</strong>，適應症為控制不良或頑固性高血壓。</p>
+<p>三期 BaxHTN 試驗的數字（12 週坐姿收縮壓，加在標準治療之上）：1
+毫克組扣除安慰劑後降 8.7 mmHg、2 毫克組降 9.8 mmHg；2
+毫克組自基期的絕對降幅是 15.7 mmHg。約四成病人收縮壓降到 130
+以下，療效維持至少 32 週。同類的 <strong>lorundrostat</strong>
+三期亦達主要指標，NDA 審查中，PDUFA 目標日為 2026 年 12 月 22 日。</p>
+<p>它與 MR 拮抗劑的差別在機轉層次：<strong>MRA
+是阻斷受體，這類藥是直接減少醛固酮的合成</strong>，因此沒有抗雄性素的副作用。技術難點在選擇性——CYP11B2
+與負責皮質醇合成的 CYP11B1 高度同源，選擇性不足就會壓到皮質醇。</p>
+<p>針對原發性醛固酮症本身的適應症研究仍在進行。Williams 15
+版的原話是：特異性醛固酮合成酶抑制劑可能證明是 IHA 的較佳治療。</p>
+<hr />
+<h2 id="六光譜的另外兩端">六、光譜的另外兩端</h2>
+<h3 id="次發性醛固酮症">6-1 次發性醛固酮症</h3>
+<p>邏輯一句話：<strong>腎素先高，醛固酮才高</strong>。分兩類：</p>
+<ul>
+<li><strong>腎素原發性過度分泌</strong>：腎素瘤、Bartter
+症候群、Gitelman 症候群、懷孕</li>
+<li><strong>腎灌流下降造成的續發性腎素上升</strong>：腎血管性高血壓、腎病症候群、肝硬化、心衰竭</li>
+</ul>
+<p>後三者是水腫性疾病——有效循環容積不足、RAS
+被生理性啟動，這時醛固酮高是「果」不是「因」。</p>
+<h3 id="bartter-與-gitelman用尿鈣分辨">6-2 Bartter 與
+Gitelman：用尿鈣分辨</h3>
+<p><strong>Bartter 症候群</strong>的缺陷在亨利氏環粗上行支的 Na-K-2Cl
+共同運輸蛋白，等於天生在吃 loop
+diuretic。表現是兒童期發病、低血鉀、鹼中毒、腎素與醛固酮都高，但<strong>血壓正常、不水腫</strong>——因為根本問題是腎性失鹽，容積是不足的。實驗室特徵是<strong>高尿鈣</strong>，病理可見腎絲球旁器增生。</p>
+<p><strong>Gitelman 症候群</strong>是它的輕型變體，缺陷在遠曲小管的
+thiazide 敏感型 Na-Cl 共同運輸蛋白，等於天生在吃
+thiazide。症狀類似但較輕，常到青少年或成人才發現，體染色體隱性遺傳。</p>
+<p><strong>鑑別的關鍵就一個字：尿鈣。</strong> Gitelman
+是低尿鈣（thiazide 效應），Bartter 是高尿鈣（loop 效應）；Gitelman
+另常合併低血鎂。</p>
+<h3 id="低醛固酮症">6-3 低醛固酮症</h3>
+<p>最常見的是<strong>低腎素性低醛固酮症</strong>，典型病人是糖尿病合併腎功能不全的中老年人，也就是第四型腎小管酸中毒：<strong>高血鉀加上正常陰離子間隙的代謝性酸中毒</strong>。其他原因包括先天合成缺陷、腎上腺腺瘤切除後對側尚未恢復、長期使用肝素、嚴重疾病狀態。</p>
+<p>治療是 fludrocortisone 每日 0.05 至 0.15
+毫克；糖尿病腎病變的病人記得同時檢視有沒有在用會加重高血鉀的藥物。</p>
+<hr />
+<h2 id="七自我檢核">七、自我檢核</h2>
+<p>請先自己作答，再回去對照前面的段落。</p>
+<ol type="1">
+<li>一位 52 歲男性，高血壓用三種藥仍為 158/98 mmHg，血鉀 4.1
+mmol/L。他需要篩檢原發性醛固酮症嗎？理由是什麼？</li>
+<li>承上，他目前正在服用 amlodipine、valsartan 與
+bisoprolol。你要不要停藥？哪一種藥最可能造成偽陽性、哪一種造成偽陰性？</li>
+<li>篩檢結果 PAC 24 ng/dL、PRA 0.4
+ng/mL/h，病人沒有自發性低血鉀。下一步是什麼？如果他有自發性低血鉀且 PAC
+32，答案會不會不同？</li>
+<li>CT 顯示左側腎上腺有一顆 1.2 公分的低密度結節，右側正常。病人 58
+歲。可以直接安排左側腎上腺切除嗎？為什麼？</li>
+<li>AVS 報告（cosyntropin 輸注下）：右側 A/C 43.9、左側 A/C
+0.7、下腔靜脈 A/C 8.4，兩側腎上腺靜脈皮質醇皆大於下腔靜脈 20
+倍。這份報告取樣成功嗎？側化到哪一邊？</li>
+<li>一位 IHA 病人服用 spironolactone 50 毫克已三個月，血壓 128/78、血鉀
+4.6 mmol/L、PRA 0.3 ng/mL/h。治療達標了嗎？</li>
+<li>一位 16
+歲女性，低血鉀、鹼中毒、血壓正常、不水腫，尿鈣偏低、血鎂偏低。診斷是什麼？機轉相當於長期使用哪一類利尿劑？</li>
+<li>一位 CAH
+病人有低血鉀性高血壓與男性化表現。最可能是哪一型酵素缺乏？如果改成青春期不發育加低血鉀性高血壓呢？</li>
+</ol>
+<hr />
+<h2 id="帶回去的三句話">帶回去的三句話</h2>
+<p>第一，<strong>高血壓加低血鉀要想到原發性醛固酮症，但不要等低血鉀</strong>——七成以上的病人血鉀是正常的，門檻要放低。</p>
+<p>第二，<strong>篩檢的數字能不能信，取決於抽血前的準備</strong>：補鉀、放開鈉、看懂哪些藥會造成偽陽性與偽陰性。而
+2026 年的新原則是——腎素仍被壓制且 PAC 大於 10
+時，多數藥物並不需要停。</p>
+<p>第三，<strong>定位決定治療</strong>：單側腺瘤開刀可能治癒，雙側增生只能用
+MR 拮抗劑，而 CT
+沒有能力回答這個問題。年輕的典型個案可以簡化流程，其餘想手術的人，AVS
+仍是標準。</p>
+<hr />
+<p><em>本講義依 Harrison’s Principles of Internal Medicine
+22e（ch.398）、Williams Textbook of Endocrinology 15e（ch.14）與 Primary
+Aldosteronism: An Endocrine Society Clinical Practice Guideline（JCEM,
+2025-09）整理；課程投影片原作者為內分泌新陳代謝科歐昱侖醫師。內容供教學使用，臨床決策請依個別病人狀況與最新指引判斷。</em></p>
+<p><em>講義版本：2026-09-02</em></p>
+
+</main>
+<footer>
+  課程投影片原作者：內分泌新陳代謝科 歐昱侖醫師｜本頁為配合投影片的文字整理版，供教學使用<br>
+  臨床決策請依個別病人狀況與最新指引判斷｜講義版本：2026-09-02<br>
+  <a href="../index.html">← 回首頁</a>
+</footer>
+</div>
+</body>
+</html>
