@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<title>內分泌新陳代謝概論 — 學生講義</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="description" content="內分泌新陳代謝概論課後複習講義：腦下垂體、腎上腺、甲狀腺、糖尿病、高血脂，依 Harrison 22e 與 Williams 15e 核對更新">
+<style>
+:root{
+  --ink:#1a2330; --soft:#5e6b7a; --line:#e6e9ef; --page:#f4f6fa; --card:#fff;
+  --acc:#e8602c; --acc2:#f08a3c; --accbg:#fdeee6;
+  --blue:#1f6feb; --bluebg:#e9f1fd; --teal:#0f9d8c; --tealbg:#e3f6f2;
+  --warn:#c0392b; --warnbg:#fdecea; --tip:#9a6a12; --tipbg:#fbf3df;
+  --shadow:0 1px 2px rgba(10,20,40,.05),0 12px 30px rgba(10,20,40,.08);
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--page);color:var(--ink);
+ font-family:"PingFang TC","Noto Sans TC",-apple-system,"Segoe UI",sans-serif;line-height:1.8;font-size:16px;}
+.wrap{max-width:820px;margin:0 auto;padding:0 16px 70px;}
+header.hero{background:radial-gradient(120% 120% at 80% 0%,#21314d 0%,#0e1726 60%);color:#fff;
+ padding:34px 22px 30px;border-radius:0 0 24px 24px;box-shadow:var(--shadow);}
+header.hero .ey{font-size:12.5px;letter-spacing:2px;color:var(--acc2);font-weight:700;}
+header.hero h1{margin:6px 0 10px;font-size:25px;line-height:1.35;}
+header.hero p{margin:0;font-size:14px;color:#b9c4d4;}
+header.hero .meta{margin-top:14px;display:flex;gap:8px;flex-wrap:wrap;}
+header.hero .meta span{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);border-radius:999px;padding:4px 12px;font-size:12.5px;}
+main{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:8px 22px 24px;margin:18px 0;box-shadow:var(--shadow);}
+main h2{font-size:21px;margin:34px 0 10px;padding-top:14px;border-top:1px solid var(--line);color:#16304d;}
+main h2:first-of-type{border-top:none;margin-top:16px;}
+main h3{font-size:17px;margin:22px 0 8px;color:#22405f;}
+main p{margin:10px 0;color:#2b3644;}
+main ul,main ol{padding-left:22px;margin:10px 0;}
+main li{margin:6px 0;}
+main strong{color:#0f2c4a;}
+main hr{border:none;border-top:1px solid var(--line);margin:26px 0;}
+main em{color:var(--soft);font-style:normal;font-size:14px;}
+.callout{border-radius:10px;padding:12px 15px;margin:14px 0;font-size:15px;}
+.c-key{background:var(--accbg);border-left:4px solid var(--acc);color:#7d3416;}
+.c-key strong{color:#7d3416;}
+.c-key p{margin:6px 0;color:inherit;}
+ol li strong{color:#0f2c4a;}
+footer{color:var(--soft);font-size:13px;text-align:center;padding:6px 10px 0;line-height:1.7;}
+footer a{color:var(--blue);}
+@media(max-width:560px){
+  body{font-size:15.5px;}
+  header.hero{padding:26px 16px 24px;}
+  header.hero h1{font-size:21px;}
+  .wrap{padding:0 12px 50px;}
+  main{padding:6px 15px 18px;}
+  main h2{font-size:19px;}
+  main h3{font-size:16px;}
+}
+</style>
+</head>
+<body>
+<header class="hero">
+  <div class="wrap" style="padding-bottom:0">
+    <div class="ey">課後複習講義</div>
+    <h1>內分泌新陳代謝概論<br>學生講義</h1>
+    <p>對應課程投影片順序整理，並以 Harrison 22 版（2025）與 Williams 15 版（2024）核對更新</p>
+    <div class="meta">
+      <span>腦下垂體</span><span>腎上腺</span><span>甲狀腺</span><span>糖尿病</span><span>高血脂</span>
+    </div>
+  </div>
+</header>
+<div class="wrap">
+<main>
+<div class="callout c-key">
+<p><strong>怎麼用這份講義</strong>
+它跟著投影片的順序走，每一節對應投影片的一段。投影片上有的數字我一個都沒改，
+但投影片沒寫、我上課會補的機轉與臨床連結都寫進來了。 標 ⭐
+的是<strong>這兩年課本改過、跟舊講義不一樣</strong>的地方，考試和臨床都要用新的。
+標「待查證」的，是我還沒核對台灣現行版本的項目，先別當定論。</p>
+</div>
+<hr />
+<h2 id="一先把這門學問的範圍講清楚">一、先把這門學問的範圍講清楚</h2>
+<p>內分泌學研究的是腺體，以及腺體製造的荷爾蒙。endocrine 這個字是
+Starling 造的， 用來跟 exocrine
+對比——<strong>內分泌往體內分泌，外分泌往體外或往管腔分泌</strong>，例如腸胃道。</p>
+<p>這裡有個常被跳過的區分：已知化學結構的叫<strong>荷爾蒙（hormone）</strong>，
+未知化學結構的叫<strong>因子（factor）</strong>。所以有些物質早年叫
+factor，結構解出來之後就改叫 hormone。 看到舊文獻用
+factor，不要以為是另一種東西。</p>
+<p>內分泌系統由胚胎的中胚層與內胚層發育而來，它分泌<strong>微量</strong>激素，經血液循環到達標的細胞，
+與受體結合後發揮全身性作用。「微量」這兩個字要記住——後面講到醛固酮每天只有
+100–150 微克， 而皮質醇是 10–20
+毫克，差三個數量級，你就知道為什麼醛固酮的檢驗這麼講究。</p>
+<p>整堂課的架構其實就是一句話：<strong>任何一種內分泌細胞功能失常，造成某個激素過多或缺乏，
+都會引起相應的病理生理變化。</strong>
+我們接下來每一個疾病，都是在填這句話的空格。</p>
+<h3 id="八大腺體與它們的荷爾蒙">八大腺體與它們的荷爾蒙</h3>
+<table>
+<thead>
+<tr>
+<th>腺體</th>
+<th>荷爾蒙</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>腦下垂體前葉（佔 80%）</td>
+<td>GH、TSH、ACTH、FSH、LH、PRL</td>
+</tr>
+<tr>
+<td>腦下垂體後葉（佔 20%）</td>
+<td>ADH（vasopressin）、oxytocin</td>
+</tr>
+<tr>
+<td>甲狀腺</td>
+<td>T4、T3；calcitonin</td>
+</tr>
+<tr>
+<td>副甲狀腺</td>
+<td>PTH</td>
+</tr>
+<tr>
+<td>腎上腺皮質</td>
+<td>aldosterone、cortisol、androgen</td>
+</tr>
+<tr>
+<td>腎上腺髓質</td>
+<td>epinephrine、norepinephrine（臨床驗尿液 VMA）</td>
+</tr>
+<tr>
+<td>性腺</td>
+<td>testosterone；estrogen、progesterone</td>
+</tr>
+<tr>
+<td>胰島 β／α／δ</td>
+<td>insulin、glucagon、somatostatin</td>
+</tr>
+</tbody>
+</table>
+<p>前葉六個是自己製造，後葉兩個是<strong>下視丘製造、後葉只負責儲存與釋放</strong>。
+這個差別在講尿崩症的時候會用到——病灶在下視丘或在後葉，臨床表現不一樣。</p>
+<hr />
+<h2 id="二腦下垂體末端肥大症">二、腦下垂體：末端肥大症</h2>
+<p>生長激素（GH）與隨之升高的 IGF-1
+長期過量，造成的<strong>不是外觀問題，是全身性疾病</strong>。
+投影片上的百分比要記，因為數字本身就是說服力：</p>
+<ul>
+<li>心血管：<strong>瓣膜異常 86%</strong>、高血壓 40%、心律不整
+48%、左心室肥厚、心肌病變、心衰竭</li>
+<li>肺部：<strong>睡眠呼吸中止 80%</strong></li>
+<li>內分泌代謝：<strong>糖尿病
+56%</strong>、糖耐量異常、高泌乳素血症、腦下垂體功能低下</li>
+<li>骨骼關節：<strong>關節病變 70%</strong></li>
+<li>生殖：性慾下降、勃起功能障礙、骨質疏鬆</li>
+</ul>
+<p>三個最高的是瓣膜異常 86%、睡眠呼吸中止 80%、關節病變 70%。
+意思就是說，你在門診看到一個手腳變大、下顎前突的病人，<strong>不能只轉診內分泌就結束</strong>，
+心臟超音波和睡眠檢查都要一起安排。</p>
+<hr />
+<h2 id="三腎上腺從皮質醇的節律講起">三、腎上腺：從皮質醇的節律講起</h2>
+<h3 id="皮質醇的日夜節律">3-1 皮質醇的日夜節律</h3>
+<p>皮質醇有明顯的日夜節律：傍晚開始低於節律校正後的平均值（MESOR），
+<strong>午夜前後是最低點</strong>，清晨開始上升，<strong>約早上 8:30
+達到高峰</strong>。</p>
+<p>這個節律不是背來考試用的。<strong>午夜是最低點，正是「午夜唾液皮質醇」能診斷庫欣氏症的原理</strong>——
+庫欣氏症的病人失去這個低點。那如果你在下午兩點抽一管
+cortisol，數值高或低都不能說明什麼，
+因為你不知道那個時間點該是多少。</p>
+<p>ACTH 的脈衝頻率男性約 18 次、女性約 10
+次；時差要<strong>兩週</strong>才回到正常。 所以驗 ACTH
+用單點抽血意義有限，要看節律或做動態試驗。</p>
+<h3 id="庫欣氏症候群先把名詞分清楚">3-2
+庫欣氏症候群：先把名詞分清楚</h3>
+<p>庫欣氏症候群（Cushing’s
+syndrome）是<strong>任何原因造成的長期糖皮質素過量</strong>所導致的一組臨床表現，
+分三類：</p>
+<ol type="1">
+<li><strong>ACTH 依賴型</strong>：例如腦下垂體 corticotrope 腺瘤</li>
+<li><strong>ACTH 非依賴型</strong>：例如腎上腺皮質腺瘤</li>
+<li><strong>醫源性</strong>：給予外源性糖皮質素</li>
+</ol>
+<p>而 <strong>Cushing’s disease 專指腦下垂體 corticotrope
+腺瘤造成的庫欣氏症候群</strong>。 syndrome 是一大類，disease
+是其中一個特定病因，這個區分每年都考。</p>
+<p>臨床上<strong>最常見的其實是醫源性</strong>，遠比腦下垂體或腎上腺腫瘤常見。
+門診看到月亮臉，第一個要問的是有沒有在吃藥或打針，而不是先安排影像。</p>
+<h3 id="哪些症狀真的有鑑別力">3-3 哪些症狀真的有鑑別力</h3>
+<p>庫欣氏症的症狀列表很長，但不是每一項的價值都一樣。課本把它分成兩欄：</p>
+<p><strong>鑑別力高（Discriminatory）</strong> - 徵象：臉部多血（facial
+plethora）、近端肌病變、<strong>皮膚紫紋（紅紫色、寬 &gt;1
+cm）</strong>、瘀青； 兒童則是「體重增加同時身高百分位下降」 -
+症狀與併發症（尤其年輕就出現）：高血壓、糖尿病、骨質疏鬆與脊椎壓迫性骨折</p>
+<p><strong>鑑別力低（Less Discriminatory）</strong> -
+中心性肥胖、水牛肩、鎖骨上脂肪墊、臉部豐滿、痤瘡多毛、皮膚變薄、傷口癒合不良、周邊水腫
+-
+疲倦、體重增加、憂鬱、注意力與記憶受損、背痛、月經稀少、反覆感染、腎結石</p>
+<p>那如果你只能記兩件事，就記<strong>紫紋要 &gt;1 cm
+且紅紫色</strong>（一般肥胖的白色細紋不算），
+以及<strong>年輕人出現高血壓＋糖尿病＋骨鬆</strong>這個組合。</p>
+<p>還有一個容易被忽略的線索：血球分類會出現<strong>淋巴球下降、嗜酸性球下降、嗜中性球上升</strong>。
+看到這個型態，內源性或外源性皮質醇過量都要想到。</p>
+<h3 id="皮質醇過量對全身做了什麼">3-4 皮質醇過量對全身做了什麼</h3>
+<p>把作用一次列完，你會發現上面那些雜亂的症狀其實都來自同一個荷爾蒙：</p>
+<ul>
+<li><strong>醣類與脂質代謝</strong>：肝醣堆積↑、周邊胰島素阻抗↑、糖質新生↑、游離脂肪酸生成↑
+→ 整體致糖尿病</li>
+<li><strong>脂肪分布</strong>：促進內臟脂肪堆積</li>
+<li><strong>皮膚／肌肉／結締組織</strong>：蛋白質分解與膠原崩解 →
+皮膚變薄、肌肉萎縮</li>
+<li><strong>骨骼與鈣代謝</strong>：骨生成↓ → 骨量下降與骨質疏鬆</li>
+<li><strong>心血管／腎臟</strong>：鹽與水滯留 → 高血壓</li>
+<li><strong>免疫</strong>：抗發炎、免疫抑制 → 反覆感染</li>
+<li><strong>中樞神經</strong>：憂鬱、精神病</li>
+<li><strong>內分泌</strong>：LH／FSH↓、TSH↓、GH↓</li>
+<li><strong>眼</strong>：青光眼　<strong>腸胃道</strong>：消化性潰瘍　<strong>生長</strong>：線性生長↓</li>
+</ul>
+<h3 id="診斷流程比檢查本身重要">3-5 診斷：流程比檢查本身重要</h3>
+<p>課本講得很直白：<strong>大多數臨床誤判來自沒有遵守診斷流程</strong>——先確立診斷，才能做鑑別診斷的檢查。
+順序反了，影像上看到一顆偶發瘤，你就會被帶著走。</p>
+<p>排除外源性糖皮質素之後，要有<strong>多項且進行性</strong>的庫欣特徵（尤其是鑑別力高的那些）才進一步檢驗。
+診斷需要多項檢查一致支持：</p>
+<ol type="1">
+<li>三次分開收集的 <strong>24 小時尿液游離皮質醇</strong>上升</li>
+<li><strong>隔夜 dexamethasone
+抑制試驗</strong>後晨間皮質醇未被適當抑制</li>
+<li><strong>失去日夜節律</strong>（午夜濃度偏高）</li>
+</ol>
+<hr />
+<h2 id="四腦下垂體泌乳素瘤與功能低下">四、腦下垂體：泌乳素瘤與功能低下</h2>
+<h3 id="泌乳素瘤">4-1 泌乳素瘤</h3>
+<p>泌乳素分泌型腦下垂體腺瘤，<strong>濃度常大於 200 μg/L</strong>。
+男性的泌乳素瘤比女性大、侵犯性更強、生長更快——常見的解釋是女性因月經異常較早被發現，
+男性症狀隱匿，發現時腫瘤已經大了。</p>
+<p>症狀要<strong>分成兩組</strong>來記，這個二分法適用於所有功能性腦下垂體腫瘤：</p>
+<p><strong>第一組，荷爾蒙本身造成的（高泌乳素血症）</strong> -
+停經前女性：無月經、雌二醇低下、月經稀少、不孕、溢乳 -
+停經後女性：溢乳（罕見） -
+男性：性慾與精力下降、性毛脫落、肌肉量減少、骨質疏鬆、勃起功能障礙、
+男性女乳（罕見）、溢乳（罕見）</p>
+<p><strong>第二組，腫瘤體積造成的</strong> -
+視野缺損、視力模糊或下降、頭痛、腦神經麻痺 -
+腦下垂體功能低下的症狀、腦下垂體中風、顳葉癲癇</p>
+<h3 id="腦下垂體功能低下">4-2 腦下垂體功能低下</h3>
+<p>病因：腦部放射線治療、腦傷、<strong>產後出血</strong>、自體免疫性腦下垂體炎、腦瘤、
+經蝶竇手術後、腦下垂體萎縮、空蝶鞍。</p>
+<p>產後出血那一項就是 <strong>Sheehan’s
+syndrome</strong>，台灣現在少見，但仍是經典考題。</p>
+<hr />
+<h2 id="五甲狀腺">五、甲狀腺</h2>
+<h3 id="一個原則就夠">5-1 一個原則就夠</h3>
+<p>甲狀腺素管的事情很雜——胎兒發育、基礎代謝率、心臟收縮與交感反應、呼吸中樞、造血、
+腸胃蠕動、骨骼代謝、血脂血糖、性腺功能。不必逐條背。</p>
+<p>抓一個原則：<strong>甲狀腺素是油門</strong>。過多就是全身加速，過少就是全身變慢。
+下面兩張症狀表你自己就推得出來，不用死背。</p>
+<h3 id="功能檢查判讀畫一個-22">5-2 功能檢查判讀：畫一個 2×2</h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>free T4 ↑</th>
+<th>free T4 正常</th>
+<th>free T4 ↓</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>TSH &lt; 0.1</strong></td>
+<td>甲狀腺亢進</td>
+<td>亞臨床甲亢</td>
+<td>—</td>
+</tr>
+<tr>
+<td><strong>TSH 5–10</strong></td>
+<td>—</td>
+<td>亞臨床甲低</td>
+<td>—</td>
+</tr>
+<tr>
+<td><strong>TSH &gt; 10</strong></td>
+<td>—</td>
+<td>—</td>
+<td>甲狀腺低能</td>
+</tr>
+</tbody>
+</table>
+<p>例外要單獨記：<strong>TSH 分泌型腦下垂體腫瘤 → free T4 上升，但 TSH
+正常或略高</strong>。 這是唯一「兩者同方向」的組合，看到就要想到它。</p>
+<div class="callout c-key">
+<p>待查證：亞臨床甲低的<strong>治療門檻</strong>近年有調整討論，尤其 65
+歲以上族群。 要談治療建議請對照 Harrison 22e 甲狀腺章的最新版本。</p>
+</div>
+<h3 id="甲狀腺毒症-vs-甲狀腺低能">5-3 甲狀腺毒症 vs 甲狀腺低能</h3>
+<p><strong>甲狀腺毒症</strong> -
+症狀：過動、易怒、怕熱多汗、心悸、疲倦無力、<strong>體重減輕但食慾增加</strong>、腹瀉、多尿、月經稀少
+-
+徵象：心搏過速、顫抖、甲狀腺腫、皮膚溫暖潮濕、近端肌病變、眼瞼收縮或遲滯、男性女乳</p>
+<p>這裡有一個一定要講的陷阱：<strong>老年人的甲亢常常不像甲亢</strong>。沒有典型的過動與怕熱，
+反而以<strong>心房顫動、體重減輕、憂鬱</strong>表現，叫 apathetic
+hyperthyroidism，很容易漏診。
+那如果你在老人科看到不明原因的心房顫動，甲狀腺功能一定要驗。</p>
+<p><strong>甲狀腺低能</strong> -
+症狀：疲倦倦怠、嗜睡、憂鬱、心智功能減退、怕冷、食慾下降、出汗減少、便秘、
+關節痛、肌肉痙攣、<strong>月經過多</strong>、眼眶周圍浮腫、皮膚偏黃 -
+徵象：動作與說話變慢、聲音沙啞、心搏過緩、體重增加、<strong>非凹陷性水腫</strong>、皮膚乾冷、
+反射減弱、表情淡漠、聽力受損、阻塞性睡眠呼吸中止</p>
+<p>皮膚偏黃是<strong>胡蘿蔔素代謝變慢堆積</strong>，不是黃疸——<strong>鞏膜不黃</strong>，這一點可以拿來鑑別。</p>
+<h3 id="甲亢的治療三條路">5-4 甲亢的治療：三條路</h3>
+<ol type="1">
+<li><strong>藥物（thionamides）</strong>：methimazole、carbimazole、PTU，抑制碘化過程、減少甲狀腺素合成</li>
+<li><strong>放射性碘 131</strong>：釋出 β 輻射破壞甲狀腺細胞</li>
+<li><strong>手術</strong>：近全或全切除</li>
+</ol>
+<p>PTU
+因為肝毒性，現在多半只留給<strong>懷孕第一期與甲狀腺風暴</strong>。</p>
+<h3 id="甲狀腺癌分類已經改了別再用舊的">⭐ 5-5
+甲狀腺癌：分類已經改了，別再用舊的</h3>
+<p>分化良好的甲狀腺癌佔大多數：</p>
+<table>
+<thead>
+<tr>
+<th>組織型</th>
+<th>比例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>乳突癌（Papillary carcinoma）</td>
+<td><strong>80–85%</strong></td>
+</tr>
+<tr>
+<td>濾泡癌（Follicular carcinoma）</td>
+<td>10%</td>
+</tr>
+<tr>
+<td><strong>嗜酸細胞癌（Oncocytic carcinoma）</strong></td>
+<td>3%</td>
+</tr>
+<tr>
+<td>髓質癌（Medullary carcinoma）</td>
+<td>4%</td>
+</tr>
+<tr>
+<td>未分化癌（Anaplastic carcinoma）</td>
+<td>2%</td>
+</tr>
+<tr>
+<td>其餘（含甲狀腺淋巴瘤、鱗狀上皮細胞癌）</td>
+<td>1%</td>
+</tr>
+</tbody>
+</table>
+<p><strong>⭐ 兩個變動，考試和臨床都要用新的：</strong></p>
+<p><strong>第一，「Hürthle cell carcinoma」這個名稱已經被取代。</strong>
+Harrison 22e 用的是 <strong>oncocytic
+carcinoma（嗜酸細胞癌）</strong>，原文寫「oncocytic (formerly termed
+Hürthle cell)」。舊講義寫 Hürthle cell 的，看到要自己換過來。</p>
+<p><strong>第二，多了一個「不再算惡性」的類別：NIFTP。</strong>
+過去稱為「有被膜的乳突癌濾泡亞型、且<strong>無被膜或血管侵犯</strong>」者，<strong>已不再視為惡性</strong>，
+改名為 <strong>NIFTP</strong>（noninvasive follicular thyroid neoplasm
+with papillary-like nuclear features）。
+意思就是說，一部分過去被算進乳突癌、被當癌症治療的病例，現在不算癌了。
+這直接影響上面那張表的比例，也影響病人要不要接受全甲狀腺切除。</p>
+<p><strong>另外要提醒的是</strong>：不是所有乳突癌預後都好。Harrison 22e
+特別點名侵襲性亞型—— <strong>tall cell、columnar cell、hobnail、poorly
+differentiated</strong>——需要更積極的治療與更密切追蹤。</p>
+<p>分化良好不等於不會侵犯。臨床上看得到乳突癌合併皮膚潰爛、濾泡癌合併氣管阻塞的案例。</p>
+<hr />
+<h2 id="六糖尿病">六、糖尿病</h2>
+<h3 id="高危險群">6-1 高危險群</h3>
+<p>大於 45 歲、體重超重、一等親有糖尿病、不運動、糖尿病前期（IFG 與
+IGT）、 妊娠糖尿病或曾生下 4
+公斤以上胎兒、高血壓、多囊性卵巢症、曾有心血管疾病史。</p>
+<div class="callout c-key">
+<p>待查證：美國糖尿病學會已把<strong>篩檢起始年齡下修至 35 歲</strong>。
+台灣現行建議我沒有核對，所以這裡先保留投影片原本的 45 歲，
+你要引用之前請確認最新版指引。</p>
+</div>
+<h3 id="併發症的記法">6-2 併發症的記法</h3>
+<p>分兩類就好：</p>
+<ul>
+<li><strong>小血管</strong>：視網膜病變、腎病變、神經病變</li>
+<li><strong>大血管</strong>：冠心症、腦血管疾病、周邊動脈疾病</li>
+</ul>
+<h3 id="這是少數醫師一個人做不好的病">6-3
+這是少數「醫師一個人做不好」的病</h3>
+<p>照護團隊包括醫師、糖尿病衛教護理師、營養師、復健醫師與治療師、社工、家庭支持、
+社區衛生單位、政府宣導。</p>
+<p>我們會希望學生從一開始就建立這個觀念：糖尿病的成效取決於整個團隊與病人的自我管理，
+門診那十五分鐘只是其中一小塊。</p>
+<hr />
+<h2 id="七高血脂">七、高血脂</h2>
+<h3 id="為什麼要在意">7-1 為什麼要在意</h3>
+<p>45 歲以上，<strong>每四個國人就有一個有高血脂</strong>。
+而且<strong>總膽固醇每升高 1 mg/100 ml，冠狀動脈疾病增加 2%</strong>。
+這個數字很好用——它把「膽固醇高一點沒關係」這個迷思直接打掉。</p>
+<h3 id="兩種脂質來源完全不同">7-2 兩種脂質，來源完全不同</h3>
+<p><strong>膽固醇</strong>：構成細胞膜、合成膽酸、合成類固醇荷爾蒙。除部分來自食物外，<strong>大部分由肝臟合成</strong>。</p>
+<p><strong>三酸甘油酯（TG）</strong>：由血漿脂肪酸與醣類代謝合成，作為能源儲備。
+飲酒、大量脂肪或醣類食物很容易影響其濃度；<strong>運動可以降低
+TG</strong>。</p>
+<p>衛教上最有用的一句：膽固醇大部分是自己肝臟做的，所以「完全不吃蛋」效果有限；
+但三酸甘油酯對飲食和酒精非常敏感，<strong>那個才是吃什麼馬上反映的指標</strong>。</p>
+<h3 id="脂蛋白">7-3 脂蛋白</h3>
+<p>乳糜粒、VLDL、IDL、LDL、HDL，以及 <strong>Lp(a)</strong>。</p>
+<p>Lp(a)
+值得多記一筆：它是近年重新受重視的殘餘風險因子，<strong>主要由遺傳決定、不太受飲食影響</strong>，
+一生驗一次即可。</p>
+<h3 id="最危險的組合">7-4 最危險的組合</h3>
+<p>加速動脈硬化的血脂組合是三個一起出現： <strong>三酸甘油酯升高 ＋
+小而密的 LDL 增加 ＋ HDL 下降</strong>。</p>
+<p>注意這三個裡面<strong>沒有一項是「總膽固醇高」</strong>。所以總膽固醇正常，不代表血脂沒問題——
+這就是代謝症候群的血脂表現。</p>
+<h3 id="數值與風險因子">7-5 數值與風險因子</h3>
+<p><strong>高血脂定義</strong>：總膽固醇 ≥ 200、TG ≥ 150、HDL ≤ 40、LDL
+≥ 130 mg/dl</p>
+<p><strong>三酸甘油酯分級</strong>：正常 &lt;150｜邊緣性偏高
+150–199｜偏高 200–499｜<strong>極高 ≥500</strong></p>
+<p>≥500
+這個切點要特別記：那是<strong>急性胰臟炎</strong>的風險門檻，處置優先順序跟一般降血脂不一樣。
+TG 到 1000 以上時，飲食限制會嚴格到每日脂肪 15 克以下、肉類不超過 5 兩，
+那是在防胰臟炎，不是在降心血管風險。</p>
+<p><strong>心血管危險因子</strong>：抽菸、高血壓（≥140/90
+或使用降壓藥）、HDL &lt;40、 早發性冠心症家族史（男性一等親 &lt;55
+歲、女性一等親 &lt;65 歲）、年齡（男 ≥45、女 ≥55）。
+兩個以上即屬高風險；<strong>糖尿病等同冠心症的高風險族群</strong>。</p>
+<div class="callout c-key">
+<p>待查證：上面這套是 ATP-III
+時代的風險評估架構。國際上目前多改用整體風險計算工具 （pooled cohort
+equations、SCORE2），而台灣有 <strong>2022 年台灣血脂指引</strong>與
+<strong>2023
+年台灣糖尿病血脂指引</strong>。兩套邏輯不同，引用時請統一。</p>
+</div>
+<h3 id="治療原則一個要更新的觀念">⭐ 7-6 治療原則：一個要更新的觀念</h3>
+<p>投影片上寫「藥物治療應該等 3–6
+個月的飲食治療無效再用」。<strong>這是舊的通則，不能一體適用。</strong></p>
+<p>現行指引對<strong>高風險族群</strong>——已有心血管疾病、糖尿病、家族性高膽固醇血症——
+主張<strong>及早、甚至立即啟動
+statin</strong>，不會先觀察三到六個月。</p>
+<p>那如果分層來看：低風險者可以先做生活型態介入；高風險者依指引直接啟動藥物。
+我們寧可對高風險病人及早用藥，也不要為了等三個月的飲食療效，讓他多冒三個月的風險。</p>
+<h3 id="非藥物治療的具體處方">7-7 非藥物治療的具體處方</h3>
+<p><strong>減重</strong>：每天減少 500 大卡，每週減 0.5 公斤。理想體重 =
+身高（公尺）² × 22。 總熱量不低於 1000 大卡；每週減 0.5–1.0
+公斤為原則。</p>
+<p><strong>運動</strong>：耐力性運動，使用大肌肉群、韻律性、運動量穩定（慢跑、游泳、騎自行車）。
+強度為最大心搏率或最大攝氧量的 <strong>50–85%</strong>，每週 <strong>3–5
+次</strong>，每次 <strong>20–60 分鐘</strong>。 效果是<strong>降低 TG 和
+LDL、升高 HDL</strong>。</p>
+<p><strong>戒菸</strong>：戒菸可增加 HDL 並降低冠心病風險。</p>
+<p><strong>脂肪的選擇</strong> -
+飽和脂肪：動物性油脂，加上<strong>椰子油與棕櫚油</strong>——這兩個雖然是植物性，但屬於飽和脂肪，最常被誤解
+-
+多元不飽和：Omega-6（紅花油、葵花油、大豆油、玉米油）、Omega-3（EPA、DHA，主要來自魚油）
+- 單元不飽和：油酸為主（橄欖油、油菜籽油、花生油、米糠油、芝麻油）</p>
+<p>一般人：總脂肪 &lt;30%、飽和脂肪 &lt;10% 的總熱量。</p>
+<div class="callout c-key">
+<p>待查證：「每星期不超過 2 個蛋黃」與膳食膽固醇上限的建議，
+近年多國指引已放寬，改為強調飽和脂肪而非膽固醇本身。台灣現行版本請自行確認。</p>
+</div>
+<hr />
+<h2 id="帶回家的重點">帶回家的重點</h2>
+<p><strong>第一</strong>，內分泌疾病的邏輯都是同一句話：某個激素過多或缺乏，造成相應的病理生理變化。
+你把荷爾蒙的正常功能背熟，症狀就推得出來，不用死背症狀表。</p>
+<p><strong>第二</strong>，鑑別力比清單長度重要。庫欣氏症的症狀有二十幾項，真正有鑑別力的只有那幾個；
+甲狀腺功能異常的表現很多，一個 2×2 就講完。</p>
+<p><strong>第三</strong>，這兩年有兩件事變了，別再用舊的：
+<strong>甲狀腺癌的 Hürthle cell 已改稱 oncocytic carcinoma，而 NIFTP
+已不再算惡性</strong>；
+<strong>高風險族群的降血脂用藥不必先等三到六個月</strong>。</p>
+<p><strong>第四</strong>，看到老年人的心房顫動要想到甲亢，看到月亮臉要先問有沒有在吃類固醇。
+最常見的診斷，往往不是最罕見的那個。</p>
+<hr />
+<p><em>本講義依據課程投影片整理，並以 Harrison’s Principles of Internal
+Medicine 22e（2025） 與 Williams Textbook of Endocrinology
+15e（2024）核對更新。
+標「待查證」者為尚未核對台灣現行指引之項目，引用前請自行確認。</em></p>
+
+</main>
+<footer>
+  標 ⭐ 者為這兩年課本改版、與舊講義不同之處；標「待查證」者為尚未核對台灣現行指引之項目，引用前請自行確認<br>
+  供教學使用｜臨床決策請依個別病人狀況與最新指引判斷｜講義版本：2026-09-02<br>
+  <a href="../index.html">← 回首頁</a>
+</footer>
+</div>
+</body>
+</html>
