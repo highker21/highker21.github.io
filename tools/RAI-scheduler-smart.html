@@ -330,7 +330,20 @@
 
   <div id="computed" class="computed-dates" style="display:none"></div>
 
-  <div class="actions">
+  <div class="actions" style="flex-wrap:wrap; align-items:center; gap:8px">
+    <label style="font-size:9.5pt; color:#4a5568; display:flex; align-items:center; gap:6px">
+      病人／看護語言：
+      <select id="sched_lang" style="padding:5px 8px; font-size:9.5pt">
+        <option value="">（僅中文）</option>
+        <option value="en">English</option>
+        <option value="id">Bahasa Indonesia（印尼）</option>
+        <option value="th">ไทย（泰）</option>
+        <option value="tl">Filipino（菲律賓）</option>
+        <option value="vi">Tiếng Việt（越南）</option>
+        <option value="ms">Bahasa Melayu（馬來西亞）</option>
+      </select>
+    </label>
+
     <button class="primary" onclick="render()">產生排程單</button>
     <button class="secondary" onclick="window.print()">🖨 列印 / 存 PDF</button>
     <button class="secondary" onclick="copyChartNote()">📋 複製病歷排程（英文 EMR plan）</button>
@@ -346,7 +359,7 @@
 
 <div class="footer-instructions" style="text-align:center; margin-top:14px; font-size:9.5pt; color:#718096">
   💡 規則：吃放射碘必須 Tue 或 Fri • Tue 吃 → Thu 出院 → 隔週一掃描 • Fri 吃 → Mon 出院 → 隔天 Tue 掃描 • 吃前 1 個月開始低碘飲食
-  <div style="margin-top:6px; font-size:8.5pt; color:#a0aec0">工具版本：2026-05-27</div>
+  <div style="margin-top:6px; font-size:8.5pt; color:#a0aec0">工具版本：2026-09-02</div>
 </div>
 
 </div>
@@ -504,6 +517,254 @@ function updateComputed() {
 }
 
 // ── Render full schedule sheet ───────────
+const RAI_ZH = {
+ "sub": "碘 131 治療排程（病人／看護對照單）",
+ "name": "姓名",
+ "age": "年齡",
+ "sex": "性別",
+ "chart": "病歷號",
+ "dose": "碘 131 劑量",
+ "dates": "重要日期",
+ "diet": "低碘飲食",
+ "stop": "停用甲狀腺素 (Eltroxin)",
+ "nostop": "不停 Eltroxin —— 照常服用",
+ "resume": "恢復服用 Eltroxin",
+ "thy1": "Thyrogen 第 1 針",
+ "thy2": "Thyrogen 第 2 針",
+ "admit": "住院日",
+ "rai": "吃碘 131 日",
+ "dc": "出院日",
+ "scan": "全身掃描",
+ "inst": "您要做的事",
+ "i1": "上述期間採低碘飲食，禁食紫菜、海帶、海苔及醃漬加工的海產。",
+ "i2": "住院當天請依排定時間上午到院，不另行電話通知。",
+ "i3": "先抽血，之後至入出院服務中心辦理住院手續。",
+ "i4": "您將單獨住在輻射防護隔離病房，隔離期間不得探視。",
+ "i5": "出院後請遵守病房給您的居家輻射防護指導。",
+ "i6": "掃描完成當天起可恢復正常飲食並恢復服用甲狀腺素。"
+};
+const RAI_I18N = {
+ "en": {
+  "lang": "English",
+  "sub": "Radioactive Iodine (I-131) Treatment Schedule — Thyroid Cancer",
+  "name": "Name",
+  "age": "Age",
+  "sex": "Sex",
+  "chart": "Chart No.",
+  "dose": "I-131 dose",
+  "dates": "Key dates",
+  "diet": "Low-iodine diet",
+  "stop": "Stop thyroid hormone (Eltroxin)",
+  "nostop": "Eltroxin is NOT stopped — keep taking it as usual",
+  "resume": "Resume Eltroxin",
+  "thy1": "Thyrogen injection 1",
+  "thy2": "Thyrogen injection 2",
+  "admit": "Admission",
+  "rai": "Take I-131",
+  "dc": "Discharge",
+  "scan": "Whole-body scan",
+  "inst": "What you need to do",
+  "i1": "Follow a low-iodine diet during the dates above. Do not eat seaweed, kelp, nori, or salted/processed seafood.",
+  "i2": "On the admission day, come to the hospital in the morning as scheduled. You do not need to wait for a phone call.",
+  "i3": "Blood will be drawn first, then complete the admission procedure at the Admission Service Center.",
+  "i4": "You will stay alone in a radiation-protection isolation room. Visitors are not allowed during isolation.",
+  "i5": "After discharge, follow the home radiation-safety instructions given by the ward.",
+  "i6": "On the day the scan is finished, you may return to a normal diet and restart thyroid hormone.",
+  "places": "Place names are kept in Chinese so you can show this sheet to hospital staff and ask for directions."
+ },
+ "id": {
+  "lang": "Bahasa Indonesia",
+  "sub": "Jadwal Terapi Yodium Radioaktif (I-131) — Kanker Tiroid",
+  "name": "Nama",
+  "age": "Usia",
+  "sex": "Jenis kelamin",
+  "chart": "No. rekam medis",
+  "dose": "Dosis I-131",
+  "dates": "Tanggal penting",
+  "diet": "Diet rendah yodium",
+  "stop": "Hentikan hormon tiroid (Eltroxin)",
+  "nostop": "Eltroxin TIDAK dihentikan — tetap diminum seperti biasa",
+  "resume": "Mulai lagi Eltroxin",
+  "thy1": "Suntik Thyrogen ke-1",
+  "thy2": "Suntik Thyrogen ke-2",
+  "admit": "Masuk rawat inap",
+  "rai": "Minum I-131",
+  "dc": "Pulang",
+  "scan": "Pemindaian seluruh tubuh",
+  "inst": "Yang harus Anda lakukan",
+  "i1": "Jalani diet rendah yodium pada tanggal di atas. Jangan makan rumput laut, kelp, nori, atau makanan laut olahan/asin.",
+  "i2": "Pada hari masuk rawat, datanglah ke rumah sakit pagi hari sesuai jadwal. Anda tidak perlu menunggu telepon.",
+  "i3": "Darah akan diambil lebih dulu, lalu selesaikan pendaftaran di Pusat Layanan Masuk/Keluar Rumah Sakit.",
+  "i4": "Anda akan dirawat sendiri di kamar isolasi proteksi radiasi. Selama isolasi tidak boleh ada pengunjung.",
+  "i5": "Setelah pulang, ikuti petunjuk keselamatan radiasi di rumah yang diberikan bangsal.",
+  "i6": "Pada hari pemindaian selesai, Anda boleh kembali makan normal dan minum hormon tiroid.",
+  "places": "Nama tempat ditulis dalam bahasa Mandarin agar Anda dapat menunjukkan lembar ini kepada petugas rumah sakit."
+ },
+ "th": {
+  "lang": "ไทย",
+  "sub": "ตารางการรักษาด้วยไอโอดีนรังสี (I-131) — มะเร็งไทรอยด์",
+  "name": "ชื่อ",
+  "age": "อายุ",
+  "sex": "เพศ",
+  "chart": "เลขที่เวชระเบียน",
+  "dose": "ปริมาณ I-131",
+  "dates": "วันที่สำคัญ",
+  "diet": "อาหารไอโอดีนต่ำ",
+  "stop": "หยุดยาไทรอยด์ (Eltroxin)",
+  "nostop": "ไม่ต้องหยุด Eltroxin — กินตามปกติ",
+  "resume": "เริ่มกิน Eltroxin อีกครั้ง",
+  "thy1": "ฉีด Thyrogen เข็มที่ 1",
+  "thy2": "ฉีด Thyrogen เข็มที่ 2",
+  "admit": "วันนอนโรงพยาบาล",
+  "rai": "วันกลืนแร่ I-131",
+  "dc": "วันกลับบ้าน",
+  "scan": "สแกนทั่วร่างกาย",
+  "inst": "สิ่งที่ต้องปฏิบัติ",
+  "i1": "งดอาหารไอโอดีนสูงตามวันที่ข้างต้น ห้ามกินสาหร่ายทุกชนิด และอาหารทะเลแปรรูปหรือหมักดอง",
+  "i2": "ในวันนอนโรงพยาบาล กรุณามาถึงโรงพยาบาลตอนเช้าตามกำหนด ไม่ต้องรอโทรศัพท์แจ้ง",
+  "i3": "จะมีการเจาะเลือดก่อน จากนั้นไปทำเรื่องนอนโรงพยาบาลที่ศูนย์บริการรับเข้า-จำหน่ายผู้ป่วย",
+  "i4": "ท่านจะพักในห้องแยกป้องกันรังสีคนเดียว ระหว่างแยกห้ามมีผู้เยี่ยม",
+  "i5": "หลังกลับบ้าน ให้ปฏิบัติตามคำแนะนำความปลอดภัยด้านรังสีที่หอผู้ป่วยให้ไว้",
+  "i6": "ในวันที่สแกนเสร็จ ท่านสามารถกลับมากินอาหารตามปกติและกินยาไทรอยด์ได้",
+  "places": "ชื่อสถานที่เขียนเป็นภาษาจีน เพื่อให้ท่านแสดงเอกสารนี้แก่เจ้าหน้าที่โรงพยาบาลได้"
+ },
+ "tl": {
+  "lang": "Filipino",
+  "sub": "Iskedyul ng Paggamot na Radioactive Iodine (I-131) — Kanser sa Thyroid",
+  "name": "Pangalan",
+  "age": "Edad",
+  "sex": "Kasarian",
+  "chart": "Chart No.",
+  "dose": "Dosis ng I-131",
+  "dates": "Mahahalagang petsa",
+  "diet": "Low-iodine na diyeta",
+  "stop": "Itigil ang thyroid hormone (Eltroxin)",
+  "nostop": "HINDI itinitigil ang Eltroxin — ipagpatuloy ang pag-inom",
+  "resume": "Ibalik ang Eltroxin",
+  "thy1": "Unang iniksyon ng Thyrogen",
+  "thy2": "Ikalawang iniksyon ng Thyrogen",
+  "admit": "Pag-admit sa ospital",
+  "rai": "Pag-inom ng I-131",
+  "dc": "Paglabas ng ospital",
+  "scan": "Whole-body scan",
+  "inst": "Ang dapat ninyong gawin",
+  "i1": "Sundin ang low-iodine na diyeta sa mga petsang nasa itaas. Huwag kumain ng seaweed, kelp, nori, o inasnan/prosesong pagkaing-dagat.",
+  "i2": "Sa araw ng admission, pumunta sa ospital sa umaga ayon sa iskedyul. Hindi na kayo tatawagan.",
+  "i3": "Kukunan muna kayo ng dugo, pagkatapos ay tapusin ang admission sa Admission Service Center.",
+  "i4": "Mananatili kayong mag-isa sa radiation-protection isolation room. Bawal ang bisita habang naka-isolate.",
+  "i5": "Pagkalabas ng ospital, sundin ang home radiation-safety na bilin ng ward.",
+  "i6": "Sa araw na matapos ang scan, maaari na kayong bumalik sa normal na pagkain at uminom ng thyroid hormone.",
+  "places": "Nasa Chinese ang mga pangalan ng lugar para maipakita ninyo ito sa staff ng ospital."
+ },
+ "vi": {
+  "lang": "Tiếng Việt",
+  "sub": "Lịch điều trị I-ốt phóng xạ (I-131) — Ung thư tuyến giáp",
+  "name": "Họ tên",
+  "age": "Tuổi",
+  "sex": "Giới tính",
+  "chart": "Số hồ sơ",
+  "dose": "Liều I-131",
+  "dates": "Các mốc thời gian quan trọng",
+  "diet": "Chế độ ăn ít i-ốt",
+  "stop": "Ngừng hormone tuyến giáp (Eltroxin)",
+  "nostop": "KHÔNG ngừng Eltroxin — vẫn uống như bình thường",
+  "resume": "Dùng lại Eltroxin",
+  "thy1": "Tiêm Thyrogen mũi 1",
+  "thy2": "Tiêm Thyrogen mũi 2",
+  "admit": "Ngày nhập viện",
+  "rai": "Ngày uống I-131",
+  "dc": "Ngày xuất viện",
+  "scan": "Chụp xạ hình toàn thân",
+  "inst": "Những việc quý vị cần làm",
+  "i1": "Thực hiện chế độ ăn ít i-ốt trong khoảng thời gian trên. Không ăn rong biển, tảo bẹ, và hải sản chế biến hoặc muối.",
+  "i2": "Vào ngày nhập viện, xin đến bệnh viện buổi sáng theo lịch. Quý vị không cần chờ điện thoại thông báo.",
+  "i3": "Quý vị sẽ được lấy máu trước, sau đó làm thủ tục nhập viện tại Trung tâm dịch vụ nhập/xuất viện.",
+  "i4": "Quý vị sẽ ở một mình trong phòng cách ly chống phóng xạ. Trong thời gian cách ly không được thăm nuôi.",
+  "i5": "Sau khi xuất viện, xin tuân theo hướng dẫn an toàn phóng xạ tại nhà do khoa phòng cung cấp.",
+  "i6": "Vào ngày chụp xạ hình xong, quý vị có thể ăn uống bình thường trở lại và dùng lại hormone tuyến giáp.",
+  "places": "Tên địa điểm được giữ bằng tiếng Trung để quý vị đưa tờ này cho nhân viên bệnh viện xem."
+ },
+ "ms": {
+  "lang": "Bahasa Melayu",
+  "sub": "Jadual Rawatan Iodin Radioaktif (I-131) — Kanser Tiroid",
+  "name": "Nama",
+  "age": "Umur",
+  "sex": "Jantina",
+  "chart": "No. rekod perubatan",
+  "dose": "Dos I-131",
+  "dates": "Tarikh penting",
+  "diet": "Diet rendah iodin",
+  "stop": "Hentikan hormon tiroid (Eltroxin)",
+  "nostop": "Eltroxin TIDAK dihentikan — teruskan seperti biasa",
+  "resume": "Mula semula Eltroxin",
+  "thy1": "Suntikan Thyrogen ke-1",
+  "thy2": "Suntikan Thyrogen ke-2",
+  "admit": "Tarikh masuk wad",
+  "rai": "Tarikh ambil I-131",
+  "dc": "Tarikh keluar wad",
+  "scan": "Imbasan seluruh badan",
+  "inst": "Perkara yang perlu anda lakukan",
+  "i1": "Amalkan diet rendah iodin pada tarikh di atas. Jangan makan rumpai laut, kelp, nori, atau makanan laut diproses/dimasin.",
+  "i2": "Pada hari masuk wad, sila tiba di hospital pada waktu pagi seperti dijadualkan. Anda tidak perlu menunggu panggilan telefon.",
+  "i3": "Darah akan diambil dahulu, kemudian lengkapkan urusan kemasukan di Pusat Perkhidmatan Masuk/Keluar Hospital.",
+  "i4": "Anda akan tinggal seorang diri di bilik pengasingan perlindungan radiasi. Pelawat tidak dibenarkan semasa pengasingan.",
+  "i5": "Selepas keluar wad, ikut arahan keselamatan radiasi di rumah yang diberikan oleh wad.",
+  "i6": "Pada hari imbasan selesai, anda boleh kembali makan seperti biasa dan mengambil hormon tiroid.",
+  "places": "Nama tempat dikekalkan dalam bahasa Cina supaya anda boleh menunjukkan helaian ini kepada kakitangan hospital."
+ }
+};
+
+function renderI18n(c, lang, info) {
+  const t = RAI_I18N[lang], z = RAI_ZH;
+  if (!t) return '';
+  // 中外對照：每一列同時給中文與外語，讓病人與院方人員看同一張、指同一列
+  const row = (kz, kt, val) => val ? `<tr>
+      <td style="padding:4px 8px; border:1px solid #cbd5e0; width:46%">
+        ${kz}<br><span style="color:#4a5568; font-size:9.5pt">${kt}</span></td>
+      <td style="padding:4px 8px; border:1px solid #cbd5e0"><strong>${val}</strong></td></tr>` : '';
+  let h = `<div style="page-break-before:always"></div>`;
+  h += `<h1 style="margin-top:0">高雄醫學大學附設中和紀念醫院<br>
+        <span style="font-size:10.5pt; font-weight:normal">Kaohsiung Medical University Chung-Ho Memorial Hospital</span></h1>`;
+  h += `<h2 style="font-size:12.5pt">${z.sub}<br>
+        <span style="font-size:11pt; font-weight:normal">${t.sub}</span></h2>`;
+  h += `<table class="info-table"><tr>
+          <td style="width:25%"><strong>${z.name} / ${t.name}：</strong>${info.name}</td>
+          <td style="width:20%"><strong>${z.age} / ${t.age}：</strong>${info.age}</td>
+          <td style="width:20%"><strong>${z.sex} / ${t.sex}：</strong>${info.sex}</td>
+          <td><strong>${z.chart} / ${t.chart}：</strong>${info.id}</td></tr></table>`;
+  h += `<div class="dose-box">${z.dose} / ${t.dose}：<span class="hl">${info.dose} mCi</span></div>`;
+
+  h += `<div class="section-title">📅 ${z.dates} ／ ${t.dates}</div>`;
+  h += `<table style="width:100%; border-collapse:collapse; font-size:10.5pt; margin-bottom:10px">`;
+  h += row(z.diet, t.diet, `${fmt(c.liDietStart)} → ${fmt(c.scan)}`);
+  if (c.stopEltroxin) {
+    h += row(z.stop, t.stop, fmt(c.stopEltroxin));
+    h += row(z.resume, t.resume, fmt(c.scan));
+  } else {
+    h += row(z.stop, t.stop, `${z.nostop}<br><span style="font-weight:normal; font-size:9.5pt">${t.nostop}</span>`);
+  }
+  if (c.thyrogen1) h += row(z.thy1, t.thy1, fmt(c.thyrogen1));
+  if (c.thyrogen2) h += row(z.thy2, t.thy2, fmt(c.thyrogen2));
+  if (c.admit)     h += row(z.admit, t.admit, fmt(c.admit));
+  h += row(z.rai, t.rai, fmt(c.rai));
+  h += row(z.dc, t.dc, fmt(c.discharge));
+  h += row(z.scan, t.scan, fmt(c.scan));
+  h += `</table>`;
+
+  h += `<div class="section-title">✅ ${z.inst} ／ ${t.inst}</div><ol style="font-size:10.5pt; line-height:1.55">`;
+  for (const k of ['i1','i2','i3','i4','i5','i6'])
+    h += `<li style="margin-bottom:6px">${z[k]}<br><span style="color:#2c5282">${t[k]}</span></li>`;
+  h += `</ol>`;
+
+  h += `<div class="footer-note" style="margin-top:12px">
+        ⚠️ 院內地點保留中文，方便您拿此單向院方人員問路：<br>
+        核醫科一樓櫃台 ・ C 棟一樓檢驗室 ・ B/C 棟一樓入出院服務中心 ・ 啟川 14EN 病房<br>
+        <span style="color:#2c5282">${t.places}</span></div>`;
+  h += `<div style="text-align:right; margin-top:8px; font-size:9pt; color:#718096">
+        中文 / ${t.lang} ・ ${fmt(new Date())}</div>`;
+  return h;
+}
+
 function render() {
   const c = compute();
   const out = document.getElementById('preview');
@@ -683,6 +944,8 @@ function render() {
             本排程單由系統依規則自動產生：吃藥日 ${fmt(c.rai)} → 出院 ${fmt(c.discharge)} → 掃描 ${fmt(c.scan)}
           </div>`;
 
+  const lang = (document.getElementById('sched_lang') || {}).value || '';
+  if (lang) html += renderI18n(c, lang, {name, id, age, sex, dose});
   out.innerHTML = html;
 }
 
