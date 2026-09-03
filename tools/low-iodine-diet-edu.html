@@ -1,0 +1,353 @@
+<!DOCTYPE html><html lang="zh-Hant"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="author" content="盧子文醫師 - Dr. Lu Tz-Wen">
+<meta name="description" content="低碘飲食衛教單（碘-131 治療前準備・7 國語言中外對照）。高雄醫學大學附設醫院內分泌新陳代謝內科病房／營養部版本，外語版每項附中文對照，方便對照台灣市售包裝，可列印 A4。">
+<title>低碘飲食 — 碘-131 治療前準備（7 國語言・中外對照）</title>
+<style>
+:root{
+  --ink:#1b1f1d;--sub:#5f655f;--line:#e6e2d8;--paper:#faf8f2;--card:#fff;--faint:#9a978c;
+  --ok:#27ae60;--warn:#c0392b;--doc:#2c3e50;--okbg:#f2fbf5;--nobg:#fdf4f3;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#eceae2;font-family:"PingFang TC","Noto Sans TC","Microsoft JhengHei","Sukhumvit Set","Noto Sans Thai",sans-serif;color:var(--ink);padding:20px 12px;-webkit-font-smoothing:antialiased}
+
+.tabs{max-width:960px;margin:0 auto 14px;display:flex;gap:6px;flex-wrap:wrap}
+.tab{flex:1 1 120px;text-align:center;padding:10px 6px;border-radius:10px;border:1px solid var(--line);background:#fff;cursor:pointer;font-weight:800;color:var(--sub);font-size:15px;line-height:1.3}
+.tab small{display:block;font-weight:500;font-size:10.5px;color:var(--faint);margin-top:2px}
+.tab.active{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.tab.active small{color:#b9c7c3}
+
+.sheet{max-width:960px;margin:0 auto;background:var(--paper);padding:32px 32px 20px}
+.head{border-bottom:2px solid var(--warn);padding-bottom:12px;margin-bottom:12px}
+.kick{font-size:12px;letter-spacing:.28em;color:var(--sub);font-weight:800;margin-bottom:8px}
+.head h1{font-size:27px;font-weight:900;line-height:1.22;color:var(--warn)}
+.head .org{margin-top:6px;font-size:12.5px;color:var(--sub);line-height:1.6}
+
+.intro{background:var(--card);border:1px solid var(--line);border-left:6px solid var(--doc);border-radius:12px;padding:14px 17px;font-size:15px;line-height:1.75}
+.intro .zh{display:block;margin-top:4px;font-size:13px;color:var(--sub);line-height:1.65}
+.intro b{font-weight:900;color:var(--doc)}
+
+.wrap{overflow-x:auto;margin-top:16px}
+table.food{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+table.food th,table.food td{border:1px solid var(--line);padding:10px 12px;vertical-align:top;text-align:left;line-height:1.7;font-size:14.5px}
+table.food thead th{background:var(--paper);font-weight:900;font-size:14px;color:var(--sub);text-align:center}
+table.food thead th.y{color:var(--ok)}
+table.food thead th.n{color:var(--warn)}
+table.food td.cat{width:15%;background:var(--paper);font-weight:900;color:var(--doc);white-space:nowrap;font-size:14.5px}
+table.food td.y{background:var(--okbg);width:42.5%}
+table.food td.n{background:var(--nobg);width:42.5%}
+table.food ul{list-style:none}
+table.food li{position:relative;padding-left:15px;margin-bottom:6px}
+table.food li:last-child{margin-bottom:0}
+table.food td.y li:before{content:"‧";position:absolute;left:2px;font-weight:900;color:var(--ok)}
+table.food td.n li:before{content:"‧";position:absolute;left:2px;font-weight:900;color:var(--warn)}
+.zh{display:block;font-size:12.5px;color:var(--sub);line-height:1.55;margin-top:1px}
+.tip{margin-top:7px;padding-top:7px;border-top:1px dashed var(--line);font-size:12.5px;color:var(--sub);line-height:1.65;font-style:italic}
+
+.note{margin-top:16px;font-size:12.5px;color:var(--sub);line-height:1.75;font-style:italic}
+.hint{margin-top:12px;background:#fffbe9;border:1px solid #e8dcae;border-radius:10px;padding:11px 15px;font-size:13px;color:#6b5a1e;line-height:1.7}
+.refs{margin-top:14px;font-size:11.5px;color:var(--faint);line-height:1.8}
+.refs b{color:var(--sub);display:block;margin-bottom:3px;font-size:12px}
+.foot{margin-top:14px;text-align:center;font-size:11px;color:var(--faint);line-height:1.75;border-top:1px solid var(--line);padding-top:11px}
+.foot b{color:var(--sub)}
+
+.bar{text-align:center;margin:16px 0;display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.bar button{background:var(--ink);color:var(--paper);border:0;padding:11px 22px;font-size:15px;font-weight:700;border-radius:6px;cursor:pointer}
+
+/* ⚠️ media query 一律放在所有基礎規則之後（同權重後者勝） */
+@media print{
+  @page{size:A4 portrait;margin:8mm}
+  body{background:#fff;padding:0}
+  .tabs,.bar,.no-print{display:none!important}
+  .sheet{max-width:100%;padding:0}
+  .wrap{overflow:visible;margin-top:10px}
+  table.food{font-size:11px}
+  table.food th,table.food td{padding:4px 6px;font-size:11px;line-height:1.42}
+  table.food li{margin-bottom:3px}
+  .zh{font-size:9.5px;line-height:1.3;margin-top:0}
+  table.food tr{break-inside:avoid}
+  .head{padding-bottom:8px;margin-bottom:8px}
+  .head h1{font-size:20px}
+  .head .org{font-size:10.5px;margin-top:4px}
+  .kick{font-size:10px;margin-bottom:5px}
+  .intro{padding:8px 11px;font-size:11.5px;line-height:1.6}
+  .tip{margin-top:5px;padding-top:5px;font-size:10px;line-height:1.45}
+  .note{margin-top:10px;font-size:9.5px;line-height:1.55}
+  .refs{margin-top:9px;font-size:9px;line-height:1.55}
+  .foot{margin-top:9px;padding-top:7px;font-size:9px;line-height:1.5}
+  .hint{display:none}
+}
+@media (max-width:640px){
+  body{padding:12px 8px}
+  .sheet{padding:20px 16px 16px}
+  .head h1{font-size:21px}
+  .tab{flex:1 1 calc(50% - 6px);font-size:14px}
+  table.food th,table.food td{padding:8px 9px;font-size:13.5px}
+  table.food td.cat{width:auto}
+}
+</style></head><body>
+
+<div class="tabs no-print" id="tabs"></div>
+
+<div class="sheet" id="sheet">
+  <div class="head">
+    <div class="kick" id="kick"></div>
+    <h1 id="h1"></h1>
+    <div class="org" id="org"></div>
+  </div>
+  <div class="intro" id="intro"></div>
+  <div class="wrap"><table class="food">
+    <thead><tr><th id="th0"></th><th class="y" id="th1"></th><th class="n" id="th2"></th></tr></thead>
+    <tbody id="rows"></tbody>
+  </table></div>
+  <div class="note" id="note"></div>
+  <div class="refs" id="refs"></div>
+  <div class="foot">
+    高雄醫學大學附設中和紀念醫院　內分泌新陳代謝內科病房／營養部　｜
+    <b>本單張為一般性衛教，不取代醫師對您個別狀況的判斷</b>　｜　工具版本：2026-09-03
+  </div>
+</div>
+
+<div class="hint no-print" id="hint"></div>
+
+<div class="bar no-print">
+  <button onclick="window.print()">🖨 列印目前語言 / 存 PDF（A4）</button>
+</div>
+
+<script>
+/* 內容來源：高雄醫學大學附設醫院 內分泌新陳代謝內科病房／營養部「低碘飲食」單張
+   多語版原則（見 memory: feedback_multilingual_keep_wayfinding_original）：
+   食物名稱屬「病人要拿去對照台灣市售包裝、問店員」的資訊 →
+   外語版一律「外文 + 中文小字對照」，不是純翻譯。 */
+
+const REFS = [
+ 'Low Iodine Diet. 2014. American Thyroid Association. (thyroid.org/low-iodine-diet/)',
+ 'Preparing to Receive Radioactive Iodine. 2014. Clinical Center, National Institutes of Health, USA.',
+ "Low-Iodine Diet. 2015. Thyroid Cancer Survivors' Association. (thyca.org/pap-fol/lowiodinediet/)"];
+
+/* 每項：中文版＝字串；外語版＝[外文, 中文對照] */
+const L = {
+
+'zh-TW':{tab:'🇹🇼 繁體中文',tabsub:'Traditional Chinese',
+ kick:'內分泌新陳代謝科　·　碘-131 治療前準備',
+ h1:'🍚 低碘飲食',
+ org:'高雄醫學大學附設醫院　內分泌新陳代謝內科病房／營養部',
+ intro:'低碘飲食是每天的碘含量<b>低於 50 微克</b>。由於在台灣「加碘鹽」被廣泛使用，<b>鈉不是問題，要避免的是添加的碘</b>——特別是加工食品，應避免食用。',
+ th:['類別','✅ 建議食用','❌ 不建議食用'],
+ cats:[
+  {n:'奶類',y:['無'],
+   n2:['乳製品（牛奶、起司、鮮奶油、優格、奶油、冰淇淋、奶粉、乳清、酪蛋白）','拿鐵咖啡、鮮奶紅茶等含乳品飲料','鮮奶製作的點心、蛋糕、麵包等'],
+   tip:'1 杯牛奶平均含有 115 微克的碘（來源包括牛飼料中的碘，以及清潔乳房與設備的含碘產品）。'},
+  {n:'主食類',y:['白飯、紅豆、綠豆','不含奶類的穀物產品、麥片','去皮馬鈴薯、地瓜、玉米、冬粉等','自製不加碘鹽的吐司麵包或麵條'],
+   n2:['市售麵包、吐司','市售各類糕點、鬆餅、蛋糕、甜點','市售各類餅乾'],
+   tip:'市售烘焙產品多以加碘鹽麵團製作。'},
+  {n:'蔬菜類',y:['新鮮蔬菜和冷凍蔬菜'],
+   n2:['海藻、海帶產品，如鹿角菜膠、洋菜','醃漬蔬菜（泡菜、醬瓜、蘿蔔乾、筍乾、酸菜等）']},
+  {n:'水果類',y:['新鮮水果和果汁'],
+   n2:['醃漬水果乾、蜜餞、芒果青','加鹽番茄汁']},
+  {n:'豆魚蛋肉類',y:['新鮮肉類（豬、牛、羊、雞）','雞蛋蛋白'],
+   n2:['蛋黃、全蛋，或含全蛋的食物','大豆和大豆產品（豆漿、豆腐、素食製品）','海鮮和魚類產品（魚類、貝類、蝦蟹）','加工肉品：臘肉、香腸、鹹豬肉、火腿、培根、熱狗、火鍋料、蟹肉棒、魚漿與蝦漿製品等','市售漢堡排、肉排等（可能含有蛋黃成分）']},
+  {n:'油脂類',y:['一般植物油（含大豆沙拉油）','無鹽和未加工的堅果','少量花生醬（每天少於 2 湯匙）'],
+   n2:['含鹽堅果、堅果醬（含鹽）']},
+  {n:'其他',y:['砂糖、果凍、果醬、蜂蜜、楓糖漿','蘇打水、咖啡、茶、檸檬水、果汁','米漿、椰奶、杏仁茶','純可可粉、純黑巧克力'],
+   n2:['醬油、魚露、沙茶醬等各類醬料','含紅色色素的食品','大多數巧克力（含牛奶成分）','市售維他命或健康食品（含碘）','碘化鹽和海鹽']}],
+ note:'低碘飲食通常於碘-131 治療前 1–2 週開始，實際起訖日期請依醫師指示。飲食期間若有疑問，請與病房護理師或營養師聯繫。',
+ hint:'💡 這份單張有 7 種語言。若您要給外籍看護或家屬看，請切換上方語言頁籤後列印——<b>外語版每一項都會附上中文對照</b>，方便他們在超市對照包裝上的字，或拿給店員看。'},
+
+'en':{tab:'🇬🇧 English',tabsub:'English',
+ kick:'Endocrinology & Metabolism　·　Preparing for Iodine-131',
+ h1:'🍚 Low-Iodine Diet',
+ org:'Kaohsiung Medical University Hospital — Endocrinology & Metabolism Ward / Nutrition Department',
+ intro:'A low-iodine diet keeps daily iodine intake <b>below 50 micrograms</b>. Because iodized salt is widely used in Taiwan, <b>sodium is not the concern — added iodine is</b>. Processed foods in particular should be avoided.',
+ th:['Category','✅ Allowed','❌ Avoid'],
+ cats:[
+  {n:['Dairy','奶類'],y:[['None','無']],
+   n2:[['Dairy products (milk, cheese, cream, yogurt, butter, ice cream, milk powder, whey, casein)','乳製品（牛奶、起司、鮮奶油、優格、奶油、冰淇淋、奶粉、乳清、酪蛋白）'],['Milk-containing drinks such as latte or milk tea','拿鐵咖啡、鮮奶紅茶等含乳品飲料'],['Desserts, cakes and breads made with milk','鮮奶製作的點心、蛋糕、麵包等']],
+   tip:['One cup of milk contains about 115 mcg of iodine (from iodine in cattle feed and from iodine-containing udder/equipment cleaning products).','1 杯牛奶平均含 115 微克碘。']},
+  {n:['Grains & Starches','主食類'],y:[['White rice, red beans, mung beans','白飯、紅豆、綠豆'],['Dairy-free grain products, oatmeal','不含奶類的穀物產品、麥片'],['Peeled potato, sweet potato, corn, mung bean noodles','去皮馬鈴薯、地瓜、玉米、冬粉等'],['Home-made bread or noodles without iodized salt','自製不加碘鹽的吐司麵包或麵條']],
+   n2:[['Commercial bread and toast','市售麵包、吐司'],['Commercial pastries, waffles, cakes, desserts','市售各類糕點、鬆餅、蛋糕、甜點'],['Commercial biscuits and crackers','市售各類餅乾']],
+   tip:['Commercial baked goods are usually made with iodized-salt dough.','市售烘焙產品多以加碘鹽麵團製作。']},
+  {n:['Vegetables','蔬菜類'],y:[['Fresh and frozen vegetables','新鮮蔬菜和冷凍蔬菜']],
+   n2:[['Seaweed and kelp products, e.g. carrageenan, agar','海藻、海帶產品，如鹿角菜膠、洋菜'],['Pickled vegetables (kimchi, pickled cucumber, dried radish, dried bamboo shoot, pickled mustard)','醃漬蔬菜（泡菜、醬瓜、蘿蔔乾、筍乾、酸菜等）']]},
+  {n:['Fruits','水果類'],y:[['Fresh fruit and fruit juice','新鮮水果和果汁']],
+   n2:[['Preserved dried fruit, candied fruit, pickled green mango','醃漬水果乾、蜜餞、芒果青'],['Salted tomato juice','加鹽番茄汁']]},
+  {n:['Protein','豆魚蛋肉類'],y:[['Fresh meat (pork, beef, lamb, chicken)','新鮮肉類（豬、牛、羊、雞）'],['Egg white only','雞蛋蛋白']],
+   n2:[['Egg yolk, whole egg, or foods containing whole egg','蛋黃、全蛋，或含全蛋的食物'],['Soy and soy products (soy milk, tofu, vegetarian products)','大豆和大豆產品（豆漿、豆腐、素食製品）'],['Seafood and fish products (fish, shellfish, shrimp, crab)','海鮮和魚類產品（魚類、貝類、蝦蟹）'],['Processed meats: cured meat, sausage, salted pork, ham, bacon, hot dogs, hot-pot items, imitation crab stick, fish paste and shrimp paste products','加工肉品：臘肉、香腸、鹹豬肉、火腿、培根、熱狗、火鍋料、蟹肉棒、魚漿與蝦漿製品等'],['Commercial hamburger patties and meat patties (may contain egg yolk)','市售漢堡排、肉排等（可能含有蛋黃成分）']]},
+  {n:['Fats & Oils','油脂類'],y:[['Ordinary vegetable oil (including soybean salad oil)','一般植物油（含大豆沙拉油）'],['Unsalted, unprocessed nuts','無鹽和未加工的堅果'],['A small amount of peanut butter (less than 2 tablespoons a day)','少量花生醬（每天少於 2 湯匙）']],
+   n2:[['Salted nuts and salted nut butter','含鹽堅果、堅果醬（含鹽）']]},
+  {n:['Others','其他'],y:[['Sugar, jelly, jam, honey, maple syrup','砂糖、果凍、果醬、蜂蜜、楓糖漿'],['Soda water, coffee, tea, lemonade, fruit juice','蘇打水、咖啡、茶、檸檬水、果汁'],['Rice milk, coconut milk, almond tea','米漿、椰奶、杏仁茶'],['Pure cocoa powder, pure dark chocolate','純可可粉、純黑巧克力']],
+   n2:[['Soy sauce, fish sauce, satay sauce and other sauces','醬油、魚露、沙茶醬等各類醬料'],['Foods containing red food colouring','含紅色色素的食品'],['Most chocolate (contains milk)','大多數巧克力（含牛奶成分）'],['Commercial vitamins or health supplements containing iodine','市售維他命或健康食品（含碘）'],['Iodized salt and sea salt','碘化鹽和海鹽']]}],
+ note:'The low-iodine diet usually starts 1–2 weeks before iodine-131 treatment. Please follow your doctor’s instructions for the exact start and end dates. Contact the ward nurse or dietitian if you have questions.',
+ hint:'💡 Each item shows the Chinese name underneath — you can use it to check product packaging in Taiwanese supermarkets, or show it to shop staff.'},
+
+'id':{tab:'🇮🇩 Bahasa Indonesia',tabsub:'Indonesian',
+ kick:'Endokrinologi & Metabolisme　·　Persiapan Yodium-131',
+ h1:'🍚 Diet Rendah Yodium',
+ org:'Rumah Sakit Universitas Kedokteran Kaohsiung — Bangsal Endokrinologi & Metabolisme / Bagian Gizi',
+ intro:'Diet rendah yodium berarti asupan yodium harian <b>kurang dari 50 mikrogram</b>. Karena garam beryodium banyak dipakai di Taiwan, <b>yang harus dihindari bukan natrium, melainkan yodium tambahan</b> — terutama pada makanan olahan.',
+ th:['Kategori','✅ Boleh','❌ Hindari'],
+ cats:[
+  {n:['Produk Susu','奶類'],y:[['Tidak ada','無']],
+   n2:[['Produk susu (susu, keju, krim, yogurt, mentega, es krim, susu bubuk, whey, kasein)','乳製品（牛奶、起司、鮮奶油、優格、奶油、冰淇淋、奶粉、乳清、酪蛋白）'],['Minuman yang mengandung susu seperti latte atau teh susu','拿鐵咖啡、鮮奶紅茶等含乳品飲料'],['Kue, roti, dan makanan penutup yang dibuat dengan susu','鮮奶製作的點心、蛋糕、麵包等']],
+   tip:['Satu gelas susu rata-rata mengandung 115 mcg yodium.','1 杯牛奶平均含 115 微克碘。']},
+  {n:['Makanan Pokok','主食類'],y:[['Nasi putih, kacang merah, kacang hijau','白飯、紅豆、綠豆'],['Produk biji-bijian tanpa susu, oatmeal','不含奶類的穀物產品、麥片'],['Kentang kupas, ubi, jagung, soun','去皮馬鈴薯、地瓜、玉米、冬粉等'],['Roti atau mi buatan sendiri tanpa garam beryodium','自製不加碘鹽的吐司麵包或麵條']],
+   n2:[['Roti dan roti tawar yang dijual di toko','市售麵包、吐司'],['Kue, wafel, cake, dan makanan penutup yang dijual di toko','市售各類糕點、鬆餅、蛋糕、甜點'],['Biskuit dan kraker yang dijual di toko','市售各類餅乾']],
+   tip:['Produk roti komersial umumnya dibuat dengan adonan bergaram yodium.','市售烘焙產品多以加碘鹽麵團製作。']},
+  {n:['Sayuran','蔬菜類'],y:[['Sayuran segar dan sayuran beku','新鮮蔬菜和冷凍蔬菜']],
+   n2:[['Rumput laut dan produk kelp, misalnya karagenan, agar-agar','海藻、海帶產品，如鹿角菜膠、洋菜'],['Sayuran asin/acar (kimchi, acar timun, lobak kering, rebung kering, sawi asin)','醃漬蔬菜（泡菜、醬瓜、蘿蔔乾、筍乾、酸菜等）']]},
+  {n:['Buah','水果類'],y:[['Buah segar dan jus buah','新鮮水果和果汁']],
+   n2:[['Buah kering yang diawetkan, manisan, mangga muda asin','醃漬水果乾、蜜餞、芒果青'],['Jus tomat bergaram','加鹽番茄汁']]},
+  {n:['Protein','豆魚蛋肉類'],y:[['Daging segar (babi, sapi, kambing, ayam)','新鮮肉類（豬、牛、羊、雞）'],['Putih telur saja','雞蛋蛋白']],
+   n2:[['Kuning telur, telur utuh, atau makanan yang mengandung telur utuh','蛋黃、全蛋，或含全蛋的食物'],['Kedelai dan produk kedelai (susu kedelai, tahu, produk vegetarian)','大豆和大豆產品（豆漿、豆腐、素食製品）'],['Makanan laut dan produk ikan (ikan, kerang, udang, kepiting)','海鮮和魚類產品（魚類、貝類、蝦蟹）'],['Daging olahan: dendeng, sosis, daging babi asin, ham, bacon, hot dog, bahan hot pot, stik kepiting imitasi, produk pasta ikan dan udang','加工肉品：臘肉、香腸、鹹豬肉、火腿、培根、熱狗、火鍋料、蟹肉棒、魚漿與蝦漿製品等'],['Patty burger dan patty daging yang dijual di toko (mungkin mengandung kuning telur)','市售漢堡排、肉排等（可能含有蛋黃成分）']]},
+  {n:['Lemak & Minyak','油脂類'],y:[['Minyak nabati biasa (termasuk minyak kedelai)','一般植物油（含大豆沙拉油）'],['Kacang tanpa garam dan tanpa olahan','無鹽和未加工的堅果'],['Sedikit selai kacang (kurang dari 2 sendok makan per hari)','少量花生醬（每天少於 2 湯匙）']],
+   n2:[['Kacang bergaram dan selai kacang bergaram','含鹽堅果、堅果醬（含鹽）']]},
+  {n:['Lain-lain','其他'],y:[['Gula, jeli, selai, madu, sirup maple','砂糖、果凍、果醬、蜂蜜、楓糖漿'],['Air soda, kopi, teh, air lemon, jus buah','蘇打水、咖啡、茶、檸檬水、果汁'],['Susu beras, santan, teh almond','米漿、椰奶、杏仁茶'],['Bubuk kakao murni, cokelat hitam murni','純可可粉、純黑巧克力']],
+   n2:[['Kecap asin, kecap ikan, saus satay, dan saus lainnya','醬油、魚露、沙茶醬等各類醬料'],['Makanan yang mengandung pewarna merah','含紅色色素的食品'],['Sebagian besar cokelat (mengandung susu)','大多數巧克力（含牛奶成分）'],['Vitamin atau suplemen kesehatan komersial yang mengandung yodium','市售維他命或健康食品（含碘）'],['Garam beryodium dan garam laut','碘化鹽和海鹽']]}],
+ note:'Diet rendah yodium biasanya dimulai 1–2 minggu sebelum terapi yodium-131. Ikuti petunjuk dokter untuk tanggal mulai dan selesai. Hubungi perawat bangsal atau ahli gizi jika ada pertanyaan.',
+ hint:'💡 Setiap item disertai nama dalam bahasa Mandarin di bawahnya — gunakan untuk mencocokkan kemasan produk di supermarket Taiwan, atau tunjukkan kepada petugas toko.'},
+
+'th':{tab:'🇹🇭 ภาษาไทย',tabsub:'Thai',
+ kick:'ต่อมไร้ท่อและเมแทบอลิซึม　·　เตรียมตัวก่อนรับไอโอดีน-131',
+ h1:'🍚 อาหารไอโอดีนต่ำ',
+ org:'โรงพยาบาลมหาวิทยาลัยแพทยศาสตร์เกาสง — หอผู้ป่วยต่อมไร้ท่อและเมแทบอลิซึม / แผนกโภชนาการ',
+ intro:'อาหารไอโอดีนต่ำ คือการรับไอโอดีน<b>น้อยกว่า 50 ไมโครกรัมต่อวัน</b> เนื่องจากไต้หวันใช้เกลือเสริมไอโอดีนอย่างแพร่หลาย <b>สิ่งที่ต้องหลีกเลี่ยงไม่ใช่โซเดียม แต่เป็นไอโอดีนที่เติมเข้าไป</b> โดยเฉพาะในอาหารแปรรูป',
+ th:['หมวด','✅ รับประทานได้','❌ ควรหลีกเลี่ยง'],
+ cats:[
+  {n:['นม','奶類'],y:[['ไม่มี','無']],
+   n2:[['ผลิตภัณฑ์นม (นม ชีส ครีม โยเกิร์ต เนย ไอศกรีม นมผง เวย์ เคซีน)','乳製品（牛奶、起司、鮮奶油、優格、奶油、冰淇淋、奶粉、乳清、酪蛋白）'],['เครื่องดื่มที่มีนม เช่น ลาเต้ ชานม','拿鐵咖啡、鮮奶紅茶等含乳品飲料'],['ขนม เค้ก ขนมปัง ที่ทำจากนมสด','鮮奶製作的點心、蛋糕、麵包等']],
+   tip:['นม 1 แก้ว มีไอโอดีนเฉลี่ย 115 ไมโครกรัม','1 杯牛奶平均含 115 微克碘。']},
+  {n:['อาหารหลัก','主食類'],y:[['ข้าวขาว ถั่วแดง ถั่วเขียว','白飯、紅豆、綠豆'],['ผลิตภัณฑ์ธัญพืชที่ไม่มีนม ข้าวโอ๊ต','不含奶類的穀物產品、麥片'],['มันฝรั่งปอกเปลือก มันเทศ ข้าวโพด วุ้นเส้น','去皮馬鈴薯、地瓜、玉米、冬粉等'],['ขนมปังหรือเส้นที่ทำเองโดยไม่ใช้เกลือเสริมไอโอดีน','自製不加碘鹽的吐司麵包或麵條']],
+   n2:[['ขนมปังและขนมปังแผ่นที่ขายทั่วไป','市售麵包、吐司'],['ขนมอบ วาฟเฟิล เค้ก ของหวานที่ขายทั่วไป','市售各類糕點、鬆餅、蛋糕、甜點'],['คุกกี้และแครกเกอร์ที่ขายทั่วไป','市售各類餅乾']],
+   tip:['ผลิตภัณฑ์เบเกอรี่ทั่วไปมักใช้แป้งที่ผสมเกลือเสริมไอโอดีน','市售烘焙產品多以加碘鹽麵團製作。']},
+  {n:['ผัก','蔬菜類'],y:[['ผักสดและผักแช่แข็ง','新鮮蔬菜和冷凍蔬菜']],
+   n2:[['สาหร่ายและผลิตภัณฑ์จากสาหร่ายทะเล เช่น คาราจีแนน วุ้น','海藻、海帶產品，如鹿角菜膠、洋菜'],['ผักดอง (กิมจิ แตงกวาดอง หัวไชเท้าแห้ง หน่อไม้แห้ง ผักกาดดอง)','醃漬蔬菜（泡菜、醬瓜、蘿蔔乾、筍乾、酸菜等）']]},
+  {n:['ผลไม้','水果類'],y:[['ผลไม้สดและน้ำผลไม้','新鮮水果和果汁']],
+   n2:[['ผลไม้แห้งดอง ผลไม้เชื่อม มะม่วงดอง','醃漬水果乾、蜜餞、芒果青'],['น้ำมะเขือเทศใส่เกลือ','加鹽番茄汁']]},
+  {n:['โปรตีน','豆魚蛋肉類'],y:[['เนื้อสด (หมู วัว แกะ ไก่)','新鮮肉類（豬、牛、羊、雞）'],['ไข่ขาวเท่านั้น','雞蛋蛋白']],
+   n2:[['ไข่แดง ไข่ทั้งฟอง หรืออาหารที่มีไข่ทั้งฟอง','蛋黃、全蛋，或含全蛋的食物'],['ถั่วเหลืองและผลิตภัณฑ์จากถั่วเหลือง (น้ำเต้าหู้ เต้าหู้ อาหารเจ)','大豆和大豆產品（豆漿、豆腐、素食製品）'],['อาหารทะเลและผลิตภัณฑ์จากปลา (ปลา หอย กุ้ง ปู)','海鮮和魚類產品（魚類、貝類、蝦蟹）'],['เนื้อแปรรูป: เนื้อเค็ม ไส้กรอก หมูเค็ม แฮม เบคอน ฮอทดอก ของใส่หม้อไฟ ปูอัด ผลิตภัณฑ์ลูกชิ้นปลาและกุ้ง','加工肉品：臘肉、香腸、鹹豬肉、火腿、培根、熱狗、火鍋料、蟹肉棒、魚漿與蝦漿製品等'],['เนื้อบดสำเร็จรูป เบอร์เกอร์ที่ขายทั่วไป (อาจมีไข่แดง)','市售漢堡排、肉排等（可能含有蛋黃成分）']]},
+  {n:['ไขมันและน้ำมัน','油脂類'],y:[['น้ำมันพืชทั่วไป (รวมน้ำมันถั่วเหลือง)','一般植物油（含大豆沙拉油）'],['ถั่วที่ไม่ใส่เกลือและไม่ผ่านการแปรรูป','無鹽和未加工的堅果'],['เนยถั่วปริมาณน้อย (น้อยกว่า 2 ช้อนโต๊ะต่อวัน)','少量花生醬（每天少於 2 湯匙）']],
+   n2:[['ถั่วใส่เกลือ และเนยถั่วที่ใส่เกลือ','含鹽堅果、堅果醬（含鹽）']]},
+  {n:['อื่น ๆ','其他'],y:[['น้ำตาล เยลลี่ แยม น้ำผึ้ง เมเปิลไซรัป','砂糖、果凍、果醬、蜂蜜、楓糖漿'],['น้ำโซดา กาแฟ ชา น้ำมะนาว น้ำผลไม้','蘇打水、咖啡、茶、檸檬水、果汁'],['น้ำนมข้าว กะทิ น้ำอัลมอนด์','米漿、椰奶、杏仁茶'],['ผงโกโก้แท้ ดาร์กช็อกโกแลตแท้','純可可粉、純黑巧克力']],
+   n2:[['ซีอิ๊ว น้ำปลา ซอสสะเต๊ะ และซอสต่าง ๆ','醬油、魚露、沙茶醬等各類醬料'],['อาหารที่มีสีผสมอาหารสีแดง','含紅色色素的食品'],['ช็อกโกแลตส่วนใหญ่ (มีนมผสม)','大多數巧克力（含牛奶成分）'],['วิตามินหรืออาหารเสริมที่มีไอโอดีน','市售維他命或健康食品（含碘）'],['เกลือเสริมไอโอดีนและเกลือทะเล','碘化鹽和海鹽']]}],
+ note:'อาหารไอโอดีนต่ำมักเริ่ม 1–2 สัปดาห์ก่อนการรักษาด้วยไอโอดีน-131 กรุณาปฏิบัติตามคำแนะนำของแพทย์สำหรับวันเริ่มและวันสิ้นสุด หากมีข้อสงสัยกรุณาติดต่อพยาบาลประจำหอผู้ป่วยหรือนักโภชนาการ',
+ hint:'💡 ทุกรายการมีชื่อภาษาจีนกำกับด้านล่าง — ใช้เทียบกับฉลากสินค้าในซูเปอร์มาร์เก็ตไต้หวัน หรือแสดงให้พนักงานร้านดูได้'},
+
+'tl':{tab:'🇵🇭 Filipino',tabsub:'Filipino / Tagalog',
+ kick:'Endocrinology at Metabolism　·　Paghahanda para sa Iodine-131',
+ h1:'🍚 Low-Iodine Diet (Mababang Yodo)',
+ org:'Kaohsiung Medical University Hospital — Endocrinology & Metabolism Ward / Nutrition Department',
+ intro:'Ang low-iodine diet ay pagkain na may <b>mas mababa sa 50 microgram na yodo bawat araw</b>. Dahil laganap ang iodized salt sa Taiwan, <b>hindi sodium ang iniiwasan kundi ang dagdag na yodo</b> — lalo na sa mga processed na pagkain.',
+ th:['Kategorya','✅ Pwedeng kainin','❌ Iwasan'],
+ cats:[
+  {n:['Gatas at Dairy','奶類'],y:[['Wala','無']],
+   n2:[['Mga produktong gatas (gatas, keso, cream, yogurt, mantikilya, ice cream, powdered milk, whey, casein)','乳製品（牛奶、起司、鮮奶油、優格、奶油、冰淇淋、奶粉、乳清、酪蛋白）'],['Inuming may gatas gaya ng latte o milk tea','拿鐵咖啡、鮮奶紅茶等含乳品飲料'],['Meryenda, cake, tinapay na gawa sa sariwang gatas','鮮奶製作的點心、蛋糕、麵包等']],
+   tip:['Isang basong gatas ay may humigit-kumulang 115 mcg na yodo.','1 杯牛奶平均含 115 微克碘。']},
+  {n:['Pangunahing Pagkain','主食類'],y:[['Puting kanin, red beans, mung beans','白飯、紅豆、綠豆'],['Mga produktong butil na walang gatas, oatmeal','不含奶類的穀物產品、麥片'],['Binalatang patatas, kamote, mais, sotanghon','去皮馬鈴薯、地瓜、玉米、冬粉等'],['Sariling gawang tinapay o noodles na walang iodized salt','自製不加碘鹽的吐司麵包或麵條']],
+   n2:[['Bili nang tinapay at toast','市售麵包、吐司'],['Bili nang pastry, waffle, cake, dessert','市售各類糕點、鬆餅、蛋糕、甜點'],['Bili nang biskwit at crackers','市售各類餅乾']],
+   tip:['Karaniwang gumagamit ng iodized-salt dough ang mga tinapay na binibili sa labas.','市售烘焙產品多以加碘鹽麵團製作。']},
+  {n:['Gulay','蔬菜類'],y:[['Sariwa at frozen na gulay','新鮮蔬菜和冷凍蔬菜']],
+   n2:[['Seaweed at kelp products, hal. carrageenan, agar','海藻、海帶產品，如鹿角菜膠、洋菜'],['Inatsarang gulay (kimchi, atsarang pipino, tuyong labanos, tuyong labong, burong mustasa)','醃漬蔬菜（泡菜、醬瓜、蘿蔔乾、筍乾、酸菜等）']]},
+  {n:['Prutas','水果類'],y:[['Sariwang prutas at fruit juice','新鮮水果和果汁']],
+   n2:[['Preserved na tuyong prutas, kendi-prutas, inatsarang hilaw na mangga','醃漬水果乾、蜜餞、芒果青'],['Tomato juice na may asin','加鹽番茄汁']]},
+  {n:['Protina','豆魚蛋肉類'],y:[['Sariwang karne (baboy, baka, tupa, manok)','新鮮肉類（豬、牛、羊、雞）'],['Puti ng itlog lamang','雞蛋蛋白']],
+   n2:[['Pula ng itlog, buong itlog, o pagkaing may buong itlog','蛋黃、全蛋，或含全蛋的食物'],['Soya at mga produktong soya (soy milk, tokwa, vegetarian products)','大豆和大豆產品（豆漿、豆腐、素食製品）'],['Seafood at isda (isda, shellfish, hipon, alimango)','海鮮和魚類產品（魚類、貝類、蝦蟹）'],['Processed na karne: tapa, sausage, inasnang baboy, ham, bacon, hotdog, hot-pot items, imitation crab stick, fish at shrimp paste','加工肉品：臘肉、香腸、鹹豬肉、火腿、培根、熱狗、火鍋料、蟹肉棒、魚漿與蝦漿製品等'],['Bili nang burger patty at meat patty (maaaring may pula ng itlog)','市售漢堡排、肉排等（可能含有蛋黃成分）']]},
+  {n:['Taba at Langis','油脂類'],y:[['Karaniwang gulay na langis (kasama ang soybean oil)','一般植物油（含大豆沙拉油）'],['Nuts na walang asin at hindi processed','無鹽和未加工的堅果'],['Kaunting peanut butter (mas mababa sa 2 kutsara kada araw)','少量花生醬（每天少於 2 湯匙）']],
+   n2:[['Nuts na may asin at nut butter na may asin','含鹽堅果、堅果醬（含鹽）']]},
+  {n:['Iba pa','其他'],y:[['Asukal, jelly, jam, pulot, maple syrup','砂糖、果凍、果醬、蜂蜜、楓糖漿'],['Soda water, kape, tsaa, lemonada, fruit juice','蘇打水、咖啡、茶、檸檬水、果汁'],['Rice milk, gata ng niyog, almond tea','米漿、椰奶、杏仁茶'],['Purong cocoa powder, purong dark chocolate','純可可粉、純黑巧克力']],
+   n2:[['Toyo, patis, satay sauce at iba pang sarsa','醬油、魚露、沙茶醬等各類醬料'],['Pagkaing may pulang food colouring','含紅色色素的食品'],['Karamihan ng tsokolate (may gatas)','大多數巧克力（含牛奶成分）'],['Bili nang bitamina o supplement na may yodo','市售維他命或健康食品（含碘）'],['Iodized salt at sea salt','碘化鹽和海鹽']]}],
+ note:'Karaniwang nagsisimula ang low-iodine diet 1–2 linggo bago ang iodine-131 treatment. Sundin ang bilin ng doktor para sa eksaktong petsa ng simula at katapusan. Kontakin ang nurse ng ward o dietitian kung may tanong.',
+ hint:'💡 May nakalagay na pangalang Chinese sa ilalim ng bawat item — gamitin ito para itapat sa packaging sa supermarket sa Taiwan, o ipakita sa tindero.'},
+
+'vi':{tab:'🇻🇳 Tiếng Việt',tabsub:'Vietnamese',
+ kick:'Nội tiết & Chuyển hoá　·　Chuẩn bị trước điều trị I-131',
+ h1:'🍚 Chế độ ăn ít i-ốt',
+ org:'Bệnh viện Đại học Y Cao Hùng — Khoa Nội tiết & Chuyển hoá / Khoa Dinh dưỡng',
+ intro:'Chế độ ăn ít i-ốt là mỗi ngày nạp <b>dưới 50 microgam i-ốt</b>. Vì muối i-ốt được dùng phổ biến ở Đài Loan, <b>điều cần tránh không phải natri mà là i-ốt được thêm vào</b> — đặc biệt trong thực phẩm chế biến sẵn.',
+ th:['Nhóm','✅ Nên dùng','❌ Nên tránh'],
+ cats:[
+  {n:['Sữa','奶類'],y:[['Không có','無']],
+   n2:[['Sản phẩm từ sữa (sữa, phô mai, kem tươi, sữa chua, bơ, kem, sữa bột, whey, casein)','乳製品（牛奶、起司、鮮奶油、優格、奶油、冰淇淋、奶粉、乳清、酪蛋白）'],['Đồ uống có sữa như latte, trà sữa','拿鐵咖啡、鮮奶紅茶等含乳品飲料'],['Bánh ngọt, bánh kem, bánh mì làm từ sữa tươi','鮮奶製作的點心、蛋糕、麵包等']],
+   tip:['Một ly sữa chứa trung bình 115 mcg i-ốt.','1 杯牛奶平均含 115 微克碘。']},
+  {n:['Tinh bột','主食類'],y:[['Cơm trắng, đậu đỏ, đậu xanh','白飯、紅豆、綠豆'],['Sản phẩm ngũ cốc không sữa, yến mạch','不含奶類的穀物產品、麥片'],['Khoai tây gọt vỏ, khoai lang, ngô, miến','去皮馬鈴薯、地瓜、玉米、冬粉等'],['Bánh mì hoặc mì tự làm không dùng muối i-ốt','自製不加碘鹽的吐司麵包或麵條']],
+   n2:[['Bánh mì, bánh mì lát bán sẵn','市售麵包、吐司'],['Bánh ngọt, bánh waffle, bánh kem, tráng miệng bán sẵn','市售各類糕點、鬆餅、蛋糕、甜點'],['Bánh quy, bánh cracker bán sẵn','市售各類餅乾']],
+   tip:['Sản phẩm nướng bán sẵn thường dùng bột trộn muối i-ốt.','市售烘焙產品多以加碘鹽麵團製作。']},
+  {n:['Rau','蔬菜類'],y:[['Rau tươi và rau đông lạnh','新鮮蔬菜和冷凍蔬菜']],
+   n2:[['Rong biển và sản phẩm từ tảo bẹ, ví dụ carrageenan, thạch agar','海藻、海帶產品，如鹿角菜膠、洋菜'],['Rau muối chua (kimchi, dưa chuột muối, củ cải khô, măng khô, dưa cải)','醃漬蔬菜（泡菜、醬瓜、蘿蔔乾、筍乾、酸菜等）']]},
+  {n:['Trái cây','水果類'],y:[['Trái cây tươi và nước ép','新鮮水果和果汁']],
+   n2:[['Trái cây sấy tẩm, mứt, xoài ngâm','醃漬水果乾、蜜餞、芒果青'],['Nước ép cà chua có muối','加鹽番茄汁']]},
+  {n:['Đạm','豆魚蛋肉類'],y:[['Thịt tươi (heo, bò, cừu, gà)','新鮮肉類（豬、牛、羊、雞）'],['Chỉ lòng trắng trứng','雞蛋蛋白']],
+   n2:[['Lòng đỏ trứng, trứng nguyên quả, hoặc món có trứng nguyên quả','蛋黃、全蛋，或含全蛋的食物'],['Đậu nành và sản phẩm từ đậu nành (sữa đậu nành, đậu phụ, đồ chay)','大豆和大豆產品（豆漿、豆腐、素食製品）'],['Hải sản và sản phẩm từ cá (cá, sò ốc, tôm, cua)','海鮮和魚類產品（魚類、貝類、蝦蟹）'],['Thịt chế biến: thịt khô, xúc xích, thịt heo muối, giăm bông, thịt xông khói, xúc xích hot dog, đồ lẩu, thanh cua giả, chả cá và chả tôm','加工肉品：臘肉、香腸、鹹豬肉、火腿、培根、熱狗、火鍋料、蟹肉棒、魚漿與蝦漿製品等'],['Miếng bò băm, chả thịt bán sẵn (có thể chứa lòng đỏ trứng)','市售漢堡排、肉排等（可能含有蛋黃成分）']]},
+  {n:['Chất béo','油脂類'],y:[['Dầu thực vật thông thường (kể cả dầu đậu nành)','一般植物油（含大豆沙拉油）'],['Các loại hạt không muối, chưa chế biến','無鹽和未加工的堅果'],['Một ít bơ đậu phộng (dưới 2 thìa canh mỗi ngày)','少量花生醬（每天少於 2 湯匙）']],
+   n2:[['Hạt có muối và bơ hạt có muối','含鹽堅果、堅果醬（含鹽）']]},
+  {n:['Khác','其他'],y:[['Đường, thạch, mứt, mật ong, si-rô phong','砂糖、果凍、果醬、蜂蜜、楓糖漿'],['Nước soda, cà phê, trà, nước chanh, nước ép','蘇打水、咖啡、茶、檸檬水、果汁'],['Sữa gạo, nước cốt dừa, trà hạnh nhân','米漿、椰奶、杏仁茶'],['Bột ca cao nguyên chất, sô-cô-la đen nguyên chất','純可可粉、純黑巧克力']],
+   n2:[['Nước tương, nước mắm, sốt sa tế và các loại sốt khác','醬油、魚露、沙茶醬等各類醬料'],['Thực phẩm có phẩm màu đỏ','含紅色色素的食品'],['Phần lớn sô-cô-la (có sữa)','大多數巧克力（含牛奶成分）'],['Vitamin hoặc thực phẩm chức năng có chứa i-ốt','市售維他命或健康食品（含碘）'],['Muối i-ốt và muối biển','碘化鹽和海鹽']]}],
+ note:'Chế độ ăn ít i-ốt thường bắt đầu 1–2 tuần trước khi điều trị I-131. Vui lòng theo hướng dẫn của bác sĩ về ngày bắt đầu và kết thúc. Liên hệ điều dưỡng khoa hoặc chuyên gia dinh dưỡng nếu có thắc mắc.',
+ hint:'💡 Mỗi mục đều có tên tiếng Trung ở bên dưới — dùng để đối chiếu bao bì sản phẩm ở siêu thị Đài Loan, hoặc đưa cho nhân viên cửa hàng xem.'},
+
+'ms':{tab:'🇲🇾 Bahasa Melayu',tabsub:'Malay',
+ kick:'Endokrinologi & Metabolisme　·　Persediaan sebelum Iodin-131',
+ h1:'🍚 Diet Rendah Iodin',
+ org:'Hospital Universiti Perubatan Kaohsiung — Wad Endokrinologi & Metabolisme / Jabatan Pemakanan',
+ intro:'Diet rendah iodin bermaksud pengambilan iodin harian <b>kurang daripada 50 mikrogram</b>. Oleh sebab garam beriodin digunakan secara meluas di Taiwan, <b>yang perlu dielakkan bukan natrium tetapi iodin tambahan</b> — terutamanya dalam makanan diproses.',
+ th:['Kategori','✅ Boleh dimakan','❌ Elakkan'],
+ cats:[
+  {n:['Susu & Tenusu','奶類'],y:[['Tiada','無']],
+   n2:[['Produk tenusu (susu, keju, krim, yogurt, mentega, ais krim, susu tepung, whey, kasein)','乳製品（牛奶、起司、鮮奶油、優格、奶油、冰淇淋、奶粉、乳清、酪蛋白）'],['Minuman bersusu seperti latte atau teh susu','拿鐵咖啡、鮮奶紅茶等含乳品飲料'],['Kuih, kek, roti yang dibuat daripada susu segar','鮮奶製作的點心、蛋糕、麵包等']],
+   tip:['Satu cawan susu mengandungi purata 115 mcg iodin.','1 杯牛奶平均含 115 微克碘。']},
+  {n:['Makanan Ruji','主食類'],y:[['Nasi putih, kacang merah, kacang hijau','白飯、紅豆、綠豆'],['Produk bijirin tanpa susu, oatmeal','不含奶類的穀物產品、麥片'],['Kentang dikupas, ubi keledek, jagung, sohun','去皮馬鈴薯、地瓜、玉米、冬粉等'],['Roti atau mi buatan sendiri tanpa garam beriodin','自製不加碘鹽的吐司麵包或麵條']],
+   n2:[['Roti dan roti bakar yang dijual di kedai','市售麵包、吐司'],['Pastri, wafel, kek, pencuci mulut yang dijual di kedai','市售各類糕點、鬆餅、蛋糕、甜點'],['Biskut dan keropok yang dijual di kedai','市售各類餅乾']],
+   tip:['Produk bakeri komersial biasanya menggunakan doh bergaram iodin.','市售烘焙產品多以加碘鹽麵團製作。']},
+  {n:['Sayur','蔬菜類'],y:[['Sayur segar dan sayur beku','新鮮蔬菜和冷凍蔬菜']],
+   n2:[['Rumpai laut dan produk kelp, contohnya karagenan, agar-agar','海藻、海帶產品，如鹿角菜膠、洋菜'],['Sayur jeruk (kimchi, timun jeruk, lobak kering, rebung kering, sawi masin)','醃漬蔬菜（泡菜、醬瓜、蘿蔔乾、筍乾、酸菜等）']]},
+  {n:['Buah','水果類'],y:[['Buah segar dan jus buah','新鮮水果和果汁']],
+   n2:[['Buah kering yang diawet, manisan, mangga muda jeruk','醃漬水果乾、蜜餞、芒果青'],['Jus tomato bergaram','加鹽番茄汁']]},
+  {n:['Protein','豆魚蛋肉類'],y:[['Daging segar (khinzir, lembu, kambing, ayam)','新鮮肉類（豬、牛、羊、雞）'],['Putih telur sahaja','雞蛋蛋白']],
+   n2:[['Kuning telur, telur penuh, atau makanan yang mengandungi telur penuh','蛋黃、全蛋，或含全蛋的食物'],['Kacang soya dan produk soya (susu soya, tauhu, produk vegetarian)','大豆和大豆產品（豆漿、豆腐、素食製品）'],['Makanan laut dan produk ikan (ikan, kerang, udang, ketam)','海鮮和魚類產品（魚類、貝類、蝦蟹）'],['Daging diproses: dendeng, sosej, daging masin, ham, bacon, hot dog, bahan stim bur, ketam tiruan, produk pes ikan dan udang','加工肉品：臘肉、香腸、鹹豬肉、火腿、培根、熱狗、火鍋料、蟹肉棒、魚漿與蝦漿製品等'],['Patty burger dan patty daging yang dijual di kedai (mungkin mengandungi kuning telur)','市售漢堡排、肉排等（可能含有蛋黃成分）']]},
+  {n:['Lemak & Minyak','油脂類'],y:[['Minyak sayuran biasa (termasuk minyak soya)','一般植物油（含大豆沙拉油）'],['Kacang tanpa garam dan tidak diproses','無鹽和未加工的堅果'],['Sedikit mentega kacang (kurang daripada 2 sudu besar sehari)','少量花生醬（每天少於 2 湯匙）']],
+   n2:[['Kacang bergaram dan mentega kacang bergaram','含鹽堅果、堅果醬（含鹽）']]},
+  {n:['Lain-lain','其他'],y:[['Gula, jeli, jem, madu, sirap maple','砂糖、果凍、果醬、蜂蜜、楓糖漿'],['Air soda, kopi, teh, air limau, jus buah','蘇打水、咖啡、茶、檸檬水、果汁'],['Susu beras, santan, teh badam','米漿、椰奶、杏仁茶'],['Serbuk koko tulen, coklat gelap tulen','純可可粉、純黑巧克力']],
+   n2:[['Kicap, sos ikan, sos satay dan sos lain','醬油、魚露、沙茶醬等各類醬料'],['Makanan yang mengandungi pewarna merah','含紅色色素的食品'],['Kebanyakan coklat (mengandungi susu)','大多數巧克力（含牛奶成分）'],['Vitamin atau suplemen kesihatan yang mengandungi iodin','市售維他命或健康食品（含碘）'],['Garam beriodin dan garam laut','碘化鹽和海鹽']]}],
+ note:'Diet rendah iodin biasanya bermula 1–2 minggu sebelum rawatan iodin-131. Sila ikut arahan doktor untuk tarikh mula dan tamat. Hubungi jururawat wad atau pakar pemakanan jika ada pertanyaan.',
+ hint:'💡 Setiap item disertakan nama Cina di bawahnya — gunakan untuk memadankan pembungkusan produk di pasar raya Taiwan, atau tunjukkan kepada pekerja kedai.'}
+};
+
+const $ = id => document.getElementById(id);
+const KEYS = Object.keys(L);
+
+/* 項目可能是字串（中文版）或 [外文, 中文對照]（外語版） */
+const item = x => Array.isArray(x) ? `${x[0]}<span class="zh">${x[1]}</span>` : x;
+const cell = arr => `<ul>${arr.map(x => `<li>${item(x)}</li>`).join('')}</ul>`;
+
+function render(k){
+  const d = L[k];
+  document.documentElement.lang = (k === 'zh-TW') ? 'zh-Hant' : k;
+  $('kick').textContent = d.kick;
+  $('h1').textContent   = d.h1;
+  $('org').textContent  = d.org;
+  $('intro').innerHTML  = d.intro;
+  d.th.forEach((t,i) => $('th'+i).textContent = t);
+  $('rows').innerHTML = d.cats.map(c => {
+    const name = Array.isArray(c.n) ? `${c.n[0]}<span class="zh">${c.n[1]}</span>` : c.n;
+    const tip  = c.tip ? `<div class="tip">${item(c.tip)}</div>` : '';
+    return `<tr><td class="cat">${name}</td><td class="y">${cell(c.y)}</td><td class="n">${cell(c.n2)}${tip}</td></tr>`;
+  }).join('');
+  $('note').textContent = d.note;
+  $('refs').innerHTML = `<b>參考資料 / References</b>${REFS.map(r=>`${r}<br>`).join('')}`;
+  $('hint').innerHTML = d.hint;
+  [...$('tabs').children].forEach(t => t.classList.toggle('active', t.dataset.k === k));
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+$('tabs').innerHTML = KEYS.map(k =>
+  `<div class="tab" data-k="${k}">${L[k].tab}<small>${L[k].tabsub}</small></div>`
+).join('');
+[...$('tabs').children].forEach(t => t.onclick = () => {
+  render(t.dataset.k);
+  history.replaceState(null,'', t.dataset.k==='zh-TW' ? location.pathname : location.pathname+'?lang='+t.dataset.k);
+});
+
+/* ?lang=xx 直接開該語言版本——方便把單一語言網址直接傳給外籍看護 */
+const want = new URLSearchParams(location.search).get('lang');
+render(KEYS.includes(want) ? want : 'zh-TW');
+</script>
+</body></html>
