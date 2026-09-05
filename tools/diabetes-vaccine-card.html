@@ -1,0 +1,229 @@
+<!DOCTYPE html><html lang="zh-Hant"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="author" content="盧子文醫師 - Dr. Lu Tz-Wen">
+<meta name="description" content="糖尿病病人疫苗接種紀錄卡產生器。高雄醫學大學附設醫院／高醫岡山醫院內分泌新陳代謝科版本，填入病人資料後可直接列印成 A5 隨身卡，供病人帶回家記錄流感、肺炎鏈球菌、帶狀疱疹、COVID-19、RSV 接種日期。">
+<title>糖尿病疫苗接種紀錄卡 — 產生器</title>
+<style>
+/* ⚠️ CJK 字型排第一：放在西文字型後面，列印時中文會整片消失（clinic_report.py 踩過） */
+:root{
+  --ink:#1b1f1d; --sub:#5a615c; --line:#d9d5cb; --paper:#fbfaf6; --card:#fff;
+  --accent:#1a5c8a; --warn:#b5651d; --bg:#eceae4;
+}
+*{box-sizing:border-box;margin:0;padding:0;
+  font-family:"PingFang TC","Noto Sans TC","Source Han Sans TC","Microsoft JhengHei",
+              -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
+body{background:var(--bg);color:var(--ink);padding:16px 12px;-webkit-font-smoothing:antialiased}
+
+/* ── 操作列（不列印）── */
+.bar{max-width:940px;margin:0 auto 14px;background:var(--card);border:1px solid var(--line);
+     border-radius:10px;padding:14px 16px}
+.bar h1{font-size:19px;font-weight:800;margin-bottom:4px}
+.bar .hint{font-size:13px;color:var(--sub);line-height:1.6}
+.bar .row{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.btn{flex:1 1 130px;padding:11px 14px;border-radius:8px;border:1px solid var(--accent);
+     background:var(--accent);color:#fff;font-size:15px;font-weight:700;cursor:pointer}
+.btn.ghost{background:#fff;color:var(--accent)}
+.btn:active{transform:translateY(1px)}
+
+/* ── 卡片本體 ── */
+.card{max-width:940px;margin:0 auto;background:var(--paper);border:1px solid var(--line);
+      border-radius:10px;padding:22px 24px}
+.head{border-bottom:2px solid var(--accent);padding-bottom:10px;margin-bottom:14px}
+.head h2{font-size:23px;font-weight:900;letter-spacing:.5px}
+.head .org{font-size:12.5px;color:var(--sub);margin-top:4px}
+
+.idbox{border:1.2px solid #444;border-radius:6px;padding:12px 14px;margin-bottom:14px;
+       display:flex;gap:14px;flex-wrap:wrap;align-items:center;background:#fff}
+.idbox label{font-size:14px;font-weight:700;white-space:nowrap}
+.idbox input{border:none;border-bottom:1.2px solid #888;padding:4px 6px;font-size:15px;
+             background:transparent;min-width:0}
+.idbox input:focus{outline:none;border-bottom-color:var(--accent);background:#f4f9ff}
+.f-name{flex:1 1 150px} .f-birth{flex:1 1 190px} .f-chart{flex:1 1 150px}
+
+.why{background:#f2f6fa;border-left:4px solid var(--accent);padding:10px 13px;
+     margin-bottom:9px;font-size:14px;line-height:1.7}
+.why b{display:block;font-size:14.5px;margin-bottom:2px}
+.why.b2{background:#fdf8f3;border-left-color:var(--warn)}
+
+h3{font-size:16px;margin:16px 0 6px;padding-left:8px;border-left:4px solid var(--accent)}
+.lead{font-size:13px;color:var(--sub);margin-bottom:8px}
+
+.wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:620px}
+th,td{border:1px solid #a8a8a8;padding:6px 7px;font-size:14px;vertical-align:middle}
+th{background:#e5edf4;font-size:13px;text-align:center;font-weight:700}
+.vac{width:34%;line-height:1.4}
+.vac b{font-size:15px}
+.vac small{display:block;color:var(--sub);font-size:11.5px;margin-top:2px;line-height:1.4}
+td input{width:100%;border:none;background:transparent;font-size:14px;padding:5px 3px;min-height:30px}
+td input:focus{outline:none;background:#f4f9ff}
+.c-dose{width:12%} .c-date{width:20%} .c-unit{width:17%} .c-sign{width:17%}
+
+.sec{margin-top:16px}
+.sec p{font-size:14px;line-height:1.75;margin-bottom:6px}
+.sec p b{color:var(--warn)}
+.note{background:#fdf6f0;border:1px solid #e3c9ad;padding:9px 12px;font-size:13.5px;
+      border-radius:6px;margin-top:10px}
+.foot{border-top:1px solid #c9c5bb;margin-top:16px;padding-top:9px;
+      display:flex;justify-content:space-between;font-size:12px;color:var(--sub);flex-wrap:wrap;gap:6px}
+
+/* ── 手機 ──（⚠️ media query 必須在基礎規則之後，否則被蓋掉） */
+@media (max-width:480px){
+  body{padding:10px 8px}
+  .card{padding:16px 14px}
+  .head h2{font-size:20px}
+  .idbox{gap:9px}
+  .bar .row{flex-direction:column}
+  .btn{flex:0 0 auto}  /* ⚠️ 直排時 flex-basis 是高度，不歸零按鈕會變 130px 高 */
+}
+
+/* ── 列印：A5 橫式，隱藏所有操作元件 ── */
+@media print{
+  @page{size:210mm 148mm;margin:7mm 8mm}
+  body{background:#fff;padding:0}
+  .bar,.noprint{display:none!important}
+  .card{max-width:none;margin:0;border:none;border-radius:0;padding:0;background:#fff}
+  .head h2{font-size:17pt} .head .org{font-size:8.5pt}
+  .idbox{padding:6px 8px;margin-bottom:7px;font-size:10pt}
+  .idbox input{font-size:10pt;border-bottom-color:#555}
+  .why{font-size:8.8pt;padding:5px 8px;margin-bottom:5px;line-height:1.5}
+  .why b{font-size:9.2pt}
+  h3{font-size:10.5pt;margin:8px 0 3px}
+  .lead{font-size:8pt;margin-bottom:4px}
+  table{min-width:0}
+  th,td{padding:2.6px 4px;font-size:8.6pt}
+  th{font-size:8pt}
+  .vac b{font-size:9pt} .vac small{font-size:7.2pt}
+  td input{font-size:8.6pt;min-height:6mm;padding:1px 2px}  /* 手寫高度，不是視覺留白 */
+  .sec p{font-size:8.6pt;line-height:1.5;margin-bottom:3px}
+  .note{font-size:8.2pt;padding:5px 7px;margin-top:6px}
+  .foot{font-size:7.5pt;margin-top:8px;padding-top:5px}
+  /* placeholder 多數引擎不列印，格式提示已放進表頭；這行是雙保險 */
+  input::placeholder{color:#888;opacity:1}
+  /* 分頁：紀錄表與說明各自完整，不要被切斷 */
+  .pbreak{page-break-before:always}
+  table{page-break-inside:auto} tr{page-break-inside:avoid}
+}
+</style></head>
+<body>
+
+<!-- ══ 操作列（不列印）══ -->
+<div class="bar noprint">
+  <h1>糖尿病疫苗接種紀錄卡 — 產生器</h1>
+  <p class="hint">
+    填好病人資料後按「列印」，印出來是 <b>A5 橫式</b>的隨身卡，可讓病人帶回家記錄。<br>
+    表格裡的每一格都能直接打字（也可以留白讓病人手寫）。輸入內容會暫存在這台電腦的瀏覽器，
+    下一位病人按「清空重填」即可。
+  </p>
+  <div class="row">
+    <button class="btn" onclick="window.print()">🖨 列印（A5 橫式）</button>
+    <button class="btn ghost" onclick="clearAll()">清空重填</button>
+    <button class="btn ghost" onclick="saveNow(true)">儲存目前內容</button>
+  </div>
+</div>
+
+<!-- ══ 卡片 ══ -->
+<div class="card" id="card">
+  <div class="head">
+    <h2>糖尿病　疫苗接種紀錄卡</h2>
+    <div class="org">高雄醫學大學附設中和紀念醫院／高醫岡山醫院　內分泌新陳代謝科</div>
+  </div>
+
+  <div class="idbox">
+    <span class="f-name"><label>姓名</label> <input data-k="name" placeholder="　"></span>
+    <span class="f-birth"><label>出生（年／月／日）</label> <input data-k="birth" placeholder="　年　月　日"></span>
+    <span class="f-chart"><label>病歷號</label> <input data-k="chart" placeholder="　"></span>
+  </div>
+
+  <div class="why">
+    <b>為什麼糖尿病要打疫苗</b>
+    血糖控制不好時，身體對抗感染的能力會變差。接種疫苗可以減少感染、住院和重症的機會。
+  </div>
+  <div class="why b2">
+    <b>這張卡怎麼用</b>
+    打完一支就請診所或醫院填一列，回診時帶著給醫師看。
+  </div>
+
+  <h3 class="pbreak">接種紀錄</h3>
+  <p class="lead">打完一支請填一列，回診時帶著給醫師看。</p>
+  <div class="wrap">
+  <table>
+    <thead>
+    <tr><th>疫苗</th><th>劑次／年度</th><th>接種日期<br><span style="font-weight:400;font-size:.85em">（年／月／日）</span></th><th>接種單位</th><th>醫師／護理師簽章</th></tr>
+    </thead>
+
+    <tr><td class="vac" rowspan="4"><b>流感</b><small>每年一次</small></td>
+      <td class="c-dose"><input data-k="flu1d"></td><td class="c-date"><input data-k="flu1t" placeholder="　年　月　日"></td><td class="c-unit"><input data-k="flu1u"></td><td class="c-sign"><input data-k="flu1s"></td></tr>
+    <tr><td><input data-k="flu2d"></td><td><input data-k="flu2t" placeholder="　年　月　日"></td><td><input data-k="flu2u"></td><td><input data-k="flu2s"></td></tr>
+    <tr><td><input data-k="flu3d"></td><td><input data-k="flu3t" placeholder="　年　月　日"></td><td><input data-k="flu3u"></td><td><input data-k="flu3s"></td></tr>
+    <tr><td><input data-k="flu4d"></td><td><input data-k="flu4t" placeholder="　年　月　日"></td><td><input data-k="flu4u"></td><td><input data-k="flu4s"></td></tr>
+
+    <tr><td class="vac" rowspan="2"><b>肺炎鏈球菌</b><small>若需第二劑，與前一劑至少隔一年</small></td>
+      <td><input data-k="pn1d"></td><td><input data-k="pn1t" placeholder="　年　月　日"></td><td><input data-k="pn1u"></td><td><input data-k="pn1s"></td></tr>
+    <tr><td><input data-k="pn2d"></td><td><input data-k="pn2t" placeholder="　年　月　日"></td><td><input data-k="pn2u"></td><td><input data-k="pn2s"></td></tr>
+
+    <tr><td class="vac" rowspan="2"><b>帶狀疱疹（皮蛇）</b><small>50 歲以上建議；未滿 50 歲若已有腎臟或血管併發症也請問醫師</small></td>
+      <td><input data-k="hz1d" value="第 1 劑"></td><td><input data-k="hz1t" placeholder="　年　月　日"></td><td><input data-k="hz1u"></td><td><input data-k="hz1s"></td></tr>
+    <tr><td><input data-k="hz2d" value="第 2 劑"></td><td><input data-k="hz2t" placeholder="　年　月　日"></td><td><input data-k="hz2u"></td><td><input data-k="hz2s"></td></tr>
+
+    <tr><td class="vac" rowspan="3"><b>COVID-19</b><small>與一般民眾相同</small></td>
+      <td><input data-k="cv1d"></td><td><input data-k="cv1t" placeholder="　年　月　日"></td><td><input data-k="cv1u"></td><td><input data-k="cv1s"></td></tr>
+    <tr><td><input data-k="cv2d"></td><td><input data-k="cv2t" placeholder="　年　月　日"></td><td><input data-k="cv2u"></td><td><input data-k="cv2s"></td></tr>
+    <tr><td><input data-k="cv3d"></td><td><input data-k="cv3t" placeholder="　年　月　日"></td><td><input data-k="cv3u"></td><td><input data-k="cv3s"></td></tr>
+
+    <tr><td class="vac"><b>RSV</b><small>單劑，請與醫師討論</small></td>
+      <td><input data-k="rsvd"></td><td><input data-k="rsvt" placeholder="　年　月　日"></td><td><input data-k="rsvu"></td><td><input data-k="rsvs"></td></tr>
+  </table>
+  </div>
+
+  <div class="sec pbreak">
+    <h3>打針前請先告訴醫師</h3>
+    <p><b>這些情況要先暫緩</b>：正在發燒、感冒或有其他急性感染；血糖突然變化很大而且有高血糖的症狀。等狀況穩定再打。</p>
+    <p><b>也請告訴醫師</b>：以前打疫苗有沒有過敏或不舒服、目前有沒有在用免疫抑制劑或類固醇、有沒有懷孕。</p>
+  </div>
+
+  <div class="sec">
+    <h3>費用怎麼算</h3>
+    <p><b>流感與 COVID-19</b>　依疾病管制署當年度的公費規定，符合資格可免費，請洽衛教室或掛號櫃檯。</p>
+    <p><b>帶狀疱疹、肺炎鏈球菌、RSV</b>　目前為自費。<b>金額請洽繳費櫃檯或衛教室</b>——疫苗價格會調整，這張卡您會帶在身上很久，所以不印金額，以免拿到過期的數字。</p>
+    <div class="note">⚠️ 各院區供應的品項可能不同，實際請洽該院區藥局。</div>
+  </div>
+
+  <div class="foot">
+    <span>內分泌新陳代謝科　衛教諮詢</span>
+    <span>工具版本：2026-09-05</span>
+  </div>
+</div>
+
+<script>
+// 暫存：只存在這台電腦的瀏覽器，不上傳任何地方。
+// ⚠️ 私密瀏覽或清除網站資料時會取不到，所有讀寫都要能在失敗時照常運作。
+var KEY = 'kmuh_vaccine_card_v1';
+function fields(){ return Array.prototype.slice.call(document.querySelectorAll('[data-k]')); }
+
+function saveNow(tell){
+  try{
+    var o = {};
+    fields().forEach(function(el){ o[el.dataset.k] = el.value; });
+    localStorage.setItem(KEY, JSON.stringify(o));
+    if (tell) alert('已暫存在這台電腦的瀏覽器。');
+  }catch(e){ if (tell) alert('這個瀏覽器不允許暫存（例如無痕模式），但列印不受影響。'); }
+}
+function load(){
+  try{
+    var raw = localStorage.getItem(KEY); if(!raw) return;
+    var o = JSON.parse(raw);
+    fields().forEach(function(el){ if(o[el.dataset.k] !== undefined) el.value = o[el.dataset.k]; });
+  }catch(e){ /* 取不到就用預設值，不影響使用 */ }
+}
+function clearAll(){
+  if(!confirm('清空所有欄位，換下一位病人？')) return;
+  fields().forEach(function(el){
+    el.value = (el.dataset.k === 'hz1d') ? '第 1 劑' : (el.dataset.k === 'hz2d') ? '第 2 劑' : '';
+  });
+  try{ localStorage.removeItem(KEY); }catch(e){}
+}
+document.addEventListener('input', function(e){ if(e.target.dataset && e.target.dataset.k) saveNow(false); });
+load();
+</script>
+</body></html>
