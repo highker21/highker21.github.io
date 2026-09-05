@@ -39,6 +39,11 @@ body{background:var(--bg);color:var(--ink);padding:16px 12px;-webkit-font-smooth
              background:transparent;min-width:0}
 .idbox input:focus{outline:none;border-bottom-color:var(--accent);background:#f4f9ff}
 .f-name{flex:1 1 150px} .f-birth{flex:1 1 190px} .f-chart{flex:1 1 150px}
+.f-bc{flex:0 0 auto;display:none}          /* 沒有病歷號就整塊不出現，不印空條碼 */
+.f-bc.on{display:block}
+#bc svg{display:block}
+#bc .bcnum{font-size:10px;letter-spacing:1.5px;text-align:center;color:#333;margin-top:1px;
+           font-family:ui-monospace,Menlo,Consolas,monospace}
 
 .why{background:#f2f6fa;border-left:4px solid var(--accent);padding:10px 13px;
      margin-bottom:9px;font-size:14px;line-height:1.7}
@@ -79,21 +84,25 @@ td input:focus{outline:none;background:#f4f9ff}
 
 /* ── 列印：A5 橫式，隱藏所有操作元件 ── */
 @media print{
-  @page{size:210mm 148mm;margin:7mm 8mm}
+  @page{size:210mm 148mm;margin:6mm 8mm}
   body{background:#fff;padding:0}
   .bar,.noprint{display:none!important}
   .card{max-width:none;margin:0;border:none;border-radius:0;padding:0;background:#fff}
-  .head h2{font-size:17pt} .head .org{font-size:8.5pt}
-  .idbox{padding:6px 8px;margin-bottom:7px;font-size:10pt}
+  .head h2{font-size:14pt} .head .org{font-size:8pt}
+  .head{padding-bottom:3px;margin-bottom:4px}
+  .idbox{padding:3px 7px;margin-bottom:3px;font-size:9.5pt;gap:8px}
   .idbox input{font-size:10pt;border-bottom-color:#555}
   .why{font-size:8.8pt;padding:5px 8px;margin-bottom:5px;line-height:1.5}
   .why b{font-size:9.2pt}
-  h3{font-size:10.5pt;margin:8px 0 3px}
-  .lead{font-size:8pt;margin-bottom:4px}
+  h3{font-size:10pt;margin:4px 0 2px}
+  .lead{font-size:7.6pt;margin-bottom:2px}
   table{min-width:0}
-  th,td{padding:2.6px 4px;font-size:8.6pt}
+  th,td{padding:1.2px 4px;font-size:8.6pt}
   th{font-size:8pt}
-  .vac b{font-size:9pt} .vac small{font-size:7.2pt}
+  .vac b{font-size:9pt} .vac small{font-size:7pt;line-height:1.2;margin-top:0}
+  .vac{width:40%}                      /* 加寬：疫苗欄少換一行，整表就少一列的高度 */
+  .f-bc svg{height:8mm!important}      /* 條碼 8mm 仍在可刷範圍，換第一頁多一列 */
+  #bc .bcnum{font-size:8px;margin-top:0}
   td input{font-size:8.6pt;min-height:6mm;padding:1px 2px}  /* 手寫高度，不是視覺留白 */
   .sec p{font-size:8.6pt;line-height:1.5;margin-bottom:3px}
   .note{font-size:8.2pt;padding:5px 7px;margin-top:6px}
@@ -133,18 +142,10 @@ td input:focus{outline:none;background:#f4f9ff}
     <span class="f-name"><label>姓名</label> <input data-k="name" placeholder="　"></span>
     <span class="f-birth"><label>出生（年／月／日）</label> <input data-k="birth" placeholder="　年　月　日"></span>
     <span class="f-chart"><label>病歷號</label> <input data-k="chart" placeholder="　"></span>
+    <span class="f-bc"><span id="bc"></span></span>
   </div>
 
-  <div class="why">
-    <b>為什麼糖尿病要打疫苗</b>
-    血糖控制不好時，身體對抗感染的能力會變差。接種疫苗可以減少感染、住院和重症的機會。
-  </div>
-  <div class="why b2">
-    <b>這張卡怎麼用</b>
-    打完一支就請診所或醫院填一列，回診時帶著給醫師看。
-  </div>
-
-  <h3 class="pbreak">接種紀錄</h3>
+  <h3>接種紀錄</h3>
   <p class="lead">打完一支請填一列，回診時帶著給醫師看。</p>
   <div class="wrap">
   <table>
@@ -176,7 +177,16 @@ td input:focus{outline:none;background:#f4f9ff}
   </table>
   </div>
 
-  <div class="sec pbreak">
+  <div class="why pbreak">
+    <b>為什麼糖尿病要打疫苗</b>
+    血糖控制不好時，身體對抗感染的能力會變差。接種疫苗可以減少感染、住院和重症的機會。
+  </div>
+  <div class="why b2">
+    <b>這張卡怎麼用</b>
+    打完一支就請診所或醫院填一列，回診時帶著給醫師看。
+  </div>
+
+  <div class="sec">
     <h3>打針前請先告訴醫師</h3>
     <p><b>這些情況要先暫緩</b>：正在發燒、感冒或有其他急性感染；血糖突然變化很大而且有高血糖的症狀。等狀況穩定再打。</p>
     <p><b>也請告訴醫師</b>：以前打疫苗有沒有過敏或不舒服、目前有沒有在用免疫抑制劑或類固醇、有沒有懷孕。</p>
@@ -198,6 +208,75 @@ td input:focus{outline:none;background:#f4f9ff}
 <script>
 // 暫存：只存在這台電腦的瀏覽器，不上傳任何地方。
 // ⚠️ 私密瀏覽或清除網站資料時會取不到，所有讀寫都要能在失敗時照常運作。
+// ══ Code 128 條碼（純自寫、不掛任何 CDN——診間電腦可能離線或擋外網）══
+// 產出 SVG 向量圖：印出來不會糊，掃描器才刷得動。
+var C128 = ("212222 222122 222221 121223 121322 131222 122213 122312 132212 221213 "+
+"221312 231212 112232 122132 122231 113222 123122 123221 223211 221132 "+
+"221231 213212 223112 312131 311222 321122 321221 312212 322112 322211 "+
+"212123 212321 232121 111323 131123 131321 112313 132113 132311 211313 "+
+"231113 231311 112133 112331 132131 113123 113321 133121 313121 211331 "+
+"231131 213113 213311 213131 311123 311321 331121 312113 312311 332111 "+
+"314111 221411 431111 111224 111422 121124 121421 141122 141221 112214 "+
+"112412 122114 122411 142112 142211 241211 221114 413111 241112 134111 "+
+"111242 121142 121241 114212 124112 124211 411212 421112 421211 212141 "+
+"214121 412121 111143 111341 131141 114113 114311 411113 411311 113141 "+
+"114131 311141 411131 211412 211214 211232 2331112").split(/\s+/);
+
+// 全數字且偶數長度 → 用 Code C（兩位一碼，寬度減半）；其餘一律 Code B（可含英文字母）
+function c128values(t){
+  var v=[], i;
+  if(/^\d+$/.test(t) && t.length%2===0){
+    v.push(105);                                   // Start C
+    for(i=0;i<t.length;i+=2) v.push(parseInt(t.substr(i,2),10));
+  }else{
+    v.push(104);                                   // Start B
+    for(i=0;i<t.length;i++){
+      var c=t.charCodeAt(i);
+      if(c<32||c>126) return null;                 // 不可編碼的字元就不畫
+      v.push(c-32);
+    }
+  }
+  var sum=v[0];
+  for(i=1;i<v.length;i++) sum += i*v[i];
+  v.push(sum%103);                                 // 檢查碼
+  v.push(106);                                     // Stop
+  return v;
+}
+
+function c128svg(text, opt){
+  opt = opt || {};
+  var mm   = opt.mm   || 0.33;   // 單位模組寬(mm)。0.25mm 是一般掃描器下限，0.33 留餘裕
+  var hmm  = opt.hmm  || 9;      // 條高(mm)
+  var quiet= 10;                 // ⚠️ 靜空區：兩端各留 10 模組，太窄會刷不到
+  var vals = c128values(text);
+  if(!vals) return null;
+  var bars=[], x=quiet, total;
+  vals.forEach(function(v){
+    var pat=C128[v], dark=true;
+    for(var i=0;i<pat.length;i++){
+      var w=parseInt(pat[i],10);
+      if(dark) bars.push([x,w]);
+      x+=w; dark=!dark;
+    }
+  });
+  total = x + quiet;
+  var svg='<svg xmlns="http://www.w3.org/2000/svg" width="'+(total*mm).toFixed(2)+'mm" height="'+hmm+'mm" '+
+          'viewBox="0 0 '+total+' 100" preserveAspectRatio="none" shape-rendering="crispEdges">'+
+          '<rect width="'+total+'" height="100" fill="#fff"/>';
+  bars.forEach(function(b){ svg+='<rect x="'+b[0]+'" y="0" width="'+b[1]+'" height="100" fill="#000"/>'; });
+  return svg+'</svg>';
+}
+
+function drawBarcode(){
+  var el=document.getElementById('bc'), box=document.querySelector('.f-bc');
+  if(!el||!box) return;
+  var t=(document.querySelector('[data-k="chart"]').value||'').trim();
+  var svg = t ? c128svg(t) : null;
+  if(!svg){ el.innerHTML=''; box.classList.remove('on'); return; }   // 空值或無法編碼 → 不畫
+  el.innerHTML = svg + '<div class="bcnum">'+t.replace(/[<&]/g,'')+'</div>';
+  box.classList.add('on');
+}
+
 var KEY = 'kmuh_vaccine_card_v1';
 function fields(){ return Array.prototype.slice.call(document.querySelectorAll('[data-k]')); }
 
@@ -222,8 +301,12 @@ function clearAll(){
     el.value = (el.dataset.k === 'hz1d') ? '第 1 劑' : (el.dataset.k === 'hz2d') ? '第 2 劑' : '';
   });
   try{ localStorage.removeItem(KEY); }catch(e){}
+  drawBarcode();      // 清空後條碼要跟著消失，不能留上一位病人的
 }
-document.addEventListener('input', function(e){ if(e.target.dataset && e.target.dataset.k) saveNow(false); });
+document.addEventListener('input', function(e){
+  if(e.target.dataset && e.target.dataset.k){ saveNow(false); if(e.target.dataset.k==='chart') drawBarcode(); }
+});
 load();
+drawBarcode();
 </script>
 </body></html>
