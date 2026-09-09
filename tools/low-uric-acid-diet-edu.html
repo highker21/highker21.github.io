@@ -1,0 +1,130 @@
+<!DOCTYPE html><html lang="zh-Hant"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="author" content="盧子文醫師 - Dr. Lu Tz-Wen">
+<meta name="description" content="低尿酸（痛風）飲食衛教圖卡（實證版）。依 2022 台灣痛風與高尿酸血症診治指引、2020 ACR 痛風指引整理：酒精與果糖比海鮮更關鍵、植物性普林不用怕，附食物紅綠燈與常見迷思，可列印 A4。">
+<title>低尿酸（痛風）飲食 · 衛教圖卡（實證版）</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+:root{--ink:#1b1f1d;--sub:#5f655f;--line:#e6e2d8;--accent:#6b4c9a;--hot:#c0562c;--paper:#faf8f2;--card:#fff;--faint:#9a978c;--ok:#27ae60;--mod:#e67e22;--warn:#c0392b;}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#eceae2;font-family:"PingFang TC","Noto Sans TC","Microsoft JhengHei",sans-serif;color:var(--ink);padding:20px 12px;-webkit-font-smoothing:antialiased}
+.tabs{max-width:900px;margin:0 auto 14px;display:flex;gap:8px}
+.tab{flex:1;text-align:center;padding:12px 6px;border-radius:10px;border:1px solid var(--line);background:#fff;cursor:pointer;font-weight:800;color:var(--sub);font-size:15px}
+.tab small{display:block;font-weight:500;font-size:11px;color:var(--faint);margin-top:2px}
+.tab.active{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.tab.active small{color:#c9b8e8}
+.sheet{max-width:900px;margin:0 auto;background:var(--paper);padding:40px 38px 26px}
+.head{text-align:center;border-bottom:2px solid var(--ink);padding-bottom:15px;margin-bottom:4px}
+.kick{font-size:12px;letter-spacing:.34em;color:var(--accent);font-weight:800;margin-bottom:9px}
+.head h1{font-size:31px;font-weight:900;letter-spacing:-.01em;line-height:1.1}
+.head .zh{font-size:14px;color:var(--sub);margin-top:6px;letter-spacing:.04em}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px}
+.c{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px 15px;display:flex;flex-direction:column;align-items:center;text-align:center;justify-content:flex-start;min-height:168px;position:relative}
+.c .n{position:absolute;top:10px;left:14px;font-size:14px;font-weight:900;color:#cfcabb}
+.c i{font-size:33px;color:var(--accent);margin:10px 0 12px}
+.c.hot i{color:var(--hot)}
+.c .t{font-size:15.5px;font-weight:800;line-height:1.45}
+.c .t b{color:var(--hot)} .c .t .a{color:var(--accent)}
+.c .w{display:block;margin-top:6px;font-size:12.5px;font-weight:500;color:var(--sub);line-height:1.55}
+.c.lead{grid-column:span 3;flex-direction:row;gap:18px;justify-content:flex-start;text-align:left;min-height:auto;background:var(--ink);border:none}
+.c.lead i{color:var(--paper);font-size:28px;margin:0;flex:0 0 auto}
+.c.lead .t{color:var(--paper);font-size:16px;font-weight:600;line-height:1.6}
+.c.lead .t b{color:#c9b8e8}
+table.food{width:100%;border-collapse:collapse;margin-top:16px;font-size:14px;background:#fff;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+table.food th,table.food td{border-bottom:1px solid var(--line);padding:10px 10px;text-align:left;vertical-align:top;line-height:1.6}
+table.food th{background:var(--paper);font-weight:800;color:var(--sub);font-size:13px}
+table.food td.g{color:var(--ok);font-weight:800;white-space:nowrap}
+table.food td.y{color:var(--mod);font-weight:800;white-space:nowrap}
+table.food td.r{color:var(--warn);font-weight:800;white-space:nowrap}
+.myth{margin-top:16px;background:#fff;border:1px solid var(--line);border-radius:12px;padding:16px 18px}
+.myth h3{font-size:16px;color:var(--accent);margin-bottom:10px;border-left:4px solid var(--accent);padding-left:10px}
+.myth table{width:100%;border-collapse:collapse;font-size:14px}
+.myth th,.myth td{border-bottom:1px solid var(--line);padding:9px 8px;text-align:left;vertical-align:top;line-height:1.65}
+.myth th{background:var(--paper);font-weight:800;color:var(--sub);font-size:13px}
+.myth td.x{color:var(--warn);font-weight:700;white-space:nowrap}
+.note{margin-top:14px;font-size:12.5px;color:var(--sub);line-height:1.7}
+.foot{margin-top:15px;text-align:center;font-size:11px;color:var(--faint);line-height:1.7;border-top:1px solid var(--line);padding-top:11px}
+.foot b{color:var(--sub)}
+.bar{text-align:center;margin:16px 0}
+.bar button{background:var(--ink);color:var(--paper);border:0;padding:11px 24px;font-size:15px;font-weight:700;border-radius:6px;cursor:pointer}
+@media print{@page{size:A4 portrait;margin:8mm}body{background:#fff;padding:0}.tabs,.no-print{display:none!important}.sheet{max-width:100%;padding:4mm}.c,tr{break-inside:avoid}}
+@media(max-width:640px){.grid{grid-template-columns:repeat(2,1fr)}.c.lead{grid-column:span 2}.tabs{flex-wrap:wrap}.tab{min-width:30%}}
+@media(max-width:420px){.grid{grid-template-columns:1fr}.c.lead{grid-column:span 1;flex-direction:column;text-align:center}}
+</style></head><body>
+<div class="tabs no-print">
+  <div class="tab active" data-v="core" onclick="setV('core')">九招圖卡<small>先抓最有影響的</small></div>
+  <div class="tab" data-v="food" onclick="setV('food')">食物紅綠燈<small>可以吃 / 適量 / 少碰</small></div>
+  <div class="tab" data-v="myth" onclick="setV('myth')">常見迷思<small>豆腐可以吃</small></div>
+</div>
+<div class="sheet" id="sheet">
+  <div class="head">
+    <div class="kick">內分泌新陳代謝科　·　飲食衛教</div>
+    <h1 id="h1">低尿酸（痛風）飲食</h1>
+    <div class="zh" id="zh"></div>
+  </div>
+  <div id="body"></div>
+  <div class="note" id="note"></div>
+  <div class="foot">高醫岡山醫院　內分泌新陳代謝科　盧子文醫師　｜　<b>本圖卡僅供衛教，用藥與目標值以醫師判斷為準</b>　｜　依 2022 台灣痛風與高尿酸血症診治指引、2020 ACR 痛風指引整理　｜　工具版本：2026-09-09</div>
+</div>
+<div class="bar no-print"><button onclick="window.print()">🖨 列印目前這版 / 存成 PDF（A4）</button></div>
+<script>
+const V={
+core:{zh:'九招圖卡　·　先抓最有影響的三件事：酒、含糖飲料、減重',
+  lead:{i:'fa-droplet',t:'飲食能降的尿酸大約 <b>1 mg/dL</b> 上下；治療目標是尿酸 <b>低於 6 mg/dL</b>（有痛風石低於 5），多數人要靠藥才到得了。飲食的價值是<b>少發作</b>，和讓藥的效果穩定。'},
+  cards:[
+    {i:'fa-beer-mug-empty',hot:1,t:'<b>酒精</b>是第一名<span class="w">啤酒、烈酒最傷，紅酒也不豁免。24 小時內喝 1 到 2 份，發作風險就多四成，喝越多越高。發作期間完全不喝。</span>'},
+    {i:'fa-glass-water',hot:1,t:'<b>含糖飲料、手搖、果汁</b>比海鮮更關鍵<span class="w">果糖代謝直接產生尿酸：每公斤體重吃 1 公克果糖，2 小時內尿酸升 1 到 2 mg/dL。高果糖糖漿的飲料和甜點是主要來源。</span>'},
+    {i:'fa-drumstick-bite',t:'<b>動物性高普林</b>少碰<span class="w">內臟、小魚乾、白帶魚、沙丁魚、蝦蟹貝、濃肉湯與火鍋湯底。紅肉適量、每餐掌心大小；蛋白質每天每公斤體重約 1 公克就夠。</span>'},
+    {i:'fa-leaf',t:'<b>植物性普林不用怕</b><span class="w">豆類、豆腐、豆漿、香菇、蘆筍、菠菜。研究顯示這些不增加痛風發作，指引也不限制蔬菜與豆製品。</span>'},
+    {i:'fa-glass-water-droplet',t:'<b>低脂乳製品</b>每天 1 到 2 份<span class="w">低脂牛奶、無糖優格會幫助尿酸排出，是少數「多吃反而好」的食物。</span>'},
+    {i:'fa-mug-hot',t:'咖啡可以喝，<b>水</b>每天 2,000 毫升以上<span class="w">適量咖啡與較低的尿酸有關；水分足夠有助尿酸排出，有腎結石病史的人更要喝夠。</span>'},
+    {i:'fa-weight-scale',t:'減重<b>慢慢來</b>，每月不超過 1 公斤<span class="w">過重的人減重能降尿酸；但快速減重、斷食、生酮會讓組織分解、尿酸暴衝，反而誘發發作。</span>'},
+    {i:'fa-pills',t:'維生素 C 與櫻桃<b>不必特地買</b><span class="w">2020 ACR 指引：不建議額外補充維生素 C 來降尿酸；櫻桃證據不足，沒有建議。</span>'},
+    {i:'fa-user-doctor',t:'發作時<b>藥不要自己停</b><span class="w">正在吃的降尿酸藥照吃；急性期冰敷、休息、依醫師處方用消炎藥或秋水仙素。尿酸正常不等於可以停藥。</span>'},
+  ],
+  note:'2022 台灣指引與 2020 ACR 指引把飲食建議列為「有條件建議」，意思是有幫助、但幅度有限，藥物治療決定於醫師。這張卡先抓前三招，做得到再往下。'},
+food:{zh:'食物紅綠燈　·　可以吃、適量、少碰',
+  html:`<table class="food"><tr><th style="width:90px">燈號</th><th style="width:150px">類別</th><th>內容</th></tr>
+<tr><td class="g">可以吃</td><td>五穀根莖</td><td>飯、麵、地瓜、馬鈴薯、全穀類，不限制</td></tr>
+<tr><td class="g">可以吃</td><td>蔬菜</td><td>全部可以，包括常被誤傳的香菇、蘆筍、菠菜、豆芽</td></tr>
+<tr><td class="g">可以吃</td><td>豆類與豆製品</td><td>豆腐、豆漿、黃豆、毛豆；不增加發作，可當蛋白質來源</td></tr>
+<tr><td class="g">可以吃</td><td>低脂乳製品與蛋</td><td>低脂牛奶、無糖優格每天 1 到 2 份；蛋幾乎不含普林</td></tr>
+<tr><td class="g">可以吃</td><td>水、無糖茶、咖啡</td><td>每天 2,000 毫升以上；咖啡適量</td></tr>
+<tr><td class="g">可以吃</td><td>水果</td><td>整顆水果每天 2 份；不要打成果汁</td></tr>
+<tr><td class="y">適量</td><td>瘦肉、去皮禽肉</td><td>每餐掌心大小；蛋白質每天每公斤體重約 1 公克</td></tr>
+<tr><td class="y">適量</td><td>一般魚類</td><td>鱸魚、鯛魚、鮭魚、鯖魚適量；不喝魚湯</td></tr>
+<tr><td class="y">適量</td><td>堅果</td><td>每天一份（約 10 公克，免洗湯匙 1 匙）；普林中等、脂肪好</td></tr>
+<tr><td class="r">少碰</td><td>酒精</td><td>啤酒、烈酒、紅酒都算；發作期完全禁</td></tr>
+<tr><td class="r">少碰</td><td>含糖飲料、果汁、甜點</td><td>手搖飲、汽水、果汁、含高果糖糖漿的點心</td></tr>
+<tr><td class="r">少碰</td><td>內臟與高普林海鮮</td><td>肝、腰子、腦、腸；小魚乾、白帶魚、沙丁魚、鯷魚、蝦蟹貝、扇貝類</td></tr>
+<tr><td class="r">少碰</td><td>濃湯與湯底</td><td>大骨湯、雞精、肉汁、火鍋湯底、滷汁；普林都溶在湯裡</td></tr>
+<tr><td class="r">少碰</td><td>快速減重法</td><td>斷食、生酮、極低熱量飲食會誘發急性發作</td></tr></table>`,
+  note:'份量換算：一份低脂乳品約 240 毫升；掌心大小的肉約 3 兩。外食三件事：湯不喝、飲料換無糖、酒不碰。'},
+myth:{zh:'常見迷思　·　實證上不成立的',
+  html:`<div class="myth"><h3>這些說法，指引與研究不支持</h3><table>
+<tr><th style="width:230px">常聽到的說法</th><th>實際上</th></tr>
+<tr><td class="x">「豆腐、豆漿不能吃」</td><td>植物性普林與痛風發作沒有關聯，多項世代研究顯示豆製品不增加風險。豆製品可以吃，還能取代部分肉類。</td></tr>
+<tr><td class="x">「香菇、蘆筍、菠菜要忌口」</td><td>同上。指引明寫蔬菜不限制，普林含量表上的數字不等於對血尿酸的影響。</td></tr>
+<tr><td class="x">「不吃海鮮就好」</td><td>酒精與含糖飲料對尿酸與發作的影響比海鮮大，很多人戒了海鮮卻天天手搖飲和啤酒。先改這兩樣。</td></tr>
+<tr><td class="x">「多吃櫻桃、吃維生素 C 可以降尿酸」</td><td>2020 ACR 指引不建議補充維生素 C；櫻桃研究品質不足，沒有建議。要降尿酸靠藥，飲食靠少酒少糖。</td></tr>
+<tr><td class="x">「發作時把降尿酸藥停掉」</td><td>急性發作期正在吃的降尿酸藥照吃，停藥反而讓尿酸波動、發作拖更久。要停要調由醫師決定。</td></tr>
+<tr><td class="x">「尿酸正常了就可以停藥」</td><td>尿酸正常是藥的效果。停藥後尿酸回升、痛風石與關節破壞會繼續；治療目標是長期維持低於 6。</td></tr>
+<tr><td class="x">「痛風只是關節痛」</td><td>高尿酸與腎結石、慢性腎病、高血壓、代謝症候群相關，飲食卡上的減重、少糖、少酒同時在顧這些。</td></tr>
+<tr><td class="x">「快速減肥尿酸就會降」</td><td>減重有效，但要慢；斷食與生酮飲食短期讓尿酸升高、誘發發作。每月減 1 公斤以內。</td></tr></table></div>`,
+  note:'資料來源：2022 台灣痛風與高尿酸血症診治指引（中華民國風濕病醫學會）；2020 ACR 痛風管理指引（飲食項目為有條件建議）；2016 EULAR 痛風指引；內科學誌 2022 各國指引比較。'},
+};
+function setV(k){
+  const v=V[k];
+  document.getElementById('zh').textContent=v.zh;
+  document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.dataset.v===k));
+  let h='';
+  if(v.cards){
+    h=`<div class="grid"><div class="c lead"><i class="fa-solid ${v.lead.i}"></i><div class="t">${v.lead.t}</div></div>`;
+    v.cards.forEach((c,idx)=>{h+=`<div class="c ${c.hot?'hot':''}"><span class="n">${String(idx+1).padStart(2,'0')}</span><i class="fa-solid ${c.i}"></i><div class="t">${c.t}</div></div>`;});
+    h+='</div>';
+  }else{h=v.html;}
+  document.getElementById('body').innerHTML=h;
+  document.getElementById('note').textContent=v.note;
+}
+setV((new URLSearchParams(location.search).get('v') in V)?new URLSearchParams(location.search).get('v'):'core');
+</script></body></html>

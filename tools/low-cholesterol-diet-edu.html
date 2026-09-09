@@ -1,0 +1,130 @@
+<!DOCTYPE html><html lang="zh-Hant"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="author" content="盧子文醫師 - Dr. Lu Tz-Wen">
+<meta name="description" content="低膽固醇飲食衛教圖卡（實證版）。依 2025 台灣血脂治療指引、2018 AHA/ACC、2019 ESC/EAS 整理，量化每一招能降多少 LDL，附食物紅綠燈與常見迷思，可列印 A4。">
+<title>低膽固醇飲食 · 衛教圖卡（實證版）</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+:root{--ink:#1b1f1d;--sub:#5f655f;--line:#e6e2d8;--accent:#0f6e64;--hot:#c0562c;--paper:#faf8f2;--card:#fff;--faint:#9a978c;--ok:#27ae60;--mod:#e67e22;--warn:#c0392b;}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#eceae2;font-family:"PingFang TC","Noto Sans TC","Microsoft JhengHei",sans-serif;color:var(--ink);padding:20px 12px;-webkit-font-smoothing:antialiased}
+.tabs{max-width:900px;margin:0 auto 14px;display:flex;gap:8px}
+.tab{flex:1;text-align:center;padding:12px 6px;border-radius:10px;border:1px solid var(--line);background:#fff;cursor:pointer;font-weight:800;color:var(--sub);font-size:15px}
+.tab small{display:block;font-weight:500;font-size:11px;color:var(--faint);margin-top:2px}
+.tab.active{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.tab.active small{color:#9fd8ce}
+.sheet{max-width:900px;margin:0 auto;background:var(--paper);padding:40px 38px 26px}
+.head{text-align:center;border-bottom:2px solid var(--ink);padding-bottom:15px;margin-bottom:4px}
+.kick{font-size:12px;letter-spacing:.34em;color:var(--accent);font-weight:800;margin-bottom:9px}
+.head h1{font-size:31px;font-weight:900;letter-spacing:-.01em;line-height:1.1}
+.head .zh{font-size:14px;color:var(--sub);margin-top:6px;letter-spacing:.04em}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px}
+.c{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px 15px;display:flex;flex-direction:column;align-items:center;text-align:center;justify-content:flex-start;min-height:168px;position:relative}
+.c .n{position:absolute;top:10px;left:14px;font-size:14px;font-weight:900;color:#cfcabb}
+.c i{font-size:33px;color:var(--accent);margin:10px 0 12px}
+.c.hot i{color:var(--hot)}
+.c .t{font-size:15.5px;font-weight:800;line-height:1.45}
+.c .t b{color:var(--hot)} .c .t .a{color:var(--accent)}
+.c .w{display:block;margin-top:6px;font-size:12.5px;font-weight:500;color:var(--sub);line-height:1.55}
+.c.lead{grid-column:span 3;flex-direction:row;gap:18px;justify-content:flex-start;text-align:left;min-height:auto;background:var(--ink);border:none}
+.c.lead i{color:var(--paper);font-size:28px;margin:0;flex:0 0 auto}
+.c.lead .t{color:var(--paper);font-size:16px;font-weight:600;line-height:1.6}
+.c.lead .t b{color:#7fd8cc}
+table.food{width:100%;border-collapse:collapse;margin-top:16px;font-size:14px;background:#fff;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+table.food th,table.food td{border-bottom:1px solid var(--line);padding:10px 10px;text-align:left;vertical-align:top;line-height:1.6}
+table.food th{background:var(--paper);font-weight:800;color:var(--sub);font-size:13px}
+table.food td.g{color:var(--ok);font-weight:800;white-space:nowrap}
+table.food td.y{color:var(--mod);font-weight:800;white-space:nowrap}
+table.food td.r{color:var(--warn);font-weight:800;white-space:nowrap}
+.myth{margin-top:16px;background:#fff;border:1px solid var(--line);border-radius:12px;padding:16px 18px}
+.myth h3{font-size:16px;color:var(--accent);margin-bottom:10px;border-left:4px solid var(--accent);padding-left:10px}
+.myth table{width:100%;border-collapse:collapse;font-size:14px}
+.myth th,.myth td{border-bottom:1px solid var(--line);padding:9px 8px;text-align:left;vertical-align:top;line-height:1.65}
+.myth th{background:var(--paper);font-weight:800;color:var(--sub);font-size:13px}
+.myth td.x{color:var(--warn);font-weight:700;white-space:nowrap}
+.note{margin-top:14px;font-size:12.5px;color:var(--sub);line-height:1.7}
+.foot{margin-top:15px;text-align:center;font-size:11px;color:var(--faint);line-height:1.7;border-top:1px solid var(--line);padding-top:11px}
+.foot b{color:var(--sub)}
+.bar{text-align:center;margin:16px 0}
+.bar button{background:var(--ink);color:var(--paper);border:0;padding:11px 24px;font-size:15px;font-weight:700;border-radius:6px;cursor:pointer}
+@media print{@page{size:A4 portrait;margin:8mm}body{background:#fff;padding:0}.tabs,.no-print{display:none!important}.sheet{max-width:100%;padding:4mm}.c,tr{break-inside:avoid}}
+@media(max-width:640px){.grid{grid-template-columns:repeat(2,1fr)}.c.lead{grid-column:span 2}.tabs{flex-wrap:wrap}.tab{min-width:30%}}
+@media(max-width:420px){.grid{grid-template-columns:1fr}.c.lead{grid-column:span 1;flex-direction:column;text-align:center}}
+</style></head><body>
+<div class="tabs no-print">
+  <div class="tab active" data-v="core" onclick="setV('core')">九招圖卡<small>每一招能降多少</small></div>
+  <div class="tab" data-v="food" onclick="setV('food')">食物紅綠燈<small>多吃 / 適量 / 少吃</small></div>
+  <div class="tab" data-v="myth" onclick="setV('myth')">常見迷思<small>實證上不成立的</small></div>
+</div>
+<div class="sheet" id="sheet">
+  <div class="head">
+    <div class="kick">內分泌新陳代謝科　·　飲食衛教</div>
+    <h1 id="h1">低膽固醇飲食</h1>
+    <div class="zh" id="zh"></div>
+  </div>
+  <div id="body"></div>
+  <div class="note" id="note"></div>
+  <div class="foot">高醫岡山醫院　內分泌新陳代謝科　盧子文醫師　｜　<b>本圖卡僅供衛教，是否用藥、目標值以醫師判斷為準</b>　｜　依 2025 台灣血脂治療指引、2018 AHA/ACC、2019 ESC/EAS 血脂指引整理　｜　工具版本：2026-09-09</div>
+</div>
+<div class="bar no-print"><button onclick="window.print()">🖨 列印目前這版 / 存成 PDF（A4）</button></div>
+<script>
+const V={
+core:{zh:'九招圖卡　·　目標是降低壞膽固醇（LDL-C）',
+  lead:{i:'fa-heart-pulse',t:'飲食做到位，LDL-C 大約可以降 <b>10 到 20%</b>；四招合併（Portfolio 飲食）在研究中可到 <b>20 到 30%</b>。這是藥物以外能做到的全部，但不能取代醫師開的藥。'},
+  cards:[
+    {i:'fa-bacon',hot:1,t:'<b>飽和脂肪</b>控制在每天熱量 <b>7% 以下</b><span class="w">2,000 大卡的人約 15 公克。肥肉、雞皮、豬油牛油、奶油、椰子油、棕櫚油、全脂乳、糕點是主要來源。這一招降 LDL 最多，約 8 到 10%。</span>'},
+    {i:'fa-ban',hot:1,t:'<b>反式脂肪</b>歸零<span class="w">酥油、人造奶油、酥皮點心、反覆油炸物。標示看到「部分氫化油」就放回去。</span>'},
+    {i:'fa-egg',t:'蛋黃<b>不是主角</b>了<span class="w">飲食膽固醇對血中 LDL 的影響小於飽和脂肪。一天一顆蛋多數人可以；已有心血管疾病或糖尿病者適量。內臟、蟹黃、蝦卵、魚卵才是要少的。</span>'},
+    {i:'fa-wheat-awn',t:'<b>水溶性纖維</b>每天 <span class="a">5 到 10 公克</span><span class="w">燕麥、大麥、豆類、秋葵、蘋果、柑橘。在腸道綁住膽酸排出，降 LDL 約 5%。一碗燕麥粥約 2 公克。</span>'},
+    {i:'fa-seedling',t:'<b>植物固醇</b>每天 <span class="a">2 公克</span><span class="w">降 LDL 約 8 到 10%。一般蔬菜達不到這個量，要靠強化食品（標示含植物固醇的奶類、抹醬）。</span>'},
+    {i:'fa-fish',t:'<b>換掉紅肉</b>：魚每週 2 次、豆製品、堅果每天一份<span class="w">堅果一份約 10 公克（免洗湯匙 1 匙），算進當天的油脂份數。研究用量較高，熱量要一起算。魚油膠囊降的是三酸甘油酯，不降 LDL。</span>'},
+    {i:'fa-bottle-droplet',t:'烹調用油換<b>橄欖油、芥花油、苦茶油</b><span class="w">蒸、煮、滷、烤取代油炸；外食先撈掉浮油、去皮。</span>'},
+    {i:'fa-utensils',t:'整體型態：<b>地中海</b>或<b>得舒（DASH）</b>飲食<span class="w">2025 台灣血脂指引：低、中風險者先做 3 到 6 個月生活型態，再決定要不要用藥。</span>'},
+    {i:'fa-person-walking',t:'體重、運動、戒菸<b>一起做</b><span class="w">減重 5% 就看得到血脂改變；每週 150 分鐘中強度運動。酒精對 LDL 沒有幫助，不要靠紅酒。</span>'},
+  ],
+  note:'降幅是研究平均值，個人差異大；三個月後抽血看變化才算數。已在服用降血脂藥的人，飲食照做，藥不要自己停。'},
+food:{zh:'食物紅綠燈　·　多吃、適量、少吃',
+  html:`<table class="food"><tr><th style="width:90px">燈號</th><th style="width:150px">類別</th><th>內容</th></tr>
+<tr><td class="g">多吃</td><td>全穀雜糧</td><td>燕麥、大麥、糙米、全麥、地瓜、鷹嘴豆、紅豆綠豆等澱粉性豆類；主食一半以上換成這些</td></tr>
+<tr><td class="g">多吃</td><td>豆類與豆製品</td><td>黃豆、黑豆、毛豆、豆腐、無糖豆漿；屬蛋白質，可以取代部分肉類</td></tr>
+<tr><td class="g">多吃</td><td>蔬菜水果</td><td>每天蔬菜 3 份以上、水果 2 份；秋葵、蘋果、柑橘的水溶性纖維特別高</td></tr>
+<tr><td class="g">多吃</td><td>好油與堅果</td><td>橄欖油、芥花油、苦茶油、酪梨；無調味堅果每天一份（約 10 公克，免洗湯匙 1 匙）</td></tr>
+<tr><td class="g">多吃</td><td>魚</td><td>鯖魚、秋刀魚、鮭魚、鱸魚，每週 2 次，蒸烤取代油炸</td></tr>
+<tr><td class="y">適量</td><td>蛋</td><td>一天一顆多數人可以；心血管疾病或糖尿病者每週 3 到 4 顆內</td></tr>
+<tr><td class="y">適量</td><td>瘦肉、去皮禽肉</td><td>每餐掌心大小；選里肌、雞胸，去皮去肥</td></tr>
+<tr><td class="y">適量</td><td>低脂乳製品</td><td>低脂或脫脂奶、無糖優格；全脂改低脂</td></tr>
+<tr><td class="y">適量</td><td>植物固醇強化食品</td><td>要吃到每天 2 公克才有效，照標示份量</td></tr>
+<tr><td class="r">少吃</td><td>飽和脂肪來源</td><td>肥肉、五花、雞皮、豬油、牛油、奶油、椰子油、棕櫚油、全脂鮮奶油</td></tr>
+<tr><td class="r">少吃</td><td>反式脂肪來源</td><td>酥皮、酥油、人造奶油、油炸物、部分氫化油的餅乾糕點</td></tr>
+<tr><td class="r">少吃</td><td>高膽固醇部位</td><td>內臟（肝、腦、腰子）、蟹黃、蝦卵、魚卵、魷魚乾</td></tr>
+<tr><td class="r">少吃</td><td>加工肉與精緻糖</td><td>香腸、培根、火腿；含糖飲料與甜點會拉高三酸甘油酯</td></tr>
+<tr><td class="r">少吃</td><td>酒精</td><td>不會降 LDL，會升三酸甘油酯；紅酒也一樣</td></tr></table>`,
+  note:'份量換算：一份蔬菜約煮熟半碗；一份水果約一個拳頭；一份堅果約 10 公克（免洗湯匙 1 匙），依台灣每日飲食指南算在油脂與堅果種子類。外食族先做三件事：去皮、撈油、主食換糙米或燕麥。'},
+myth:{zh:'常見迷思　·　實證上不成立的',
+  html:`<div class="myth"><h3>這些說法，指引與研究不支持</h3><table>
+<tr><th style="width:230px">常聽到的說法</th><th>實際上</th></tr>
+<tr><td class="x">「不能吃蛋，蛋黃膽固醇高」</td><td>飲食膽固醇對血中 LDL 影響有限，飽和脂肪才是主因。2018 AHA/ACC 起已不設飲食膽固醇上限；一天一顆蛋多數人可以。</td></tr>
+<tr><td class="x">「吃魚油可以降膽固醇」</td><td>魚油（EPA/DHA）降的是三酸甘油酯，對 LDL 沒有降低作用，部分製劑甚至略升。降 LDL 靠飽和脂肪、纖維、植物固醇與藥。</td></tr>
+<tr><td class="x">「植物油都健康」</td><td>椰子油與棕櫚油飽和脂肪超過八成，會升 LDL，跟動物油一樣要少。</td></tr>
+<tr><td class="x">「標示零膽固醇就是好油」</td><td>植物油本來就沒有膽固醇，這個標示不代表低飽和脂肪。看的是「飽和脂肪」那一欄。</td></tr>
+<tr><td class="x">「紅麴、保健品可以取代藥」</td><td>紅麴含天然 lovastatin，但劑量不穩、品質不一，且同樣有肝與肌肉副作用。需要用藥時，用有劑量的藥。</td></tr>
+<tr><td class="x">「喝紅酒保護心臟」</td><td>酒精不降 LDL，會升三酸甘油酯與血壓；沒有喝酒習慣的人不需要為了心臟開始喝。</td></tr>
+<tr><td class="x">「我很瘦，不用管飲食」</td><td>LDL 高低與體重不完全相關，家族性高膽固醇血症的人往往很瘦。瘦的人一樣照這張卡吃。</td></tr>
+<tr><td class="x">「飲食做好就可以停藥」</td><td>飲食最多降 10 到 20%，藥物一顆可降 30 到 50%。已有心血管疾病或糖尿病者，目標值多半飲食達不到；停藥由醫師決定。</td></tr></table></div>`,
+  note:'資料來源：2025 台灣血脂治療指引；2018 AHA/ACC 膽固醇管理指引；2019 ESC/EAS 血脂異常指引；2021 AHA 飲食指引；Portfolio 飲食隨機試驗與統合分析。'},
+};
+function setV(k){
+  const v=V[k];
+  document.getElementById('zh').textContent=v.zh;
+  document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.dataset.v===k));
+  let h='';
+  if(v.cards){
+    h=`<div class="grid"><div class="c lead"><i class="fa-solid ${v.lead.i}"></i><div class="t">${v.lead.t}</div></div>`;
+    v.cards.forEach((c,idx)=>{h+=`<div class="c ${c.hot?'hot':''}"><span class="n">${String(idx+1).padStart(2,'0')}</span><i class="fa-solid ${c.i}"></i><div class="t">${c.t}</div></div>`;});
+    h+='</div>';
+  }else{h=v.html;}
+  document.getElementById('body').innerHTML=h;
+  document.getElementById('note').textContent=v.note;
+}
+setV((new URLSearchParams(location.search).get('v') in V)?new URLSearchParams(location.search).get('v'):'core');
+</script></body></html>
