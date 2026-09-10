@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>照片壓縮（壓到 1MB 內・另存 JPG／PNG）</title>
+<meta name="description" content="把照片壓縮到指定大小（預設 1MB）以內，另存 JPG 或 PNG 下載。純前端處理，照片不上傳，手機電腦都能用。">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+  :root{
+    --accent:#0e6e6e; --ink:#132020; --line:#d8e4e4; --soft:#f4f9f9; --bg:#eaf2f2;
+    --warn:#b4540a; --warnbg:#fff4e8; --good:#0a7d43; --goodbg:#eafaf0; --muted:#5f7070;
+  }
+  *{box-sizing:border-box;}
+  body{font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;
+    color:var(--ink); background:var(--bg); margin:0; padding:0 16px 60px; line-height:1.7;}
+  .wrap{max-width:1000px; margin:0 auto;}
+  h1{font-size:23px; margin:22px 0 4px;}
+  .sub{color:var(--muted); font-size:14px; margin-bottom:16px;}
+  .card{background:#fff; border:1px solid var(--line); border-radius:10px; padding:16px 18px; margin:14px 0;}
+  .privacy{background:var(--goodbg); border-color:#b5e3c8; font-size:14px;}
+  .privacy b{color:var(--good);}
+
+  #drop{border:2px dashed #9ec4c4; border-radius:12px; background:var(--soft);
+    padding:34px 20px; text-align:center; cursor:pointer; transition:.15s;}
+  #drop:hover,#drop.over{background:#e6f4f4; border-color:var(--accent);}
+  #drop i{font-size:34px; color:var(--accent); display:block; margin-bottom:10px;}
+  #drop .big{font-size:16px; font-weight:600;}
+  #drop .small{color:var(--muted); font-size:13px; margin-top:6px;}
+
+  .row{display:flex; flex-wrap:wrap; gap:14px 18px; align-items:center;}
+  label.opt{font-size:14px; display:flex; align-items:center; gap:6px;}
+  select,input[type=number],input[type=text]{border:1px solid var(--line); border-radius:6px; padding:6px 9px;
+    font-size:14px; font-family:inherit;}
+  input[type=number]{width:92px;}
+  #go{background:var(--accent); color:#fff; border:0; border-radius:8px;
+    padding:13px 26px; font-size:16px; font-weight:600; cursor:pointer;}
+  #go:hover{background:#0b5a5a;}
+  #go:disabled{background:#9ec4c4; cursor:not-allowed;}
+  .ghost{background:#fff; color:var(--accent); border:1px solid var(--accent);
+    border-radius:8px; padding:7px 14px; font-size:13.5px; cursor:pointer; font-family:inherit;}
+  .ghost:hover{background:var(--soft);}
+  .ghost:disabled{opacity:.5; cursor:not-allowed;}
+
+  #list{list-style:none; padding:0; margin:0; display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:12px;}
+  #list li{background:#fff; border:1px solid var(--line); border-radius:9px; padding:10px; position:relative;}
+  .thumb{width:100%; height:170px; background:var(--soft); border:1px solid var(--line);
+    border-radius:5px; display:flex; align-items:center; justify-content:center; overflow:hidden;}
+  .thumb img{max-width:100%; max-height:100%; display:block;}
+  .thumb .ph{color:#9ec4c4; font-size:26px;}
+  .fname{font-size:12px; color:var(--ink); margin-top:8px; word-break:break-all; line-height:1.4;
+    max-height:2.8em; overflow:hidden; font-weight:600;}
+  .meta{font-size:12.5px; color:var(--muted); line-height:1.55; margin-top:4px;}
+  .meta b{color:var(--ink);}
+  .meta .ok{color:var(--good); font-weight:700;}
+  .meta .bad{color:var(--warn); font-weight:700;}
+  .arrow{color:var(--accent);}
+  .dl{width:100%; margin-top:8px; border:1px solid var(--accent); background:var(--accent); color:#fff;
+    border-radius:6px; padding:7px 0; cursor:pointer; font-size:13.5px; font-family:inherit; font-weight:600;}
+  .dl:hover{background:#0b5a5a;}
+  .dl:disabled{background:#9ec4c4; border-color:#9ec4c4; cursor:not-allowed;}
+  .rm{position:absolute; top:6px; right:6px; width:24px; height:24px; border-radius:50%; border:1px solid var(--line);
+    background:#fff; color:var(--muted); cursor:pointer; font-size:12px; line-height:22px; text-align:center; padding:0;}
+  .rm:hover{color:var(--warn); border-color:var(--warn);}
+  .badge{position:absolute; top:6px; left:6px; background:var(--accent); color:#fff; font-size:11px;
+    padding:1px 8px; border-radius:10px; font-weight:600;}
+  .badge.bad{background:var(--warn);}
+
+  #msg{margin-top:12px; font-size:14px;}
+  #msg .err{background:var(--warnbg); border:1px solid #f0c69a; color:var(--warn); padding:9px 13px; border-radius:7px;}
+  #msg .ok{background:var(--goodbg); border:1px solid #b5e3c8; color:var(--good); padding:9px 13px; border-radius:7px;}
+  #bar{height:6px; background:var(--line); border-radius:3px; overflow:hidden; margin-top:10px; display:none;}
+  #bar div{height:100%; width:0; background:var(--accent); transition:width .2s;}
+  footer{color:var(--muted); font-size:12.5px; margin-top:34px; padding-top:12px; border-top:1px solid var(--line);}
+  .hint{font-size:13px; color:var(--muted);}
+  code{background:var(--soft); padding:1px 5px; border-radius:4px; font-size:12.5px;}
+
+  /* ⚠️ media query 一律放在所有基礎規則之後（同權重後者勝） */
+  @media (max-width:640px){
+    body{padding:0 10px 50px;}
+    h1{font-size:20px;}
+    .card{padding:13px 13px;}
+    #drop{padding:26px 12px;}
+    #list{grid-template-columns:repeat(auto-fill,minmax(160px,1fr)); gap:9px;}
+    .thumb{height:140px;}
+    #go{width:100%;}
+    label.opt{width:100%; justify-content:space-between;}
+    label.opt select{flex:1; max-width:62%;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <h1><i class="fa-solid fa-compress" style="color:var(--accent)"></i> 照片壓縮：壓到 1MB 內</h1>
+  <div class="sub">上傳表單、傳 LINE、貼病歷附件常有「檔案不可超過 1MB」的限制。這裡把照片壓到指定大小以內，另存 JPG 或 PNG 下載，尺寸盡量保留、看不太出來差別。</div>
+
+  <div class="card privacy">
+    <b><i class="fa-solid fa-lock"></i> 照片不會上傳</b>——全部在你的手機／電腦瀏覽器裡處理，沒有伺服器、沒有第三方 API，關掉頁面就沒了。病人照片、檢查影像、身分證件都適用。
+  </div>
+
+  <div id="drop">
+    <i class="fa-solid fa-image"></i>
+    <div class="big">把照片拖進來，或點這裡選擇（手機可直接拍）</div>
+    <div class="small">可一次選多張　·　JPG／PNG／WebP／GIF／BMP　·　HEIC（iPhone 原始格式）只有 Safari 能讀，其他瀏覽器請先在相簿選「最相容格式」或用 Safari 開</div>
+    <input type="file" id="picker" multiple accept="image/*" style="display:none">
+  </div>
+
+  <div class="card" id="optCard" style="display:none">
+    <div class="row">
+      <label class="opt">目標大小
+        <select id="target">
+          <option value="300">300 KB 以內</option>
+          <option value="500">500 KB 以內</option>
+          <option value="1024" selected>1 MB 以內（預設）</option>
+          <option value="2048">2 MB 以內</option>
+          <option value="5120">5 MB 以內</option>
+        </select>
+      </label>
+      <label class="opt">輸出格式
+        <select id="fmt">
+          <option value="jpg" selected>JPG（照片，檔案小・推薦）</option>
+          <option value="png">PNG（截圖、圖表、要透明背景）</option>
+        </select>
+      </label>
+      <label class="opt">最長邊上限
+        <select id="maxEdge">
+          <option value="0" selected>不主動縮（壓不進目標才縮）</option>
+          <option value="4000">4000 px</option>
+          <option value="2048">2048 px（傳 LINE、貼簡報夠用）</option>
+          <option value="1600">1600 px</option>
+          <option value="1200">1200 px</option>
+          <option value="800">800 px</option>
+        </select>
+      </label>
+    </div>
+    <div class="row" style="margin-top:14px;">
+      <button id="go"><i class="fa-solid fa-bolt"></i> 開始壓縮</button>
+      <button class="ghost" id="zipAll" disabled><i class="fa-solid fa-file-zipper"></i> 全部打包 ZIP 下載</button>
+      <button class="ghost" id="clear"><i class="fa-regular fa-trash-can"></i> 清除全部</button>
+      <span class="hint" id="est"></span>
+    </div>
+    <div id="bar"><div></div></div>
+    <div id="msg"></div>
+  </div>
+
+  <div class="card" id="listCard" style="display:none">
+    <div class="hint" style="margin-bottom:10px">每張下方有各自的下載鈕；壓完會顯示「壓前 → 壓後」大小與尺寸。</div>
+    <ul id="list"></ul>
+  </div>
+
+  <div class="card">
+    <b>怎麼壓的</b>
+    <ul style="margin:8px 0 0; padding-left:22px; font-size:14px;">
+      <li><b>JPG</b>：先維持原尺寸、只降畫質（最低到 50），畫質降到底還壓不進目標，才逐步縮小尺寸。多數手機照片（3–8 MB）縮到 1 MB 內不需要縮尺寸，肉眼幾乎看不出差別。</li>
+      <li><b>PNG</b>：PNG 沒有畫質可調，只能靠縮尺寸，照片存 PNG 通常會比 JPG 大 5–10 倍，除非需要透明背景或是截圖／圖表，否則選 JPG。</li>
+      <li><b>方向</b>：手機直拍的照片會依照片內的方向資訊自動轉正，不會壓完變橫的。</li>
+      <li><b>透明背景的 PNG 轉 JPG</b> 會補成白底（JPG 不支援透明）。</li>
+      <li><b>超大照片</b>（4800 萬畫素以上）瀏覽器畫布放不下，會先縮到約 1600 萬畫素再處理，屬正常。</li>
+      <li><b>原檔已經比目標小</b>且格式相同：直接沿用原檔不重新編碼（重新編碼只會讓小檔變大）；若你選了不同格式（例如 PNG 轉 JPG），仍會轉檔輸出。</li>
+    </ul>
+  </div>
+
+  <footer>
+    工具版本：2026-09-10（首版：目標大小 300KB–5MB、JPG 二分搜尋畫質再縮尺寸、PNG 縮尺寸、EXIF 轉正、多張與 ZIP 打包）<br>
+    純前端處理，照片不離開你的裝置。壓縮後請自行確認影像仍清楚可辨。
+  </footer>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script>
+const $=s=>document.querySelector(s);
+function err(h){ $('#msg').innerHTML=`<div class="err"><i class="fa-solid fa-triangle-exclamation"></i> ${h}</div>`; }
+function ok(h){ $('#msg').innerHTML=`<div class="ok"><i class="fa-solid fa-circle-check"></i> ${h}</div>`; }
+function fmtKB(b){ return b>=1024*1024 ? (b/1048576).toFixed(2)+' MB' : Math.round(b/1024)+' KB'; }
+function baseName(n){ return n.replace(/\.[^.]+$/,''); }
+const MAX_AREA=16e6;   // iOS Safari canvas 面積上限附近，超過會得到空白圖且不報錯
+
+// ── 狀態 ─────────────────────────────────────────────
+let items=[];   // {file, bitmap, w, h, el, out:{blob,w,h,q,scale,name}}
+
+// ── 解碼（含 EXIF 轉正） ──────────────────────────────
+async function decode(file){
+  if(window.createImageBitmap){
+    try{ return await createImageBitmap(file,{imageOrientation:'from-image'}); }
+    catch(e){ try{ return await createImageBitmap(file); }catch(e2){} }
+  }
+  return await new Promise((res,rej)=>{
+    const url=URL.createObjectURL(file); const im=new Image();
+    im.onload=()=>{ URL.revokeObjectURL(url); res(im); };
+    im.onerror=()=>{ URL.revokeObjectURL(url); rej(new Error('無法讀取')); };
+    im.src=url;
+  });
+}
+function dims(img){ return {w:img.width||img.naturalWidth, h:img.height||img.naturalHeight}; }
+
+// ── 畫到 canvas 並輸出 blob ───────────────────────────
+function draw(img,w,h,fmt){
+  const c=document.createElement('canvas'); c.width=w; c.height=h;
+  const g=c.getContext('2d',{alpha: fmt==='png'});
+  if(fmt==='jpg'){ g.fillStyle='#fff'; g.fillRect(0,0,w,h); }
+  g.imageSmoothingEnabled=true; g.imageSmoothingQuality='high';
+  g.drawImage(img,0,0,w,h);
+  return c;
+}
+function toBlob(c,fmt,q){
+  return new Promise(res=>c.toBlob(res, fmt==='jpg'?'image/jpeg':'image/png', q));
+}
+
+// ── 核心：壓到 target 位元組以內 ───────────────────────
+// JPG：固定尺寸下二分搜尋畫質（0.50–0.95）；最低畫質仍超過 → 尺寸 ×0.85 再來。
+// PNG：無畫質可調，直接逐步縮尺寸。
+async function compress(img, target, fmt, maxEdge, onStep){
+  let {w:W,h:H}=dims(img);
+  let scale=1;
+  if(maxEdge>0 && Math.max(W,H)>maxEdge) scale=maxEdge/Math.max(W,H);
+  if(W*H*scale*scale>MAX_AREA) scale=Math.sqrt(MAX_AREA/(W*H));
+  let best=null;
+  for(let round=0; round<12; round++){
+    const w=Math.max(1,Math.round(W*scale)), h=Math.max(1,Math.round(H*scale));
+    const c=draw(img,w,h,fmt);
+    if(fmt==='png'){
+      const b=await toBlob(c,'png');
+      best={blob:b,w,h,q:null,scale};
+      if(b.size<=target) return best;
+    }else{
+      // 先試最高畫質，原本就夠小就直接用
+      let lo=0.50, hi=0.95, got=null;
+      const bHi=await toBlob(c,'jpg',hi);
+      if(bHi.size<=target){ got={blob:bHi,q:hi}; }
+      else{
+        const bLo=await toBlob(c,'jpg',lo);
+        if(bLo.size<=target){
+          got={blob:bLo,q:lo};
+          for(let i=0;i<6;i++){            // 二分：找「仍在目標內」的最高畫質
+            const mid=(lo+hi)/2; const b=await toBlob(c,'jpg',mid);
+            if(b.size<=target){ got={blob:b,q:mid}; lo=mid; } else hi=mid;
+          }
+        }else{
+          best={blob:bLo,w,h,q:lo,scale};   // 這個尺寸壓不進去，記著最小的再縮
+        }
+      }
+      if(got) return {blob:got.blob,w,h,q:got.q,scale};
+    }
+    onStep && onStep(round);
+    scale*=0.85;
+    if(Math.max(W,H)*scale<200) break;     // 縮到 200px 還不行就放棄
+  }
+  return best;   // 可能仍超過 target，UI 會標示
+}
+
+// ── UI ──────────────────────────────────────────────
+function addFiles(files){
+  const imgs=[...files].filter(f=>/^image\//.test(f.type)||/\.(heic|heif)$/i.test(f.name));
+  if(!imgs.length){ err('沒有可讀的圖片檔。'); return; }
+  for(const f of imgs){
+    const li=document.createElement('li');
+    li.innerHTML=`<span class="badge">待壓縮</span><button class="rm" title="移除"><i class="fa-solid fa-xmark"></i></button>
+      <div class="thumb"><i class="fa-regular fa-image ph"></i></div>
+      <div class="fname"></div><div class="meta"></div>
+      <button class="dl" disabled><i class="fa-solid fa-download"></i> 下載</button>`;
+    li.querySelector('.fname').textContent=f.name;
+    li.querySelector('.meta').innerHTML=`原檔 <b>${fmtKB(f.size)}</b>`;
+    const it={file:f,el:li,out:null};
+    li.querySelector('.rm').onclick=()=>{ items=items.filter(x=>x!==it); li.remove(); refresh(); };
+    li.querySelector('.dl').onclick=()=>it.out&&download(it);
+    $('#list').appendChild(li); items.push(it);
+    decode(f).then(img=>{ it.img=img; const d=dims(img); it.w=d.w; it.h=d.h;
+      const c=draw(img, Math.round(d.w*Math.min(1,400/Math.max(d.w,d.h))), Math.round(d.h*Math.min(1,400/Math.max(d.w,d.h))), 'jpg');
+      const im=new Image(); im.src=c.toDataURL('image/jpeg',0.8); li.querySelector('.thumb').replaceChildren(im);
+      li.querySelector('.meta').innerHTML=`原檔 <b>${fmtKB(f.size)}</b>・${d.w}×${d.h}`;
+    }).catch(()=>{ it.bad=true; li.querySelector('.badge').textContent='無法讀取'; li.querySelector('.badge').classList.add('bad');
+      li.querySelector('.meta').innerHTML=`<span class="bad">這個瀏覽器讀不了此格式</span>（HEIC 請用 Safari，或改存 JPG 再來）`; });
+  }
+  refresh();
+}
+function refresh(){
+  $('#listCard').style.display=items.length?'':'none';
+  $('#optCard').style.display=items.length?'':'none';
+  $('#est').textContent=items.length?`共 ${items.length} 張`:'';
+  $('#zipAll').disabled=!items.some(x=>x.out);
+}
+function download(it){
+  const a=document.createElement('a'); const url=URL.createObjectURL(it.out.blob);
+  a.href=url; a.download=it.out.name; document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),4000);
+}
+
+$('#drop').onclick=()=>$('#picker').click();
+$('#picker').onchange=e=>{ addFiles(e.target.files); e.target.value=''; };
+['dragenter','dragover'].forEach(ev=>$('#drop').addEventListener(ev,e=>{e.preventDefault(); $('#drop').classList.add('over');}));
+['dragleave','drop'].forEach(ev=>$('#drop').addEventListener(ev,e=>{e.preventDefault(); $('#drop').classList.remove('over');}));
+$('#drop').addEventListener('drop',e=>addFiles(e.dataTransfer.files));
+document.addEventListener('paste',e=>{ const fs=[...(e.clipboardData?.files||[])]; if(fs.length) addFiles(fs); });
+$('#clear').onclick=()=>{ items=[]; $('#list').innerHTML=''; $('#msg').innerHTML=''; refresh(); };
+
+$('#go').onclick=async()=>{
+  const todo=items.filter(x=>x.img&&!x.bad);
+  if(!todo.length){ err('還沒有可處理的照片。'); return; }
+  const target=+$('#target').value*1024, fmt=$('#fmt').value, maxEdge=+$('#maxEdge').value;
+  $('#go').disabled=true; $('#msg').innerHTML=''; $('#bar').style.display='';
+  let done=0, over=0;
+  for(const it of todo){
+    it.el.querySelector('.badge').textContent='壓縮中…'; it.el.querySelector('.badge').classList.remove('bad');
+    try{
+      let r;
+      const sameFmt = (fmt==='jpg' && /image\/jpe?g/.test(it.file.type)) || (fmt==='png' && it.file.type==='image/png');
+      const withinEdge = !maxEdge || Math.max(it.w,it.h)<=maxEdge;
+      if(it.file.size<=target && sameFmt && withinEdge){
+        // 原檔已在目標內、格式也一樣：重新編碼只會變大（實測 144KB→198KB），直接沿用原檔
+        r={blob:it.file,w:it.w,h:it.h,q:null,scale:1,asIs:true};
+      }else{
+        r=await compress(it.img,target,fmt,maxEdge);
+        if(!r) throw new Error('壓縮失敗');
+      }
+      r.name=`${baseName(it.file.name)}-min.${fmt}`;
+      it.out=r;
+      const fits=r.blob.size<=target; if(!fits) over++;
+      it.el.querySelector('.badge').textContent=fits?'完成':'仍超過目標';
+      it.el.querySelector('.badge').classList.toggle('bad',!fits);
+      const dimTxt = (r.w===it.w&&r.h===it.h) ? `${r.w}×${r.h}（尺寸不變）` : `${it.w}×${it.h} <span class="arrow">→</span> ${r.w}×${r.h}`;
+      it.el.querySelector('.meta').innerHTML= r.asIs
+        ? `原檔 <b>${fmtKB(it.file.size)}</b>・${r.w}×${r.h}<br><span class="ok">已在目標內，沿用原檔</span>（重新編碼只會變大）`
+        : `原檔 <b>${fmtKB(it.file.size)}</b> <span class="arrow">→</span> <span class="${fits?'ok':'bad'}">${fmtKB(r.blob.size)}</span>`+
+          `<br>${dimTxt}${r.q!=null?`・畫質 ${Math.round(r.q*100)}`:''}・${fmt.toUpperCase()}`;
+      it.el.querySelector('.dl').disabled=false;
+    }catch(e){
+      it.el.querySelector('.badge').textContent='失敗'; it.el.querySelector('.badge').classList.add('bad');
+      it.el.querySelector('.meta').innerHTML+=`<br><span class="bad">${e.message||e}</span>`;
+    }
+    done++; $('#bar div').style.width=Math.round(done/todo.length*100)+'%';
+  }
+  $('#go').disabled=false; $('#bar').style.display='none'; refresh();
+  if(over) err(`${done} 張處理完成，其中 ${over} 張縮到最小仍超過目標——可把目標放大、改選 JPG，或降低「最長邊上限」再壓一次。`);
+  else ok(`${done} 張都壓進目標了。${done>1?'可逐張下載，或按「全部打包 ZIP 下載」。':'按下方「下載」存檔。'}`);
+  if(done===1&&!over) download(todo[0]);   // 只有一張就直接給
+};
+
+$('#zipAll').onclick=async()=>{
+  const outs=items.filter(x=>x.out);
+  if(!outs.length) return;
+  if(!window.JSZip){ err('打包函式庫載入失敗，請檢查網路後重新整理，或逐張下載。'); return; }
+  const zip=new JSZip(); const used=new Set();
+  for(const it of outs){
+    let n=it.out.name, i=2; while(used.has(n)){ n=`${baseName(it.out.name)}-${i++}.${it.out.name.split('.').pop()}`; } used.add(n);
+    zip.file(n,it.out.blob);
+  }
+  const b=await zip.generateAsync({type:'blob'});
+  const a=document.createElement('a'); const url=URL.createObjectURL(b);
+  a.href=url; a.download=`photos-compressed-${new Date().toISOString().slice(0,10)}.zip`; document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),4000);
+};
+</script>
+</body>
+</html>
