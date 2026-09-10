@@ -1,18 +1,22 @@
 <!DOCTYPE html><html lang="zh-Hant"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="author" content="盧子文醫師 - Dr. Lu Tz-Wen">
-<meta name="description" content="低膽固醇飲食衛教圖卡（實證版）。依 2025 台灣血脂治療指引、2018 AHA/ACC、2019 ESC/EAS 整理，量化每一招能降多少 LDL，附食物紅綠燈與常見迷思，可列印 A4。">
-<title>低膽固醇飲食 · 衛教圖卡（實證版）</title>
+<meta name="description" content="低膽固醇飲食衛教圖卡（實證版・6 國語言）。依 2025 台灣血脂治療指引、2018 AHA/ACC、2019 ESC/EAS 整理，量化每一招能降多少 LDL，附食物紅綠燈與常見迷思。外語版一律外文在前、中文小字在後，方便對照台灣市售包裝。可列印 A4。">
+<title>低膽固醇飲食 · 衛教圖卡（實證版・6 國語言）</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <style>
 :root{--ink:#1b1f1d;--sub:#5f655f;--line:#e6e2d8;--accent:#0f6e64;--hot:#c0562c;--paper:#faf8f2;--card:#fff;--faint:#9a978c;--ok:#27ae60;--mod:#e67e22;--warn:#c0392b;}
 *{box-sizing:border-box;margin:0;padding:0}
-body{background:#eceae2;font-family:"PingFang TC","Noto Sans TC","Microsoft JhengHei",sans-serif;color:var(--ink);padding:20px 12px;-webkit-font-smoothing:antialiased}
+body{background:#eceae2;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"PingFang TC","Noto Sans TC","Microsoft JhengHei","Sukhumvit Set","Noto Sans Thai",sans-serif;color:var(--ink);padding:20px 12px;-webkit-font-smoothing:antialiased}
 .tabs{max-width:900px;margin:0 auto 14px;display:flex;gap:8px}
 .tab{flex:1;text-align:center;padding:12px 6px;border-radius:10px;border:1px solid var(--line);background:#fff;cursor:pointer;font-weight:800;color:var(--sub);font-size:15px}
 .tab small{display:block;font-weight:500;font-size:11px;color:var(--faint);margin-top:2px}
 .tab.active{background:var(--ink);color:var(--paper);border-color:var(--ink)}
 .tab.active small{color:#9fd8ce}
+.langtabs{max-width:900px;margin:0 auto 10px;display:flex;gap:6px;flex-wrap:wrap}
+.langtabs .tab{flex:1 1 calc(33.333% - 4px);padding:9px 5px;font-size:13.5px}
+.langtabs .tab small{font-size:10px}
+.langbadge{display:inline-block;background:var(--ink);color:var(--paper);font-size:12.5px;font-weight:800;padding:5px 13px;border-radius:999px;margin-bottom:11px;line-height:1.5}
 .sheet{max-width:900px;margin:0 auto;background:var(--paper);padding:40px 38px 26px}
 .head{text-align:center;border-bottom:2px solid var(--ink);padding-bottom:15px;margin-bottom:4px}
 .kick{font-size:12px;letter-spacing:.34em;color:var(--accent);font-weight:800;margin-bottom:9px}
@@ -30,101 +34,457 @@ body{background:#eceae2;font-family:"PingFang TC","Noto Sans TC","Microsoft Jhen
 .c.lead i{color:var(--paper);font-size:28px;margin:0;flex:0 0 auto}
 .c.lead .t{color:var(--paper);font-size:16px;font-weight:600;line-height:1.6}
 .c.lead .t b{color:#7fd8cc}
+
+/* 外文在前、中文小字在後（老闆 2026-09-10 裁示；與 thyroid-fna-edu 同一套） */
+.p-zh,.p-fo{display:block}
+.p-zh{font-size:12.5px;font-weight:500;color:var(--sub);line-height:1.55;margin-top:5px}
+.c .t .p-zh{font-size:12.5px}
+.c .w .p-zh{font-size:11.5px;color:var(--faint);margin-top:3px}
+.c.lead .t .p-zh{color:#b9c6c2;font-size:12.5px}
+td .p-zh,th .p-zh{font-size:11.5px;color:var(--faint);margin-top:2px;font-weight:500}
+.head h1 .p-zh{font-size:15px;color:var(--sub);margin-top:5px;font-weight:700}
+.head .zh .p-zh,.note .p-zh{font-size:12px;color:var(--faint);margin-top:3px}
+
 table.food{width:100%;border-collapse:collapse;margin-top:16px;font-size:14px;background:#fff;border:1px solid var(--line);border-radius:12px;overflow:hidden}
 table.food th,table.food td{border-bottom:1px solid var(--line);padding:10px 10px;text-align:left;vertical-align:top;line-height:1.6}
 table.food th{background:var(--paper);font-weight:800;color:var(--sub);font-size:13px}
-table.food td.g{color:var(--ok);font-weight:800;white-space:nowrap}
-table.food td.y{color:var(--mod);font-weight:800;white-space:nowrap}
-table.food td.r{color:var(--warn);font-weight:800;white-space:nowrap}
+/* 欄寬：原本寫在 <th> 的 inline style，改版時移到 CSS，並為雙語留寬（外文比中文長） */
+table.food th:nth-child(1),table.food td:nth-child(1){width:110px}
+table.food th:nth-child(2),table.food td:nth-child(2){width:180px}
+.myth th:nth-child(1),.myth td:nth-child(1){width:250px}
+table.food td.g{color:var(--ok);font-weight:800}
+table.food td.y{color:var(--mod);font-weight:800}
+table.food td.r{color:var(--warn);font-weight:800}
 .myth{margin-top:16px;background:#fff;border:1px solid var(--line);border-radius:12px;padding:16px 18px}
 .myth h3{font-size:16px;color:var(--accent);margin-bottom:10px;border-left:4px solid var(--accent);padding-left:10px}
 .myth table{width:100%;border-collapse:collapse;font-size:14px}
 .myth th,.myth td{border-bottom:1px solid var(--line);padding:9px 8px;text-align:left;vertical-align:top;line-height:1.65}
 .myth th{background:var(--paper);font-weight:800;color:var(--sub);font-size:13px}
-.myth td.x{color:var(--warn);font-weight:700;white-space:nowrap}
+.myth td.x{color:var(--warn);font-weight:700}
 .note{margin-top:14px;font-size:12.5px;color:var(--sub);line-height:1.7}
 .foot{margin-top:15px;text-align:center;font-size:11px;color:var(--faint);line-height:1.7;border-top:1px solid var(--line);padding-top:11px}
 .foot b{color:var(--sub)}
+.transnote{margin-top:6px;text-align:center;font-size:10.5px;color:var(--faint);line-height:1.6}
+.transnote .p-zh{font-size:10.5px;margin-top:2px}
 .bar{text-align:center;margin:16px 0}
 .bar button{background:var(--ink);color:var(--paper);border:0;padding:11px 24px;font-size:15px;font-weight:700;border-radius:6px;cursor:pointer}
-@media print{@page{size:A4 portrait;margin:8mm}body{background:#fff;padding:0}.tabs,.no-print{display:none!important}.sheet{max-width:100%;padding:4mm}.c,tr{break-inside:avoid}}
-@media(max-width:640px){.grid{grid-template-columns:repeat(2,1fr)}.c.lead{grid-column:span 2}.tabs{flex-wrap:wrap}.tab{min-width:30%}}
+@media print{@page{size:A4 portrait;margin:8mm}body{background:#fff;padding:0}.tabs,.langtabs,.no-print{display:none!important}.sheet{max-width:100%;padding:4mm}.c,tr{break-inside:avoid}}
+@media(max-width:640px){.grid{grid-template-columns:repeat(2,1fr)}.c.lead{grid-column:span 2}.tabs{flex-wrap:wrap}.tab{min-width:30%}.langtabs .tab{flex:1 1 calc(50% - 3px)}
+  /* 手機：取消固定欄寬，否則雙語內容會被擠成一行一兩個字 */
+  table.food th:nth-child(1),table.food td:nth-child(1),
+  table.food th:nth-child(2),table.food td:nth-child(2),
+  .myth th:nth-child(1),.myth td:nth-child(1){width:auto}
+  table.food th,table.food td,.myth th,.myth td{padding:8px 6px;font-size:13px}
+  .myth{padding:12px 10px}}
 @media(max-width:420px){.grid{grid-template-columns:1fr}.c.lead{grid-column:span 1;flex-direction:column;text-align:center}}
 </style></head><body>
-<div class="tabs no-print">
-  <div class="tab active" data-v="core" onclick="setV('core')">九招圖卡<small>每一招能降多少</small></div>
-  <div class="tab" data-v="food" onclick="setV('food')">食物紅綠燈<small>多吃 / 適量 / 少吃</small></div>
-  <div class="tab" data-v="myth" onclick="setV('myth')">常見迷思<small>實證上不成立的</small></div>
-</div>
+<div class="langtabs no-print" id="langtabs"></div>
+<div class="tabs no-print" id="viewtabs"></div>
 <div class="sheet" id="sheet">
   <div class="head">
-    <div class="kick">內分泌新陳代謝科　·　飲食衛教</div>
-    <h1 id="h1">低膽固醇飲食</h1>
+    <div class="langbadge" id="langbadge"></div>
+    <div class="kick" id="kick"></div>
+    <h1 id="h1"></h1>
     <div class="zh" id="zh"></div>
   </div>
   <div id="body"></div>
   <div class="note" id="note"></div>
-  <div class="foot">高醫岡山醫院　內分泌新陳代謝科　盧子文醫師　｜　<b>本圖卡僅供衛教，是否用藥、目標值以醫師判斷為準</b>　｜　依 2025 台灣血脂治療指引、2018 AHA/ACC、2019 ESC/EAS 血脂指引整理　｜　工具版本：2026-09-09</div>
+  <div class="foot" id="foot"></div>
+  <div class="transnote" id="transnote"></div>
 </div>
-<div class="bar no-print"><button onclick="window.print()">🖨 列印目前這版 / 存成 PDF（A4）</button></div>
+<div class="bar no-print"><button onclick="window.print()" id="printbtn">🖨 列印目前這版 / 存成 PDF（A4）</button></div>
 <script>
-const V={
-core:{zh:'九招圖卡　·　目標是降低壞膽固醇（LDL-C）',
-  lead:{i:'fa-heart-pulse',t:'飲食做到位，LDL-C 大約可以降 <b>10 到 20%</b>；四招合併（Portfolio 飲食）在研究中可到 <b>20 到 30%</b>。這是藥物以外能做到的全部，但不能取代醫師開的藥。'},
+/* 多語版原則（見 memory: feedback_multilingual_keep_wayfinding_original）：
+   食物名稱屬「病人要拿去對照台灣市售包裝、問店員」的資訊 →
+   外語版一律「外文 + 中文小字對照」，不是純翻譯。
+   老闆 2026-09-10 裁示：外文為主、中文小字說明在後。 */
+const PAIR_ORDER = 'fo-first';   // 'zh-first'：中文在前 / 'fo-first'：外文在前
+
+const L = {
+'zh-TW':{badge:'🇹🇼　繁體中文　·　Traditional Chinese　·　台灣',tab:'🇹🇼 繁體中文',tabsub:'台灣　Traditional Chinese',
+  h1:'低膽固醇飲食', kick:'內分泌新陳代謝科　·　飲食衛教',
+  printbtn:'🖨 列印目前這版 / 存成 PDF（A4）',
+  viewtabs:[['core','九招圖卡','每一招能降多少'],['food','食物紅綠燈','多吃 / 適量 / 少吃'],['myth','常見迷思','實證上不成立的']],
+  views:{core:'九招圖卡　·　目標是降低壞膽固醇（LDL-C）',food:'食物紅綠燈　·　多吃、適量、少吃',myth:'常見迷思　·　實證上不成立的'},
+  lead:'飲食做到位，LDL-C 大約可以降 <b>10 到 20%</b>；四招合併（Portfolio 飲食）在研究中可到 <b>20 到 30%</b>。這是藥物以外能做到的全部，但不能取代醫師開的藥。',
   cards:[
-    {i:'fa-bacon',hot:1,t:'<b>飽和脂肪</b>控制在每天熱量 <b>7% 以下</b><span class="w">2,000 大卡的人約 15 公克。肥肉、雞皮、豬油牛油、奶油、椰子油、棕櫚油、全脂乳、糕點是主要來源。這一招降 LDL 最多，約 8 到 10%。</span>'},
-    {i:'fa-ban',hot:1,t:'<b>反式脂肪</b>歸零<span class="w">酥油、人造奶油、酥皮點心、反覆油炸物。標示看到「部分氫化油」就放回去。</span>'},
-    {i:'fa-egg',t:'蛋黃<b>不是主角</b>了<span class="w">飲食膽固醇對血中 LDL 的影響小於飽和脂肪。一天一顆蛋多數人可以；已有心血管疾病或糖尿病者適量。內臟、蟹黃、蝦卵、魚卵才是要少的。</span>'},
-    {i:'fa-wheat-awn',t:'<b>水溶性纖維</b>每天 <span class="a">5 到 10 公克</span><span class="w">燕麥、大麥、豆類、秋葵、蘋果、柑橘。在腸道綁住膽酸排出，降 LDL 約 5%。一碗燕麥粥約 2 公克。</span>'},
-    {i:'fa-seedling',t:'<b>植物固醇</b>每天 <span class="a">2 公克</span><span class="w">降 LDL 約 8 到 10%。一般蔬菜達不到這個量，要靠強化食品（標示含植物固醇的奶類、抹醬）。</span>'},
-    {i:'fa-fish',t:'<b>換掉紅肉</b>：魚每週 2 次、豆製品、堅果每天一份<span class="w">堅果一份約 10 公克（免洗湯匙 1 匙），算進當天的油脂份數。研究用量較高，熱量要一起算。魚油膠囊降的是三酸甘油酯，不降 LDL。</span>'},
-    {i:'fa-bottle-droplet',t:'烹調用油換<b>橄欖油、芥花油、苦茶油</b><span class="w">蒸、煮、滷、烤取代油炸；外食先撈掉浮油、去皮。</span>'},
-    {i:'fa-utensils',t:'整體型態：<b>地中海</b>或<b>得舒（DASH）</b>飲食<span class="w">2025 台灣血脂指引：低、中風險者先做 3 到 6 個月生活型態，再決定要不要用藥。</span>'},
-    {i:'fa-person-walking',t:'體重、運動、戒菸<b>一起做</b><span class="w">減重 5% 就看得到血脂改變；每週 150 分鐘中強度運動。酒精對 LDL 沒有幫助，不要靠紅酒。</span>'},
+   ['<b>飽和脂肪</b>控制在每天熱量 <b>7% 以下</b>','2,000 大卡的人約 15 公克。肥肉、雞皮、豬油牛油、奶油、椰子油、棕櫚油、全脂乳、糕點是主要來源。這一招降 LDL 最多，約 8 到 10%。'],
+   ['<b>反式脂肪</b>歸零','酥油、人造奶油、酥皮點心、反覆油炸物。標示看到「部分氫化油」就放回去。'],
+   ['蛋黃<b>不是主角</b>了','飲食膽固醇對血中 LDL 的影響小於飽和脂肪。一天一顆蛋多數人可以；已有心血管疾病或糖尿病者適量。內臟、蟹黃、蝦卵、魚卵才是要少的。'],
+   ['<b>水溶性纖維</b>每天 <span class="a">5 到 10 公克</span>','燕麥、大麥、豆類、秋葵、蘋果、柑橘。在腸道綁住膽酸排出，降 LDL 約 5%。一碗燕麥粥約 2 公克。'],
+   ['<b>植物固醇</b>每天 <span class="a">2 公克</span>','降 LDL 約 8 到 10%。一般蔬菜達不到這個量，要靠強化食品（標示含植物固醇的奶類、抹醬）。'],
+   ['<b>換掉紅肉</b>：魚每週 2 次、豆製品、堅果每天一份','堅果一份約 10 公克（免洗湯匙 1 匙），算進當天的油脂份數。研究用量較高，熱量要一起算。魚油膠囊降的是三酸甘油酯，不降 LDL。'],
+   ['烹調用油換<b>橄欖油、芥花油、苦茶油</b>','蒸、煮、滷、烤取代油炸；外食先撈掉浮油、去皮。'],
+   ['整體型態：<b>地中海</b>或<b>得舒（DASH）</b>飲食','2025 台灣血脂指引：低、中風險者先做 3 到 6 個月生活型態，再決定要不要用藥。'],
+   ['體重、運動、戒菸<b>一起做</b>','減重 5% 就看得到血脂改變；每週 150 分鐘中強度運動。酒精對 LDL 沒有幫助，不要靠紅酒。'],
   ],
-  note:'降幅是研究平均值，個人差異大；三個月後抽血看變化才算數。已在服用降血脂藥的人，飲食照做，藥不要自己停。'},
-food:{zh:'食物紅綠燈　·　多吃、適量、少吃',
-  html:`<table class="food"><tr><th style="width:90px">燈號</th><th style="width:150px">類別</th><th>內容</th></tr>
-<tr><td class="g">多吃</td><td>全穀雜糧</td><td>燕麥、大麥、糙米、全麥、地瓜、鷹嘴豆、紅豆綠豆等澱粉性豆類；主食一半以上換成這些</td></tr>
-<tr><td class="g">多吃</td><td>豆類與豆製品</td><td>黃豆、黑豆、毛豆、豆腐、無糖豆漿；屬蛋白質，可以取代部分肉類</td></tr>
-<tr><td class="g">多吃</td><td>蔬菜水果</td><td>每天蔬菜 3 份以上、水果 2 份；秋葵、蘋果、柑橘的水溶性纖維特別高</td></tr>
-<tr><td class="g">多吃</td><td>好油與堅果</td><td>橄欖油、芥花油、苦茶油、酪梨；無調味堅果每天一份（約 10 公克，免洗湯匙 1 匙）</td></tr>
-<tr><td class="g">多吃</td><td>魚</td><td>鯖魚、秋刀魚、鮭魚、鱸魚，每週 2 次，蒸烤取代油炸</td></tr>
-<tr><td class="y">適量</td><td>蛋</td><td>一天一顆多數人可以；心血管疾病或糖尿病者每週 3 到 4 顆內</td></tr>
-<tr><td class="y">適量</td><td>瘦肉、去皮禽肉</td><td>每餐掌心大小；選里肌、雞胸，去皮去肥</td></tr>
-<tr><td class="y">適量</td><td>低脂乳製品</td><td>低脂或脫脂奶、無糖優格；全脂改低脂</td></tr>
-<tr><td class="y">適量</td><td>植物固醇強化食品</td><td>要吃到每天 2 公克才有效，照標示份量</td></tr>
-<tr><td class="r">少吃</td><td>飽和脂肪來源</td><td>肥肉、五花、雞皮、豬油、牛油、奶油、椰子油、棕櫚油、全脂鮮奶油</td></tr>
-<tr><td class="r">少吃</td><td>反式脂肪來源</td><td>酥皮、酥油、人造奶油、油炸物、部分氫化油的餅乾糕點</td></tr>
-<tr><td class="r">少吃</td><td>高膽固醇部位</td><td>內臟（肝、腦、腰子）、蟹黃、蝦卵、魚卵、魷魚乾</td></tr>
-<tr><td class="r">少吃</td><td>加工肉與精緻糖</td><td>香腸、培根、火腿；含糖飲料與甜點會拉高三酸甘油酯</td></tr>
-<tr><td class="r">少吃</td><td>酒精</td><td>不會降 LDL，會升三酸甘油酯；紅酒也一樣</td></tr></table>`,
-  note:'份量換算：一份蔬菜約煮熟半碗；一份水果約一個拳頭；一份堅果約 10 公克（免洗湯匙 1 匙），依台灣每日飲食指南算在油脂與堅果種子類。外食族先做三件事：去皮、撈油、主食換糙米或燕麥。'},
-myth:{zh:'常見迷思　·　實證上不成立的',
-  html:`<div class="myth"><h3>這些說法，指引與研究不支持</h3><table>
-<tr><th style="width:230px">常聽到的說法</th><th>實際上</th></tr>
-<tr><td class="x">「不能吃蛋，蛋黃膽固醇高」</td><td>飲食膽固醇對血中 LDL 影響有限，飽和脂肪才是主因。2018 AHA/ACC 起已不設飲食膽固醇上限；一天一顆蛋多數人可以。</td></tr>
-<tr><td class="x">「吃魚油可以降膽固醇」</td><td>魚油（EPA/DHA）降的是三酸甘油酯，對 LDL 沒有降低作用，部分製劑甚至略升。降 LDL 靠飽和脂肪、纖維、植物固醇與藥。</td></tr>
-<tr><td class="x">「植物油都健康」</td><td>椰子油與棕櫚油飽和脂肪超過八成，會升 LDL，跟動物油一樣要少。</td></tr>
-<tr><td class="x">「標示零膽固醇就是好油」</td><td>植物油本來就沒有膽固醇，這個標示不代表低飽和脂肪。看的是「飽和脂肪」那一欄。</td></tr>
-<tr><td class="x">「紅麴、保健品可以取代藥」</td><td>紅麴含天然 lovastatin，但劑量不穩、品質不一，且同樣有肝與肌肉副作用。需要用藥時，用有劑量的藥。</td></tr>
-<tr><td class="x">「喝紅酒保護心臟」</td><td>酒精不降 LDL，會升三酸甘油酯與血壓；沒有喝酒習慣的人不需要為了心臟開始喝。</td></tr>
-<tr><td class="x">「我很瘦，不用管飲食」</td><td>LDL 高低與體重不完全相關，家族性高膽固醇血症的人往往很瘦。瘦的人一樣照這張卡吃。</td></tr>
-<tr><td class="x">「飲食做好就可以停藥」</td><td>飲食最多降 10 到 20%，藥物一顆可降 30 到 50%。已有心血管疾病或糖尿病者，目標值多半飲食達不到；停藥由醫師決定。</td></tr></table></div>`,
-  note:'資料來源：2025 台灣血脂治療指引；2018 AHA/ACC 膽固醇管理指引；2019 ESC/EAS 血脂異常指引；2021 AHA 飲食指引；Portfolio 飲食隨機試驗與統合分析。'},
+  foodhead:['燈號','類別','內容'],
+  food:[
+   ['g','多吃','全穀雜糧','燕麥、大麥、糙米、全麥、地瓜、鷹嘴豆、紅豆綠豆等澱粉性豆類；主食一半以上換成這些'],
+   ['g','多吃','豆類與豆製品','黃豆、黑豆、毛豆、豆腐、無糖豆漿；屬蛋白質，可以取代部分肉類'],
+   ['g','多吃','蔬菜水果','每天蔬菜 3 份以上、水果 2 份；秋葵、蘋果、柑橘的水溶性纖維特別高'],
+   ['g','多吃','好油與堅果','橄欖油、芥花油、苦茶油、酪梨；無調味堅果每天一份（約 10 公克，免洗湯匙 1 匙）'],
+   ['g','多吃','魚','鯖魚、秋刀魚、鮭魚、鱸魚，每週 2 次，蒸烤取代油炸'],
+   ['y','適量','蛋','一天一顆多數人可以；心血管疾病或糖尿病者每週 3 到 4 顆內'],
+   ['y','適量','瘦肉、去皮禽肉','每餐掌心大小；選里肌、雞胸，去皮去肥'],
+   ['y','適量','低脂乳製品','低脂或脫脂奶、無糖優格；全脂改低脂'],
+   ['y','適量','植物固醇強化食品','要吃到每天 2 公克才有效，照標示份量'],
+   ['r','少吃','飽和脂肪來源','肥肉、五花、雞皮、豬油、牛油、奶油、椰子油、棕櫚油、全脂鮮奶油'],
+   ['r','少吃','反式脂肪來源','酥皮、酥油、人造奶油、油炸物、部分氫化油的餅乾糕點'],
+   ['r','少吃','高膽固醇部位','內臟（肝、腦、腰子）、蟹黃、蝦卵、魚卵、魷魚乾'],
+   ['r','少吃','加工肉與精緻糖','香腸、培根、火腿；含糖飲料與甜點會拉高三酸甘油酯'],
+   ['r','少吃','酒精','不會降 LDL，會升三酸甘油酯；紅酒也一樣'],
+  ],
+  mythtitle:'這些說法，指引與研究不支持',
+  mythhead:['常聽到的說法','實際上'],
+  myths:[
+   ['「不能吃蛋，蛋黃膽固醇高」','飲食膽固醇對血中 LDL 影響有限，飽和脂肪才是主因。2018 AHA/ACC 起已不設飲食膽固醇上限；一天一顆蛋多數人可以。'],
+   ['「吃魚油可以降膽固醇」','魚油（EPA/DHA）降的是三酸甘油酯，對 LDL 沒有降低作用，部分製劑甚至略升。降 LDL 靠飽和脂肪、纖維、植物固醇與藥。'],
+   ['「植物油都健康」','椰子油與棕櫚油飽和脂肪超過八成，會升 LDL，跟動物油一樣要少。'],
+   ['「標示零膽固醇就是好油」','植物油本來就沒有膽固醇，這個標示不代表低飽和脂肪。看的是「飽和脂肪」那一欄。'],
+   ['「紅麴、保健品可以取代藥」','紅麴含天然 lovastatin，但劑量不穩、品質不一，且同樣有肝與肌肉副作用。需要用藥時，用有劑量的藥。'],
+   ['「喝紅酒保護心臟」','酒精不降 LDL，會升三酸甘油酯與血壓；沒有喝酒習慣的人不需要為了心臟開始喝。'],
+   ['「我很瘦，不用管飲食」','LDL 高低與體重不完全相關，家族性高膽固醇血症的人往往很瘦。瘦的人一樣照這張卡吃。'],
+   ['「飲食做好就可以停藥」','飲食最多降 10 到 20%，藥物一顆可降 30 到 50%。已有心血管疾病或糖尿病者，目標值多半飲食達不到；停藥由醫師決定。'],
+  ],
+  notes:{
+   core:'降幅是研究平均值，個人差異大；三個月後抽血看變化才算數。已在服用降血脂藥的人，飲食照做，藥不要自己停。',
+   food:'份量換算：一份蔬菜約煮熟半碗；一份水果約一個拳頭；一份堅果約 10 公克（免洗湯匙 1 匙），依台灣每日飲食指南算在油脂與堅果種子類。外食族先做三件事：去皮、撈油、主食換糙米或燕麥。',
+   myth:'資料來源：2025 台灣血脂治療指引；2018 AHA/ACC 膽固醇管理指引；2019 ESC/EAS 血脂異常指引；2021 AHA 飲食指引；Portfolio 飲食隨機試驗與統合分析。'},
+  trans:'',
+  foot:'高醫岡山醫院　內分泌新陳代謝科　盧子文醫師　｜　<b>本圖卡僅供衛教，是否用藥、目標值以醫師判斷為準</b>　｜　依 2025 台灣血脂治療指引、2018 AHA/ACC、2019 ESC/EAS 血脂指引整理　｜　工具版本：2026-09-10'},
+
+'en':{badge:'🇬🇧　英文　·　English',tab:'🇬🇧 English',tabsub:'英文　English',
+  h1:'Low-Cholesterol Diet', kick:'Endocrinology &amp; Metabolism　·　Diet Education',
+  printbtn:'🖨 Print this version / Save as PDF (A4)',
+  viewtabs:[['core','9 Key Moves','how much each one lowers'],['food','Food Traffic Light','more / moderate / less'],['myth','Common Myths','not supported by evidence']],
+  views:{core:'9 Key Moves　·　the goal is lowering bad cholesterol (LDL-C)',food:'Food Traffic Light　·　eat more, in moderation, eat less',myth:'Common Myths　·　not supported by the evidence'},
+  lead:'Done properly, diet lowers LDL-C by roughly <b>10&ndash;20%</b>; combining four of these moves (the Portfolio diet) reached <b>20&ndash;30%</b> in studies. This is everything diet can do &mdash; it does not replace the medication your doctor prescribed.',
+  cards:[
+   ['Keep <b>saturated fat</b> under <b>7% of daily calories</b>','About 15 g for a 2,000 kcal diet. Main sources: fatty meat, chicken skin, lard and butter, coconut oil, palm oil, whole milk, pastries. This single move lowers LDL the most, about 8&ndash;10%.'],
+   ['Get <b>trans fat</b> to zero','Shortening, margarine, flaky pastries, repeatedly fried food. If the label says &ldquo;partially hydrogenated oil&rdquo;, put it back.'],
+   ['Egg yolk is <b>no longer the villain</b>','Dietary cholesterol affects blood LDL less than saturated fat does. One egg a day is fine for most people; go easier if you already have cardiovascular disease or diabetes. Organ meats, crab roe, shrimp roe and fish roe are what to cut.'],
+   ['<b>Soluble fibre</b> <span class="a">5&ndash;10 g a day</span>','Oats, barley, beans, okra, apples, citrus. It binds bile acids in the gut so they are excreted, lowering LDL about 5%. A bowl of oatmeal is about 2 g.'],
+   ['<b>Plant sterols</b> <span class="a">2 g a day</span>','Lowers LDL about 8&ndash;10%. Ordinary vegetables cannot reach this amount &mdash; you need fortified products (milk or spreads labelled as containing plant sterols).'],
+   ['<b>Replace red meat</b>: fish twice a week, soy foods, one serving of nuts daily','One serving of nuts is about 10 g (1 disposable soup spoon) and counts toward the day&rsquo;s fat servings. Studies used higher amounts, so count the calories too. Fish-oil capsules lower triglycerides, not LDL.'],
+   ['Switch cooking oil to <b>olive, canola or camellia oil</b>','Steam, boil, braise or bake instead of deep-frying. When eating out, skim off the surface oil and remove the skin first.'],
+   ['Overall pattern: <b>Mediterranean</b> or <b>DASH</b> diet','2025 Taiwan lipid guideline: people at low or moderate risk try lifestyle change for 3&ndash;6 months first, then decide about medication.'],
+   ['Weight, exercise and quitting smoking <b>go together</b>','Losing 5% of body weight already changes your lipid profile; aim for 150 minutes of moderate exercise a week. Alcohol does not help LDL &mdash; do not rely on red wine.'],
+  ],
+  foodhead:['Light','Category','What it covers'],
+  food:[
+   ['g','Eat more','Whole grains &amp; starches','Oats, barley, brown rice, whole wheat, sweet potato, chickpeas, and starchy beans such as red and mung beans; make these more than half of your staples'],
+   ['g','Eat more','Beans &amp; soy foods','Soybeans, black beans, edamame, tofu, unsweetened soy milk; these count as protein and can replace some meat'],
+   ['g','Eat more','Vegetables &amp; fruit','At least 3 servings of vegetables and 2 of fruit a day; okra, apples and citrus are especially high in soluble fibre'],
+   ['g','Eat more','Good oils &amp; nuts','Olive, canola and camellia oil, avocado; one serving of unsalted nuts a day (about 10 g, 1 disposable soup spoon)'],
+   ['g','Eat more','Fish','Mackerel, saury, salmon, sea bass &mdash; twice a week, steamed or baked instead of fried'],
+   ['y','In moderation','Eggs','One a day is fine for most people; keep to 3&ndash;4 a week if you have cardiovascular disease or diabetes'],
+   ['y','In moderation','Lean meat, skinless poultry','A palm-sized portion per meal; choose loin or chicken breast, remove skin and fat'],
+   ['y','In moderation','Low-fat dairy','Low-fat or skim milk, unsweetened yoghurt; switch from whole fat to low fat'],
+   ['y','In moderation','Plant-sterol fortified foods','Only effective at 2 g a day &mdash; follow the serving size on the label'],
+   ['r','Eat less','Sources of saturated fat','Fatty meat, pork belly, chicken skin, lard, tallow, butter, coconut oil, palm oil, full-fat cream'],
+   ['r','Eat less','Sources of trans fat','Puff pastry, shortening, margarine, deep-fried food, biscuits and cakes made with partially hydrogenated oil'],
+   ['r','Eat less','High-cholesterol parts','Organ meats (liver, brain, kidney), crab roe, shrimp roe, fish roe, dried squid'],
+   ['r','Eat less','Processed meat &amp; refined sugar','Sausage, bacon, ham; sugary drinks and desserts push triglycerides up'],
+   ['r','Eat less','Alcohol','It does not lower LDL and it raises triglycerides &mdash; red wine included'],
+  ],
+  mythtitle:'These claims are not supported by guidelines or research',
+  mythhead:['What you often hear','What is actually true'],
+  myths:[
+   ['&ldquo;You can&rsquo;t eat eggs, the yolk is high in cholesterol&rdquo;','Dietary cholesterol has limited effect on blood LDL; saturated fat is the main driver. Since 2018 the AHA/ACC has set no upper limit on dietary cholesterol. One egg a day is fine for most people.'],
+   ['&ldquo;Fish oil lowers cholesterol&rdquo;','Fish oil (EPA/DHA) lowers triglycerides. It does not lower LDL, and some formulations raise it slightly. LDL comes down through saturated fat, fibre, plant sterols and medication.'],
+   ['&ldquo;All vegetable oils are healthy&rdquo;','Coconut and palm oil are more than 80% saturated fat and raise LDL &mdash; treat them like animal fat and use less.'],
+   ['&ldquo;If the label says zero cholesterol, it&rsquo;s a good oil&rdquo;','Vegetable oil never contained cholesterol in the first place; that label says nothing about saturated fat. Read the &ldquo;saturated fat&rdquo; line instead.'],
+   ['&ldquo;Red yeast rice or supplements can replace the drug&rdquo;','Red yeast rice contains natural lovastatin, but the dose is inconsistent and the quality varies &mdash; and it carries the same liver and muscle side effects. If you need medication, use medication with a known dose.'],
+   ['&ldquo;Red wine protects the heart&rdquo;','Alcohol does not lower LDL; it raises triglycerides and blood pressure. If you do not already drink, there is no heart-related reason to start.'],
+   ['&ldquo;I&rsquo;m thin, so diet doesn&rsquo;t matter&rdquo;','LDL is not fully tied to body weight &mdash; people with familial hypercholesterolaemia are often thin. Thin people follow this same card.'],
+   ['&ldquo;If my diet is good I can stop the medication&rdquo;','Diet lowers LDL by at most 10&ndash;20%; one tablet lowers it 30&ndash;50%. If you already have cardiovascular disease or diabetes, diet alone usually cannot reach your target. Stopping medication is your doctor&rsquo;s decision.'],
+  ],
+  notes:{
+   core:'The percentages are study averages and vary a lot between individuals; what counts is your blood test three months from now. If you are already taking a lipid-lowering drug, follow the diet but do not stop the drug on your own.',
+   food:'Serving sizes: one vegetable serving is about half a bowl cooked; one fruit serving is about the size of your fist; one nut serving is about 10 g (1 disposable soup spoon), counted under fats and nuts in the Taiwan daily dietary guide. If you eat out often, start with three things: remove the skin, skim the oil, and switch your staple to brown rice or oats.',
+   myth:'Sources: 2025 Taiwan lipid management guideline; 2018 AHA/ACC cholesterol guideline; 2019 ESC/EAS dyslipidaemia guideline; 2021 AHA dietary guidance; randomised trials and meta-analyses of the Portfolio diet.'},
+  trans:'Translation prepared with AI assistance and checked by Dr. Lu&rsquo;s team &mdash; not an officially certified translation. Where the wording differs, the Chinese text is authoritative.',
+  foot:'Dr. Tzu-Wen Lu, Division of Endocrinology &amp; Metabolism, KMU Gangshan Hospital　｜　<b>This card is for education only; whether to use medication, and your target values, are your doctor&rsquo;s judgement</b>　｜　Based on the 2025 Taiwan lipid guideline, 2018 AHA/ACC and 2019 ESC/EAS lipid guidelines　｜　Tool version: 2026-09-10'},
+'vi':{badge:'🇻🇳　越南文　·　Tiếng Việt　·　Vietnamese',tab:'🇻🇳 Tiếng Việt',tabsub:'越南文　Vietnamese',
+  h1:'Chế độ ăn giảm cholesterol', kick:'Khoa Nội tiết &amp; Chuyển hóa　·　Giáo dục dinh dưỡng',
+  printbtn:'🖨 In bản đang xem / Lưu thành PDF (A4)',
+  viewtabs:[['core','9 việc cần làm','mỗi việc giảm được bao nhiêu'],['food','Đèn giao thông thực phẩm','nên ăn / vừa phải / hạn chế'],['myth','Những hiểu lầm thường gặp','không có bằng chứng ủng hộ']],
+  views:{core:'9 việc cần làm　·　mục tiêu là hạ cholesterol xấu (LDL-C)',food:'Đèn giao thông thực phẩm　·　nên ăn, vừa phải, hạn chế',myth:'Những hiểu lầm thường gặp　·　không có bằng chứng ủng hộ'},
+  lead:'Nếu làm đúng, chế độ ăn hạ LDL-C khoảng <b>10–20%</b>; kết hợp bốn việc (chế độ ăn Portfolio) đạt tới <b>20–30%</b> trong nghiên cứu. Đây là tất cả những gì ăn uống làm được, nhưng không thay thế thuốc bác sĩ đã kê.',
+  cards:[
+   ['Giữ <b>chất béo bão hòa</b> dưới <b>7% năng lượng mỗi ngày</b>','Khoảng 15 g với người ăn 2.000 kcal. Nguồn chính: thịt mỡ, da gà, mỡ heo và bơ, dầu dừa, dầu cọ, sữa nguyên kem, bánh ngọt. Đây là việc hạ LDL nhiều nhất, khoảng 8–10%.'],
+   ['Đưa <b>chất béo chuyển hóa</b> về 0','Shortening, bơ thực vật, bánh ngàn lớp, đồ chiên đi chiên lại. Thấy nhãn ghi “dầu hydro hóa một phần” thì đặt lại kệ.'],
+   ['Lòng đỏ trứng <b>không còn là thủ phạm chính</b>','Cholesterol trong thức ăn ảnh hưởng đến LDL trong máu ít hơn chất béo bão hòa. Một quả trứng mỗi ngày là được với đa số người; ăn vừa phải nếu đã có bệnh tim mạch hoặc tiểu đường. Nội tạng, gạch cua, trứng tôm, trứng cá mới là thứ cần giảm.'],
+   ['<b>Chất xơ hòa tan</b> <span class="a">5–10 g mỗi ngày</span>','Yến mạch, lúa mạch, các loại đậu, đậu bắp, táo, cam quýt. Nó giữ acid mật trong ruột để thải ra ngoài, hạ LDL khoảng 5%. Một bát cháo yến mạch khoảng 2 g.'],
+   ['<b>Sterol thực vật</b> <span class="a">2 g mỗi ngày</span>','Hạ LDL khoảng 8–10%. Rau thường không đạt được lượng này, phải dùng thực phẩm bổ sung (sữa hoặc bơ phết có ghi chứa sterol thực vật).'],
+   ['<b>Thay thịt đỏ</b>: cá 2 lần/tuần, đậu nành, mỗi ngày một phần hạt','Một phần hạt khoảng 10 g (1 thìa canh nhựa), tính vào lượng dầu mỡ trong ngày. Nghiên cứu dùng lượng cao hơn nên phải tính cả calo. Viên dầu cá hạ triglyceride chứ không hạ LDL.'],
+   ['Đổi dầu nấu ăn sang <b>dầu ô liu, dầu hạt cải, dầu trà</b>','Hấp, luộc, kho, nướng thay cho chiên ngập dầu; ăn ngoài thì vớt lớp mỡ nổi và bỏ da trước.'],
+   ['Kiểu ăn tổng thể: <b>Địa Trung Hải</b> hoặc <b>DASH</b>','Hướng dẫn lipid Đài Loan 2025: người nguy cơ thấp và trung bình thay đổi lối sống 3–6 tháng trước, rồi mới quyết định dùng thuốc.'],
+   ['Cân nặng, vận động, bỏ thuốc lá <b>làm cùng lúc</b>','Giảm 5% cân nặng đã thấy mỡ máu thay đổi; 150 phút vận động cường độ vừa mỗi tuần. Rượu không giúp hạ LDL, đừng trông vào rượu vang đỏ.'],
+  ],
+  foodhead:['Đèn','Nhóm','Nội dung'],
+  food:[
+   ['g','Nên ăn','Ngũ cốc nguyên hạt &amp; tinh bột','Yến mạch, lúa mạch, gạo lứt, lúa mì nguyên cám, khoai lang, đậu gà, đậu đỏ đậu xanh; đổi hơn một nửa lượng cơm sang những thứ này'],
+   ['g','Nên ăn','Đậu và chế phẩm từ đậu nành','Đậu nành, đậu đen, đậu edamame, đậu phụ, sữa đậu nành không đường; tính là chất đạm, thay được một phần thịt'],
+   ['g','Nên ăn','Rau và trái cây','Mỗi ngày ít nhất 3 phần rau và 2 phần trái cây; đậu bắp, táo, cam quýt có chất xơ hòa tan đặc biệt cao'],
+   ['g','Nên ăn','Dầu tốt và các loại hạt','Dầu ô liu, dầu hạt cải, dầu trà, bơ; mỗi ngày một phần hạt không tẩm gia vị (khoảng 10 g, 1 thìa canh nhựa)'],
+   ['g','Nên ăn','Cá','Cá thu, cá thu đao, cá hồi, cá vược — 2 lần/tuần, hấp hoặc nướng thay vì chiên'],
+   ['y','Vừa phải','Trứng','Một quả mỗi ngày là được với đa số người; nếu có bệnh tim mạch hoặc tiểu đường thì 3–4 quả mỗi tuần'],
+   ['y','Vừa phải','Thịt nạc, thịt gia cầm bỏ da','Mỗi bữa bằng lòng bàn tay; chọn thăn, ức gà, bỏ da bỏ mỡ'],
+   ['y','Vừa phải','Sữa ít béo','Sữa ít béo hoặc tách béo, sữa chua không đường; đổi nguyên kem sang ít béo'],
+   ['y','Vừa phải','Thực phẩm bổ sung sterol thực vật','Phải đủ 2 g mỗi ngày mới có tác dụng, theo đúng khẩu phần ghi trên nhãn'],
+   ['r','Hạn chế','Nguồn chất béo bão hòa','Thịt mỡ, ba chỉ, da gà, mỡ heo, mỡ bò, bơ, dầu dừa, dầu cọ, kem béo nguyên kem'],
+   ['r','Hạn chế','Nguồn chất béo chuyển hóa','Bánh ngàn lớp, shortening, bơ thực vật, đồ chiên, bánh quy bánh ngọt làm từ dầu hydro hóa một phần'],
+   ['r','Hạn chế','Bộ phận nhiều cholesterol','Nội tạng (gan, óc, cật), gạch cua, trứng tôm, trứng cá, mực khô'],
+   ['r','Hạn chế','Thịt chế biến và đường tinh luyện','Xúc xích, thịt xông khói, giăm bông; nước ngọt và đồ ngọt làm tăng triglyceride'],
+   ['r','Hạn chế','Rượu bia','Không hạ LDL mà làm tăng triglyceride; rượu vang đỏ cũng vậy'],
+  ],
+  mythtitle:'Những câu này không được hướng dẫn và nghiên cứu ủng hộ',
+  mythhead:['Câu thường nghe','Thực tế'],
+  myths:[
+   ['“Không được ăn trứng, lòng đỏ nhiều cholesterol”','Cholesterol trong thức ăn ảnh hưởng đến LDL trong máu có giới hạn, chất béo bão hòa mới là nguyên nhân chính. Từ 2018 AHA/ACC đã bỏ mức trần cholesterol trong khẩu phần; một quả trứng mỗi ngày là được với đa số người.'],
+   ['“Uống dầu cá hạ được cholesterol”','Dầu cá (EPA/DHA) hạ triglyceride, không hạ LDL, một số chế phẩm còn làm tăng nhẹ. Hạ LDL dựa vào chất béo bão hòa, chất xơ, sterol thực vật và thuốc.'],
+   ['“Dầu thực vật thì đều tốt”','Dầu dừa và dầu cọ có hơn 80% là chất béo bão hòa, làm tăng LDL — phải hạn chế như mỡ động vật.'],
+   ['“Nhãn ghi không cholesterol là dầu tốt”','Dầu thực vật vốn dĩ không có cholesterol, nhãn đó không nói gì về chất béo bão hòa. Hãy xem dòng “chất béo bão hòa”.'],
+   ['“Men gạo đỏ hay thực phẩm chức năng thay được thuốc”','Men gạo đỏ có lovastatin tự nhiên, nhưng liều không ổn định, chất lượng không đồng đều, và vẫn có tác dụng phụ trên gan và cơ. Khi cần dùng thuốc, hãy dùng thuốc có liều rõ ràng.'],
+   ['“Uống rượu vang đỏ bảo vệ tim”','Rượu không hạ LDL, còn làm tăng triglyceride và huyết áp; người không có thói quen uống thì không cần bắt đầu vì tim.'],
+   ['“Tôi gầy nên không cần để ý ăn uống”','LDL không hoàn toàn liên quan đến cân nặng — người tăng cholesterol máu gia đình thường rất gầy. Người gầy vẫn ăn theo tờ này.'],
+   ['“Ăn uống tốt rồi thì bỏ thuốc được”','Ăn uống hạ nhiều nhất 10–20%, một viên thuốc hạ 30–50%. Người đã có bệnh tim mạch hoặc tiểu đường thường không đạt mục tiêu chỉ bằng ăn uống; ngừng thuốc do bác sĩ quyết định.'],
+  ],
+  notes:{
+   core:'Các mức phần trăm là trung bình trong nghiên cứu, khác nhau nhiều tùy người; cái tính là kết quả xét nghiệm máu sau ba tháng. Người đang uống thuốc hạ mỡ máu thì cứ ăn theo, nhưng đừng tự ngừng thuốc.',
+   food:'Quy đổi khẩu phần: một phần rau khoảng nửa bát rau đã nấu; một phần trái cây khoảng một nắm tay; một phần hạt khoảng 10 g (1 thìa canh nhựa), tính vào nhóm dầu mỡ và hạt theo hướng dẫn dinh dưỡng Đài Loan. Người hay ăn ngoài làm ba việc trước: bỏ da, vớt mỡ, đổi cơm sang gạo lứt hoặc yến mạch.',
+   myth:'Nguồn: Hướng dẫn điều trị rối loạn lipid Đài Loan 2025; hướng dẫn cholesterol AHA/ACC 2018; hướng dẫn rối loạn lipid ESC/EAS 2019; hướng dẫn dinh dưỡng AHA 2021; các thử nghiệm ngẫu nhiên và phân tích gộp về chế độ ăn Portfolio.'},
+  trans:'Bản dịch được thực hiện với sự hỗ trợ của AI và do nhóm của bác sĩ kiểm tra — không phải bản dịch được chứng nhận chính thức. Nếu có khác biệt, bản tiếng Trung là bản chuẩn.',
+  foot:'BS. Lu Tzu-Wen, Khoa Nội tiết &amp; Chuyển hóa, Bệnh viện Cương Sơn thuộc Đại học Y Cao Hùng　｜　<b>Tờ này chỉ để giáo dục; việc dùng thuốc và mục tiêu điều trị do bác sĩ quyết định</b>　｜　Theo hướng dẫn lipid Đài Loan 2025, AHA/ACC 2018 và ESC/EAS 2019　｜　Phiên bản công cụ: 2026-09-10'},
+
+'id':{badge:'🇮🇩　印尼文　·　Bahasa Indonesia　·　Indonesian',tab:'🇮🇩 Bahasa Indonesia',tabsub:'印尼文　Indonesian',
+  h1:'Diet Rendah Kolesterol', kick:'Divisi Endokrinologi &amp; Metabolisme　·　Edukasi Gizi',
+  printbtn:'🖨 Cetak versi ini / Simpan sebagai PDF (A4)',
+  viewtabs:[['core','9 Langkah','berapa banyak tiap langkah menurunkan'],['food','Lampu Lalu Lintas Makanan','perbanyak / secukupnya / kurangi'],['myth','Mitos yang Sering Terdengar','tidak didukung bukti']],
+  views:{core:'9 Langkah　·　tujuannya menurunkan kolesterol jahat (LDL-C)',food:'Lampu Lalu Lintas Makanan　·　perbanyak, secukupnya, kurangi',myth:'Mitos yang Sering Terdengar　·　tidak didukung bukti'},
+  lead:'Kalau dijalankan dengan benar, pola makan menurunkan LDL-C sekitar <b>10–20%</b>; menggabungkan empat langkah (diet Portfolio) mencapai <b>20–30%</b> dalam penelitian. Ini batas yang bisa dicapai pola makan, dan tidak menggantikan obat dari dokter.',
+  cards:[
+   ['Jaga <b>lemak jenuh</b> di bawah <b>7% kalori harian</b>','Sekitar 15 g untuk diet 2.000 kkal. Sumber utama: daging berlemak, kulit ayam, lemak babi dan mentega, minyak kelapa, minyak sawit, susu full cream, kue. Langkah ini paling banyak menurunkan LDL, sekitar 8–10%.'],
+   ['Jadikan <b>lemak trans</b> nol','Shortening, margarin, kue berlapis, gorengan yang dipakai berulang. Kalau label tertulis “minyak terhidrogenasi parsial”, kembalikan ke rak.'],
+   ['Kuning telur <b>bukan lagi biang keladinya</b>','Kolesterol dari makanan berpengaruh lebih kecil pada LDL darah dibanding lemak jenuh. Satu telur sehari boleh untuk kebanyakan orang; kurangi bila sudah ada penyakit jantung atau diabetes. Jeroan, telur kepiting, telur udang dan telur ikan justru yang harus dikurangi.'],
+   ['<b>Serat larut</b> <span class="a">5–10 g sehari</span>','Oat, jelai, kacang-kacangan, okra, apel, jeruk. Serat mengikat asam empedu di usus agar terbuang, menurunkan LDL sekitar 5%. Semangkuk bubur oat sekitar 2 g.'],
+   ['<b>Sterol nabati</b> <span class="a">2 g sehari</span>','Menurunkan LDL sekitar 8–10%. Sayur biasa tidak sampai jumlah ini, perlu produk yang difortifikasi (susu atau olesan berlabel mengandung sterol nabati).'],
+   ['<b>Ganti daging merah</b>: ikan 2 kali seminggu, olahan kedelai, satu porsi kacang tiap hari','Satu porsi kacang sekitar 10 g (1 sendok sup plastik) dan dihitung ke dalam porsi lemak hari itu. Penelitian memakai jumlah lebih besar, jadi kalorinya ikut dihitung. Kapsul minyak ikan menurunkan trigliserida, bukan LDL.'],
+   ['Ganti minyak masak ke <b>minyak zaitun, kanola, atau camellia</b>','Kukus, rebus, ungkep, panggang menggantikan goreng rendam; kalau makan di luar, buang minyak yang mengambang dan lepas kulitnya dulu.'],
+   ['Pola menyeluruh: diet <b>Mediterania</b> atau <b>DASH</b>','Panduan lipid Taiwan 2025: yang risikonya rendah dan sedang menjalani perubahan gaya hidup 3–6 bulan dulu, baru diputuskan perlu obat atau tidak.'],
+   ['Berat badan, olahraga, berhenti merokok <b>dijalankan bersama</b>','Turun 5% berat badan saja sudah mengubah profil lemak darah; 150 menit olahraga intensitas sedang per minggu. Alkohol tidak membantu LDL — jangan mengandalkan anggur merah.'],
+  ],
+  foodhead:['Lampu','Kelompok','Isinya'],
+  food:[
+   ['g','Perbanyak','Biji-bijian utuh &amp; sumber pati','Oat, jelai, beras merah, gandum utuh, ubi jalar, kacang arab, kacang merah dan kacang hijau; ganti lebih dari separuh makanan pokok dengan ini'],
+   ['g','Perbanyak','Kacang dan olahan kedelai','Kedelai, kacang hitam, edamame, tahu, susu kedelai tanpa gula; termasuk protein dan bisa menggantikan sebagian daging'],
+   ['g','Perbanyak','Sayur dan buah','Minimal 3 porsi sayur dan 2 porsi buah sehari; okra, apel dan jeruk paling tinggi serat larutnya'],
+   ['g','Perbanyak','Minyak baik dan kacang','Minyak zaitun, kanola, camellia, alpukat; satu porsi kacang tanpa bumbu sehari (sekitar 10 g, 1 sendok sup plastik)'],
+   ['g','Perbanyak','Ikan','Makerel, ikan saury, salmon, kakap — 2 kali seminggu, dikukus atau dipanggang, bukan digoreng'],
+   ['y','Secukupnya','Telur','Satu sehari boleh untuk kebanyakan orang; 3–4 butir seminggu bila ada penyakit jantung atau diabetes'],
+   ['y','Secukupnya','Daging tanpa lemak, unggas tanpa kulit','Sebesar telapak tangan tiap kali makan; pilih has dalam atau dada ayam, buang kulit dan lemaknya'],
+   ['y','Secukupnya','Produk susu rendah lemak','Susu rendah lemak atau skim, yoghurt tanpa gula; ganti full cream ke rendah lemak'],
+   ['y','Secukupnya','Makanan berfortifikasi sterol nabati','Baru berefek pada 2 g sehari — ikuti takaran saji di label'],
+   ['r','Kurangi','Sumber lemak jenuh','Daging berlemak, samcan, kulit ayam, lemak babi, lemak sapi, mentega, minyak kelapa, minyak sawit, krim full cream'],
+   ['r','Kurangi','Sumber lemak trans','Kulit pastri, shortening, margarin, gorengan, biskuit dan kue dari minyak terhidrogenasi parsial'],
+   ['r','Kurangi','Bagian tinggi kolesterol','Jeroan (hati, otak, ginjal), telur kepiting, telur udang, telur ikan, cumi kering'],
+   ['r','Kurangi','Daging olahan dan gula rafinasi','Sosis, bacon, ham; minuman manis dan makanan penutup menaikkan trigliserida'],
+   ['r','Kurangi','Alkohol','Tidak menurunkan LDL dan menaikkan trigliserida; anggur merah pun sama'],
+  ],
+  mythtitle:'Pernyataan berikut tidak didukung panduan maupun penelitian',
+  mythhead:['Yang sering terdengar','Kenyataannya'],
+  myths:[
+   ['“Tidak boleh makan telur, kuningnya tinggi kolesterol”','Kolesterol dari makanan pengaruhnya terbatas pada LDL darah; lemak jenuh yang jadi penyebab utama. Sejak 2018 AHA/ACC tidak lagi menetapkan batas atas kolesterol makanan; satu telur sehari boleh untuk kebanyakan orang.'],
+   ['“Minum minyak ikan bisa menurunkan kolesterol”','Minyak ikan (EPA/DHA) menurunkan trigliserida, bukan LDL, dan sebagian sediaan malah sedikit menaikkannya. LDL turun lewat lemak jenuh, serat, sterol nabati, dan obat.'],
+   ['“Semua minyak nabati itu sehat”','Minyak kelapa dan minyak sawit lebih dari 80% lemak jenuh dan menaikkan LDL — perlakukan seperti lemak hewani dan kurangi.'],
+   ['“Kalau labelnya nol kolesterol berarti minyaknya bagus”','Minyak nabati memang tidak pernah mengandung kolesterol; label itu tidak berbicara soal lemak jenuh. Yang dibaca adalah baris “lemak jenuh”.'],
+   ['“Angkak atau suplemen bisa menggantikan obat”','Angkak mengandung lovastatin alami, tetapi dosisnya tidak stabil, mutunya tidak seragam, dan efek samping pada hati serta otot tetap ada. Kalau memang perlu obat, pakai obat yang dosisnya jelas.'],
+   ['“Minum anggur merah melindungi jantung”','Alkohol tidak menurunkan LDL; ia menaikkan trigliserida dan tekanan darah. Kalau selama ini tidak minum, tidak ada alasan jantung untuk mulai.'],
+   ['“Saya kurus, jadi tidak perlu mengatur makan”','LDL tidak sepenuhnya berkaitan dengan berat badan — penderita hiperkolesterolemia familial justru sering kurus. Yang kurus tetap makan sesuai kartu ini.'],
+   ['“Kalau pola makan sudah baik, obat boleh dihentikan”','Pola makan menurunkan paling banyak 10–20%, satu tablet menurunkan 30–50%. Yang sudah punya penyakit jantung atau diabetes umumnya tidak mencapai target hanya dengan makanan; menghentikan obat adalah keputusan dokter.'],
+  ],
+  notes:{
+   core:'Angka persen adalah rata-rata penelitian dan berbeda-beda antarorang; yang menentukan adalah hasil laboratorium tiga bulan lagi. Kalau sudah minum obat penurun lemak darah, jalankan dietnya tetapi jangan menghentikan obat sendiri.',
+   food:'Takaran: satu porsi sayur sekitar setengah mangkuk matang; satu porsi buah sekitar sekepalan tangan; satu porsi kacang sekitar 10 g (1 sendok sup plastik), dihitung pada kelompok minyak dan kacang menurut panduan gizi harian Taiwan. Yang sering makan di luar mulai dari tiga hal: buang kulit, buang minyak yang mengambang, ganti nasi ke beras merah atau oat.',
+   myth:'Sumber: Panduan tata laksana lipid Taiwan 2025; panduan kolesterol AHA/ACC 2018; panduan dislipidemia ESC/EAS 2019; panduan gizi AHA 2021; uji acak dan meta-analisis diet Portfolio.'},
+  trans:'Terjemahan disusun dengan bantuan AI dan diperiksa oleh tim dokter — bukan terjemahan bersertifikat resmi. Bila ada perbedaan, teks bahasa Mandarin yang berlaku.',
+  foot:'dr. Lu Tzu-Wen, Divisi Endokrinologi &amp; Metabolisme, RS Gangshan KMU　｜　<b>Kartu ini hanya untuk edukasi; keputusan memakai obat dan nilai targetnya ada pada dokter</b>　｜　Disusun menurut panduan lipid Taiwan 2025, AHA/ACC 2018, dan ESC/EAS 2019　｜　Versi alat: 2026-09-10'},
+'th':{badge:'🇹🇭　泰文　·　ภาษาไทย　·　Thai',tab:'🇹🇭 ภาษาไทย',tabsub:'泰文　Thai',
+  h1:'อาหารลดคอเลสเตอรอล', kick:'สาขาต่อมไร้ท่อและเมตาบอลิซึม　·　ความรู้ด้านโภชนาการ',
+  printbtn:'🖨 พิมพ์หน้านี้ / บันทึกเป็น PDF (A4)',
+  viewtabs:[['core','9 ข้อที่ต้องทำ','แต่ละข้อลดได้เท่าไร'],['food','ไฟจราจรอาหาร','กินได้ / พอประมาณ / ลด'],['myth','ความเชื่อที่พบบ่อย','ไม่มีหลักฐานรองรับ']],
+  views:{core:'9 ข้อที่ต้องทำ　·　เป้าหมายคือลดคอเลสเตอรอลชนิดไม่ดี (LDL-C)',food:'ไฟจราจรอาหาร　·　กินได้ พอประมาณ ลด',myth:'ความเชื่อที่พบบ่อย　·　ไม่มีหลักฐานรองรับ'},
+  lead:'ถ้าทำได้ครบ อาหารลด LDL-C ได้ราว <b>10–20%</b>; ถ้ารวมสี่ข้อเข้าด้วยกัน (อาหารแบบ Portfolio) งานวิจัยพบว่าลดได้ถึง <b>20–30%</b> นี่คือทั้งหมดที่อาหารทำได้ แต่ไม่ใช้แทนยาที่แพทย์สั่ง',
+  cards:[
+   ['คุม <b>ไขมันอิ่มตัว</b> ให้ต่ำกว่า <b>7% ของพลังงานต่อวัน</b>','ราว 15 กรัมสำหรับคนที่กิน 2,000 กิโลแคลอรี แหล่งหลัก: เนื้อติดมัน หนังไก่ น้ำมันหมูและเนย น้ำมันมะพร้าว น้ำมันปาล์ม นมไขมันเต็ม ขนมอบ ข้อนี้ลด LDL ได้มากที่สุด ราว 8–10%'],
+   ['ทำให้ <b>ไขมันทรานส์</b> เป็นศูนย์','ชอร์ตเทนนิง มาร์การีน ขนมพัฟ ของทอดซ้ำ ถ้าฉลากเขียนว่า “น้ำมันเติมไฮโดรเจนบางส่วน” ให้วางกลับ'],
+   ['ไข่แดง <b>ไม่ใช่ตัวการหลักอีกแล้ว</b>','คอเลสเตอรอลในอาหารมีผลต่อ LDL ในเลือดน้อยกว่าไขมันอิ่มตัว คนส่วนใหญ่กินไข่วันละฟองได้ ถ้ามีโรคหัวใจหลอดเลือดหรือเบาหวานให้กินพอประมาณ สิ่งที่ต้องลดคือเครื่องใน มันปู ไข่กุ้ง ไข่ปลา'],
+   ['<b>ใยอาหารชนิดละลายน้ำ</b> <span class="a">วันละ 5–10 กรัม</span>','ข้าวโอ๊ต ข้าวบาร์เลย์ ถั่ว กระเจี๊ยบเขียว แอปเปิล ส้ม มันจับกรดน้ำดีในลำไส้แล้วขับออก ลด LDL ราว 5% โจ๊กข้าวโอ๊ตหนึ่งถ้วยราว 2 กรัม'],
+   ['<b>สเตอรอลจากพืช</b> <span class="a">วันละ 2 กรัม</span>','ลด LDL ราว 8–10% ผักทั่วไปให้ไม่ถึงปริมาณนี้ ต้องอาศัยผลิตภัณฑ์เสริม (นมหรือแยมทาขนมที่ฉลากระบุว่ามีสเตอรอลจากพืช)'],
+   ['<b>เปลี่ยนจากเนื้อแดง</b>: ปลาสัปดาห์ละ 2 ครั้ง ผลิตภัณฑ์ถั่วเหลือง ถั่วเปลือกแข็งวันละหนึ่งส่วน','ถั่วหนึ่งส่วนราว 10 กรัม (ช้อนซุปพลาสติก 1 ช้อน) และนับรวมในโควตาไขมันของวันนั้น งานวิจัยใช้ปริมาณสูงกว่านี้ จึงต้องคิดแคลอรีด้วย น้ำมันปลาแคปซูลลดไตรกลีเซอไรด์ ไม่ได้ลด LDL'],
+   ['เปลี่ยนน้ำมันปรุงอาหารเป็น <b>น้ำมันมะกอก น้ำมันคาโนลา น้ำมันเมล็ดชา</b>','นึ่ง ต้ม ตุ๋น อบ แทนการทอดน้ำมันท่วม เวลากินนอกบ้านให้ช้อนน้ำมันที่ลอยอยู่ออกและลอกหนังทิ้งก่อน'],
+   ['รูปแบบโดยรวม: อาหาร <b>เมดิเตอร์เรเนียน</b> หรือ <b>DASH</b>','แนวทางไขมันในเลือดไต้หวัน 2025: ผู้ที่มีความเสี่ยงต่ำถึงปานกลางให้ปรับวิถีชีวิต 3–6 เดือนก่อน แล้วจึงตัดสินใจเรื่องยา'],
+   ['น้ำหนัก การออกกำลังกาย เลิกบุหรี่ <b>ทำไปพร้อมกัน</b>','ลดน้ำหนักเพียง 5% ก็เห็นไขมันในเลือดเปลี่ยน ออกกำลังกายระดับปานกลางสัปดาห์ละ 150 นาที แอลกอฮอล์ไม่ช่วยเรื่อง LDL อย่าหวังพึ่งไวน์แดง'],
+  ],
+  foodhead:['สัญญาณ','หมวด','รายละเอียด'],
+  food:[
+   ['g','กินได้','ธัญพืชเต็มเมล็ดและแป้ง','ข้าวโอ๊ต ข้าวบาร์เลย์ ข้าวกล้อง ข้าวสาลีเต็มเมล็ด มันเทศ ถั่วลูกไก่ ถั่วแดงถั่วเขียว; เปลี่ยนอาหารหลักมากกว่าครึ่งมาเป็นกลุ่มนี้'],
+   ['g','กินได้','ถั่วและผลิตภัณฑ์จากถั่วเหลือง','ถั่วเหลือง ถั่วดำ ถั่วแระ เต้าหู้ นมถั่วเหลืองไม่หวาน; นับเป็นโปรตีน ใช้แทนเนื้อสัตว์บางส่วนได้'],
+   ['g','กินได้','ผักและผลไม้','วันละผักอย่างน้อย 3 ส่วน ผลไม้ 2 ส่วน; กระเจี๊ยบเขียว แอปเปิล ส้ม มีใยอาหารละลายน้ำสูงเป็นพิเศษ'],
+   ['g','กินได้','น้ำมันดีและถั่วเปลือกแข็ง','น้ำมันมะกอก คาโนลา เมล็ดชา อะโวคาโด; ถั่วไม่ปรุงรสวันละหนึ่งส่วน (ราว 10 กรัม ช้อนซุปพลาสติก 1 ช้อน)'],
+   ['g','กินได้','ปลา','ปลาแมกเคอเรล ปลาซาบะ แซลมอน ปลากะพง สัปดาห์ละ 2 ครั้ง นึ่งหรืออบแทนการทอด'],
+   ['y','พอประมาณ','ไข่','คนส่วนใหญ่วันละฟองได้; ถ้ามีโรคหัวใจหลอดเลือดหรือเบาหวาน สัปดาห์ละ 3–4 ฟอง'],
+   ['y','พอประมาณ','เนื้อไม่ติดมัน สัตว์ปีกลอกหนัง','มื้อละเท่าฝ่ามือ; เลือกสันในหรืออกไก่ ลอกหนังและมันออก'],
+   ['y','พอประมาณ','นมไขมันต่ำ','นมพร่องมันเนยหรือขาดมันเนย โยเกิร์ตไม่หวาน; เปลี่ยนจากไขมันเต็มเป็นไขมันต่ำ'],
+   ['y','พอประมาณ','อาหารเสริมสเตอรอลจากพืช','ต้องได้วันละ 2 กรัมจึงได้ผล ให้ทำตามปริมาณบนฉลาก'],
+   ['r','ลด','แหล่งไขมันอิ่มตัว','เนื้อติดมัน หมูสามชั้น หนังไก่ น้ำมันหมู ไขวัว เนย น้ำมันมะพร้าว น้ำมันปาล์ม ครีมไขมันเต็ม'],
+   ['r','ลด','แหล่งไขมันทรานส์','แป้งพัฟ ชอร์ตเทนนิง มาร์การีน ของทอด บิสกิตและเค้กที่ใช้น้ำมันเติมไฮโดรเจนบางส่วน'],
+   ['r','ลด','ส่วนที่คอเลสเตอรอลสูง','เครื่องใน (ตับ สมอง ไต) มันปู ไข่กุ้ง ไข่ปลา ปลาหมึกแห้ง'],
+   ['r','ลด','เนื้อแปรรูปและน้ำตาลขัดขาว','ไส้กรอก เบคอน แฮม; เครื่องดื่มหวานและของหวานทำให้ไตรกลีเซอไรด์สูงขึ้น'],
+   ['r','ลด','แอลกอฮอล์','ไม่ลด LDL แต่ทำให้ไตรกลีเซอไรด์สูงขึ้น; ไวน์แดงก็เช่นกัน'],
+  ],
+  mythtitle:'คำกล่าวเหล่านี้ไม่มีแนวทางเวชปฏิบัติหรืองานวิจัยรองรับ',
+  mythhead:['ที่ได้ยินบ่อย','ความจริง'],
+  myths:[
+   ['“กินไข่ไม่ได้ ไข่แดงคอเลสเตอรอลสูง”','คอเลสเตอรอลในอาหารมีผลต่อ LDL ในเลือดจำกัด ไขมันอิ่มตัวต่างหากที่เป็นตัวหลัก ตั้งแต่ปี 2018 AHA/ACC ไม่กำหนดเพดานคอเลสเตอรอลในอาหารอีกแล้ว คนส่วนใหญ่กินไข่วันละฟองได้'],
+   ['“กินน้ำมันปลาแล้วคอเลสเตอรอลลด”','น้ำมันปลา (EPA/DHA) ลดไตรกลีเซอไรด์ ไม่ได้ลด LDL บางสูตรกลับทำให้สูงขึ้นเล็กน้อย การลด LDL อาศัยไขมันอิ่มตัว ใยอาหาร สเตอรอลจากพืช และยา'],
+   ['“น้ำมันพืชดีต่อสุขภาพทุกชนิด”','น้ำมันมะพร้าวและน้ำมันปาล์มมีไขมันอิ่มตัวเกิน 80% ทำให้ LDL สูงขึ้น ต้องลดเหมือนไขมันสัตว์'],
+   ['“ฉลากเขียนว่าไม่มีคอเลสเตอรอลแปลว่าเป็นน้ำมันดี”','น้ำมันพืชไม่เคยมีคอเลสเตอรอลอยู่แล้ว ฉลากนี้ไม่ได้บอกอะไรเรื่องไขมันอิ่มตัว ให้ดูบรรทัด “ไขมันอิ่มตัว” แทน'],
+   ['“ข้าวยีสต์แดงหรืออาหารเสริมใช้แทนยาได้”','ข้าวยีสต์แดงมีโลวาสแตตินตามธรรมชาติ แต่ขนาดยาไม่คงที่ คุณภาพไม่สม่ำเสมอ และมีผลข้างเคียงต่อตับและกล้ามเนื้อเช่นกัน เมื่อจำเป็นต้องใช้ยา ให้ใช้ยาที่ระบุขนาดชัดเจน'],
+   ['“ดื่มไวน์แดงช่วยปกป้องหัวใจ”','แอลกอฮอล์ไม่ลด LDL แต่ทำให้ไตรกลีเซอไรด์และความดันโลหิตสูงขึ้น คนที่ไม่ได้ดื่มอยู่แล้วไม่จำเป็นต้องเริ่มดื่มเพื่อหัวใจ'],
+   ['“ฉันผอม ไม่ต้องคุมอาหาร”','ระดับ LDL ไม่ได้ขึ้นกับน้ำหนักทั้งหมด ผู้ที่มีภาวะไขมันสูงทางพันธุกรรมมักผอม คนผอมก็กินตามการ์ดใบนี้เช่นกัน'],
+   ['“คุมอาหารดีแล้วหยุดยาได้”','อาหารลดได้มากที่สุด 10–20% ยาหนึ่งเม็ดลดได้ 30–50% ผู้ที่มีโรคหัวใจหลอดเลือดหรือเบาหวานส่วนใหญ่ไปไม่ถึงเป้าหมายด้วยอาหารอย่างเดียว การหยุดยาให้แพทย์เป็นผู้ตัดสิน'],
+  ],
+  notes:{
+   core:'ตัวเลขเปอร์เซ็นต์เป็นค่าเฉลี่ยจากงานวิจัยและต่างกันมากในแต่ละคน สิ่งที่ตัดสินคือผลเลือดในอีกสามเดือน ผู้ที่กินยาลดไขมันอยู่แล้วให้คุมอาหารตามนี้ แต่อย่าหยุดยาเอง',
+   food:'การเทียบส่วน: ผักหนึ่งส่วนราวครึ่งถ้วยหลังปรุงสุก; ผลไม้หนึ่งส่วนราวหนึ่งกำปั้น; ถั่วหนึ่งส่วนราว 10 กรัม (ช้อนซุปพลาสติก 1 ช้อน) นับอยู่ในกลุ่มไขมันและถั่วเมล็ดแห้งตามคู่มือโภชนาการไต้หวัน ผู้ที่กินนอกบ้านบ่อยเริ่มจากสามอย่าง: ลอกหนัง ช้อนน้ำมันออก เปลี่ยนข้าวเป็นข้าวกล้องหรือข้าวโอ๊ต',
+   myth:'แหล่งข้อมูล: แนวทางการรักษาไขมันในเลือดไต้หวัน 2025; แนวทางคอเลสเตอรอล AHA/ACC 2018; แนวทางภาวะไขมันผิดปกติ ESC/EAS 2019; แนวทางโภชนาการ AHA 2021; การทดลองแบบสุ่มและการวิเคราะห์อภิมานของอาหารแบบ Portfolio'},
+  trans:'คำแปลจัดทำโดยใช้ AI ช่วยและตรวจทานโดยทีมแพทย์ — ไม่ใช่คำแปลที่ได้รับการรับรองอย่างเป็นทางการ หากข้อความต่างกัน ให้ยึดฉบับภาษาจีนเป็นหลัก',
+  foot:'นพ. ลู่ จื่อเหวิน สาขาต่อมไร้ท่อและเมตาบอลิซึม โรงพยาบาลกังชาน มหาวิทยาลัยแพทยศาสตร์เกาสง　｜　<b>การ์ดนี้ใช้เพื่อให้ความรู้เท่านั้น การใช้ยาและค่าเป้าหมายขึ้นกับดุลพินิจของแพทย์</b>　｜　เรียบเรียงตามแนวทางไขมันในเลือดไต้หวัน 2025, AHA/ACC 2018 และ ESC/EAS 2019　｜　เวอร์ชันเครื่องมือ: 2026-09-10'},
+
+'tl':{badge:'🇵🇭　菲律賓文　·　Tagalog　·　Filipino',tab:'🇵🇭 Tagalog',tabsub:'菲律賓文　Filipino',
+  h1:'Diyeta na Mababa sa Kolesterol', kick:'Endocrinology at Metabolism　·　Edukasyon sa Nutrisyon',
+  printbtn:'🖨 I-print ang bersyong ito / I-save bilang PDF (A4)',
+  viewtabs:[['core','9 Hakbang','gaano ibinababa ng bawat isa'],['food','Traffic Light ng Pagkain','dagdagan / katamtaman / bawasan'],['myth','Mga Karaniwang Maling Paniniwala','walang ebidensiyang sumusuporta']],
+  views:{core:'9 Hakbang　·　layunin ay ibaba ang masamang kolesterol (LDL-C)',food:'Traffic Light ng Pagkain　·　dagdagan, katamtaman, bawasan',myth:'Mga Karaniwang Maling Paniniwala　·　walang ebidensiyang sumusuporta'},
+  lead:'Kapag nagawa nang tama, ibinababa ng diyeta ang LDL-C nang humigit-kumulang <b>10–20%</b>; kapag pinagsama ang apat na hakbang (Portfolio diet), umabot ito sa <b>20–30%</b> sa mga pag-aaral. Ito na ang kayang gawin ng pagkain, pero hindi nito papalitan ang gamot na inireseta ng doktor.',
+  cards:[
+   ['Panatilihin ang <b>saturated fat</b> sa ilalim ng <b>7% ng kalorya kada araw</b>','Mga 15 g para sa 2,000 kcal na diyeta. Pangunahing pinagmumulan: matabang karne, balat ng manok, mantika at mantikilya, langis ng niyog, palm oil, full-cream na gatas, tinapay at pastry. Ito ang pinakamalaking pagbaba ng LDL, mga 8–10%.'],
+   ['Gawing zero ang <b>trans fat</b>','Shortening, margarine, malutong na pastry, paulit-ulit na piniritong pagkain. Kapag nakasulat sa label na “partially hydrogenated oil”, ibalik mo sa istante.'],
+   ['Hindi na <b>ang pula ng itlog ang pangunahing sisi</b>','Mas maliit ang epekto ng kolesterol mula sa pagkain kaysa sa saturated fat. Isang itlog kada araw ay ayos sa karamihan; magtimpi kung may sakit sa puso o diabetes. Ang dapat bawasan ay lamang-loob, aligue, itlog ng hipon at itlog ng isda.'],
+   ['<b>Soluble fiber</b> <span class="a">5–10 g kada araw</span>','Oats, barley, beans, okra, mansanas, dalandan. Hinihigpitan nito ang bile acid sa bituka para mailabas, nagpapababa ng LDL nang mga 5%. Isang mangkok na oatmeal ay mga 2 g.'],
+   ['<b>Plant sterol</b> <span class="a">2 g kada araw</span>','Nagpapababa ng LDL nang mga 8–10%. Hindi kayang abutin ito ng ordinaryong gulay — kailangan ng fortified na produkto (gatas o pampahid na may nakasulat na plant sterol).'],
+   ['<b>Palitan ang pulang karne</b>: isda 2 beses kada linggo, soy products, isang serving ng mani araw-araw','Isang serving ng mani ay mga 10 g (1 disposable na kutsara) at binibilang sa taba ng araw na iyon. Mas mataas ang ginamit na dami sa pag-aaral, kaya bilangin din ang kalorya. Ang fish oil capsule ay nagpapababa ng triglyceride, hindi ng LDL.'],
+   ['Palitan ang panluto ng <b>olive oil, canola o camellia oil</b>','Pasingawan, pakuluan, nilaga o ihaw sa halip na malalim na pagprito; kapag kumakain sa labas, sandukin muna ang nakalutang na mantika at alisin ang balat.'],
+   ['Kabuuang paraan ng pagkain: <b>Mediterranean</b> o <b>DASH</b>','Gabay sa lipid ng Taiwan 2025: ang may mababa at katamtamang panganib ay sumubok muna ng pagbabago sa pamumuhay nang 3–6 na buwan, saka magdesisyon tungkol sa gamot.'],
+   ['Timbang, ehersisyo at pagtigil sa paninigarilyo — <b>sabay-sabay</b>','Sapat nang pagbaba ng 5% ng timbang para magbago ang lipid; 150 minuto ng katamtamang ehersisyo kada linggo. Hindi nakakatulong ang alak sa LDL — huwag umasa sa red wine.'],
+  ],
+  foodhead:['Ilaw','Uri','Nilalaman'],
+  food:[
+   ['g','Dagdagan','Buong butil at starches','Oats, barley, brown rice, whole wheat, kamote, chickpeas, at mga starchy na beans tulad ng red at mung beans; gawing mahigit kalahati ng iyong staple ang mga ito'],
+   ['g','Dagdagan','Beans at soy products','Soybeans, black beans, edamame, tokwa, soy milk na walang asukal; itinuturing na protina at kayang pumalit sa bahagi ng karne'],
+   ['g','Dagdagan','Gulay at prutas','Hindi bababa sa 3 serving ng gulay at 2 ng prutas kada araw; ang okra, mansanas at dalandan ay lalong mataas sa soluble fiber'],
+   ['g','Dagdagan','Magagandang langis at mani','Olive, canola at camellia oil, abukado; isang serving ng walang asin na mani kada araw (mga 10 g, 1 disposable na kutsara)'],
+   ['g','Dagdagan','Isda','Mackerel, saury, salmon, apahap — 2 beses kada linggo, pasingawan o ihaw sa halip na prituhin'],
+   ['y','Katamtaman','Itlog','Isa kada araw ay ayos sa karamihan; 3–4 kada linggo kung may sakit sa puso o diabetes'],
+   ['y','Katamtaman','Walang tabang karne, manok na walang balat','Kasinlaki ng palad kada kainan; piliin ang loin o dibdib ng manok, alisin ang balat at taba'],
+   ['y','Katamtaman','Low-fat na gatas','Low-fat o skim na gatas, yogurt na walang asukal; palitan ang full fat ng low fat'],
+   ['y','Katamtaman','Pagkaing may plant sterol','Epektibo lamang sa 2 g kada araw — sundin ang serving size sa label'],
+   ['r','Bawasan','Pinagmumulan ng saturated fat','Matabang karne, liempo, balat ng manok, mantika, taba ng baka, mantikilya, langis ng niyog, palm oil, full-fat na cream'],
+   ['r','Bawasan','Pinagmumulan ng trans fat','Puff pastry, shortening, margarine, piniritong pagkain, biskwit at cake na gawa sa partially hydrogenated oil'],
+   ['r','Bawasan','Bahaging mataas sa kolesterol','Lamang-loob (atay, utak, bato), aligue, itlog ng hipon, itlog ng isda, tuyong pusit'],
+   ['r','Bawasan','Processed na karne at refined na asukal','Sausage, bacon, ham; ang matatamis na inumin at dessert ay nagpapataas ng triglyceride'],
+   ['r','Bawasan','Alak','Hindi nito ibinababa ang LDL at pinapataas nito ang triglyceride; pati na ang red wine'],
+  ],
+  mythtitle:'Hindi sinusuportahan ng mga gabay at pananaliksik ang mga sumusunod',
+  mythhead:['Madalas marinig','Ang totoo'],
+  myths:[
+   ['“Bawal ang itlog, mataas sa kolesterol ang pula”','Limitado ang epekto ng kolesterol mula sa pagkain sa LDL ng dugo; ang saturated fat ang pangunahing dahilan. Mula 2018, wala nang itinakdang limitasyon ang AHA/ACC sa kolesterol mula sa pagkain; isang itlog kada araw ay ayos sa karamihan.'],
+   ['“Nakakapagpababa ng kolesterol ang fish oil”','Ang fish oil (EPA/DHA) ay nagpapababa ng triglyceride, hindi ng LDL, at may ilang produkto na bahagyang nagpapataas pa nga. Ang LDL ay bumababa sa pamamagitan ng saturated fat, fiber, plant sterol at gamot.'],
+   ['“Malusog ang lahat ng vegetable oil”','Mahigit 80% saturated fat ang langis ng niyog at palm oil at nagpapataas ito ng LDL — ituring na parang taba ng hayop at bawasan.'],
+   ['“Kung nakasulat na zero cholesterol, magandang langis iyon”','Talagang walang kolesterol ang vegetable oil sa simula pa lang; walang sinasabi ang label na iyon tungkol sa saturated fat. Ang basahin ay ang linyang “saturated fat”.'],
+   ['“Kayang palitan ng red yeast rice o supplement ang gamot”','May natural na lovastatin ang red yeast rice, pero hindi matatag ang dosis, magkakaiba ang kalidad, at may parehong side effect sa atay at kalamnan. Kapag kailangan ng gamot, gumamit ng gamot na may tiyak na dosis.'],
+   ['“Pinoprotektahan ng red wine ang puso”','Hindi ibinababa ng alak ang LDL; pinapataas nito ang triglyceride at presyon ng dugo. Kung hindi ka naman umiinom, walang dahilan sa puso para magsimula.'],
+   ['“Payat ako kaya hindi ko kailangang mag-ingat sa pagkain”','Hindi ganap na nakadepende sa timbang ang LDL — madalas na payat ang mga may familial hypercholesterolemia. Kahit payat, sundin pa rin ang card na ito.'],
+   ['“Kapag maayos na ang pagkain ko, puwede nang itigil ang gamot”','Pinakamataas na 10–20% ang naibababa ng pagkain; 30–50% naman ang isang tableta. Kadalasang hindi naaabot ng pagkain lamang ang target ng may sakit sa puso o diabetes; ang doktor ang magdedesisyon kung titigil sa gamot.'],
+  ],
+  notes:{
+   core:'Ang mga porsiyento ay average mula sa pag-aaral at malaki ang pagkakaiba sa bawat tao; ang mahalaga ay ang resulta ng dugo mo pagkalipas ng tatlong buwan. Kung umiinom ka na ng gamot sa kolesterol, sundin ang diyeta pero huwag mong ititigil ang gamot nang mag-isa.',
+   food:'Sukat ng serving: isang serving ng gulay ay mga kalahating mangkok na luto; isang serving ng prutas ay kasinlaki ng iyong kamao; isang serving ng mani ay mga 10 g (1 disposable na kutsara), binibilang sa taba at buto ayon sa pang-araw-araw na gabay sa nutrisyon ng Taiwan. Kung madalas kang kumain sa labas, simulan sa tatlo: alisin ang balat, sandukin ang mantika, at palitan ang kanin ng brown rice o oats.',
+   myth:'Sanggunian: 2025 Taiwan lipid management guideline; 2018 AHA/ACC cholesterol guideline; 2019 ESC/EAS dyslipidemia guideline; 2021 AHA dietary guidance; mga randomized trial at meta-analysis ng Portfolio diet.'},
+  trans:'Ang salin ay ginawa nang may tulong ng AI at sinuri ng koponan ng doktor — hindi ito opisyal na sertipikadong salin. Kung may pagkakaiba, ang tekstong Tsino ang masusunod.',
+  foot:'Dr. Tzu-Wen Lu, Endocrinology at Metabolism, KMU Gangshan Hospital　｜　<b>Pang-edukasyon lamang ang card na ito; ang paggamit ng gamot at ang target na halaga ay pagpapasya ng doktor</b>　｜　Batay sa 2025 Taiwan lipid guideline, 2018 AHA/ACC at 2019 ESC/EAS　｜　Bersyon ng tool: 2026-09-10'},
 };
-function setV(k){
-  const v=V[k];
-  document.getElementById('zh').textContent=v.zh;
-  document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.dataset.v===k));
-  let h='';
-  if(v.cards){
-    h=`<div class="grid"><div class="c lead"><i class="fa-solid ${v.lead.i}"></i><div class="t">${v.lead.t}</div></div>`;
-    v.cards.forEach((c,idx)=>{h+=`<div class="c ${c.hot?'hot':''}"><span class="n">${String(idx+1).padStart(2,'0')}</span><i class="fa-solid ${c.i}"></i><div class="t">${c.t}</div></div>`;});
-    h+='</div>';
-  }else{h=v.html;}
-  document.getElementById('body').innerHTML=h;
-  document.getElementById('note').textContent=v.note;
+
+const ZH = L['zh-TW'];
+
+/* 外文在前、中文小字在後；中文版只回中文本身 */
+function pair(zh, fo, k){
+  if (k === 'zh-TW' || zh === fo) return zh;
+  const a = `<span class="p-zh">${zh}</span>`, b = `<span class="p-fo">${fo}</span>`;
+  return PAIR_ORDER === 'zh-first' ? a + b : b + a;
 }
-setV((new URLSearchParams(location.search).get('v') in V)?new URLSearchParams(location.search).get('v'):'core');
+
+let LANG = 'zh-TW', VIEW = 'core';
+const $ = id => document.getElementById(id);
+
+function renderLangTabs(){
+  $('langtabs').innerHTML = Object.keys(L).map(k =>
+    `<div class="tab ${k===LANG?'active':''}" onclick="setLang('${k}')">${L[k].tab}<small>${L[k].tabsub}</small></div>`).join('');
+}
+function renderViewTabs(){
+  const d = L[LANG];
+  $('viewtabs').innerHTML = d.viewtabs.map(([v,label,sub],i) =>
+    `<div class="tab ${v===VIEW?'active':''}" onclick="setV('${v}')">${pair(ZH.viewtabs[i][1],label,LANG)}<small>${pair(ZH.viewtabs[i][2],sub,LANG)}</small></div>`).join('');
+}
+
+function render(){
+  const d = L[LANG], k = LANG;
+  document.documentElement.lang = (k === 'zh-TW') ? 'zh-Hant' : k;
+  $('langbadge').textContent = d.badge;
+  $('kick').innerHTML = pair(ZH.kick, d.kick, k);
+  $('h1').innerHTML   = pair(ZH.h1, d.h1, k);
+  $('zh').innerHTML   = pair(ZH.views[VIEW], d.views[VIEW], k);
+  $('foot').innerHTML = pair(ZH.foot, d.foot, k);
+  $('note').innerHTML = pair(ZH.notes[VIEW], d.notes[VIEW], k);
+  $('printbtn').innerHTML = d.printbtn;
+  // 翻譯來源聲明：只在外語版出現（老闆 2026-09-10 同意揭露翻譯來源）
+  $('transnote').innerHTML = d.trans ? `${d.trans}<span class="p-zh">本外語版由 AI 協助翻譯、經醫師端校閱，非官方認證譯本；文字如有出入，以中文版為準。</span>` : '';
+
+  let h = '';
+  if (VIEW === 'core'){
+    h = `<div class="grid"><div class="c lead"><i class="fa-solid fa-heart-pulse"></i><div class="t">${pair(ZH.lead, d.lead, k)}</div></div>`;
+    const ICON = ['fa-bacon','fa-ban','fa-egg','fa-wheat-awn','fa-seedling','fa-fish','fa-bottle-droplet','fa-utensils','fa-person-walking'];
+    const HOT  = [1,1,0,0,0,0,0,0,0];
+    d.cards.forEach((c,i) => {
+      h += `<div class="c ${HOT[i]?'hot':''}"><span class="n">${String(i+1).padStart(2,'0')}</span>`
+         + `<i class="fa-solid ${ICON[i]}"></i><div class="t">${pair(ZH.cards[i][0], c[0], k)}`
+         + `<span class="w">${pair(ZH.cards[i][1], c[1], k)}</span></div></div>`;
+    });
+    h += '</div>';
+  } else if (VIEW === 'food'){
+    h = `<table class="food"><tr>${d.foodhead.map((t,i)=>`<th>${pair(ZH.foodhead[i],t,k)}</th>`).join('')}</tr>`
+      + d.food.map((r,i)=>`<tr><td class="${r[0]}">${pair(ZH.food[i][1],r[1],k)}</td>`
+      + `<td>${pair(ZH.food[i][2],r[2],k)}</td><td>${pair(ZH.food[i][3],r[3],k)}</td></tr>`).join('')
+      + '</table>';
+  } else {
+    h = `<div class="myth"><h3>${pair(ZH.mythtitle,d.mythtitle,k)}</h3><table><tr>`
+      + d.mythhead.map((t,i)=>`<th>${pair(ZH.mythhead[i],t,k)}</th>`).join('') + '</tr>'
+      + d.myths.map((r,i)=>`<tr><td class="x">${pair(ZH.myths[i][0],r[0],k)}</td>`
+      + `<td>${pair(ZH.myths[i][1],r[1],k)}</td></tr>`).join('')
+      + '</table></div>';
+  }
+  $('body').innerHTML = h;
+  renderLangTabs(); renderViewTabs();
+}
+
+function setLang(k){ LANG = k; render(); }
+function setV(v){ VIEW = v; render(); }
+
+const q = new URLSearchParams(location.search);
+if (q.get('v') && ZH.viewtabs.some(t => t[0] === q.get('v'))) VIEW = q.get('v');
+if (q.get('lang') && L[q.get('lang')]) LANG = q.get('lang');
+render();
 </script></body></html>

@@ -1,18 +1,22 @@
 <!DOCTYPE html><html lang="zh-Hant"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="author" content="盧子文醫師 - Dr. Lu Tz-Wen">
-<meta name="description" content="低尿酸（痛風）飲食衛教圖卡（實證版）。依 2022 台灣痛風與高尿酸血症診治指引、2020 ACR 痛風指引整理：酒精與果糖比海鮮更關鍵、植物性普林不用怕，附食物紅綠燈與常見迷思，可列印 A4。">
-<title>低尿酸（痛風）飲食 · 衛教圖卡（實證版）</title>
+<meta name="description" content="低尿酸（痛風）飲食衛教圖卡（實證版・6 國語言）。依 2022 台灣痛風與高尿酸血症診治指引、2020 ACR 痛風指引整理，先抓酒精、含糖飲料、減重三件事，附食物紅綠燈與常見迷思（豆腐、香菇可以吃）。外語版一律外文在前、中文小字在後，方便對照台灣市售包裝。可列印 A4。">
+<title>低尿酸（痛風）飲食 · 衛教圖卡（實證版・6 國語言）</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <style>
-:root{--ink:#1b1f1d;--sub:#5f655f;--line:#e6e2d8;--accent:#6b4c9a;--hot:#c0562c;--paper:#faf8f2;--card:#fff;--faint:#9a978c;--ok:#27ae60;--mod:#e67e22;--warn:#c0392b;}
+:root{--ink:#1b1f1d;--sub:#5f655f;--line:#e6e2d8;--accent:#0f6e64;--hot:#c0562c;--paper:#faf8f2;--card:#fff;--faint:#9a978c;--ok:#27ae60;--mod:#e67e22;--warn:#c0392b;}
 *{box-sizing:border-box;margin:0;padding:0}
-body{background:#eceae2;font-family:"PingFang TC","Noto Sans TC","Microsoft JhengHei",sans-serif;color:var(--ink);padding:20px 12px;-webkit-font-smoothing:antialiased}
+body{background:#eceae2;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"PingFang TC","Noto Sans TC","Microsoft JhengHei","Sukhumvit Set","Noto Sans Thai",sans-serif;color:var(--ink);padding:20px 12px;-webkit-font-smoothing:antialiased}
 .tabs{max-width:900px;margin:0 auto 14px;display:flex;gap:8px}
 .tab{flex:1;text-align:center;padding:12px 6px;border-radius:10px;border:1px solid var(--line);background:#fff;cursor:pointer;font-weight:800;color:var(--sub);font-size:15px}
 .tab small{display:block;font-weight:500;font-size:11px;color:var(--faint);margin-top:2px}
 .tab.active{background:var(--ink);color:var(--paper);border-color:var(--ink)}
-.tab.active small{color:#c9b8e8}
+.tab.active small{color:#9fd8ce}
+.langtabs{max-width:900px;margin:0 auto 10px;display:flex;gap:6px;flex-wrap:wrap}
+.langtabs .tab{flex:1 1 calc(33.333% - 4px);padding:9px 5px;font-size:13.5px}
+.langtabs .tab small{font-size:10px}
+.langbadge{display:inline-block;background:var(--ink);color:var(--paper);font-size:12.5px;font-weight:800;padding:5px 13px;border-radius:999px;margin-bottom:11px;line-height:1.5}
 .sheet{max-width:900px;margin:0 auto;background:var(--paper);padding:40px 38px 26px}
 .head{text-align:center;border-bottom:2px solid var(--ink);padding-bottom:15px;margin-bottom:4px}
 .kick{font-size:12px;letter-spacing:.34em;color:var(--accent);font-weight:800;margin-bottom:9px}
@@ -29,102 +33,459 @@ body{background:#eceae2;font-family:"PingFang TC","Noto Sans TC","Microsoft Jhen
 .c.lead{grid-column:span 3;flex-direction:row;gap:18px;justify-content:flex-start;text-align:left;min-height:auto;background:var(--ink);border:none}
 .c.lead i{color:var(--paper);font-size:28px;margin:0;flex:0 0 auto}
 .c.lead .t{color:var(--paper);font-size:16px;font-weight:600;line-height:1.6}
-.c.lead .t b{color:#c9b8e8}
+.c.lead .t b{color:#7fd8cc}
+
+/* 外文在前、中文小字在後（老闆 2026-09-10 裁示；與 thyroid-fna-edu 同一套） */
+.p-zh,.p-fo{display:block}
+.p-zh{font-size:12.5px;font-weight:500;color:var(--sub);line-height:1.55;margin-top:5px}
+.c .t .p-zh{font-size:12.5px}
+.c .w .p-zh{font-size:11.5px;color:var(--faint);margin-top:3px}
+.c.lead .t .p-zh{color:#b9c6c2;font-size:12.5px}
+td .p-zh,th .p-zh{font-size:11.5px;color:var(--faint);margin-top:2px;font-weight:500}
+.head h1 .p-zh{font-size:15px;color:var(--sub);margin-top:5px;font-weight:700}
+.head .zh .p-zh,.note .p-zh{font-size:12px;color:var(--faint);margin-top:3px}
+
 table.food{width:100%;border-collapse:collapse;margin-top:16px;font-size:14px;background:#fff;border:1px solid var(--line);border-radius:12px;overflow:hidden}
 table.food th,table.food td{border-bottom:1px solid var(--line);padding:10px 10px;text-align:left;vertical-align:top;line-height:1.6}
 table.food th{background:var(--paper);font-weight:800;color:var(--sub);font-size:13px}
-table.food td.g{color:var(--ok);font-weight:800;white-space:nowrap}
-table.food td.y{color:var(--mod);font-weight:800;white-space:nowrap}
-table.food td.r{color:var(--warn);font-weight:800;white-space:nowrap}
+/* 欄寬：原本寫在 <th> 的 inline style，改版時移到 CSS，並為雙語留寬（外文比中文長） */
+table.food th:nth-child(1),table.food td:nth-child(1){width:110px}
+table.food th:nth-child(2),table.food td:nth-child(2){width:180px}
+.myth th:nth-child(1),.myth td:nth-child(1){width:250px}
+table.food td.g{color:var(--ok);font-weight:800}
+table.food td.y{color:var(--mod);font-weight:800}
+table.food td.r{color:var(--warn);font-weight:800}
 .myth{margin-top:16px;background:#fff;border:1px solid var(--line);border-radius:12px;padding:16px 18px}
 .myth h3{font-size:16px;color:var(--accent);margin-bottom:10px;border-left:4px solid var(--accent);padding-left:10px}
 .myth table{width:100%;border-collapse:collapse;font-size:14px}
 .myth th,.myth td{border-bottom:1px solid var(--line);padding:9px 8px;text-align:left;vertical-align:top;line-height:1.65}
 .myth th{background:var(--paper);font-weight:800;color:var(--sub);font-size:13px}
-.myth td.x{color:var(--warn);font-weight:700;white-space:nowrap}
+.myth td.x{color:var(--warn);font-weight:700}
 .note{margin-top:14px;font-size:12.5px;color:var(--sub);line-height:1.7}
 .foot{margin-top:15px;text-align:center;font-size:11px;color:var(--faint);line-height:1.7;border-top:1px solid var(--line);padding-top:11px}
 .foot b{color:var(--sub)}
+.transnote{margin-top:6px;text-align:center;font-size:10.5px;color:var(--faint);line-height:1.6}
+.transnote .p-zh{font-size:10.5px;margin-top:2px}
 .bar{text-align:center;margin:16px 0}
 .bar button{background:var(--ink);color:var(--paper);border:0;padding:11px 24px;font-size:15px;font-weight:700;border-radius:6px;cursor:pointer}
-@media print{@page{size:A4 portrait;margin:8mm}body{background:#fff;padding:0}.tabs,.no-print{display:none!important}.sheet{max-width:100%;padding:4mm}.c,tr{break-inside:avoid}}
-@media(max-width:640px){.grid{grid-template-columns:repeat(2,1fr)}.c.lead{grid-column:span 2}.tabs{flex-wrap:wrap}.tab{min-width:30%}}
+@media print{@page{size:A4 portrait;margin:8mm}body{background:#fff;padding:0}.tabs,.langtabs,.no-print{display:none!important}.sheet{max-width:100%;padding:4mm}.c,tr{break-inside:avoid}}
+@media(max-width:640px){.grid{grid-template-columns:repeat(2,1fr)}.c.lead{grid-column:span 2}.tabs{flex-wrap:wrap}.tab{min-width:30%}.langtabs .tab{flex:1 1 calc(50% - 3px)}
+  /* 手機：取消固定欄寬，否則雙語內容會被擠成一行一兩個字 */
+  table.food th:nth-child(1),table.food td:nth-child(1),
+  table.food th:nth-child(2),table.food td:nth-child(2),
+  .myth th:nth-child(1),.myth td:nth-child(1){width:auto}
+  table.food th,table.food td,.myth th,.myth td{padding:8px 6px;font-size:13px}
+  .myth{padding:12px 10px}}
 @media(max-width:420px){.grid{grid-template-columns:1fr}.c.lead{grid-column:span 1;flex-direction:column;text-align:center}}
 </style></head><body>
-<div class="tabs no-print">
-  <div class="tab active" data-v="core" onclick="setV('core')">九招圖卡<small>先抓最有影響的</small></div>
-  <div class="tab" data-v="food" onclick="setV('food')">食物紅綠燈<small>可以吃 / 適量 / 少碰</small></div>
-  <div class="tab" data-v="myth" onclick="setV('myth')">常見迷思<small>豆腐可以吃</small></div>
-</div>
+<div class="langtabs no-print" id="langtabs"></div>
+<div class="tabs no-print" id="viewtabs"></div>
 <div class="sheet" id="sheet">
   <div class="head">
-    <div class="kick">內分泌新陳代謝科　·　飲食衛教</div>
-    <h1 id="h1">低尿酸（痛風）飲食</h1>
+    <div class="langbadge" id="langbadge"></div>
+    <div class="kick" id="kick"></div>
+    <h1 id="h1"></h1>
     <div class="zh" id="zh"></div>
   </div>
   <div id="body"></div>
   <div class="note" id="note"></div>
-  <div class="foot">高醫岡山醫院　內分泌新陳代謝科　盧子文醫師　｜　<b>本圖卡僅供衛教，用藥與目標值以醫師判斷為準</b>　｜　依 2022 台灣痛風與高尿酸血症診治指引、2020 ACR 痛風指引整理　｜　工具版本：2026-09-09</div>
+  <div class="foot" id="foot"></div>
+  <div class="transnote" id="transnote"></div>
 </div>
-<div class="bar no-print"><button onclick="window.print()">🖨 列印目前這版 / 存成 PDF（A4）</button></div>
+<div class="bar no-print"><button onclick="window.print()" id="printbtn">🖨 列印目前這版 / 存成 PDF（A4）</button></div>
 <script>
-const V={
-core:{zh:'九招圖卡　·　先抓最有影響的三件事：酒、含糖飲料、減重',
-  lead:{i:'fa-droplet',t:'飲食能降的尿酸大約 <b>1 mg/dL</b> 上下；治療目標是尿酸 <b>低於 6 mg/dL</b>（有痛風石低於 5），多數人要靠藥才到得了。飲食的價值是<b>少發作</b>，和讓藥的效果穩定。'},
+/* 多語版原則（見 memory: feedback_multilingual_keep_wayfinding_original）：
+   食物名稱屬「病人要拿去對照台灣市售包裝、問店員」的資訊 →
+   外語版一律「外文 + 中文小字對照」，不是純翻譯。
+   老闆 2026-09-10 裁示：外文為主、中文小字說明在後。 */
+const PAIR_ORDER = 'fo-first';   // 'zh-first'：中文在前 / 'fo-first'：外文在前
+
+const L = {
+'zh-TW':{badge:'🇹🇼　繁體中文　·　Traditional Chinese　·　台灣',tab:'🇹🇼 繁體中文',tabsub:'台灣　Traditional Chinese',
+  h1:'低尿酸（痛風）飲食', kick:'內分泌新陳代謝科　·　飲食衛教',
+  printbtn:'🖨 列印目前這版 / 存成 PDF（A4）',
+  viewtabs:[['core','九招圖卡','先抓最有影響的'],['food','食物紅綠燈','可以吃 / 適量 / 少碰'],['myth','常見迷思','豆腐可以吃']],
+  views:{core:'九招圖卡　·　先抓最有影響的三件事：酒、含糖飲料、減重',food:'食物紅綠燈　·　可以吃、適量、少碰',myth:'常見迷思　·　實證上不成立的'},
+  lead:'飲食能降的尿酸大約 <b>1 mg/dL</b> 上下；治療目標是尿酸 <b>低於 6 mg/dL</b>（有痛風石低於 5），多數人要靠藥才到得了。飲食的價值是<b>少發作</b>，和讓藥的效果穩定。',
   cards:[
-    {i:'fa-beer-mug-empty',hot:1,t:'<b>酒精</b>是第一名<span class="w">啤酒、烈酒最傷，紅酒也不豁免。24 小時內喝 1 到 2 份，發作風險就多四成，喝越多越高。發作期間完全不喝。</span>'},
-    {i:'fa-glass-water',hot:1,t:'<b>含糖飲料、手搖、果汁</b>比海鮮更關鍵<span class="w">果糖代謝直接產生尿酸：每公斤體重吃 1 公克果糖，2 小時內尿酸升 1 到 2 mg/dL。高果糖糖漿的飲料和甜點是主要來源。</span>'},
-    {i:'fa-drumstick-bite',t:'<b>動物性高普林</b>少碰<span class="w">內臟、小魚乾、白帶魚、沙丁魚、蝦蟹貝、濃肉湯與火鍋湯底。紅肉適量、每餐掌心大小；蛋白質每天每公斤體重約 1 公克就夠。</span>'},
-    {i:'fa-leaf',t:'<b>植物性普林不用怕</b><span class="w">豆類、豆腐、豆漿、香菇、蘆筍、菠菜。研究顯示這些不增加痛風發作，指引也不限制蔬菜與豆製品。</span>'},
-    {i:'fa-glass-water-droplet',t:'<b>低脂乳製品</b>每天 1 到 2 份<span class="w">低脂牛奶、無糖優格會幫助尿酸排出，是少數「多吃反而好」的食物。</span>'},
-    {i:'fa-mug-hot',t:'咖啡可以喝，<b>水</b>每天 2,000 毫升以上<span class="w">適量咖啡與較低的尿酸有關；水分足夠有助尿酸排出，有腎結石病史的人更要喝夠。</span>'},
-    {i:'fa-weight-scale',t:'減重<b>慢慢來</b>，每月不超過 1 公斤<span class="w">過重的人減重能降尿酸；但快速減重、斷食、生酮會讓組織分解、尿酸暴衝，反而誘發發作。</span>'},
-    {i:'fa-pills',t:'維生素 C 與櫻桃<b>不必特地買</b><span class="w">2020 ACR 指引：不建議額外補充維生素 C 來降尿酸；櫻桃證據不足，沒有建議。</span>'},
-    {i:'fa-user-doctor',t:'發作時<b>藥不要自己停</b><span class="w">正在吃的降尿酸藥照吃；急性期冰敷、休息、依醫師處方用消炎藥或秋水仙素。尿酸正常不等於可以停藥。</span>'},
+   ['<b>酒精</b>是第一名','啤酒、烈酒最傷，紅酒也不豁免。24 小時內喝 1 到 2 份，發作風險就多四成，喝越多越高。發作期間完全不喝。'],
+   ['<b>含糖飲料、手搖、果汁</b>比海鮮更關鍵','果糖代謝直接產生尿酸：每公斤體重吃 1 公克果糖，2 小時內尿酸升 1 到 2 mg/dL。高果糖糖漿的飲料和甜點是主要來源。'],
+   ['<b>動物性高普林</b>少碰','內臟、小魚乾、白帶魚、沙丁魚、蝦蟹貝、濃肉湯與火鍋湯底。紅肉適量、每餐掌心大小；蛋白質每天每公斤體重約 1 公克就夠。'],
+   ['<b>植物性普林不用怕</b>','豆類、豆腐、豆漿、香菇、蘆筍、菠菜。研究顯示這些不增加痛風發作，指引也不限制蔬菜與豆製品。'],
+   ['<b>低脂乳製品</b>每天 1 到 2 份','低脂牛奶、無糖優格會幫助尿酸排出，是少數「多吃反而好」的食物。'],
+   ['咖啡可以喝，<b>水</b>每天 2,000 毫升以上','適量咖啡與較低的尿酸有關；水分足夠有助尿酸排出，有腎結石病史的人更要喝夠。'],
+   ['減重<b>慢慢來</b>，每月不超過 1 公斤','過重的人減重能降尿酸；但快速減重、斷食、生酮會讓組織分解、尿酸暴衝，反而誘發發作。'],
+   ['維生素 C 與櫻桃<b>不必特地買</b>','2020 ACR 指引：不建議額外補充維生素 C 來降尿酸；櫻桃證據不足，沒有建議。'],
+   ['發作時<b>藥不要自己停</b>','正在吃的降尿酸藥照吃；急性期冰敷、休息、依醫師處方用消炎藥或秋水仙素。尿酸正常不等於可以停藥。'],
   ],
-  note:'2022 台灣指引與 2020 ACR 指引把飲食建議列為「有條件建議」，意思是有幫助、但幅度有限，藥物治療決定於醫師。這張卡先抓前三招，做得到再往下。'},
-food:{zh:'食物紅綠燈　·　可以吃、適量、少碰',
-  html:`<table class="food"><tr><th style="width:90px">燈號</th><th style="width:150px">類別</th><th>內容</th></tr>
-<tr><td class="g">可以吃</td><td>五穀根莖</td><td>飯、麵、地瓜、馬鈴薯、全穀類，不限制</td></tr>
-<tr><td class="g">可以吃</td><td>蔬菜</td><td>全部可以，包括常被誤傳的香菇、蘆筍、菠菜、豆芽</td></tr>
-<tr><td class="g">可以吃</td><td>豆類與豆製品</td><td>豆腐、豆漿、黃豆、毛豆；不增加發作，可當蛋白質來源</td></tr>
-<tr><td class="g">可以吃</td><td>低脂乳製品與蛋</td><td>低脂牛奶、無糖優格每天 1 到 2 份；蛋幾乎不含普林</td></tr>
-<tr><td class="g">可以吃</td><td>水、無糖茶、咖啡</td><td>每天 2,000 毫升以上；咖啡適量</td></tr>
-<tr><td class="g">可以吃</td><td>水果</td><td>整顆水果每天 2 份；不要打成果汁</td></tr>
-<tr><td class="y">適量</td><td>瘦肉、去皮禽肉</td><td>每餐掌心大小；蛋白質每天每公斤體重約 1 公克</td></tr>
-<tr><td class="y">適量</td><td>一般魚類</td><td>鱸魚、鯛魚、鮭魚、鯖魚適量；不喝魚湯</td></tr>
-<tr><td class="y">適量</td><td>堅果</td><td>每天一份（約 10 公克，免洗湯匙 1 匙）；普林中等、脂肪好</td></tr>
-<tr><td class="r">少碰</td><td>酒精</td><td>啤酒、烈酒、紅酒都算；發作期完全禁</td></tr>
-<tr><td class="r">少碰</td><td>含糖飲料、果汁、甜點</td><td>手搖飲、汽水、果汁、含高果糖糖漿的點心</td></tr>
-<tr><td class="r">少碰</td><td>內臟與高普林海鮮</td><td>肝、腰子、腦、腸；小魚乾、白帶魚、沙丁魚、鯷魚、蝦蟹貝、扇貝類</td></tr>
-<tr><td class="r">少碰</td><td>濃湯與湯底</td><td>大骨湯、雞精、肉汁、火鍋湯底、滷汁；普林都溶在湯裡</td></tr>
-<tr><td class="r">少碰</td><td>快速減重法</td><td>斷食、生酮、極低熱量飲食會誘發急性發作</td></tr></table>`,
-  note:'份量換算：一份低脂乳品約 240 毫升；掌心大小的肉約 3 兩。外食三件事：湯不喝、飲料換無糖、酒不碰。'},
-myth:{zh:'常見迷思　·　實證上不成立的',
-  html:`<div class="myth"><h3>這些說法，指引與研究不支持</h3><table>
-<tr><th style="width:230px">常聽到的說法</th><th>實際上</th></tr>
-<tr><td class="x">「豆腐、豆漿不能吃」</td><td>植物性普林與痛風發作沒有關聯，多項世代研究顯示豆製品不增加風險。豆製品可以吃，還能取代部分肉類。</td></tr>
-<tr><td class="x">「香菇、蘆筍、菠菜要忌口」</td><td>同上。指引明寫蔬菜不限制，普林含量表上的數字不等於對血尿酸的影響。</td></tr>
-<tr><td class="x">「不吃海鮮就好」</td><td>酒精與含糖飲料對尿酸與發作的影響比海鮮大，很多人戒了海鮮卻天天手搖飲和啤酒。先改這兩樣。</td></tr>
-<tr><td class="x">「多吃櫻桃、吃維生素 C 可以降尿酸」</td><td>2020 ACR 指引不建議補充維生素 C；櫻桃研究品質不足，沒有建議。要降尿酸靠藥，飲食靠少酒少糖。</td></tr>
-<tr><td class="x">「發作時把降尿酸藥停掉」</td><td>急性發作期正在吃的降尿酸藥照吃，停藥反而讓尿酸波動、發作拖更久。要停要調由醫師決定。</td></tr>
-<tr><td class="x">「尿酸正常了就可以停藥」</td><td>尿酸正常是藥的效果。停藥後尿酸回升、痛風石與關節破壞會繼續；治療目標是長期維持低於 6。</td></tr>
-<tr><td class="x">「痛風只是關節痛」</td><td>高尿酸與腎結石、慢性腎病、高血壓、代謝症候群相關，飲食卡上的減重、少糖、少酒同時在顧這些。</td></tr>
-<tr><td class="x">「快速減肥尿酸就會降」</td><td>減重有效，但要慢；斷食與生酮飲食短期讓尿酸升高、誘發發作。每月減 1 公斤以內。</td></tr></table></div>`,
-  note:'資料來源：2022 台灣痛風與高尿酸血症診治指引（中華民國風濕病醫學會）；2020 ACR 痛風管理指引（飲食項目為有條件建議）；2016 EULAR 痛風指引；內科學誌 2022 各國指引比較。'},
+  foodhead:['燈號','類別','內容'],
+  food:[
+   ['g','可以吃','五穀根莖','飯、麵、地瓜、馬鈴薯、全穀類，不限制'],
+   ['g','可以吃','蔬菜','全部可以，包括常被誤傳的香菇、蘆筍、菠菜、豆芽'],
+   ['g','可以吃','豆類與豆製品','豆腐、豆漿、黃豆、毛豆；不增加發作，可當蛋白質來源'],
+   ['g','可以吃','低脂乳製品與蛋','低脂牛奶、無糖優格每天 1 到 2 份；蛋幾乎不含普林'],
+   ['g','可以吃','水、無糖茶、咖啡','每天 2,000 毫升以上；咖啡適量'],
+   ['g','可以吃','水果','整顆水果每天 2 份；不要打成果汁'],
+   ['y','適量','瘦肉、去皮禽肉','每餐掌心大小；蛋白質每天每公斤體重約 1 公克'],
+   ['y','適量','一般魚類','鱸魚、鯛魚、鮭魚、鯖魚適量；不喝魚湯'],
+   ['y','適量','堅果','每天一份（約 10 公克，免洗湯匙 1 匙）；普林中等、脂肪好'],
+   ['r','少碰','酒精','啤酒、烈酒、紅酒都算；發作期完全禁'],
+   ['r','少碰','含糖飲料、果汁、甜點','手搖飲、汽水、果汁、含高果糖糖漿的點心'],
+   ['r','少碰','內臟與高普林海鮮','肝、腰子、腦、腸；小魚乾、白帶魚、沙丁魚、鯷魚、蝦蟹貝、扇貝類'],
+   ['r','少碰','濃湯與湯底','大骨湯、雞精、肉汁、火鍋湯底、滷汁；普林都溶在湯裡'],
+   ['r','少碰','快速減重法','斷食、生酮、極低熱量飲食會誘發急性發作'],
+  ],
+  mythtitle:'這些說法，指引與研究不支持',
+  mythhead:['常聽到的說法','實際上'],
+  myths:[
+   ['「豆腐、豆漿不能吃」','植物性普林與痛風發作沒有關聯，多項世代研究顯示豆製品不增加風險。豆製品可以吃，還能取代部分肉類。'],
+   ['「香菇、蘆筍、菠菜要忌口」','同上。指引明寫蔬菜不限制，普林含量表上的數字不等於對血尿酸的影響。'],
+   ['「不吃海鮮就好」','酒精與含糖飲料對尿酸與發作的影響比海鮮大，很多人戒了海鮮卻天天手搖飲和啤酒。先改這兩樣。'],
+   ['「多吃櫻桃、吃維生素 C 可以降尿酸」','2020 ACR 指引不建議補充維生素 C；櫻桃研究品質不足，沒有建議。要降尿酸靠藥，飲食靠少酒少糖。'],
+   ['「發作時把降尿酸藥停掉」','急性發作期正在吃的降尿酸藥照吃，停藥反而讓尿酸波動、發作拖更久。要停要調由醫師決定。'],
+   ['「尿酸正常了就可以停藥」','尿酸正常是藥的效果。停藥後尿酸回升、痛風石與關節破壞會繼續；治療目標是長期維持低於 6。'],
+   ['「痛風只是關節痛」','高尿酸與腎結石、慢性腎病、高血壓、代謝症候群相關，飲食卡上的減重、少糖、少酒同時在顧這些。'],
+   ['「快速減肥尿酸就會降」','減重有效，但要慢；斷食與生酮飲食短期讓尿酸升高、誘發發作。每月減 1 公斤以內。'],
+  ],
+  notes:{
+   core:'2022 台灣指引與 2020 ACR 指引把飲食建議列為「有條件建議」，意思是有幫助、但幅度有限，藥物治療決定於醫師。這張卡先抓前三招，做得到再往下。',
+   food:'份量換算：一份低脂乳品約 240 毫升；掌心大小的肉約 3 兩。外食三件事：湯不喝、飲料換無糖、酒不碰。',
+   myth:'資料來源：2022 台灣痛風與高尿酸血症診治指引（中華民國風濕病醫學會）；2020 ACR 痛風管理指引（飲食項目為有條件建議）；2016 EULAR 痛風指引；內科學誌 2022 各國指引比較。'},
+  trans:'',
+  foot:'高醫岡山醫院　內分泌新陳代謝科　盧子文醫師　｜　<b>本圖卡僅供衛教，用藥與目標值以醫師判斷為準</b>　｜　依 2022 台灣痛風與高尿酸血症診治指引、2020 ACR 痛風指引整理　｜　工具版本：2026-09-10'},
+
+'en':{badge:'🇬🇧　英文　·　English',tab:'🇬🇧 English',tabsub:'英文　English',
+  h1:'Low-Uric-Acid (Gout) Diet', kick:'Endocrinology &amp; Metabolism　·　Diet Education',
+  printbtn:'🖨 Print this version / Save as PDF (A4)',
+  viewtabs:[['core','9 Key Moves','start with what matters most'],['food','Food Traffic Light','fine / moderate / avoid'],['myth','Common Myths','tofu is fine']],
+  views:{core:'9 Key Moves　·　start with the three that matter most: alcohol, sugary drinks, weight',food:'Food Traffic Light　·　fine, in moderation, avoid',myth:'Common Myths　·　not supported by the evidence'},
+  lead:'Diet lowers uric acid by roughly <b>1 mg/dL</b>; the treatment target is uric acid <b>below 6 mg/dL</b> (below 5 if you have tophi), and most people need medication to get there. What diet is worth is <b>fewer attacks</b>, and keeping the medication working steadily.',
+  cards:[
+   ['<b>Alcohol</b> is number one','Beer and spirits are the worst, and wine is not exempt. One to two drinks within 24 hours already raises attack risk by about 40%, and it climbs with the amount. During an attack, none at all.'],
+   ['<b>Sugary drinks, bubble tea and juice</b> matter more than seafood','Fructose metabolism produces uric acid directly: 1 g of fructose per kg of body weight raises uric acid by 1&ndash;2 mg/dL within 2 hours. Drinks and desserts made with high-fructose corn syrup are the main source.'],
+   ['Go easy on <b>high-purine animal foods</b>','Organ meats, dried small fish, hairtail, sardines, shrimp, crab and shellfish, concentrated meat broths and hotpot bases. Red meat in moderation, a palm-sized portion per meal; about 1 g of protein per kg of body weight a day is enough.'],
+   ['<b>Plant purines are not a problem</b>','Beans, tofu, soy milk, shiitake, asparagus, spinach. Studies show these do not increase gout attacks, and the guidelines do not restrict vegetables or soy foods.'],
+   ['<b>Low-fat dairy</b>, 1&ndash;2 servings a day','Low-fat milk and unsweetened yoghurt help uric acid leave the body &mdash; one of the few foods where more is actually better.'],
+   ['Coffee is fine; drink over <b>2,000 mL of water</b> a day','Moderate coffee is associated with lower uric acid; enough fluid helps uric acid be excreted, and this matters even more if you have had kidney stones.'],
+   ['Lose weight <b>slowly</b> &mdash; no more than 1 kg a month','Losing weight lowers uric acid if you are overweight. But rapid weight loss, fasting and keto break down tissue and make uric acid spike, which triggers attacks instead.'],
+   ['You do not need to buy <b>vitamin C or cherries</b>','2020 ACR guideline: supplementing vitamin C to lower uric acid is not recommended; the evidence on cherries is too weak for a recommendation.'],
+   ['During an attack, <b>do not stop your medication yourself</b>','Keep taking the urate-lowering drug you are on. For the acute phase use ice, rest, and the anti-inflammatory or colchicine your doctor prescribed. A normal uric acid level does not mean you can stop the drug.'],
+  ],
+  foodhead:['Light','Category','What it covers'],
+  food:[
+   ['g','Fine','Grains &amp; root vegetables','Rice, noodles, sweet potato, potato, whole grains &mdash; no restriction'],
+   ['g','Fine','Vegetables','All of them, including shiitake, asparagus, spinach and bean sprouts, which are often wrongly said to be off limits'],
+   ['g','Fine','Beans &amp; soy foods','Tofu, soy milk, soybeans, edamame; they do not increase attacks and can serve as your protein'],
+   ['g','Fine','Low-fat dairy &amp; eggs','1&ndash;2 servings of low-fat milk or unsweetened yoghurt a day; eggs contain almost no purine'],
+   ['g','Fine','Water, unsweetened tea, coffee','Over 2,000 mL a day; coffee in moderation'],
+   ['g','Fine','Fruit','2 servings of whole fruit a day &mdash; do not blend it into juice'],
+   ['y','In moderation','Lean meat, skinless poultry','A palm-sized portion per meal; about 1 g of protein per kg of body weight a day'],
+   ['y','In moderation','Ordinary fish','Sea bass, sea bream, salmon and mackerel in moderation; do not drink the fish soup'],
+   ['y','In moderation','Nuts','One serving a day (about 10 g, 1 disposable soup spoon); moderate in purine, good fats'],
+   ['r','Avoid','Alcohol','Beer, spirits and wine all count; completely off during an attack'],
+   ['r','Avoid','Sugary drinks, juice, desserts','Bubble tea, soda, fruit juice, snacks made with high-fructose corn syrup'],
+   ['r','Avoid','Organ meats &amp; high-purine seafood','Liver, kidney, brain, intestine; dried small fish, hairtail, sardines, anchovies, shrimp, crab, shellfish and scallops'],
+   ['r','Avoid','Concentrated soups &amp; broth bases','Bone broth, chicken essence, gravy, hotpot bases, braising liquid &mdash; the purines all dissolve into the liquid'],
+   ['r','Avoid','Crash weight-loss methods','Fasting, keto and very-low-calorie diets can trigger an acute attack'],
+  ],
+  mythtitle:'These claims are not supported by guidelines or research',
+  mythhead:['What you often hear','What is actually true'],
+  myths:[
+   ['&ldquo;You can&rsquo;t have tofu or soy milk&rdquo;','Plant purines are not linked to gout attacks, and several cohort studies show soy foods do not raise the risk. Soy foods are fine and can replace some meat.'],
+   ['&ldquo;Avoid shiitake, asparagus and spinach&rdquo;','Same as above. The guidelines explicitly place no restriction on vegetables; a number on a purine-content table is not the same as an effect on blood uric acid.'],
+   ['&ldquo;Just cut out seafood and you&rsquo;re fine&rdquo;','Alcohol and sugary drinks affect uric acid and attacks more than seafood does. Many people give up seafood while still having bubble tea and beer daily. Change those two first.'],
+   ['&ldquo;Cherries or vitamin C will lower uric acid&rdquo;','The 2020 ACR guideline does not recommend vitamin C supplements; the cherry studies are not good enough to support a recommendation. Uric acid comes down with medication; diet&rsquo;s job is less alcohol and less sugar.'],
+   ['&ldquo;Stop the urate-lowering drug during an attack&rdquo;','Keep taking it during an acute attack. Stopping makes uric acid swing and drags the attack out longer. Stopping or adjusting is your doctor&rsquo;s decision.'],
+   ['&ldquo;My uric acid is normal now, so I can stop the drug&rdquo;','It is normal because of the drug. After stopping, uric acid rises again and tophi and joint damage continue. The goal is staying below 6 long term.'],
+   ['&ldquo;Gout is just joint pain&rdquo;','High uric acid is linked to kidney stones, chronic kidney disease, high blood pressure and metabolic syndrome. The weight, sugar and alcohol advice on this card is looking after those at the same time.'],
+   ['&ldquo;Crash dieting will bring uric acid down&rdquo;','Weight loss works, but it has to be slow. Fasting and keto raise uric acid in the short term and trigger attacks. Keep it under 1 kg a month.'],
+  ],
+  notes:{
+   core:'The 2022 Taiwan guideline and the 2020 ACR guideline list dietary advice as a conditional recommendation &mdash; it helps, but only so much, and medication decisions belong to your doctor. Start with the first three on this card, then work down.',
+   food:'Serving sizes: one serving of low-fat dairy is about 240 mL; a palm-sized piece of meat is about 110 g. Three things when eating out: skip the soup, switch to unsweetened drinks, no alcohol.',
+   myth:'Sources: 2022 Taiwan guideline for gout and hyperuricaemia (Taiwan Rheumatology Association); 2020 ACR gout management guideline (dietary items are conditional recommendations); 2016 EULAR gout guideline; 2022 comparison of national guidelines in the Journal of Internal Medicine of Taiwan.'},
+  trans:'Translation prepared with AI assistance and checked by Dr. Lu&rsquo;s team &mdash; not an officially certified translation. Where the wording differs, the Chinese text is authoritative.',
+  foot:'Dr. Tzu-Wen Lu, Division of Endocrinology &amp; Metabolism, KMU Gangshan Hospital　｜　<b>This card is for education only; medication and target values are your doctor&rsquo;s judgement</b>　｜　Based on the 2022 Taiwan gout and hyperuricaemia guideline and the 2020 ACR gout guideline　｜　Tool version: 2026-09-10'},
+
+'vi':{badge:'🇻🇳　越南文　·　Tiếng Việt　·　Vietnamese',tab:'🇻🇳 Tiếng Việt',tabsub:'越南文　Vietnamese',
+  h1:'Chế độ ăn giảm acid uric (bệnh gút)', kick:'Khoa Nội tiết &amp; Chuyển hóa　·　Giáo dục dinh dưỡng',
+  printbtn:'🖨 In bản đang xem / Lưu thành PDF (A4)',
+  viewtabs:[['core','9 việc cần làm','bắt đầu từ việc quan trọng nhất'],['food','Đèn giao thông thực phẩm','ăn được / vừa phải / tránh'],['myth','Những hiểu lầm thường gặp','đậu phụ ăn được']],
+  views:{core:'9 việc cần làm　·　bắt đầu từ ba thứ quan trọng nhất: rượu bia, đồ uống ngọt, cân nặng',food:'Đèn giao thông thực phẩm　·　ăn được, vừa phải, tránh',myth:'Những hiểu lầm thường gặp　·　không có bằng chứng ủng hộ'},
+  lead:'Chế độ ăn hạ acid uric được khoảng <b>1 mg/dL</b>; mục tiêu điều trị là acid uric <b>dưới 6 mg/dL</b> (dưới 5 nếu đã có hạt tophi), và đa số người phải dùng thuốc mới đạt được. Giá trị của ăn uống là <b>ít lên cơn hơn</b> và giúp thuốc phát huy ổn định.',
+  cards:[
+   ['<b>Rượu bia</b> đứng đầu','Bia và rượu mạnh hại nhất, rượu vang cũng không ngoại lệ. Uống 1–2 phần trong 24 giờ đã làm nguy cơ lên cơn tăng khoảng 40%, uống càng nhiều càng cao. Trong đợt cấp thì tuyệt đối không uống.'],
+   ['<b>Đồ uống ngọt, trà sữa, nước ép</b> quan trọng hơn hải sản','Chuyển hóa fructose sinh ra acid uric trực tiếp: mỗi kg cân nặng ăn 1 g fructose thì trong 2 giờ acid uric tăng 1–2 mg/dL. Đồ uống và món ngọt có siro ngô nhiều fructose là nguồn chính.'],
+   ['Hạn chế <b>thực phẩm động vật nhiều purin</b>','Nội tạng, cá khô nhỏ, cá hố, cá mòi, tôm cua sò ốc, nước hầm thịt đậm và nước lẩu. Thịt đỏ vừa phải, mỗi bữa bằng lòng bàn tay; đạm khoảng 1 g mỗi kg cân nặng mỗi ngày là đủ.'],
+   ['<b>Purin thực vật không đáng ngại</b>','Các loại đậu, đậu phụ, sữa đậu nành, nấm hương, măng tây, rau bina. Nghiên cứu cho thấy những thứ này không làm tăng cơn gút, hướng dẫn cũng không hạn chế rau và chế phẩm đậu nành.'],
+   ['<b>Sữa ít béo</b> mỗi ngày 1–2 phần','Sữa ít béo và sữa chua không đường giúp đào thải acid uric — một trong số ít thực phẩm càng ăn càng tốt.'],
+   ['Cà phê uống được, <b>nước</b> trên 2.000 mL mỗi ngày','Cà phê vừa phải liên quan đến acid uric thấp hơn; đủ nước giúp thải acid uric, người từng bị sỏi thận càng phải uống đủ.'],
+   ['Giảm cân <b>từ từ</b>, mỗi tháng không quá 1 kg','Người thừa cân giảm cân thì acid uric hạ; nhưng giảm cân nhanh, nhịn ăn, ăn keto làm mô phân hủy khiến acid uric vọt lên và gây lên cơn.'],
+   ['Không cần mua <b>vitamin C hay quả anh đào</b>','Hướng dẫn ACR 2020: không khuyến cáo bổ sung vitamin C để hạ acid uric; bằng chứng về anh đào chưa đủ nên không có khuyến cáo.'],
+   ['Khi lên cơn <b>đừng tự ngừng thuốc</b>','Thuốc hạ acid uric đang uống thì cứ uống tiếp; đợt cấp thì chườm lạnh, nghỉ ngơi, dùng thuốc kháng viêm hoặc colchicine theo đơn bác sĩ. Acid uric bình thường không có nghĩa là được ngừng thuốc.'],
+  ],
+  foodhead:['Đèn','Nhóm','Nội dung'],
+  food:[
+   ['g','Ăn được','Ngũ cốc và củ','Cơm, mì, khoai lang, khoai tây, ngũ cốc nguyên hạt — không hạn chế'],
+   ['g','Ăn được','Rau','Tất cả đều được, kể cả nấm hương, măng tây, rau bina, giá đỗ vốn hay bị đồn là phải kiêng'],
+   ['g','Ăn được','Đậu và chế phẩm từ đậu nành','Đậu phụ, sữa đậu nành, đậu nành, đậu edamame; không làm tăng cơn và dùng làm nguồn đạm được'],
+   ['g','Ăn được','Sữa ít béo và trứng','Sữa ít béo hoặc sữa chua không đường 1–2 phần mỗi ngày; trứng gần như không có purin'],
+   ['g','Ăn được','Nước, trà không đường, cà phê','Trên 2.000 mL mỗi ngày; cà phê vừa phải'],
+   ['g','Ăn được','Trái cây','Mỗi ngày 2 phần trái cây nguyên quả; đừng ép thành nước'],
+   ['y','Vừa phải','Thịt nạc, thịt gia cầm bỏ da','Mỗi bữa bằng lòng bàn tay; đạm khoảng 1 g mỗi kg cân nặng mỗi ngày'],
+   ['y','Vừa phải','Cá thông thường','Cá vược, cá tráp, cá hồi, cá thu vừa phải; không uống nước canh cá'],
+   ['y','Vừa phải','Hạt','Mỗi ngày một phần (khoảng 10 g, 1 thìa canh nhựa); purin trung bình, chất béo tốt'],
+   ['r','Tránh','Rượu bia','Bia, rượu mạnh, rượu vang đều tính; đợt cấp thì cấm hoàn toàn'],
+   ['r','Tránh','Đồ uống ngọt, nước ép, món ngọt','Trà sữa, nước ngọt có ga, nước ép, đồ ngọt có siro ngô nhiều fructose'],
+   ['r','Tránh','Nội tạng và hải sản nhiều purin','Gan, cật, óc, lòng; cá khô nhỏ, cá hố, cá mòi, cá cơm, tôm cua sò ốc, sò điệp'],
+   ['r','Tránh','Nước hầm đậm và nước lẩu','Nước hầm xương, tinh chất gà, nước thịt, nước lẩu, nước kho — purin tan hết vào nước'],
+   ['r','Tránh','Cách giảm cân cấp tốc','Nhịn ăn, keto, ăn rất ít calo có thể gây cơn cấp'],
+  ],
+  mythtitle:'Những câu này không được hướng dẫn và nghiên cứu ủng hộ',
+  mythhead:['Câu thường nghe','Thực tế'],
+  myths:[
+   ['“Không được ăn đậu phụ, sữa đậu nành”','Purin thực vật không liên quan đến cơn gút, nhiều nghiên cứu đoàn hệ cho thấy chế phẩm đậu nành không làm tăng nguy cơ. Đậu nành ăn được và còn thay được một phần thịt.'],
+   ['“Phải kiêng nấm hương, măng tây, rau bina”','Như trên. Hướng dẫn ghi rõ không hạn chế rau; con số trên bảng hàm lượng purin không đồng nghĩa với ảnh hưởng lên acid uric trong máu.'],
+   ['“Chỉ cần bỏ hải sản là được”','Rượu bia và đồ uống ngọt ảnh hưởng đến acid uric và cơn gút nhiều hơn hải sản. Nhiều người bỏ hải sản nhưng ngày nào cũng trà sữa và bia. Hãy đổi hai thứ đó trước.'],
+   ['“Ăn nhiều anh đào hay vitamin C sẽ hạ acid uric”','Hướng dẫn ACR 2020 không khuyến cáo bổ sung vitamin C; nghiên cứu về anh đào chất lượng chưa đủ nên không có khuyến cáo. Hạ acid uric dựa vào thuốc, ăn uống thì bớt rượu bớt đường.'],
+   ['“Lên cơn thì ngừng thuốc hạ acid uric”','Trong đợt cấp, thuốc đang uống thì cứ uống tiếp; ngừng thuốc làm acid uric dao động và kéo dài cơn. Ngừng hay chỉnh liều do bác sĩ quyết định.'],
+   ['“Acid uric bình thường rồi thì ngừng thuốc được”','Bình thường là nhờ thuốc. Ngừng rồi acid uric tăng lại, hạt tophi và tổn thương khớp vẫn tiếp diễn; mục tiêu là giữ dưới 6 lâu dài.'],
+   ['“Gút chỉ là đau khớp”','Acid uric cao liên quan đến sỏi thận, bệnh thận mạn, tăng huyết áp và hội chứng chuyển hóa; việc giảm cân, bớt đường, bớt rượu trên tờ này cũng đang lo cho những thứ đó.'],
+   ['“Giảm cân cấp tốc thì acid uric sẽ hạ”','Giảm cân có hiệu quả nhưng phải từ từ; nhịn ăn và keto làm acid uric tăng trong ngắn hạn và gây lên cơn. Mỗi tháng giảm dưới 1 kg.'],
+  ],
+  notes:{
+   core:'Hướng dẫn Đài Loan 2022 và ACR 2020 xếp lời khuyên ăn uống là “khuyến cáo có điều kiện”, nghĩa là có ích nhưng mức độ hạn chế, còn điều trị thuốc do bác sĩ quyết định. Tờ này hãy làm ba việc đầu trước, làm được rồi thì đi tiếp.',
+   food:'Quy đổi khẩu phần: một phần sữa ít béo khoảng 240 mL; miếng thịt bằng lòng bàn tay khoảng 110 g. Ăn ngoài nhớ ba việc: không uống nước canh, đổi sang đồ uống không đường, không đụng rượu bia.',
+   myth:'Nguồn: Hướng dẫn chẩn đoán và điều trị gút và tăng acid uric máu Đài Loan 2022 (Hội Thấp khớp học Đài Loan); hướng dẫn quản lý gút ACR 2020 (mục ăn uống là khuyến cáo có điều kiện); hướng dẫn gút EULAR 2016; so sánh hướng dẫn các nước, Tạp chí Nội khoa Đài Loan 2022.'},
+  trans:'Bản dịch được thực hiện với sự hỗ trợ của AI và do nhóm của bác sĩ kiểm tra — không phải bản dịch được chứng nhận chính thức. Nếu có khác biệt, bản tiếng Trung là bản chuẩn.',
+  foot:'BS. Lu Tzu-Wen, Khoa Nội tiết &amp; Chuyển hóa, Bệnh viện Cương Sơn thuộc Đại học Y Cao Hùng　｜　<b>Tờ này chỉ để giáo dục; thuốc và mục tiêu điều trị do bác sĩ quyết định</b>　｜　Theo hướng dẫn gút và tăng acid uric máu Đài Loan 2022 và hướng dẫn gút ACR 2020　｜　Phiên bản công cụ: 2026-09-10'},
+
+'id':{badge:'🇮🇩　印尼文　·　Bahasa Indonesia　·　Indonesian',tab:'🇮🇩 Bahasa Indonesia',tabsub:'印尼文　Indonesian',
+  h1:'Diet Rendah Asam Urat (Gout)', kick:'Divisi Endokrinologi &amp; Metabolisme　·　Edukasi Gizi',
+  printbtn:'🖨 Cetak versi ini / Simpan sebagai PDF (A4)',
+  viewtabs:[['core','9 Langkah','mulai dari yang paling berpengaruh'],['food','Lampu Lalu Lintas Makanan','boleh / secukupnya / hindari'],['myth','Mitos yang Sering Terdengar','tahu boleh dimakan']],
+  views:{core:'9 Langkah　·　mulai dari tiga hal paling berpengaruh: alkohol, minuman manis, berat badan',food:'Lampu Lalu Lintas Makanan　·　boleh, secukupnya, hindari',myth:'Mitos yang Sering Terdengar　·　tidak didukung bukti'},
+  lead:'Pola makan menurunkan asam urat sekitar <b>1 mg/dL</b>; target terapi adalah asam urat <b>di bawah 6 mg/dL</b> (di bawah 5 bila sudah ada tofus), dan kebanyakan orang perlu obat untuk mencapainya. Nilai pola makan adalah <b>lebih jarang kambuh</b> dan membuat kerja obat lebih stabil.',
+  cards:[
+   ['<b>Alkohol</b> nomor satu','Bir dan minuman keras paling merusak, anggur pun tidak dikecualikan. Minum 1–2 porsi dalam 24 jam sudah menaikkan risiko serangan sekitar 40%, makin banyak makin tinggi. Saat serangan, sama sekali tidak boleh.'],
+   ['<b>Minuman manis, boba, dan jus</b> lebih menentukan daripada seafood','Metabolisme fruktosa langsung menghasilkan asam urat: 1 g fruktosa per kg berat badan menaikkan asam urat 1–2 mg/dL dalam 2 jam. Minuman dan makanan manis dengan sirup jagung tinggi fruktosa adalah sumber utamanya.'],
+   ['Kurangi <b>makanan hewani tinggi purin</b>','Jeroan, ikan teri kering, ikan layur, sarden, udang kepiting kerang, kaldu daging pekat dan kuah hotpot. Daging merah secukupnya, sebesar telapak tangan tiap kali makan; protein sekitar 1 g per kg berat badan sehari sudah cukup.'],
+   ['<b>Purin nabati tidak perlu ditakuti</b>','Kacang-kacangan, tahu, susu kedelai, jamur shiitake, asparagus, bayam. Penelitian menunjukkan semua ini tidak menambah serangan gout, dan panduan pun tidak membatasi sayur maupun olahan kedelai.'],
+   ['<b>Produk susu rendah lemak</b> 1–2 porsi sehari','Susu rendah lemak dan yoghurt tanpa gula membantu pembuangan asam urat — termasuk sedikit makanan yang justru makin banyak makin baik.'],
+   ['Kopi boleh, <b>air</b> lebih dari 2.000 mL sehari','Kopi secukupnya berkaitan dengan asam urat yang lebih rendah; cairan yang cukup membantu asam urat terbuang, dan yang pernah kena batu ginjal harus lebih banyak lagi.'],
+   ['Turunkan berat badan <b>perlahan</b>, tidak lebih dari 1 kg sebulan','Kalau kelebihan berat badan, menurunkannya menurunkan asam urat; tetapi penurunan cepat, puasa, dan keto memecah jaringan sehingga asam urat melonjak dan malah memicu serangan.'],
+   ['Tidak perlu membeli <b>vitamin C atau ceri</b>','Panduan ACR 2020: suplemen vitamin C untuk menurunkan asam urat tidak dianjurkan; bukti tentang ceri belum cukup sehingga tidak ada rekomendasi.'],
+   ['Saat serangan, <b>jangan hentikan obat sendiri</b>','Obat penurun asam urat yang sedang diminum tetap diteruskan; saat fase akut kompres dingin, istirahat, dan pakai antiradang atau colchicine sesuai resep dokter. Asam urat normal bukan berarti boleh berhenti minum obat.'],
+  ],
+  foodhead:['Lampu','Kelompok','Isinya'],
+  food:[
+   ['g','Boleh','Serealia dan umbi','Nasi, mi, ubi jalar, kentang, biji-bijian utuh — tidak dibatasi'],
+   ['g','Boleh','Sayur','Semuanya boleh, termasuk jamur shiitake, asparagus, bayam, dan tauge yang sering salah dikira harus dipantang'],
+   ['g','Boleh','Kacang dan olahan kedelai','Tahu, susu kedelai, kedelai, edamame; tidak menambah serangan dan bisa jadi sumber protein'],
+   ['g','Boleh','Susu rendah lemak dan telur','Susu rendah lemak atau yoghurt tanpa gula 1–2 porsi sehari; telur hampir tidak mengandung purin'],
+   ['g','Boleh','Air, teh tawar, kopi','Lebih dari 2.000 mL sehari; kopi secukupnya'],
+   ['g','Boleh','Buah','2 porsi buah utuh sehari; jangan dijadikan jus'],
+   ['y','Secukupnya','Daging tanpa lemak, unggas tanpa kulit','Sebesar telapak tangan tiap kali makan; protein sekitar 1 g per kg berat badan sehari'],
+   ['y','Secukupnya','Ikan biasa','Kakap, kakap merah, salmon, makerel secukupnya; jangan minum kuah ikannya'],
+   ['y','Secukupnya','Kacang-kacangan berkulit keras','Satu porsi sehari (sekitar 10 g, 1 sendok sup plastik); purin sedang, lemaknya baik'],
+   ['r','Hindari','Alkohol','Bir, minuman keras, dan anggur semuanya dihitung; saat serangan dilarang sama sekali'],
+   ['r','Hindari','Minuman manis, jus, makanan penutup','Boba, soda, jus buah, camilan dengan sirup jagung tinggi fruktosa'],
+   ['r','Hindari','Jeroan dan seafood tinggi purin','Hati, ginjal, otak, usus; ikan teri kering, ikan layur, sarden, ikan bilis, udang, kepiting, kerang, dan simping'],
+   ['r','Hindari','Kaldu pekat dan kuah dasar','Kaldu tulang, ekstrak ayam, saus daging, kuah hotpot, air kecap rebusan — purinnya larut semua ke dalam kuah'],
+   ['r','Hindari','Cara menurunkan berat badan kilat','Puasa, keto, dan diet sangat rendah kalori dapat memicu serangan akut'],
+  ],
+  mythtitle:'Pernyataan berikut tidak didukung panduan maupun penelitian',
+  mythhead:['Yang sering terdengar','Kenyataannya'],
+  myths:[
+   ['“Tahu dan susu kedelai tidak boleh”','Purin nabati tidak berkaitan dengan serangan gout, dan beberapa studi kohort menunjukkan olahan kedelai tidak menambah risiko. Kedelai boleh dimakan dan bisa menggantikan sebagian daging.'],
+   ['“Jamur shiitake, asparagus, dan bayam harus dipantang”','Sama seperti di atas. Panduan menulis jelas bahwa sayur tidak dibatasi; angka pada tabel kandungan purin bukan berarti pengaruh pada asam urat darah.'],
+   ['“Asal tidak makan seafood sudah aman”','Alkohol dan minuman manis lebih besar pengaruhnya pada asam urat dan serangan dibanding seafood. Banyak orang berhenti makan seafood tetapi tiap hari minum boba dan bir. Ubah dua hal itu dulu.'],
+   ['“Banyak makan ceri atau vitamin C bisa menurunkan asam urat”','Panduan ACR 2020 tidak menganjurkan suplemen vitamin C; mutu penelitian tentang ceri belum memadai sehingga tidak ada rekomendasi. Menurunkan asam urat mengandalkan obat, sedangkan pola makan mengurangi alkohol dan gula.'],
+   ['“Saat serangan, hentikan obat penurun asam urat”','Saat serangan akut, obat yang sedang diminum tetap diteruskan; menghentikannya justru membuat asam urat naik turun dan serangan berlangsung lebih lama. Menghentikan atau menyesuaikan adalah keputusan dokter.'],
+   ['“Asam urat sudah normal, jadi obat boleh dihentikan”','Normalnya karena obat. Setelah berhenti, asam urat naik lagi dan tofus serta kerusakan sendi terus berjalan; targetnya menjaga di bawah 6 dalam jangka panjang.'],
+   ['“Gout hanya nyeri sendi”','Asam urat tinggi berkaitan dengan batu ginjal, penyakit ginjal kronis, tekanan darah tinggi, dan sindrom metabolik; menurunkan berat badan, mengurangi gula dan alkohol di kartu ini sekaligus menjaga semua itu.'],
+   ['“Diet kilat akan menurunkan asam urat”','Menurunkan berat badan memang efektif, tetapi harus perlahan; puasa dan keto menaikkan asam urat dalam jangka pendek dan memicu serangan. Turunkan kurang dari 1 kg sebulan.'],
+  ],
+  notes:{
+   core:'Panduan Taiwan 2022 dan ACR 2020 menempatkan saran pola makan sebagai “rekomendasi bersyarat”, artinya membantu tetapi terbatas, sedangkan pengobatan ditentukan dokter. Kerjakan tiga langkah pertama dulu, baru lanjut ke bawah.',
+   food:'Takaran: satu porsi susu rendah lemak sekitar 240 mL; daging sebesar telapak tangan sekitar 110 g. Tiga hal saat makan di luar: jangan minum kuahnya, ganti ke minuman tanpa gula, jangan menyentuh alkohol.',
+   myth:'Sumber: Panduan diagnosis dan tata laksana gout dan hiperurisemia Taiwan 2022 (Perhimpunan Reumatologi Taiwan); panduan tata laksana gout ACR 2020 (butir pola makan berupa rekomendasi bersyarat); panduan gout EULAR 2016; perbandingan panduan berbagai negara, Journal of Internal Medicine of Taiwan 2022.'},
+  trans:'Terjemahan disusun dengan bantuan AI dan diperiksa oleh tim dokter — bukan terjemahan bersertifikat resmi. Bila ada perbedaan, teks bahasa Mandarin yang berlaku.',
+  foot:'dr. Lu Tzu-Wen, Divisi Endokrinologi &amp; Metabolisme, RS Gangshan KMU　｜　<b>Kartu ini hanya untuk edukasi; obat dan nilai target ditentukan oleh dokter</b>　｜　Disusun menurut panduan gout dan hiperurisemia Taiwan 2022 dan panduan gout ACR 2020　｜　Versi alat: 2026-09-10'},
+
+'th':{badge:'🇹🇭　泰文　·　ภาษาไทย　·　Thai',tab:'🇹🇭 ภาษาไทย',tabsub:'泰文　Thai',
+  h1:'อาหารลดกรดยูริก (โรคเกาต์)', kick:'สาขาต่อมไร้ท่อและเมตาบอลิซึม　·　ความรู้ด้านโภชนาการ',
+  printbtn:'🖨 พิมพ์หน้านี้ / บันทึกเป็น PDF (A4)',
+  viewtabs:[['core','9 ข้อที่ต้องทำ','เริ่มจากข้อที่สำคัญที่สุด'],['food','ไฟจราจรอาหาร','กินได้ / พอประมาณ / เลี่ยง'],['myth','ความเชื่อที่พบบ่อย','เต้าหู้กินได้']],
+  views:{core:'9 ข้อที่ต้องทำ　·　เริ่มจากสามเรื่องที่สำคัญที่สุด: แอลกอฮอล์ เครื่องดื่มหวาน น้ำหนักตัว',food:'ไฟจราจรอาหาร　·　กินได้ พอประมาณ เลี่ยง',myth:'ความเชื่อที่พบบ่อย　·　ไม่มีหลักฐานรองรับ'},
+  lead:'อาหารลดกรดยูริกได้ราว <b>1 mg/dL</b> เป้าหมายการรักษาคือกรดยูริก <b>ต่ำกว่า 6 mg/dL</b> (ต่ำกว่า 5 ถ้ามีปุ่มโทฟัส) ซึ่งคนส่วนใหญ่ต้องอาศัยยาจึงจะถึง คุณค่าของอาหารคือ <b>กำเริบน้อยลง</b> และทำให้ยาออกฤทธิ์ได้สม่ำเสมอ',
+  cards:[
+   ['<b>แอลกอฮอล์</b> เป็นอันดับหนึ่ง','เบียร์และเหล้าแรงเสียหายที่สุด ไวน์ก็ไม่ได้รับการยกเว้น ดื่ม 1–2 ส่วนภายใน 24 ชั่วโมงก็เพิ่มความเสี่ยงกำเริบราว 40% ยิ่งดื่มยิ่งสูง ช่วงกำเริบให้งดโดยสิ้นเชิง'],
+   ['<b>เครื่องดื่มหวาน ชานมไข่มุก น้ำผลไม้</b> สำคัญกว่าอาหารทะเล','การเผาผลาญฟรุกโตสสร้างกรดยูริกโดยตรง: กินฟรุกโตส 1 กรัมต่อน้ำหนักตัว 1 กิโลกรัม ภายใน 2 ชั่วโมงกรดยูริกเพิ่ม 1–2 mg/dL เครื่องดื่มและของหวานที่ใส่ไซรัปข้าวโพดฟรุกโตสสูงคือแหล่งหลัก'],
+   ['ลด <b>อาหารสัตว์ที่มีพิวรีนสูง</b>','เครื่องใน ปลาแห้งตัวเล็ก ปลาดาบเงิน ปลาซาร์ดีน กุ้งปูหอย น้ำต้มเนื้อเข้มข้นและน้ำซุปหม้อไฟ เนื้อแดงพอประมาณ มื้อละเท่าฝ่ามือ; โปรตีนวันละราว 1 กรัมต่อน้ำหนักตัว 1 กิโลกรัมก็พอ'],
+   ['<b>พิวรีนจากพืชไม่ต้องกลัว</b>','ถั่วต่าง ๆ เต้าหู้ น้ำเต้าหู้ เห็ดหอม หน่อไม้ฝรั่ง ผักโขม งานวิจัยพบว่าสิ่งเหล่านี้ไม่เพิ่มการกำเริบของเกาต์ แนวทางก็ไม่จำกัดผักและผลิตภัณฑ์จากถั่วเหลือง'],
+   ['<b>นมไขมันต่ำ</b> วันละ 1–2 ส่วน','นมพร่องมันเนยและโยเกิร์ตไม่หวานช่วยขับกรดยูริกออก เป็นอาหารไม่กี่อย่างที่ยิ่งกินยิ่งดี'],
+   ['กาแฟดื่มได้ <b>น้ำ</b> วันละมากกว่า 2,000 มิลลิลิตร','กาแฟในปริมาณพอเหมาะสัมพันธ์กับกรดยูริกที่ต่ำลง; น้ำเพียงพอช่วยขับกรดยูริก คนที่เคยเป็นนิ่วในไตยิ่งต้องดื่มให้พอ'],
+   ['ลดน้ำหนัก <b>อย่างช้า ๆ</b> เดือนละไม่เกิน 1 กิโลกรัม','คนน้ำหนักเกินเมื่อลดน้ำหนักกรดยูริกจะลดลง แต่การลดน้ำหนักเร็ว การอดอาหาร และคีโตทำให้เนื้อเยื่อสลายและกรดยูริกพุ่ง กลับกระตุ้นให้กำเริบ'],
+   ['<b>วิตามินซีและเชอร์รี</b> ไม่ต้องซื้อเป็นพิเศษ','แนวทาง ACR 2020: ไม่แนะนำให้เสริมวิตามินซีเพื่อลดกรดยูริก; หลักฐานเรื่องเชอร์รียังไม่พอจึงไม่มีคำแนะนำ'],
+   ['เวลากำเริบ <b>อย่าหยุดยาเอง</b>','ยาลดกรดยูริกที่กินอยู่ให้กินต่อ; ระยะเฉียบพลันให้ประคบเย็น พักผ่อน และใช้ยาแก้อักเสบหรือโคลชิซีนตามที่แพทย์สั่ง กรดยูริกปกติไม่ได้แปลว่าหยุดยาได้'],
+  ],
+  foodhead:['สัญญาณ','หมวด','รายละเอียด'],
+  food:[
+   ['g','กินได้','ธัญพืชและหัวใต้ดิน','ข้าว เส้น มันเทศ มันฝรั่ง ธัญพืชเต็มเมล็ด — ไม่จำกัด'],
+   ['g','กินได้','ผัก','ได้ทั้งหมด รวมถึงเห็ดหอม หน่อไม้ฝรั่ง ผักโขม ถั่วงอก ที่มักถูกเล่าลือผิดว่าต้องงด'],
+   ['g','กินได้','ถั่วและผลิตภัณฑ์จากถั่วเหลือง','เต้าหู้ น้ำเต้าหู้ ถั่วเหลือง ถั่วแระ; ไม่เพิ่มการกำเริบ ใช้เป็นแหล่งโปรตีนได้'],
+   ['g','กินได้','นมไขมันต่ำและไข่','นมไขมันต่ำหรือโยเกิร์ตไม่หวานวันละ 1–2 ส่วน; ไข่แทบไม่มีพิวรีน'],
+   ['g','กินได้','น้ำ ชาไม่หวาน กาแฟ','วันละมากกว่า 2,000 มิลลิลิตร; กาแฟพอประมาณ'],
+   ['g','กินได้','ผลไม้','ผลไม้ทั้งผลวันละ 2 ส่วน; อย่าปั่นเป็นน้ำผลไม้'],
+   ['y','พอประมาณ','เนื้อไม่ติดมัน สัตว์ปีกลอกหนัง','มื้อละเท่าฝ่ามือ; โปรตีนวันละราว 1 กรัมต่อน้ำหนักตัว 1 กิโลกรัม'],
+   ['y','พอประมาณ','ปลาทั่วไป','ปลากะพง ปลาทราย แซลมอน ปลาแมกเคอเรล พอประมาณ; ไม่ดื่มน้ำแกงปลา'],
+   ['y','พอประมาณ','ถั่วเปลือกแข็ง','วันละหนึ่งส่วน (ราว 10 กรัม ช้อนซุปพลาสติก 1 ช้อน); พิวรีนปานกลาง ไขมันดี'],
+   ['r','เลี่ยง','แอลกอฮอล์','เบียร์ เหล้าแรง ไวน์ นับหมด; ช่วงกำเริบห้ามเด็ดขาด'],
+   ['r','เลี่ยง','เครื่องดื่มหวาน น้ำผลไม้ ของหวาน','ชานมไข่มุก น้ำอัดลม น้ำผลไม้ ขนมที่ใส่ไซรัปข้าวโพดฟรุกโตสสูง'],
+   ['r','เลี่ยง','เครื่องในและอาหารทะเลพิวรีนสูง','ตับ ไต สมอง ไส้; ปลาแห้งตัวเล็ก ปลาดาบเงิน ปลาซาร์ดีน ปลากะตัก กุ้ง ปู หอย หอยเชลล์'],
+   ['r','เลี่ยง','น้ำซุปเข้มข้นและน้ำซุปหม้อไฟ','น้ำต้มกระดูก ซุปไก่สกัด น้ำเนื้อ น้ำซุปหม้อไฟ น้ำพะโล้ — พิวรีนละลายอยู่ในน้ำทั้งหมด'],
+   ['r','เลี่ยง','วิธีลดน้ำหนักแบบเร่งด่วน','การอดอาหาร คีโต และอาหารแคลอรีต่ำมากกระตุ้นให้กำเริบเฉียบพลันได้'],
+  ],
+  mythtitle:'คำกล่าวเหล่านี้ไม่มีแนวทางเวชปฏิบัติหรืองานวิจัยรองรับ',
+  mythhead:['ที่ได้ยินบ่อย','ความจริง'],
+  myths:[
+   ['“เต้าหู้ น้ำเต้าหู้ กินไม่ได้”','พิวรีนจากพืชไม่สัมพันธ์กับการกำเริบของเกาต์ งานวิจัยกลุ่มประชากรหลายชิ้นแสดงว่าผลิตภัณฑ์ถั่วเหลืองไม่เพิ่มความเสี่ยง กินได้และยังใช้แทนเนื้อสัตว์บางส่วนได้'],
+   ['“ต้องงดเห็ดหอม หน่อไม้ฝรั่ง ผักโขม”','เช่นเดียวกับข้อบน แนวทางระบุชัดว่าไม่จำกัดผัก ตัวเลขในตารางปริมาณพิวรีนไม่เท่ากับผลต่อกรดยูริกในเลือด'],
+   ['“แค่ไม่กินอาหารทะเลก็พอ”','แอลกอฮอล์และเครื่องดื่มหวานมีผลต่อกรดยูริกและการกำเริบมากกว่าอาหารทะเล หลายคนเลิกอาหารทะเลแต่ยังดื่มชานมและเบียร์ทุกวัน ให้เปลี่ยนสองอย่างนี้ก่อน'],
+   ['“กินเชอร์รีหรือวิตามินซีเยอะ ๆ ช่วยลดกรดยูริก”','แนวทาง ACR 2020 ไม่แนะนำให้เสริมวิตามินซี; งานวิจัยเรื่องเชอร์รีคุณภาพยังไม่พอจึงไม่มีคำแนะนำ การลดกรดยูริกอาศัยยา ส่วนอาหารคือลดเหล้าลดน้ำตาล'],
+   ['“เวลากำเริบให้หยุดยาลดกรดยูริก”','ระยะกำเริบเฉียบพลัน ยาที่กินอยู่ให้กินต่อ การหยุดยาทำให้กรดยูริกแกว่งและกำเริบนานขึ้น การหยุดหรือปรับยาให้แพทย์เป็นผู้ตัดสิน'],
+   ['“กรดยูริกปกติแล้วหยุดยาได้”','ที่ปกติเพราะยา เมื่อหยุดแล้วกรดยูริกจะขึ้นอีก ปุ่มโทฟัสและการทำลายข้อยังดำเนินต่อ เป้าหมายคือรักษาให้ต่ำกว่า 6 ในระยะยาว'],
+   ['“เกาต์ก็แค่ปวดข้อ”','กรดยูริกสูงสัมพันธ์กับนิ่วในไต โรคไตเรื้อรัง ความดันโลหิตสูง และกลุ่มอาการเมตาบอลิก การลดน้ำหนัก ลดน้ำตาล ลดเหล้าในการ์ดใบนี้กำลังดูแลสิ่งเหล่านั้นไปพร้อมกัน'],
+   ['“ลดน้ำหนักเร็ว ๆ แล้วกรดยูริกจะลด”','การลดน้ำหนักได้ผล แต่ต้องช้า ๆ; การอดอาหารและคีโตทำให้กรดยูริกสูงขึ้นในระยะสั้นและกระตุ้นการกำเริบ ให้ลดไม่เกินเดือนละ 1 กิโลกรัม'],
+  ],
+  notes:{
+   core:'แนวทางไต้หวัน 2022 และ ACR 2020 จัดคำแนะนำด้านอาหารเป็น “คำแนะนำแบบมีเงื่อนไข” หมายความว่ามีประโยชน์แต่ได้ผลจำกัด ส่วนการรักษาด้วยยาขึ้นกับแพทย์ การ์ดใบนี้ให้ทำสามข้อแรกก่อน ทำได้แล้วค่อยไล่ลงไป',
+   food:'การเทียบส่วน: นมไขมันต่ำหนึ่งส่วนราว 240 มิลลิลิตร; เนื้อขนาดฝ่ามือราว 110 กรัม กินนอกบ้านให้ทำสามอย่าง: ไม่ดื่มน้ำแกง เปลี่ยนเป็นเครื่องดื่มไม่หวาน ไม่แตะแอลกอฮอล์',
+   myth:'แหล่งข้อมูล: แนวทางการวินิจฉัยและรักษาโรคเกาต์และภาวะกรดยูริกสูงในเลือด ไต้หวัน 2022 (สมาคมโรคข้อแห่งไต้หวัน); แนวทางการดูแลโรคเกาต์ ACR 2020 (หัวข้ออาหารเป็นคำแนะนำแบบมีเงื่อนไข); แนวทางโรคเกาต์ EULAR 2016; การเปรียบเทียบแนวทางของแต่ละประเทศ วารสารอายุรศาสตร์ไต้หวัน 2022'},
+  trans:'คำแปลจัดทำโดยใช้ AI ช่วยและตรวจทานโดยทีมแพทย์ — ไม่ใช่คำแปลที่ได้รับการรับรองอย่างเป็นทางการ หากข้อความต่างกัน ให้ยึดฉบับภาษาจีนเป็นหลัก',
+  foot:'นพ. ลู่ จื่อเหวิน สาขาต่อมไร้ท่อและเมตาบอลิซึม โรงพยาบาลกังชาน มหาวิทยาลัยแพทยศาสตร์เกาสง　｜　<b>การ์ดนี้ใช้เพื่อให้ความรู้เท่านั้น การใช้ยาและค่าเป้าหมายขึ้นกับดุลพินิจของแพทย์</b>　｜　เรียบเรียงตามแนวทางโรคเกาต์และกรดยูริกสูงไต้หวัน 2022 และแนวทางโรคเกาต์ ACR 2020　｜　เวอร์ชันเครื่องมือ: 2026-09-10'},
+
+'tl':{badge:'🇵🇭　菲律賓文　·　Tagalog　·　Filipino',tab:'🇵🇭 Tagalog',tabsub:'菲律賓文　Filipino',
+  h1:'Diyeta na Mababa sa Uric Acid (Gout)', kick:'Endocrinology at Metabolism　·　Edukasyon sa Nutrisyon',
+  printbtn:'🖨 I-print ang bersyong ito / I-save bilang PDF (A4)',
+  viewtabs:[['core','9 Hakbang','simulan sa pinakamahalaga'],['food','Traffic Light ng Pagkain','puwede / katamtaman / iwasan'],['myth','Mga Karaniwang Maling Paniniwala','puwede ang tokwa']],
+  views:{core:'9 Hakbang　·　simulan sa tatlong pinakamahalaga: alak, matatamis na inumin, timbang',food:'Traffic Light ng Pagkain　·　puwede, katamtaman, iwasan',myth:'Mga Karaniwang Maling Paniniwala　·　walang ebidensiyang sumusuporta'},
+  lead:'Nakakapagpababa ang diyeta ng uric acid nang mga <b>1 mg/dL</b>; ang target ng paggamot ay uric acid na <b>mas mababa sa 6 mg/dL</b> (mas mababa sa 5 kung may tophi), at kadalasang kailangan ng gamot para marating iyon. Ang halaga ng pagkain ay <b>mas madalang na atake</b> at ang pagpapanatag sa bisa ng gamot.',
+  cards:[
+   ['<b>Alak</b> ang numero uno','Pinakamasama ang beer at matatapang na alak, at hindi rin ligtas ang wine. Ang 1–2 baso sa loob ng 24 oras ay nagpapataas na ng panganib ng atake nang mga 40%, at tumataas pa habang dumadami. Sa panahon ng atake, wala talaga.'],
+   ['Mas mahalaga ang <b>matatamis na inumin, milk tea at juice</b> kaysa seafood','Ang metabolismo ng fructose ay direktang gumagawa ng uric acid: 1 g ng fructose kada kilo ng timbang ay nagpapataas ng uric acid nang 1–2 mg/dL sa loob ng 2 oras. Ang mga inumin at panghimagas na may high-fructose corn syrup ang pangunahing pinagmumulan.'],
+   ['Bawasan ang <b>pagkaing hayop na mataas sa purine</b>','Lamang-loob, tuyong maliliit na isda, espada, sardinas, hipon, alimango at shellfish, malalim na sabaw ng karne at sabaw ng hotpot. Katamtamang pulang karne, kasinlaki ng palad kada kainan; sapat na ang mga 1 g ng protina kada kilo ng timbang kada araw.'],
+   ['<b>Hindi kailangang katakutan ang purine mula sa halaman</b>','Beans, tokwa, soy milk, shiitake, asparagus, spinach. Ipinapakita ng mga pag-aaral na hindi ito nagpaparami ng atake ng gout, at hindi rin nililimitahan ng mga gabay ang gulay at soy products.'],
+   ['<b>Low-fat na gatas</b>, 1–2 serving kada araw','Tumutulong ang low-fat na gatas at yogurt na walang asukal na mailabas ang uric acid — isa sa iilang pagkain na mas mabuti kapag mas marami.'],
+   ['Puwede ang kape; <b>tubig</b> na mahigit 2,000 mL kada araw','Ang katamtamang kape ay may kaugnayan sa mas mababang uric acid; ang sapat na tubig ay tumutulong ilabas ang uric acid, at lalo itong mahalaga kung nagkaroon ka na ng bato sa bato.'],
+   ['Magbawas ng timbang nang <b>dahan-dahan</b> — hindi hihigit sa 1 kg kada buwan','Kung sobra ang timbang, ang pagbaba nito ay nagpapababa ng uric acid; pero ang mabilis na pagpapapayat, pag-aayuno at keto ay nagpapasira ng tisyu kaya biglang tumataas ang uric acid at nag-uumpisa pa ng atake.'],
+   ['Hindi mo kailangang bumili ng <b>vitamin C o cherries</b>','Gabay ng ACR 2020: hindi inirerekomenda ang pag-inom ng vitamin C para ibaba ang uric acid; kulang pa ang ebidensiya tungkol sa cherries kaya walang rekomendasyon.'],
+   ['Kapag may atake, <b>huwag mong ihinto ang gamot nang mag-isa</b>','Ipagpatuloy ang iniinom mong urate-lowering na gamot; sa akutong yugto, lagyan ng yelo, magpahinga, at gamitin ang anti-inflammatory o colchicine na inireseta ng doktor. Ang normal na uric acid ay hindi nangangahulugang puwede nang itigil ang gamot.'],
+  ],
+  foodhead:['Ilaw','Uri','Nilalaman'],
+  food:[
+   ['g','Puwede','Butil at ugat na gulay','Kanin, pansit, kamote, patatas, buong butil — walang limitasyon'],
+   ['g','Puwede','Gulay','Lahat puwede, pati ang shiitake, asparagus, spinach at toge na madalas maling sabihing bawal'],
+   ['g','Puwede','Beans at soy products','Tokwa, soy milk, soybeans, edamame; hindi nagpaparami ng atake at puwedeng gawing pinagkukunan ng protina'],
+   ['g','Puwede','Low-fat na gatas at itlog','1–2 serving ng low-fat na gatas o yogurt na walang asukal kada araw; halos walang purine ang itlog'],
+   ['g','Puwede','Tubig, tsaang walang asukal, kape','Mahigit 2,000 mL kada araw; katamtamang kape'],
+   ['g','Puwede','Prutas','2 serving ng buong prutas kada araw; huwag gawing juice'],
+   ['y','Katamtaman','Walang tabang karne, manok na walang balat','Kasinlaki ng palad kada kainan; mga 1 g ng protina kada kilo ng timbang kada araw'],
+   ['y','Katamtaman','Karaniwang isda','Apahap, tilapia-tulad na isda, salmon, mackerel nang katamtaman; huwag inumin ang sabaw ng isda'],
+   ['y','Katamtaman','Mani','Isang serving kada araw (mga 10 g, 1 disposable na kutsara); katamtaman ang purine, maganda ang taba'],
+   ['r','Iwasan','Alak','Beer, matatapang na alak at wine — lahat bilang; ganap na bawal habang may atake'],
+   ['r','Iwasan','Matatamis na inumin, juice, panghimagas','Milk tea, softdrinks, fruit juice, meryendang may high-fructose corn syrup'],
+   ['r','Iwasan','Lamang-loob at seafood na mataas sa purine','Atay, bato, utak, bituka; tuyong maliliit na isda, espada, sardinas, dilis, hipon, alimango, shellfish at scallops'],
+   ['r','Iwasan','Malalim na sabaw at sabaw na base','Sabaw ng buto, chicken essence, sarsa ng karne, sabaw ng hotpot, sabaw ng adobo — natutunaw sa sabaw ang lahat ng purine'],
+   ['r','Iwasan','Mabilisang pagpapapayat','Ang pag-aayuno, keto at napakababang-kaloriyang diyeta ay puwedeng mag-udyok ng akutong atake'],
+  ],
+  mythtitle:'Hindi sinusuportahan ng mga gabay at pananaliksik ang mga sumusunod',
+  mythhead:['Madalas marinig','Ang totoo'],
+  myths:[
+   ['“Bawal ang tokwa at soy milk”','Walang kaugnayan ang purine mula sa halaman sa atake ng gout, at ipinakita ng ilang cohort study na hindi nagpapataas ng panganib ang soy products. Puwede ang soy at kayang pumalit sa bahagi ng karne.'],
+   ['“Dapat iwasan ang shiitake, asparagus at spinach”','Katulad ng nasa itaas. Malinaw na nakasulat sa mga gabay na hindi nililimitahan ang gulay; ang numero sa talahanayan ng purine ay hindi katumbas ng epekto sa uric acid sa dugo.'],
+   ['“Basta hindi kumain ng seafood, ayos na”','Mas malaki ang epekto ng alak at matatamis na inumin sa uric acid at sa atake kaysa seafood. Maraming tumitigil sa seafood pero araw-araw pa ring milk tea at beer. Iyon muna ang baguhin.'],
+   ['“Nakakapagpababa ng uric acid ang cherries o vitamin C”','Hindi inirerekomenda ng gabay ng ACR 2020 ang vitamin C supplement; kulang ang kalidad ng mga pag-aaral sa cherries kaya walang rekomendasyon. Ang uric acid ay bumababa sa gamot; ang trabaho ng pagkain ay bawasan ang alak at asukal.'],
+   ['“Kapag may atake, itigil ang urate-lowering na gamot”','Sa akutong atake, ipagpatuloy ang iniinom mong gamot; ang paghinto ay nagpapaalon-alon ng uric acid at nagpapatagal ng atake. Ang doktor ang magdedesisyon kung ihihinto o iaayos.'],
+   ['“Normal na ang uric acid ko kaya puwede nang itigil ang gamot”','Normal ito dahil sa gamot. Pagkahinto, tataas ulit ang uric acid at magpapatuloy ang tophi at pinsala sa kasukasuan; ang layunin ay manatiling mas mababa sa 6 sa mahabang panahon.'],
+   ['“Pananakit lang ng kasukasuan ang gout”','May kaugnayan ang mataas na uric acid sa bato sa bato, malalang sakit sa bato, altapresyon at metabolic syndrome; ang pagbabawas ng timbang, asukal at alak sa card na ito ay nangangalaga rin sa mga iyon.'],
+   ['“Bababa ang uric acid kapag nagbawas agad ng timbang”','Epektibo ang pagbabawas ng timbang pero kailangang dahan-dahan; ang pag-aayuno at keto ay nagpapataas ng uric acid sa maikling panahon at nag-uudyok ng atake. Panatilihing wala pang 1 kg kada buwan.'],
+  ],
+  notes:{
+   core:'Inuuri ng gabay ng Taiwan 2022 at ng ACR 2020 ang payo sa pagkain bilang “conditional recommendation” — nakakatulong pero may hangganan, at ang doktor ang nagpapasya sa gamot. Gawin muna ang unang tatlo sa card na ito, saka bumaba sa iba.',
+   food:'Sukat ng serving: isang serving ng low-fat na gatas ay mga 240 mL; ang karneng kasinlaki ng palad ay mga 110 g. Tatlong bagay kapag kumakain sa labas: huwag inumin ang sabaw, palitan ng inuming walang asukal, huwag uminom ng alak.',
+   myth:'Sanggunian: 2022 Taiwan guideline sa gout at hyperuricemia (Taiwan Rheumatology Association); 2020 ACR gout management guideline (conditional recommendation ang mga item sa pagkain); 2016 EULAR gout guideline; paghahambing ng mga gabay ng iba’t ibang bansa, Journal of Internal Medicine of Taiwan 2022.'},
+  trans:'Ang salin ay ginawa nang may tulong ng AI at sinuri ng koponan ng doktor — hindi ito opisyal na sertipikadong salin. Kung may pagkakaiba, ang tekstong Tsino ang masusunod.',
+  foot:'Dr. Tzu-Wen Lu, Endocrinology at Metabolism, KMU Gangshan Hospital　｜　<b>Pang-edukasyon lamang ang card na ito; ang gamot at ang target na halaga ay pagpapasya ng doktor</b>　｜　Batay sa 2022 Taiwan gout at hyperuricemia guideline at 2020 ACR gout guideline　｜　Bersyon ng tool: 2026-09-10'},
 };
-function setV(k){
-  const v=V[k];
-  document.getElementById('zh').textContent=v.zh;
-  document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.dataset.v===k));
-  let h='';
-  if(v.cards){
-    h=`<div class="grid"><div class="c lead"><i class="fa-solid ${v.lead.i}"></i><div class="t">${v.lead.t}</div></div>`;
-    v.cards.forEach((c,idx)=>{h+=`<div class="c ${c.hot?'hot':''}"><span class="n">${String(idx+1).padStart(2,'0')}</span><i class="fa-solid ${c.i}"></i><div class="t">${c.t}</div></div>`;});
-    h+='</div>';
-  }else{h=v.html;}
-  document.getElementById('body').innerHTML=h;
-  document.getElementById('note').textContent=v.note;
+const ZH = L['zh-TW'];
+
+/* 外文在前、中文小字在後；中文版只回中文本身 */
+function pair(zh, fo, k){
+  if (k === 'zh-TW' || zh === fo) return zh;
+  const a = `<span class="p-zh">${zh}</span>`, b = `<span class="p-fo">${fo}</span>`;
+  return PAIR_ORDER === 'zh-first' ? a + b : b + a;
 }
-setV((new URLSearchParams(location.search).get('v') in V)?new URLSearchParams(location.search).get('v'):'core');
+
+let LANG = 'zh-TW', VIEW = 'core';
+const $ = id => document.getElementById(id);
+
+function renderLangTabs(){
+  $('langtabs').innerHTML = Object.keys(L).map(k =>
+    `<div class="tab ${k===LANG?'active':''}" onclick="setLang('${k}')">${L[k].tab}<small>${L[k].tabsub}</small></div>`).join('');
+}
+function renderViewTabs(){
+  const d = L[LANG];
+  $('viewtabs').innerHTML = d.viewtabs.map(([v,label,sub],i) =>
+    `<div class="tab ${v===VIEW?'active':''}" onclick="setV('${v}')">${pair(ZH.viewtabs[i][1],label,LANG)}<small>${pair(ZH.viewtabs[i][2],sub,LANG)}</small></div>`).join('');
+}
+
+function render(){
+  const d = L[LANG], k = LANG;
+  document.documentElement.lang = (k === 'zh-TW') ? 'zh-Hant' : k;
+  $('langbadge').textContent = d.badge;
+  $('kick').innerHTML = pair(ZH.kick, d.kick, k);
+  $('h1').innerHTML   = pair(ZH.h1, d.h1, k);
+  $('zh').innerHTML   = pair(ZH.views[VIEW], d.views[VIEW], k);
+  $('foot').innerHTML = pair(ZH.foot, d.foot, k);
+  $('note').innerHTML = pair(ZH.notes[VIEW], d.notes[VIEW], k);
+  $('printbtn').innerHTML = d.printbtn;
+  // 翻譯來源聲明：只在外語版出現（老闆 2026-09-10 同意揭露翻譯來源）
+  $('transnote').innerHTML = d.trans ? `${d.trans}<span class="p-zh">本外語版由 AI 協助翻譯、經醫師端校閱，非官方認證譯本；文字如有出入，以中文版為準。</span>` : '';
+
+  let h = '';
+  if (VIEW === 'core'){
+    h = `<div class="grid"><div class="c lead"><i class="fa-solid fa-droplet"></i><div class="t">${pair(ZH.lead, d.lead, k)}</div></div>`;
+    const ICON = ['fa-beer-mug-empty','fa-glass-water','fa-drumstick-bite','fa-leaf','fa-glass-water-droplet','fa-mug-hot','fa-weight-scale','fa-pills','fa-user-doctor'];
+    const HOT  = [1,1,0,0,0,0,0,0,0];
+    d.cards.forEach((c,i) => {
+      h += `<div class="c ${HOT[i]?'hot':''}"><span class="n">${String(i+1).padStart(2,'0')}</span>`
+         + `<i class="fa-solid ${ICON[i]}"></i><div class="t">${pair(ZH.cards[i][0], c[0], k)}`
+         + `<span class="w">${pair(ZH.cards[i][1], c[1], k)}</span></div></div>`;
+    });
+    h += '</div>';
+  } else if (VIEW === 'food'){
+    h = `<table class="food"><tr>${d.foodhead.map((t,i)=>`<th>${pair(ZH.foodhead[i],t,k)}</th>`).join('')}</tr>`
+      + d.food.map((r,i)=>`<tr><td class="${r[0]}">${pair(ZH.food[i][1],r[1],k)}</td>`
+      + `<td>${pair(ZH.food[i][2],r[2],k)}</td><td>${pair(ZH.food[i][3],r[3],k)}</td></tr>`).join('')
+      + '</table>';
+  } else {
+    h = `<div class="myth"><h3>${pair(ZH.mythtitle,d.mythtitle,k)}</h3><table><tr>`
+      + d.mythhead.map((t,i)=>`<th>${pair(ZH.mythhead[i],t,k)}</th>`).join('') + '</tr>'
+      + d.myths.map((r,i)=>`<tr><td class="x">${pair(ZH.myths[i][0],r[0],k)}</td>`
+      + `<td>${pair(ZH.myths[i][1],r[1],k)}</td></tr>`).join('')
+      + '</table></div>';
+  }
+  $('body').innerHTML = h;
+  renderLangTabs(); renderViewTabs();
+}
+
+function setLang(k){ LANG = k; render(); }
+function setV(v){ VIEW = v; render(); }
+
+const q = new URLSearchParams(location.search);
+if (q.get('v') && ZH.viewtabs.some(t => t[0] === q.get('v'))) VIEW = q.get('v');
+if (q.get('lang') && L[q.get('lang')]) LANG = q.get('lang');
+render();
 </script></body></html>
