@@ -1,0 +1,277 @@
+<!DOCTYPE html><html lang="zh-Hant"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="author" content="盧子文醫師 - Dr. Lu Tz-Wen">
+<meta name="description" content="糖尿病飲食衛教圖卡：進食順序（菜→豆魚蛋肉→飯）、餐盤與份量（國健署我的餐盤糖尿病版、衛福部六大類一份多少）、食物紅綠燈（台灣外食常見陷阱）。依 2022 台灣第 2 型糖尿病臨床照護指引整理，可列印 A4。">
+<title>糖尿病飲食建議：種類、順序、份量 · 衛教圖卡</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+:root{--ink:#1b1f1d;--sub:#5f655f;--line:#e6e2d8;--accent:#0f6e64;--hot:#c0562c;--paper:#faf8f2;--card:#fff;--faint:#9a978c;--ok:#27ae60;--mod:#e67e22;--warn:#c0392b;}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#eceae2;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"PingFang TC","Noto Sans TC","Microsoft JhengHei","Sukhumvit Set","Noto Sans Thai",sans-serif;color:var(--ink);padding:20px 12px;-webkit-font-smoothing:antialiased}
+.tabs{max-width:900px;margin:0 auto 14px;display:flex;gap:8px}
+.tab{flex:1;text-align:center;padding:12px 6px;border-radius:10px;border:1px solid var(--line);background:#fff;cursor:pointer;font-weight:800;color:var(--sub);font-size:15px}
+.tab small{display:block;font-weight:500;font-size:11px;color:var(--faint);margin-top:2px}
+.tab.active{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.tab.active small{color:#9fd8ce}
+.langtabs{max-width:900px;margin:0 auto 10px;display:flex;gap:6px;flex-wrap:wrap}
+.langtabs .tab{flex:1 1 calc(33.333% - 4px);padding:9px 5px;font-size:13.5px}
+.langtabs .tab small{font-size:10px}
+.langbadge{display:inline-block;background:var(--ink);color:var(--paper);font-size:12.5px;font-weight:800;padding:5px 13px;border-radius:999px;margin-bottom:11px;line-height:1.5}
+.sheet{max-width:900px;margin:0 auto;background:var(--paper);padding:40px 38px 26px}
+.head{text-align:center;border-bottom:2px solid var(--ink);padding-bottom:15px;margin-bottom:4px}
+.kick{font-size:12px;letter-spacing:.34em;color:var(--accent);font-weight:800;margin-bottom:9px}
+.head h1{font-size:31px;font-weight:900;letter-spacing:-.01em;line-height:1.1}
+.head .zh{font-size:14px;color:var(--sub);margin-top:6px;letter-spacing:.04em}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px}
+.c{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px 15px;display:flex;flex-direction:column;align-items:center;text-align:center;justify-content:flex-start;min-height:168px;position:relative}
+.c .n{position:absolute;top:10px;left:14px;font-size:14px;font-weight:900;color:#cfcabb}
+.c i{font-size:33px;color:var(--accent);margin:10px 0 12px}
+.c.hot i{color:var(--hot)}
+.c .t{font-size:15.5px;font-weight:800;line-height:1.45}
+.c .t b{color:var(--hot)} .c .t .a{color:var(--accent)}
+.c .w{display:block;margin-top:6px;font-size:12.5px;font-weight:500;color:var(--sub);line-height:1.55}
+.c.lead{grid-column:span 3;flex-direction:row;gap:18px;justify-content:flex-start;text-align:left;min-height:auto;background:var(--ink);border:none}
+.c.lead i{color:var(--paper);font-size:28px;margin:0;flex:0 0 auto}
+.c.lead .t{color:var(--paper);font-size:16px;font-weight:600;line-height:1.6}
+.c.lead .t b{color:#7fd8cc}
+
+/* 外文在前、中文小字在後（老闆 2026-09-10 裁示；與 thyroid-fna-edu 同一套） */
+.p-zh,.p-fo{display:block}
+.p-zh{font-size:12.5px;font-weight:500;color:var(--sub);line-height:1.55;margin-top:5px}
+.c .t .p-zh{font-size:12.5px}
+.c .w .p-zh{font-size:11.5px;color:var(--faint);margin-top:3px}
+.c.lead .t .p-zh{color:#b9c6c2;font-size:12.5px}
+td .p-zh,th .p-zh{font-size:11.5px;color:var(--faint);margin-top:2px;font-weight:500}
+.head h1 .p-zh{font-size:15px;color:var(--sub);margin-top:5px;font-weight:700}
+.head .zh .p-zh,.note .p-zh{font-size:12px;color:var(--faint);margin-top:3px}
+
+table.food{width:100%;border-collapse:collapse;margin-top:16px;font-size:14px;background:#fff;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+table.food th,table.food td{border-bottom:1px solid var(--line);padding:10px 10px;text-align:left;vertical-align:top;line-height:1.6}
+table.food th{background:var(--paper);font-weight:800;color:var(--sub);font-size:13px}
+/* 欄寬：原本寫在 <th> 的 inline style，改版時移到 CSS，並為雙語留寬（外文比中文長） */
+table.food th:nth-child(1),table.food td:nth-child(1){width:110px}
+table.food th:nth-child(2),table.food td:nth-child(2){width:180px}
+.myth th:nth-child(1),.myth td:nth-child(1){width:250px}
+table.food td.g{color:var(--ok);font-weight:800}
+table.food td.y{color:var(--mod);font-weight:800}
+table.food td.r{color:var(--warn);font-weight:800}
+.myth{margin-top:16px;background:#fff;border:1px solid var(--line);border-radius:12px;padding:16px 18px}
+.myth h3{font-size:16px;color:var(--accent);margin-bottom:10px;border-left:4px solid var(--accent);padding-left:10px}
+.myth table{width:100%;border-collapse:collapse;font-size:14px}
+.myth th,.myth td{border-bottom:1px solid var(--line);padding:9px 8px;text-align:left;vertical-align:top;line-height:1.65}
+.myth th{background:var(--paper);font-weight:800;color:var(--sub);font-size:13px}
+.myth td.x{color:var(--warn);font-weight:700}
+.note{margin-top:14px;font-size:12.5px;color:var(--sub);line-height:1.7}
+.foot{margin-top:15px;text-align:center;font-size:11px;color:var(--faint);line-height:1.7;border-top:1px solid var(--line);padding-top:11px}
+.foot b{color:var(--sub)}
+.transnote{margin-top:6px;text-align:center;font-size:10.5px;color:var(--faint);line-height:1.6}
+.transnote .p-zh{font-size:10.5px;margin-top:2px}
+.bar{text-align:center;margin:16px 0}
+.bar button{background:var(--ink);color:var(--paper);border:0;padding:11px 24px;font-size:15px;font-weight:700;border-radius:6px;cursor:pointer}
+/* 餐盤圖（plate 頁籤） */
+.plate-wrap{display:grid;grid-template-columns:260px 1fr;gap:18px;align-items:center;margin-top:16px;background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px}
+.plate-wrap svg{width:100%;height:auto;display:block}
+.motto{list-style:none;margin:0;padding:0}
+.motto li{position:relative;padding:7px 0 7px 30px;font-size:14.5px;line-height:1.55;border-bottom:1px dashed var(--line)}
+.motto li:last-child{border-bottom:0}
+.motto li i{position:absolute;left:2px;top:9px;color:var(--accent);font-size:16px;width:20px;text-align:center}
+.motto li b{color:var(--hot)}
+.motto li .dm{display:block;font-size:12.5px;color:var(--sub);margin-top:1px}
+.carb{margin-top:14px;background:var(--ink);color:var(--paper);border-radius:12px;padding:14px 18px;font-size:14.5px;line-height:1.7}
+.carb b{color:#7fd8cc}
+table.food td.k{font-weight:800;color:var(--ink);white-space:nowrap}
+@media(max-width:640px){.plate-wrap{grid-template-columns:1fr}.plate-wrap svg{max-width:240px;margin:0 auto}table.food td.k{white-space:normal}
+  .head h1{font-size:24px}
+  /* 份量表在手機改成一列一卡：四欄硬塞 430px 會變成一字一行 */
+  table.food.portion,table.food.portion tbody,table.food.portion tr,table.food.portion td{display:block;width:auto}
+  table.food.portion tr:first-child{display:none}
+  table.food.portion tr{border-bottom:2px solid var(--line);padding:6px 0}
+  table.food.portion td{border-bottom:0;padding:4px 8px}
+  table.food.portion td.k{font-size:15px;color:var(--accent);padding-top:8px}
+  table.food.portion td[data-h]::before{content:attr(data-h) "：";font-weight:800;color:var(--sub);font-size:12.5px}}
+
+@media print{@page{size:A4 portrait;margin:8mm}body{background:#fff;padding:0}.tabs,.langtabs,.no-print{display:none!important}.sheet{max-width:100%;padding:4mm}.c,tr{break-inside:avoid}}
+@media(max-width:640px){.grid{grid-template-columns:repeat(2,1fr)}.c.lead{grid-column:span 2}.tabs{flex-wrap:wrap}.tab{min-width:30%}.langtabs .tab{flex:1 1 calc(50% - 3px)}
+  /* 手機：取消固定欄寬，否則雙語內容會被擠成一行一兩個字 */
+  table.food th:nth-child(1),table.food td:nth-child(1),
+  table.food th:nth-child(2),table.food td:nth-child(2),
+  .myth th:nth-child(1),.myth td:nth-child(1){width:auto}
+  table.food th,table.food td,.myth th,.myth td{padding:8px 6px;font-size:13px}
+  .myth{padding:12px 10px}}
+@media(max-width:420px){.grid{grid-template-columns:1fr}.c.lead{grid-column:span 1;flex-direction:column;text-align:center}}
+</style></head><body>
+<div class="langtabs no-print" id="langtabs"></div>
+<div class="tabs no-print" id="viewtabs"></div>
+<div class="sheet" id="sheet">
+  <div class="head">
+    <div class="langbadge" id="langbadge"></div>
+    <div class="kick" id="kick"></div>
+    <h1 id="h1"></h1>
+    <div class="zh" id="zh"></div>
+  </div>
+  <div id="body"></div>
+  <div class="note" id="note"></div>
+  <div class="foot" id="foot"></div>
+  <div class="transnote" id="transnote"></div>
+</div>
+<div class="bar no-print"><button onclick="window.print()" id="printbtn">🖨 列印目前這版 / 存成 PDF（A4）</button></div>
+<script>
+/* 多語版原則（見 memory: feedback_multilingual_keep_wayfinding_original）：
+   食物名稱屬「病人要拿去對照台灣市售包裝、問店員」的資訊 → 外語版一律「外文 + 中文小字對照」。
+   老闆 2026-09-10 裁示：外文為主、中文小字說明在後。本檔先只有 zh-TW，加語言時在 L 增加同結構的鍵即可。 */
+const PAIR_ORDER = 'fo-first';
+
+const L = {
+'zh-TW':{badge:'🇹🇼　繁體中文　·　Traditional Chinese　·　台灣',tab:'🇹🇼 繁體中文',tabsub:'台灣　Traditional Chinese',
+  h1:'糖尿病飲食建議', kick:'內分泌新陳代謝科　·　飲食衛教',
+  printbtn:'🖨 列印目前這版 / 存成 PDF（A4）',
+  viewtabs:[['order','進食順序','菜 → 豆魚蛋肉 → 飯'],['plate','餐盤與份量','半盤菜、飯不超過四分之一'],['food','食物紅綠燈','多吃 / 適量 / 少碰']],
+  views:{order:'進食順序　·　同一餐、同樣的量，換個順序血糖差很多',plate:'餐盤與份量　·　國健署「我的餐盤」調成糖尿病版，一份是多少用家常量具比',food:'食物紅綠燈　·　台灣外食最常踩的坑'},
+  lead:'同樣一碗飯，<b>先吃菜和豆魚蛋肉、飯留到最後</b>，飯後血糖高峰可以低兩到四成。這一招不花錢、不加藥，今天這一餐就能做。血糖是「吃什麼、吃多少、什麼順序」三件事一起決定的。',
+  cards:[
+   ['<b>第一口先吃菜</b>','每餐先吃至少半碗煮熟的蔬菜（生菜要一碗）。纖維先鋪底，後面的醣吸收就慢。葉菜、瓜類、菇類、海帶都算；地瓜、玉米、南瓜是主食，不算菜。'],
+   ['<b>第二吃豆魚蛋肉</b>','蛋白質和油脂會延緩胃排空，讓飯的糖慢慢進血液。一掌心厚度就夠，不必因為「先吃」就吃兩倍。'],
+   ['<b>飯留到最後</b>','飯、麵、麵包、地瓜、水果都是醣類，放最後。前面吃到七分飽，飯自然只吃得下半碗到八分滿。'],
+   ['<b>一餐吃 20 分鐘以上</b>','吃太快血糖衝得快、也容易過量；飽足訊號要 20 分鐘才到大腦。每口多嚼幾下，中間放下筷子。'],
+   ['<b>湯放最後，或不喝</b>','湯麵、羹、勾芡的湯裡全是澱粉和糖。要喝就喝清湯，而且在菜和肉之後。'],
+   ['<b>水果不當飯後甜點</b>','飯後立刻吃水果是醣上加醣。改到兩餐之間吃，一次一份：拳頭大一個，或切塊八分滿碗。'],
+   ['<b>定時定量、不跳餐</b>','跳過一餐常換來下一餐暴食；吃藥或打胰島素的人還會低血糖。三餐時間固定、份量固定，血糖才穩。'],
+   ['<b>外食也照順序</b>','便當先吃配菜、再主菜，飯留最後吃一半；自助餐先夾菜；火鍋先菜後肉，最後才下麵；早餐店先蛋再吃吐司。'],
+   ['<b>量一次血糖給自己看</b>','飯前和飯後 2 小時各量一次，比較「先吃飯」和「先吃菜」兩天的差別。目標飯後 2 小時低於 180 mg/dL。親眼看到最有說服力。'],
+  ],
+  plate:{
+   title:'我的餐盤（國健署）糖尿病版',
+   sub:'半盤蔬菜、四分之一豆魚蛋肉、四分之一全穀雜糧；先吃菜，飯不超過菜的量。',
+   labels:['蔬菜 ½','豆魚蛋肉 ¼','全穀雜糧 ¼'],
+   motto:[
+    ['每天早晚一杯奶','鮮奶 240 毫升一杯，一杯約 12 公克醣，要算進醣量；調味乳與含糖優酪乳不算'],
+    ['每餐水果拳頭大','糖尿病版：改到<b>兩餐之間</b>吃，一天 2 份，不打成果汁'],
+    ['菜比水果多一點','蔬菜每天至少 3 份（煮熟半碗算一份），每餐都要有'],
+    ['飯跟蔬菜一樣多','糖尿病版：<b>飯不超過蔬菜的量</b>，每餐半碗到八分滿，先吃菜再吃飯'],
+    ['豆魚蛋肉一掌心','順序豆製品、魚、蛋、肉；加工肉（香腸、培根、火腿）少吃'],
+    ['堅果種子一茶匙','每天 1 份約 10 公克（免洗湯匙 1 匙），取代一部分烹調油'],
+   ],
+   carb:'算醣的口訣：<b>一份醣 = 15 公克 = ¼ 碗飯 = 半碗麵 = 1 份水果 = 1 杯鮮奶</b>。常見起點是女性每餐 2 到 3 份、男性 3 到 4 份，實際份數由營養師依體重、活動量和藥物設定；打胰島素的人要學醣類計算。',
+   head:['六大類','一份是多少（家常量具）','每天幾份','糖尿病提醒'],
+   rows:[
+    ['全穀雜糧','¼ 碗飯 ＝ 半碗麵或稀飯 ＝ 小地瓜半個 ＝ 玉米 ⅓ 根 ＝ 吐司半片（約 15 公克醣）','每餐 2 到 4 份（半碗到一碗飯）','地瓜、芋頭、南瓜、玉米、馬鈴薯、紅豆、綠豆都是主食，要跟飯換，不是配菜'],
+    ['蔬菜','煮熟半碗 ＝ 生的一碗（約 100 公克）','每天 3 到 5 份，每餐至少 1 份','先吃、佔半盤；菇類、海帶、瓜類都算'],
+    ['豆魚蛋肉','一掌心厚度的肉或魚（約 35 公克、1 兩）＝ 蛋 1 顆 ＝ 傳統豆腐 3 格（80 公克）＝ 無糖豆漿 190 毫升','每餐 1 到 2 掌心；每天 3 到 8 份依體重','腎功能正常者每公斤體重約 1 到 1.5 公克蛋白質；優先豆製品與魚'],
+    ['乳品','鮮奶 240 毫升 ＝ 無糖優格 210 公克 ＝ 起司 2 片','每天 1.5 到 2 杯','一杯 12 公克醣要算；不選調味乳、含糖優酪乳'],
+    ['水果','拳頭大 1 個 ＝ 切塊八分滿碗 ＝ 小顆葡萄 13 顆（約 15 公克醣）','每天 2 份，分兩次','兩餐之間吃、不打汁；芒果、荔枝、香蕉、葡萄一份很小'],
+    ['油脂與堅果','烹調油 1 茶匙（5 公克）；堅果 1 份 10 公克（免洗湯匙 1 匙）','油 3 到 7 茶匙 ＋ 堅果 1 份','用植物油，少動物油；椰子油、棕櫚油不算好油；炸物一次就用掉一天的油'],
+   ]},
+  foodhead:['燈號','類別','怎麼吃'],
+  food:[
+   ['g','多吃','非澱粉類蔬菜','葉菜、瓜類、菇類、海帶、番茄、花椰菜、豆芽；每餐先吃半盤'],
+   ['g','多吃','豆製品','豆腐、豆干、無糖豆漿、毛豆、黃豆；植物性蛋白優先，可取代部分肉'],
+   ['g','多吃','魚與海鮮','每週至少 2 次，清蒸、烤、煮；油脂好、對心血管有幫助'],
+   ['g','多吃','全穀當主食','糙米、五穀飯、燕麥、全麥；升糖慢又有纖維，但<b>份量一樣要算</b>，不是可以多吃'],
+   ['g','多吃','水、無糖茶、黑咖啡','取代所有含糖飲料；每天 1,500 到 2,000 毫升'],
+   ['y','適量','水果','每天 2 份、分開吃、整顆吃；打成果汁一杯等於 3 到 4 份'],
+   ['y','適量','乳品','鮮奶每天 1.5 到 2 杯，算進醣量；優格選無糖'],
+   ['y','適量','根莖類與澱粉性豆類','地瓜、芋頭、南瓜、玉米、馬鈴薯、紅豆、綠豆：好食物，但是主食，要跟飯換'],
+   ['y','適量','瘦肉、去皮禽肉、蛋','每餐一掌心；蛋每天 1 顆沒問題'],
+   ['y','適量','堅果','每天 1 份 10 公克（免洗湯匙 1 匙）；無調味的'],
+   ['y','適量','酒','男性每天 2 份、女性 1 份以內（1 份＝啤酒 350 毫升或紅酒 150 毫升）；空腹喝會低血糖'],
+   ['r','少碰','含糖飲料','手搖飲、汽水、果汁、含糖乳酸飲、運動飲料；<b>第一個要戒</b>'],
+   ['r','少碰','精緻澱粉與加糖','白麵包、蛋糕、餅乾、麵線羹、肉羹、勾芡、炒飯炒麵、滷肉飯'],
+   ['r','少碰','加工肉與油炸','香腸、培根、火腿、炸雞、鹹酥雞；飽和脂肪和鹽都高'],
+   ['r','少碰','「無糖」「低糖」陷阱','無糖蘇打餅、無糖麥片飲、無糖豆漿以外的「無糖」點心：無糖不等於無醣，看營養標示的碳水化合物'],
+  ],
+  notes:{
+   order:'進食順序的證據：2015 年 Diabetes Care 與 2016 年 Diabetologia 的隨機交叉研究，先吃蔬菜與蛋白質、最後吃醣類，餐後 30 到 60 分鐘血糖比先吃飯低約三成；內科學誌 2025 年 FEED ATOMS 原則與 2022 台灣指引同樣建議「蔬菜 → 豆魚蛋肉 → 醣類」。順序改了，總量還是要算。',
+   plate:'份量依衛福部每日飲食指南與國健署「我的餐盤」；2022 台灣第 2 型糖尿病臨床照護指引：盤子一半放非澱粉類蔬菜、醣類不超過四分之一、其餘是蛋白質。每餐醣份數由營養師依體重、活動量與藥物個別設定；用 SGLT2 抑制劑的人不要極端減醣。',
+   food:'資料來源：2022 台灣第 2 型糖尿病臨床照護指引第十章（非澱粉蔬菜優先、減少添加糖與精緻穀類、原型食物為主、植物油取代動物油）；衛福部每日飲食指南；ADA Standards of Care 2025 第 5 章。'},
+  trans:'',
+  foot:'高醫岡山醫院　內分泌新陳代謝科　盧子文醫師　｜　<b>本圖卡僅供衛教，實際份量與用藥以醫師與營養師判斷為準</b>　｜　依 2022 台灣第 2 型糖尿病臨床照護指引、衛福部每日飲食指南、國健署我的餐盤整理　｜　工具版本：2026-09-10'},
+};
+
+let LANG = 'zh-TW', VIEW = 'order';
+const ZH = L['zh-TW'];
+function pair(zh, fo, k){
+  if (k === 'zh-TW' || zh === fo) return zh;
+  const a = `<span class="p-zh">${zh}</span>`, b = `<span class="p-fo">${fo}</span>`;
+  return PAIR_ORDER === 'zh-first' ? a + b : b + a;
+}
+
+const $ = id => document.getElementById(id);
+
+function renderLangTabs(){
+  const keys = Object.keys(L);
+  $('langtabs').style.display = keys.length > 1 ? '' : 'none';
+  $('langtabs').innerHTML = keys.map(k =>
+    `<div class="tab ${k===LANG?'active':''}" onclick="setLang('${k}')">${L[k].tab}<small>${L[k].tabsub}</small></div>`).join('');
+}
+function renderViewTabs(){
+  const d = L[LANG];
+  $('viewtabs').innerHTML = d.viewtabs.map(([v,label,sub],i) =>
+    `<div class="tab ${v===VIEW?'active':''}" onclick="setV('${v}')">${pair(ZH.viewtabs[i][1],label,LANG)}<small>${pair(ZH.viewtabs[i][2],sub,LANG)}</small></div>`).join('');
+}
+function plateSVG(labels){
+  // 半盤蔬菜（左）、右上豆魚蛋肉、右下全穀雜糧
+  return `<svg viewBox="0 0 240 240" role="img" aria-label="${labels.join('、')}">
+    <circle cx="120" cy="120" r="112" fill="#fff" stroke="#cfcabb" stroke-width="6"/>
+    <path d="M120 20 A100 100 0 0 0 120 220 Z" fill="#dff3ea"/>
+    <path d="M120 20 A100 100 0 0 1 220 120 L120 120 Z" fill="#fde7d6"/>
+    <path d="M220 120 A100 100 0 0 1 120 220 L120 120 Z" fill="#f4ecd2"/>
+    <line x1="120" y1="20" x2="120" y2="220" stroke="#fff" stroke-width="4"/>
+    <line x1="120" y1="120" x2="220" y2="120" stroke="#fff" stroke-width="4"/>
+    <text x="72" y="116" text-anchor="middle" font-size="15" font-weight="800" fill="#0f6e64">${labels[0]}</text>
+    <text x="72" y="136" text-anchor="middle" font-size="11" fill="#5f655f">先吃</text>
+    <text x="168" y="78" text-anchor="middle" font-size="13" font-weight="800" fill="#c0562c">${labels[1]}</text>
+    <text x="168" y="96" text-anchor="middle" font-size="11" fill="#5f655f">第二</text>
+    <text x="168" y="166" text-anchor="middle" font-size="13" font-weight="800" fill="#8a6d1f">${labels[2]}</text>
+    <text x="168" y="184" text-anchor="middle" font-size="11" fill="#5f655f">最後</text>
+  </svg>`;
+}
+function render(){
+  const d = L[LANG], k = LANG;
+  document.documentElement.lang = (k === 'zh-TW') ? 'zh-Hant' : k;
+  $('langbadge').textContent = d.badge;
+  $('kick').innerHTML = pair(ZH.kick, d.kick, k);
+  $('h1').innerHTML   = pair(ZH.h1, d.h1, k);
+  $('zh').innerHTML   = pair(ZH.views[VIEW], d.views[VIEW], k);
+  $('foot').innerHTML = pair(ZH.foot, d.foot, k);
+  $('note').innerHTML = pair(ZH.notes[VIEW], d.notes[VIEW], k);
+  $('printbtn').innerHTML = d.printbtn;
+  $('transnote').innerHTML = d.trans ? `${d.trans}<span class="p-zh">本外語版由 AI 協助翻譯、經醫師端校閱，非官方認證譯本；文字如有出入，以中文版為準。</span>` : '';
+
+  let h = '';
+  if (VIEW === 'order'){
+    h = `<div class="grid"><div class="c lead"><i class="fa-solid fa-arrow-down-1-9"></i><div class="t">${pair(ZH.lead, d.lead, k)}</div></div>`;
+    const ICON = ['fa-leaf','fa-fish','fa-bowl-rice','fa-clock','fa-mug-hot','fa-apple-whole','fa-calendar-check','fa-utensils','fa-droplet'];
+    const HOT  = [1,1,1,0,0,0,0,0,0];
+    d.cards.forEach((c,i) => {
+      h += `<div class="c ${HOT[i]?'hot':''}"><span class="n">${String(i+1).padStart(2,'0')}</span>`
+         + `<i class="fa-solid ${ICON[i]}"></i><div class="t">${pair(ZH.cards[i][0], c[0], k)}`
+         + `<span class="w">${pair(ZH.cards[i][1], c[1], k)}</span></div></div>`;
+    });
+    h += '</div>';
+  } else if (VIEW === 'plate'){
+    const p = d.plate, z = ZH.plate;
+    const MI = ['fa-glass-water','fa-apple-whole','fa-leaf','fa-bowl-rice','fa-hand','fa-seedling'];
+    h = `<div class="plate-wrap">${plateSVG(p.labels)}<div><div class="t" style="font-size:17px;font-weight:900">${pair(z.title,p.title,k)}</div>`
+      + `<div style="font-size:13.5px;color:var(--sub);margin:4px 0 10px;line-height:1.6">${pair(z.sub,p.sub,k)}</div><ul class="motto">`
+      + p.motto.map((m,i)=>`<li><i class="fa-solid ${MI[i]}"></i>${pair(z.motto[i][0],m[0],k)}<span class="dm">${pair(z.motto[i][1],m[1],k)}</span></li>`).join('')
+      + `</ul></div></div>`
+      + `<div class="carb">${pair(z.carb,p.carb,k)}</div>`
+      + `<table class="food portion"><tr>${p.head.map((t,i)=>`<th>${pair(z.head[i],t,k)}</th>`).join('')}</tr>`
+      + p.rows.map((r,i)=>`<tr><td class="k">${pair(z.rows[i][0],r[0],k)}</td><td data-h="${z.head[1]}">${pair(z.rows[i][1],r[1],k)}</td><td data-h="${z.head[2]}">${pair(z.rows[i][2],r[2],k)}</td><td data-h="${z.head[3]}">${pair(z.rows[i][3],r[3],k)}</td></tr>`).join('')
+      + '</table>';
+  } else {
+    h = `<table class="food"><tr>${d.foodhead.map((t,i)=>`<th>${pair(ZH.foodhead[i],t,k)}</th>`).join('')}</tr>`
+      + d.food.map((r,i)=>`<tr><td class="${r[0]}">${pair(ZH.food[i][1],r[1],k)}</td>`
+      + `<td>${pair(ZH.food[i][2],r[2],k)}</td><td>${pair(ZH.food[i][3],r[3],k)}</td></tr>`).join('')
+      + '</table>';
+  }
+  $('body').innerHTML = h;
+  renderLangTabs(); renderViewTabs();
+}
+function setLang(k){ LANG = k; render(); }
+function setV(v){ VIEW = v; render(); }
+const q = new URLSearchParams(location.search);
+if (q.get('v') && ZH.viewtabs.some(t => t[0] === q.get('v'))) VIEW = q.get('v');
+if (q.get('lang') && L[q.get('lang')]) LANG = q.get('lang');
+render();
+</script></body></html>
