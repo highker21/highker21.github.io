@@ -211,7 +211,9 @@ const $ = id => document.getElementById(id);
 
 function renderLangTabs(){
   const keys = Object.keys(L);
-  $('langtabs').style.display = keys.length > 1 ? '' : 'none';
+  const only = keys.length <= 1;   // 單語時語言列與抬頭徽章都藏起來（徽章在 .sheet 內會印到紙上）
+  $('langtabs').style.display = only ? 'none' : '';
+  $('langbadge').style.display = only ? 'none' : '';
   $('langtabs').innerHTML = keys.map(k =>
     `<div class="tab ${k===LANG?'active':''}" onclick="setLang('${k}')">${L[k].tab}<small>${L[k].tabsub}</small></div>`).join('');
 }
