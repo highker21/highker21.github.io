@@ -1,0 +1,257 @@
+<!DOCTYPE html><html lang="zh-Hant"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="author" content="盧子文醫師 - Dr. Lu Tz-Wen">
+<meta name="description" content="運動處方衛教圖卡。依 ADA Standards of Care in Diabetes—2026 第 5 章、WHO 2020 身體活動指引與國民健康署全民身體活動指引整理：每週 150 分鐘中等強度有氧＋每週 2 到 3 次阻力訓練，附一週範例表與常見迷思。可列印 A4，支援一次列印三頁。">
+<title>運動處方 · 衛教圖卡（每週 150 分鐘＋2 次阻力）</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+:root{--ink:#1b1f1d;--sub:#5f655f;--line:#e6e2d8;--accent:#0f6e64;--hot:#c0562c;--paper:#faf8f2;--card:#fff;--faint:#9a978c;--ok:#27ae60;--mod:#e67e22;--warn:#c0392b;}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#eceae2;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"PingFang TC","Noto Sans TC","Microsoft JhengHei","Sukhumvit Set","Noto Sans Thai",sans-serif;color:var(--ink);padding:20px 12px;-webkit-font-smoothing:antialiased}
+.tabs{max-width:900px;margin:0 auto 14px;display:flex;gap:8px}
+.tab{flex:1;text-align:center;padding:12px 6px;border-radius:10px;border:1px solid var(--line);background:#fff;cursor:pointer;font-weight:800;color:var(--sub);font-size:15px}
+.tab small{display:block;font-weight:500;font-size:11px;color:var(--faint);margin-top:2px}
+.tab.active{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.tab.active small{color:#9fd8ce}
+.langtabs{max-width:900px;margin:0 auto 10px;display:flex;gap:6px;flex-wrap:wrap}
+.langtabs .tab{flex:1 1 calc(33.333% - 4px);padding:9px 5px;font-size:13.5px}
+.langtabs .tab small{font-size:10px}
+.langbadge{display:inline-block;background:var(--ink);color:var(--paper);font-size:12.5px;font-weight:800;padding:5px 13px;border-radius:999px;margin-bottom:11px;line-height:1.5}
+.sheet{max-width:900px;margin:0 auto;background:var(--paper);padding:40px 38px 26px}
+.head{text-align:center;border-bottom:2px solid var(--ink);padding-bottom:15px;margin-bottom:4px}
+.kick{font-size:12px;letter-spacing:.34em;color:var(--accent);font-weight:800;margin-bottom:9px}
+.head h1{font-size:31px;font-weight:900;letter-spacing:-.01em;line-height:1.1}
+.head .zh{font-size:14px;color:var(--sub);margin-top:6px;letter-spacing:.04em}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px}
+.c{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px 15px;display:flex;flex-direction:column;align-items:center;text-align:center;justify-content:flex-start;min-height:168px;position:relative}
+.c .n{position:absolute;top:10px;left:14px;font-size:14px;font-weight:900;color:#cfcabb}
+.c i{font-size:33px;color:var(--accent);margin:10px 0 12px}
+.c.hot i{color:var(--hot)}
+.c .t{font-size:15.5px;font-weight:800;line-height:1.45}
+.c .t b{color:var(--hot)} .c .t .a{color:var(--accent)}
+.c .w{display:block;margin-top:6px;font-size:12.5px;font-weight:500;color:var(--sub);line-height:1.55}
+.c.lead{grid-column:span 3;flex-direction:row;gap:18px;justify-content:flex-start;text-align:left;min-height:auto;background:var(--ink);border:none}
+.c.lead i{color:var(--paper);font-size:28px;margin:0;flex:0 0 auto}
+.c.lead .t{color:var(--paper);font-size:16px;font-weight:600;line-height:1.6}
+.c.lead .t b{color:#7fd8cc}
+
+/* 外文在前、中文小字在後（老闆 2026-09-10 裁示；與 thyroid-fna-edu 同一套） */
+.p-zh,.p-fo{display:block}
+.p-zh{font-size:12.5px;font-weight:500;color:var(--sub);line-height:1.55;margin-top:5px}
+.c .t .p-zh{font-size:12.5px}
+.c .w .p-zh{font-size:11.5px;color:var(--faint);margin-top:3px}
+.c.lead .t .p-zh{color:#b9c6c2;font-size:12.5px}
+td .p-zh,th .p-zh{font-size:11.5px;color:var(--faint);margin-top:2px;font-weight:500}
+.head h1 .p-zh{font-size:15px;color:var(--sub);margin-top:5px;font-weight:700}
+.head .zh .p-zh,.note .p-zh{font-size:12px;color:var(--faint);margin-top:3px}
+
+table.food{width:100%;border-collapse:collapse;margin-top:16px;font-size:14px;background:#fff;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+table.food th,table.food td{border-bottom:1px solid var(--line);padding:10px 10px;text-align:left;vertical-align:top;line-height:1.6}
+table.food th{background:var(--paper);font-weight:800;color:var(--sub);font-size:13px}
+/* 欄寬：原本寫在 <th> 的 inline style，改版時移到 CSS，並為雙語留寬（外文比中文長） */
+table.food th:nth-child(1),table.food td:nth-child(1){width:110px}
+table.food th:nth-child(2),table.food td:nth-child(2){width:180px}
+.myth th:nth-child(1),.myth td:nth-child(1){width:250px}
+/* 運動類型色碼（沿用飲食圖卡的表格骨架，但語意不同：不是紅綠燈，是四種訓練類型） */
+table.food td.ae{color:var(--ok);font-weight:800}      /* 有氧 */
+table.food td.re{color:var(--mod);font-weight:800}     /* 阻力 */
+table.food td.fb{color:var(--accent);font-weight:800}  /* 柔軟度・平衡 */
+table.food td.rs{color:var(--faint);font-weight:800}   /* 休息／輕活動 */
+.myth{margin-top:16px;background:#fff;border:1px solid var(--line);border-radius:12px;padding:16px 18px}
+.myth h3{font-size:16px;color:var(--accent);margin-bottom:10px;border-left:4px solid var(--accent);padding-left:10px}
+.myth table{width:100%;border-collapse:collapse;font-size:14px}
+.myth th,.myth td{border-bottom:1px solid var(--line);padding:9px 8px;text-align:left;vertical-align:top;line-height:1.65}
+.myth th{background:var(--paper);font-weight:800;color:var(--sub);font-size:13px}
+.myth td.x{color:var(--warn);font-weight:700}
+.note{margin-top:14px;font-size:12.5px;color:var(--sub);line-height:1.7}
+.foot{margin-top:15px;text-align:center;font-size:11px;color:var(--faint);line-height:1.7;border-top:1px solid var(--line);padding-top:11px}
+.foot b{color:var(--sub)}
+.transnote{margin-top:6px;text-align:center;font-size:10.5px;color:var(--faint);line-height:1.6}
+.transnote .p-zh{font-size:10.5px;margin-top:2px}
+.bar{text-align:center;margin:16px 0}
+.bar button{background:var(--ink);color:var(--paper);border:0;padding:11px 24px;font-size:15px;font-weight:700;border-radius:6px;cursor:pointer}
+.bar button.ghost{background:#fff;color:var(--ink);border:1px solid var(--ink)}
+.bar button+button{margin-left:8px}
+#printall{display:none}
+@media print{@page{size:A4 portrait;margin:8mm}body{background:#fff;padding:0}.tabs,.langtabs,.no-print{display:none!important}.sheet{max-width:100%;padding:4mm}.c,tr{break-inside:avoid}
+  /* 列印全部三頁：把三個分頁各印成一頁 */
+  body.print-all #sheet{display:none!important}
+  body.print-all #printall{display:block}
+  body.print-all #printall .sheet{page-break-after:always}
+  body.print-all #printall .sheet:last-child{page-break-after:auto}}
+@media(max-width:640px){.grid{grid-template-columns:repeat(2,1fr)}.c.lead{grid-column:span 2}.tabs{flex-wrap:wrap}.tab{min-width:30%}.langtabs .tab{flex:1 1 calc(50% - 3px)}
+  /* 手機：取消固定欄寬，否則雙語內容會被擠成一行一兩個字 */
+  table.food th:nth-child(1),table.food td:nth-child(1),
+  table.food th:nth-child(2),table.food td:nth-child(2),
+  .myth th:nth-child(1),.myth td:nth-child(1){width:auto}
+  table.food th,table.food td,.myth th,.myth td{padding:8px 6px;font-size:13px}
+  .myth{padding:12px 10px}}
+@media(max-width:420px){.grid{grid-template-columns:1fr}.c.lead{grid-column:span 1;flex-direction:column;text-align:center}}
+</style></head><body>
+<div class="langtabs no-print" id="langtabs"></div>
+<div class="tabs no-print" id="viewtabs"></div>
+<div class="sheet" id="sheet">
+  <div class="head">
+    <div class="langbadge" id="langbadge"></div>
+    <div class="kick" id="kick"></div>
+    <h1 id="h1"></h1>
+    <div class="zh" id="zh"></div>
+  </div>
+  <div id="body"></div>
+  <div class="note" id="note"></div>
+  <div class="foot" id="foot"></div>
+  <div class="transnote" id="transnote"></div>
+</div>
+<div id="printall"></div>
+<div class="bar no-print">
+  <button onclick="window.print()" id="printbtn">🖨 列印目前這版 / 存成 PDF（A4）</button>
+  <button onclick="printAll()" id="printallbtn" class="ghost">🖨 三個分頁一起列印 / 存成一份 PDF</button>
+</div>
+<script>
+const L = {
+'zh-TW':{badge:'🇹🇼　繁體中文　·　Traditional Chinese　·　台灣',tab:'🇹🇼 繁體中文',tabsub:'台灣　Traditional Chinese',
+  h1:'運動處方', kick:'內分泌新陳代謝科　·　身體活動衛教',
+  printbtn:'🖨 列印目前這版 / 存成 PDF（A4）',
+  printall:'🖨 三個分頁一起列印 / 存成一份 PDF',
+  trans:'', transzh:'本外語版由 AI 協助翻譯、經醫師端校閱，非官方認證譯本；文字如有出入，以中文版為準。',
+  viewtabs:[['core','九招圖卡','一週要做到什麼'],['plan','一週範例表','照著排就好'],['myth','常見迷思','實證上不成立的']],
+  views:{core:'九招圖卡　·　每週 150 分鐘中等強度＋2 次阻力訓練',plan:'一週範例表　·　有氧合計 150 分鐘、阻力 2 次非連續日',myth:'常見迷思　·　實證上不成立的'},
+  lead:'兩個數字先記起來：每週 <b>150 分鐘</b>中等強度有氧、每週 <b>2 到 3 次</b>阻力訓練。這是國健署與 ADA 2026 一致的門檻。但真正決定成敗的不是這兩個數字，是<b>你能不能持續三個月</b>——做得到的量開始，比完美的計畫重要。',
+  cards:[
+   ['<b>每週 150 分鐘</b>中等強度有氧','拆成 5 天 × 30 分鐘最好記。做不到就拆更小段——<span class="a">10 分鐘一段累積起來一樣算數</span>。體能較好的人改成每週 75 分鐘費力運動也可以。'],
+   ['分散到至少 <b>3 天</b>，不要連續兩天不動','ADA 2026 明寫的條件。運動改善胰島素敏感度的效果只維持一到兩天，斷太久等於從頭來過。週末一次做完兩個半小時，對血糖的好處比分散做差。'],
+   ['每週 <b>2 到 3 次阻力訓練</b>，不要連續兩天','練大肌群：腿、臀、背、胸、肩、手臂。每個動作 2 到 3 組、每組 10 到 15 下，做到最後兩下有點吃力就對了。深蹲、坐姿站起、彈力帶、寶特瓶裝水都算。'],
+   ['強度怎麼抓：<b>能說話、不能唱歌</b>','國健署的定義——中等強度是呼吸心跳略快、微微流汗，可以順暢講話但唱不了歌。要用數字的話，自覺費力程度（RPE）<span class="a">12 到 14 分</span>（滿分 20）。'],
+   ['久坐<b>每 30 分鐘</b>起來動一下','ADA 2026 建議連續久坐至少每 30 分鐘打斷一次。起身走兩三分鐘、原地深蹲十下都行。這件事對飯後血糖的幫助，跟正式運動是分開算的。'],
+   ['65 歲以上再加<b>柔軟度與平衡</b>，每週 2 到 3 次','太極、瑜伽、單腳站立。目的不是體能是<span class="a">防跌倒</span>——跌一次骨折，前面所有的努力都會被打斷。'],
+   ['從<b>你現在做得到的量</b>開始，每週加一成','現在一次只能走 10 分鐘，就從 10 分鐘開始。一開始就排 30 分鐘，多數人撐不過兩週。能持續兩個月的量，勝過完美但只做三天的計畫。'],
+   ['打胰島素或吃 SU 的人，運動<b>前後測血糖</b>','只有這兩類藥會低血糖。運動前低於 <span class="a">90 mg/dL</span> 先補 15 公克醣類，身上隨時帶糖。其他降血糖藥（metformin、SGLT2 抑制劑、GLP-1）單獨使用不會因運動低血糖，不必特地先吃東西。'],
+   ['這些情況<b>先問過醫師</b>再開始','運動時胸悶、胸痛、異常喘、頭暈或昏厥；增殖性視網膜病變；嚴重周邊神經病變或足部有傷口；血糖超過 250 mg/dL 且驗出酮體。這幾項不是自己判斷的，帶這張單來門診問。'],
+  ],
+  planhead:['類型','星期','內容與時間'],
+  plan:[
+   ['ae','有氧','週一','快走或騎腳踏車 <b>40 分鐘</b>——速度抓在能說話、唱不了歌'],
+   ['re','阻力','週二','暖身快走 15 分鐘 ＋ 大肌群 8 到 10 個動作，各 2 到 3 組 × 10 到 15 下'],
+   ['ae','有氧','週三','快走 <b>40 分鐘</b>；或拆成早晚各 20 分鐘'],
+   ['rs','休息','週四','散步或伸展 15 到 20 分鐘。可以不做正式運動，但不要整天都不動'],
+   ['re','阻力','週五','暖身快走 15 分鐘 ＋ 同週二，換一組動作或加一點重量'],
+   ['ae','有氧','週六','<b>40 分鐘</b>，可以換成游泳、爬山、跳舞——換項目比較不會膩'],
+   ['fb','柔軟平衡','週日','伸展、太極或瑜伽 20 分鐘。65 歲以上這天不要跳過'],
+  ],
+  mythtitle:'這些說法，指引與研究不支持',
+  mythhead:['常聽到的說法','實際上'],
+  myths:[
+   ['「要先做運動心電圖才能開始運動」','ADA 2026：沒有症狀的人，不建議為了篩檢心血管疾病例行做運動心電圖，也不需要為了開始「中等強度」運動特地去做。但如果你一動就胸悶、胸痛、異常喘或頭暈，那不是迷思是症狀，要先看醫師。'],
+   ['「一定要連續 30 分鐘才有效」','累積計算就好。10 分鐘一段、一天三段，跟一次做 30 分鐘差不多。真正影響結果的是每週總量與頻率，不是單次長度。'],
+   ['「走路不算運動」','快到「能說話、唱不了歌」的走路就是中等強度，完全算數。散步聊天的速度才不算——差別在強度不在項目。'],
+   ['「有糖尿病不能做重訓」','剛好相反。ADA 2026 建議每週 2 到 3 次阻力訓練。肌肉是身體處理血糖最大的去處，練肌力對血糖的幫助不輸有氧。'],
+   ['「血糖高就不能運動」','分情況。單純血糖偏高、沒有酮體，運動反而有幫助。要暫停的是<b>超過 250 mg/dL 且驗出酮體</b>，那時候運動會讓血糖更高。'],
+   ['「空腹運動比較燃脂」','對一般人差異有限；對打胰島素或吃 SU 的人是低血糖風險。想減重靠的是每週總量與飲食，不是空不空腹。'],
+   ['「年紀大了做重訓容易受傷」','65 歲以上流失最快的就是肌肉。彈力帶、坐姿站起、寶特瓶裝水都算阻力訓練，重點是姿勢正確、重量從輕開始，不是不做。'],
+   ['「今天走了一萬步就夠了」','步數不等於強度。一萬步如果都是慢慢晃，可能一分鐘中等強度都沒有。要看的是「有幾分鐘達到能說話、唱不了歌」。'],
+  ],
+  notes:{
+   core:'這張卡是給一般成人與糖尿病族群的通則，不是個人化處方。有心血管疾病、關節問題、或正在懷孕，運動內容要由醫師依你的狀況調整。開始之後三個月回頭看糖化血色素與體重，比每天量體重有意義。',
+   plan:'表中有氧合計 <b>150 分鐘</b>（40＋15＋40＋15＋40），阻力 2 次且非連續日，柔軟平衡 1 次——四項門檻都達到。星期幾可以自己換，只要守住兩條：不要連續兩天完全不動、兩次阻力訓練不要排在一起。做不到全部，先保住有氧的天數。',
+   myth:'資料來源：ADA Standards of Care in Diabetes—2026 第 5 章（身體活動與運動）；WHO 2020 身體活動與久坐行為指引；衛生福利部國民健康署《全民身體活動指引》。'},
+  foot:'高醫岡山醫院　內分泌新陳代謝科　盧子文醫師　｜　<b>本圖卡僅供衛教，實際運動內容請依醫師評估調整</b>　｜　依 ADA Standards of Care in Diabetes—2026 第 5 章、WHO 2020 身體活動指引、國民健康署全民身體活動指引整理　｜　工具版本：2026-09-10'},
+};
+
+const ZH = L['zh-TW'];
+const VIEWS = ['core','plan','myth'];
+
+/* 外文在前、中文小字在後（老闆 2026-09-10 裁示；與 thyroid-fna-edu 同一套） */
+const PAIR_ORDER = 'fo-first';
+function pair(zh, fo, k){
+  if (k === 'zh-TW' || zh === fo) return zh;
+  const a = `<span class="p-zh">${zh}</span>`, b = `<span class="p-fo">${fo}</span>`;
+  return PAIR_ORDER === 'zh-first' ? a + b : b + a;
+}
+
+let LANG = 'zh-TW', VIEW = 'core';
+const $ = id => document.getElementById(id);
+
+const ICON = ['fa-person-walking','fa-calendar-check','fa-dumbbell','fa-comments','fa-chair',
+              'fa-person-cane','fa-seedling','fa-syringe','fa-user-doctor'];
+const HOT  = [1,1,0,0,0,0,0,0,1];
+
+function renderLangTabs(){
+  $('langtabs').innerHTML = Object.keys(L).map(k =>
+    `<div class="tab ${k===LANG?'active':''}" onclick="setLang('${k}')">${L[k].tab}<small>${L[k].tabsub}</small></div>`).join('');
+}
+function renderViewTabs(){
+  const d = L[LANG];
+  $('viewtabs').innerHTML = d.viewtabs.map(([v,label,sub],i) =>
+    `<div class="tab ${v===VIEW?'active':''}" onclick="setV('${v}')">${pair(ZH.viewtabs[i][1],label,LANG)}<small>${pair(ZH.viewtabs[i][2],sub,LANG)}</small></div>`).join('');
+}
+
+function bodyHTML(view, k){
+  const d = L[k];
+  if (view === 'core'){
+    let h = `<div class="grid"><div class="c lead"><i class="fa-solid fa-person-running"></i><div class="t">${pair(ZH.lead, d.lead, k)}</div></div>`;
+    d.cards.forEach((c,i) => {
+      h += `<div class="c ${HOT[i]?'hot':''}"><span class="n">${String(i+1).padStart(2,'0')}</span>`
+         + `<i class="fa-solid ${ICON[i]}"></i><div class="t">${pair(ZH.cards[i][0], c[0], k)}`
+         + `<span class="w">${pair(ZH.cards[i][1], c[1], k)}</span></div></div>`;
+    });
+    return h + '</div>';
+  }
+  if (view === 'plan'){
+    return `<table class="food"><tr>${d.planhead.map((t,i)=>`<th>${pair(ZH.planhead[i],t,k)}</th>`).join('')}</tr>`
+      + d.plan.map((r,i)=>`<tr><td class="${r[0]}">${pair(ZH.plan[i][1],r[1],k)}</td>`
+      + `<td>${pair(ZH.plan[i][2],r[2],k)}</td><td>${pair(ZH.plan[i][3],r[3],k)}</td></tr>`).join('')
+      + '</table>';
+  }
+  return `<div class="myth"><h3>${pair(ZH.mythtitle,d.mythtitle,k)}</h3><table><tr>`
+    + d.mythhead.map((t,i)=>`<th>${pair(ZH.mythhead[i],t,k)}</th>`).join('') + '</tr>'
+    + d.myths.map((r,i)=>`<tr><td class="x">${pair(ZH.myths[i][0],r[0],k)}</td>`
+    + `<td>${pair(ZH.myths[i][1],r[1],k)}</td></tr>`).join('')
+    + '</table></div>';
+}
+
+function render(){
+  const d = L[LANG], k = LANG;
+  document.documentElement.lang = (k === 'zh-TW') ? 'zh-Hant' : k;
+  $('langbadge').textContent = d.badge;
+  $('kick').innerHTML = pair(ZH.kick, d.kick, k);
+  $('h1').innerHTML   = pair(ZH.h1, d.h1, k);
+  $('zh').innerHTML   = pair(ZH.views[VIEW], d.views[VIEW], k);
+  $('note').innerHTML = pair(ZH.notes[VIEW], d.notes[VIEW], k);
+  $('foot').innerHTML = pair(ZH.foot, d.foot, k);
+  $('transnote').innerHTML = d.trans ? `${d.trans}<span class="p-zh">${ZH.transzh}</span>` : '';
+  $('printbtn').innerHTML = d.printbtn;
+  $('printallbtn').innerHTML = d.printall;
+  $('body').innerHTML = bodyHTML(VIEW, k);
+  renderLangTabs(); renderViewTabs();
+}
+
+/* 列印全部三頁：把三個分頁各渲染一次、複製整張單子進 #printall，印完還原 */
+function printAll(){
+  const saved = VIEW, box = $('printall');
+  box.innerHTML = '';
+  for (const v of VIEWS){
+    VIEW = v; render();
+    const clone = $('sheet').cloneNode(true);
+    clone.removeAttribute('id');
+    box.appendChild(clone);
+  }
+  VIEW = saved; render();
+  document.body.classList.add('print-all');
+  window.print();
+}
+// 用 afterprint 還原，不要用 setTimeout 猜時間（列印對話框停多久不可預測）
+window.addEventListener('afterprint', () => {
+  document.body.classList.remove('print-all');
+  $('printall').innerHTML = '';
+});
+
+function setLang(k){ LANG = k; render(); }
+function setV(v){ VIEW = v; render(); }
+
+const q = new URLSearchParams(location.search);
+if (VIEWS.includes(q.get('v'))) VIEW = q.get('v');
+if (q.get('lang') && L[q.get('lang')]) LANG = q.get('lang');
+render();
+// ?printall=1 直接印全部三頁（給「列印全部」的分享連結用）
+if (q.get('printall') === '1') printAll();
+</script></body></html>
