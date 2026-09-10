@@ -330,7 +330,7 @@
 
 <div class="footer-instructions" style="text-align:center; margin-top:14px; font-size:9.5pt; color:#718096">
   💡 規則：吃放射碘必須 Tue 或 Fri • Tue 吃 → Thu 出院 → 隔週一掃描 • Fri 吃 → Mon 出院 → 隔天 Tue 掃描 • 吃前 1 個月開始低碘飲食
-  <div style="margin-top:6px; font-size:8.5pt; color:#a0aec0">工具版本：2026-09-02</div>
+  <div style="margin-top:6px; font-size:8.5pt; color:#a0aec0">工具版本：2026-09-10</div>
 </div>
 
 </div>
@@ -748,31 +748,31 @@ const RAI_I18N = {
 function renderI18n(c, lang, info) {
   const t = RAI_I18N[lang], z = RAI_ZH;
   if (!t) return '';
-  // 中外對照：每一列同時給中文與外語，讓病人與院方人員看同一張、指同一列
+  // 中外對照：每一列同時給外語與中文（2026-09-10 老闆裁示：全部統一外文在前、中文小字在後），病人與院方人員看同一張、指同一列；院內地點仍保留中文
   const row = (kz, kt, val) => val ? `<tr>
       <td style="padding:4px 8px; border:1px solid #cbd5e0; width:46%">
-        ${kz}<br><span style="color:#4a5568; font-size:9.5pt">${kt}</span></td>
+        ${kt}<br><span style="color:#4a5568; font-size:9.5pt">${kz}</span></td>
       <td style="padding:4px 8px; border:1px solid #cbd5e0"><strong>${val}</strong></td></tr>` : '';
   let h = `<div style="page-break-before:always"></div>`;
   h += `<h1 style="margin-top:0">高雄醫學大學附設中和紀念醫院<br>
         <span style="font-size:10.5pt; font-weight:normal">Kaohsiung Medical University Chung-Ho Memorial Hospital</span></h1>`;
-  h += `<h2 style="font-size:12.5pt">${z.sub}<br>
-        <span style="font-size:11pt; font-weight:normal">${t.sub}</span></h2>`;
+  h += `<h2 style="font-size:12.5pt">${t.sub}<br>
+        <span style="font-size:11pt; font-weight:normal">${z.sub}</span></h2>`;
   h += `<table class="info-table"><tr>
-          <td style="width:25%"><strong>${z.name} / ${t.name}：</strong>${info.name}</td>
-          <td style="width:20%"><strong>${z.age} / ${t.age}：</strong>${info.age}</td>
-          <td style="width:20%"><strong>${z.sex} / ${t.sex}：</strong>${info.sex}</td>
-          <td><strong>${z.chart} / ${t.chart}：</strong>${info.id}</td></tr></table>`;
-  h += `<div class="dose-box">${z.dose} / ${t.dose}：<span class="hl">${info.dose} mCi</span></div>`;
+          <td style="width:25%"><strong>${t.name} / ${z.name}：</strong>${info.name}</td>
+          <td style="width:20%"><strong>${t.age} / ${z.age}：</strong>${info.age}</td>
+          <td style="width:20%"><strong>${t.sex} / ${z.sex}：</strong>${info.sex}</td>
+          <td><strong>${t.chart} / ${z.chart}：</strong>${info.id}</td></tr></table>`;
+  h += `<div class="dose-box">${t.dose} / ${z.dose}：<span class="hl">${info.dose} mCi</span></div>`;
 
-  h += `<div class="section-title">📅 ${z.dates} ／ ${t.dates}</div>`;
+  h += `<div class="section-title">📅 ${t.dates} ／ ${z.dates}</div>`;
   h += `<table style="width:100%; border-collapse:collapse; font-size:10.5pt; margin-bottom:10px">`;
   h += row(z.diet, t.diet, `${fmt(c.liDietStart)} → ${fmt(c.scan)}`);
   if (c.stopEltroxin) {
     h += row(z.stop, t.stop, fmt(c.stopEltroxin));
     h += row(z.resume, t.resume, fmt(c.scan));
   } else {
-    h += row(z.stop, t.stop, `${z.nostop}<br><span style="font-weight:normal; font-size:9.5pt">${t.nostop}</span>`);
+    h += row(z.stop, t.stop, `${t.nostop}<br><span style="font-weight:normal; font-size:9.5pt">${z.nostop}</span>`);
   }
   if (c.thyrogen1) h += row(z.thy1, t.thy1, fmt(c.thyrogen1));
   if (c.thyrogen2) h += row(z.thy2, t.thy2, fmt(c.thyrogen2));
@@ -782,9 +782,9 @@ function renderI18n(c, lang, info) {
   h += row(z.scan, t.scan, fmt(c.scan));
   h += `</table>`;
 
-  h += `<div class="section-title">✅ ${z.inst} ／ ${t.inst}</div><ol style="font-size:10.5pt; line-height:1.55">`;
+  h += `<div class="section-title">✅ ${t.inst} ／ ${z.inst}</div><ol style="font-size:10.5pt; line-height:1.55">`;
   for (const k of ['i1','i2','i3','i4','i5','i6'])
-    h += `<li style="margin-bottom:6px">${z[k]}<br><span style="color:#2c5282">${t[k]}</span></li>`;
+    h += `<li style="margin-bottom:6px">${t[k]}<br><span style="color:#4a5568; font-size:9.5pt">${z[k]}</span></li>`;
   h += `</ol>`;
 
   h += `<div class="footer-note" style="margin-top:12px">
@@ -792,7 +792,7 @@ function renderI18n(c, lang, info) {
         核醫科一樓櫃台 ・ C 棟一樓檢驗室 ・ B/C 棟一樓入出院服務中心 ・ 啟川 14EN 病房<br>
         <span style="color:#2c5282">${t.places}</span></div>`;
   h += `<div style="text-align:right; margin-top:8px; font-size:9pt; color:#718096">
-        中文 / ${t.lang} ・ ${fmt(new Date())}</div>`;
+        ${t.lang} / 中文 ・ ${fmt(new Date())}</div>`;
   return h;
 }
 

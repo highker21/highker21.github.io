@@ -60,6 +60,19 @@ body{background:#eceae2;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",
 .myth td.o{color:var(--ok);font-weight:700}
 .myth .wrap{overflow-x:auto}
 
+
+/* 中外對照（2026-09-10 老闆指示：外語版每一句附中文對照） */
+.p-zh,.p-fo{display:block}
+.p-fo{color:var(--doc)}
+.sec li .p-fo{margin-top:1px}
+.head h1 .p-fo{font-size:.78em;font-weight:800;line-height:1.3;margin-top:4px}
+.kick .p-fo{letter-spacing:.05em}
+.alert .p-fo{font-weight:700}
+.note .p-fo,.hotline .p-fo{color:inherit}
+
+.p-zh{font-size:12.5px;color:var(--sub);line-height:1.55}
+.sec li .p-zh{margin-top:1px}
+
 /* ⚠️ media query 一律放在所有基礎規則之後（同權重後者勝） */
 @media print{
   @page{size:A4 portrait;margin:10mm}
@@ -67,6 +80,7 @@ body{background:#eceae2;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",
   .tabs,.bar,.no-print{display:none!important}
   .sheet{max-width:100%;padding:0}
   .sec,.myth{break-inside:avoid}
+  .p-fo{margin-top:0}
   .myth{border:0;padding:14px 0 0}
 }
 @media (max-width:640px){
@@ -92,7 +106,7 @@ body{background:#eceae2;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",
   <div class="note" id="note"></div>
   <div class="foot">
     高雄醫學大學附設中和紀念醫院　內分泌新陳代謝科　｜
-    <b>本單張為一般性衛教，不取代醫師對您個別狀況的判斷</b>　｜　工具版本：2026-07-31
+    <b>本單張為一般性衛教，不取代醫師對您個別狀況的判斷</b>　｜　工具版本：2026-09-10
   </div>
 </div>
 
@@ -284,16 +298,23 @@ const $ = id => document.getElementById(id);
 const KEYS = Object.keys(L);
 let cur = 'zh-TW';
 
+const ZH = L['zh-TW'];
+const PAIR_ORDER = 'fo-first'; // 'zh-first'：中文在前 / 'fo-first'：外文在前
+function pair(zh, fo, k){
+  if (k === 'zh-TW' || zh === fo) return zh;
+  const a = `<span class="p-zh">${zh}</span>`, b = `<span class="p-fo">${fo}</span>`;
+  return PAIR_ORDER === 'zh-first' ? a + b : b + a;
+}
 function render(k){
   cur = k;
   const d = L[k];
   document.documentElement.lang = (k === 'zh-TW') ? 'zh-Hant' : k;
-  $('kick').textContent = d.kick;
-  $('h1').textContent = d.h1;
-  $('secs').innerHTML = d.secs.map(s =>
-    `<div class="sec ${s.c}"><h2>${s.t}</h2><ul>${s.items.map(i=>`<li>${i}</li>`).join('')}</ul></div>`
+  $('kick').innerHTML = pair(ZH.kick, d.kick, k);
+  $('h1').innerHTML = pair(ZH.h1, d.h1, k);
+  $('secs').innerHTML = d.secs.map((s, i) =>
+    `<div class="sec ${s.c}"><h2>${pair(ZH.secs[i].t, s.t, k)}</h2><ul>${s.items.map((it, j)=>`<li>${pair(ZH.secs[i].items[j], it, k)}</li>`).join('')}</ul></div>`
   ).join('');
-  $('note').textContent = d.note;
+  $('note').innerHTML = pair(ZH.note, d.note, k);
   $('myth').innerHTML = (k === 'zh-TW') ? MYTH : '';
   $('myth').style.display = (k === 'zh-TW') ? '' : 'none';
   [...$('tabs').children].forEach(t => t.classList.toggle('active', t.dataset.k === k));
