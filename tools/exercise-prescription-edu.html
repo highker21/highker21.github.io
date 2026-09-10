@@ -176,7 +176,13 @@ const ICON = ['fa-person-walking','fa-calendar-check','fa-dumbbell','fa-comments
 const HOT  = [1,1,0,0,0,0,0,0,1];
 
 function renderLangTabs(){
-  $('langtabs').innerHTML = Object.keys(L).map(k =>
+  const keys = Object.keys(L);
+  // 只有一種語言時不顯示語言列（與另外三支一致），語言徽章也一併收起來——
+  // 它會印在紙本上，中文單張上寫「繁體中文」是多餘的
+  const only = keys.length <= 1;
+  $('langtabs').style.display = only ? 'none' : '';
+  $('langbadge').style.display = only ? 'none' : '';
+  $('langtabs').innerHTML = keys.map(k =>
     `<div class="tab ${k===LANG?'active':''}" onclick="setLang('${k}')">${L[k].tab}<small>${L[k].tabsub}</small></div>`).join('');
 }
 function renderViewTabs(){
