@@ -77,6 +77,17 @@ table.food td.r{color:var(--warn);font-weight:800}
   table.food th,table.food td,.myth th,.myth td{padding:8px 6px;font-size:13px}
   .myth{padding:12px 10px}}
 @media(max-width:420px){.grid{grid-template-columns:1fr}.c.lead{grid-column:span 1;flex-direction:column;text-align:center}}
+
+/* 三個分頁一起列印（老闆 2026-09-10 12:46 要求）：把三個 view 各渲染一份 .sheet 疊進 #printall，只在列印時顯示 */
+#printall{display:none}
+.bar{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.bar button.ghost{background:#fff;color:var(--ink);border:1px solid var(--ink)}
+@media print{
+  body.printing-all #sheet,body.printing-all .bar{display:none!important}
+  body.printing-all #printall{display:block}
+  #printall .sheet{max-width:100%;padding:4mm}
+  #printall .sheet+.sheet{break-before:page;page-break-before:always}
+}
 </style></head><body>
 <div class="langtabs no-print" id="langtabs"></div>
 <div class="tabs no-print" id="viewtabs"></div>
@@ -92,7 +103,7 @@ table.food td.r{color:var(--warn);font-weight:800}
   <div class="foot" id="foot"></div>
   <div class="transnote" id="transnote"></div>
 </div>
-<div class="bar no-print"><button onclick="window.print()" id="printbtn">🖨 列印目前這版 / 存成 PDF（A4）</button></div>
+<div class="bar no-print"><button onclick="window.print()" id="printbtn">🖨 列印目前這版 / 存成 PDF（A4）</button><button onclick="printAll()" id="printallbtn" class="ghost">🖨 三個分頁一起列印 / 存成一份 PDF</button></div>
 <script>
 /* 多語版原則（見 memory: feedback_multilingual_keep_wayfinding_original）：
    食物名稱屬「病人要拿去對照台灣市售包裝、問店員」的資訊 →
@@ -104,6 +115,7 @@ const L = {
 'zh-TW':{badge:'🇹🇼　繁體中文　·　Traditional Chinese　·　台灣',tab:'🇹🇼 繁體中文',tabsub:'台灣　Traditional Chinese',
   h1:'低尿酸（痛風）飲食', kick:'內分泌新陳代謝科　·　飲食衛教',
   printbtn:'🖨 列印目前這版 / 存成 PDF（A4）',
+  printall:'🖨 三個分頁一起列印 / 存成一份 PDF',
   viewtabs:[['core','九招圖卡','先抓最有影響的'],['food','食物紅綠燈','可以吃 / 適量 / 少碰'],['myth','常見迷思','豆腐可以吃']],
   views:{core:'九招圖卡　·　先抓最有影響的三件事：酒、含糖飲料、減重',food:'食物紅綠燈　·　可以吃、適量、少碰',myth:'常見迷思　·　實證上不成立的'},
   lead:'飲食能降的尿酸大約 <b>1 mg/dL</b> 上下；治療目標是尿酸 <b>低於 6 mg/dL</b>（有痛風石低於 5），多數人要靠藥才到得了。飲食的價值是<b>少發作</b>，和讓藥的效果穩定。',
@@ -157,6 +169,7 @@ const L = {
 'en':{badge:'🇬🇧　英文　·　English',tab:'🇬🇧 English',tabsub:'英文　English',
   h1:'Low-Uric-Acid (Gout) Diet', kick:'Endocrinology &amp; Metabolism　·　Diet Education',
   printbtn:'🖨 Print this version / Save as PDF (A4)',
+  printall:'🖨 Print all 3 tabs / one PDF',
   viewtabs:[['core','9 Key Moves','start with what matters most'],['food','Food Traffic Light','fine / moderate / avoid'],['myth','Common Myths','tofu is fine']],
   views:{core:'9 Key Moves　·　start with the three that matter most: alcohol, sugary drinks, weight',food:'Food Traffic Light　·　fine, in moderation, avoid',myth:'Common Myths　·　not supported by the evidence'},
   lead:'Diet lowers uric acid by roughly <b>1 mg/dL</b>; the treatment target is uric acid <b>below 6 mg/dL</b> (below 5 if you have tophi), and most people need medication to get there. What diet is worth is <b>fewer attacks</b>, and keeping the medication working steadily.',
@@ -210,6 +223,7 @@ const L = {
 'vi':{badge:'🇻🇳　越南文　·　Tiếng Việt　·　Vietnamese',tab:'🇻🇳 Tiếng Việt',tabsub:'越南文　Vietnamese',
   h1:'Chế độ ăn giảm acid uric (bệnh gút)', kick:'Khoa Nội tiết &amp; Chuyển hóa　·　Giáo dục dinh dưỡng',
   printbtn:'🖨 In bản đang xem / Lưu thành PDF (A4)',
+  printall:'🖨 In cả 3 mục / một tệp PDF',
   viewtabs:[['core','9 việc cần làm','bắt đầu từ việc quan trọng nhất'],['food','Đèn giao thông thực phẩm','ăn được / vừa phải / tránh'],['myth','Những hiểu lầm thường gặp','đậu phụ ăn được']],
   views:{core:'9 việc cần làm　·　bắt đầu từ ba thứ quan trọng nhất: rượu bia, đồ uống ngọt, cân nặng',food:'Đèn giao thông thực phẩm　·　ăn được, vừa phải, tránh',myth:'Những hiểu lầm thường gặp　·　không có bằng chứng ủng hộ'},
   lead:'Chế độ ăn hạ acid uric được khoảng <b>1 mg/dL</b>; mục tiêu điều trị là acid uric <b>dưới 6 mg/dL</b> (dưới 5 nếu đã có hạt tophi), và đa số người phải dùng thuốc mới đạt được. Giá trị của ăn uống là <b>ít lên cơn hơn</b> và giúp thuốc phát huy ổn định.',
@@ -263,6 +277,7 @@ const L = {
 'id':{badge:'🇮🇩　印尼文　·　Bahasa Indonesia　·　Indonesian',tab:'🇮🇩 Bahasa Indonesia',tabsub:'印尼文　Indonesian',
   h1:'Diet Rendah Asam Urat (Gout)', kick:'Divisi Endokrinologi &amp; Metabolisme　·　Edukasi Gizi',
   printbtn:'🖨 Cetak versi ini / Simpan sebagai PDF (A4)',
+  printall:'🖨 Cetak ketiga tab / satu PDF',
   viewtabs:[['core','9 Langkah','mulai dari yang paling berpengaruh'],['food','Lampu Lalu Lintas Makanan','boleh / secukupnya / hindari'],['myth','Mitos yang Sering Terdengar','tahu boleh dimakan']],
   views:{core:'9 Langkah　·　mulai dari tiga hal paling berpengaruh: alkohol, minuman manis, berat badan',food:'Lampu Lalu Lintas Makanan　·　boleh, secukupnya, hindari',myth:'Mitos yang Sering Terdengar　·　tidak didukung bukti'},
   lead:'Pola makan menurunkan asam urat sekitar <b>1 mg/dL</b>; target terapi adalah asam urat <b>di bawah 6 mg/dL</b> (di bawah 5 bila sudah ada tofus), dan kebanyakan orang perlu obat untuk mencapainya. Nilai pola makan adalah <b>lebih jarang kambuh</b> dan membuat kerja obat lebih stabil.',
@@ -316,6 +331,7 @@ const L = {
 'th':{badge:'🇹🇭　泰文　·　ภาษาไทย　·　Thai',tab:'🇹🇭 ภาษาไทย',tabsub:'泰文　Thai',
   h1:'อาหารลดกรดยูริก (โรคเกาต์)', kick:'สาขาต่อมไร้ท่อและเมตาบอลิซึม　·　ความรู้ด้านโภชนาการ',
   printbtn:'🖨 พิมพ์หน้านี้ / บันทึกเป็น PDF (A4)',
+  printall:'🖨 พิมพ์ทั้ง 3 แท็บ / PDF เดียว',
   viewtabs:[['core','9 ข้อที่ต้องทำ','เริ่มจากข้อที่สำคัญที่สุด'],['food','ไฟจราจรอาหาร','กินได้ / พอประมาณ / เลี่ยง'],['myth','ความเชื่อที่พบบ่อย','เต้าหู้กินได้']],
   views:{core:'9 ข้อที่ต้องทำ　·　เริ่มจากสามเรื่องที่สำคัญที่สุด: แอลกอฮอล์ เครื่องดื่มหวาน น้ำหนักตัว',food:'ไฟจราจรอาหาร　·　กินได้ พอประมาณ เลี่ยง',myth:'ความเชื่อที่พบบ่อย　·　ไม่มีหลักฐานรองรับ'},
   lead:'อาหารลดกรดยูริกได้ราว <b>1 mg/dL</b> เป้าหมายการรักษาคือกรดยูริก <b>ต่ำกว่า 6 mg/dL</b> (ต่ำกว่า 5 ถ้ามีปุ่มโทฟัส) ซึ่งคนส่วนใหญ่ต้องอาศัยยาจึงจะถึง คุณค่าของอาหารคือ <b>กำเริบน้อยลง</b> และทำให้ยาออกฤทธิ์ได้สม่ำเสมอ',
@@ -369,6 +385,7 @@ const L = {
 'tl':{badge:'🇵🇭　菲律賓文　·　Tagalog　·　Filipino',tab:'🇵🇭 Tagalog',tabsub:'菲律賓文　Filipino',
   h1:'Diyeta na Mababa sa Uric Acid (Gout)', kick:'Endocrinology at Metabolism　·　Edukasyon sa Nutrisyon',
   printbtn:'🖨 I-print ang bersyong ito / I-save bilang PDF (A4)',
+  printall:'🖨 I-print lahat ng 3 tab / isang PDF',
   viewtabs:[['core','9 Hakbang','simulan sa pinakamahalaga'],['food','Traffic Light ng Pagkain','puwede / katamtaman / iwasan'],['myth','Mga Karaniwang Maling Paniniwala','puwede ang tokwa']],
   views:{core:'9 Hakbang　·　simulan sa tatlong pinakamahalaga: alak, matatamis na inumin, timbang',food:'Traffic Light ng Pagkain　·　puwede, katamtaman, iwasan',myth:'Mga Karaniwang Maling Paniniwala　·　walang ebidensiyang sumusuporta'},
   lead:'Nakakapagpababa ang diyeta ng uric acid nang mga <b>1 mg/dL</b>; ang target ng paggamot ay uric acid na <b>mas mababa sa 6 mg/dL</b> (mas mababa sa 5 kung may tophi), at kadalasang kailangan ng gamot para marating iyon. Ang halaga ng pagkain ay <b>mas madalang na atake</b> at ang pagpapanatag sa bisa ng gamot.',
@@ -451,6 +468,7 @@ function render(){
   $('foot').innerHTML = pair(ZH.foot, d.foot, k);
   $('note').innerHTML = pair(ZH.notes[VIEW], d.notes[VIEW], k);
   $('printbtn').innerHTML = d.printbtn;
+  if ($('printallbtn')) $('printallbtn').innerHTML = d.printall || ZH.printall;
   // 翻譯來源聲明：只在外語版出現（老闆 2026-09-10 同意揭露翻譯來源）
   $('transnote').innerHTML = d.trans ? `${d.trans}<span class="p-zh">本外語版由 AI 協助翻譯、經醫師端校閱，非官方認證譯本；文字如有出入，以中文版為準。</span>` : '';
 
@@ -481,6 +499,19 @@ function render(){
   renderLangTabs(); renderViewTabs();
 }
 
+function buildPrintAll(){
+  const keep = VIEW, box = document.createElement('div'); box.id = 'printall';
+  ZH.viewtabs.forEach(([v]) => { VIEW = v; render(); const c = $('sheet').cloneNode(true); c.removeAttribute('id'); box.appendChild(c); });
+  VIEW = keep; render();
+  return box;
+}
+function printAll(){
+  const old = $('printall'); if (old) old.remove();
+  const box = buildPrintAll(); document.body.appendChild(box); document.body.classList.add('printing-all');
+  const done = () => { document.body.classList.remove('printing-all'); box.remove(); window.removeEventListener('afterprint', done); };
+  window.addEventListener('afterprint', done);
+  setTimeout(() => { window.print(); setTimeout(done, 120000); }, 50);
+}
 function setLang(k){ LANG = k; render(); }
 function setV(v){ VIEW = v; render(); }
 
@@ -488,4 +519,5 @@ const q = new URLSearchParams(location.search);
 if (q.get('v') && ZH.viewtabs.some(t => t[0] === q.get('v'))) VIEW = q.get('v');
 if (q.get('lang') && L[q.get('lang')]) LANG = q.get('lang');
 render();
+if (q.get('printall')) { document.body.appendChild(buildPrintAll()); document.body.classList.add('printing-all'); }
 </script></body></html>

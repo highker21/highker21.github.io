@@ -99,6 +99,17 @@ table.food td.k{font-weight:800;color:var(--ink);white-space:nowrap}
   table.food th,table.food td,.myth th,.myth td{padding:8px 6px;font-size:13px}
   .myth{padding:12px 10px}}
 @media(max-width:420px){.grid{grid-template-columns:1fr}.c.lead{grid-column:span 1;flex-direction:column;text-align:center}}
+
+/* 三個分頁一起列印（老闆 2026-09-10 12:46 要求）：把三個 view 各渲染一份 .sheet 疊進 #printall，只在列印時顯示 */
+#printall{display:none}
+.bar{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.bar button.ghost{background:#fff;color:var(--ink);border:1px solid var(--ink)}
+@media print{
+  body.printing-all #sheet,body.printing-all .bar{display:none!important}
+  body.printing-all #printall{display:block}
+  #printall .sheet{max-width:100%;padding:4mm}
+  #printall .sheet+.sheet{break-before:page;page-break-before:always}
+}
 </style></head><body>
 <div class="langtabs no-print" id="langtabs"></div>
 <div class="tabs no-print" id="viewtabs"></div>
@@ -114,7 +125,7 @@ table.food td.k{font-weight:800;color:var(--ink);white-space:nowrap}
   <div class="foot" id="foot"></div>
   <div class="transnote" id="transnote"></div>
 </div>
-<div class="bar no-print"><button onclick="window.print()" id="printbtn">🖨 列印目前這版 / 存成 PDF（A4）</button></div>
+<div class="bar no-print"><button onclick="window.print()" id="printbtn">🖨 列印目前這版 / 存成 PDF（A4）</button><button onclick="printAll()" id="printallbtn" class="ghost">🖨 三個分頁一起列印 / 存成一份 PDF</button></div>
 <script>
 /* 多語版原則（見 memory: feedback_multilingual_keep_wayfinding_original）：
    食物名稱屬「病人要拿去對照台灣市售包裝、問店員」的資訊 → 外語版一律「外文 + 中文小字對照」。
@@ -125,6 +136,7 @@ const L = {
 'zh-TW':{badge:'🇹🇼　繁體中文　·　Traditional Chinese　·　台灣',tab:'🇹🇼 繁體中文',tabsub:'台灣　Traditional Chinese',
   h1:'糖尿病飲食建議', kick:'內分泌新陳代謝科　·　飲食衛教',
   printbtn:'🖨 列印目前這版 / 存成 PDF（A4）',
+  printall:'🖨 三個分頁一起列印 / 存成一份 PDF',
   viewtabs:[['order','進食順序','菜 → 豆魚蛋肉 → 飯'],['plate','餐盤與份量','半盤菜、飯不超過四分之一'],['food','食物紅綠燈','多吃 / 適量 / 少碰']],
   views:{order:'進食順序　·　同一餐、同樣的量，換個順序血糖差很多',plate:'餐盤與份量　·　國健署「我的餐盤」調成糖尿病版，一份是多少用家常量具比',food:'食物紅綠燈　·　台灣外食最常踩的坑'},
   lead:'同樣一碗飯，<b>先吃菜和豆魚蛋肉、飯留到最後</b>，飯後血糖高峰可以低兩到四成。這一招不花錢、不加藥，今天這一餐就能做。血糖是「吃什麼、吃多少、什麼順序」三件事一起決定的。',
@@ -235,6 +247,7 @@ function render(){
   $('foot').innerHTML = pair(ZH.foot, d.foot, k);
   $('note').innerHTML = pair(ZH.notes[VIEW], d.notes[VIEW], k);
   $('printbtn').innerHTML = d.printbtn;
+  if ($('printallbtn')) $('printallbtn').innerHTML = d.printall || ZH.printall;
   $('transnote').innerHTML = d.trans ? `${d.trans}<span class="p-zh">本外語版由 AI 協助翻譯、經醫師端校閱，非官方認證譯本；文字如有出入，以中文版為準。</span>` : '';
 
   let h = '';
@@ -268,10 +281,24 @@ function render(){
   $('body').innerHTML = h;
   renderLangTabs(); renderViewTabs();
 }
+function buildPrintAll(){
+  const keep = VIEW, box = document.createElement('div'); box.id = 'printall';
+  ZH.viewtabs.forEach(([v]) => { VIEW = v; render(); const c = $('sheet').cloneNode(true); c.removeAttribute('id'); box.appendChild(c); });
+  VIEW = keep; render();
+  return box;
+}
+function printAll(){
+  const old = $('printall'); if (old) old.remove();
+  const box = buildPrintAll(); document.body.appendChild(box); document.body.classList.add('printing-all');
+  const done = () => { document.body.classList.remove('printing-all'); box.remove(); window.removeEventListener('afterprint', done); };
+  window.addEventListener('afterprint', done);
+  setTimeout(() => { window.print(); setTimeout(done, 120000); }, 50);
+}
 function setLang(k){ LANG = k; render(); }
 function setV(v){ VIEW = v; render(); }
 const q = new URLSearchParams(location.search);
 if (q.get('v') && ZH.viewtabs.some(t => t[0] === q.get('v'))) VIEW = q.get('v');
 if (q.get('lang') && L[q.get('lang')]) LANG = q.get('lang');
 render();
+if (q.get('printall')) { document.body.appendChild(buildPrintAll()); document.body.classList.add('printing-all'); }
 </script></body></html>

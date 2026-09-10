@@ -77,6 +77,17 @@ table.food td.r{color:var(--warn);font-weight:800}
   table.food th,table.food td,.myth th,.myth td{padding:8px 6px;font-size:13px}
   .myth{padding:12px 10px}}
 @media(max-width:420px){.grid{grid-template-columns:1fr}.c.lead{grid-column:span 1;flex-direction:column;text-align:center}}
+
+/* 三個分頁一起列印（老闆 2026-09-10 12:46 要求）：把三個 view 各渲染一份 .sheet 疊進 #printall，只在列印時顯示 */
+#printall{display:none}
+.bar{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.bar button.ghost{background:#fff;color:var(--ink);border:1px solid var(--ink)}
+@media print{
+  body.printing-all #sheet,body.printing-all .bar{display:none!important}
+  body.printing-all #printall{display:block}
+  #printall .sheet{max-width:100%;padding:4mm}
+  #printall .sheet+.sheet{break-before:page;page-break-before:always}
+}
 </style></head><body>
 <div class="langtabs no-print" id="langtabs"></div>
 <div class="tabs no-print" id="viewtabs"></div>
@@ -92,7 +103,7 @@ table.food td.r{color:var(--warn);font-weight:800}
   <div class="foot" id="foot"></div>
   <div class="transnote" id="transnote"></div>
 </div>
-<div class="bar no-print"><button onclick="window.print()" id="printbtn">🖨 列印目前這版 / 存成 PDF（A4）</button></div>
+<div class="bar no-print"><button onclick="window.print()" id="printbtn">🖨 列印目前這版 / 存成 PDF（A4）</button><button onclick="printAll()" id="printallbtn" class="ghost">🖨 三個分頁一起列印 / 存成一份 PDF</button></div>
 <script>
 /* 多語版原則（見 memory: feedback_multilingual_keep_wayfinding_original）：
    食物名稱屬「病人要拿去對照台灣市售包裝、問店員」的資訊 →
@@ -104,6 +115,7 @@ const L = {
 'zh-TW':{badge:'🇹🇼　繁體中文　·　Traditional Chinese　·　台灣',tab:'🇹🇼 繁體中文',tabsub:'台灣　Traditional Chinese',
   h1:'低膽固醇飲食', kick:'內分泌新陳代謝科　·　飲食衛教',
   printbtn:'🖨 列印目前這版 / 存成 PDF（A4）',
+  printall:'🖨 三個分頁一起列印 / 存成一份 PDF',
   viewtabs:[['core','九招圖卡','每一招能降多少'],['food','食物紅綠燈','多吃 / 適量 / 少吃'],['myth','常見迷思','實證上不成立的']],
   views:{core:'九招圖卡　·　目標是降低壞膽固醇（LDL-C）',food:'食物紅綠燈　·　多吃、適量、少吃',myth:'常見迷思　·　實證上不成立的'},
   lead:'飲食做到位，LDL-C 大約可以降 <b>10 到 20%</b>；四招合併（Portfolio 飲食）在研究中可到 <b>20 到 30%</b>。這是藥物以外能做到的全部，但不能取代醫師開的藥。',
@@ -157,6 +169,7 @@ const L = {
 'en':{badge:'🇬🇧　英文　·　English',tab:'🇬🇧 English',tabsub:'英文　English',
   h1:'Low-Cholesterol Diet', kick:'Endocrinology &amp; Metabolism　·　Diet Education',
   printbtn:'🖨 Print this version / Save as PDF (A4)',
+  printall:'🖨 Print all 3 tabs / one PDF',
   viewtabs:[['core','9 Key Moves','how much each one lowers'],['food','Food Traffic Light','more / moderate / less'],['myth','Common Myths','not supported by evidence']],
   views:{core:'9 Key Moves　·　the goal is lowering bad cholesterol (LDL-C)',food:'Food Traffic Light　·　eat more, in moderation, eat less',myth:'Common Myths　·　not supported by the evidence'},
   lead:'Done properly, diet lowers LDL-C by roughly <b>10&ndash;20%</b>; combining four of these moves (the Portfolio diet) reached <b>20&ndash;30%</b> in studies. This is everything diet can do &mdash; it does not replace the medication your doctor prescribed.',
@@ -209,6 +222,7 @@ const L = {
 'vi':{badge:'🇻🇳　越南文　·　Tiếng Việt　·　Vietnamese',tab:'🇻🇳 Tiếng Việt',tabsub:'越南文　Vietnamese',
   h1:'Chế độ ăn giảm cholesterol', kick:'Khoa Nội tiết &amp; Chuyển hóa　·　Giáo dục dinh dưỡng',
   printbtn:'🖨 In bản đang xem / Lưu thành PDF (A4)',
+  printall:'🖨 In cả 3 mục / một tệp PDF',
   viewtabs:[['core','9 việc cần làm','mỗi việc giảm được bao nhiêu'],['food','Đèn giao thông thực phẩm','nên ăn / vừa phải / hạn chế'],['myth','Những hiểu lầm thường gặp','không có bằng chứng ủng hộ']],
   views:{core:'9 việc cần làm　·　mục tiêu là hạ cholesterol xấu (LDL-C)',food:'Đèn giao thông thực phẩm　·　nên ăn, vừa phải, hạn chế',myth:'Những hiểu lầm thường gặp　·　không có bằng chứng ủng hộ'},
   lead:'Nếu làm đúng, chế độ ăn hạ LDL-C khoảng <b>10–20%</b>; kết hợp bốn việc (chế độ ăn Portfolio) đạt tới <b>20–30%</b> trong nghiên cứu. Đây là tất cả những gì ăn uống làm được, nhưng không thay thế thuốc bác sĩ đã kê.',
@@ -262,6 +276,7 @@ const L = {
 'id':{badge:'🇮🇩　印尼文　·　Bahasa Indonesia　·　Indonesian',tab:'🇮🇩 Bahasa Indonesia',tabsub:'印尼文　Indonesian',
   h1:'Diet Rendah Kolesterol', kick:'Divisi Endokrinologi &amp; Metabolisme　·　Edukasi Gizi',
   printbtn:'🖨 Cetak versi ini / Simpan sebagai PDF (A4)',
+  printall:'🖨 Cetak ketiga tab / satu PDF',
   viewtabs:[['core','9 Langkah','berapa banyak tiap langkah menurunkan'],['food','Lampu Lalu Lintas Makanan','perbanyak / secukupnya / kurangi'],['myth','Mitos yang Sering Terdengar','tidak didukung bukti']],
   views:{core:'9 Langkah　·　tujuannya menurunkan kolesterol jahat (LDL-C)',food:'Lampu Lalu Lintas Makanan　·　perbanyak, secukupnya, kurangi',myth:'Mitos yang Sering Terdengar　·　tidak didukung bukti'},
   lead:'Kalau dijalankan dengan benar, pola makan menurunkan LDL-C sekitar <b>10–20%</b>; menggabungkan empat langkah (diet Portfolio) mencapai <b>20–30%</b> dalam penelitian. Ini batas yang bisa dicapai pola makan, dan tidak menggantikan obat dari dokter.',
@@ -314,6 +329,7 @@ const L = {
 'th':{badge:'🇹🇭　泰文　·　ภาษาไทย　·　Thai',tab:'🇹🇭 ภาษาไทย',tabsub:'泰文　Thai',
   h1:'อาหารลดคอเลสเตอรอล', kick:'สาขาต่อมไร้ท่อและเมตาบอลิซึม　·　ความรู้ด้านโภชนาการ',
   printbtn:'🖨 พิมพ์หน้านี้ / บันทึกเป็น PDF (A4)',
+  printall:'🖨 พิมพ์ทั้ง 3 แท็บ / PDF เดียว',
   viewtabs:[['core','9 ข้อที่ต้องทำ','แต่ละข้อลดได้เท่าไร'],['food','ไฟจราจรอาหาร','กินได้ / พอประมาณ / ลด'],['myth','ความเชื่อที่พบบ่อย','ไม่มีหลักฐานรองรับ']],
   views:{core:'9 ข้อที่ต้องทำ　·　เป้าหมายคือลดคอเลสเตอรอลชนิดไม่ดี (LDL-C)',food:'ไฟจราจรอาหาร　·　กินได้ พอประมาณ ลด',myth:'ความเชื่อที่พบบ่อย　·　ไม่มีหลักฐานรองรับ'},
   lead:'ถ้าทำได้ครบ อาหารลด LDL-C ได้ราว <b>10–20%</b>; ถ้ารวมสี่ข้อเข้าด้วยกัน (อาหารแบบ Portfolio) งานวิจัยพบว่าลดได้ถึง <b>20–30%</b> นี่คือทั้งหมดที่อาหารทำได้ แต่ไม่ใช้แทนยาที่แพทย์สั่ง',
@@ -367,6 +383,7 @@ const L = {
 'tl':{badge:'🇵🇭　菲律賓文　·　Tagalog　·　Filipino',tab:'🇵🇭 Tagalog',tabsub:'菲律賓文　Filipino',
   h1:'Diyeta na Mababa sa Kolesterol', kick:'Endocrinology at Metabolism　·　Edukasyon sa Nutrisyon',
   printbtn:'🖨 I-print ang bersyong ito / I-save bilang PDF (A4)',
+  printall:'🖨 I-print lahat ng 3 tab / isang PDF',
   viewtabs:[['core','9 Hakbang','gaano ibinababa ng bawat isa'],['food','Traffic Light ng Pagkain','dagdagan / katamtaman / bawasan'],['myth','Mga Karaniwang Maling Paniniwala','walang ebidensiyang sumusuporta']],
   views:{core:'9 Hakbang　·　layunin ay ibaba ang masamang kolesterol (LDL-C)',food:'Traffic Light ng Pagkain　·　dagdagan, katamtaman, bawasan',myth:'Mga Karaniwang Maling Paniniwala　·　walang ebidensiyang sumusuporta'},
   lead:'Kapag nagawa nang tama, ibinababa ng diyeta ang LDL-C nang humigit-kumulang <b>10–20%</b>; kapag pinagsama ang apat na hakbang (Portfolio diet), umabot ito sa <b>20–30%</b> sa mga pag-aaral. Ito na ang kayang gawin ng pagkain, pero hindi nito papalitan ang gamot na inireseta ng doktor.',
@@ -450,6 +467,7 @@ function render(){
   $('foot').innerHTML = pair(ZH.foot, d.foot, k);
   $('note').innerHTML = pair(ZH.notes[VIEW], d.notes[VIEW], k);
   $('printbtn').innerHTML = d.printbtn;
+  if ($('printallbtn')) $('printallbtn').innerHTML = d.printall || ZH.printall;
   // 翻譯來源聲明：只在外語版出現（老闆 2026-09-10 同意揭露翻譯來源）
   $('transnote').innerHTML = d.trans ? `${d.trans}<span class="p-zh">本外語版由 AI 協助翻譯、經醫師端校閱，非官方認證譯本；文字如有出入，以中文版為準。</span>` : '';
 
@@ -480,6 +498,19 @@ function render(){
   renderLangTabs(); renderViewTabs();
 }
 
+function buildPrintAll(){
+  const keep = VIEW, box = document.createElement('div'); box.id = 'printall';
+  ZH.viewtabs.forEach(([v]) => { VIEW = v; render(); const c = $('sheet').cloneNode(true); c.removeAttribute('id'); box.appendChild(c); });
+  VIEW = keep; render();
+  return box;
+}
+function printAll(){
+  const old = $('printall'); if (old) old.remove();
+  const box = buildPrintAll(); document.body.appendChild(box); document.body.classList.add('printing-all');
+  const done = () => { document.body.classList.remove('printing-all'); box.remove(); window.removeEventListener('afterprint', done); };
+  window.addEventListener('afterprint', done);
+  setTimeout(() => { window.print(); setTimeout(done, 120000); }, 50);
+}
 function setLang(k){ LANG = k; render(); }
 function setV(v){ VIEW = v; render(); }
 
@@ -487,4 +518,5 @@ const q = new URLSearchParams(location.search);
 if (q.get('v') && ZH.viewtabs.some(t => t[0] === q.get('v'))) VIEW = q.get('v');
 if (q.get('lang') && L[q.get('lang')]) LANG = q.get('lang');
 render();
+if (q.get('printall')) { document.body.appendChild(buildPrintAll()); document.body.classList.add('printing-all'); }
 </script></body></html>
