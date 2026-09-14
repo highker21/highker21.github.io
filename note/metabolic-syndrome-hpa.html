@@ -1,0 +1,1028 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>代謝症候群防治計畫教育訓練課程 筆記（上・中・下）</title>
+<style>
+:root{--bg:#f6f8f9;--panel:#ffffff;--ink:#26302f;--muted:#6b7778;--line:#e6eced;--accent:#0091AC;--accent2:#00778e;--soft:#eaf3f5;--code:#eef2f3}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,"Segoe UI",Roboto,system-ui,"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;line-height:1.9;font-size:var(--fs,16.5px);-webkit-font-smoothing:antialiased}
+.fontctl{display:flex;flex-wrap:wrap;align-items:center;gap:6px;padding:4px 10px 12px;margin-bottom:8px;border-bottom:1px solid var(--line);font-size:12px;color:var(--muted)}
+.fontctl button{border:1px solid var(--line);background:#fff;border-radius:7px;padding:3px 10px;cursor:pointer;font-family:inherit;color:var(--ink);line-height:1}
+.fontctl button:hover{background:var(--soft);border-color:var(--accent);color:var(--accent)}
+.fontctl .printbtn{margin-left:auto;font-weight:700;white-space:nowrap;border-color:var(--accent);color:var(--accent2)}
+@media print{.fontctl{display:none}}
+a{color:var(--accent2);text-decoration:none}
+a:hover{text-decoration:underline}
+/* layout */
+.wrap{display:flex;min-height:100vh}
+.sidebar{width:300px;flex:0 0 300px;background:var(--panel);border-right:1px solid var(--line);height:100vh;position:sticky;top:0;overflow-y:auto;padding:22px 14px 40px}
+.brand{padding:6px 10px 16px;border-bottom:1px solid var(--line);margin-bottom:12px}
+.brand h1{font-size:16px;margin:0 0 4px;letter-spacing:.3px}
+.brand p{font-size:12px;color:var(--muted);margin:0}
+.searchbox{width:100%;padding:8px 12px;border:1px solid var(--line);border-radius:9px;background:var(--soft);margin:8px 0 14px;font-size:13px;font-family:inherit}
+.navgroup{margin-bottom:2px}
+.navhead{width:100%;display:flex;align-items:center;gap:8px;background:none;border:0;padding:9px 10px;border-radius:9px;cursor:pointer;font:inherit;color:var(--ink);text-align:left}
+.navhead:hover{background:var(--soft)}
+.navhead .ic{font-size:15px}
+.navhead .nt{flex:1;font-size:13.5px;font-weight:600}
+.navhead .chev{color:var(--muted);font-size:11px;transition:transform .18s}
+.navgroup.open .chev{transform:rotate(90deg)}
+.navsubs{display:none;padding:2px 0 6px 30px}
+.navgroup.open .navsubs{display:block}
+.navsub{display:block;padding:5px 10px;font-size:12.5px;color:var(--muted);border-radius:7px;border-left:2px solid transparent;line-height:1.5}
+.navsub:hover{background:var(--soft);color:var(--ink);text-decoration:none}
+.navsub.active{color:var(--accent);border-left-color:var(--accent);background:var(--soft);font-weight:600}
+/* main */
+.main{flex:1;min-width:0}
+.hero{background:linear-gradient(135deg,#0091AC,#006d84);color:#fff;padding:54px 48px 46px}
+.hero h1{margin:0 0 10px;font-size:30px;letter-spacing:.5px}
+.hero p{margin:0;font-size:15px;opacity:.92;max-width:640px}
+.hero .stat{margin-top:20px;display:flex;gap:26px;font-size:13px;opacity:.95}
+.hero .stat b{font-size:20px;display:block;font-weight:700}
+.content{max-width:840px;margin:0 auto;padding:8px 48px 120px}
+.course{padding-top:26px}
+.coursebar{display:flex;align-items:center;gap:14px;margin:34px 0 6px;padding:16px 18px;background:var(--panel);border:1px solid var(--line);border-radius:14px;border-left:5px solid var(--accent)}
+.coursebar .cic{font-size:26px}
+.ctitle{margin:0;font-size:21px}
+.csub{color:var(--muted);font-size:13px;margin-top:2px}
+.note{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:8px 26px 20px;margin:16px 0;scroll-margin-top:20px}
+.ntitle{font-size:18px;margin:18px 0 6px;padding-bottom:8px;border-bottom:1px dashed var(--line)}
+.nbody h2{font-size:18px;margin:24px 0 8px;color:#1c1c19}
+.nbody h3{font-size:16.5px;margin:22px 0 8px;color:#1c1c19;font-weight:800}
+.nbody h4{font-size:15px;margin:20px 0 8px;color:var(--accent);letter-spacing:.3px}
+.nbody h5{font-size:14px;margin:16px 0 6px;color:#333}
+.nbody p{margin:9px 0}
+.nbody p.lead{margin:16px 0 6px;font-weight:600;color:#1c1c19}
+.nbody ul,.nbody ol{margin:8px 0;padding-left:22px}
+.nbody li{margin:5px 0}
+.nbody li>ul,.nbody li>ol{margin:4px 0}
+.nbody code{background:var(--code);padding:2px 6px;border-radius:6px;font-family:"SF Mono",Consolas,monospace;font-size:.9em}
+blockquote{margin:14px 0;padding:12px 18px;background:#fbf7ef;border-left:4px solid #d9a441;border-radius:0 10px 10px 0;color:#5c4a1f}
+.callout{margin:14px 0;padding:12px 16px 12px 44px;border-radius:10px;border-left:4px solid;position:relative}
+.callout .cx-t{font-weight:700;margin-bottom:3px}
+.callout .cx-b{font-size:.97em}
+.callout::before{position:absolute;left:14px;top:11px;font-size:16px;line-height:1.4}
+.cx-key{background:#eef4fb;border-color:#3b82c4;color:#20384d}.cx-key::before{content:"📌"}
+.cx-tip{background:#edf7f0;border-color:#3fa46a;color:#1f4632}.cx-tip::before{content:"💡"}
+.cx-warn{background:#fdf0ec;border-color:#d9663f;color:#5c2f1f}.cx-warn::before{content:"⚠️"}
+.cx-quote{background:#f4f0fb;border-color:#8a63c4;color:#3d2f5c}.cx-quote::before{content:"❝"}
+.cx-note{background:#f1f4f5;border-color:#8a9797;color:#374343}.cx-note::before{content:"📝"}
+.cx-ex{background:#fbf7ef;border-color:#d9a441;color:#5c4a1f}.cx-ex::before{content:"🔎"}
+.cx-fig{background:#eef1f8;border-color:#5b6ea8;color:#2f3a5c}.cx-fig::before{content:"🖼️"}
+.callout .cx-b>:first-child{margin-top:0}.callout .cx-b>:last-child{margin-bottom:0}
+.callout .cx-b ul,.callout .cx-b ol{margin:5px 0;padding-left:20px}
+.nbody li.task{list-style:none;margin-left:-20px}
+.nbody li.task>label{display:flex;gap:9px;align-items:flex-start;cursor:pointer}
+.nbody li.task input.tk{margin:4px 0 0;flex:none;width:16px;height:16px;accent-color:var(--accent);cursor:pointer}
+.coursemap{background:var(--panel);border:1px solid var(--line);border-radius:14px;margin:16px 0;padding:2px 22px}
+.coursemap>summary{cursor:pointer;font-weight:800;font-size:16px;padding:14px 0;list-style:none;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.coursemap>summary::-webkit-details-marker{display:none}
+.coursemap>summary::before{content:"▸";color:var(--accent);font-size:13px}
+.coursemap[open]>summary::before{content:"▾"}
+.coursemap .cm-hint{font-size:12.5px;font-weight:500;color:var(--muted)}
+.cmtable{width:100%;border-collapse:collapse;margin:0 0 16px;font-size:14.5px}
+.cmtable td{padding:9px 10px;border-top:1px solid var(--line);vertical-align:top}
+.cmtable tr:first-child td{border-top:0}
+.cmtable .cm-u{width:32%;font-weight:700}
+.cmtable .cm-s{color:var(--muted);line-height:1.7}
+@media(max-width:640px){.cmtable,.cmtable tbody,.cmtable tr,.cmtable td{display:block;width:auto}.cmtable .cm-u{border-top:1px solid var(--line);padding-bottom:0}.cmtable .cm-s{padding-top:2px}}
+.nbody figure.fig{margin:16px 0;text-align:center;position:relative;display:inline-block;width:100%}
+.nbody figure.fig img{max-width:100%;height:auto;border:1px solid var(--line);border-radius:10px;cursor:zoom-in}
+.nbody figure.fig:not(.fig-missing)::after{content:"🔍";position:absolute;top:9px;right:9px;background:rgba(15,26,40,.6);color:#fff;border-radius:7px;padding:1px 7px;font-size:12.5px;pointer-events:none}
+@media print{.nbody figure.fig::after{display:none}}
+.nbody figure.fig figcaption{margin-top:7px;font-size:13.5px;color:var(--muted);line-height:1.6}
+.nbody figure.fig-missing{background:var(--soft);border:1px dashed var(--line);border-radius:10px;padding:11px 15px;text-align:left}
+.nbody figure.fig-missing figcaption{margin:0;color:var(--muted)}
+#lightbox{position:fixed;inset:0;background:rgba(15,26,40,.92);display:none;align-items:center;justify-content:center;z-index:999;cursor:zoom-out;padding:24px}
+#lightbox.show{display:flex}
+#lightbox img{max-width:96%;max-height:96%;border-radius:8px;box-shadow:0 8px 40px rgba(0,0,0,.5)}
+@media print{#lightbox{display:none!important}.nbody figure.fig img{cursor:default}}
+.quiz,.flashcards{border:1px solid var(--line);border-radius:14px;padding:4px 20px 18px;margin:18px 0;background:var(--panel)}
+.wgh{font-weight:800;font-size:16px;padding:13px 0 4px;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.wghint{font-size:12.5px;font-weight:500;color:var(--muted)}
+.qzscore{margin-left:auto;font-size:13.5px;font-weight:700;color:var(--accent2)}
+.qzretry{border:1px solid var(--line);background:#fff;border-radius:8px;padding:3px 10px;font:inherit;font-size:12.5px;color:var(--muted);cursor:pointer}
+.qzretry:hover{border-color:var(--accent);color:var(--accent)}
+@media print{.qzretry{display:none!important}}
+.qzq{margin:12px 0;padding-top:13px;border-top:1px solid var(--line)}
+.qzq:first-of-type{border-top:0}
+.qzqt{font-weight:600;margin-bottom:9px}
+.qzopts{display:flex;flex-direction:column;gap:7px}
+.qzopt{text-align:left;padding:9px 13px;border:1px solid var(--line);border-radius:9px;background:#fff;font:inherit;font-size:14.5px;color:var(--ink);cursor:pointer;transition:background .12s}
+.qzopt:hover:not(:disabled){border-color:var(--accent);background:var(--soft)}
+.qzopt:disabled{cursor:default}
+.qzopt.right{border-color:#3fa46a;background:#edf7f0;color:#1f4632;font-weight:700}
+.qzopt.wrong{border-color:#d9663f;background:#fdf0ec;color:#5c2f1f}
+.qzex{margin-top:9px;font-size:14px;color:var(--muted);background:var(--soft);border-radius:9px;padding:9px 13px;display:none}
+.qzq.done .qzex{display:block}
+.fcgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:12px;margin-top:6px}
+.fc{border:0;background:none;padding:0;font:inherit;cursor:pointer;perspective:1000px;min-height:112px;display:block}
+.fc-in{position:relative;display:block;width:100%;min-height:112px;transition:transform .4s;transform-style:preserve-3d}
+.fc.flipped .fc-in{transform:rotateY(180deg)}
+.fc-f,.fc-b{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border:1px solid var(--line);border-radius:11px;padding:14px;display:flex;align-items:center;justify-content:center;text-align:center;line-height:1.55}
+.fc-f{background:var(--soft);font-weight:700;color:var(--ink)}
+.fc-b{background:#fff;transform:rotateY(180deg);color:var(--muted);font-size:14px}
+@media print{.qzopt{border:1px solid #ccc}.qzq.done .qzex,.qzex{display:block}.fc-in{transform:none!important}.fc-b{position:static;transform:none;margin-top:8px}.fc-f,.fc-b{backface-visibility:visible;-webkit-backface-visibility:visible;position:static}.fc{min-height:0}}
+pre.codeblock{background:#0f1e2e;color:#dbe6f0;padding:14px 16px;border-radius:10px;overflow-x:auto;font-family:"SF Mono",Consolas,monospace;font-size:13px;line-height:1.6;margin:14px 0;white-space:pre}
+pre.codeblock code{background:none;padding:0;font:inherit;color:inherit;border-radius:0}
+@media print{.callout,pre.codeblock{break-inside:avoid}pre.codeblock{white-space:pre-wrap}}
+.tablewrap{overflow-x:auto;margin:14px 0}
+.nbody table{border-collapse:collapse;width:100%;font-size:14px;background:#fff;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.nbody th{background:var(--soft);text-align:left;padding:10px 12px;font-weight:700;border-bottom:2px solid var(--line)}
+.nbody td{padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+.nbody tr:last-child td{border-bottom:0}
+hr{border:0;border-top:1px solid var(--line);margin:18px 0}
+.totop{position:fixed;right:26px;bottom:26px;background:var(--accent);color:#fff;border:0;width:44px;height:44px;border-radius:50%;font-size:18px;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.18);opacity:0;pointer-events:none;transition:opacity .2s}
+.totop.show{opacity:1;pointer-events:auto}
+.foot{color:var(--muted);font-size:12px;text-align:center;padding:30px}
+mark{background:#fde68a;padding:0 2px}
+.noresults{color:var(--muted);text-align:center;padding:60px 20px;font-size:15px}
+/* mobile：側欄變成頂部橫條，搜尋／字級／導覽在手機上都還在 */
+@media(max-width:860px){.wrap{flex-direction:column}.sidebar{width:100%;flex:none;height:auto;position:static;overflow:visible;border-right:0;border-bottom:1px solid var(--line);padding:16px 18px}.hero,.content{padding-left:22px;padding-right:22px}}
+/* print */
+@media print{.sidebar,.totop{display:none}.main{width:100%}.hero{background:#0091AC!important;-webkit-print-color-adjust:exact}.note,.coursebar{break-inside:avoid;border:1px solid #ddd}.navsubs{display:block}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <aside class="sidebar">
+    <div class="brand"><h1>代謝症候群防治計畫教育訓練課程 筆記（上・中・下）</h1><p>把買了看不完的線上課程，一鍵變成能讀完的筆記。</p></div>
+    <input class="searchbox" id="search" placeholder="🔍 搜尋筆記…" oninput="doSearch(this.value)">
+    <div class="fontctl"><span>字級</span><button onclick="setFs(-1)" title="縮小">A−</button><button onclick="setFs(0)" title="預設">A</button><button onclick="setFs(1)" title="放大">A+</button><button class="printbtn" onclick="window.print()">🖨 列印／存 PDF</button></div>
+    
+  <div class="navgroup" data-course="c0">
+    <button class="navhead"><span class="ic">🩺</span><span class="nt">代謝症候群防治計畫教育訓練課程－上（定義・計畫介紹・運動）</span><span class="chev">▸</span></button>
+    <div class="navsubs" id="subs-c0">
+      <a href="#c0-0" class="navsub">課程總覽：代謝症候群防治計畫教育訓練課程－上</a><a href="#c0-1" class="navsub">1-1 代謝症候群之定義、生理機轉與流行病學</a><a href="#c0-2" class="navsub">1-2 代謝症候群防治計畫介紹</a><a href="#c0-3" class="navsub">1-3 代謝症候群之防治與運動</a>
+    </div>
+  </div>
+  <div class="navgroup" data-course="c1">
+    <button class="navhead"><span class="ic">🚭</span><span class="nt">代謝症候群防治計畫教育訓練課程－中（健康促進：戒菸・戒檳）</span><span class="chev">▸</span></button>
+    <div class="navsubs" id="subs-c1">
+      <a href="#c1-0" class="navsub">課程總覽：代謝症候群防治計畫教育訓練課程－中</a><a href="#c1-1" class="navsub">2-1 促進病人參與及行為改變－健康促進（含戒菸）</a><a href="#c1-2" class="navsub">促進病人參與及行為改變－健康促進－戒檳</a>
+    </div>
+  </div>
+  <div class="navgroup" data-course="c2">
+    <button class="navhead"><span class="ic">🥗</span><span class="nt">代謝症候群防治計畫教育訓練課程－下（飲食・健康識能・動機晤談・跨領域照護）</span><span class="chev">▸</span></button>
+    <div class="navsubs" id="subs-c2">
+      <a href="#c2-0" class="navsub">課程總覽：代謝症候群防治計畫教育訓練課程－下</a><a href="#c2-1" class="navsub">3-1 代謝症候群之防治與飲食</a><a href="#c2-2" class="navsub">3-2 健康識能實務與策略</a><a href="#c2-3" class="navsub">促進病人參與及行為改變－動機晤談</a><a href="#c2-4" class="navsub">連結跨領域照護及溝通協調－以病人為中心的跨資源整合照護運用（一）</a><a href="#c2-5" class="navsub">3-5 連結跨領域照護及溝通協調－以病人為中心的跨資源整合照護運用（二）</a><a href="#c2-6" class="navsub">連結跨領域照護及溝通協調－以病人為中心的跨資源整合照護運用（三）</a>
+    </div>
+  </div>
+  </aside>
+  <div class="main">
+    <div class="hero">
+      <h1>代謝症候群防治計畫教育訓練課程 筆記（上・中・下）</h1>
+      <p>把買了看不完的線上課程，一鍵變成能讀完的筆記。</p>
+      <div class="stat"><span><b>3</b>門課程</span><span><b>14</b>篇筆記</span><span><b>一鍵</b>自動整理</span></div>
+    </div>
+    <div class="content">
+      
+  <section class="course" id="course-c0">
+    <div class="coursebar"><span class="cic">🩺</span><div><h2 class="ctitle">代謝症候群防治計畫教育訓練課程－上（定義・計畫介紹・運動）</h2><div class="csub"> · 4 篇</div></div></div>
+    <details class="coursemap" open><summary>🗺️ 本課地圖<span class="cm-hint">（點單元標題可跳到那一篇）</span></summary><table class="cmtable"><tbody><tr><td class="cm-u"><a href="#c0-0">課程總覽：代謝症候群防治計畫教育訓練課程－上</a></td><td class="cm-s"></td></tr><tr><td class="cm-u"><a href="#c0-1">1-1 代謝症候群之定義、生理機轉與流行病學</a></td><td class="cm-s">代謝症候群不是一個病，而是<strong>五項可量測因子中符合三項以上</strong>所定義的「慢性病前期狀態」，核心異常是<strong>內臟脂肪增加引發慢性發炎與胰島素阻抗</strong>，因此治療首重生活型態改變、藥物只是輔助。</td></tr><tr><td class="cm-u"><a href="#c0-2">1-2 代謝症候群防治計畫介紹</a></td><td class="cm-s">代謝症候群防治計畫是把<strong>疾病前期（亞健康）的民眾</strong>納入正式的疾病管理流程，用「<strong>收案評估 → 三次追蹤管理 → 年度評估</strong>」的節奏，配合健保三組申報代碼與給付，在病人還沒變成糖尿病、高血壓、慢性腎臟病之前先介入生活習慣。</td></tr><tr><td class="cm-u"><a href="#c0-3">1-3 代謝症候群之防治與運動</a></td><td class="cm-s">運動對代謝症候群的每一項指標都有實證效益，但<strong>要先做運動前評估、再用 FITT-VP 開出個別化運動處方</strong>，而不是一句「多運動」就結束。</td></tr></tbody></table></details>
+    
+      <article class="note" id="c0-0">
+        <h3 class="ntitle">課程總覽：代謝症候群防治計畫教育訓練課程－上</h3>
+        <div class="nbody"><div class="callout cx-note"><div class="cx-t">來源：e等公務園＋學習平臺（國民健康e學苑／衛生福利部國民健康署），課程代碼 PHPA115100030，影片共 42 分鐘，認證時數 1.0 小時。本頁是個人學習筆記，用自己的話整理，不是官方教材；行政規定以國健署當期公告為準。</div></div>
+<p>這是三門系列課的第一門，目標是讓一線臨床人員先把「代謝症候群是什麼、國健署的防治計畫怎麼做、運動要怎麼開處方」這三件事建立起共同語言。三個單元分別由三位講者主講：</p>
+<ul><li><strong>1-1 定義、生理機轉與流行病學</strong>（日康診所 洪才力醫師）：五項指標怎麼判定、背後的胰島素阻抗機轉、台灣的盛行率與後續慢性病風險。</li><li><strong>1-2 防治計畫介紹</strong>（中華民國醫師公會全國聯合會 張嘉興副秘書長）：誰能收案、怎麼評估、追蹤與申報的時程，這一單元行政細節最多，也是個管與醫師最常卡關的地方。</li><li><strong>1-3 防治與運動</strong>（輔大醫院復健科 陳思遠主任）：運動對代謝症候群的效益、運動處方怎麼開、哪些人要先做醫療評估。</li></ul>
+<p><strong>建議閱讀順序</strong>：照 1-1 → 1-2 → 1-3。若你已熟悉定義，可直接從 1-2 看收案與追蹤規則，再回頭補 1-3 的處方細節。每篇開頭都有「一句話總結」與「你會學到」，可先掃過再決定要不要精讀；結尾的「可執行要點」是明天門診或個管就能做的事。</p></div>
+      </article>
+      <article class="note" id="c0-1">
+        <h3 class="ntitle">1-1 代謝症候群之定義、生理機轉與流行病學</h3>
+        <div class="nbody"><div class="callout cx-note"><div class="cx-t">代謝症候群防治計畫教育訓練課程－上 · 單元 1-1 · 影片 7 分鐘 · 講者：洪才力醫師（日康診所）</div></div>
+<div class="callout cx-key"><div class="cx-t">一句話總結</div><div class="cx-b"><p>代謝症候群不是一個病，而是<strong>五項可量測因子中符合三項以上</strong>所定義的「慢性病前期狀態」，核心異常是<strong>內臟脂肪增加引發慢性發炎與胰島素阻抗</strong>，因此治療首重生活型態改變、藥物只是輔助。</p></div></div>
+<div class="callout cx-key"><div class="cx-t">你會學到</div><div class="cx-b"><ul><li>國健署 2007 年公告的代謝症候群五項判定因子與各自切點，以及「三項成立」的判定規則</li><li>從遺傳、活動量不足、飲食西化，一路到內臟脂肪、發炎因子、胰島素阻抗、內皮功能異常、動脈硬化的完整機轉鏈</li><li>代謝症候群個案相對一般族群的慢性病風險倍數（糖尿病 6 倍、高血壓 4 倍、高血脂 3 倍、心臟病與腦中風 2 倍）</li><li>台灣盛行率數字：全人口、性別、年齡層差異，以及它與十大死因中五項的關聯</li><li>治療策略的優先順序：非藥物介入（戒菸、戒檳、飲食、運動、減重、生活管理）為主，合併糖尿病／高血壓／高血脂時才加藥</li></ul></div></div>
+<h3>內容筆記</h3>
+<h4>一、代謝症候群的定義 ⏱ 00:20</h4>
+<p>依據<strong>國民健康署 2007 年公告</strong>的臺灣代謝症候群判定標準（原由行政院衛生署國民健康局於 2004 年 10 月訂定），共有五項因子：</p>
+<div class="tablewrap"><table><thead><tr><th>#</th><th>因子</th><th>判定切點</th><th>用藥即成立</th></tr></thead><tbody><tr><td>1</td><td>腹部肥胖</td><td>男性腰圍 ≥ 90 公分（35 吋）、女性腰圍 ≥ 80 公分（31 吋），或身體質量指數（BMI）≥ 27 kg/m²</td><td>—</td></tr><tr><td>2</td><td>血壓偏高</td><td>收縮壓 ≥ 130 mmHg 或舒張壓 ≥ 85 mmHg</td><td>已服用高血壓藥物者即成立</td></tr><tr><td>3</td><td>空腹血糖偏高</td><td>飯前血糖 ≥ 100 mg/dL</td><td>已服用糖尿病藥物者即成立</td></tr><tr><td>4</td><td>空腹三酸甘油酯偏高</td><td>≥ 150 mg/dL</td><td>已服用降三酸甘油酯藥物者即成立</td></tr><tr><td>5</td><td>高密度脂蛋白膽固醇（HDL-C）偏低</td><td>男性 &lt; 40 mg/dL、女性 &lt; 50 mg/dL</td><td>—</td></tr></tbody></table></div>
+<div class="callout cx-key"><div class="cx-t">判定規則</div><div class="cx-b"><p>以上五項因子，<strong>符合三項（含）以上</strong>即判定為代謝症候群。</p></div></div>
+<div class="callout cx-tip"><div class="cx-t">三個容易在門診漏掉的細節</div><div class="cx-b"><ul><li>血壓、血糖、三酸甘油酯這三項，<strong>「已在服藥控制」本身就算該項成立</strong>，不必等到抽血數值超標；已用藥而數值漂亮的病人最容易被誤判為不符合。</li><li>肥胖這項腰圍與 BMI 是「或」的關係，腰圍沒超標但 BMI ≥ 27 一樣成立。</li><li>HDL-C 的男女切點不同（男 40、女 50），女性門檻反而較高，判讀時別套用同一條線。</li></ul></div></div>
+<h4>二、生理機轉 ⏱ 01:51</h4>
+<p>講者把機轉拆成「上游三個原因 → 內臟脂肪 → 兩條下游路徑 → 動脈硬化」。</p>
+<p><strong>上游三個原因</strong>：先天遺傳基因、後天活動量不足、飲食西化。</p>
+<p>這三者共同造成<strong>內臟脂肪細胞增加</strong>，接著分兩條路走：</p>
+<ul><li><strong>代謝路徑</strong>：內臟脂肪增加使血中脂肪酸上升 → 改變葡萄糖代謝 → 胰島素阻抗（insulin resistance）增加、血中胰島素濃度上升（高胰島素血症）→ 內皮細胞功能異常（endothelial dysfunction）→ 動脈硬化（atherogenesis）。</li><li><strong>發炎路徑</strong>：內臟脂肪增加使脂肪細胞的發炎因子分泌增加，包括腫瘤壞死因子α（TNF-α）、介白素-6（IL-6）、瘦體素（leptin）、纖溶酶原活化抑制因子-1（PAI-1）、抵抗素（resistin）。這些發炎因子同樣會破壞內皮細胞功能，導向動脈硬化。</li></ul>
+<p>兩條路徑匯流成血管動脈硬化後，就墊高了糖尿病、高血壓、心血管疾病的風險。</p>
+<div class="callout cx-key"><div class="cx-t">一句話版本的機轉</div><div class="cx-b"><p>在肥胖、脂肪細胞激素、胰島素阻抗、自主神經系統的交互作用下，個案出現<strong>攝入葡萄糖的功能受損、第二型血管張力素（angiotensin II）上升、游離脂肪酸加速釋出</strong>三個共同結果。</p></div></div>
+<div class="callout cx-key"><div class="cx-t">相對於一般族群的風險倍數</div><div class="cx-b"><p>這些改變讓代謝症候群個案的慢性病風險明顯高於一般族群。</p></div></div>
+<div class="tablewrap"><table><thead><tr><th>疾病</th><th>相對一般族群的風險</th></tr></thead><tbody><tr><td>糖尿病</td><td>增加 6 倍</td></tr><tr><td>高血壓</td><td>增加 4 倍</td></tr><tr><td>高血脂症</td><td>增加 3 倍</td></tr><tr><td>心臟病、腦中風</td><td>增加 2 倍</td></tr></tbody></table></div>
+<h4>三、流行病學 ⏱ 03:37</h4>
+<p>依國健署統計資料與相關研究：</p>
+<div class="tablewrap"><table><thead><tr><th>族群</th><th>盛行率</th></tr></thead><tbody><tr><td>15 歲以上國人（整體）</td><td>14.99%</td></tr><tr><td>15 歲以上男性</td><td>16.9%</td></tr><tr><td>15 歲以上女性</td><td>13.8%</td></tr><tr><td>成年人（以修正版美國國家膽固醇教育計畫成人治療指引 NCEP ATP III 定義計）</td><td>約 15–30%</td></tr><tr><td>65 歲以上男性</td><td>25.5%</td></tr><tr><td>65 歲以上女性</td><td>46.8%</td></tr></tbody></table></div>
+<div class="callout cx-key"><div class="cx-t">年齡是最強的放大器</div><div class="cx-b"><p>盛行率隨年齡增加而上升，約在 <strong>60–80 歲達到高峰</strong>。特別注意 65 歲以上的性別逆轉：15 歲以上整體是男性（16.9%）高於女性（13.8%），但到了 65 歲以上，女性（46.8%）幾乎是男性（25.5%）的兩倍。</p></div></div>
+<p><strong>與十大死因的關聯</strong>：台灣十大死因中，有五項與代謝症候群密切相關（括號內為該資料年度的死因排名）——心臟疾病（第 2）、腦血管疾病（第 4）、糖尿病（第 5）、高血壓性疾病（第 7）、腎炎腎病症候群及腎病變（第 9）。</p>
+<div class="callout cx-note"><div class="cx-t">資料來源</div><div class="cx-b"><p>投影片標註的引用包含 Hwang LC, Bai CH, Chen CJ. J Formos Med Assoc 2006; 105: 626-35；《代謝症候群防治工作手冊》2007，國民健康署；李龍騰等，台灣地區老年人代謝症候群之盛行率調查，台灣老年醫學雜誌 2005; 1(1): 9-17；以及 109 年國人十大死因統計結果（110/6/18 公告）。</p></div></div>
+<h4>四、治療策略 ⏱ 04:37</h4>
+<p>治療<strong>以非藥物治療為主</strong>，也就是用生活型態改變作為介入性治療，共六個面向：</p>
+<div class="tablewrap"><table><thead><tr><th>面向</th><th>具體做法（講者敘述）</th></tr></thead><tbody><tr><td>戒菸</td><td>有抽菸習慣者，優先鼓勵戒菸</td></tr><tr><td>戒檳</td><td>有嚼檳榔習慣者，優先鼓勵戒檳榔</td></tr><tr><td>飲食</td><td>建立低糖、低油、高纖的飲食習慣，並且定時定量</td></tr><tr><td>運動</td><td>每週應有適當的運動量與運動時間</td></tr><tr><td>減重</td><td>體重過重者鼓勵減輕體重</td></tr><tr><td>生活管理</td><td>規律作息與充足睡眠；最重要的是把上述改變<strong>內化成日常生活習慣</strong>，而不是短期執行</td></tr></tbody></table></div>
+<p><strong>藥物治療</strong>：若個案已有糖尿病、高血壓或高血脂症，則在生活型態介入之上再考慮加上降血糖、降血壓、降血脂藥物。</p>
+<div class="callout cx-fig"><div class="cx-t">圖示重建：代謝症候群的成因與介入切入點</div><div class="cx-b"><p>講者在此處帶了一張「發生原因」圖（影片只描述其結論，圖中細項未逐一唸出）。其要點為：</p>
+<div class="tablewrap"><table><thead><tr><th>成因</th><th>是否可介入</th></tr></thead><tbody><tr><td>遺傳</td><td>不可改變</td></tr><tr><td>年齡</td><td>不可改變</td></tr><tr><td>壓力</td><td>部分可介入</td></tr><tr><td>不良生活型態</td><td><strong>可介入，且是最主要的原因</strong></td></tr></tbody></table></div>
+<p>推論出的臨床行動：健檢篩檢到符合代謝症候群的個案時，應<strong>積極做介入性治療</strong>；一旦改變不良生活型態，就能減少發炎反應，進而阻斷糖尿病、高血壓、高血脂、心臟病與腦中風的發生。</p></div></div>
+<h4>五、結論 ⏱ 06:24</h4>
+<ul><li>代謝症候群是<strong>許多慢性病的風險因子</strong>；對它做介入治療的目的，就是減少日後產生慢性病的機會。</li><li>盛行率隨年齡增加而上升，因此<strong>對高齡民眾更應積極篩檢</strong>。</li><li>核心異常在於<strong>脂肪細胞增加引起發炎反應／免疫反應，進一步增加胰島素阻抗及血管異常</strong>。</li><li>治療策略<strong>首重生活型態改變</strong>，再依個案需求給予相關藥物治療。</li></ul>
+<h3>關鍵詞</h3>
+<ul><li><strong>代謝症候群（Metabolic Syndrome, MetS）</strong>：腰圍、血壓、空腹血糖、三酸甘油酯、HDL-C 五項因子中符合三項以上的狀態；是慢性病的前期風險群，不是單一疾病。</li><li><strong>胰島素阻抗（insulin resistance）</strong>：組織對胰島素的反應變差，身體必須分泌更多胰島素才能維持血糖，是代謝症候群下游的核心環節。</li><li><strong>內臟脂肪（visceral adipose）</strong>：堆積在腹腔臟器周邊的脂肪，會分泌發炎因子，是本課機轉圖的中心節點；也是腰圍成為判定因子的原因。</li><li><strong>內皮功能異常（endothelial dysfunction）</strong>：血管內皮細胞功能受損，是代謝異常與發炎共同走向動脈硬化的必經站。</li><li><strong>發炎因子（TNF-α、IL-6、leptin、PAI-1、resistin）</strong>：由增加的內臟脂肪細胞分泌，破壞內皮功能並加重胰島素阻抗。</li><li><strong>高密度脂蛋白膽固醇（HDL-C）</strong>：俗稱「好膽固醇」，此處是<strong>偏低</strong>才算異常，判讀方向與其他四項相反。</li></ul>
+<h3>可執行要點</h3>
+<ul><li class="task"><label><input type="checkbox" class="tk">門診看到腰圍超標的病人，當場把五項因子逐條對一遍，別只看抽血報告。</label></li><li class="task"><label><input type="checkbox" class="tk">判定時記得把「已在服用高血壓／糖尿病／降三酸甘油酯藥物」直接算成該項成立，避免用藥控制良好的病人被漏判。</label></li><li class="task"><label><input type="checkbox" class="tk">判讀 HDL-C 時分男女套用不同切點（男 &lt; 40、女 &lt; 50 mg/dL）。</label></li><li class="task"><label><input type="checkbox" class="tk">65 歲以上、尤其女性個案，主動納入代謝症候群篩檢名單（該族群盛行率 46.8%）。</label></li><li class="task"><label><input type="checkbox" class="tk">衛教時先問菸與檳榔，這是講者列在生活型態介入的第一、第二項。</label></li><li class="task"><label><input type="checkbox" class="tk">飲食衛教統一給「低糖、低油、高纖、定時定量」四個關鍵字，比給細項更容易被記住。</label></li><li class="task"><label><input type="checkbox" class="tk">對已確診個案，用「糖尿病 6 倍、高血壓 4 倍、高血脂 3 倍、心臟病與腦中風 2 倍」的倍數說明風險，取代抽象的「你要小心」。</label></li><li class="task"><label><input type="checkbox" class="tk">生活型態介入的目標設定為「變成日常習慣」，回診時追蹤習慣是否維持，而非只追數值。</label></li></ul>
+<div class="quiz" id="qz0" data-total="5"><div class="wgh">📝 隨堂測驗<span class="wghint">（點選項作答）</span><span class="qzscore"></span><button class="qzretry" style="display:none">↺ 重做</button></div><div class="qzq"><div class="qzqt">一位 58 歲男性，腰圍 88 公分、BMI 25、血壓 128/82 mmHg（未服藥）、空腹血糖 96 mg/dL 但已在服用糖尿病藥物、三酸甘油酯 160 mg/dL、HDL-C 38 mg/dL。依國健署標準，他是否符合代謝症候群？</div><div class="qzopts"><button class="qzopt" data-c="0">不符合，因為只有 2 項成立</button><button class="qzopt" data-c="1">符合，共 3 項成立</button><button class="qzopt" data-c="0">不符合，因為血糖數值正常</button><button class="qzopt" data-c="0">符合，共 5 項成立</button></div><div class="qzex">成立的有三項：空腹血糖偏高（已服用糖尿病藥物即成立，不看當下數值）、三酸甘油酯 160 ≥ 150、HDL-C 38 &lt; 40（男性）。肥胖項不成立（腰圍 88 &lt; 90 且 BMI 25 &lt; 27），血壓項不成立（128 &lt; 130 且 82 &lt; 85 且未服藥）。三項即判定為代謝症候群。</div></div><div class="qzq"><div class="qzqt">依本課提供的台灣盛行率資料，下列何者正確？</div><div class="qzopts"><button class="qzopt" data-c="0">盛行率在 40–50 歲達到高峰，之後下降</button><button class="qzopt" data-c="1">15 歲以上整體盛行率為 14.99%，且男性高於女性</button><button class="qzopt" data-c="0">65 歲以上男性盛行率高於同齡女性</button><button class="qzopt" data-c="0">以 NCEP ATP III 修正版定義計算，成年人盛行率低於 10%</button></div><div class="qzex">15 歲以上整體 14.99%，男性 16.9% 高於女性 13.8%。但 65 歲以上則逆轉為女性 46.8% 遠高於男性 25.5%；高峰落在 60–80 歲；以修正版 NCEP ATP III 定義計算成年人約 15–30%。</div></div><div class="qzq"><div class="qzqt">依講者說明的機轉，內臟脂肪增加走向動脈硬化的「兩條路徑」是什麼？</div><div class="qzopts"><button class="qzopt" data-c="0">自體免疫路徑與凝血路徑</button><button class="qzopt" data-c="0">腎素-血管張力素路徑與交感神經路徑</button><button class="qzopt" data-c="1">脂肪酸／葡萄糖代謝異常導致胰島素阻抗與高胰島素血症，以及發炎因子分泌增加；兩者都造成內皮功能異常</button><button class="qzopt" data-c="0">膽固醇沉積路徑與血小板聚集路徑</button></div><div class="qzex">講者將機轉分為代謝路徑（脂肪酸上升→葡萄糖代謝改變→胰島素阻抗與高胰島素血症）與發炎路徑（TNF-α、IL-6、leptin、PAI-1、resistin 分泌增加），兩者匯流於內皮細胞功能異常，再形成動脈硬化。</div></div><div class="qzq"><div class="qzqt">關於代謝症候群的治療策略，何者最符合講者的立場？</div><div class="qzopts"><button class="qzopt" data-c="0">一旦判定為代謝症候群就應立即三線藥物併用</button><button class="qzopt" data-c="1">以生活型態改變為主要介入，已合併糖尿病、高血壓或高血脂時才考慮加上藥物</button><button class="qzopt" data-c="0">藥物治療與生活型態改變同等重要，可任選其一</button><button class="qzopt" data-c="0">只需減重，其他項目不必處理</button></div><div class="qzex">講者明確指出治療「以非藥物治療為主」，用戒菸、戒檳、飲食、運動、減重、生活管理六個面向的生活型態改變作為介入；藥物（降血糖、降血壓、降血脂）是在個案已有糖尿病、高血壓或高血脂症時才加上去。</div></div><div class="qzq"><div class="qzqt">為什麼講者強調對高齡民眾更要積極篩檢代謝症候群？</div><div class="qzopts"><button class="qzopt" data-c="0">因為高齡者判定切點較寬鬆</button><button class="qzopt" data-c="1">因為盛行率隨年齡增加而上升，60–80 歲達高峰，65 歲以上女性可達 46.8%</button><button class="qzopt" data-c="0">因為高齡者藥物治療效果特別好</button><button class="qzopt" data-c="0">因為健保只給付 65 歲以上族群的篩檢</button></div><div class="qzex">結論段的理由就是盛行率隨年齡上升、60–80 歲達高峰，且 65 歲以上男性 25.5%、女性 46.8%，篩檢的陽性收穫率高。判定切點並未因年齡放寬。</div></div></div>
+<div class="flashcards"><div class="wgh">🎴 單字卡<span class="wghint">（點卡片翻面）</span></div><div class="fcgrid"><button class="fc"><span class="fc-in"><span class="fc-f">代謝症候群判定：腰圍切點（男／女）</span><span class="fc-b">男性 ≥ 90 公分（35 吋）、女性 ≥ 80 公分（31 吋）；或 BMI ≥ 27 kg/m² 亦可成立此項</span></span></button><button class="fc"><span class="fc-in"><span class="fc-f">代謝症候群判定：血壓切點</span><span class="fc-b">收縮壓 ≥ 130 mmHg 或舒張壓 ≥ 85 mmHg，或已服用高血壓藥物</span></span></button><button class="fc"><span class="fc-in"><span class="fc-f">代謝症候群判定：空腹血糖切點</span><span class="fc-b">飯前血糖 ≥ 100 mg/dL，或已服用糖尿病藥物</span></span></button><button class="fc"><span class="fc-in"><span class="fc-f">代謝症候群判定：三酸甘油酯切點</span><span class="fc-b">空腹三酸甘油酯 ≥ 150 mg/dL，或已服用降三酸甘油酯藥物</span></span></button><button class="fc"><span class="fc-in"><span class="fc-f">代謝症候群判定：HDL-C 切點</span><span class="fc-b">男性 &lt; 40 mg/dL、女性 &lt; 50 mg/dL（此項是偏低才算異常）</span></span></button><button class="fc"><span class="fc-in"><span class="fc-f">代謝症候群的判定規則與公告年份</span><span class="fc-b">國健署 2007 年公告標準；五項因子符合三項（含）以上即判定為代謝症候群</span></span></button><button class="fc"><span class="fc-in"><span class="fc-f">代謝症候群機轉的上游三個原因</span><span class="fc-b">先天遺傳基因、後天活動量不足、飲食西化 → 共同造成內臟脂肪細胞增加</span></span></button><button class="fc"><span class="fc-in"><span class="fc-f">內臟脂肪細胞分泌的發炎因子有哪些</span><span class="fc-b">TNF-α、IL-6、leptin、PAI-1、resistin</span></span></button><button class="fc"><span class="fc-in"><span class="fc-f">代謝症候群個案的慢性病風險倍數</span><span class="fc-b">糖尿病 6 倍、高血壓 4 倍、高血脂症 3 倍、心臟病與腦中風 2 倍</span></span></button><button class="fc"><span class="fc-in"><span class="fc-f">台灣 15 歲以上代謝症候群盛行率</span><span class="fc-b">整體 14.99%；男性 16.9%、女性 13.8%</span></span></button><button class="fc"><span class="fc-in"><span class="fc-f">台灣 65 歲以上代謝症候群盛行率</span><span class="fc-b">男性 25.5%、女性 46.8%；盛行率隨年齡上升，60–80 歲達高峰</span></span></button><button class="fc"><span class="fc-in"><span class="fc-f">十大死因中與代謝症候群密切相關的五項</span><span class="fc-b">心臟疾病（2）、腦血管疾病（4）、糖尿病（5）、高血壓性疾病（7）、腎炎腎病症候群及腎病變（9）</span></span></button><button class="fc"><span class="fc-in"><span class="fc-f">代謝症候群的非藥物治療六面向</span><span class="fc-b">戒菸、戒檳、飲食（低糖低油高纖、定時定量）、運動、減重、生活管理（規律作息與充足睡眠）</span></span></button><button class="fc"><span class="fc-in"><span class="fc-f">代謝症候群的核心異常是什麼</span><span class="fc-b">脂肪細胞增加引起發炎／免疫反應，進一步增加胰島素阻抗與血管異常</span></span></button></div></div></div>
+      </article>
+      <article class="note" id="c0-2">
+        <h3 class="ntitle">1-2 代謝症候群防治計畫介紹</h3>
+        <div class="nbody"><div class="callout cx-note"><div class="cx-t">代謝症候群防治計畫教育訓練課程－上 · 單元 1-2 · 影片 15 分鐘 · 講者：張嘉興醫師（中華民國醫師公會全國聯合會副秘書長）</div></div>
+<div class="callout cx-key"><div class="cx-t">一句話總結</div><div class="cx-b"><p>代謝症候群防治計畫是把<strong>疾病前期（亞健康）的民眾</strong>納入正式的疾病管理流程，用「<strong>收案評估 → 三次追蹤管理 → 年度評估</strong>」的節奏，配合健保三組申報代碼與給付，在病人還沒變成糖尿病、高血壓、慢性腎臟病之前先介入生活習慣。</p></div></div>
+<div class="callout cx-key"><div class="cx-t">你會學到</div><div class="cx-b"><ul><li>院所與醫師要具備什麼資格才能執行這個計畫</li><li>兩條收案路徑（代謝症候群五項指標符合三項／糖尿病前期）與明確的排除條件</li><li>收案評估、追蹤管理、年度評估的健保代碼、間隔天數與給付金額</li><li>每一站實際要做的事：知情同意、疾病管理表、慢性病風險評估、722 居家血壓、腰圍量測</li><li>戒菸、戒檳榔、飲食（我的餐盤）、運動這四大介入的操作重點</li></ul></div></div>
+<h3>內容筆記</h3>
+<h4>一、這個計畫在做什麼 ⏱ 00:31</h4>
+<p>代謝症候群防治計畫照顧的對象是<strong>疾病前期</strong>的病人，這群人多半因為不良生活習慣、年齡、壓力或遺傳而出現代謝異常。代謝症候群共有 5 項指標，符合其中 ≥3 項就達到收案資格。</p>
+<p>講者強調，這 5 項指標若沒有控制好，會走向<strong>胰島素阻抗（insulin resistance）</strong>與肥胖，和一般人相比，日後罹患糖尿病、高血壓、高血脂的風險明顯較高——這正是代謝症候群最重要的意義。</p>
+<p>計畫的做法是用<strong>疾病管理</strong>加上<strong>個案追蹤</strong>，以民眾健康為導向，改善生活習慣、協助壓力調適，降低慢性病風險；同時透過醫療人員的指導，把病人的自我疾病管理意識建立起來。</p>
+<div class="callout cx-quote"><div class="cx-t">講者原話</div><div class="cx-b"><p>「代謝症候群其實主要是在照顧疾病前期的病人。」</p></div></div>
+<h4>二、誰可以執行：院所與醫師資格 ⏱ 01:19</h4>
+<div class="callout cx-warn"><div class="cx-t">院所資格是硬門檻</div><div class="cx-b"><p>醫療院所<strong>必須具備成人預防保健的資格</strong>。原因很實際：代謝症候群個案的來源大部分就是從成人預防保健篩出來的，所以計畫直接要求院所要有這個資格。</p></div></div>
+<p>醫師資格則是<strong>擇一符合即可</strong>：</p>
+<div class="tablewrap"><table><thead><tr><th>條件</th><th>說明</th></tr></thead><tbody><tr><td>專科／業務別</td><td>家醫科醫師、內科醫師、執行成人預防保健的醫師，或糖尿病共同照護網醫師</td></tr><tr><td>訓練時數</td><td>其他專科醫師，完成 <strong>4 小時訓練</strong>後亦可取得執行資格</td></tr></tbody></table></div>
+<h4>三、收案條件：兩條路徑 ⏱ 02:07</h4>
+<p>受案（收案）對象年齡為 <strong>20 至 69 歲</strong>。收案有兩條互相獨立的路徑。</p>
+<p class="lead"><strong>路徑一：代謝症候群五項指標，符合 ≥3 項</strong></p>
+<div class="tablewrap"><table><thead><tr><th>指標</th><th>切點</th></tr></thead><tbody><tr><td>空腹血糖</td><td>≥ 100 mg/dL</td></tr><tr><td>血壓</td><td>收縮壓 ≥ 130／舒張壓 ≥ 85 mmHg（影片此處口述為「103 公分 85」，依上下文應為 130/85）</td></tr><tr><td>三酸甘油酯（Triglyceride, TG）</td><td>≥ 150 mg/dL</td></tr><tr><td>高密度脂蛋白膽固醇（HDL-C）</td><td>男性 &lt; 40、女性 &lt; 50 mg/dL</td></tr><tr><td>腰圍／體位</td><td>男性 ≥ 90 cm、女性 ≥ 80 cm，或 BMI ≥ 27</td></tr></tbody></table></div>
+<p class="lead"><strong>路徑二：糖尿病前期</strong></p>
+<p>糖化血色素（HbA1c）落在 <strong>5.7～6.4%</strong> 之間即可收案。</p>
+<div class="callout cx-key"><div class="cx-t">為什麼要特別納入糖尿病前期</div><div class="cx-b"><p>講者指出，糖尿病前期在健保目前<strong>沒有任何計畫可以管理</strong>，是一段照護空窗；代謝症候群計畫刻意把這群人納進來。所以這個計畫實際上分成兩大塊：傳統的代謝症候群（五項符合三項），以及糖尿病前期。</p></div></div>
+<div class="callout cx-warn"><div class="cx-t">不論走哪一條路徑收案，健保 VPN 上都要填寫代謝症候群的五項指標。</div></div>
+<h4>四、不能收案的對象 ⏱ 03:11</h4>
+<p>因為本計畫的定位是「疾病前期」，凡是已經進入疾病期或已被其他計畫收案者，一律排除：</p>
+<ul><li>已收案於<strong>糖尿病與初期慢性腎臟病照護計畫</strong>（DM-CKD、糖尿病腎病變 DKD）</li><li>已納入院所的整合照護計畫（影片此處口述不清，聽似「全能全社區」，應為醫院端的整合性照護計畫）</li><li>已納入 <strong>pre-ESRD（初期慢性腎臟病／末期腎病前期）照護計畫</strong></li><li>已在接受<strong>透析</strong>治療</li><li><strong>已被其他院所收案</strong>者</li></ul>
+<div class="callout cx-tip"><div class="cx-t">兩道把關</div><div class="cx-b"><p>第一道在問診當下——初步詢問病人就大概知道他是否已被收案；第二道在健保 VPN——上傳時系統會顯示他已被別人收案，或已是糖尿病、pre-ESRD、DKD 個案，這時就不要收。</p></div></div>
+<h4>五、執行流程與給付 ⏱ 03:54</h4>
+<div class="callout cx-fig"><div class="cx-t">流程重建：一個個案的完整路徑</div><div class="cx-b"><p>新收案（收案評估）→ 間隔 ≥70 天 → 追蹤管理（第 1 次）→ ≥70 天 → 追蹤管理（第 2 次）→ ≥70 天 → 追蹤管理（第 3 次）→ 年度評估 → 視需要繼續追蹤與下一年度評估，或符合條件時結案。</p></div></div>
+<div class="tablewrap"><table><thead><tr><th>階段</th><th>健保代碼</th><th>給付</th><th>次數／間隔</th></tr></thead><tbody><tr><td>新收案（收案評估）</td><td>P7501C</td><td>900 元</td><td>1 次</td></tr><tr><td>追蹤管理</td><td>P7502C</td><td>200 元</td><td>共 3 次，每次間隔 ≥70 天</td></tr><tr><td>年度評估</td><td>P7503C</td><td>500 元</td><td>三次追蹤後進行</td></tr></tbody></table></div>
+<p>年度評估完成後，個案若仍有需求可以繼續追蹤下去，符合結案條件或有特殊因素才結案。</p>
+<div class="callout cx-warn"><div class="cx-t">資料上傳與備查</div><div class="cx-b"><p>所有執行資料都要上傳健保 VPN，並<strong>保留相關紀錄與佐證</strong>備查——例如病歷記錄、電話聯繫紀錄、數位工具的使用紀錄。講者建議：<strong>每個月申報之前就把資料上傳 VPN，申報才會正確</strong>。</p></div></div>
+<h4>六、收案評估（P7501C）要做的十件事 ⏱ 04:39</h4>
+<ul><li><strong>取得知情同意</strong>：這是最重要的一步。病人要在個案疾病管理表上簽名，或以其他方式保存同意紀錄。</li><li><strong>完成收案評估的 10 個項目</strong>，收齊相關數據。</li><li>向個案說明計畫流程與收案條件。</li><li><strong>慢性病風險評估</strong>與風險因子評估，涵蓋：戒菸、戒檳榔、運動、飲食、腰圍、BMI、三高風險。</li><li><strong>健康指導與衛教</strong>（講者認為這是最重要的部分）。</li><li>教導病人在家量 <strong>722 血壓</strong>。</li><li>在疾病管理表上與個案<strong>討論並設定可達成的改善目標</strong>。</li><li>把<strong>疾病管理表交付給個案</strong>。</li><li>資料上傳健保 VPN。</li></ul>
+<div class="callout cx-tip"><div class="cx-t">疾病管理表怎麼處理</div><div class="cx-b"><p>表上除了身高、體重等基本生理數據，更重要的是<strong>醫病共決（shared decision making）訂出的目標值</strong>。文件一張交給個案，院所留存的那張<strong>拍照存檔或紙本保留都可以</strong>。</p></div></div>
+<h4>七、慢性病風險評估怎麼算 ⏱ 06:08</h4>
+<p>風險評估不必自己算：</p>
+<ul><li>可用<strong>網頁平台</strong>計算；</li><li>在<strong>健保 VPN</strong> 登入時系統就會幫你算好；</li><li>許多 <strong>HIS（醫院資訊系統）廠商</strong>也有提供這項功能。</li></ul>
+<p>算出來之後，向個案解釋他罹患三高或心血管疾病的風險大約多少，記錄在個案疾病管理表上並交付給個案。評估項目包含<strong>冠心病、腦中風、糖尿病、心血管不良事件</strong>等相關風險。</p>
+<h4>八、其他危險因子 ⏱ 07:00</h4>
+<p>抽菸、嚼檳榔、不健康飲食、缺乏身體活動，都是要與個案溝通與教導的項目。另外<strong>一定要量腰圍與 BMI，以及血壓、血糖、血脂</strong>。</p>
+<h4>九、追蹤管理（P7502C） ⏱ 07:17</h4>
+<p>新收案時教導個案執行健康生活行為之後，<strong>70 天之後</strong>回來追蹤他有沒有做到、哪裡需要加強。</p>
+<ul><li>評估個案的戒菸、戒酒、運動、飲食情形。</li><li><strong>檢驗值未達標準者，至少可以再追蹤、再抽血一次。</strong></li><li>針對菸、檳榔、不健康生活習慣進行介入管理——講者強調，這個介入才是代謝症候群計畫最重要的目的。</li></ul>
+<h4>十、戒菸服務 ⏱ 08:01</h4>
+<p><strong>用藥資格</strong>：個案每天抽菸超過 10 支，且<strong>尼古丁成癮度 ≥4 分</strong>，即可提供戒菸服務。只要年滿 <strong>18 歲以上</strong>，不論抽的是紙菸、加熱菸或電子菸，成癮度 ≥4 分都可以提供戒菸用藥服務。</p>
+<p><strong>藥物選擇</strong>：分為尼古丁類與非尼古丁類藥物。尼古丁類包含貼片、咀嚼錠、吸入劑與口含錠，依個案需求選擇合適劑型。</p>
+<p><strong>沒有用藥的個案</strong>：仍要進行戒菸衛教，依四個步驟進行會談、協助壓力調適、鼓勵個案戒菸（影片此處口述不清，聽似「STAIR」，應為戒菸衛教的四步驟架構）。</p>
+<div class="callout cx-key"><div class="cx-t">新增誘因</div><div class="cx-b"><p>本次計畫針對新加入、符合資格的戒菸服務醫師另有提供獎勵，詳細資料可於國健署網站查詢。</p></div></div>
+<h4>十一、戒檳榔 ⏱ 09:02</h4>
+<div class="callout cx-key"><div class="cx-t">這是本計畫的新亮點</div><div class="cx-b"><p>講者指出，健保與國健署過去的方案裡<strong>一直沒有戒檳榔的相關方案</strong>，這次代謝症候群計畫首度主動納入戒檳榔的宣導。</p></div></div>
+<ul><li>個案有嚼檳榔時，<strong>不論新收案或追蹤</strong>都要告知：檳榔是致癌物，且與代謝症候群高度相關。</li><li>協助教導戒檳榔的重要性。</li><li>順便安排<strong>口腔黏膜檢查</strong>：<strong>30 歲以上有嚼檳榔者，可每兩年一次免費檢查</strong>。</li></ul>
+<h4>十二、飲食：我的餐盤 ⏱ 09:36</h4>
+<p>用國健署「我的餐盤」教導個案認識六大類食物。講者的臨床觀察是：大部分人不是<strong>澱粉類吃太多</strong>，就是<strong>水果吃太多、零食吃太多</strong>。</p>
+<p>建議做法：</p>
+<div class="tablewrap"><table><thead><tr><th>面向</th><th>建議</th></tr></thead><tbody><tr><td>全穀雜糧</td><td>適量即可，優先選糙米或未精製雜糧</td></tr><tr><td>食材選擇</td><td>多用當季食材</td></tr><tr><td>烹調與加工</td><td>減少油炸與加工食物</td></tr><tr><td>蔬菜</td><td>鼓勵多吃青菜</td></tr><tr><td>飲料</td><td>不喝含糖飲料，改喝無糖</td></tr><tr><td>調味</td><td>減少用鹽量</td></tr></tbody></table></div>
+<h4>十三、身體活動與久坐 ⏱ 10:11</h4>
+<ul><li><strong>減少久坐</strong>：建議每隔 <strong>30～60 分鐘</strong>起身活動。</li><li><strong>每週至少累積 150 分鐘中等強度運動</strong>，可有效降低體重過重與心血管疾病風險。</li></ul>
+<h4>十四、血壓管理與 722 ⏱ 10:27</h4>
+<div class="callout cx-key"><div class="cx-t">血壓是核心中的核心</div><div class="cx-b"><p>講者說血壓管理與 722 居家血壓是本計畫「非常非常重要的核心」，因為血壓在三高防治中特別關鍵，與心臟病、腦中風、糖尿病、腎臟病都高度相關，也扣合政府推動的三高防治 888 政策。</p></div></div>
+<p><strong>正確量血壓的姿勢</strong>：</p>
+<ul><li>先休息約 <strong>5 分鐘</strong>。</li><li>坐在<strong>有靠背的椅子</strong>上，背部放鬆。</li><li>雙腳平放地板。</li><li>放輕鬆、保持安靜。</li><li><strong>壓脈帶與心臟同高</strong>——大約就是一般餐桌桌面的高度。</li></ul>
+<p><strong>血壓數值的分層處置</strong>：</p>
+<div class="tablewrap"><table><thead><tr><th>收縮壓</th><th>處置</th></tr></thead><tbody><tr><td>&lt; 120 mmHg</td><td>大致健康</td></tr><tr><td>120–129 mmHg</td><td>建議調整飲食與運動</td></tr><tr><td>≥ 130／80 mmHg</td><td>與醫師討論下一步（影片此處口述為「103 到 80」，依上下文應為 130/80）</td></tr></tbody></table></div>
+<div class="callout cx-tip"><div class="cx-t">722 居家血壓的定義</div><div class="cx-b"><p><strong>連續量 7 天</strong>；<strong>每天量 2 次</strong>（早上一次、晚上睡前一小時內一次）；<strong>每次量 2 遍</strong>，取平均值。</p>
+<p>操作上：收案時就請個案開始量 722 並保留紀錄，追蹤管理時把居家血壓紀錄收回來，據此做衛教與指導。</p></div></div>
+<h4>十五、量腰圍的正確方法 ⏱ 11:47</h4>
+<p><strong>量測位置：肋骨下緣與骨盆上緣的中線</strong>——這才是正確的量法。</p>
+<ul><li>正常值：男性 &lt; 90 cm、女性 &lt; 80 cm。</li><li>超標即代表具備代謝症候群的一項危險因子，就要進行衛教；若再符合其他項目共達三項，即可收案管理。</li></ul>
+<h4>十六、追蹤時的疾病管理回顧清單 ⏱ 12:19</h4>
+<p>每次追蹤時回頭檢查這幾件事：</p>
+<ul><li>有沒有抽菸？符合用藥資格就提供戒菸服務。</li><li>有沒有嚼檳榔？</li><li>熱量攝取：盡量吃原型食物，避免油炸、甜食與過鹹。</li><li>運動：每週 150 分鐘以上中等費力運動。</li><li>722 居家血壓的指導。</li><li>腰圍與體重。</li><li><strong>個人目標值</strong>：例如與個案約定腰圍要達到多少。目標必須是<strong>個案做得到的</strong>，才符合本計畫的目的。</li></ul>
+<h4>十七、年度評估（P7503C） ⏱ 12:54</h4>
+<p>經過 3 次追蹤之後才能進行年度評估。要做的事和收案時很類似：</p>
+<ul><li>完成<strong>五大指標的檢驗數據</strong>檢測。</li><li>完成代謝症候群疾病管理表，並提供給個案。</li><li>上傳健保 VPN。</li></ul>
+<div class="callout cx-warn"><div class="cx-t">年度評估不等於結束</div><div class="cx-b"><p>講者特別提醒：做完年度評估<strong>並不代表結案</strong>。要看個案狀況——若個案仍有代謝症候群的照護需求，可以繼續追蹤評估下去；符合結案條件時才結案。</p></div></div>
+<h4>十八、結論與可用資源 ⏱ 13:41</h4>
+<p>計畫的整體邏輯：照顧亞健康、疾病前期的民眾，因為三高風險會拉低國人的健康餘命（呼應 888 計畫）。以民眾健康為導向早期介入，改善不健康的生活習慣、降低慢性病風險，讓個案在疾病前期就守住健康、不要進入疾病期。操作上是利用成人預防保健或病史找出代謝症候群的高危險因子個案，收案管理，與個案共同訂定改善目標，經 ≥70 天間隔的 3 次追蹤後進行年度評估，並鼓勵個案的進步。</p>
+<p><strong>相關資源</strong>：</p>
+<div class="tablewrap"><table><thead><tr><th>對象</th><th>資源</th><th>內容</th></tr></thead><tbody><tr><td>專業人員</td><td>國健署「預防保健專區」</td><td>照護手冊、專業人員教育訓練</td></tr><tr><td>民眾</td><td>國健署「健康九九」網站</td><td>飲食、運動、戒菸相關衛教素材</td></tr></tbody></table></div>
+<h3>關鍵詞</h3>
+<ul><li><strong>代謝症候群五項指標</strong>：空腹血糖、血壓、三酸甘油酯、HDL-C、腰圍（或 BMI）；符合 ≥3 項即達收案標準。</li><li><strong>糖尿病前期</strong>：HbA1c 5.7～6.4%，本計畫的第二條收案路徑，填補健保原本沒有計畫可管理的空窗。</li><li><strong>P7501C／P7502C／P7503C</strong>：分別對應收案評估（900 元）、追蹤管理（200 元、3 次）、年度評估（500 元）的健保申報代碼。</li><li><strong>722 居家血壓</strong>：連續 7 天、每天 2 次（早上與睡前一小時內）、每次 2 遍取平均。</li><li><strong>健保 VPN</strong>：計畫資料上傳與查核的平台；也用來確認個案是否已被其他計畫收案，並可直接計算慢性病風險。</li><li><strong>疾病管理表</strong>：記錄生理數據與醫病共決目標的核心文件，一份交付個案、一份院所留存（可拍照）。</li><li><strong>成人預防保健</strong>：院所執行本計畫的資格前提，也是個案的主要來源。</li><li><strong>醫病共決（shared decision making）</strong>：與個案一起訂出他做得到的改善目標，而非單方面下指令。</li></ul>
+<h3>可執行要點</h3>
+<ul><li class="task"><label><input type="checkbox" class="tk">確認自家院所已具備成人預防保健資格，以及自己是否符合醫師資格（家醫／內科／成人預防保健／糖尿病共照網，或補完 4 小時訓練）。</label></li><li class="task"><label><input type="checkbox" class="tk">建立門診篩選動線：把 20–69 歲成人預防保健的結果拿來對照五項指標，並把 HbA1c 5.7–6.4% 的糖尿病前期個案也撈出來。</label></li><li class="task"><label><input type="checkbox" class="tk">收案前先問一句「你有沒有參加糖尿病、腎臟病或其他院所的照護計畫」，並在 VPN 上覆核，避免重複收案。</label></li><li class="task"><label><input type="checkbox" class="tk">把「知情同意簽名 → 10 項評估 → 風險評估 → 722 衛教 → 共訂目標 → 交付疾病管理表」做成一張收案檢核表放在診間。</label></li><li class="task"><label><input type="checkbox" class="tk">請護理／個管師在收案當天教會個案 722 量法，並發給紀錄單，約定 70 天後回診時帶回。</label></li><li class="task"><label><input type="checkbox" class="tk">量腰圍統一用肋骨下緣與骨盆上緣中線，避免量在肚臍或褲頭。</label></li><li class="task"><label><input type="checkbox" class="tk">建立每月申報前的 VPN 上傳例行作業，並同步歸檔佐證（病歷、電話紀錄、數位工具紀錄）。</label></li><li class="task"><label><input type="checkbox" class="tk">抽菸個案問清楚每日菸量與尼古丁成癮分數；每日超過 10 支且成癮度 ≥4 分者直接銜接戒菸服務。</label></li><li class="task"><label><input type="checkbox" class="tk">嚼檳榔個案一律告知檳榔為致癌物，並轉介 30 歲以上兩年一次免費口腔黏膜檢查。</label></li><li class="task"><label><input type="checkbox" class="tk">把年度評估設為「檢視點」而非「終點」，個案仍有需求就排下一輪追蹤。</label></li></ul>
+<div class="quiz" id="qz1" data-total="5"><div class="wgh">📝 隨堂測驗<span class="wghint">（點選項作答）</span><span class="qzscore"></span><button class="qzretry" style="display:none">↺ 重做</button></div><div class="qzq"><div class="qzqt">一位 45 歲男性，空腹血糖 104 mg/dL、腰圍 92 cm、三酸甘油酯 128 mg/dL、HDL-C 45 mg/dL、血壓 126/78 mmHg。他是否符合代謝症候群路徑的收案條件？</div><div class="qzopts"><button class="qzopt" data-c="0">符合，因為已有兩項指標異常</button><button class="qzopt" data-c="1">不符合，五項指標中只有兩項達標，需要 ≥3 項</button><button class="qzopt" data-c="0">符合，因為腰圍超標就可以收案</button><button class="qzopt" data-c="0">不符合，因為年齡未滿 50 歲</button></div><div class="qzex">空腹血糖 ≥100 與腰圍 ≥90 各算一項，共兩項；TG 128 &lt; 150、HDL-C 45 ≥ 40、血壓未達 130/85 都不算。代謝症候群路徑需五項中符合 ≥3 項。不過仍應查 HbA1c，若落在 5.7–6.4% 可走糖尿病前期路徑收案。收案年齡範圍是 20–69 歲。</div></div><div class="qzq"><div class="qzqt">關於本計畫的執行節奏與給付，下列何者正確？</div><div class="qzopts"><button class="qzopt" data-c="1">收案評估 900 元，追蹤管理 200 元共 3 次、每次間隔至少 70 天，年度評估 500 元</button><button class="qzopt" data-c="0">收案評估 500 元，追蹤管理 900 元共 3 次，年度評估 200 元</button><button class="qzopt" data-c="0">追蹤管理不限次數，只要間隔 30 天即可申報</button><button class="qzopt" data-c="0">年度評估完成後個案一律結案</button></div><div class="qzex">P7501C 收案評估 900 元、P7502C 追蹤管理 200 元共 3 次（每次間隔 ≥70 天）、P7503C 年度評估 500 元。年度評估不等於結案，個案仍有需求可繼續追蹤。</div></div><div class="qzq"><div class="qzqt">下列哪一位個案「不能」收案於代謝症候群防治計畫？</div><div class="qzopts"><button class="qzopt" data-c="0">HbA1c 5.9% 的 52 歲女性</button><button class="qzopt" data-c="0">腰圍 95 cm、血壓 134/88 mmHg、TG 180 mg/dL 的 40 歲男性</button><button class="qzopt" data-c="1">已收案於糖尿病與初期慢性腎臟病照護計畫（DM-CKD）的 60 歲男性</button><button class="qzopt" data-c="0">BMI 28、空腹血糖 102 mg/dL、HDL-C 38 mg/dL 的 35 歲男性</button></div><div class="qzex">本計畫定位在疾病前期，已進入 DM-CKD／DKD、pre-ESRD、透析，或已被其他院所或整合照護計畫收案者一律排除。其餘三位分別走糖尿病前期路徑或五項符合三項路徑。</div></div><div class="qzq"><div class="qzqt">722 居家血壓的正確定義是什麼？</div><div class="qzopts"><button class="qzopt" data-c="1">連續 7 天、每天 2 次、每次量 2 遍取平均</button><button class="qzopt" data-c="0">每週 7 次、每次 2 分鐘、休息 2 分鐘</button><button class="qzopt" data-c="0">7 天內任選 2 天、每天量 2 次</button><button class="qzopt" data-c="0">早上 7 點與晚上 2 次各量 2 遍</button></div><div class="qzex">722＝連續量 7 天、每天 2 次（早上一次、晚上睡前一小時內一次）、每次量 2 遍取平均值。量測時先休息 5 分鐘、坐有靠背的椅子、雙腳平放地板、壓脈帶與心臟同高。</div></div><div class="qzq"><div class="qzqt">關於量腰圍，下列何者是講者強調的正確做法？</div><div class="qzopts"><button class="qzopt" data-c="0">量在肚臍的水平位置</button><button class="qzopt" data-c="0">量在褲頭最寬的位置</button><button class="qzopt" data-c="1">量在肋骨下緣與骨盆上緣的中線</button><button class="qzopt" data-c="0">量在胸廓最下方一根肋骨的位置</button></div><div class="qzex">正確位置是肋骨下緣與骨盆上緣的中線。男性 &lt;90 cm、女性 &lt;80 cm 為正常；超標即構成代謝症候群的一項危險因子。</div></div></div>
+<div class="flashcards"><div class="wgh">🎴 單字卡<span class="wghint">（點卡片翻面）</span></div><div class="fcgrid"><button class="fc"><span class="fc-in"><span class="fc-f">代謝症候群五項指標的切點</span><span class="fc-b">空腹血糖 ≥100 mg/dL；血壓 ≥130/85 mmHg；三酸甘油酯 ≥150 mg/dL；HDL-C 男 &lt;40、女 &lt;50 mg/dL；腰圍 男 ≥90、女 ≥80 cm 或 BMI ≥27。符合 ≥3 項即可收案。</span></span></button><button class="fc"><span class="fc-in"><span class="fc-f">本計畫的兩條收案路徑</span><span class="fc-b">①代謝症候群：五項指標符合 ≥3 項。②糖尿病前期：HbA1c 5.7–6.4%。兩者皆需在健保 VPN 填寫五項指標。收案年齡 20–69 歲。</span></span></button><button class="fc"><span class="fc-in"><span class="fc-f">三組健保代碼與給付</span><span class="fc-b">P7501C 收案評估 900 元；P7502C 追蹤管理 200 元、共 3 次、每次間隔 ≥70 天；P7503C 年度評估 500 元。</span></span></button><button class="fc"><span class="fc-in"><span class="fc-f">不能收案的對象</span><span class="fc-b">已收案於 DM-CKD／DKD、pre-ESRD 計畫、正在透析、已納入院所整合照護計畫，或已被其他院所收案者。</span></span></button><button class="fc"><span class="fc-in"><span class="fc-f">院所與醫師資格</span><span class="fc-b">院所必須具備成人預防保健資格。醫師擇一符合：家醫科、內科、執行成人預防保健的醫師、糖尿病共同照護網醫師；其他專科完成 4 小時訓練亦可。</span></span></button><button class="fc"><span class="fc-in"><span class="fc-f">722 居家血壓</span><span class="fc-b">連續 7 天、每天 2 次（早上與睡前一小時內）、每次 2 遍取平均。量測前休息 5 分鐘、坐有靠背椅、背部放鬆、雙腳平放、壓脈帶與心臟同高。</span></span></button><button class="fc"><span class="fc-in"><span class="fc-f">血壓分層處置</span><span class="fc-b">&lt;120 mmHg 大致健康；120–129 mmHg 調整飲食與運動；≥130/80 mmHg 與醫師討論下一步。</span></span></button><button class="fc"><span class="fc-in"><span class="fc-f">戒菸用藥資格</span><span class="fc-b">每日菸量 &gt;10 支且尼古丁成癮度 ≥4 分；18 歲以上，不論紙菸、加熱菸或電子菸皆適用。藥物分尼古丁類（貼片、咀嚼錠、吸入劑、口含錠）與非尼古丁類。未用藥者仍應做戒菸衛教。</span></span></button><button class="fc"><span class="fc-in"><span class="fc-f">戒檳榔與口腔黏膜檢查</span><span class="fc-b">本計畫首度納入戒檳榔宣導。嚼檳榔個案不論新收案或追蹤都要告知檳榔是致癌物；30 歲以上嚼檳榔者可每兩年一次免費口腔黏膜檢查。</span></span></button><button class="fc"><span class="fc-in"><span class="fc-f">運動與久坐建議</span><span class="fc-b">每隔 30–60 分鐘起身活動以減少久坐；每週至少累積 150 分鐘中等強度運動。</span></span></button><button class="fc"><span class="fc-in"><span class="fc-f">正確量腰圍的位置與標準</span><span class="fc-b">肋骨下緣與骨盆上緣的中線。正常：男性 &lt;90 cm、女性 &lt;80 cm。</span></span></button><button class="fc"><span class="fc-in"><span class="fc-f">年度評估後要做什麼</span><span class="fc-b">年度評估（P7503C）需完成五大指標檢驗、填妥疾病管理表交付個案、上傳 VPN。完成後不等於結案——個案仍有需求即可繼續追蹤，符合結案條件才結案。</span></span></button></div></div></div>
+      </article>
+      <article class="note" id="c0-3">
+        <h3 class="ntitle">1-3 代謝症候群之防治與運動</h3>
+        <div class="nbody"><div class="callout cx-note"><div class="cx-t">代謝症候群防治計畫教育訓練課程－上 · 單元 1-3 · 影片 20 分鐘 · 講者：輔大醫院復健科 陳思遠主任</div></div>
+<div class="callout cx-key"><div class="cx-t">一句話總結</div><div class="cx-b"><p>運動對代謝症候群的每一項指標都有實證效益，但<strong>要先做運動前評估、再用 FITT-VP 開出個別化運動處方</strong>，而不是一句「多運動」就結束。</p></div></div>
+<div class="callout cx-key"><div class="cx-t">你會學到</div><div class="cx-b"><ul><li>分清身體活動（physical activity）、運動（exercise）、競技運動（sports）三個常被混用的名詞。</li><li>規律運動對 HbA1c、血壓、腰圍、體重、血脂的實際改善幅度（可直接拿來衛教的數字）。</li><li>為什麼「久坐者突然劇烈運動」風險最高，以及運動前篩檢演算法（Pre-participation Screening Algorithm）怎麼跑。</li><li>用 RPE／MET／心跳儲備率判斷輕度、中等強度、劇烈運動的切點。</li><li>有氧與阻力訓練各自的 FITT-VP 處方參數，以及高血壓、糖尿病患者的特別注意事項。</li></ul></div></div>
+<h3>內容筆記</h3>
+<h4>一、三個名詞先分清楚 ⏱ 00:27</h4>
+<p>臨床上常把「運動」當成同一件事，但在運動醫學裡是三個層次：</p>
+<div class="tablewrap"><table><thead><tr><th>名詞</th><th>定義</th><th>例子</th></tr></thead><tbody><tr><td>身體活動（physical activity）</td><td>骨骼肌收縮所產生、且明顯高於休息代謝的能量消耗，以及後續的各種代謝反應</td><td>走路、做家事、通勤</td></tr><tr><td>運動（exercise）</td><td>身體活動的一種，具<strong>計畫性、結構性、重複性</strong>，目的是健身或改善體適能</td><td>每週三次快走 30 分鐘</td></tr><tr><td>競技運動（sports）</td><td>也是身體活動，但需要更多技巧、通常有明確規則與競賽項目</td><td>棒球、籃球、排球、游泳</td></tr></tbody></table></div>
+<div class="callout cx-tip"><div class="cx-t">開運動處方時，我們要病人做的是中間那一欄的 exercise：有計畫、有結構、會重複，而不是「偶爾動一動」。</div></div>
+<h4>二、運動改善代謝症候群的機轉 ⏱ 01:49</h4>
+<p>代謝症候群的處置因子可分三類：</p>
+<ul><li><strong>可改變（modifiable）</strong>：可透過飲食、藥物處置的部分。</li><li><strong>不可改變（non-modifiable）</strong>：年齡、性別等病人本身因子。</li><li><strong>運動相關（exercise related）</strong>：本單元的主題，也是可以介入的一塊。</li></ul>
+<p>講者強調運動背後的分子機轉「相當複雜」，涉及腦部、肌肉、能量代謝（粒線體）、血液循環與血流動力學等多條路徑，最終反映在 HbA1c、低密度脂蛋白膽固醇（LDL-C）、身體組成（body composition）、發炎相關指標（口述不清，依上下文判讀）以及血管舒張（vessel dilation）等結果上。</p>
+<h4>三、運動介入的實證效益 ⏱ 04:06</h4>
+<p>講者依序回顧三類研究結果（投影片為研究結果彙整圖，影片未含個別研究的數值）：</p>
+<div class="callout cx-fig"><div class="cx-t">圖示重建：三類研究的方向性結論</div><div class="cx-b"><div class="tablewrap"><table><thead><tr><th>研究設計</th><th>觀察的指標</th><th>結果方向</th></tr></thead><tbody><tr><td>運動＋營養合併介入</td><td>腰圍、三酸甘油酯、HDL-C、血壓、血糖</td><td>多數指標往改善方向</td></tr><tr><td>單獨運動 vs. 一般照護</td><td>體重、腰圍、三酸甘油酯、血脂、血壓、空腹血糖</td><td>基本上都往改善方向</td></tr><tr><td>單獨運動對代謝症候群<strong>盛行率</strong></td><td>代謝症候群盛行率</td><td>結果不一致：有研究顯示改善，也有研究看不到改善</td></tr></tbody></table></div></div></div>
+<div class="callout cx-key"><div class="cx-t">規律運動對心血管危險因子的綜合效果</div><div class="cx-b"><div class="tablewrap"><table><thead><tr><th>指標</th><th>變化幅度</th></tr></thead><tbody><tr><td>糖化血色素（HbA1c）</td><td>下降約 <strong>0.5%</strong></td></tr><tr><td>高密度脂蛋白膽固醇（HDL-C）</td><td>上升約 <strong>4 mg/dL</strong></td></tr><tr><td>腰圍</td><td>減少約 <strong>3 公分</strong></td></tr><tr><td>收縮壓</td><td>下降約 <strong>9 mmHg</strong></td></tr><tr><td>舒張壓</td><td>下降約 <strong>5 mmHg</strong></td></tr><tr><td>體重</td><td>有機會減少約 <strong>5 公斤</strong></td></tr></tbody></table></div></div></div>
+<div class="callout cx-note"><div class="cx-t">這組數字是目前一般對「運動對代謝症候群危險因子效果」的綜合估計，適合在門診用來說服病人：單靠運動就接近一顆藥的效果量。</div></div>
+<h4>四、運動前評估：先確認他現在有沒有在動 ⏱ 05:24</h4>
+<p>運動本身在「做的當下」是有風險的，而風險高低取決於平常的運動習慣。</p>
+<p>上圖的臨床解讀：</p>
+<ul><li>久坐者突然從事劇烈運動時，<strong>在運動當下與停止運動後約 30 分鐘內</strong>，急性心肌梗塞（acute myocardial infarction, AMI）風險明顯升高。</li><li>有規律劇烈運動習慣的人，平時 AMI 的基礎風險約比一般人<strong>低 50%</strong>（基準值 0.5 vs 1）。</li><li>規律運動者從事劇烈運動時，當下風險仍會上升，但<strong>運動頻率愈高、上升幅度愈小</strong>（每週 1–2 次 &gt; 每週 3–4 次 &gt; 每週 5 次以上）。</li></ul>
+<div class="callout cx-key"><div class="cx-t">所以面對病人時第一個要問的不是「你要不要運動」，而是「你現在到底有沒有在運動」。</div></div>
+<div class="callout cx-tip"><div class="cx-t">美國推動的 Exercise is Medicine 主張把<strong>運動當成一項生命徵象（vital sign）</strong>記錄在電子病歷裡，內容包括：過去三個月每週運動幾次、每次幾分鐘（相乘即每週總運動時間）、以及運動時的強度大概到哪裡。</div></div>
+<h4>五、運動前篩檢演算法（ACSM 2021） ⏱ 07:52</h4>
+<p>五個步驟：</p>
+<ul><li><strong>A.</strong> 判斷運動參與現況是否達到規律運動之標準。</li><li><strong>B.</strong> 辨認是否有已被診斷之心血管疾病、代謝性疾病、腎臟疾病。</li><li><strong>C.</strong> 辨認是否有上述疾病之症狀或徵象。</li><li><strong>D.</strong> 綜合運動參與現況、疾病史、症狀徵象、運動計畫目標強度，判斷是否需經醫師評估。</li><li><strong>E.</strong> 若判斷需經醫師評估，則轉介給醫師；醫師再依臨床判斷與檢驗、檢查結果，審慎評估其運動建議或運動處方。</li></ul>
+<div class="callout cx-key"><div class="cx-t">規律運動的操作型定義</div><div class="cx-b"><p>過去三個月內，<strong>每週至少 3 次、每次至少 30 分鐘以上的中等強度運動</strong>，才算達到規律運動標準。</p></div></div>
+<p>需要辨認的症狀／徵象包括：胸悶、胸痛、會喘、頭暈、端坐呼吸（orthopnea）、陣發性夜間呼吸困難（paroxysmal nocturnal dyspnea, PND）、下肢水腫、心悸、間歇性跛行（intermittent claudication）。</p>
+<h5>依「有無規律運動 × 有無心血管／代謝／腎臟疾病 × 有無症狀」決定建議</h5>
+<div class="callout cx-fig"><div class="cx-t">圖示重建：運動前篩檢決策（投影片為流程圖，以下依講者說明重建為表格）</div><div class="cx-b"><div class="tablewrap"><table><thead><tr><th>運動參與現況</th><th>疾病與症狀狀態</th><th>建議作法</th></tr></thead><tbody><tr><td>未規律運動</td><td>無已知心血管／代謝／腎臟疾病</td><td>可直接<strong>從輕度或中等強度開始</strong>執行</td></tr><tr><td>未規律運動</td><td>已知疾病、但目前無症狀</td><td>經醫師確認無症狀後，依 ACSM 建議<strong>由輕度、中等強度漸進</strong>，可逐步進展到劇烈運動</td></tr><tr><td>未規律運動</td><td>目前有症狀</td><td><strong>醫師需特別小心</strong>：先評估並釐清症狀背後的疾病，確認後才依 ACSM 建議由輕度慢慢增加到中等強度</td></tr><tr><td>已規律運動</td><td>無疾病、無症狀</td><td>可繼續現有運動，並可慢慢增加到劇烈運動</td></tr><tr><td>已規律運動</td><td>已知心血管疾病、無症狀</td><td>維持<strong>中等強度運動即可</strong>；需確認過去 12 個月無症狀或病情變化，若有變化則需進一步專業評估；原本已從事劇烈運動者可續行並漸進調整</td></tr><tr><td>已規律運動</td><td>目前有症狀</td><td><strong>先停止運動</strong>，由醫師評估心血管疾病現況與控制情形，再依 ACSM 指引慢慢增加強度</td></tr></tbody></table></div></div></div>
+<h4>六、運動強度怎麼定義 ⏱ 11:20</h4>
+<p>強度可用心跳儲備率、攝氧量儲備率、代謝當量（MET）或自覺用力係數（RPE）判斷。臨床上 RPE 最好用——Borg 量表從 6 到 20，<strong>6 代表完全不費力、20 代表耗盡全力、13 是「有點累但還沒到累」</strong>。</p>
+<div class="tablewrap"><table><thead><tr><th>目標強度</th><th>心跳儲備率</th><th>攝氧量儲備率</th><th>MET</th><th>RPE（6–20）</th></tr></thead><tbody><tr><td>輕度運動</td><td>30–39%</td><td>30–39%</td><td>2.0–2.9</td><td>9–11</td></tr><tr><td>中等強度運動</td><td>40–59%</td><td>40–59%</td><td>3.0–5.9</td><td>12–13</td></tr><tr><td>劇烈運動</td><td>≥ 60%</td><td>≥ 60%</td><td>≥ 6.0</td><td>≥ 14</td></tr></tbody></table></div>
+<p>輕度運動只會稍微增加心跳與呼吸速率；中等強度會顯著增加；劇烈運動則會大量增加。</p>
+<p>Borg 自覺用力量表的語意錨點：6 完全不費力、7 非常輕鬆、9 很輕鬆、11 輕鬆、13 有點累、15 累、17 很累、19 非常累、20 耗盡全力。</p>
+<div class="callout cx-tip"><div class="cx-t">現在許多病人手上有心跳錶，可用心跳率做更精準的運動處方；沒有裝置時，RPE 一樣好用而且不需任何設備。</div></div>
+<h4>七、一堂標準運動訓練的組成 ⏱ 12:30</h4>
+<div class="tablewrap"><table><thead><tr><th>階段</th><th>時間</th><th>內容</th></tr></thead><tbody><tr><td>暖身（warm-up）</td><td>5–10 分鐘</td><td>低至中等強度的心肺或肌耐力活動</td></tr><tr><td>運動期（conditioning）</td><td>20–60 分鐘</td><td>有氧、阻力、神經肌肉協調或競技類活動</td></tr><tr><td>緩和（cool-down）</td><td>5–10 分鐘</td><td>回到低至中等強度，讓身體慢慢恢復</td></tr><tr><td>柔軟度（stretching）</td><td>至少 10 分鐘</td><td>安排在暖身後或緩和後</td></tr></tbody></table></div>
+<div class="callout cx-note"><div class="cx-t">投影片補充：若當天累積有氧運動達 20–60 分鐘，拆成每次 10 分鐘的多個回合也可以接受——對忙碌或體能差的病人是很實用的替代方案。</div></div>
+<h4>八、FITT-VP 運動處方原則 ⏱ 13:22</h4>
+<p>FITT-VP 是美國運動醫學會（American College of Sports Medicine, ACSM）的處方架構，適用對象設定為「外觀健康的成人」：</p>
+<div class="tablewrap"><table><thead><tr><th>字母</th><th>意義</th><th>要回答的問題</th></tr></thead><tbody><tr><td>F</td><td>Frequency 頻率</td><td>一週運動幾次？</td></tr><tr><td>I</td><td>Intensity 強度</td><td>要多劇烈？</td></tr><tr><td>T</td><td>Time 時間</td><td>每次持續多久？</td></tr><tr><td>T</td><td>Type 類型</td><td>哪一類運動（有氧／阻力）？</td></tr><tr><td>V</td><td>Total Volume 總量</td><td>累積的總運動量多少？</td></tr><tr><td>P</td><td>Progression 進展</td><td>強度／時間怎麼往上加？</td></tr></tbody></table></div>
+<h5>有氧運動的 FITT-VP ⏱ 13:40</h5>
+<ul><li><strong>頻率</strong>：一般建議每週 3–5 次。每週 3 次以上心肺適能就會改善；超過每週 5 次，健身效益大致達到穩定狀態（plateau）。實務建議是<strong>中等強度約每週 5 天，劇烈運動約每週 3 天</strong>，或在 3–5 天內做中等與劇烈強度的搭配。</li><li><strong>類型</strong>：使用大肌肉群的活動，如走路、慢跑、騎腳踏車、游泳。</li><li><strong>總量</strong>（達到下列任一即可）：<ul><li>每週約 <strong>500–1000 MET·分鐘</strong></li><li>每週熱量消耗約 <strong>1000 大卡以上</strong>（上限數值口述不清）</li><li>中等強度運動每週累積 <strong>150 分鐘</strong></li><li>計步器計算每天約 <strong>5400–7900 步</strong></li></ul></li><li><strong>進展</strong>：可從增加運動量、強度或時間三個方向著手；有氧運動建議<strong>先延長時間、再提高強度</strong>，例如每週增加 5–10 分鐘，達到目標時間後才加強度。</li></ul>
+<div class="callout cx-quote"><div class="cx-t">面對老人，用 start low and go slow：一開始不急著把強度拉高，重點是先把運動習慣建立起來。</div></div>
+<h5>阻力（肌力）訓練的 FITT-VP ⏱ 16:22</h5>
+<ul><li><strong>頻率</strong>：每週 2–3 次（每個大肌群每週訓練 2–3 天）。</li><li><strong>強度</strong>：以 <strong>1-RM</strong>（one repetition maximum，該肌群一次能舉起的最大阻力）為基準。初學者從 <strong>40–50% 1-RM</strong> 開始，逐步進展到中等強度的 <strong>60–70% 1-RM</strong>。</li><li><strong>反覆次數</strong>：年輕、無慢性病者一般做 <strong>8–12 下</strong>至肌肉疲乏（fatigue）的阻力作為中等強度；老年人或有心血管疾病、代謝症候群等狀況者，可改為 <strong>10–15 下</strong>。</li><li><strong>組數（sets）</strong>：同一肌群做 <strong>2–4 組</strong>（做 10 下算一組）。</li><li><strong>類型</strong>：涵蓋各大肌群，可用不同方式訓練不同肌群。</li></ul>
+<div class="callout cx-note"><div class="cx-t">阻力訓練的「時間」在實證上沒有特定的有效時數建議，因此處方重點放在頻率、強度、反覆次數與組數。</div></div>
+<h4>九、高血壓患者的特別注意事項 ⏱ 18:06</h4>
+<ul><li>開處方前要考慮<strong>血壓控制程度、降血壓藥物的改變與不良反應、標的器官疾病（心臟、腎臟、視網膜病變）、其他共病（糖尿病、血脂異常）與年齡</strong>；運動量調增要循序漸進，避免一次加太多。</li><li>從事運動時血壓最好維持在<strong>收縮壓 ≤ 220 mmHg、舒張壓 ≤ 105 mmHg</strong> 的範圍內。</li><li>做阻力運動時吸氣或閉氣的<strong>伐氏操作（Valsalva maneuver）</strong>可能造成血壓過度升高或頭暈，運動時應避免閉氣。</li><li><strong>有中度或高度心臟併發症風險</strong>的高血壓患者，接受運動測驗或從事劇烈運動時應有醫療監測（如心電圖）；必要時轉介到醫院先做運動測試，確認劇烈運動時是否需要心電圖監控。</li></ul>
+<h4>十、糖尿病患者的特別注意事項 ⏱ 18:41</h4>
+<div class="callout cx-warn"><div class="cx-t">糖尿病患者運動時最怕的是低血糖（血糖 &lt; 70 mg/dL）。</div></div>
+<ul><li>必須教會病人辨認低血糖症狀：顫抖、無力、冒汗、焦躁、焦慮、手及嘴部麻木、飢餓感，並知道如何處理。建議<strong>運動前、中、後測血糖</strong>，據以調整飲食與藥物用量。</li><li>使用胰島素的病人，若<strong>運動前血糖 ≤ 100 mg/dL，可先攝取少量碳水化合物（15 公克以內）</strong>再運動。</li><li>曾發生運動誘發低血糖者，運動時最好有同伴或有人監看；運動中應攜帶糖尿病識別標誌、手機、葡萄糖片或其他快速吸收的碳水化合物補充品。</li><li>可能有<strong>體溫調節失常</strong>，在炎熱或寒冷天氣運動要特別小心。</li><li><strong>視網膜病變</strong>者有玻璃體出血風險，應避免血壓突然升高：避免劇烈有氧運動或阻力運動、跳躍、撞擊、頭下腳上姿勢及閉氣動作。</li></ul>
+<h4>十一、總結 ⏱ 19:20</h4>
+<ul><li>運動介入可改善代謝症候群患者的體重、腰圍、血壓（收縮壓與舒張壓）、血糖控制與血脂異常。</li><li>從事運動前需先做<strong>運動前評估</strong>：考量運動參與現況、是否有心血管／代謝性／腎臟疾病的症狀或徵象，據以給予適當的目標強度。</li><li>依評估結果，運用 <strong>FITT-VP</strong> 原則給予個別化運動處方。</li><li>別忘了提醒糖尿病與高血壓患者運動時的特別注意事項。</li></ul>
+<h3>關鍵詞</h3>
+<ul><li><strong>身體活動（physical activity）</strong>：骨骼肌收縮造成能量消耗明顯高於休息代謝的一切身體動作。</li><li><strong>運動（exercise）</strong>：有計畫、有結構、重複性的身體活動，目的在改善體適能。</li><li><strong>規律運動</strong>：過去三個月內每週至少 3 次、每次至少 30 分鐘以上的中等強度運動。</li><li><strong>RPE（ratings of perceived exertion，自覺用力係數）</strong>：Borg 6–20 量表，6 為完全不費力、13 為有點累、20 為耗盡全力。</li><li><strong>MET（metabolic equivalent，代謝當量）</strong>：以休息代謝率為 1 的強度單位；中等強度為 3.0–5.9 MET。</li><li><strong>FITT-VP</strong>：ACSM 運動處方架構，含頻率、強度、時間、類型、總量、進展六要素。</li><li><strong>1-RM（one repetition maximum）</strong>：某肌群一次所能舉起的最大重量，用來設定阻力訓練強度。</li><li><strong>Valsalva maneuver（伐氏操作）</strong>：用力時閉氣憋氣，會使血壓急遽上升，運動中應避免。</li><li><strong>Exercise is Medicine</strong>：將運動習慣視為生命徵象並記錄於病歷的推廣倡議。</li></ul>
+<h3>可執行要點</h3>
+<ul><li class="task"><label><input type="checkbox" class="tk">在病歷／個管紀錄加一欄「運動生命徵象」：過去三個月每週幾次、每次幾分鐘、強度（RPE）。</label></li><li class="task"><label><input type="checkbox" class="tk">用「每週 ≥3 次、每次 ≥30 分鐘中等強度」這條線，把病人分成「已規律運動」與「未規律運動」兩組再給建議。</label></li><li class="task"><label><input type="checkbox" class="tk">問診時主動篩檢胸悶、胸痛、喘、頭暈、端坐呼吸、陣發性夜間呼吸困難、下肢水腫、心悸、間歇性跛行——有症狀者先停運動、先評估。</label></li><li class="task"><label><input type="checkbox" class="tk">衛教久坐病人時，明講「不要突然去打球爬山」，改從輕度或中等強度起步。</label></li><li class="task"><label><input type="checkbox" class="tk">教病人用 RPE 自我監測：說得出話、覺得「有點累」（RPE 12–13）就是中等強度。</label></li><li class="task"><label><input type="checkbox" class="tk">開處方寫滿 FITT-VP 六格：有氧每週 3–5 次、每週累積 150 分鐘或 5400–7900 步；阻力每週 2–3 次、40–50% 1-RM 起步、10–15 下。</label></li><li class="task"><label><input type="checkbox" class="tk">老年或體弱者採 start low and go slow：先養成習慣、再延長時間、最後才加強度（每週加 5–10 分鐘）。</label></li><li class="task"><label><input type="checkbox" class="tk">高血壓病人衛教「阻力訓練不要閉氣」，並確認運動時血壓不超過 220/105 mmHg。</label></li><li class="task"><label><input type="checkbox" class="tk">打胰島素的病人衛教低血糖症狀與 15 公克碳水化合物的運動前補充規則。</label></li><li class="task"><label><input type="checkbox" class="tk">有視網膜病變者，明確列出禁忌動作（劇烈有氧、重阻力、跳躍、撞擊、頭下腳上、閉氣）。</label></li></ul>
+<div class="quiz" id="qz2" data-total="5"><div class="wgh">📝 隨堂測驗<span class="wghint">（點選項作答）</span><span class="qzscore"></span><button class="qzretry" style="display:none">↺ 重做</button></div><div class="qzq"><div class="qzqt">依 ACSM 的定義，下列何者才算「規律運動」？</div><div class="qzopts"><button class="qzopt" data-c="0">每天散步 15 分鐘，已持續一個月</button><button class="qzopt" data-c="1">過去三個月內每週至少 3 次、每次至少 30 分鐘以上的中等強度運動</button><button class="qzopt" data-c="0">每週打一次兩小時的籃球</button><button class="qzopt" data-c="0">工作需久站走動，每天步行超過 6000 步</button></div><div class="qzex">運動前篩檢演算法第一步就是判斷是否達到規律運動標準，其操作型定義為過去三個月內每週 3 次、每次 30 分鐘以上的中等強度運動。單次時間不足、頻率不足，或非結構性的日常身體活動都不算。</div></div><div class="qzq"><div class="qzqt">關於劇烈運動與急性心肌梗塞（AMI）風險，何者正確？</div><div class="qzopts"><button class="qzopt" data-c="0">規律運動者從事劇烈運動時完全沒有風險上升</button><button class="qzopt" data-c="1">久坐者突然劇烈運動，風險上升幅度最大，且風險期涵蓋運動當下與停止後約 30 分鐘</button><button class="qzopt" data-c="0">運動頻率愈高，劇烈運動當下的風險上升幅度愈大</button><button class="qzopt" data-c="0">有規律劇烈運動者的平時基礎風險與一般人相同</button></div><div class="qzex">久坐者（每週 0 天劇烈運動）在運動當下相對風險飆升至基準值約 100 倍；每週 1–2 天約 25 倍、3–4 天約 8 倍、5 天以上僅約 2 倍。規律運動者平時的基礎風險也只有久坐者的一半。風險期包含運動當下到停止後約 30 分鐘。</div></div><div class="qzq"><div class="qzqt">一位 55 歲代謝症候群病人，沒有規律運動習慣，已知有高血壓但目前無任何症狀。依篩檢演算法應如何建議？</div><div class="qzopts"><button class="qzopt" data-c="0">禁止運動，直到心導管檢查完成</button><button class="qzopt" data-c="0">直接建議開始劇烈運動以求快速改善</button><button class="qzopt" data-c="1">經醫師確認目前無症狀後，依 ACSM 建議由輕度、中等強度開始漸進，可逐步進展</button><button class="qzopt" data-c="0">不需任何評估，直接給每週 5 次劇烈運動處方</button></div><div class="qzex">未規律運動但有已知疾病、目前無症狀者，經醫師評估確認無症狀後仍可運動，作法是由輕度、中等強度開始逐步漸進。有症狀者才需要先釐清症狀背後的疾病。</div></div><div class="qzq"><div class="qzqt">以下何者是代謝症候群患者阻力訓練的合理起始處方？</div><div class="qzopts"><button class="qzopt" data-c="1">每週 2–3 次，40–50% 1-RM 起步，每組 10–15 下，2–4 組</button><button class="qzopt" data-c="0">每週 6 次，80% 1-RM，每組 3 下</button><button class="qzopt" data-c="0">每週 1 次，60–70% 1-RM，每組 20 下</button><button class="qzopt" data-c="0">每天訓練同一肌群，強度以能舉起的最大重量為準</button></div><div class="qzex">阻力訓練頻率為每週 2–3 次，強度由 40–50% 1-RM 起步再進展到 60–70% 1-RM；老年人或有慢性病者採 10–15 下的反覆次數，每個肌群 2–4 組。</div></div><div class="qzq"><div class="qzqt">使用胰島素的糖尿病患者運動前血糖為 95 mg/dL，應如何處理？</div><div class="qzopts"><button class="qzopt" data-c="0">立即追加一次短效胰島素</button><button class="qzopt" data-c="1">先攝取少量碳水化合物（15 公克以內）再運動</button><button class="qzopt" data-c="0">取消運動，當天不得從事任何活動</button><button class="qzopt" data-c="0">改做劇烈運動以加速降低血糖</button></div><div class="qzex">運動前血糖 ≤ 100 mg/dL 的胰島素使用者，應先補充 15 公克以內的碳水化合物，以避免運動中發生低血糖（血糖 &lt; 70 mg/dL）。</div></div></div>
+<div class="flashcards"><div class="wgh">🎴 單字卡<span class="wghint">（點卡片翻面）</span></div><div class="fcgrid"><button class="fc"><span class="fc-in"><span class="fc-f">規律運動的操作型定義</span><span class="fc-b">過去三個月內，每週至少 3 次、每次至少 30 分鐘以上的中等強度運動</span></span></button><button class="fc"><span class="fc-in"><span class="fc-f">規律運動對 HbA1c、血壓、腰圍、體重的效果</span><span class="fc-b">HbA1c ↓約 0.5%；收縮壓 ↓約 9 mmHg、舒張壓 ↓約 5 mmHg；腰圍 ↓約 3 公分；體重有機會 ↓約 5 公斤；HDL-C ↑約 4 mg/dL</span></span></button><button class="fc"><span class="fc-in"><span class="fc-f">FITT-VP 六個要素</span><span class="fc-b">Frequency 頻率、Intensity 強度、Time 時間、Type 類型、Total Volume 總量、Progression 進展（ACSM 運動處方原則）</span></span></button><button class="fc"><span class="fc-in"><span class="fc-f">中等強度運動的量化切點</span><span class="fc-b">心跳儲備率 40–59%、攝氧量儲備率 40–59%、3.0–5.9 MET、RPE 12–13（有點累但還沒到累）</span></span></button><button class="fc"><span class="fc-in"><span class="fc-f">有氧運動的建議總量（任一即可）</span><span class="fc-b">每週 500–1000 MET·分鐘；每週熱量消耗約 1000 大卡以上；中等強度每週累積 150 分鐘；每天約 5400–7900 步</span></span></button><button class="fc"><span class="fc-in"><span class="fc-f">一堂標準運動課的四個階段</span><span class="fc-b">暖身 5–10 分鐘 → 運動期 20–60 分鐘（有氧／阻力）→ 緩和 5–10 分鐘 → 柔軟度至少 10 分鐘</span></span></button><button class="fc"><span class="fc-in"><span class="fc-f">阻力訓練的強度設定</span><span class="fc-b">以 1-RM 為基準，初學 40–50% 1-RM 起步、進展到 60–70% 1-RM；年輕健康者每組 8–12 下，老年或慢性病者 10–15 下，每肌群 2–4 組，每週 2–3 次</span></span></button><button class="fc"><span class="fc-in"><span class="fc-f">高血壓患者運動時的血壓上限</span><span class="fc-b">收縮壓 ≤ 220 mmHg、舒張壓 ≤ 105 mmHg；阻力運動時避免閉氣（Valsalva maneuver）</span></span></button><button class="fc"><span class="fc-in"><span class="fc-f">糖尿病患者運動前血糖 ≤ 100 mg/dL 怎麼辦</span><span class="fc-b">使用胰島素者先攝取 15 公克以內的碳水化合物；低血糖定義為血糖 &lt; 70 mg/dL</span></span></button><button class="fc"><span class="fc-in"><span class="fc-f">老年人開始運動的原則</span><span class="fc-b">start low and go slow：先建立習慣、再每週延長 5–10 分鐘運動時間，達到目標時間後才提高強度</span></span></button></div></div></div>
+      </article>
+  </section>
+  <section class="course" id="course-c1">
+    <div class="coursebar"><span class="cic">🚭</span><div><h2 class="ctitle">代謝症候群防治計畫教育訓練課程－中（健康促進：戒菸・戒檳）</h2><div class="csub"> · 3 篇</div></div></div>
+    <details class="coursemap" open><summary>🗺️ 本課地圖<span class="cm-hint">（點單元標題可跳到那一篇）</span></summary><table class="cmtable"><tbody><tr><td class="cm-u"><a href="#c1-0">課程總覽：代謝症候群防治計畫教育訓練課程－中</a></td><td class="cm-s"></td></tr><tr><td class="cm-u"><a href="#c1-1">2-1 促進病人參與及行為改變－健康促進（含戒菸）</a></td><td class="cm-s">要讓個案改變行為，先把<strong>慢性病診斷標準講清楚</strong>，再用戒菸、戒檳、戒酒、運動的<strong>實證效益當說服的理由</strong>，最後把改變的單位從個人拉高到<strong>家庭</strong>。</td></tr><tr><td class="cm-u"><a href="#c1-2">促進病人參與及行為改變－健康促進－戒檳</a></td><td class="cm-s">檳榔子本身就是<strong>第一類致癌物</strong>，十個口腔癌有九個嚼檳榔，而且它同時把病人推向<strong>第二型糖尿病與代謝症候群</strong>——所以戒檳不是牙科的事，是代謝照護團隊該在門診做的事。 [!KEY] 你會學到 口腔癌的流行病學輪廓：誰在得、什麼年紀得、佔第幾名 檳榔為什麼致癌：檳榔子、荖花、荖葉、石灰各扮演什麼角色 嚼檳榔跟慢性病／代謝症候群的關聯，包括對子代的影響 口腔癌前病變怎麼認、口腔自我檢查怎麼教、免費篩檢誰有資格 戒檳十招、拒檳三攻略、拒絕互請的六大技巧，以及無檳家庭／職場怎麼建立</td></tr></tbody></table></details>
+    
+      <article class="note" id="c1-0">
+        <h3 class="ntitle">課程總覽：代謝症候群防治計畫教育訓練課程－中</h3>
+        <div class="nbody"><div class="callout cx-note"><div class="cx-t">來源：e等公務園＋學習平臺（國民健康e學苑／衛生福利部國民健康署），課程代碼 PHPA115100031，影片共 37 分鐘，認證時數 1.0 小時。本頁是個人學習筆記，用自己的話整理，不是官方教材。</div></div>
+<p>第二門課把焦點放在代謝症候群個案最常合併的兩個危險因子：菸與檳榔。兩個單元各由一位講者主講：</p>
+<ul><li><strong>2-1 健康促進（含戒菸）</strong>（育和診所家庭醫學科 賴和賢醫師）：健康促進活動對代謝症候群與慢性病防治的效益，以及在門診推動戒菸的實務做法。</li><li><strong>2-2 健康促進－戒檳</strong>（台中榮總嘉義分院牙科 曾弼君主任）：檳榔的致病機轉與健康危害、口腔黏膜檢查與口腔癌篩檢怎麼做、戒檳的引導技巧。</li></ul>
+<p><strong>建議閱讀順序</strong>：兩單元彼此獨立，可依你的個案族群先看常遇到的那一個。防治計畫規定合併菸、酒、檳榔的個案要併同衛教或協助轉介，這兩篇正好補上「轉介之前，自己能先做什麼」的部分。</p></div>
+      </article>
+      <article class="note" id="c1-1">
+        <h3 class="ntitle">2-1 促進病人參與及行為改變－健康促進（含戒菸）</h3>
+        <div class="nbody"><div class="callout cx-note"><div class="cx-t">代謝症候群防治計畫教育訓練課程－中 · 單元 2-1 · 影片 18 分鐘 · 講者：賴和賢（育和診所）</div></div>
+<div class="callout cx-key"><div class="cx-t">一句話總結</div><div class="cx-b"><p>要讓個案改變行為，先把<strong>慢性病診斷標準講清楚</strong>，再用戒菸、戒檳、戒酒、運動的<strong>實證效益當說服的理由</strong>，最後把改變的單位從個人拉高到<strong>家庭</strong>。</p></div></div>
+<div class="callout cx-key"><div class="cx-t">你會學到</div><div class="cx-b"><ul><li>高血壓、糖尿病、高血脂三大慢性病目前的診斷切點，以及血壓標準今年的下修</li><li>抽菸分別對血壓、血糖、血脂造成什麼量化的傷害，戒菸又能拿回多少</li><li>協助個案戒菸的四個著力點，以及「第一次失敗」該怎麼回應</li><li>有氧運動對血壓、糖尿病風險、血脂的實證改善幅度</li><li>為什麼健康促進要以家庭為中心，而不是只衛教眼前這一位</li></ul></div></div>
+<h3>內容筆記</h3>
+<h4>一、先把診斷標準講清楚 ⏱ 00:57</h4>
+<p>講者把「熟悉診斷標準」放在行為改變的最前面：個案要先知道自己在標準的哪一側，後面的健康促進才有著力點。</p>
+<h5>高血壓：今年標準下修</h5>
+<p>今年血壓診斷標準出現這堂課裡最大的一項變革。過去用的是收縮壓超過 140 mmHg、舒張壓超過 90 mmHg；在一項大型華人研究之後，標準下修為以<strong>在家中測量</strong>的血壓為準，收縮壓應低於 130 mmHg、舒張壓應低於 80 mmHg。</p>
+<div class="callout cx-fig"><div class="cx-t">圖示重建：高血壓診斷標準的變動</div><div class="cx-b"><div class="tablewrap"><table><thead><tr><th>版本</th><th>測量情境</th><th>收縮壓</th><th>舒張壓</th></tr></thead><tbody><tr><td>原標準</td><td>未特別指定</td><td>&gt;140 mmHg 為異常</td><td>&gt;90 mmHg 為異常</td></tr><tr><td>今年新標準</td><td><strong>居家血壓</strong></td><td>應 &lt;130 mmHg</td><td>應 &lt;80 mmHg</td></tr></tbody></table></div></div></div>
+<div class="callout cx-warn"><div class="cx-t">新標準綁定的是「居家測量」，不是診間一次量測。門診衛教時要一併教會個案在家量血壓、記錄血壓，否則新切點無從套用。</div></div>
+<h5>糖尿病：四項擇一，但原則上要有兩個異常結果</h5>
+<div class="callout cx-fig"><div class="cx-t">圖示重建：第二型糖尿病診斷要件（符合任一項）</div><div class="cx-b"><div class="tablewrap"><table><thead><tr><th>檢查項目</th><th>診斷切點</th></tr></thead><tbody><tr><td>空腹血漿葡萄糖</td><td>超過 126 mg/dL</td></tr><tr><td>口服 75 公克葡萄糖耐受試驗，第 2 小時血漿葡萄糖</td><td>超過 200 mg/dL</td></tr><tr><td>隨機血糖（且有高血糖症狀）</td><td>超過 200 mg/dL</td></tr><tr><td>糖化血色素（HbA1c）</td><td>超過 6.5%</td></tr></tbody></table></div></div></div>
+<p>判讀規則有兩層，講者特別提醒不要只看單一數值：</p>
+<ul><li>在<strong>沒有明確高血糖症狀</strong>的情況下，診斷要取得兩個異常的測試結果——可以來自同一個檢體，也可以來自兩個不同檢體。</li><li>若只有一項符合標準、另一項不符合，建議就<strong>符合標準的那一項</strong>重複測試。</li><li>HbA1c 的判讀本身需要一定的鑑別能力，不能直接把數字等同於平均血糖去解讀。</li></ul>
+<h5>高血脂：沒有單一固定準則 ⏱ 02:53</h5>
+<p>高血脂是否需要治療，取決於個案身上的危險因子組合，因此並非單一固定的診斷準則。若要簡單判別是否落在正常範圍：</p>
+<div class="tablewrap"><table><thead><tr><th>指標</th><th>視為正常的條件</th></tr></thead><tbody><tr><td>總膽固醇（TC）</td><td>小於 200 mg/dL</td></tr><tr><td>高密度脂蛋白膽固醇（HDL-C），男性</td><td>超過 40 mg/dL</td></tr><tr><td>高密度脂蛋白膽固醇（HDL-C），女性</td><td>超過 50 mg/dL</td></tr></tbody></table></div>
+<p>超出上述範圍者，要再看是否具備心血管疾病危險因子、是否已有心血管疾病、是否為糖尿病患者，才能判定高血脂症的有無與治療的必要性。</p>
+<h4>二、抽菸對三大慢性病的傷害與戒菸的回收 ⏱ 04:10</h4>
+<h5>對血壓</h5>
+<ul><li>吸菸者的血壓通常比未吸菸者高，而且<strong>對降血壓藥物的反應通常比較差</strong>。</li><li>在高吸菸率、高心血管疾病發生率的<strong>北美原住民 10 至 19 歲年輕族群</strong>研究中，每天抽菸的支數與收縮壓呈現<strong>劑量效應</strong>：抽得越多，收縮壓越高。</li><li>停止抽菸 <strong>20 分鐘後</strong>，血壓與脈搏就開始改善。</li><li>台灣本土研究顯示，國健署推動的一項計畫（此處講者提及計畫名稱，影片轉錄不清）顯著降低了受試者的收縮壓與舒張壓，且與非高血壓族群相比，<strong>高血壓族群的改善幅度更明顯</strong>。</li></ul>
+<h5>對血糖 ⏱ 05:19</h5>
+<ul><li>抽菸是導致第二型糖尿病的原因之一：吸菸者罹患糖尿病的可能性比不吸菸者<strong>高出 30% 至 40%</strong>。</li><li>已罹病者若同時吸菸，在<strong>胰島素劑量調整與病情控制</strong>上更容易出問題。</li><li>菸量越大，第二型糖尿病風險越高；反之戒菸可以提高胰島素敏感性。</li><li>一個容易被誤解的現象：<strong>短期戒菸者的第二型糖尿病風險反而高於仍在吸菸者</strong>，但這個風險很快就下降，回到與長期未吸菸者一致的水準。</li><li>相對風險下降的時程有性別差異：女性約在<strong>戒菸 5 年後</strong>、男性約在<strong>戒菸 10 年後</strong>下降。</li><li>韓國的世代研究同樣顯示，戒菸後罹患糖尿病的風險逐步下降，長期來看甚至可以達到與不吸菸者一致的水平。</li></ul>
+<div class="callout cx-tip"><div class="cx-t">「我戒菸反而變胖、血糖還變差」是真實會發生的短期現象。事先把這段講給個案聽，等它發生時個案才不會把它當成戒菸失敗的證據而復吸。</div></div>
+<h5>對血脂 ⏱ 06:49</h5>
+<p>抽菸造成血管收縮、心跳加快，影響血脂肪代謝，使血中膽固醇與游離脂肪酸上升，動脈粥狀硬化機會增加，進而推高心血管疾病風險。吸菸者的 HDL-C（俗稱「好的膽固醇」）濃度也低於非吸菸者。</p>
+<div class="callout cx-key"><div class="cx-t">減量也有效：若菸量能降到原來的 <strong>50%</strong>，或每天少抽到<strong>每日不到 10 根</strong>的水平，膽固醇即可獲得改善。</div></div>
+<div class="callout cx-tip"><div class="cx-t">對「戒不掉」的個案，先談減量目標（砍半、或壓到一天 10 根以下）比堅持全有全無更容易啟動，而且已有血脂上的實證好處。</div></div>
+<h5>戒菸好處的時序 ⏱ 07:39</h5>
+<p>國民健康署《戒菸教戰手冊》總結了目前具實證基礎的戒菸好處，涵蓋一條由短到長的時間軸：從短時間內心跳、血壓恢復正常，到長時間降低肺癌發生風險與心血管疾病發生風險。整體而言，戒菸能有效改善身體的總體健康。</p>
+<h4>三、怎麼幫一個有意願的人真的戒成 ⏱ 08:34</h4>
+<p>講者列出四個著力點：</p>
+<ol><li><strong>塑造支持的環境</strong>——讓個案身處的環境不會反覆把他推回去。</li><li><strong>找到菸癮的替代物或替代方法</strong>——協助個案分散注意力，同時又能自我提醒「戒菸是對自己正向健康有助益的行為」。</li><li><strong>善用戒菸藥物</strong>——必要時使用，是很好的方法，不必等到意志力用盡。</li><li><strong>轉介國健署二代戒菸服務計畫</strong>——不會有額外費用，普及性也相當好。</li></ol>
+<p>最終目標是改善生活習慣、讓身心恢復平衡。</p>
+<div class="callout cx-key"><div class="cx-t">絕大多數的戒菸者需要歷經<strong>四次以上</strong>的戒菸嘗試才會成功。第一次失敗就懷疑自己，是非常常見的反應。</div></div>
+<div class="callout cx-quote"><div class="cx-t">有些人會第一次戒菸就失敗、會懷疑自己，但是這是非常常見的。</div></div>
+<div class="callout cx-ex"><div class="cx-t">個案常見迷思之一：「戒菸之後體重是不是會暴增？」這類問題屬於戒菸衛教必須事先準備好回答的範圍，不能迴避。</div></div>
+<div class="callout cx-warn"><div class="cx-t">面對有需求的個案，別忘了可以直接轉介到國健署的二代戒菸服務計畫——這是在診間之外還能給個案的額外支持。</div></div>
+<h4>四、檳榔與酒精 ⏱ 10:45</h4>
+<ul><li><strong>檳榔</strong>：台灣本土文化中的檳榔，對高血壓、糖尿病、高血脂症都有相關的負面影響；戒除咀嚼檳榔的習慣，對自身健康都有幫助。（本課程單元 2-2 另有戒檳專題。）</li><li><strong>酒精</strong> ⏱ 11:35：飲酒過量確實會看到血壓的變化；另一項為人熟知的現象是飲酒過量後<strong>三酸甘油酯顯著上升</strong>。這些都是可以直接與個案分享的事實。</li></ul>
+<div class="callout cx-key"><div class="cx-t">講者的策略邏輯：讓個案先理解疾病定義，再理解各種健康行為的正、負面影響，我們才有足夠的理由去說服他、協助他重新獲得健康。</div></div>
+<h4>五、運動：唯一「百利無一害」的那一項 ⏱ 12:17</h4>
+<div class="tablewrap"><table><thead><tr><th>面向</th><th>實證效益</th></tr></thead><tbody><tr><td>高血壓</td><td>有氧運動在特定高血壓族群中具<strong>獨立</strong>的降壓效果，可使收縮壓、舒張壓下降 <strong>8 至 10 mmHg</strong></td></tr><tr><td>高血壓（台灣本土）</td><td>台北市研究：每週一次在健康服務中心的社區運動計畫，持續 <strong>12 週</strong>後收縮壓顯著下降 <strong>5.73 mmHg</strong></td></tr><tr><td>第二型糖尿病預防</td><td>高危險族群發生第二型糖尿病的風險降低 <strong>47% 至 58%</strong>，且發病率的降低可持續長達 <strong>10 年</strong></td></tr><tr><td>第二型糖尿病治療</td><td>改善血糖控制、降低心血管危險因素、有助減重、改善整體健康狀況；經常性鍛鍊更可預防與延緩病程發展</td></tr><tr><td>第一型糖尿病</td><td>定期鍛鍊同樣有效益：改善心血管健康、肌肉力量與胰島素敏感性</td></tr><tr><td>血脂</td><td>有氧運動訓練對總膽固醇、低密度脂蛋白膽固醇（LDL-C）與三酸甘油酯都有有意義的改善；HDL-C 也有小幅增加</td></tr></tbody></table></div>
+<div class="callout cx-key"><div class="cx-t">以健康行為而言，運動是<strong>百利而無一害</strong>，只要不過度到造成運動傷害，都是應該積極向個案推薦的活動。</div></div>
+<h4>六、以家庭為中心的健康促進 ⏱ 14:43</h4>
+<p>健康促進行為要落實、要讓影響力扎根，關鍵在於把介入單位從個人擴大到家庭。講者給的理由是：</p>
+<ul><li>家庭單位是維護健康、預防疾病與促進公共衛生領域中<strong>不可取代</strong>的參與者。</li><li>隨著時間推移，家庭成員在生命的不同階段相互支持、互相養育，塑造出一個親密的互動環境。</li><li>家庭在整個生命歷程中培養、照顧、保護、教導並影響其成員，因此是公共衛生實踐上一個有效的切入點。</li><li>兒童與年輕人在成長過程中，<strong>最有可能模仿或延續家中的經歷與實踐</strong>。</li></ul>
+<div class="callout cx-key"><div class="cx-t">過去研究已發現：所謂「遺傳」除了基因體上的遺傳之外，<strong>家中傳下來的健康生活習慣也是對下一代的影響之一</strong>，而且影響深遠、長久。原生家庭若有良好的健康生活習慣，這套習慣會對下一代發揮正向影響力。</div></div>
+<h4>七、總結 ⏱ 16:32</h4>
+<p>戒菸、戒檳、戒酒、運動對慢性病的治療都有正向影響與效益。若能讓個案具備並且能夠向外傳達正確知識，就有助於病人與家屬<strong>共同參與</strong>行為改變。以家庭為中心的健康促進應用在這些健康促進活動中，不只能因為家庭參與而提升成功率、養成全家人的良好習慣，更能藉此培養出擁有正確健康行為的下一代。</p>
+<h3>關鍵詞</h3>
+<ul><li><strong>居家血壓（home blood pressure）</strong>：由個案在家中自行測量的血壓，是今年下修後高血壓診斷標準所依據的測量情境，切點為收縮壓 130 / 舒張壓 80 mmHg。</li><li><strong>口服葡萄糖耐受試驗（OGTT）</strong>：口服 75 公克葡萄糖後測量血漿葡萄糖濃度，第 2 小時超過 200 mg/dL 為糖尿病診斷要件之一。</li><li><strong>糖化血色素（HbA1c）</strong>：反映一段期間血糖平均狀態的指標，超過 6.5% 為糖尿病診斷要件之一，判讀需具備鑑別能力。</li><li><strong>高密度脂蛋白膽固醇（HDL-C）</strong>：俗稱「好的膽固醇」，男性超過 40、女性超過 50 mg/dL 視為正常；吸菸者濃度較低。</li><li><strong>劑量效應（dose-response effect）</strong>：暴露量與結果呈等比變化的關係，本課用於描述每日菸支數與收縮壓的關聯。</li><li><strong>二代戒菸服務計畫</strong>：國健署提供的戒菸支持服務，個案不需額外付費，普及性佳，可由醫療端直接轉介。</li></ul>
+<h3>可執行要點</h3>
+<ul><li class="task"><label><input type="checkbox" class="tk">門診血壓衛教改口徑：教個案在<strong>家中</strong>量血壓並記錄，判讀改用 130/80 而非 140/90。</label></li><li class="task"><label><input type="checkbox" class="tk">判定新診斷糖尿病時，確認手上有<strong>兩個</strong>異常結果（同一或不同檢體）；若只有一項異常，就那一項安排重複檢驗。</label></li><li class="task"><label><input type="checkbox" class="tk">問到吸菸史時，順手給出量化的說法：吸菸者罹患糖尿病機率高 30–40%、停菸 20 分鐘血壓脈搏即開始改善。</label></li><li class="task"><label><input type="checkbox" class="tk">對戒不掉的個案改談減量目標：菸量砍半，或壓到每日 10 根以下，血脂就能有改善。</label></li><li class="task"><label><input type="checkbox" class="tk">把「多數人要嘗試四次以上才成功」寫進戒菸衛教話術，並先行預告體重、短期血糖的變化。</label></li><li class="task"><label><input type="checkbox" class="tk">建立二代戒菸服務轉介的固定動作（不需額外費用可作為說服點）。</label></li><li class="task"><label><input type="checkbox" class="tk">開運動處方時，引用可量化的期待值：有氧運動降壓 8–10 mmHg、社區運動 12 週降 5.73 mmHg、高危險族群糖尿病風險降 47–58%。</label></li><li class="task"><label><input type="checkbox" class="tk">衛教對象從個案擴大到同住家人，並詢問家中是否有兒童或青少年，把「習慣會被模仿」講給家長聽。</label></li></ul>
+<div class="quiz" id="qz3" data-total="5"><div class="wgh">📝 隨堂測驗<span class="wghint">（點選項作答）</span><span class="qzscore"></span><button class="qzretry" style="display:none">↺ 重做</button></div><div class="qzq"><div class="qzqt">依本課程所述，今年下修後的高血壓診斷標準為何？</div><div class="qzopts"><button class="qzopt" data-c="0">診間收縮壓低於 140、舒張壓低於 90</button><button class="qzopt" data-c="1">家中測量收縮壓低於 130、舒張壓低於 80</button><button class="qzopt" data-c="0">家中測量收縮壓低於 120、舒張壓低於 70</button><button class="qzopt" data-c="0">24 小時平均收縮壓低於 130、舒張壓低於 85</button></div><div class="qzex">經大型華人研究後，標準下修為以居家測量為準：收縮壓低於 130 mmHg、舒張壓低於 80 mmHg。原標準為收縮壓超過 140、舒張壓超過 90。</div></div><div class="qzq"><div class="qzqt">在沒有明確高血糖症狀的情況下，糖尿病的診斷應如何處理？</div><div class="qzopts"><button class="qzopt" data-c="0">單一項檢查異常即可診斷</button><button class="qzopt" data-c="0">必須四項要件全部符合</button><button class="qzopt" data-c="1">需取得兩個異常測試結果，可來自同一或兩個不同檢體</button><button class="qzopt" data-c="0">一律以 HbA1c 為唯一依據</button></div><div class="qzex">講者強調，沒有明確高血糖時要從同一檢體或兩個不同檢體取得兩個異常結果；若只有一項符合，就該項重複測試。</div></div><div class="qzq"><div class="qzqt">關於吸菸與第二型糖尿病，下列何者符合課程內容？</div><div class="qzopts"><button class="qzopt" data-c="1">吸菸者罹患糖尿病的可能性比不吸菸者高出 30% 至 40%</button><button class="qzopt" data-c="0">吸菸與糖尿病無關，只影響血壓與血脂</button><button class="qzopt" data-c="0">戒菸後糖尿病風險立刻低於不吸菸者</button><button class="qzopt" data-c="0">菸量多寡與糖尿病風險無關</button></div><div class="qzex">吸菸是第二型糖尿病成因之一，風險高出 30–40%，且菸量越大風險越高；短期戒菸者風險會先偏高再下降至與長期未吸菸者相當。</div></div><div class="qzq"><div class="qzqt">本課程提到，減少菸量到什麼程度即可看到膽固醇改善？</div><div class="qzopts"><button class="qzopt" data-c="0">必須完全戒除才有效</button><button class="qzopt" data-c="1">菸量降到原來的 50%，或每天少抽到不到 10 根</button><button class="qzopt" data-c="0">菸量降到原來的 90%</button><button class="qzopt" data-c="0">改抽淡菸即可</button></div><div class="qzex">講者引用國健署戒菸教戰手冊的整理：菸量降到原來 50%，或壓到每日不到 10 根，膽固醇便可有所改善。</div></div><div class="qzq"><div class="qzqt">有氧運動對高血壓族群的降壓幅度，以及台北市社區運動計畫 12 週的結果分別為何？</div><div class="qzopts"><button class="qzopt" data-c="0">降 3–5 mmHg；社區計畫降 2.1 mmHg</button><button class="qzopt" data-c="1">降 8–10 mmHg；社區計畫收縮壓降 5.73 mmHg</button><button class="qzopt" data-c="0">降 15–20 mmHg；社區計畫降 10.5 mmHg</button><button class="qzopt" data-c="0">無獨立降壓效果；社區計畫無顯著差異</button></div><div class="qzex">有氧運動在特定高血壓族群具獨立降壓效果，收縮壓與舒張壓可降 8–10 mmHg；台北市每週一次社區運動計畫持續 12 週，收縮壓顯著下降 5.73 mmHg。</div></div></div>
+<div class="flashcards"><div class="wgh">🎴 單字卡<span class="wghint">（點卡片翻面）</span></div><div class="fcgrid"><button class="fc"><span class="fc-in"><span class="fc-f">高血壓新診斷標準（今年下修後）</span><span class="fc-b">居家測量：收縮壓 &lt;130 mmHg、舒張壓 &lt;80 mmHg（原為 &gt;140 / &gt;90 為異常）</span></span></button><button class="fc"><span class="fc-in"><span class="fc-f">糖尿病四項診斷要件</span><span class="fc-b">空腹血糖 &gt;126；OGTT 75g 第2小時 &gt;200；有高血糖症狀且隨機血糖 &gt;200；HbA1c &gt;6.5%</span></span></button><button class="fc"><span class="fc-in"><span class="fc-f">血脂「視為正常」的簡易判別</span><span class="fc-b">總膽固醇 &lt;200；男性 HDL-C &gt;40；女性 HDL-C &gt;50。其餘須看心血管危險因子、既有心血管疾病或糖尿病再判定</span></span></button><button class="fc"><span class="fc-in"><span class="fc-f">吸菸與第二型糖尿病的風險倍率</span><span class="fc-b">吸菸者罹患糖尿病的可能性比不吸菸者高出 30%–40%，且菸量越大風險越高</span></span></button><button class="fc"><span class="fc-in"><span class="fc-f">停止抽菸 20 分鐘後會發生什麼</span><span class="fc-b">血壓與脈搏開始改善</span></span></button><button class="fc"><span class="fc-in"><span class="fc-f">菸量減到多少可見膽固醇改善</span><span class="fc-b">降到原來的 50%，或每天少抽到每日不到 10 根</span></span></button><button class="fc"><span class="fc-in"><span class="fc-f">多數戒菸者需要嘗試幾次才成功</span><span class="fc-b">四次以上；第一次失敗就自我懷疑非常常見，應事先告知</span></span></button><button class="fc"><span class="fc-in"><span class="fc-f">協助戒菸的四個著力點</span><span class="fc-b">塑造支持環境、找到菸癮替代物或方法、必要時善用戒菸藥物、轉介國健署二代戒菸服務計畫</span></span></button><button class="fc"><span class="fc-in"><span class="fc-f">有氧運動對血壓的實證效果</span><span class="fc-b">特定高血壓族群中具獨立降壓效果，收縮壓與舒張壓可降 8–10 mmHg</span></span></button><button class="fc"><span class="fc-in"><span class="fc-f">運動對第二型糖尿病高危險族群的預防效果</span><span class="fc-b">發生風險降低 47%–58%，且發病率的降低可持續長達 10 年</span></span></button><button class="fc"><span class="fc-in"><span class="fc-f">為什麼健康促進要以家庭為中心</span><span class="fc-b">家庭是維護健康與預防疾病不可取代的參與者；兒童與青少年最容易模仿家中實踐，健康生活習慣會像遺傳一樣傳給下一代</span></span></button></div></div></div>
+      </article>
+      <article class="note" id="c1-2">
+        <h3 class="ntitle">促進病人參與及行為改變－健康促進－戒檳</h3>
+        <div class="nbody"><div class="callout cx-note"><div class="cx-t">代謝症候群防治計畫教育訓練課程－中 · 單元 2-2 · 影片 19 分鐘 · 講者：曾弼君主任（台中榮民總醫院嘉義分院牙科）</div></div>
+<div class="callout cx-key"><div class="cx-t">一句話總結</div><div class="cx-b"><p>檳榔子本身就是<strong>第一類致癌物</strong>，十個口腔癌有九個嚼檳榔，而且它同時把病人推向<strong>第二型糖尿病與代謝症候群</strong>——所以戒檳不是牙科的事，是代謝照護團隊該在門診做的事。</p></div></div>
+<div class="callout cx-key"><div class="cx-t">你會學到</div><div class="cx-b"><ul><li>口腔癌的流行病學輪廓：誰在得、什麼年紀得、佔第幾名</li><li>檳榔為什麼致癌：檳榔子、荖花、荖葉、石灰各扮演什麼角色</li><li>嚼檳榔跟慢性病／代謝症候群的關聯，包括對子代的影響</li><li>口腔癌前病變怎麼認、口腔自我檢查怎麼教、免費篩檢誰有資格</li><li>戒檳十招、拒檳三攻略、拒絕互請的六大技巧，以及無檳家庭／職場怎麼建立</li></ul></div></div>
+<h3>內容筆記</h3>
+<h4>為什麼要談檳榔 ⏱ 00:16</h4>
+<p>這一單元把檳榔放在「健康促進」的框架下處理，四個目標依序是：講清楚檳榔危害健康與致病的機轉、教會口腔黏膜檢查與口腔癌篩檢、給出可操作的戒檳方法與引導技巧，最後創造無檳的支持性環境讓行為改變能持續。</p>
+<div class="callout cx-key"><div class="cx-t">檳榔議題的難處在於它不只是口腔問題，而是跨越癌症、慢性病、代謝症候群與職場文化的複合題。</div></div>
+<h4>口腔癌流行病學：青壯年男性勞工的癌症 ⏱ 01:27</h4>
+<p>這裡講的「口腔癌」是含<strong>口腔、口咽及下咽癌</strong>的統稱，發生率近年持續攀升。依 108 年癌症登記年報：</p>
+<div class="tablewrap"><table><thead><tr><th>指標</th><th>排名／數字</th></tr></thead><tbody><tr><td>國人男性十大癌症發生率</td><td>第 3 名</td></tr><tr><td>國人十大癌症發生率</td><td>第 6 名</td></tr><tr><td>國人男性十大癌症死亡率</td><td>第 4 名</td></tr><tr><td>國人十大癌症死亡率</td><td>第 5 名</td></tr><tr><td>108 年新診斷人數</td><td>8,204 人（男性 7,468 人）</td></tr><tr><td>108 年死亡人數</td><td>3,425 人（男性 3,154 人）</td></tr></tbody></table></div>
+<p>男性 <strong>30–64 歲</strong>年齡層最好發的癌症就是口腔癌；換成族群語言，它是<strong>青壯年（25–44 歲）男性勞工</strong>最常罹患的癌症——這正好跟代謝症候群個案管理常遇到的族群高度重疊。</p>
+<p>講者提到國民健康署癌症防治組拍攝的紀錄片《消失的微笑》（The Lost Smile），由口腔癌病友現身說法（病友姓名影片口述不清），可到癌症防治組取得觀看。</p>
+<div class="callout cx-quote"><div class="cx-t">十個口腔癌患者、九個有嚼檳榔習慣。</div></div>
+<p>這句話就是推動戒檳的核心理由：把嚼檳榔率壓下來，口腔癌的發生率與死亡率才有機會跟著下降。</p>
+<h4>檳榔致癌的實證：葛應欽教授的倍數表 ⏱ 03:05</h4>
+<p>葛應欽教授 1995 年發表於《口腔病理學及口腔內科學雜誌》的研究（Ko YC et al., <em>J Oral Pathol Med</em> 1995;24:450-453），用「有／無」三種不良習慣的組合算出罹患口腔癌的危險倍數。以三項皆無者為 1 倍：</p>
+<div class="tablewrap"><table><thead><tr><th>酗酒</th><th>嚼檳榔</th><th>吸菸</th><th>罹患口腔癌危險倍數</th></tr></thead><tbody><tr><td>有</td><td>有</td><td>有</td><td><strong>123 倍</strong></td></tr><tr><td>－</td><td>有</td><td>有</td><td>89 倍</td></tr><tr><td>有</td><td>有</td><td>－</td><td>54 倍</td></tr><tr><td>－</td><td>有</td><td>－</td><td><strong>28 倍</strong></td></tr><tr><td>有</td><td>－</td><td>有</td><td>22 倍</td></tr><tr><td>－</td><td>－</td><td>有</td><td>18 倍</td></tr><tr><td>有</td><td>－</td><td>－</td><td>10 倍</td></tr><tr><td>－</td><td>－</td><td>－</td><td>1 倍（基準）</td></tr></tbody></table></div>
+<div class="callout cx-key"><div class="cx-t">讀上面這份倍數清單要看的不是最大的 123 倍，而是<strong>單獨嚼檳榔就已經 28 倍</strong>——比單獨吸菸（18 倍）或單獨酗酒（10 倍）都高。檳榔是這三項裡風險權重最重的那一個。</div></div>
+<h4>檳榔為什麼致癌：四個成分各做什麼 ⏱ 03:41</h4>
+<p>2003 年<strong>國際癌症研究機構（IARC）</strong>公布，確定<strong>檳榔子（檳榔果實）本身</strong>即為第一類致癌物——不加任何添加物也一樣致癌。</p>
+<ul><li><strong>檳榔子</strong>：主要成分包括檳榔素（arecoline）、檳榔鹼、粗纖維、多酚化合物等。咀嚼後產生興奮與發熱感，就是檳榔鹼的效果。</li><li><strong>致癌與纖維化機轉</strong>：咀嚼時釋出檳榔素及檳榔鹼，含致突變性物質，對人類口腔纖維母細胞產生<strong>細胞毒性</strong>；同時促使口腔黏膜細胞<strong>合成膠原蛋白增加</strong>、<strong>分解與吞食膠原蛋白的能力下降</strong>，兩邊一起作用造成過量膠原纖維堆積，黏膜粗糙增厚，形成<strong>口腔黏膜下纖維化症（OSF, oral submucous fibrosis）</strong>。</li></ul>
+<p>市售檳榔嚼塊分兩大類，組成不同：</p>
+<div class="tablewrap"><table><thead><tr><th>嚼塊類型</th><th>俗稱</th><th>檳榔子</th><th>包／夾的植物</th><th>石灰</th></tr></thead><tbody><tr><td>紅灰檳榔</td><td>菁仔</td><td>剖半</td><td>荖花（或荖藤）</td><td>紅灰</td></tr><tr><td>白灰檳榔</td><td>葉仔（包葉仔）</td><td>整顆</td><td>荖葉</td><td>白灰（或紅灰）</td></tr></tbody></table></div>
+<p>各添加物的角色：</p>
+<ul><li><strong>荖花</strong>（雌性荖藤果穗）：含致癌物質<strong>黃樟素（safrole）</strong>，屬香辛植物，有清涼作用與佐味功能；長期嚼食會使牙齒變黑、降低食慾，並產生強烈化學性刺激的<strong>亞硝基致癌物質</strong>。</li><li><strong>荖葉</strong>（雄性荖藤葉片）：含丁香酚（eugenol）等酚類化合物；種植時為求葉片快速生長肥大，多噴灑農藥。</li><li><strong>白灰與紅灰</strong>：都是石灰物質<strong>氫氧化鈣</strong>，使口腔呈鹼性環境，釋出<strong>游離基</strong>增強多酚類的傷害，易引起細胞變性導致癌化。紅灰是在白灰物質中再加甘味料、香料調味品等偏方，所以口味較甘甜；白灰吃起來則偏鹹澀。</li></ul>
+<div class="callout cx-warn"><div class="cx-t">常見的病人說法是「我吃的不加紅灰、不加荖花，比較沒關係」。實證上不成立：不含任何添加物的檳榔子本身就是第一類致癌物。</div></div>
+<h4>嚼檳榔與慢性病、代謝症候群 ⏱ 06:36</h4>
+<p>這段是本單元跟代謝症候群防治最直接相關的部分。</p>
+<ul><li>易造成<strong>支氣管痙攣</strong>，使氣喘者發作惡化</li><li>造成<strong>免疫功能降低</strong>，胃腸功能易損傷</li><li><strong>心血管疾病</strong>機率上升</li><li>罹患<strong>食道癌</strong>、<strong>肝癌（增加 9.8 倍）</strong>、<strong>肝硬化（增加 5.5 倍）</strong></li><li>糖尿病患者嚼檳榔易使<strong>腎臟</strong>受損</li><li>檳榔中的<strong>檳榔素（arecoline）會干擾脂肪代謝及胰島素促進葡萄糖攝取</strong>，導致<strong>第二型糖尿病</strong>與<strong>代謝症候群</strong></li><li><strong>轉移子代現象</strong>：相較於沒嚼檳榔者，嚼檳榔者的<strong>子女發生代謝症候群風險高達 2 倍以上</strong></li><li>懷孕婦女嚼檳榔，有 <strong>2.8 倍</strong>危險產生流產、死產、早產等不良懷孕結果（葛應欽，2006）</li></ul>
+<div class="callout cx-key"><div class="cx-t">對個管師而言，這幾個數字讓「戒檳」可以直接寫進代謝症候群的個案處置：它不只是防癌衛教，而是<strong>同時介入胰島素阻抗、肝臟、腎臟與下一代風險</strong>的單一行為改變。</div></div>
+<h4>嚼檳榔對口腔健康的危害 ⏱ 07:27</h4>
+<p>依嚴重度大致分三層：</p>
+<div class="tablewrap"><table><thead><tr><th>受影響部位</th><th>表現</th></tr></thead><tbody><tr><td>牙齒、牙周</td><td>牙齒染色、齒質磨耗、敏感疼痛；牙齦腫脹流血易化膿；牙齒動搖產生牙周病破壞</td></tr><tr><td>黏膜與功能</td><td>口腔及唇部黏膜緊縮、<strong>張口不易</strong>；口腔黏膜下纖維化導致咀嚼或吞嚥困難；舌頭或黏膜乾澀粗糙、灼熱刺痛</td></tr><tr><td>癌化警訊</td><td>黏膜變白、變紅或紅白交雜（白斑刮不掉）；<strong>口腔潰瘍超過兩週未改善</strong>；<strong>顏面及口腔不明腫塊持續超過兩週</strong></td></tr></tbody></table></div>
+<div class="callout cx-warn"><div class="cx-t">兩個「超過兩週」是轉介切片的門檻：潰瘍破皮超過兩週沒改善、或不明腫塊持續超過兩週，就要提醒病人去做切片檢查。</div></div>
+<h4>癌前病變與口腔癌 ⏱ 08:41</h4>
+<p>口腔癌前病變共六種：<strong>口腔黏膜下纖維化、白斑、紅斑、扁平苔癬、乳突瘤、疣狀增生</strong>。其中<strong>紅斑的惡性轉變率最高</strong>；白斑與紅斑有時會交雜出現。這些病變在數年之後可能進展為口腔癌。</p>
+<p>口腔癌的病程是從口內牙齦、舌頭、頰黏膜的病變開始，最後可能穿破皮膚，在臉部外側長出腫瘤。</p>
+<h4>口腔癌的治療與術後照護 ⏱ 09:30</h4>
+<p>韓良俊教授（台大醫院口腔外科專科醫師）是最早推動口腔癌防治者，被尊稱為口腔癌防治之父。治療與照護要點：</p>
+<ul><li><strong>首推外科手術治療</strong>；其次為放射線治療（電療）、化學藥物治療（化療）、標靶治療</li><li><strong>雷射療法僅限局部表淺的早期病變</strong></li><li>手術範圍大、常需補皮瓣做顏面重建 → 需<strong>傷口照護與飲食訓練</strong></li><li>補皮瓣後張口不易 → 需<strong>咀嚼及吞嚥訓練、張口訓練</strong>，必要時由<strong>語言治療師</strong>介入協助恢復說話</li><li>術後必須正常作息、確實戒除<strong>檳、菸、酒</strong></li><li>術後應<strong>每二至三個月回診檢查</strong>避免復發</li></ul>
+<div class="callout cx-ex"><div class="cx-t">講者展示的個案：一側手術完成後，約兩三年後另一側再度長出口腔癌。口腔癌是相對難控制、容易復發的癌症。</div></div>
+<h4>增能賦權：口腔自我檢查 ⏱ 11:03</h4>
+<p>要早期發現早期治療，第一步是讓嚼檳者自己會檢查。檢查工具只要一面鏡子，原則是<strong>先看臉部與頸部外觀，再看口腔內部，每次按照固定順序</strong>以免遺漏。</p>
+<p>外觀先看臉部與頸部是否對稱、有無突起腫塊，以及<strong>張口是否能自由張開到四隻手指頭以上</strong>。口腔內部則依序：</p>
+<ol><li>翻開上唇，檢查唇黏膜及上顎與牙齦</li><li>翻開右邊頰黏膜，觀察內側頰黏膜與上下牙齦</li><li>翻開下唇，檢查唇黏膜與下顎及牙齦</li><li>翻開左邊頰黏膜，同樣觀察內側與上下牙齦</li><li>開大口，看舌頭上方與上顎內側牙齦</li><li>張開嘴巴發出「啊」聲，檢查咽喉後方、扁桃腺及懸壅垂有無突起、硬塊或破皮處等異常</li><li>伸出舌頭左右、上下擺動，看有無不適感；捲起舌頭看舌底、以紗布捲住舌尖往左右兩側拉，<strong>重點看舌緣</strong>有無硬塊、潰瘍等異常</li></ol>
+<p>要找的異常包括：顏色改變（白色斑、紅色斑或紅白混雜；正常應為粉紅色）、表面變粗糙／變硬／破皮潰瘍，特別是<strong>超過兩個星期還沒好的</strong>。發現異常就立即至<strong>口腔顎面外科、牙科或耳鼻喉科</strong>診治。此份自我檢查資料由陽光社會福利基金會設計、台大醫院口腔外科專科醫師韓良俊教授提供資訊。</p>
+<h4>定期口腔癌篩檢：資格、做法、轉介 ⏱ 12:05</h4>
+<p>國民健康署口腔癌篩檢補助對象與頻率：</p>
+<div class="tablewrap"><table><thead><tr><th>對象</th><th>條件</th><th>頻率</th></tr></thead><tbody><tr><td>一般民眾</td><td><strong>30 歲以上</strong>，有嚼食檳榔（<strong>含已戒</strong>）或吸菸</td><td><strong>每 2 年 1 次</strong>免費口腔黏膜檢查</td></tr><tr><td>原住民</td><td><strong>18 歲以上</strong>，有嚼食檳榔（含已戒）</td><td>每 2 年 1 次免費口腔黏膜檢查</td></tr></tbody></table></div>
+<p>檢查方式是醫師的<strong>目視檢查</strong>，非常簡單、快速不會疼痛、沒有副作用，檢查前只需將口腔清洗乾淨；看的是嘴唇、舌頭、咽喉處、頰黏膜及口唇周遭有無硬塊、潰瘍等不正常現象。</p>
+<p>執行者：受過訓練認證合格的<strong>家醫科、內外科、耳鼻喉科、牙科</strong>醫師皆可做篩檢。發現口腔黏膜異常時，<strong>轉介到具備下列專科的確診醫院</strong>做切片確診：口腔顎面外科，或具頭頸癌診治專業之耳鼻喉科、口腔病理或病理科。檢查結果登錄於「健康署口腔黏膜檢查服務檢查結果表單」。</p>
+<h4>戒檳十招 ⏱ 13:17</h4>
+<p>建立健康行為模式的十個著力點：</p>
+<ol><li><strong>堅持信念</strong>：持續每日減檳（從一顆、兩顆開始減）至戒除嚼檳習慣</li><li><strong>規律生活</strong>：正常作息避免熬夜</li><li><strong>運動強身</strong>：提升體能、提神醒腦</li><li><strong>健康飲食</strong>：營養均衡、避免刺激性食物</li><li><strong>放鬆心情</strong>：減少壓力，避免依賴檳、菸、酒</li><li><strong>戒檳日記</strong>：記錄戒檳過程及省錢成果</li><li><strong>尋求替代</strong>：運用口香糖／喉糖／蒟蒻豆干等替代</li><li><strong>提升形象</strong>：口腔保健、確實潔牙、口齒清新</li><li><strong>拒絕檳友</strong>：拒絕嚼檳同伴的互請檳榔文化</li><li><strong>遠離誘惑</strong>：避免經過檳榔攤，減少購買慾望</li></ol>
+<p>搭配的「<strong>戒除檳榔 3 攻略</strong>」：<strong>善用代替品</strong>（口香糖、喉糖、蒟蒻豆干）、<strong>轉移話題</strong>（藉由自我解嘲、轉移話題來拒絕檳榔）、<strong>轉移情境</strong>（培養運動習慣）。</p>
+<p><strong>戒檳日記</strong>可在國民健康署「健康久久」網站下載《戒檳教戰手冊》，由東華大學李明憲教授規劃設計。日記格式是每天一行「我是有決心的人，我今天吃了＿粒／包檳榔」，並勾選當日目標達成與否，同時寫下「我決心要達成的目標」與「本週應達成目標」。</p>
+<div class="callout cx-tip"><div class="cx-t">衛教時把「戒幾顆了」和「省下多少錢」一起記，成就感來自兩個方向；對經濟誘因敏感的勞工族群，省錢那一欄往往比健康那一欄更有效。</div></div>
+<h4>拒絕檳榔互請的六大技巧 ⏱ 15:02</h4>
+<p>檳榔族最大的行為障礙是<strong>互請文化</strong>——不吃像是不給面子。所以需要具體到可以照著講的句子：</p>
+<div class="tablewrap"><table><thead><tr><th>技巧</th><th>說法示例</th></tr></thead><tbody><tr><td>哀兵致勝法</td><td>「我嘴巴破皮，不能再吃檳榔了」「我不要吃了，嘴巴紅紅的，等一下要去拜訪客戶」</td></tr><tr><td>自我嘲解法</td><td>「我太太不希望我吃檳榔，我怕老婆生氣」「我朋友得口腔癌，我不要再吃檳榔、我會怕得口腔癌」</td></tr><tr><td>走為上策法</td><td>對方已經拿出檳榔請你時：「我沒時間，我先去忙了」「我太太剛打電話來，我要先去處理一下，不陪你聊天了」</td></tr><tr><td>投桃報李法</td><td>隨身攜帶口香糖或喉糖，朋友邀約吃檳榔時馬上請他吃口香糖或自己先吃：「每次都吃你的，這次換吃我的口香糖啦」</td></tr><tr><td>安身立命法</td><td>以身體不適婉拒：「我喉嚨痛，我不想吃檳榔」「醫生叫我不要再吃檳榔了，身體健康要顧」</td></tr><tr><td>虛與委蛇法</td><td>一時找不到理由時用拖延法先躲過這次，再想更好的辦法，先轉移話題：「最近看新聞說經濟很差，失業的人又增加⋯」「你知道隔壁 OOO 得口腔癌住院了⋯」</td></tr></tbody></table></div>
+<div class="callout cx-key"><div class="cx-t">不管用哪一種技巧，關鍵是<strong>堅定自己戒檳榔的決心、對自己有信心</strong>，拒絕、拒絕、再拒絕，假以時日一定能戒檳成功。</div></div>
+<h4>提高自我警覺性：定期檢查的時程表 ⏱ 15:27</h4>
+<p>「戒嚼檳榔＋口腔及身體保健＝遠離口腔癌」，對應的時程是：</p>
+<div class="tablewrap"><table><thead><tr><th>頻率</th><th>該做的事</th></tr></thead><tbody><tr><td>每星期</td><td>自我口腔黏膜檢查</td></tr><tr><td>每 6 個月</td><td>接受牙科診察治療、清洗牙結石</td></tr><tr><td>每 2–3 個月</td><td><strong>高危險群</strong>回診檢查</td></tr><tr><td>每 2 年</td><td>口腔癌篩檢</td></tr><tr><td>定期</td><td>身體健康檢查，避免代謝症候群症狀</td></tr><tr><td>一有異狀</td><td>立即至口腔顎面外科、牙科或耳鼻喉科診治（切片確診）</td></tr></tbody></table></div>
+<h4>創造無檳支持性環境 ⏱ 16:01</h4>
+<p class="lead"><strong>無檳生活宣言：三不三要拒檳榔</strong></p>
+<ul><li>不<strong>嚼</strong>檳榔要健康</li><li>不<strong>買</strong>檳榔要省錢</li><li>不<strong>請</strong>檳榔要尊重</li></ul>
+<p>搭配的台語口號是「麥哺、麥揪、麥請——檳榔是致癌物」。</p>
+<p><strong>無檳家庭全家福：永結三心戒檳榔</strong>——讓全家人一起支持這位「一家之主」戒檳：</p>
+<div class="tablewrap"><table><thead><tr><th>三心</th><th>做法</th><th>訴求</th></tr></thead><tbody><tr><td><strong>決心</strong></td><td>宣示戒檳目標、每日堅持</td><td>拒嚼檳榔顧形象</td></tr><tr><td><strong>耐心</strong></td><td>運動及替代物轉移情境</td><td>健康省錢顧家庭</td></tr><tr><td><strong>信心</strong></td><td>定期口腔檢查、隔離誘惑</td><td>口癌篩檢顧性命</td></tr></tbody></table></div>
+<p><strong>無檳職場／無檳工地公約</strong>——因為嚼檳行為多半發生在工作時段，職場介入特別重要：</p>
+<ul><li>張貼禁嚼檳榔標示</li><li>辦理戒檳、戒菸、戒酒衛教</li><li>環境督察禁嚼檳榔</li><li>協助戒檳成功獎勵</li><li>勞工健檢合併口癌篩檢</li><li>追蹤管理陽性個案</li></ul>
+<h4>用法規增加嚼檳的不便性 ⏱ 18:06</h4>
+<p>《廢棄物清理法》提供了環境面的嚇阻工具：</p>
+<ul><li><strong>第 50 條</strong>：隨地吐痰、<strong>檳榔汁、檳榔渣</strong>，拋棄紙屑、菸蒂、口香糖、瓜果或其皮、核、汁、渣或其他一般廢棄物，可依法處以 <strong>1,200 至 6,000 元</strong>罰鍰。</li><li><strong>第 50-1 條</strong>（2013/6/3 立法通過）：違反第 27 條第 1 款隨地吐檳榔汁、檳榔渣規定者，<strong>應接受 4 小時之戒檳班講習</strong>；講習及其他應遵行事項之辦法由中央主管機關定之。</li></ul>
+<div class="callout cx-note"><div class="cx-t">講者口述提及「第 51 條」，投影片條文為第 50 條及第 50-1 條，以投影片為準。</div></div>
+<h4>結語 ⏱ 18:38</h4>
+<p>講者以海報標語作結：「生命有數，檳榔麥哺，家庭才會幸福」。<strong>不含任何添加物的檳榔子就是致癌物</strong>，十個口腔癌九個嚼檳榔。希望紅唇族大哥們都能戒檳成功，而不是走到手術、咀嚼困難、吞嚥困難、顏面破相那一步。</p>
+<h3>關鍵詞</h3>
+<ul><li><strong>口腔癌</strong>：本課程指含口腔、口咽及下咽癌的統稱，男性十大癌症發生率第 3 名、死亡率第 4 名。</li><li><strong>口腔黏膜下纖維化症（OSF, oral submucous fibrosis）</strong>：檳榔鹼造成膠原蛋白合成增加、分解能力下降，膠原纖維過量堆積使黏膜粗糙增厚、張口困難，屬癌前病變。</li><li><strong>檳榔素（arecoline）</strong>：檳榔子的主要致癌成分之一，會干擾脂肪代謝及胰島素促進葡萄糖攝取，連結第二型糖尿病與代謝症候群。</li><li><strong>黃樟素（safrole）</strong>：荖花所含的致癌物質，長期嚼食使牙齒變黑並產生亞硝基致癌物質。</li><li><strong>菁仔／葉仔</strong>：兩種市售檳榔嚼塊。菁仔＝檳榔子剖半＋荖花（或荖藤）＋紅灰；葉仔＝整顆檳榔子以荖葉包覆＋白灰（或紅灰）。</li><li><strong>IARC（國際癌症研究機構）</strong>：2003 年公布檳榔子本身即為第一類致癌物。</li><li><strong>轉移子代</strong>：嚼檳榔者的子女發生代謝症候群的風險高達 2 倍以上的跨代效應。</li><li><strong>紅唇族</strong>：嚼食檳榔者的俗稱，本課程健康促進的目標族群。</li></ul>
+<h3>可執行要點</h3>
+<ul><li class="task"><label><input type="checkbox" class="tk">在代謝症候群個案的生活習慣問診中，把「嚼檳榔（含已戒）」與菸、酒並列為固定必問項目，並記錄每日顆數。</label></li><li class="task"><label><input type="checkbox" class="tk">對 30 歲以上有嚼檳榔（含已戒）或吸菸者、原住民 18 歲以上有嚼檳榔（含已戒）者，當場確認是否已做「每 2 年 1 次免費口腔黏膜檢查」，未做即安排。</label></li><li class="task"><label><input type="checkbox" class="tk">教會病人用一面鏡子做每週口腔自我檢查：外觀對稱與腫塊 → 張口能否達 4 指幅 → 上唇、右頰、下唇、左頰、上顎、咽喉、舌緣依序看一遍。</label></li><li class="task"><label><input type="checkbox" class="tk">衛教時明確傳達兩個轉介門檻：潰瘍破皮超過 2 週未癒、不明腫塊持續超過 2 週，立即轉口腔顎面外科／牙科／耳鼻喉科切片。</label></li><li class="task"><label><input type="checkbox" class="tk">破除「不加荖花、不加紅灰就沒關係」的迷思，用「檳榔子本身就是第一類致癌物」與「單獨嚼檳榔已 28 倍」兩個事實回應。</label></li><li class="task"><label><input type="checkbox" class="tk">對有子女的嚼檳個案，加講「子女代謝症候群風險高 2 倍以上」，把家人納入戒檳的支持系統（永結三心）。</label></li><li class="task"><label><input type="checkbox" class="tk">提供戒檳日記（健康久久網站《戒檳教戰手冊》），請病人記錄每日顆數與省下的金額，回診時檢視。</label></li><li class="task"><label><input type="checkbox" class="tk">準備口香糖／喉糖／蒟蒻豆干作為衛教衛材，並帶病人練習至少 2 句拒檳話術（如投桃報李法、安身立命法）。</label></li><li class="task"><label><input type="checkbox" class="tk">針對職場／工地團體衛教時，推無檳職場公約六項，並建議勞工健檢合併口癌篩檢、陽性個案追蹤管理。</label></li></ul>
+<div class="quiz" id="qz4" data-total="5"><div class="wgh">📝 隨堂測驗<span class="wghint">（點選項作答）</span><span class="qzscore"></span><button class="qzretry" style="display:none">↺ 重做</button></div><div class="qzq"><div class="qzqt">依葛應欽教授 1995 年的研究，下列哪一組合的口腔癌危險倍數最接近 28 倍？</div><div class="qzopts"><button class="qzopt" data-c="0">單獨吸菸</button><button class="qzopt" data-c="0">單獨酗酒</button><button class="qzopt" data-c="1">單獨嚼檳榔</button><button class="qzopt" data-c="0">酗酒＋吸菸（無嚼檳榔）</button></div><div class="qzex">單獨嚼檳榔即 28 倍，高於單獨吸菸的 18 倍與單獨酗酒的 10 倍；三項皆有則為 123 倍。</div></div><div class="qzq"><div class="qzqt">關於國民健康署補助的免費口腔黏膜檢查，下列敘述何者正確？</div><div class="qzopts"><button class="qzopt" data-c="0">限目前仍在嚼檳榔者，已戒者不補助</button><button class="qzopt" data-c="1">30 歲以上有嚼檳榔（含已戒）或吸菸者，每 2 年 1 次</button><button class="qzopt" data-c="0">原住民須滿 30 歲才符合資格</button><button class="qzopt" data-c="0">每年 1 次，且須由牙科醫師執行</button></div><div class="qzex">30 歲以上有嚼食檳榔（含已戒）或吸菸民眾，及 18 歲以上有嚼食檳榔（含已戒）的原住民，每 2 年 1 次；受訓合格的家醫科、內外科、耳鼻喉科、牙科醫師皆可執行。</div></div><div class="qzq"><div class="qzqt">病人說「我吃的檳榔沒有加紅灰也沒有荖花，應該安全吧？」最正確的回應是？</div><div class="qzopts"><button class="qzopt" data-c="0">沒有添加物確實風險低很多</button><button class="qzopt" data-c="0">只要不配菸酒就沒問題</button><button class="qzopt" data-c="1">檳榔子本身在 2003 年即被 IARC 列為第一類致癌物，不加添加物一樣致癌</button><button class="qzopt" data-c="0">只要每年洗牙就可以抵銷風險</button></div><div class="qzex">IARC 2003 年確認檳榔子（檳榔果實）本身就是第一類致癌物；荖花的黃樟素、石灰造成的鹼性環境是額外風險，不是唯一風險。</div></div><div class="qzq"><div class="qzqt">下列哪一項是本單元提到、嚼檳榔與代謝症候群最直接的機轉？</div><div class="qzopts"><button class="qzopt" data-c="0">石灰使口腔呈鹼性導致胰島素失活</button><button class="qzopt" data-c="1">檳榔素干擾脂肪代謝及胰島素促進葡萄糖攝取</button><button class="qzopt" data-c="0">荖葉農藥殘留破壞胰島細胞</button><button class="qzopt" data-c="0">咀嚼動作提高交感神經張力造成高血壓</button></div><div class="qzex">檳榔中的檳榔素（arecoline）會干擾脂肪代謝及胰島素促進葡萄糖攝取，導致第二型糖尿病與代謝症候群；嚼檳者子女的代謝症候群風險亦高達 2 倍以上。</div></div><div class="qzq"><div class="qzqt">門診中哪一個口腔表現最應立即安排切片轉介？</div><div class="qzopts"><button class="qzopt" data-c="0">牙齒染色與齒質磨耗</button><button class="qzopt" data-c="0">咀嚼後短暫的口腔發熱感</button><button class="qzopt" data-c="1">口腔潰瘍超過兩週未改善</button><button class="qzopt" data-c="0">牙齦偶爾刷牙流血</button></div><div class="qzex">潰瘍破皮超過兩週未改善、或顏面及口腔不明腫塊持續超過兩週，都是癌化警訊，應轉口腔顎面外科、牙科或耳鼻喉科做切片確診。</div></div></div>
+<div class="flashcards"><div class="wgh">🎴 單字卡<span class="wghint">（點卡片翻面）</span></div><div class="fcgrid"><button class="fc"><span class="fc-in"><span class="fc-f">十個口腔癌，幾個嚼檳榔？</span><span class="fc-b">九個。108 年新診斷口腔癌 8,204 人（男性 7,468 人），死亡 3,425 人（男性 3,154 人）。</span></span></button><button class="fc"><span class="fc-in"><span class="fc-f">單獨嚼檳榔的口腔癌危險倍數？</span><span class="fc-b">28 倍（葛應欽 1995）。酗酒＋嚼檳榔＋吸菸＝123 倍；嚼檳榔＋吸菸＝89 倍。</span></span></button><button class="fc"><span class="fc-in"><span class="fc-f">IARC 在 2003 年公布什麼？</span><span class="fc-b">確定檳榔子（檳榔果實）本身即為第一類致癌物，不含任何添加物也會致癌。</span></span></button><button class="fc"><span class="fc-in"><span class="fc-f">OSF 是什麼、怎麼形成？</span><span class="fc-b">口腔黏膜下纖維化症。檳榔鹼使膠原蛋白合成增加、分解吞食能力下降，膠原纖維過量堆積，黏膜粗糙增厚、張口困難，屬癌前病變。</span></span></button><button class="fc"><span class="fc-in"><span class="fc-f">口腔癌前病變有哪六種？</span><span class="fc-b">口腔黏膜下纖維化、白斑、紅斑、扁平苔癬、乳突瘤、疣狀增生；其中紅斑惡性率最高。</span></span></button><button class="fc"><span class="fc-in"><span class="fc-f">菁仔與葉仔的組成差別？</span><span class="fc-b">菁仔＝檳榔子剖半＋荖花（或荖藤）＋紅灰；葉仔＝整顆檳榔子＋荖葉包覆＋白灰（或紅灰）。</span></span></button><button class="fc"><span class="fc-in"><span class="fc-f">免費口腔黏膜檢查的補助資格？</span><span class="fc-b">30 歲以上有嚼檳榔（含已戒）或吸菸者；原住民 18 歲以上有嚼檳榔（含已戒）者。每 2 年 1 次。</span></span></button><button class="fc"><span class="fc-in"><span class="fc-f">口腔癌化的兩個「兩週」警訊？</span><span class="fc-b">口腔潰瘍超過兩週未改善；顏面及口腔不明腫塊持續超過兩週。應轉介切片。</span></span></button><button class="fc"><span class="fc-in"><span class="fc-f">嚼檳榔對子代的影響？</span><span class="fc-b">轉移子代現象——嚼檳榔者的子女發生代謝症候群的風險高達 2 倍以上；孕婦嚼檳榔有 2.8 倍流產、死產、早產風險。</span></span></button><button class="fc"><span class="fc-in"><span class="fc-f">戒除檳榔 3 攻略是什麼？</span><span class="fc-b">善用代替品（口香糖／喉糖／蒟蒻豆干）、轉移話題、轉移情境（培養運動習慣）。</span></span></button><button class="fc"><span class="fc-in"><span class="fc-f">拒絕檳榔互請的六大技巧？</span><span class="fc-b">哀兵致勝法、自我嘲解法、走為上策法、投桃報李法、安身立命法、虛與委蛇法。</span></span></button><button class="fc"><span class="fc-in"><span class="fc-f">無檳生活宣言「三不三要」？</span><span class="fc-b">不嚼檳榔要健康、不買檳榔要省錢、不請檳榔要尊重。</span></span></button><button class="fc"><span class="fc-in"><span class="fc-f">隨地吐檳榔汁渣的法律後果？</span><span class="fc-b">《廢棄物清理法》第 50 條罰 1,200–6,000 元；第 50-1 條（2013/6/3 通過）應接受 4 小時戒檳班講習。</span></span></button><button class="fc"><span class="fc-in"><span class="fc-f">口腔癌術後的回診頻率？</span><span class="fc-b">每二至三個月回診檢查以避免復發，並須確實戒除檳、菸、酒。</span></span></button></div></div></div>
+      </article>
+  </section>
+  <section class="course" id="course-c2">
+    <div class="coursebar"><span class="cic">🥗</span><div><h2 class="ctitle">代謝症候群防治計畫教育訓練課程－下（飲食・健康識能・動機晤談・跨領域照護）</h2><div class="csub"> · 7 篇</div></div></div>
+    <details class="coursemap" open><summary>🗺️ 本課地圖<span class="cm-hint">（點單元標題可跳到那一篇）</span></summary><table class="cmtable"><tbody><tr><td class="cm-u"><a href="#c2-0">課程總覽：代謝症候群防治計畫教育訓練課程－下</a></td><td class="cm-s"></td></tr><tr><td class="cm-u"><a href="#c2-1">3-1 代謝症候群之防治與飲食</a></td><td class="cm-s">代謝症候群不是單一疾病而是五項異常數值的統稱，飲食處方要<strong>依個案哪一項異常來選策略</strong>，而<strong>減重（尤其減腹部脂肪）是所有異常共同的第一線</strong>。</td></tr><tr><td class="cm-u"><a href="#c2-2">3-2 健康識能實務與策略</a></td><td class="cm-s">民眾的健康識能很難改變，<strong>真正該提升的是醫療端「把話講到民眾懂」的服務能力</strong>——用淺白語言、分段說明、回覆示教與符合識能原則的衛教教材，把資訊真的送進病人腦袋。</td></tr><tr><td class="cm-u"><a href="#c2-3">促進病人參與及行為改變－動機晤談</a></td><td class="cm-s">病人不是不想改變，而是<strong>不想被改變</strong>；動機式晤談用引導取代說服，讓病人自己說出改變的理由。 [!KEY] 你會學到 為什麼「給理由、給知識、給方法、嚇後果」四招常常沒用 什麼是矯正反射（righting reflex），以及它為什麼會製造抵抗 評估改變的四個觀察要素：矛盾、動機、齊備、信心 動機式晤談的精神（ACE）、四項原則與四項技巧 一組可以今天就在門診試用的四個問句，以及一個完整的減重對話示範</td></tr><tr><td class="cm-u"><a href="#c2-4">連結跨領域照護及溝通協調－以病人為中心的跨資源整合照護運用（一）</a></td><td class="cm-s">慢性病的成敗有八成不在診間，而在社會經濟環境與健康行為，因此基層診所要用<strong>以人為本（people-centred）的整合照護</strong>加上<strong>個案管理師這個樞紐角色</strong>，把成人健檢的異常個案接住、衛教、追蹤並轉介出去。</td></tr><tr><td class="cm-u"><a href="#c2-5">3-5 連結跨領域照護及溝通協調－以病人為中心的跨資源整合照護運用（二）</a></td><td class="cm-s">代謝症候群個案管理的價值不在「發現異常」，而在<strong>把異常轉成一套可執行、可監測、可轉介的介入流程</strong>——血壓血糖血脂、體重、菸品各有各的介入模式與追蹤指標，65 歲以上再加一層長者整合性功能評估（ICOPE）與長照轉介。 [!KEY] 你會學到 非內科系統的基層院所，如何借用家醫醫療群、糖尿病共照網與糖尿病健康促進機構的跨專業資源 血脂／血糖／血壓異常個案的標準介入模式：通知回診 → 飲食、運動、用藥指導 → 監測 → 資訊推播 → 電訪 722 血壓監測法與配對血糖監測法的操作定義與判讀切點 體重管理與戒菸兩條介入路徑的設計要素，以及三類介入的追蹤評值指標 65 歲以上個案的 ICOPE 評估，以及「記憶異常」這條路徑從 MMSE、CDR 一路走到長照／共照據點的完整分流</td></tr><tr><td class="cm-u"><a href="#c2-6">連結跨領域照護及溝通協調－以病人為中心的跨資源整合照護運用（三）</a></td><td class="cm-s">代謝症候群的長者照護要從<strong>多重用藥清查、肌少症篩檢、足量蛋白質與熱量、再到社區資源轉介</strong>串成一條線，由個案管理師擔任個案與醫療團隊之間的橋樑。</td></tr></tbody></table></details>
+    
+      <article class="note" id="c2-0">
+        <h3 class="ntitle">課程總覽：代謝症候群防治計畫教育訓練課程－下</h3>
+        <div class="nbody"><div class="callout cx-note"><div class="cx-t">來源：e等公務園＋學習平臺（國民健康e學苑／衛生福利部國民健康署），課程代碼 PHPA115100032，影片共 99 分鐘，認證時數 1.0 小時。本頁是個人學習筆記，用自己的話整理，不是官方教材。</div></div>
+<p>第三門課是三門裡最長的一門，主題從「飲食怎麼吃」延伸到「病人聽不聽得懂、願不願意改、團隊怎麼接手」。六個單元由四位講者主講：</p>
+<ul><li><strong>3-1 防治與飲食</strong>（台北醫學大學附設醫院營養室 蘇秀悅營養師）：代謝症候群的飲食控制原則，減重、認識營養素與熱量、高血壓與心血管疾病飲食、低糖高纖飲食。</li><li><strong>3-2 健康識能實務與策略</strong>（花蓮慈濟醫院家庭醫學科 謝至鎠醫師）：健康識能是什麼、識能受限怎麼影響行為改變、衛教與教材要怎麼調整才讓病人真的聽懂。</li><li><strong>3-3 動機晤談</strong>（聯安預防醫學機構聯欣診所 顏佐樺醫師）：促進病人參與與行為改變的談話技巧。</li><li><strong>3-4 ～ 3-6 以病人為中心的跨資源整合照護運用</strong>（李氏聯合診所 徐慧君護理衛教師）：同一主題分三段，講跨領域照護的連結與溝通協調，以及個管實務上怎麼把資源接起來。</li></ul>
+<p><strong>建議閱讀順序</strong>：3-1 飲食可以獨立看；3-2 → 3-3 是一組（先懂病人為什麼聽不懂，再學怎麼談）；3-4 到 3-6 要連著讀。</p></div>
+      </article>
+      <article class="note" id="c2-1">
+        <h3 class="ntitle">3-1 代謝症候群之防治與飲食</h3>
+        <div class="nbody"><div class="callout cx-note"><div class="cx-t">代謝症候群防治計畫教育訓練課程－下 · 單元 3-1 · 影片 19 分鐘 · 講者：蘇秀悅營養師（臺北醫學大學附設醫院營養室）</div></div>
+<div class="callout cx-key"><div class="cx-t">一句話總結</div><div class="cx-b"><p>代謝症候群不是單一疾病而是五項異常數值的統稱，飲食處方要<strong>依個案哪一項異常來選策略</strong>，而<strong>減重（尤其減腹部脂肪）是所有異常共同的第一線</strong>。</p></div></div>
+<div class="callout cx-key"><div class="cx-t">你會學到</div><div class="cx-b"><ul><li>血壓、血糖、三酸甘油酯、腰圍、高密度脂蛋白膽固醇（HDL-C）五項異常各自對應哪一種飲食策略</li><li>用理想體重、每日熱量需求、7700 大卡法則算出可執行的減重飲食處方</li><li>高血壓飲食的鈉上限、減鈉技巧，以及得舒飲食（DASH）的每日份量表</li><li>降低低密度脂蛋白膽固醇（LDL-C）的治療性生活型態（TLC）營養素切點，與地中海飲食的份量原則</li><li>低糖高纖飲食要避開哪些食物、要吃到幾份蔬果才會有 20 公克膳食纖維</li></ul></div></div>
+<h3>內容筆記</h3>
+<h4>一、代謝症候群的飲食策略總表 ⏱ 01:00</h4>
+<p>代謝症候群不是一個特定疾病，而是血壓、血脂、血糖、腰圍異常的統稱，是一個<strong>健康的危險訊號</strong>。因此飲食不是一套通用菜單，而是<strong>依個案哪一項數值異常做對應調整</strong>。</p>
+<p>五項異常中，<strong>肥胖、尤其腹部肥胖是首要控制因子</strong>，所以「減肥」幾乎出現在每一項異常的策略裡。</p>
+<p>下表是講者整理的異常項目對飲食策略對照（資料來源：BMC Medicine 2012; 10:138、Nutrients 2021; 13:1307）：</p>
+<div class="tablewrap"><table><thead><tr><th>異常項目</th><th>對應飲食／生活策略</th></tr></thead><tbody><tr><td>腰圍過粗</td><td>減肥、得舒飲食（DASH）、地中海型飲食</td></tr><tr><td>血壓偏高</td><td>減肥、低鹽飲食、得舒飲食、地中海型飲食</td></tr><tr><td>空腹血糖值偏高</td><td>減肥、低糖飲食、高纖飲食、地中海型飲食</td></tr><tr><td>三酸甘油酯偏高</td><td>減肥、低糖飲食、高纖飲食、地中海型飲食</td></tr><tr><td>高密度脂蛋白膽固醇（HDL-C）偏低</td><td>運動（此項講者列的是運動，不是飲食）</td></tr></tbody></table></div>
+<div class="callout cx-key"><div class="cx-t">只有 HDL-C 偏低這一項，主要靠運動而非飲食；其餘四項都以減重為共同基礎。</div></div>
+<h4>二、減肥飲食 ⏱ 01:51</h4>
+<h5>肥胖與腹部肥胖的判定</h5>
+<ul><li>身體質量指數（BMI）＝體重（公斤）÷ 身高（公尺）的平方</li><li>BMI &gt; 24：體重過重；BMI &gt; 27：肥胖</li><li>腹部肥胖（代謝症候群特別重視）：男性腰圍 ≥ 90 公分、女性腰圍 ≥ 80 公分</li></ul>
+<h5>理想體重怎麼算</h5>
+<p>台灣訂的理想 BMI 是 <strong>22</strong>，所以：</p>
+<blockquote>理想體重（公斤）＝ 22 × 身高（公尺）× 身高（公尺），上下可放寬 ±10％</blockquote>
+<p>講者強調要讓民眾知道自己的理想體重<strong>範圍</strong>，而不是一個死數字。</p>
+<h5>一天可以吃多少熱量</h5>
+<p>簡易估算：以中度工作者計算，<strong>每公斤體重 30 大卡 × 目前體重</strong>。</p>
+<h5>減重的熱量赤字算法</h5>
+<ul><li>消耗 1 公斤體脂肪需要 <strong>7700 大卡</strong></li><li>每天少吃 <strong>500～1000 大卡</strong> → 一週累積 <strong>3500～7000 大卡</strong> → 預計每週減 <strong>0.5～1 公斤</strong></li><li>減重目標設定：<strong>三個月減 5～10％ 體重</strong></li><li>必須<strong>同時配合運動</strong>，避免基礎代謝率下降</li></ul>
+<div class="callout cx-ex"><div class="cx-t">講者示範的計算</div><div class="cx-b"><p>一位 74 公斤的個案：30 × 74 = 2220 大卡為每日需求；扣掉 500 大卡後，每日熱量處方訂在 <strong>1720 大卡</strong>。</p></div></div>
+<div class="callout cx-warn"><div class="cx-t">每日熱量<strong>不要低於 1000 大卡</strong>，以免產生維生素、礦物質缺乏。</div></div>
+<h5>認識營養素與熱量 ⏱ 05:03</h5>
+<p>吃東西不是為了美味，而是滿足三大需求：提供適當熱量、構成身體組織、維持身體功能運轉。</p>
+<p>六大營養素中，<strong>有熱量的只有三種</strong>：</p>
+<div class="tablewrap"><table><thead><tr><th>營養素</th><th>每公克熱量</th><th>是否有熱量</th></tr></thead><tbody><tr><td>醣類（糖類）</td><td>4 大卡</td><td>有</td></tr><tr><td>脂肪</td><td>9 大卡</td><td>有</td></tr><tr><td>蛋白質</td><td>4 大卡</td><td>有</td></tr><tr><td>維生素</td><td>—</td><td>無</td></tr><tr><td>礦物質</td><td>—</td><td>無</td></tr><tr><td>水</td><td>—</td><td>無</td></tr></tbody></table></div>
+<p>體重控制時，這三種有熱量的營養素要重新調配。講者給的分配原則：</p>
+<div class="tablewrap"><table><thead><tr><th>營養素</th><th>均衡／減重時的建議分配</th></tr></thead><tbody><tr><td>蛋白質</td><td>每公斤體重 1 公克，約佔總熱量 15％</td></tr><tr><td>脂肪</td><td>減重時壓低，抓總熱量 30％</td></tr><tr><td>醣類</td><td>總熱量 50～60％</td></tr></tbody></table></div>
+<p>維生素、礦物質、水沒有熱量，只要六大類食物攝取均衡就能從食物中取得。</p>
+<h5>六大類食物與份量 ⏱ 06:18</h5>
+<p>依營養素特性把食物分成六大類：<strong>全穀雜糧類、乳品類、豆魚蛋肉類、油脂類、蔬菜類、水果類</strong>。全穀雜糧類主要提供醣類，豆魚蛋肉類主要提供蛋白質，乳品類主要提供鈣質。均衡飲食＝每天六大類都吃到，再依生命期、體型、疾病狀況調整比例。</p>
+<p>熱量需求可查衛福部國健署《每日飲食指南》手冊。講者引用的數字：成年男性約 1800 大卡，女性約 1400～1500 大卡（依年齡與活動強度不同）。</p>
+<p>以 <strong>1500 大卡</strong>為例，一天的六大類食物份量建議（講者口述）：</p>
+<div class="tablewrap"><table><thead><tr><th>食物類別</th><th>1500 大卡的建議份量</th></tr></thead><tbody><tr><td>全穀雜糧類</td><td>2.5 碗</td></tr><tr><td>乳品類</td><td>1.5 杯</td></tr><tr><td>豆魚蛋肉類</td><td>4～5 份</td></tr><tr><td>油脂類</td><td>1.5 湯匙</td></tr><tr><td>蔬菜、水果</td><td>三蔬二果（最基本份量）</td></tr></tbody></table></div>
+<h5>減重不是只有算熱量 ⏱ 08:30</h5>
+<p>講者提醒：減重個案還需要<strong>心理支持與生活習慣改變</strong>。她引用台灣肥胖醫學會的衛教單張，內容包括：先下定決心並與個案一起訂減重目標；建立健康飲食習慣（不喝甜飲料、不吃零食、多吃蔬菜、多咀嚼、多活動、少油、少宵夜、六大類均衡）；單張裡另有行為改變的技巧。</p>
+<div class="callout cx-key"><div class="cx-t">最後也最難的一步是<strong>維持已下降的體重</strong>，這件事一定要主動提醒個案。</div></div>
+<h4>三、高血壓飲食 ⏱ 09:25</h4>
+<p>高血壓的常見危險因子包含體重過重、鈉鹽攝取過多、過度飲酒、運動量不足、吸菸、生活壓力；其中<strong>與飲食直接相關的是前三項</strong>——體重過重、吃太鹹、喝太多酒，這三項就是衛教切入點。</p>
+<h5>鈉的上限與隱藏來源</h5>
+<ul><li>健康飲食建議：鈉 <strong>&lt; 2400 毫克／天</strong>，相當於 <strong>6 公克鹽</strong></li><li>提醒個案：<strong>不是只有鹽才有鈉</strong>。醬油、蠔油／油膏、味精、烏醋、豆瓣醬等調味料都含鈉</li></ul>
+<h5>減鈉技巧</h5>
+<ul><li>運用天然食材本身的味道，減少用鹽量</li><li>減少煙燻、醬滷、醃漬的烹調方式</li><li>上桌後不要再加調味料（包含不再加鹽，也包含沾醬如豆瓣醬）</li><li>避免醃漬食品、避免加工食品</li></ul>
+<h5>得舒飲食（DASH） ⏱ 11:04</h5>
+<p>講者指出，得舒飲食是<strong>證據明確可預防與控制高血壓</strong>的飲食型態，特色是強調全穀雜糧、低脂乳品、大量蔬菜與水果（蔬菜 400～500 公克、水果 400～500 公克／天），減少紅肉、避免過多油脂，並多吃堅果種子類。</p>
+<p>上圖份量表的重點整理：</p>
+<div class="tablewrap"><table><thead><tr><th>食物類別</th><th>每日份量</th><th>一份是多少</th></tr></thead><tbody><tr><td>全穀類</td><td>7～8</td><td>1 片全麥麵包、半杯穀物、半杯熟飯或麵食</td></tr><tr><td>蔬菜類</td><td>4～5</td><td>1 杯生菜、半杯熟菜、6 盎司蔬菜汁</td></tr><tr><td>水果類</td><td>4～5</td><td>1 個中型水果、半杯新鮮或罐頭水果</td></tr><tr><td>低脂（脫脂）乳品類</td><td>2～3</td><td>8 盎司牛奶、1 杯優格、1.5 盎司乳酪</td></tr><tr><td>紅肉類</td><td>2 或更少</td><td>3 盎司瘦肉</td></tr><tr><td>堅果種子類</td><td>1～2</td><td>1～2 湯匙堅果</td></tr><tr><td>油脂類</td><td>3～4</td><td>1 茶匙＝5 公克</td></tr></tbody></table></div>
+<h5>高血壓飲食原則總整理</h5>
+<ul><li>控制體重</li><li>達到均衡飲食</li><li>鈉不超過 2400 毫克／天</li><li>增加全穀雜糧類攝取</li><li>每天蔬菜加水果 <strong>5～9 份</strong></li><li>每天喝低脂奶；乳糖不耐症者建議改喝豆漿</li><li>避免過度飲酒</li></ul>
+<div class="callout cx-tip"><div class="cx-t">酒精當量怎麼換算</div><div class="cx-b"><p>男性每天不超過 2 個酒精當量、女性不超過 1 個。<strong>1 個酒精當量</strong> ≒ 一鋁罐啤酒約 330 cc ≒ 葡萄酒 120 cc ≒ 烈酒 40 cc。適度飲酒本身就是預防高血壓的策略之一。</p></div></div>
+<h4>四、心血管疾病飲食 ⏱ 13:01</h4>
+<p>心血管疾病的<strong>可改變</strong>危險因子：飲食不當、高血壓、肥胖、運動不足、抽菸、飲酒過量、高血糖、高 LDL、低 HDL。<strong>不可改變</strong>的則是年齡、性別、家族史。因此預防要從可改變的飲食與生活型態下手。</p>
+<h5>降低 LDL-C 的治療性生活型態（TLC）</h5>
+<p>心血管疾病最直接的危險因子是 <strong>LDL 膽固醇（LDL-C）</strong>。控制方式是用治療性生活型態的飲食改變，一邊<strong>降低會升高 LDL-C 的營養素</strong>、一邊<strong>增加會降低 LDL-C 的營養素</strong>：</p>
+<div class="tablewrap"><table><thead><tr><th>行動</th><th>營養素</th><th>建議量</th></tr></thead><tbody><tr><td>降低</td><td>飽和脂肪</td><td>&lt; 7％ 總熱量</td></tr><tr><td>降低</td><td>膽固醇</td><td>&lt; 200 毫克／天</td></tr><tr><td>增加</td><td>可溶性纖維</td><td>10～25 公克／天</td></tr><tr><td>增加</td><td>植物固醇</td><td>2 公克／天</td></tr></tbody></table></div>
+<h5>地中海飲食 ⏱ 14:40</h5>
+<p>講者強調：心血管疾病不論預防或治療都要認識地中海飲食。其份量結構分成「每餐／每天／每週」三層：</p>
+<div class="tablewrap"><table><thead><tr><th>頻率</th><th>內容與份量</th></tr></thead><tbody><tr><td>每餐</td><td>水果 1～2 份、蔬菜 ≥ 2 份、全穀類 1～2 份、用橄欖油烹調、喝足夠的水</td></tr><tr><td>每天</td><td>乳品類 2 份（起司或低脂奶）、堅果／種子 1～2 份、莢豆類</td></tr><tr><td>每週</td><td>白肉 2 份、魚／海鮮 ≥ 2 份、蛋 2～4 個；紅肉 &lt; 2 份、加工肉類 ≤ 1 份；甜食 ≤ 3 份</td></tr></tbody></table></div>
+<div class="callout cx-key"><div class="cx-t">地中海飲食的價值在於它<strong>一次改善多項代謝症候群指標</strong>：可降低血壓、三酸甘油酯、腰圍與空腹血糖。</div></div>
+<div class="callout cx-tip"><div class="cx-t">莢豆類（如四季豆、米豆）降膽固醇效果很好，是容易被忽略但便宜好取得的一類食物。</div></div>
+<p>金字塔頂端的原則是：盡量不吃甜食、紅肉與加工肉類，改用白肉、魚，以及每週 2～4 個蛋來取代。</p>
+<h4>五、低糖高纖飲食（血糖控制） ⏱ 16:11</h4>
+<h5>哪些食物會影響血糖</h5>
+<p>除了明顯的甜食與加糖飲料，<strong>含醣的六大類食物經消化吸收後都會影響血糖</strong>：全穀雜糧類、水果類、乳品類，甚至部分蔬菜。</p>
+<p>要避免的是：</p>
+<ul><li>含糖量高的飲料、甜點、糕餅點心</li><li><strong>精緻澱粉</strong>：冬粉、太白粉、地瓜粉、粉條、粉圓這一類；連帶地，勾芡的菜色也要想辦法減少</li></ul>
+<h5>高纖要吃到多少</h5>
+<p>健康飲食建議的膳食纖維量是<strong>每天 20 公克以上</strong>。要吃到 20 公克，講者給的組合是：</p>
+<ul><li>全穀雜糧類每天至少 2 碗</li><li>豆類／莢豆類每天吃到 2 種以上</li><li>至少三蔬二果</li></ul>
+<div class="callout cx-warn"><div class="cx-t">三蔬二果對青少年可能夠，但<strong>成年女性要達到高纖飲食，蔬果份量要增加到 7 份；成年男性甚至要到 9 份</strong>。</div></div>
+<h4>六、總結：代謝症候群的飲食管理 ⏱ 18:34</h4>
+<p>生活管理面：<strong>體重控制＋運動</strong>。</p>
+<p>飲食面：依個案異常的數值做調整，具體原則為——</p>
+<ul><li>多選用<strong>營養密度高的天然食物</strong>來源</li><li>增加全穀雜糧類的攝取</li><li>增加蔬果的攝取</li><li>增加低脂奶的攝取</li><li>把加工食品、隱藏的脂肪、鈉的攝取量降到最低</li><li>盡量減少糖及精緻澱粉的攝取</li></ul>
+<h3>關鍵詞</h3>
+<ul><li><strong>代謝症候群（Metabolic Syndrome）</strong>：血壓、血脂、血糖、腰圍異常的統稱，不是單一疾病，是健康的危險訊號。</li><li><strong>身體質量指數（BMI）</strong>：體重（公斤）÷ 身高（公尺）平方；台灣以 22 為理想值，&gt; 24 過重、&gt; 27 肥胖。</li><li><strong>腹部肥胖</strong>：男性腰圍 ≥ 90 公分、女性 ≥ 80 公分，是代謝症候群首要控制的因子。</li><li><strong>得舒飲食（DASH, Dietary Approaches to Stop Hypertension）</strong>：強調全穀、低脂乳品、大量蔬果、堅果，減少紅肉與油脂的飲食型態，用於預防與控制高血壓。</li><li><strong>地中海飲食（Mediterranean Diet）</strong>：以橄欖油、蔬果、全穀、莢豆、堅果、魚為主，少紅肉與甜食；可同時降低血壓、三酸甘油酯、腰圍與空腹血糖。</li><li><strong>治療性生活型態（TLC, Therapeutic Lifestyle Change）</strong>：以降低飽和脂肪與膽固醇、增加可溶性纖維與植物固醇為核心的 LDL-C 控制飲食。</li><li><strong>酒精當量</strong>：飲酒量的計算單位，1 個當量約等於啤酒 330 cc、葡萄酒 120 cc 或烈酒 40 cc。</li><li><strong>營養密度</strong>：單位熱量中所含營養素的多寡；代謝症候群飲食要優先選營養密度高的天然食物。</li></ul>
+<h3>可執行要點</h3>
+<ul><li class="task"><label><input type="checkbox" class="tk">個案初診時，先把五項異常逐項列出，再依「異常項目→飲食策略」對照表挑出這位個案要做的 1～2 件事，不要一次給整套飲食衛教。</label></li><li class="task"><label><input type="checkbox" class="tk">現場用 22 ×（身高公尺）² 算出理想體重範圍（±10％），並用 30 大卡 × 目前體重估每日熱量，直接寫下一個具體的每日熱量處方。</label></li><li class="task"><label><input type="checkbox" class="tk">減重個案的目標統一設定為「三個月減 5～10％ 體重、每週 0.5～1 公斤」，每日減 500～1000 大卡但不低於 1000 大卡，並同時開運動處方。</label></li><li class="task"><label><input type="checkbox" class="tk">高血壓個案衛教時，除了「少吃鹽」再多問一句醬油、烏醋、豆瓣醬、味精的使用習慣，並給「上桌不再加調味料」這一條具體行為。</label></li><li class="task"><label><input type="checkbox" class="tk">血糖或三酸甘油酯異常的個案，主動詢問冬粉、粉圓、勾芡菜色與含糖飲料的頻率。</label></li><li class="task"><label><input type="checkbox" class="tk">成年個案衛教高纖時，把「三蔬二果」改口為「女性 7 份、男性 9 份蔬果」，並搭配每天 2 碗全穀雜糧、2 種以上豆類。</label></li><li class="task"><label><input type="checkbox" class="tk">不能喝低脂奶（乳糖不耐）的個案，衛教時直接改建議豆漿，避免個案自行放棄這一類。</label></li><li class="task"><label><input type="checkbox" class="tk">回診時把「維持已下降的體重」列為固定追蹤項目，而不只追蹤本次減了幾公斤。</label></li></ul>
+<div class="quiz" id="qz5" data-total="5"><div class="wgh">📝 隨堂測驗<span class="wghint">（點選項作答）</span><span class="qzscore"></span><button class="qzretry" style="display:none">↺ 重做</button></div><div class="qzq"><div class="qzqt">依講者整理的代謝症候群異常項目與飲食策略對照，「高密度脂蛋白膽固醇（HDL-C）偏低」對應的主要策略是什麼？</div><div class="qzopts"><button class="qzopt" data-c="0">低鹽飲食</button><button class="qzopt" data-c="1">運動</button><button class="qzopt" data-c="0">低糖飲食</button><button class="qzopt" data-c="0">得舒飲食</button></div><div class="qzex">五項異常中只有 HDL-C 偏低這一項，講者列的策略是運動而非特定飲食；其餘四項（腰圍過粗、血壓偏高、空腹血糖偏高、三酸甘油酯偏高）都以減肥為共同基礎再加上對應飲食。</div></div><div class="qzq"><div class="qzqt">一位 74 公斤的中度工作者要減重，依課程的簡易算法，每日熱量處方大約應訂在多少？</div><div class="qzopts"><button class="qzopt" data-c="0">1220 大卡</button><button class="qzopt" data-c="1">1720 大卡</button><button class="qzopt" data-c="0">2220 大卡</button><button class="qzopt" data-c="0">2720 大卡</button></div><div class="qzex">30 大卡 × 74 公斤 = 2220 大卡為每日需求，再扣掉 500 大卡的赤字即 1720 大卡。每日減 500～1000 大卡可預計每週減 0.5～1 公斤，但總熱量不可低於 1000 大卡。</div></div><div class="qzq"><div class="qzqt">健康飲食建議的鈉攝取上限，以及它相當於多少食鹽？</div><div class="qzopts"><button class="qzopt" data-c="1">2400 毫克鈉，約 6 公克鹽</button><button class="qzopt" data-c="0">2400 毫克鈉，約 2.4 公克鹽</button><button class="qzopt" data-c="0">6000 毫克鈉，約 6 公克鹽</button><button class="qzopt" data-c="0">1500 毫克鈉，約 4 公克鹽</button></div><div class="qzex">講者的建議是鈉 &lt; 2400 毫克／天，相當於 6 公克鹽。並提醒醬油、油膏、味精、烏醋、豆瓣醬等調味料也都含鈉，不是只有鹽要算。</div></div><div class="qzq"><div class="qzqt">在治療性生活型態（TLC）飲食中，用來降低 LDL-C 的兩個「要增加」的營養素與建議量是？</div><div class="qzopts"><button class="qzopt" data-c="0">飽和脂肪 &lt;7% 與膽固醇 &lt;200 毫克</button><button class="qzopt" data-c="1">可溶性纖維 10～25 公克與植物固醇 2 公克</button><button class="qzopt" data-c="0">蛋白質 15% 與碳水化合物 50～60%</button><button class="qzopt" data-c="0">單元不飽和脂肪 20% 與多元不飽和脂肪 10%</button></div><div class="qzex">TLC 的邏輯是兩邊一起做：降低會升高 LDL-C 的飽和脂肪（&lt;7% 總熱量）與膽固醇（&lt;200 毫克／天），並增加會降低 LDL-C 的可溶性纖維（10～25 公克／天）與植物固醇（2 公克／天）。</div></div><div class="qzq"><div class="qzqt">成年女性若要達到每天 20 公克以上膳食纖維的高纖飲食，蔬果份量應達到多少？</div><div class="qzopts"><button class="qzopt" data-c="0">三蔬二果（5 份）即可</button><button class="qzopt" data-c="1">7 份</button><button class="qzopt" data-c="0">9 份</button><button class="qzopt" data-c="0">12 份</button></div><div class="qzex">講者指出三蔬二果對青少年可能足夠，但成年女性要達到高纖需增加到 7 份蔬果，男性甚至要到 9 份，並搭配每天至少 2 碗全穀雜糧與 2 種以上豆類。</div></div></div>
+<div class="flashcards"><div class="wgh">🎴 單字卡<span class="wghint">（點卡片翻面）</span></div><div class="fcgrid"><button class="fc"><span class="fc-in"><span class="fc-f">台灣訂的理想體重 BMI 值與理想體重算法？</span><span class="fc-b">理想 BMI = 22；理想體重（公斤）= 22 × 身高（公尺）²，範圍可放寬 ±10％。</span></span></button><button class="fc"><span class="fc-in"><span class="fc-f">消耗 1 公斤體脂肪需要多少熱量？對應的減重處方？</span><span class="fc-b">7700 大卡。每日減 500～1000 大卡 → 每週 3500～7000 大卡 → 每週減 0.5～1 公斤；目標為三個月減 5～10％ 體重。</span></span></button><button class="fc"><span class="fc-in"><span class="fc-f">三大有熱量營養素的每公克熱量？</span><span class="fc-b">醣類 4 大卡、脂肪 9 大卡、蛋白質 4 大卡；維生素、礦物質、水沒有熱量。</span></span></button><button class="fc"><span class="fc-in"><span class="fc-f">減重時蛋白質／脂肪／醣類的建議分配？</span><span class="fc-b">蛋白質每公斤體重 1 公克（約總熱量 15％）、脂肪佔總熱量 30％、醣類 50～60％。</span></span></button><button class="fc"><span class="fc-in"><span class="fc-f">得舒（DASH）飲食的蔬果份量重點？</span><span class="fc-b">蔬菜 4～5 份、水果 4～5 份（各約 400～500 公克／天），全穀 7～8 份、低脂乳品 2～3 份，紅肉 2 份或更少。</span></span></button><button class="fc"><span class="fc-in"><span class="fc-f">1 個酒精當量等於多少酒？男女上限？</span><span class="fc-b">約啤酒 330 cc、葡萄酒 120 cc 或烈酒 40 cc；男性每天不超過 2 個當量、女性不超過 1 個。</span></span></button><button class="fc"><span class="fc-in"><span class="fc-f">地中海飲食可改善哪四項指標？</span><span class="fc-b">血壓、三酸甘油酯、腰圍、空腹血糖。</span></span></button><button class="fc"><span class="fc-in"><span class="fc-f">常被忽略的精緻澱粉有哪些？</span><span class="fc-b">冬粉、太白粉、地瓜粉、粉條、粉圓，以及使用勾芡的菜色。</span></span></button></div></div></div>
+      </article>
+      <article class="note" id="c2-2">
+        <h3 class="ntitle">3-2 健康識能實務與策略</h3>
+        <div class="nbody"><div class="callout cx-note"><div class="cx-t">代謝症候群防治計畫教育訓練課程－下 · 單元 3-2 · 影片 21 分鐘 · 講者：花蓮慈濟醫院家庭醫學科 謝至鎠醫師</div></div>
+<div class="callout cx-key"><div class="cx-t">一句話總結</div><div class="cx-b"><p>民眾的健康識能很難改變，<strong>真正該提升的是醫療端「把話講到民眾懂」的服務能力</strong>——用淺白語言、分段說明、回覆示教與符合識能原則的衛教教材，把資訊真的送進病人腦袋。</p></div></div>
+<div class="callout cx-key"><div class="cx-t">你會學到</div><div class="cx-b"><ul><li>健康識能（health literacy）的定義，以及它為什麼同時包含「知識」與「運用能力」兩面</li><li>國際與台灣的健康識能盛行率數字，以及哪些族群識能偏低</li><li>為什麼照護策略從「提升民眾識能」轉向「提升機構與人員的識能服務能力」</li><li>符合健康識能的口語溝通與書面資料原則（分段說明、回覆示教、易讀設計）</li><li>國健署《健康識能友善教材評估指標》的實際評分重點，可直接拿來檢查自家衛教單張</li><li>病人離院後如何延續健康識能支持（出院說明、社區資源、增能賦權模式）</li></ul></div></div>
+<h3>內容筆記</h3>
+<h4>一個真實的用藥錯誤：問題不只出在病人 ⏱ 01:12</h4>
+<p>講者用一個小兒科場景開場。兩歲女童被診斷為中耳感染，醫師開了抗生素藥水，依醫護經驗這類藥水絕大多數是<strong>口服</strong>。媽媽知道一天要用兩次，拿起藥瓶看了標籤上的給藥說明，然後倒了 5 cc <strong>灌進小孩的耳朵</strong>。</p>
+<p>中耳炎確實另有專用的耳滴劑劑型，但那是完全不同的藥品與用法。為什麼媽媽會這樣做？</p>
+<div class="callout cx-fig"><div class="cx-t">圖示重建：講者展示的那張藥品標籤（⏱ 02:14）</div><div class="cx-b"><p>講者把這支中耳炎常用抗生素藥水的藥盒標示逐項拆解（藥品名稱口述不清），內容大致如下：</p>
+<div class="tablewrap"><table><thead><tr><th>標籤欄位</th><th>有沒有寫</th><th>說明</th></tr></thead><tbody><tr><td>藥品名稱</td><td>有</td><td>中耳炎常用的抗生素藥水</td></tr><tr><td>配製方法</td><td>有</td><td>如何泡製藥水</td></tr><tr><td>劑量說明</td><td>有</td><td>一次多少、一天幾次</td></tr><tr><td>給藥途徑（口服／耳滴）</td><td><strong>中文沒有</strong></td><td>全盒唯一提到口服的，是一句英文標示</td></tr></tbody></table></div></div></div>
+<div class="callout cx-key"><div class="cx-t">檢討的方向要對</div><div class="cx-b"><p>這不是「媽媽笨」。關鍵資訊「這是用喝的」只以英文呈現，媽媽不見得看得懂英文，也不見得知道這個藥只能口服。對醫師來說理所當然的事，對拿藥回家的人不是。</p></div></div>
+<div class="callout cx-quote"><div class="cx-t">講者原話（意旨）</div><div class="cx-b"><p>我們在開業的時候很清楚它是口服的，可是民眾拿到這個藥物、沒有經過清楚的藥物資訊說明的時候，他真的知道這是口服使用嗎？</p></div></div>
+<p>也就是說，健康識能的缺口<strong>同時存在於民眾端與醫療提供者端</strong>。標示不清、說明不足，民眾就會對健康措施產生錯誤理解，健康促進行為自然做不出預期效果。</p>
+<h4>什麼是健康識能：知識 ＋ 運用能力 ⏱ 04:27</h4>
+<p>健康識能的英文是 <strong>health literacy</strong>，過去中文曾譯為「健康知能」「健康認知」「健康識讀」「健康素養」，指的都是同一件事。</p>
+<div class="callout cx-key"><div class="cx-t">為什麼現在採用「健康識能」</div><div class="cx-b"><p>這個概念包含兩個部分：</p>
+<ol><li><strong>知識</strong>：民眾如何從各種媒體管道取得健康資訊。</li><li><strong>能力</strong>：取得知識之後，如何運用它去改變自己的健康行為。</li></ol>
+<p>舊譯法（健康知能、健康素養）偏重「知識」那一半；現行「健康識能」更強調<strong>運用能力</strong>，因此較符合實務需要。</p></div></div>
+<p>學理定義：<strong>健康識能是個人獲得、處理、了解基本健康訊息與服務，並運用這些訊息與服務進行健康決策的能力。</strong></p>
+<h4>健康識能受限有多普遍 ⏱ 04:56</h4>
+<div class="tablewrap"><table><thead><tr><th>調查範圍</th><th>分級</th><th>比例</th></tr></thead><tbody><tr><td>國際統合分析（85 篇論文，Paasche-Orlow 等，2005）</td><td>低健康識能</td><td>約 26%</td></tr><tr><td>同上</td><td>邊緣性低健康識能</td><td>約 20%</td></tr><tr><td>歐盟 8 國調查（HLS-EU Consortium, 2012），分不足／有問題／足夠／優良四級</td><td>不足</td><td>12%</td></tr><tr><td>同上</td><td>有問題</td><td>35%</td></tr><tr><td>台灣成人（以中文多面向健康識能量表調查）</td><td>健康識能不足</td><td>4.4%</td></tr><tr><td>同上</td><td>健康識能有限</td><td>37.6%</td></tr></tbody></table></div>
+<div class="callout cx-key"><div class="cx-t">三份調查指向同一個結論</div><div class="cx-b"><p>不論國際、歐盟或台灣，<strong>大約有一半的成人在健康環境中難以適當取得與理解訊息</strong>。台灣的情形跟國際其實差不多，不能假設「我的病人應該聽得懂」。</p></div></div>
+<p>影響健康識能的因素：<strong>年紀較大、教育程度較低、少數族群、社經地位較低</strong>者，健康識能明顯偏低。</p>
+<h4>策略轉向：改變民眾很難，改變我們自己比較快 ⏱ 06:35</h4>
+<div class="callout cx-key"><div class="cx-t">提升民眾健康識能是很困難的任務</div><div class="cx-b"><p>影響識能的因素是年齡、教育程度、社經地位——這些<strong>都是臨床上很難改變的變項</strong>。與其去撼動這麼困難的問題，不如提升「我們照顧民眾時的健康識能服務能力」。</p></div></div>
+<p>因此近年健康識能照護的重心已經轉向：<strong>從「提升民眾的健康識能」轉為「提升機構提供符合健康識能之照護的能力」</strong>。</p>
+<p>美國國家衛生政策 <em>Healthy People 2010</em> 指出，提供符合健康識能的服務是達成健康目標的關鍵要務；其 final report 進一步把新目標訂在：<strong>醫療提供者是否能以淺顯易懂的溝通方式，為所有民眾提供符合健康識能的醫療資訊</strong>。做得到的話，在癌症篩檢率、血壓與血糖控制等不同層面，都能達到更好的照護成果。</p>
+<h4>醫療人員的現況：我們高估了病人 ⏱ 07:55</h4>
+<ul><li><strong>醫師端</strong>：常因為對健康識能的認知不足而<strong>高估民眾的理解程度</strong>，造成資訊傳遞阻礙；也很少有醫師察覺醫病溝通中那些「不小心犯的小錯」正在讓民眾聽不懂。</li><li><strong>醫護人員端</strong>：受訪醫護人員中有 <strong>34.2%</strong> 自身的健康識能表現並不理想。</li><li><strong>傳遞訊息的能力</strong>：會使用回覆示教、會提供易讀衛教教材的醫師比例都不高；<strong>超過一半</strong>受訪醫護人員對健康識能的態度並不正面。</li></ul>
+<p>根本原因在教育：醫學教育中<strong>很少有正式課程</strong>專門設計來訓練醫病溝通能力，醫護學生因而缺乏進入職場所需的溝通技巧與經驗。住院醫師的調查也呼應這點——多數認為學校的健康識能訓練不足，並認為有較好的健康識能訓練課程會有助於日後的臨床教學。</p>
+<h4>機構層面：把健康識能列為必備專業能力 ⏱ 10:18</h4>
+<p>醫療照護機構應將健康識能視為工作人員<strong>必備的專業能力</strong>，重點有二：</p>
+<ol><li><strong>清楚的溝通方式</strong>與<strong>對溝通訊息的正確理解</strong>，是確保病人與家屬掌握足夠資訊、能處理健康照護問題的關鍵。</li><li>機構應提供員工<strong>足夠的健康識能訓練</strong>，確保在所有照護情境下，工作人員都能善用健康識能策略，讓病人能對可能出現的狀況做出決定。</li></ol>
+<h4>口語溝通的實務原則 ⏱ 10:50</h4>
+<ul><li>口語溝通要<strong>容易理解、容易執行</strong>。</li><li>建立一套健康識能實務指引，能因應各種情境：<strong>不同語言族群、不同文化、身心障礙族群</strong>。</li><li>治療資訊要以<strong>簡明且個別化</strong>的方式提供，並具備<strong>最新的科學實證</strong>。</li><li>推動醫病共享決策（shared decision making, SDM），例如使用<strong>決策輔助工具</strong>，讓病人與醫療人員共同做出合適的醫療決策。</li><li><strong>鼓勵病人提問</strong>：就醫三問、就醫提問單都是現成的好工具（⏱ 11:27）。</li><li><strong>允許並鼓勵病人帶家人、朋友或照顧者一起來</strong>問問題——這樣才會知道日常生活中真正會遇到的照顧難題。</li><li>諮詢時提供<strong>有利溝通的環境</strong>：有隱私的空間、安靜的環境，並確保<strong>諮詢時間充足</strong>，病人才問得完。</li></ul>
+<div class="callout cx-ex"><div class="cx-t">就醫提問單怎麼用（以慢性腎臟病為例）</div><div class="cx-b"><p>第一次跟病人討論「未來可能需要洗腎」時，病人往往問不出來、也不知道該問什麼。提問單事先把病人最想知道的問題列出來，例如：</p>
+<ul><li>我的腎臟功能可以恢復到什麼程度？</li><li>可以晚一點再洗嗎？</li><li>改變什麼（生活方式）會有幫助？出現什麼症狀要注意？</li><li>要洗多久？</li></ul>
+<p>它的價值在於讓病人看見「哪些問題對我很重要」，也讓醫護人員有具體題目可以跟病人逐條討論。</p></div></div>
+<h4>實務範例：讓看不見、看不懂中文的人也能正確用藥 ⏱ 12:44</h4>
+<p>針對視障族群，高雄市立小港醫院製作<strong>愛盲防水點字用藥指示貼紙</strong>，以中文／點字對照呈現，搭配簡單易懂的圖示，直接貼在藥袋上。這讓醫療人員能與視障病人及家屬完成用藥溝通，病人回家後也仍能自行辨識用藥指示，提升用藥安全。</p>
+<p>同樣來自小港醫院的<strong>多語用藥指示貼紙</strong>，以中文、印尼文、越南文、泰文、日文對照呈現，搭配圖示，一樣直接貼在原本的藥袋上。</p>
+<div class="callout cx-tip"><div class="cx-t">這個做法聰明在哪裡</div><div class="cx-b"><p><strong>不用重印藥袋</strong>，只要加一張貼紙，就變成醫護人員、病人、家屬與外籍看護之間共通的用藥溝通工具，可以直接提升居家照護的用藥正確性。對聘用外籍看護的家庭尤其有用——因為真正在給藥的人，常常不是那位聽衛教的家屬。</p></div></div>
+<h4>確認病人真的懂：分段解釋與回覆示教 ⏱ 13:20</h4>
+<ul><li>使用<strong>淺白用語</strong>。</li><li><strong>分段解釋</strong>：把長資訊切成短段落，<strong>一次只給一段</strong>，確認對方理解後再講下一段。</li><li><strong>回覆示教（teach-back）</strong>：請溝通對象<strong>用自己的話重複</strong>他需要知道或需要做的事，以此確認他是否真的理解我們的說明。</li></ul>
+<h4>書面資料與衛教教材的原則 ⏱ 14:00</h4>
+<ul><li>書面資料同樣要<strong>容易理解、容易執行</strong>，並遵循易讀設計原則：<strong>字體大小、間距、色彩、圖像</strong>。</li><li>書面資料的角色是<strong>輔助口語溝通</strong>，不是取代。</li><li>書面與視聽教材要讓民眾<strong>容易取得</strong>。</li><li>要<strong>定期修訂</strong>教材，確保資訊品質與正確性；最好<strong>註明引用來源</strong>，讓使用者可以自行評估資訊品質。</li></ul>
+<h4>國健署《健康識能友善教材評估指標使用指引》 ⏱ 14:36</h4>
+<p>國民健康署出版有《健康識能友善教材評估指標》使用指引，可用來評估自家衛教教材的好壞。</p>
+<p><strong>開發教材的起手式</strong>：先確認教材的使用目標，並進行意見調查——釐清教材的<strong>行為目標</strong>是什麼、要傳達的<strong>關鍵訊息</strong>是什麼，再決定教材的<strong>格式與傳播形式</strong>，讓目標對象容易接收與使用。教材設計完成後應做<strong>教材測試</strong>，把回饋作為修改的依據。</p>
+<p><strong>評估指標重點（⏱ 15:30 起）</strong>：</p>
+<div class="tablewrap"><table><thead><tr><th>面向</th><th>具體要求</th></tr></thead><tbody><tr><td>主要訊息的位置</td><td>主要訊息呈現在<strong>封面或主題</strong>上，一目了然，用 1–3 個短句描述</td></tr><tr><td>行為導向</td><td>重點放在<strong>健康行為怎麼執行</strong>——民眾對「如何做」最有興趣；並說明做與不做的結果，幫助民眾決策</td></tr><tr><td>訊息量</td><td>範圍合理且與主題密切相關；訊息太多會造成讀者過度負荷。只留最重要、最值得知道的，其餘刪除；<strong>一頁大約 3–5 個重點就夠</strong></td></tr><tr><td>總結</td><td>提供總結與重點回顧，可用列點簡要文字、圖表、清單，或以<strong>加框文字</strong>強調</td></tr><tr><td>時效性</td><td>內容為最新且正確的訊息，並<strong>標示出版日期</strong>供讀者參考</td></tr><tr><td>用語</td><td>使用日常口語化的用語與語調，例如以「<strong>拍痰</strong>」取代「胸腔物理治療」、以「<strong>洗腎</strong>」取代「血液透析」；必須出現的醫學專有名詞要附簡單解釋</td></tr><tr><td>文化適切性</td><td>依地區文化特性調整，使用當地慣用語言與口吻以爭取認同；<strong>避免對特定族群產生負面暗示</strong>的用語或圖像（例如成人衛教教材不適合用兒童當主要圖像）</td></tr><tr><td>邏輯與版面</td><td>內容有邏輯連貫性，<strong>最重要的訊息放最前面</strong>；適當切分學習區塊，大量資訊拆成小段落並加上次標題提示內容</td></tr><tr><td>數值呈現</td><td>用文字描述或圖示舉例；<strong>結合數字、詞語與視覺</strong>來解釋風險的高低程度</td></tr><tr><td>視覺圖像</td><td>有圖像輔助理解，但<strong>不要過度花俏</strong>，以免分散注意力</td></tr></tbody></table></div>
+<div class="callout cx-key"><div class="cx-t">這張單張示範了什麼</div><div class="cx-b"><p>大標／小標分層清楚，讓民眾一眼找到重要訊息；每個重點都配圖示；份量這種抽象數字用「一份蔬菜約煮熟後半個飯碗」這類<strong>具象化</strong>方式說明；結語用編號列出四個可執行行為；並標註資料來源。這正好逐條命中上表的評估指標。</p></div></div>
+<h4>離院之後：把照護點延伸到社區與家庭 ⏱ 18:22</h4>
+<p>病人離院並非治療的結束，而是<strong>照護旅程的轉換</strong>。</p>
+<ul><li>要<strong>告知民眾未來治療與復原的過程</strong>該怎麼繼續走下去。</li><li>病人與家屬的<strong>自我管理能力對照護結果有決定性影響</strong>，因此要把照護點（point-of-care）延伸到社區與家庭，強化自我管理能力——<strong>對健康識能不足的民眾尤其重要</strong>。</li><li>機構應提供容易取得、以實證為基礎的健康資訊，特別針對不易觸及的族群。</li></ul>
+<p><strong>出院準備該講清楚的事</strong>：</p>
+<ul><li>自我照顧所需的資訊，說明要清楚且容易執行</li><li>如何取得資源、有沒有電話諮詢服務</li><li>如何回診與轉診，並建立既定程序確保民眾<strong>按時回診與轉診</strong></li><li>確保病人收到住院期間尚未被告知的<strong>臨床檢查結果</strong></li><li>病友團體、社會服務、病人倡議組織的資訊，都應在出院說明中詳列</li></ul>
+<div class="callout cx-ex"><div class="cx-t">花蓮慈濟醫院的做法</div><div class="cx-b"><p>以手機 app 作為出院後健康識能訊息的傳遞管道，延續出院後的衛教支持。（此處講者指投影片，影片未含該 app 的具體功能細節）</p></div></div>
+<h4>總結：健康識能是一種增能賦權模式 ⏱ 19:47</h4>
+<div class="callout cx-key"><div class="cx-t">增能賦權（empowerment）的兩根支柱</div><div class="cx-b"><p><strong>完善的資源</strong>：即時提供服務的醫療團隊、社區基層醫療機構與醫護人員的鼓勵與支持、衛教資源，以及整體社區環境的支持性氛圍。 <strong>充足的知識</strong>：訊息必須符合民眾需求，考量文化適應性，並以有效的溝通方式（口語、書面與不同媒材）與民眾互動。</p></div></div>
+<p>再加上有效的<strong>支持網路</strong>，讓民眾獲得安全感與歸屬感，知道社區裡有哪些病友團體與支持團體可以參與，由他們自己參與決定；病人透過討論過程產生內化與決心，才能得到更好的健康照護品質。</p>
+<h3>關鍵詞</h3>
+<ul><li><strong>健康識能（health literacy）</strong>：個人獲得、處理、了解基本健康訊息與服務，並運用這些訊息與服務進行健康決策的能力；包含「取得知識」與「運用知識改變行為」兩部分。</li><li><strong>邊緣性低健康識能</strong>：比「低健康識能」好一些、但尚未達到足夠程度的中間層級，國際統合分析中盛行率約 20%。</li><li><strong>回覆示教（teach-back）</strong>：請病人用自己的話，把他需要知道或需要做的事重複一次，藉此確認他是否真的理解，而不是只問「你聽懂了嗎」。</li><li><strong>分段解釋（chunking）</strong>：把長資訊切成短段落，一次只給一段，確認理解後再給下一段。</li><li><strong>醫病共享決策（shared decision making, SDM）</strong>：病人與醫療人員一起做出合適醫療決策的過程，常搭配決策輔助工具進行。</li><li><strong>就醫提問單／就醫三問</strong>：事先列出病人最該問的問題，協助病人在門診問出關鍵問題的溝通工具。</li><li><strong>健康識能友善教材評估指標</strong>：國民健康署出版的使用指引，用來檢核衛教教材是否符合健康識能原則。</li><li><strong>增能賦權（empowerment）</strong>：透過完善資源、充足知識與支持網路，讓病人有能力與意願自己參與健康決定的照護模式。</li></ul>
+<h3>可執行要點</h3>
+<ul><li class="task"><label><input type="checkbox" class="tk">明天門診結束衛教後，至少對 3 位病人改用回覆示教：「為了確認我剛剛有講清楚，可以請您用自己的話說一次回家怎麼吃藥嗎？」</label></li><li class="task"><label><input type="checkbox" class="tk">衛教長資訊時刻意分段，一次只講一段，確認理解再講下一段，不要一口氣講完整套代謝症候群五項指標。</label></li><li class="task"><label><input type="checkbox" class="tk">把常用的專業用語換成口語：血液透析→洗腎、胸腔物理治療→拍痰；整理一份自己科別的「換句話說」對照表。</label></li><li class="task"><label><input type="checkbox" class="tk">拿一張自家現行的衛教單張，對照本單元的評估指標逐條打勾：主要訊息有沒有放封面？一頁是不是超過 5 個重點？有沒有出版日期與資料來源？</label></li><li class="task"><label><input type="checkbox" class="tk">檢查藥袋與衛教單上「怎麼用」的欄位是否明確到不需要額外解釋，尤其是劑型容易混淆的藥品（口服藥水 vs. 滴劑）。</label></li><li class="task"><label><input type="checkbox" class="tk">門診導入就醫提問單，並主動邀請病人下次帶家屬或實際照顧者一起來。</label></li><li class="task"><label><input type="checkbox" class="tk">針對外籍看護照顧的病人，比照小港醫院做法，在藥袋加貼多語／圖示用藥指示，不必重印藥袋。</label></li><li class="task"><label><input type="checkbox" class="tk">檢視出院說明或個管結案說明，確認已列出：回診與轉診方式、諮詢電話、尚未告知的檢查結果、病友團體與社區資源。</label></li></ul>
+<div class="quiz" id="qz6" data-total="5"><div class="wgh">📝 隨堂測驗<span class="wghint">（點選項作答）</span><span class="qzscore"></span><button class="qzretry" style="display:none">↺ 重做</button></div><div class="qzq"><div class="qzqt">為什麼近年健康識能的照護重心，從「提升民眾健康識能」轉向「提升機構的健康識能服務能力」？</div><div class="qzopts"><button class="qzopt" data-c="0">因為民眾的健康識能其實普遍很好，不需要再提升</button><button class="qzopt" data-c="1">因為影響民眾健康識能的年齡、教育程度、社經地位等因素臨床上很難改變</button><button class="qzopt" data-c="0">因為法規規定醫療機構必須接受評鑑</button><button class="qzopt" data-c="0">因為提升機構能力不需要花費任何成本</button></div><div class="qzex">講者指出影響民眾健康識能的主要因素是年齡、教育程度與社經地位，都是很難撼動的變項；與其去改變這個困難的問題，不如提升醫療端「把資訊講到民眾懂」的服務能力。</div></div><div class="qzq"><div class="qzqt">關於各國健康識能盛行率，下列敘述何者正確？</div><div class="qzopts"><button class="qzopt" data-c="1">國際統合分析顯示低健康識能盛行率約 26%、邊緣性低健康識能約 20%</button><button class="qzopt" data-c="0">歐盟調查顯示只有不到 5% 的民眾健康識能有問題</button><button class="qzopt" data-c="0">台灣調查顯示成人健康識能不足的比例高達 37.6%</button><button class="qzopt" data-c="0">台灣民眾的健康識能明顯優於國際水準</button></div><div class="qzex">國際統合分析為低識能約 26%、邊緣性低識能約 20%。歐盟為 12% 不足、35% 有問題。台灣為 4.4% 不足、37.6% 有限。三者都指向「約一半成人難以適當取得與理解健康訊息」，台灣並未明顯優於國際。</div></div><div class="qzq"><div class="qzqt">門診衛教後，下列哪一種做法最符合「回覆示教」的精神？</div><div class="qzopts"><button class="qzopt" data-c="0">問病人「這樣聽懂了嗎？有沒有問題？」</button><button class="qzopt" data-c="0">把衛教單張交給病人，請他回家再看一次</button><button class="qzopt" data-c="1">請病人用自己的話說一次回家要怎麼用藥、怎麼調整飲食</button><button class="qzopt" data-c="0">請病人在衛教紀錄上簽名確認</button></div><div class="qzex">回覆示教是請溝通對象用自己的話重複他需要知道或需要做的事，藉此確認理解程度；問「聽懂了嗎」或請他簽名都無法驗證是否真的理解。</div></div><div class="qzq"><div class="qzqt">依照健康識能友善教材評估指標，設計一頁衛教單張時下列何者較適當？</div><div class="qzopts"><button class="qzopt" data-c="0">盡量把所有相關資訊都放上去，以免遺漏</button><button class="qzopt" data-c="1">一頁聚焦 3 到 5 個重點，並把最重要的訊息放在最前面或封面</button><button class="qzopt" data-c="0">多用花俏的視覺設計吸引民眾目光</button><button class="qzopt" data-c="0">避免標示出版日期，以免教材看起來過時</button></div><div class="qzex">指標建議一頁傳達約 3–5 個重點，主要訊息放在封面或最前面且一目了然；訊息過多會造成讀者負荷，視覺不宜過度花俏以免分散注意力，且應標示出版日期與引用來源供讀者評估品質。</div></div><div class="qzq"><div class="qzqt">小港醫院的多語／點字用藥指示貼紙，最主要解決了什麼問題？</div><div class="qzopts"><button class="qzopt" data-c="0">降低醫院重印藥袋的印刷成本</button><button class="qzopt" data-c="0">讓藥師不必再進行用藥說明</button><button class="qzopt" data-c="1">讓視障病人、不同語言族群與外籍看護在回家後仍能正確辨識用藥指示</button><button class="qzopt" data-c="0">取代醫師的處方簽章程序</button></div><div class="qzex">這個做法的核心價值是溝通：以中文／點字或多語對照搭配圖示直接貼在既有藥袋上，讓視障病人、不同母語的病人家屬與實際給藥的外籍看護都能看懂用藥指示，提升居家照護用藥正確性；不用重印藥袋只是附帶的實作優點。</div></div></div>
+<div class="flashcards"><div class="wgh">🎴 單字卡<span class="wghint">（點卡片翻面）</span></div><div class="fcgrid"><button class="fc"><span class="fc-in"><span class="fc-f">健康識能（health literacy）的定義</span><span class="fc-b">個人獲得、處理、了解基本健康訊息與服務，並運用這些訊息與服務進行健康決策的能力；含知識取得與運用能力兩部分。</span></span></button><button class="fc"><span class="fc-in"><span class="fc-f">為什麼採用「健康識能」而非「健康知能／健康素養」</span><span class="fc-b">舊譯偏重知識面；現行譯法更強調「把知識拿來改變健康行為」的運用能力。</span></span></button><button class="fc"><span class="fc-in"><span class="fc-f">國際統合分析的健康識能盛行率</span><span class="fc-b">低健康識能約 26%、邊緣性低健康識能約 20%，合計約一半成人難以適當取得與理解健康訊息。</span></span></button><button class="fc"><span class="fc-in"><span class="fc-f">台灣成人健康識能調查結果</span><span class="fc-b">以中文多面向健康識能量表調查，4.4% 不足、37.6% 有限，合計約一半民眾缺乏足夠健康識能。</span></span></button><button class="fc"><span class="fc-in"><span class="fc-f">健康識能偏低的高風險族群</span><span class="fc-b">年紀較大、教育程度較低、少數族群、社經地位較低者。</span></span></button><button class="fc"><span class="fc-in"><span class="fc-f">回覆示教（teach-back）</span><span class="fc-b">請病人用自己的話重複他需要知道或需要做的事，確認是否真的理解，而不是問「聽懂了嗎」。</span></span></button><button class="fc"><span class="fc-in"><span class="fc-f">分段解釋原則</span><span class="fc-b">把長資訊切成短段落，一次只給一段，確認理解後再給下一段。</span></span></button><button class="fc"><span class="fc-in"><span class="fc-f">衛教教材一頁應放幾個重點</span><span class="fc-b">約 3–5 個；訊息過多會造成讀者過度負荷，只留最重要、最值得知道的。</span></span></button><button class="fc"><span class="fc-in"><span class="fc-f">教材用語的口語化示例</span><span class="fc-b">以「拍痰」取代胸腔物理治療、以「洗腎」取代血液透析；必要的專有名詞要附簡單解釋。</span></span></button><button class="fc"><span class="fc-in"><span class="fc-f">出院準備應涵蓋哪些資訊</span><span class="fc-b">自我照顧資訊、資源與諮詢電話、回診與轉診方式與既定程序、住院期間尚未告知的臨床結果、病友團體／社會服務／病人倡議組織資訊。</span></span></button><button class="fc"><span class="fc-in"><span class="fc-f">健康識能的增能賦權模式兩大要素</span><span class="fc-b">完善之資源（醫療團隊、社區基層機構與人員支持、衛教資源、社區支持氛圍）與充足之知識（符合需求、考量文化適應性、有效溝通方式）。</span></span></button></div></div></div>
+      </article>
+      <article class="note" id="c2-3">
+        <h3 class="ntitle">促進病人參與及行為改變－動機晤談</h3>
+        <div class="nbody"><div class="callout cx-note"><div class="cx-t">代謝症候群防治計畫教育訓練課程－下 · 單元 3-3 · 影片 16 分鐘 · 講者：顏佐樺醫師（聯安預防醫學機構聯欣診所）</div></div>
+<div class="callout cx-key"><div class="cx-t">一句話總結</div><div class="cx-b"><p>病人不是不想改變，而是<strong>不想被改變</strong>；動機式晤談用引導取代說服，讓病人自己說出改變的理由。</p></div></div>
+<div class="callout cx-key"><div class="cx-t">你會學到</div><div class="cx-b"><ul><li>為什麼「給理由、給知識、給方法、嚇後果」四招常常沒用</li><li>什麼是矯正反射（righting reflex），以及它為什麼會製造抵抗</li><li>評估改變的四個觀察要素：矛盾、動機、齊備、信心</li><li>動機式晤談的精神（ACE）、四項原則與四項技巧</li><li>一組可以今天就在門診試用的四個問句，以及一個完整的減重對話示範</li></ul></div></div>
+<h3>內容筆記</h3>
+<h4>為什麼改變如此困難？ ⏱ 00:43</h4>
+<p>臨床人員幾乎都有這個經驗：想說服病人戒菸、按時服藥、改變飲食，結果改變就是發生不了。</p>
+<p>我們通常把「病人不改變」歸因為四件事，這也是最常見的四個假設：</p>
+<div class="tablewrap"><table><thead><tr><th>我們假設病人為什麼不改變</th><th>我們於是採取的對策</th></tr></thead><tbody><tr><td>他看不到為什麼要改變</td><td>讓他看見改變的理由</td></tr><tr><td>他沒有足夠的知識</td><td>給他衛教知識</td></tr><tr><td>他不知道如何改變</td><td>教他具體方法</td></tr><tr><td>他不在乎不改變的後果</td><td>告訴他後果、嚇一嚇他</td></tr></tbody></table></div>
+<p>講者的判斷是：這四招都合理，但<strong>現實上，有理由、有知識、有方法、也真的會害怕後果，仍然不足以讓一個人改變</strong>。</p>
+<div class="callout cx-ex"><div class="cx-t">紅燈路口的小實驗</div><div class="cx-b"><p>你正在趕時間，走到一個亮著紅燈、但左右沒車也沒人的小路口。你會等綠燈，還是確認安全後快步通過？ 講者的重點不在於你選哪一個，而在於：<strong>不管你選哪一個，你都不希望是別人來告訴你該怎麼做。</strong></p></div></div>
+<p>這種心理叫<strong>抵抗勸說的反應</strong>——一般人天生不喜歡被說服、被勸著改變。</p>
+<h4>矯正反射：好意造成的反效果 ⏱ 02:44</h4>
+<div class="callout cx-warn"><div class="cx-t">矯正反射（righting reflex）</div><div class="cx-b"><p>身為醫師，看到病人「走錯方向」就會有一股衝動想把他矯正回來。初衷是好意、是替病人著想，但表現出來就是積極勸說；病人接收到的是被糾正，於是回以抵抗。</p></div></div>
+<p>在這一來一回的拉扯裡，<strong>太積極的醫師反而讓病人更不想改變</strong>。</p>
+<div class="callout cx-quote"><div class="cx-t">我們不是不想改變，而是不想被改變。</div></div>
+<p>改變要成立，必須是病人自己願意、自己啟動的，不是被勸出來的。</p>
+<h4>評估改變的四個要素 ⏱ 03:35</h4>
+<p>觀察與評估一個病人「改變到哪裡了」，可以看這四點：</p>
+<div class="tablewrap"><table><thead><tr><th>要素</th><th>英文</th><th>要觀察什麼</th></tr></thead><tbody><tr><td>矛盾</td><td>Ambivalence</td><td>他心裡同時存在的「想改變」與「不想改變」</td></tr><tr><td>動機</td><td>Motivation</td><td>他有多想改變</td></tr><tr><td>齊備</td><td>Readiness</td><td>他準備好要開始了嗎</td></tr><tr><td>信心</td><td>Confidence</td><td>他對自己做得到的信心有多少</td></tr></tbody></table></div>
+<p><strong>矛盾</strong>幾乎是每個要改變的人的預設狀態，而且病人自己講出來的句子就會前後打架：</p>
+<div class="callout cx-ex"><div class="cx-t">典型的矛盾句</div><div class="cx-b"><ul><li>「我想要減重，但是我不愛運動。」</li><li>「我應該戒菸，但是我做不到。」</li><li>「我必須按時服藥，但是我常常忘記。」</li></ul></div></div>
+<p>也就是說，病人身上同時有改變的動機，也有不改變的理由。能把這四點評估出來，協助改變才會有效。</p>
+<h4>什麼是動機式晤談？ ⏱ 04:52</h4>
+<p><strong>動機式晤談法（Motivational Interviewing, MI）</strong>是一種協助改變的特殊溝通模式。講者引述的研究證據：相較於傳統溝通模式，MI 更能有效減少不健康行為、增加體能活動、改善飲食習慣等；而且曾有研究發現，<strong>即使是 15 分鐘以內的簡短介入（口述不清，影片此處原音近似「簡短記錄」），效果一樣顯著</strong>。</p>
+<div class="callout cx-key"><div class="cx-t">MI 不需要很長的時間——這對門診最重要。</div></div>
+<p><strong>三種溝通模式的差別</strong>（動機式晤談屬於其中的「引導」）：</p>
+<div class="tablewrap"><table><thead><tr><th>模式</th><th>特徵</th><th>主權在誰</th><th>有無方向性</th></tr></thead><tbody><tr><td>指示</td><td>命令、請你去做什麼</td><td>在醫療人員</td><td>有</td></tr><tr><td>跟隨</td><td>只是聆聽，不帶方向</td><td>在病人</td><td>無</td></tr><tr><td><strong>引導（MI）</strong></td><td>把主權放回病人身上，同時保有方向性</td><td>在病人</td><td>有</td></tr></tbody></table></div>
+<div class="callout cx-quote"><div class="cx-t">動機晤談的目的，是讓對方說服自己進行改變。</div></div>
+<h4>動機式晤談的關鍵假設 ⏱ 06:14</h4>
+<ul><li><strong>動機是會變的</strong>：這次接觸他沒有動機，不代表下次也沒有。</li><li><strong>病人抵抗的理由也會改變</strong>，不是固定不動的特質。</li><li><strong>醫療人員的行為與話語選擇很重要</strong>：有效率的話語選擇，可以讓病人傾向改變。</li><li><strong>用說服的方式是沒有效的做法。</strong></li></ul>
+<p>要改變的人心裡有兩股力量在拉扯：<strong>阻抗（不想改變的理由）</strong>與<strong>傾向改變的理由</strong>。兩股力量相持不下時，人就維持現狀；只要能幫病人把天平往「傾向改變」那一邊挪一點，他就會慢慢往改變的方向走。</p>
+<div class="callout cx-key"><div class="cx-t">MI 的作用機轉</div><div class="cx-b"><p>透過互動技巧化解矛盾心態 → 讓病人<strong>講出更多改變的語言</strong> → 同時<strong>減少或忽略抵抗的語言</strong>。</p></div></div>
+<h4>MI 的精神：ACE ⏱ 07:52</h4>
+<div class="tablewrap"><table><thead><tr><th>字母</th><th>英文</th><th>中文</th><th>要做什麼／不要做什麼</th></tr></thead><tbody><tr><td>A</td><td>Autonomy</td><td>尊重自主</td><td>尊重病人的自主權，讓主權回到他手裡；不展示我們的權威</td></tr><tr><td>C</td><td>Collaboration</td><td>共同合作</td><td>與病人合作，而不是對抗、衝突</td></tr><tr><td>E</td><td>Evocation</td><td>引發</td><td>引起病人自己改變的興趣；不用教訓、高姿態、負面的方式逼他改變</td></tr></tbody></table></div>
+<div class="callout cx-note"><div class="cx-t">影片此處口述為「invocation」，依 ACE 架構與動機式晤談標準用語應為 <strong>evocation（引發）</strong>。</div></div>
+<h4>MI 的四項原則 ⏱ 08:34</h4>
+<ol><li><strong>抵抗自己的矯正反射</strong>——講者明講這是第一項、也是<strong>最困難</strong>的一項。身為臨床人員一定很想幫病人改變，但太積極的作為與話語只會引出抵抗；抑制矯正反射，病人反而更有動機。</li><li><strong>了解對方的動機</strong>。</li><li><strong>聆聽對方</strong>。</li><li><strong>賦能於對方</strong>，讓他具備進行改變的能力與信心。</li></ol>
+<h4>MI 的四項技巧 ⏱ 09:26</h4>
+<p>用來化解矛盾、提高改變動機：</p>
+<div class="tablewrap"><table><thead><tr><th>技巧</th><th>做法</th><th>目的</th></tr></thead><tbody><tr><td>開放式問句</td><td>多問開放式問題，少問是非題</td><td>讓對方說出比較深層的理由與動機</td></tr><tr><td>肯定</td><td>適當給予肯定</td><td>支持病人的自我效能</td></tr><tr><td>反應式傾聽</td><td>積極聆聽對方所說的，並給出反應</td><td>讓溝通能快速且持續地進行下去</td></tr><tr><td>摘要</td><td>在溝通結束前做一次摘要</td><td>讓病人知道這次談了哪些事</td></tr></tbody></table></div>
+<div class="callout cx-key"><div class="cx-t">一句話收攏：動機式晤談就是協助解決矛盾心態、啟動改變的動機。</div></div>
+<h4>動機晤談初體驗：四個問句 ⏱ 10:34</h4>
+<p>這是講者給的入門練習，對象可以是家人，也可以是病人。</p>
+<div class="callout cx-tip"><div class="cx-t">練習的兩條戒律</div><div class="cx-b"><p><strong>不要嘗試說服對方改變、也不要給任何建議。</strong>只問以下問題，然後仔細聆聽。</p></div></div>
+<ol><li>「你為什麼想進行這項改變？」</li><li>「你可以如何達到這項改變？」</li><li>「0 到 10 分，0 分是完全不重要、10 分是非常重要，這項改變對你來說有多重要？」</li><li>「為什麼是 X 分，而不是 0 分？」</li></ol>
+<p>第 4 題是整組問句的關鍵。假設對方只答 5 分，聽起來不高；但當你問「為什麼是 5 分而不是 0 分」，<strong>對方就會把改變的重要性、也就是改變的話語，親口講出來</strong>。</p>
+<p>仔細聽完後：先把剛剛聽到的做一次總結講給對方聽，再多問一個問題——<strong>「你認為你接下來可以怎麼做？」</strong></p>
+<div class="callout cx-key"><div class="cx-t">標準流程</div><div class="cx-b"><p>聆聽並詢問改變的理由 → 摸清動機、信心、準備度 → 把這些動機整理出來、回饋講一次給對方聽 → 再問下一步可以怎麼做。</p></div></div>
+<h5>完整示範：減重的門診對話 ⏱ 12:53</h5>
+<div class="tablewrap"><table><thead><tr><th>醫師</th><th>病人</th></tr></thead><tbody><tr><td>你為什麼想減重？</td><td>我的血糖越來越高，我怕自己以後會得糖尿病。</td></tr><tr><td>你可以如何減重呢？</td><td>我很喜歡喝飲料，我想我可以先把飲料戒掉。</td></tr><tr><td>0 分到 10 分，減重對你來說有多重要？</td><td>8 分，蠻重要的。</td></tr><tr><td>減重本來就不容易，為什麼會是 8 分，而不是更低的分數？</td><td>我有好幾位家人都有糖尿病，後來也都需要洗腎。我需要把體重減下來。</td></tr><tr><td>（摘要）雖然減重不容易，你卻認為它很重要；你不想像家人一樣得到糖尿病、最後可能還需要洗腎。你有想到可以先把含糖飲料戒掉。聽到這裡，你認為接下來還可以怎麼做？</td><td>醫師，我先努力減重，我們下次再測測血糖。</td></tr></tbody></table></div>
+<p>這段短短的對話裡，醫師做的事只有三件：用有效的開放式問句、從病人的<strong>改變話語</strong>中萃取重點再講一次給他聽、最後把自主權交回病人手上讓他自己做決定。全程沒有說服、沒有給建議、也沒有衛教。</p>
+<h4>總結與學習資源 ⏱ 14:45</h4>
+<div class="callout cx-key"><div class="cx-t">動機式晤談是經研究證實有效、且不需要太長時間的溝通方式；核心是透過互動溝通，協助病人化解矛盾心態、減少抵抗語言、提升改變動機。</div></div>
+<p><strong>線上資源</strong>：MINT（Motivational Interviewing Network of Trainers）網站，站上有免費與付費資源。</p>
+<p><strong>講者推薦的三本書</strong>（第三本為中文書）：</p>
+<div class="tablewrap"><table><thead><tr><th>書名</th><th>作者</th></tr></thead><tbody><tr><td>Motivational Interviewing: Helping People Change（第三版）</td><td>William R. Miller、Stephen Rollnick</td></tr><tr><td>Motivational Interviewing in Health Care: Helping Patients Change Behavior</td><td>Stephen Rollnick、William R. Miller、Christopher C. Butler</td></tr><tr><td>強化動機 承諾改變：動機式晤談實務工作手冊（中文）</td><td>（書封作者姓名截圖解析度不足，未能判讀）</td></tr></tbody></table></div>
+<p>講者對這三本書的評語：都簡單明瞭地說明了這種溝通模式如何應用在臨床上。</p>
+<h3>關鍵詞</h3>
+<ul><li><strong>動機式晤談法（Motivational Interviewing, MI）</strong>：一種「引導型」的溝通模式，透過互動化解病人的矛盾心態、引出他自己的改變理由，協助他啟動改變。</li><li><strong>矯正反射（righting reflex）</strong>：臨床人員看到病人走錯方向時，想立刻把他糾正過來的衝動。出於好意，卻常引發病人的抵抗。</li><li><strong>抵抗勸說的反應</strong>：人天生不喜歡被說服、被勸著做改變的心理傾向。</li><li><strong>矛盾（ambivalence）</strong>：同時存在「想改變」與「不想改變」兩股力量的心理狀態，是多數待改變者的預設狀態。</li><li><strong>改變的語言（改變話語）</strong>：病人自己講出來、指向改變的話。MI 的目標就是讓這種話變多、抵抗的話變少。</li><li><strong>ACE 精神</strong>：Autonomy（尊重自主）、Collaboration（共同合作）、Evocation（引發）。</li><li><strong>齊備（readiness）</strong>：病人是否已經準備好開始行動。</li></ul>
+<h3>可執行要點</h3>
+<ul><li class="task"><label><input type="checkbox" class="tk">下一次想脫口說出「你應該要……」時，先停三秒，辨認那是不是自己的矯正反射。</label></li><li class="task"><label><input type="checkbox" class="tk">把四個問句（為什麼想改變／可以怎麼做／0–10 分有多重要／為什麼不是 0 分）寫在門診桌上或衛教單背面，本週先在一位病人身上試一次。</label></li><li class="task"><label><input type="checkbox" class="tk">病人給分數後，一律追問「為什麼是 X 分而不是 0 分」，讓他自己講出改變的理由，不要幫他補。</label></li><li class="task"><label><input type="checkbox" class="tk">每次衛教結束前，用 30 秒把病人剛剛講過的改變理由摘要回饋給他，再問「你接下來可以怎麼做」。</label></li><li class="task"><label><input type="checkbox" class="tk">個管追蹤時，除了記錄體重血壓，另外記下四個要素：矛盾點、動機、準備度、信心分數，作為下次接觸的起點。</label></li><li class="task"><label><input type="checkbox" class="tk">把「這次沒動機」視為當下狀態而非結論，下次接觸重新評估。</label></li><li class="task"><label><input type="checkbox" class="tk">找一本推薦書（中文可選《強化動機 承諾改變》）或上 MINT 網站，補充完整技巧訓練。</label></li></ul>
+<div class="quiz" id="qz7" data-total="4"><div class="wgh">📝 隨堂測驗<span class="wghint">（點選項作答）</span><span class="qzscore"></span><button class="qzretry" style="display:none">↺ 重做</button></div><div class="qzq"><div class="qzqt">依講者說法，MI 中「最困難」的一項原則是什麼？</div><div class="qzopts"><button class="qzopt" data-c="0">給病人足夠的衛教知識</button><button class="qzopt" data-c="1">抵抗自己的矯正反射</button><button class="qzopt" data-c="0">教病人具體的執行方法</button><button class="qzopt" data-c="0">說明不改變的嚴重後果</button></div><div class="qzex">講者明確指出四項原則中第一項也是最困難的，就是抑制臨床人員自身想把病人「矯正」過來的衝動；太積極的作為反而引發抵抗。</div></div><div class="qzq"><div class="qzqt">病人說減重的重要性是 5 分。依動機晤談的做法，下一句最好問什麼？</div><div class="qzopts"><button class="qzopt" data-c="0">為什麼不是 8 分或 10 分？</button><button class="qzopt" data-c="0">5 分太低了，你知道肥胖的風險嗎？</button><button class="qzopt" data-c="1">為什麼是 5 分而不是 0 分？</button><button class="qzopt" data-c="0">那你要不要先減 3 公斤？</button></div><div class="qzex">往低分方向問（為什麼不是 0 分），病人才會自己講出改變的理由，也就是「改變的語言」；往高分方向問或給建議，容易引出抵抗。</div></div><div class="qzq"><div class="qzqt">下列何者最符合動機式晤談屬於的溝通模式？</div><div class="qzopts"><button class="qzopt" data-c="0">指示：明確告訴病人該做什麼</button><button class="qzopt" data-c="0">跟隨：只聆聽、不帶方向</button><button class="qzopt" data-c="1">引導：主權在病人，但保有方向性</button><button class="qzopt" data-c="0">衛教：提供完整知識讓病人自行判斷</button></div><div class="qzex">講者把溝通模式分為引導、指示、跟隨三類。MI 是引導型：把主權放回病人身上，同時仍有方向性地引導他往改變走。</div></div><div class="qzq"><div class="qzqt">關於 MI 所需時間，講者引述的研究發現是什麼？</div><div class="qzopts"><button class="qzopt" data-c="0">至少需要一小時的深度會談</button><button class="qzopt" data-c="1">15 分鐘以內的簡短介入效果一樣顯著</button><button class="qzopt" data-c="0">必須連續四次以上才有效</button><button class="qzopt" data-c="0">門診時間不足時無法應用</button></div><div class="qzex">講者指出有研究發現即使是 15 分鐘以內的簡短介入，效果一樣顯著，這是 MI 能落地到門診的關鍵理由。</div></div></div>
+<div class="flashcards"><div class="wgh">🎴 單字卡<span class="wghint">（點卡片翻面）</span></div><div class="fcgrid"><button class="fc"><span class="fc-in"><span class="fc-f">矯正反射（righting reflex）是什麼？為什麼要抑制？</span><span class="fc-b">臨床人員看到病人走錯方向就想立刻糾正的衝動。初衷是好意，但表現為積極勸說，會引發病人的抵抗，反而降低改變意願。</span></span></button><button class="fc"><span class="fc-in"><span class="fc-f">評估改變的四個要素</span><span class="fc-b">矛盾（Ambivalence）、動機（Motivation）、齊備（Readiness）、信心（Confidence）。</span></span></button><button class="fc"><span class="fc-in"><span class="fc-f">MI 的 ACE 精神</span><span class="fc-b">A＝Autonomy 尊重自主；C＝Collaboration 共同合作（非對抗）；E＝Evocation 引發病人自己的改變興趣（非教訓）。</span></span></button><button class="fc"><span class="fc-in"><span class="fc-f">MI 的四項原則</span><span class="fc-b">1. 抵抗自身的矯正反射（最難）2. 了解對方的動機 3. 聆聽對方 4. 賦能於對方，給他改變的能力與信心。</span></span></button><button class="fc"><span class="fc-in"><span class="fc-f">MI 的四項技巧</span><span class="fc-b">開放式問句、肯定、反應式傾聽、摘要。</span></span></button><button class="fc"><span class="fc-in"><span class="fc-f">動機晤談初體驗的四個問句</span><span class="fc-b">1.「你為什麼想進行這項改變？」2.「你可以如何達到這項改變？」3.「0 到 10 分，這項改變對你多重要？」4.「為什麼是 X 分而不是 0 分？」最後總結後再問「你認為你接下來可以怎麼做？」</span></span></button><button class="fc"><span class="fc-in"><span class="fc-f">MI 的作用機轉一句話</span><span class="fc-b">透過互動化解矛盾心態，讓病人講出更多改變的語言、減少抵抗的語言，讓他說服自己改變。</span></span></button></div></div></div>
+      </article>
+      <article class="note" id="c2-4">
+        <h3 class="ntitle">連結跨領域照護及溝通協調－以病人為中心的跨資源整合照護運用（一）</h3>
+        <div class="nbody"><div class="callout cx-note"><div class="cx-t">代謝症候群防治計畫教育訓練課程－下 · 單元 3-4 · 影片 11 分鐘 · 講者：徐慧君護理衛教師（李氏聯合診所）</div></div>
+<div class="callout cx-key"><div class="cx-t">一句話總結</div><div class="cx-b"><p>慢性病的成敗有八成不在診間，而在社會經濟環境與健康行為，因此基層診所要用<strong>以人為本（people-centred）的整合照護</strong>加上<strong>個案管理師這個樞紐角色</strong>，把成人健檢的異常個案接住、衛教、追蹤並轉介出去。</p></div></div>
+<div class="callout cx-key"><div class="cx-t">你會學到</div><div class="cx-b"><ul><li>WHO 2015 年以人為本整合式健康服務的兩大概念，以及「以人為本」在實務上的四個判準</li><li>慢性病照護模式（Chronic Care Model）的六大要素，以及它真正要產出的兩個角色</li><li>文獻對「基層醫療＋照護連續性」的關鍵數據（就醫信任度、住院／急診／費用下降幅度）</li><li>個案管理師（衛教師）為什麼是慢性病照護模式成敗的關鍵角色</li><li>從成人健檢異常值出發的代謝症候群個管流程：判讀→電訪→回診／電話衛教→衛教資訊傳遞→追蹤與轉介的完整分流</li></ul></div></div>
+<h3>內容筆記</h3>
+<h4>一、為什麼要談「以病人為中心」 ⏱ 01:10</h4>
+<p>現代醫學之父奧斯勒（William Osler，影片口述為「Oslo」，依上下文判為 Osler）的名言是這堂課的起點：</p>
+<div class="callout cx-quote"><div class="cx-t">一個好的醫師是治療疾病，一個偉大的醫師是治療「有疾病的人」。</div></div>
+<p>講者用這句話點出醫療人員要從「只看疾病」轉換成「以病人為中心」的全人觀點。</p>
+<p>接著她引用過去對慢性病照護的分析結果，說明這個轉換不是口號而是數據上的必然 ⏱ 01:37：</p>
+<div class="tablewrap"><table><thead><tr><th>影響個人健康的層面</th><th>佔比</th></tr></thead><tbody><tr><td>臨床醫療照護</td><td>20%</td></tr><tr><td>社會經濟環境＋健康行為</td><td>80%</td></tr></tbody></table></div>
+<div class="callout cx-key"><div class="cx-t">診間能改變的只有兩成</div><div class="cx-b"><p>臨床醫療照護只佔慢性病健康結果的 <strong>20%</strong>，其餘 <strong>80%</strong> 落在社會經濟環境與健康行為。這正是「社會心理與行為因素對個人健康極為重要」的實證基礎，也是後面所有跨資源整合、社區轉介的理由。</p></div></div>
+<h4>二、WHO 以人為本的整合式健康服務（2015） ⏱ 01:55</h4>
+<p>2015 年世界衛生組織頒布「以人為本的健康照護服務」框架，講者強調其中兩項重要概念：</p>
+<ol><li><strong>把個人、家庭與社區的觀點納入照護系統</strong>——用尊重且整體（holistic）的方式回應個案的需求與偏好。</li><li><strong>要求民眾參與自己照護所需的教育</strong>——個案必須先懂自己疾病的相關知識，才有能力為自己做出合適的照護決策。</li></ol>
+<p>整體而言，這套服務是<strong>圍繞個案的健康需求與期望</strong>打轉，而不是圍繞某一個特定疾病。</p>
+<div class="callout cx-key"><div class="cx-t">「以人為本」的四個實務判準</div><div class="cx-b"><ol><li>以<strong>尊嚴、同情、尊重</strong>的方式提供照護。</li><li>團隊之間與醫病之間的<strong>照護協調良好</strong>。</li><li><strong>個別化</strong>：同時考慮臨床、社會、情感與實際（practical）需求。</li><li>讓個案<strong>在自己的照護中發揮積極作用</strong>。</li></ol></div></div>
+<div class="callout cx-warn"><div class="cx-t">個案不是被動的接受者</div><div class="cx-b"><p>講者特別提醒：以人為本的本質，是對「個人、他的家人與周遭一切」有更多關注，而不只關注疾病；並且要促進個案與醫療提供者之間的<strong>平等關係</strong>。個案不是被動的接受者，這是很重要的觀念。</p></div></div>
+<h4>三、文獻怎麼說：基層醫療與照護連續性 ⏱ 03:57</h4>
+<p>以人為中心也強調<strong>照護的連續性（continuity）</strong>與<strong>共同協調合作（coordination）</strong>。講者引用一組文獻整理，說明基層醫療是極重要的照護提供者：口述提到「六成以上的患者重視且信任基層醫療提供者」，投影片上的對應數據如下表。</p>
+<div class="tablewrap"><table><thead><tr><th>文獻關鍵訊息</th><th>數值</th></tr></thead><tbody><tr><td>重視能持續看同一位基層醫療提供者的病人比例</td><td>75%</td></tr><tr><td>重視能看自己認識且信任的人的病人比例</td><td>63%</td></tr><tr><td>協調良好的居家型基層醫療可降低醫療費用</td><td>下降 17%</td></tr><tr><td>高照護連續性可減少住院</td><td>減少 13%</td></tr><tr><td>高照護連續性可減少急診就診</td><td>減少 27%</td></tr><tr><td>在宅住院（hospital at home）可降低照護成本</td><td>下降 19%</td></tr><tr><td>可由基層醫療管理的心理健康需求者比例</td><td>超過五分之四</td></tr><tr><td>回報醫療照護使用量下降的醫療之家（medical home）研究</td><td>25 篇中有 23 篇</td></tr></tbody></table></div>
+<div class="callout cx-key"><div class="cx-t">基層醫療的定位</div><div class="cx-b"><p>這組數據支撐的結論是：<strong>基層醫療在慢性病管理中扮演十分重要的角色</strong>——協調良好、以居家為基礎的基層醫療，能同時降低醫療花費、住院與急診人次。</p></div></div>
+<h4>四、慢性病照護模式（Chronic Care Model, CCM） ⏱ 04:19</h4>
+<p>CCM 由 Wagner 醫師提出（影片口述為「doctor wong 哥」，依 CCM 文獻通例判為 Wagner）。核心主張是：慢性病照護必須由<strong>健康照護系統</strong>與<strong>社區</strong>互相配合，包含六個環環相扣的要素。</p>
+<div class="tablewrap"><table><thead><tr><th>CCM 六要素</th><th>內涵</th></tr></thead><tbody><tr><td>社區資源與政策</td><td>診所之外可連結的社區支援與制度面</td></tr><tr><td>自我管理支持</td><td>支持病人做自我照護</td></tr><tr><td>健康照護組織</td><td>機構層面的組織與領導</td></tr><tr><td>服務輸送系統</td><td>健康服務如何被遞送到個案身上</td></tr><tr><td>決策支持</td><td>決策所需的資源與依據</td></tr><tr><td>臨床資訊系統</td><td>臨床相關訊息的掌握與流通</td></tr></tbody></table></div>
+<p>這六個要素最後要匯流成<strong>兩個角色的互動</strong>：</p>
+<ul><li><strong>充分被告知、被激活（activated）的病人</strong>——他了解自己的疾病知識。</li><li><strong>充分準備、主動前瞻（proactive）的實務團隊</strong>——跨專業且積極主動。</li></ul>
+<div class="callout cx-key"><div class="cx-t">CCM 的產出是「一場有成效的互動」</div><div class="cx-b"><p>六大要素本身不是目的；目的是讓「知情且被激活的病人」與「準備充分的跨專業團隊」產生<strong>富有成效的互動（productive interaction）</strong>，進而達成慢性病人最佳的功能與臨床結果。</p></div></div>
+<p>醫療團隊要靠哪些技巧促成這種互動？講者列出四組行為改變策略 ⏱ 06:00 前後：</p>
+<ul><li><strong>投入／參與（engagement）</strong></li><li><strong>教練式引導（coaching）</strong></li><li><strong>動機式晤談（motivational interviewing）</strong></li><li><strong>賦能（empowerment）</strong> 與 <strong>醫病共享決策（shared decision making, SDM）</strong></li></ul>
+<div class="callout cx-tip"><div class="cx-t">跨專業＋跨科別，兩件不同的事</div><div class="cx-b"><ul><li><strong>跨專業團隊</strong>：為的是從多面向評估病人需求，提供適合這個人的健康服務。</li><li><strong>多科別醫療照護</strong>：為的是依個案的健康狀況安排不同專科來提供醫療處置。</li></ul>
+<p>兩者都需要，不能互相取代。</p></div></div>
+<p>整體思維的翻轉是：從過去<strong>以急性醫療為主流</strong>，轉成<strong>著重社區及長期照護</strong>。</p>
+<h4>五、關鍵角色：個案管理師／衛教師 ⏱ 06:29</h4>
+<p>成功的慢性病照護模式需要一個關鍵角色——<strong>個案管理師</strong>，部分醫療院所稱為<strong>衛教師</strong>。講者說明這個角色的價值來自三件事：</p>
+<ol><li><strong>溝通橋樑</strong>：可以做醫病之間良好的溝通中介。</li><li><strong>長期關係</strong>：個案管理師通常與個案長期接觸，關係較好，對個案各方面的需求也較了解。</li><li><strong>能力組合</strong>：當這位個案管理師同時具備<strong>醫療照護能力、溝通能力、資源整合能力</strong>時，就能以全人角度多方協助個案，滿足其健康照護需求。</li></ol>
+<div class="callout cx-key"><div class="cx-t">對代謝症候群尤其關鍵</div><div class="cx-b"><p>代謝症候群個案的核心任務是<strong>改變生活型態</strong>，這正是個案管理師最能著力、也最需要長期陪伴的部分。</p></div></div>
+<p>複習診斷標準（講者在此重提）⏱ 07:24：</p>
+<div class="tablewrap"><table><thead><tr><th>代謝症候群五項危險因子</th></tr></thead><tbody><tr><td>腰圍</td></tr><tr><td>血壓</td></tr><tr><td>高密度脂蛋白膽固醇（HDL-C）</td></tr><tr><td>空腹血糖</td></tr><tr><td>三酸甘油酯（TG）</td></tr></tbody></table></div>
+<ul><li>五項中<strong>符合 3 項（含）以上異常</strong> → 代謝症候群</li><li><strong>符合 1 項</strong> → 代謝症候群高危險群</li></ul>
+<h4>六、代謝症候群個案管理流程：從成人健檢到追蹤 ⏱ 07:55</h4>
+<p>講者以自己診所的實作示範整條流程。起點是<strong>成人健檢（影片口述為「成人見解」）</strong>：從健檢報告中找出異常個案，只要有任一項異常就可以採取行動。</p>
+<p class="lead"><strong>第一步：一週內電訪告知報告結果。</strong></p>
+<p><strong>第二步：判斷要不要叫回診。</strong> 部分條件必須回診，因為可能需要用藥，要與醫師約診討論治療處置：</p>
+<div class="tablewrap"><table><thead><tr><th>必須回診的檢驗門檻</th><th>數值</th></tr></thead><tbody><tr><td>空腹血糖（fasting sugar）</td><td>≥ 126 mg/dL</td></tr><tr><td>三酸甘油酯（TG）</td><td>&gt; 500 mg/dL</td></tr></tbody></table></div>
+<p class="lead"><strong>第三步：依「能否回診」分流。</strong></p>
+<div class="tablewrap"><table><thead><tr><th>分流</th><th>做法</th></tr></thead><tbody><tr><td>確定回診</td><td>在病歷上做註記；<strong>回診當天由衛教師進行相關衛教</strong></td></tr><tr><td>無法回診</td><td>先用<strong>電話</strong>針對異常值進行衛教，再補上書面／數位衛教管道</td></tr></tbody></table></div>
+<div class="callout cx-warn"><div class="cx-t">電話衛教講不清楚，一定要補管道</div><div class="cx-b"><p>講者直言：無法回診的個案「用電話講其實沒有很清楚」。所以電訪之後必須再給一條可以反覆看的資訊管道。</p></div></div>
+<p><strong>第四步：把衛教資訊送到個案手上的四條管道</strong> ⏱ 08:51：</p>
+<ul><li>教個案如何搜尋<strong>診所官網</strong>，官網上可<strong>掃 QR code 加入診所官方 LINE</strong>，裡面有大量衛教資訊可下載。</li><li>請個案留下 <strong>email</strong>，用 email 傳送相關資訊。</li><li>診所的<strong>公務機</strong>：請個案主動加 LINE，診所把他的檢驗數據，以及與其數據相關的衛教訊息傳給他。</li><li>一般衛教資訊的訊息推播。</li></ul>
+<p><strong>第五步：依異常項目給對應衛教內容</strong> ⏱ 09:30：</p>
+<div class="tablewrap"><table><thead><tr><th>異常類型／需求</th><th>衛教內容</th></tr></thead><tbody><tr><td>高血脂</td><td>高血脂飲食攝取技巧、如何選擇適當飲食</td></tr><tr><td>高血壓</td><td>高血壓飲食技巧</td></tr><tr><td>體重</td><td>減重的重要性、外食技巧</td></tr><tr><td>自我監測</td><td>血糖測量；血壓測量強調 <strong>722 量測法</strong></td></tr><tr><td>運動</td><td>運動處方、居家運動模式</td></tr></tbody></table></div>
+<div class="callout cx-tip"><div class="cx-t">722 血壓量測法</div><div class="cx-b"><p>講者指出診所衛教一律強調 722 的血壓測量方式（連續 7 天、早晚各 1 次共 2 個時段、每次量 2 回），並把量測方式一併提供給個案。</p></div></div>
+<p><strong>第六步：轉介與後續追蹤</strong> ⏱ 10:06：</p>
+<div class="tablewrap"><table><thead><tr><th>情境</th><th>處置</th></tr></thead><tbody><tr><td>有抽菸且個案願意</td><td>積極轉介<strong>戒菸門診</strong></td></tr><tr><td>年齡 &gt; 65 歲且有約診回來</td><td>建議<strong>每 3 個月</strong>做一次長者功能全方位評估（ICOPE，影片口述為「iCOP」；講者表示後續單元會再提到）；評估有異常項目即進行衛教轉介</td></tr><tr><td>糖尿病前期（pre-DM，影片口述為「pre-diagn」）</td><td><strong>每 6 個月</strong>追蹤一次，至少請個案回來再測一次空腹血糖</td></tr><tr><td>pre-DM 或血脂異常</td><td>建議<strong>至少 6 個月回診</strong>一次</td></tr><tr><td>電訪得知已在使用藥物（不論院內或院外）</td><td>確認是否<strong>規律回診、規律用藥</strong></td></tr><tr><td>未服藥者</td><td>由<strong>專人每 6 個月</strong>追蹤</td></tr><tr><td>已確診糖尿病（DM）</td><td>進入 <strong>P4P（Pay for Performance，糖尿病論質計酬）方案</strong>；此時代謝症候群這一塊即予<strong>結案</strong></td></tr></tbody></table></div>
+<div class="callout cx-key"><div class="cx-t">流程的兩個設計重點</div><div class="cx-b"><p>一是<strong>每一種異常都有出口</strong>：能回診的走門診衛教，不能回診的走電話＋數位管道，特殊族群（吸菸、高齡、pre-DM、已用藥）各有自己的追蹤節奏。二是<strong>個案不會在系統裡消失</strong>：即使確診糖尿病轉入 P4P，也是有意識地把代謝症候群個管結案，而不是不了了之。</p></div></div>
+<div class="callout cx-note"><div class="cx-t">本單元為三段同主題課程的第一段</div><div class="cx-b"><p>3-4／3-5／3-6 是同一主題的連續三段。本段講到代謝症候群個案管理流程與居家社區資源轉介為止；課程大綱中的「高風險個案管理流程」「資源盤點連結與轉介」「結論」將在後兩段展開。</p></div></div>
+<h3>關鍵詞</h3>
+<ul><li><strong>以人為本／以人為中心的整合式健康服務（people-centred and integrated health services）</strong>：WHO 2015 年提出的照護框架，把個人、家庭、社區觀點納入照護系統，圍繞個案的健康需求與期望而非單一疾病，並要求民眾參與自己照護所需的教育。</li><li><strong>慢性病照護模式（Chronic Care Model, CCM）</strong>：Wagner 提出，主張慢性病照護需健康系統與社區配合，包含社區資源與政策、自我管理支持、健康照護組織、服務輸送系統、決策支持、臨床資訊系統六大環環相扣要素。</li><li><strong>富有成效的互動（productive interaction）</strong>：CCM 的核心產出，指「知情且被激活的病人」與「準備充分、主動前瞻的跨專業團隊」之間的互動。</li><li><strong>被激活的病人（activated patient）</strong>：了解自身疾病知識、能為自己做照護決策、在自己照護中發揮積極作用的病人。</li><li><strong>個案管理師（case manager）／衛教師</strong>：慢性病照護模式成敗的關鍵角色，兼具醫療照護、溝通與資源整合能力，作為醫病間的溝通橋樑並長期陪伴個案。</li><li><strong>照護連續性（continuity of care）</strong>：病人能持續由同一位（或自己信任的）基層醫療提供者照顧；文獻顯示與住院、急診使用下降有關。</li><li><strong>醫病共享決策（shared decision making, SDM）</strong>：促成行為改變的策略之一，與 engagement、coaching、動機式晤談、賦能並列。</li><li><strong>ICOPE（Integrated Care for Older People）</strong>：長者功能的全方位評估，講者建議 &gt; 65 歲且有回診的個案每 3 個月做一次。</li><li><strong>722 血壓量測法</strong>：診所對血壓自我監測的標準衛教方式。</li><li><strong>P4P（Pay for Performance）</strong>：論質計酬方案；個案確診糖尿病後轉入該方案，代謝症候群個管同時結案。</li></ul>
+<h3>可執行要點</h3>
+<ul><li class="task"><label><input type="checkbox" class="tk">把成人健檢報告改成「一週內必電訪」的固定作業，不要等個案自己回來看報告。</label></li><li class="task"><label><input type="checkbox" class="tk">在電訪腳本裡寫死兩個「必須叫回診」的門檻：空腹血糖 ≥ 126 mg/dL、TG &gt; 500 mg/dL。</label></li><li class="task"><label><input type="checkbox" class="tk">確定回診的個案，當下就在病歷註記，讓回診當天衛教師一定接得到這個案。</label></li><li class="task"><label><input type="checkbox" class="tk">盤點自家診所的衛教資訊管道：官網、官方 LINE（含 QR code）、email 名單、公務機 LINE，至少把其中兩條做到可立即傳送。</label></li><li class="task"><label><input type="checkbox" class="tk">把常用衛教品項先做成可傳送的檔案：高血脂飲食、高血壓飲食、減重與外食技巧、血糖血壓自我監測（含 722）、居家運動處方。</label></li><li class="task"><label><input type="checkbox" class="tk">建立四條追蹤時程：吸菸者→戒菸門診轉介；&gt;65 歲→每 3 個月 ICOPE；pre-DM／血脂異常→每 6 個月回診測空腹血糖；未服藥者→專人每 6 個月追蹤。</label></li><li class="task"><label><input type="checkbox" class="tk">對電訪中發現已在院外用藥的個案，逐一確認是否規律回診與規律用藥。</label></li><li class="task"><label><input type="checkbox" class="tk">訂出結案規則：個案確診糖尿病轉入 P4P 後，代謝症候群個管正式結案，避免重複收案。</label></li><li class="task"><label><input type="checkbox" class="tk">檢視自己的衛教語言，是否已從「治療疾病」轉成「治療有疾病的人」——同時問臨床、社會、情感與實際需求四個面向。</label></li></ul>
+<div class="quiz" id="qz8" data-total="5"><div class="wgh">📝 隨堂測驗<span class="wghint">（點選項作答）</span><span class="qzscore"></span><button class="qzretry" style="display:none">↺ 重做</button></div><div class="qzq"><div class="qzqt">依講者引用的分析，臨床醫療照護對個人慢性病健康結果的影響約佔多少？</div><div class="qzopts"><button class="qzopt" data-c="1">20%</button><button class="qzopt" data-c="0">50%</button><button class="qzopt" data-c="0">80%</button><button class="qzopt" data-c="0">95%</button></div><div class="qzex">臨床醫療照護僅佔 20%，社會經濟環境與健康行為佔 80%。這正是慢性病照護必須走出診間、連結社區資源的理由。</div></div><div class="qzq"><div class="qzqt">慢性病照護模式（CCM）最終要促成的是什麼？</div><div class="qzopts"><button class="qzopt" data-c="0">醫師開立更精準的處方</button><button class="qzopt" data-c="1">知情且被激活的病人與準備充分、主動前瞻的跨專業團隊之間富有成效的互動</button><button class="qzopt" data-c="0">把所有慢性病人集中到醫學中心管理</button><button class="qzopt" data-c="0">以急性醫療為核心重新分配資源</button></div><div class="qzex">CCM 六大要素（社區資源與政策、自我管理支持、健康照護組織、服務輸送系統、決策支持、臨床資訊系統）都是手段，目的是產生 productive interaction，才能達成最佳功能與臨床結果。</div></div><div class="qzq"><div class="qzqt">成人健檢後，下列哪一種情況講者認為必須請個案回診與醫師討論？</div><div class="qzopts"><button class="qzopt" data-c="0">空腹血糖 110 mg/dL</button><button class="qzopt" data-c="0">三酸甘油酯 300 mg/dL</button><button class="qzopt" data-c="1">空腹血糖 ≥ 126 mg/dL</button><button class="qzopt" data-c="0">腰圍超標但其餘四項正常</button></div><div class="qzex">講者給的兩個必須回診門檻是空腹血糖 ≥ 126 mg/dL 與 TG &gt; 500 mg/dL，因為這類個案可能需要開始用藥，必須與醫師討論治療處置。</div></div><div class="qzq"><div class="qzqt">對於年齡大於 65 歲、且有約診回來的個案，講者建議多久做一次長者功能全方位評估（ICOPE）？</div><div class="qzopts"><button class="qzopt" data-c="0">每 1 個月</button><button class="qzopt" data-c="1">每 3 個月</button><button class="qzopt" data-c="0">每 6 個月</button><button class="qzopt" data-c="0">每 12 個月</button></div><div class="qzex">講者建議 &gt;65 歲且有回診的個案每 3 個月進行一次 ICOPE，評估有異常項目則進行衛教轉介。pre-DM 與血脂異常才是每 6 個月追蹤。</div></div><div class="qzq"><div class="qzqt">個案在代謝症候群個管期間確診糖尿病（DM）之後，講者診所的做法是？</div><div class="qzopts"><button class="qzopt" data-c="0">繼續留在代謝症候群個管並加做糖尿病衛教</button><button class="qzopt" data-c="1">轉入 P4P 論質計酬方案，代謝症候群這塊結案</button><button class="qzopt" data-c="0">直接轉診至醫學中心不再追蹤</button><button class="qzopt" data-c="0">改為每 3 個月電訪一次</button></div><div class="qzex">確診 DM 後個案進入 P4P 方案，由該方案接手照護，代謝症候群個管同時結案，避免兩套流程重複收案。</div></div></div>
+<div class="flashcards"><div class="wgh">🎴 單字卡<span class="wghint">（點卡片翻面）</span></div><div class="fcgrid"><button class="fc"><span class="fc-in"><span class="fc-f">臨床醫療照護佔慢性病健康影響的比例？剩下的是什麼？</span><span class="fc-b">臨床醫療照護 20%；社會經濟環境與健康行為 80%。</span></span></button><button class="fc"><span class="fc-in"><span class="fc-f">WHO 2015 以人為本健康服務的兩項重要概念</span><span class="fc-b">① 把個人、家庭、社區觀點納入照護系統，以尊重且整體的方式回應需求與偏好；② 要求民眾參與自己照護所需的教育，才能做出合適的照護決策。</span></span></button><button class="fc"><span class="fc-in"><span class="fc-f">「以人為本」的四個實務判準</span><span class="fc-b">以尊嚴／同情／尊重提供照護；照護協調良好；個別化（兼顧臨床、社會、情感、實際需求）；讓個案在自己的照護中發揮積極作用。</span></span></button><button class="fc"><span class="fc-in"><span class="fc-f">慢性病照護模式（CCM）的六大要素</span><span class="fc-b">社區資源與政策、自我管理支持、健康照護組織、服務輸送系統、決策支持、臨床資訊系統。</span></span></button><button class="fc"><span class="fc-in"><span class="fc-f">CCM 要促成哪兩個角色的互動？</span><span class="fc-b">充分被告知且被激活的病人，與充分準備、主動前瞻的跨專業實務團隊，兩者產生富有成效的互動。</span></span></button><button class="fc"><span class="fc-in"><span class="fc-f">促進行為改變的四組技巧</span><span class="fc-b">engagement（投入參與）、coaching（教練式引導）、motivational interviewing（動機式晤談）、empowerment 與 shared decision making（賦能與醫病共享決策）。</span></span></button><button class="fc"><span class="fc-in"><span class="fc-f">代謝症候群五項危險因子與判定</span><span class="fc-b">腰圍、血壓、HDL-C、空腹血糖、三酸甘油酯；符合 3 項以上為代謝症候群，符合 1 項為高危險群。</span></span></button><button class="fc"><span class="fc-in"><span class="fc-f">成人健檢後必須請個案回診的兩個檢驗門檻</span><span class="fc-b">空腹血糖 ≥ 126 mg/dL；三酸甘油酯 &gt; 500 mg/dL（可能需要用藥，須與醫師討論）。</span></span></button><button class="fc"><span class="fc-in"><span class="fc-f">無法回診的個案怎麼補衛教？</span><span class="fc-b">先電話衛教異常值，再補數位管道：診所官網、掃 QR code 加官方 LINE 下載衛教資料、留 email 寄送、加診所公務機 LINE 傳送個人數據與相關衛教。</span></span></button><button class="fc"><span class="fc-in"><span class="fc-f">四條追蹤／轉介時程</span><span class="fc-b">吸菸且願意→轉介戒菸門診；&gt;65 歲→每 3 個月 ICOPE；pre-DM／血脂異常→每 6 個月回診測空腹血糖；未服藥者→專人每 6 個月追蹤。</span></span></button><button class="fc"><span class="fc-in"><span class="fc-f">個案確診 DM 後的處置</span><span class="fc-b">進入 P4P（論質計酬）方案，代謝症候群個管結案。</span></span></button><button class="fc"><span class="fc-in"><span class="fc-f">基層醫療照護連續性的文獻數據</span><span class="fc-b">75% 病人重視能看同一位基層醫療提供者、63% 重視看認識且信任的人；高連續性住院減少 13%、急診減少 27%；協調良好的居家型基層醫療費用降 17%；在宅住院成本降 19%。</span></span></button></div></div></div>
+      </article>
+      <article class="note" id="c2-5">
+        <h3 class="ntitle">3-5 連結跨領域照護及溝通協調－以病人為中心的跨資源整合照護運用（二）</h3>
+        <div class="nbody"><div class="callout cx-note"><div class="cx-t">代謝症候群防治計畫教育訓練課程－下 · 單元 3-5 · 影片 12 分鐘 · 講者：徐慧君護理衛教師（李氏聯合診所）</div></div>
+<div class="callout cx-key"><div class="cx-t">一句話總結</div><div class="cx-b"><p>代謝症候群個案管理的價值不在「發現異常」，而在<strong>把異常轉成一套可執行、可監測、可轉介的介入流程</strong>——血壓血糖血脂、體重、菸品各有各的介入模式與追蹤指標，65 歲以上再加一層長者整合性功能評估（ICOPE）與長照轉介。</p></div></div>
+<div class="callout cx-key"><div class="cx-t">你會學到</div><div class="cx-b"><ul><li>非內科系統的基層院所，如何借用家醫醫療群、糖尿病共照網與糖尿病健康促進機構的跨專業資源</li><li>血脂／血糖／血壓異常個案的標準介入模式：通知回診 → 飲食、運動、用藥指導 → 監測 → 資訊推播 → 電訪</li><li>722 血壓監測法與配對血糖監測法的操作定義與判讀切點</li><li>體重管理與戒菸兩條介入路徑的設計要素，以及三類介入的追蹤評值指標</li><li>65 歲以上個案的 ICOPE 評估，以及「記憶異常」這條路徑從 MMSE、CDR 一路走到長照／共照據點的完整分流</li></ul></div></div>
+<h3>內容筆記</h3>
+<h4>一、非內科系統怎麼補足跨專業能力 ⏱ 00:00</h4>
+<p>代謝症候群個案往往需要醫師以外的專業，但不是每家基層院所都是內科系統、也不是每家都養得起完整團隊。講者建議的做法是<strong>向外借力，而不是硬撐</strong>：</p>
+<ul><li>善用<strong>家庭醫師整合性照護計畫（家醫醫療群）</strong>的資源，把個案轉介到適合的科別。</li><li>優先找有在執行<strong>糖尿病共同照護網</strong>（影片轉錄為「peoplep」，依上下文為糖尿病共照相關計畫）或具<strong>糖尿病健康促進機構</strong>資格的基層單位。</li></ul>
+<p>為什麼挑這兩類單位？因為它們的跨專業人力比較齊全：除了醫師、衛教師、營養師之外，可能還有<strong>心理師、藥師、運動教練</strong>。人齊的好處有兩個——可以提供比較全方位的專業諮詢，也有能力再往外接，把個案轉介到長照或社區資源。</p>
+<div class="callout cx-tip"><div class="cx-t">判斷要不要往外轉的簡單原則：你自己院所缺的那個專業，決定了你要轉去哪一種單位。與其自己勉強做衛教，不如轉給有心理師、運動教練的團隊。</div></div>
+<h4>二、血壓／血糖／血脂異常的介入模式 ⏱ 00:45</h4>
+<p>這是一條有時限的流程，起點是「報告出來以後你多快通知他」。</p>
+<div class="callout cx-key"><div class="cx-t">檢驗報告異常，<strong>3–7 天內</strong>打電話告知個案並通知回診。（講者口述為「七天內」，投影片標示為「3–7 天電話告知報告異常、通知回診」。）</div></div>
+<p>回診之後做四件事：</p>
+<p class="lead"><strong>1. 飲食諮詢及指導</strong></p>
+<p>最重要的是先破除誤解。很多病人以為要控制血脂、血壓、血糖就得「吃得很可憐、吃得很拮据」，其實不然——重點是<strong>健康飲食型態、強調均衡飲食</strong>。具體要調整的有：</p>
+<div class="tablewrap"><table><thead><tr><th>面向</th><th>要避免</th><th>建議改成</th></tr></thead><tbody><tr><td>烹調方式</td><td>煎、炸、糖醋、勾芡</td><td>蒸、滷、煮、烤等少油脂做法</td></tr><tr><td>飲食習慣</td><td>暴飲暴食、大小餐</td><td>規律、定量</td></tr><tr><td>精緻糖</td><td>甜點、手搖飲（含國人愛喝的珍奶）</td><td>盡量避免</td></tr><tr><td>食物選擇</td><td>加工食品</td><td>原型食物</td></tr></tbody></table></div>
+<p class="lead"><strong>2. 運動指導</strong></p>
+<p>不要給通用處方。依個人條件與身體狀況，<strong>跟個案討論</strong>適合他的運動種類，教他怎麼評估運動強度，然後<strong>慢慢增加強度</strong>，而不是一開始就用比較強烈的方式運動；過程中也一併討論運動頻率。</p>
+<div class="callout cx-warn"><div class="cx-t">沒有運動習慣的個案，強度是逐步加上去的，不是一次到位。</div></div>
+<p class="lead"><strong>3. 用藥指導</strong></p>
+<p>個案若已開始用藥，依醫囑提供用藥指導。</p>
+<p class="lead"><strong>4. 監測 ⏱ 02:33</strong></p>
+<p>監測項目包含血壓、血糖，以及體重與腰圍的定期測量。<strong>體重與腰圍建議每天量並做紀錄。</strong></p>
+<div class="callout cx-key"><div class="cx-t">722 血壓監測法</div><div class="cx-b"><ul><li><strong>7</strong>：連續 7 天，天天量</li><li><strong>第一個 2</strong>：每天 2 回（早、晚各一回）</li><li><strong>第二個 2</strong>：每回量 2 次，兩次之間間隔 1 分鐘</li></ul>
+<p>教會個案怎麼量之後，要請他確實做紀錄。</p></div></div>
+<div class="callout cx-key"><div class="cx-t">配對血糖監測法 ⏱ 03:34</div><div class="cx-b"><p>適用於很在意自己血糖狀況的個案——即使只是<strong>糖尿病前期（pre-DM）</strong>，有些人在家也會想量，而臨床上餐後血糖特別高的人相當多。</p>
+<ul><li>量測方式：同一餐的<strong>餐前血糖</strong>與<strong>餐後 2 小時血糖</strong>配成一對。</li><li>判讀切點：兩者的<strong>差值應控制在 ±60 mg/dL 以內</strong>。</li></ul>
+<p>這樣做的用意是把抽象的飲食建議變成個案自己看得到的回饋：他會知道吃了什麼會讓差值超過 60，吃什麼可以壓在 60 以內，然後自然傾向選擇後者。</p></div></div>
+<p>監測資料可以請個案加入手機 App（投影片列舉「智抗糖」）上傳數據，照護團隊從網路平台端就看得到，直接給建議。</p>
+<p class="lead"><strong>5. 資訊分享與追蹤</strong></p>
+<p>請個案加入診所的 LINE 官方帳號（LINE@），定期推播衛教資訊。但講者強調：<strong>最重要的仍然是電訪追蹤。</strong></p>
+<h4>三、體重管理個案的介入模式 ⏱ 04:18</h4>
+<p>第一步不是給菜單，是<strong>確認減重動機</strong>。有些個案拖久了會「麻痺」，動機很低；能強化就強化，並鼓勵他加入<strong>減重門診</strong>。</p>
+<p>進了減重門診可以做全方位評估：</p>
+<div class="tablewrap"><table><thead><tr><th>評估面向</th><th>具體項目</th></tr></thead><tbody><tr><td>體位測量</td><td>體重、BMI、體脂、肌肉量、內臟脂肪、腰圍</td></tr><tr><td>生活型態</td><td>日常作息與行為</td></tr><tr><td>壓力</td><td>壓力指數</td></tr><tr><td>睡眠</td><td>睡眠狀況</td></tr></tbody></table></div>
+<p>後三項會影響體重，不能只看吃了什麼。</p>
+<p>課程設計上，有些診所會做<strong>週期性／循環性、系統性的體重管理課程</strong>，依個人期待與需求設定個人目標。因為體重管理沒那麼容易，目標要拆成<strong>短期、中期、長期</strong>三層來規劃策略。</p>
+<div class="callout cx-quote"><div class="cx-t">減重其實不只是飲食問題，它還包含了很複雜的生理跟心理的問題。</div></div>
+<p>正因如此，需要更多不同專業別的人員一起參與介入，才強化得了動機。另外兩個設計重點：</p>
+<ul><li><strong>同儕支持</strong>：有些診所做客製化課程，例如「三人成行」，找親朋好友一起參加減重計畫，互相提醒、互相支持。</li><li><strong>心理師介入下的行為治療</strong>：飲食修正與進食行為調整、動機式晤談、睡眠與壓力的舒緩，都可以放進課程裡。</li></ul>
+<p>最後仍需通訊軟體持續追蹤，了解個案每天的用餐狀況與體重變化。</p>
+<h4>四、抽菸高風險個案的戒菸介入 ⏱ 06:26</h4>
+<p>個管師先用良好的溝通技巧引導個案、增強戒菸意願，再視情況轉介——<strong>意願不高就不勉強轉</strong>。願意的就轉到戒菸門診，接受<strong>半年的介入治療與戒菸管理</strong>。</p>
+<p>轉診前要先確認是否符合戒菸門診資格，講者舉的條件包括：</p>
+<ul><li>年齡 18 歲以上</li><li>尼古丁成癮度達 <strong>4 分以上</strong></li><li>平均每天吸菸達一定支數以上（影片此處數字<strong>口述不清</strong>，未採用）</li></ul>
+<h4>五、三類介入的追蹤評值指標 ⏱ 07:02</h4>
+<div class="callout cx-key"><div class="cx-t">有介入就要有評值。講者把指標依三條路徑分開列。</div></div>
+<div class="tablewrap"><table><thead><tr><th>介入類別</th><th>追蹤頻率／工具</th><th>評值內容</th></tr></thead><tbody><tr><td>血糖、血壓、血脂 ⏱ 07:02</td><td>至少<strong>半年到一年</strong>回診抽血複檢</td><td>檢驗值變化，並重新評值飲食攝取、活動量與整體生活型態</td></tr><tr><td>體重控制 ⏱ 07:18</td><td>依個別體重管理目標定期量測</td><td>體重、腰圍、肌肉量、體脂量、內臟脂肪；進一步評值飲食總熱量攝取與三大營養素比例是否接近建議值</td></tr><tr><td>戒菸 ⏱ 07:43</td><td><strong>戒菸治療個案紀錄表</strong></td><td>追蹤個案戒菸進度與尼古丁成癮度，看<strong>半年內</strong>能否達標</td></tr></tbody></table></div>
+<h4>六、高齡個案要多做一層：ICOPE ⏱ 08:03</h4>
+<div class="callout cx-key"><div class="cx-t">65 歲以上是<strong>衰弱（frailty）的高危險群</strong>。為了預防與延緩失能，這群個案要進一步評估「內在能力」。</div></div>
+<p><strong>ICOPE（Integrated Care for Older People，長者健康整合式功能評估）</strong>是國健署近年積極推廣的工具（講者記憶中約自 2018 年開始推）。評估的內在能力面向包括：</p>
+<ul><li>認知功能</li><li>行動能力</li><li>營養狀況</li><li>視力</li><li>聽力</li><li>憂鬱</li></ul>
+<p>任何一項異常，就轉介相關科別或相關專業做照護／諮詢；有需要時再往下轉到<strong>居家醫療、居家復能等居家照護</strong>，或進入長照系統；狀況需要時也可能轉到醫院。</p>
+<p>下圖是講者提供的高齡個案轉介全貌：65 歲以上個案回診後先做護理／營養衛教，再做 ICOPE 與肌少症／衰弱檢測，異常者分流到各科醫師、心理師、營養師，並由<strong>主護（Care Coordinator）</strong>統籌，向下銜接居家訪視／居家醫療／長照與衛生所；若中途發生急性疾病，則走急診／住院這條線，出院後仍回到主護的管理。</p>
+<div class="callout cx-tip"><div class="cx-t">這張流程圖的重點是「<strong>主護（Care Coordinator）</strong>」這個角色：所有分流出去的專業與所有社區、長照、衛生所資源，最後都要有人收攏。在基層診所，這個人通常就是個案管理師。</div></div>
+<h4>七、案例路徑：ICOPE 記憶評估異常怎麼走 ⏱ 09:11</h4>
+<p>講者以「記憶評估異常」示範一條完整分流。ICOPE 篩出記憶異常後，先用 <strong>MMSE（Mini-Mental State Examination，簡易智能測驗）</strong>評估，之後依 MMSE 結果、個案意願與後續 <strong>CDR（Clinical Dementia Rating，臨床失智評估量表）</strong>分數決定去向：</p>
+<div class="tablewrap"><table><thead><tr><th>情境</th><th>處置</th></tr></thead><tbody><tr><td>MMSE &lt; 26 → 轉神經內科 → 醫師做 CDR，<strong>CDR ≥ 1 分</strong></td><td>診所個案管理師接手個管，轉接長期照護／長照中心。其中符合失能、<strong>CMS &gt; 5 級</strong>者轉<strong>日間照顧中心</strong>；<strong>CMS 4 級以下</strong>者到<strong>失智共照據點</strong></td></tr><tr><td>MMSE 異常但 <strong>CDR &lt; 1 分</strong></td><td>個案管理師考慮轉介<strong>社區關懷據點</strong>，參加據點活動做刺激，並接受長期照顧</td></tr><tr><td>未失能、僅輕微失智</td><td>轉介<strong>失智共同照護中心</strong>（由共照中心協助後續轉介與服務安排），或直接到失智共照據點即可</td></tr><tr><td>個案不願意去據點（「我不愛去外面跟人家湊熱鬧」）</td><td>個案管理師接手，<strong>至少每月訪視一次</strong>，掌握個案狀態</td></tr><tr><td>連居家訪視也不願意</td><td>先評估拒絕原因，改以<strong>門診追蹤</strong></td></tr><tr><td>個案不願意做 MMSE</td><td>個案管理師密切觀察，可以的話仍轉介社區關懷據點</td></tr><tr><td>MMSE &lt; 26 但不願轉神經內科</td><td>一樣由個案管理師接手管理</td></tr></tbody></table></div>
+<div class="callout cx-key"><div class="cx-t">這條路徑真正的設計重點是：<strong>每一個「不願意」的分支都還有接手的人</strong>，而那個人固定是個案管理師。個案可以拒絕檢查、拒絕轉診、拒絕出門，但不會就此掉出照護網。</div></div>
+<h4>八、行動能力怎麼測 ⏱ 11:07</h4>
+<p>ICOPE 的「行動能力」在診間是這樣做的：</p>
+<div class="callout cx-fig"><div class="cx-t">圖示重建：行動能力兩階段測試</div><div class="cx-b"><div class="tablewrap"><table><thead><tr><th>階段</th><th>測試</th><th>操作方式</th><th>判讀</th></tr></thead><tbody><tr><td>第一關</td><td><strong>椅子起身測試</strong></td><td>雙手抱胸，連續起立坐下 5 次</td><td>需在 <strong>12 秒內</strong>完成；未達標即為異常</td></tr><tr><td>第二關（第一關異常才做）</td><td><strong>簡易體能狀態量表（SPPB）之平衡測試</strong></td><td>雙腳並排站立、雙腳半並排（半直線）站立、雙腳直線站立</td><td>各姿勢能否維持 <strong>10 秒</strong></td></tr></tbody></table></div></div></div>
+<p>講者另備有診所實際執行 ICOPE 與收案（篩檢、評估與介入）的現場照片，內容為衛教人員指導長者進行上述起身與平衡測試，不含額外數據。</p>
+<h3>關鍵詞</h3>
+<ul><li><strong>家醫醫療群</strong>：家庭醫師整合性照護計畫下的基層院所聯合團隊，可作為非內科系統診所的轉介與資源來源。</li><li><strong>糖尿病健康促進機構</strong>：具較完整跨專業人力（醫師、衛教師、營養師，甚至心理師、藥師、運動教練）的基層單位。</li><li><strong>722 血壓監測法</strong>：連續 7 天、每天早晚 2 回、每回間隔 1 分鐘量 2 次。</li><li><strong>配對血糖監測</strong>：同餐的餐前與餐後 2 小時血糖成對量測，差值以 ±60 mg/dL 為判讀切點。</li><li><strong>ICOPE（Integrated Care for Older People）</strong>：長者健康整合式功能評估，評估認知、行動、營養、視力、聽力、憂鬱等內在能力。</li><li><strong>MMSE（Mini-Mental State Examination）</strong>：簡易智能測驗，本課程以 26 分為轉介神經內科的切點。</li><li><strong>CDR（Clinical Dementia Rating）</strong>：臨床失智評估量表，本課程以 1 分作為是否啟動長照個管的分界。</li><li><strong>CMS</strong>：長照需要等級，本課程以第 5 級為日照中心與失智共照據點的分流點。</li><li><strong>主護（Care Coordinator）</strong>：統籌高齡個案所有分流專業與社區、長照資源的窗口角色，基層多由個案管理師擔任。</li><li><strong>原型食物</strong>：未經加工或僅低度加工、保持食物原本樣貌的食材。</li></ul>
+<h3>可執行要點</h3>
+<ul><li class="task"><label><input type="checkbox" class="tk">盤點自己院所缺哪些專業（心理師／藥師／運動教練／營養師），列出可轉介的家醫醫療群或糖尿病健康促進機構名單，貼在診間。</label></li><li class="task"><label><input type="checkbox" class="tk">建立檢驗報告異常的通知流程，確保 3–7 天內完成電話告知並約回診，並留下通知紀錄。</label></li><li class="task"><label><input type="checkbox" class="tk">把「烹調方式、飲食習慣、精緻糖、原型食物」四項做成一張衛教小卡，回診時直接對著講，避免病人誤以為要吃得很拮据。</label></li><li class="task"><label><input type="checkbox" class="tk">教會高血壓個案 722 監測法，並給紙本或 App 紀錄表；下次回診先看紀錄再談用藥。</label></li><li class="task"><label><input type="checkbox" class="tk">對餐後血糖偏高或 pre-DM 的個案導入配對血糖監測，用 ±60 mg/dL 差值帶他自己找出「安全的食物」。</label></li><li class="task"><label><input type="checkbox" class="tk">體重管理個案先問動機，再談方法；目標拆成短、中、長期三層寫下來。</label></li><li class="task"><label><input type="checkbox" class="tk">抽菸個案先評估意願再談轉介，符合資格者轉戒菸門診，並用戒菸治療個案紀錄表追半年。</label></li><li class="task"><label><input type="checkbox" class="tk">65 歲以上個案回診時加做 ICOPE 六項篩檢；行動能力先做 12 秒內起立坐下 5 次的椅子起身測試。</label></li><li class="task"><label><input type="checkbox" class="tk">為記憶異常個案建立「拒絕也有下一步」的分流表（改門診追蹤、改每月訪視、改轉關懷據點），讓個管師照表行動。</label></li></ul>
+<div class="quiz" id="qz9" data-total="5"><div class="wgh">📝 隨堂測驗<span class="wghint">（點選項作答）</span><span class="qzscore"></span><button class="qzretry" style="display:none">↺ 重做</button></div><div class="qzq"><div class="qzqt">722 血壓監測法的正確操作是？</div><div class="qzopts"><button class="qzopt" data-c="0">連續 7 天、每天量 2 回、每回間隔 2 分鐘量 2 次</button><button class="qzopt" data-c="1">連續 7 天、每天量 2 回（早晚）、每回間隔 1 分鐘量 2 次</button><button class="qzopt" data-c="0">每週量 7 次、每次 2 分鐘、連續 2 週</button><button class="qzopt" data-c="0">連續 2 天、每天量 7 回、每回量 2 次</button></div><div class="qzex">722 是連續 7 天天天量、每天早晚各一回共 2 回、每回間隔 1 分鐘量 2 次。</div></div><div class="qzq"><div class="qzqt">配對血糖監測中，餐前與餐後 2 小時血糖的差值建議控制在多少以內？</div><div class="qzopts"><button class="qzopt" data-c="0">30 mg/dL</button><button class="qzopt" data-c="1">60 mg/dL</button><button class="qzopt" data-c="0">100 mg/dL</button><button class="qzopt" data-c="0">140 mg/dL</button></div><div class="qzex">講者指出差值應在 ±60 mg/dL 以內；個案可藉此自行辨認哪些食物會讓差值超標。</div></div><div class="qzq"><div class="qzqt">依課程示範的記憶異常分流，MMSE &lt; 26 轉神經內科後，若 CDR ≥ 1 分，下一步是？</div><div class="qzopts"><button class="qzopt" data-c="0">直接安排住院檢查</button><button class="qzopt" data-c="0">只需門診每半年追蹤即可</button><button class="qzopt" data-c="1">由診所個案管理師接手個管，並轉接長期照護系統</button><button class="qzopt" data-c="0">轉回原科別繼續藥物治療，不需個管</button></div><div class="qzex">CDR ≥ 1 分時由診所個案管理師接手，轉接長照；其中 CMS &gt; 5 級者到日照中心，CMS 4 級以下到失智共照據點。</div></div><div class="qzq"><div class="qzqt">關於 ICOPE，下列何者正確？</div><div class="qzopts"><button class="qzopt" data-c="0">只評估認知功能與憂鬱兩項</button><button class="qzopt" data-c="1">評估認知、行動、營養、視力、聽力、憂鬱等內在能力，適用 65 歲以上衰弱高危險群</button><button class="qzopt" data-c="0">是一套針對代謝症候群的飲食評估工具</button><button class="qzopt" data-c="0">必須由神經內科醫師執行，基層無法進行</button></div><div class="qzex">ICOPE 是長者健康整合式功能評估，涵蓋認知、行動、營養、視力、聽力、憂鬱，目的是預防與延緩失能，基層診所即可執行篩檢。</div></div><div class="qzq"><div class="qzqt">個案在 ICOPE 行動能力篩檢中，椅子起身測試未能在 12 秒內完成，接下來應該？</div><div class="qzopts"><button class="qzopt" data-c="0">直接判定為失能並轉長照中心</button><button class="qzopt" data-c="1">進行簡易體能狀態量表的平衡測試，看並排、半並排、直線站立能否各維持 10 秒</button><button class="qzopt" data-c="0">重複測試 5 次取平均</button><button class="qzopt" data-c="0">先做 MMSE 評估認知</button></div><div class="qzex">椅子起身測試異常後，續做簡易體能狀態測量中的平衡測試（並排、半並排、直線站立各 10 秒）進一步確認行動能力。</div></div></div>
+<div class="flashcards"><div class="wgh">🎴 單字卡<span class="wghint">（點卡片翻面）</span></div><div class="fcgrid"><button class="fc"><span class="fc-in"><span class="fc-f">722 血壓監測法</span><span class="fc-b">連續 7 天天天量；每天 2 回（早、晚）；每回間隔 1 分鐘量 2 次，並請個案記錄。</span></span></button><button class="fc"><span class="fc-in"><span class="fc-f">配對血糖監測的判讀切點</span><span class="fc-b">同餐餐前與餐後 2 小時血糖差值控制在 ±60 mg/dL 以內。</span></span></button><button class="fc"><span class="fc-in"><span class="fc-f">檢驗報告異常的通知時限</span><span class="fc-b">3–7 天內電話告知個案報告異常並通知回診。</span></span></button><button class="fc"><span class="fc-in"><span class="fc-f">ICOPE 評估哪些內在能力</span><span class="fc-b">認知、行動、營養、視力、聽力、憂鬱。適用 65 歲以上衰弱高危險群。</span></span></button><button class="fc"><span class="fc-in"><span class="fc-f">MMSE 與 CDR 在記憶異常分流的角色</span><span class="fc-b">MMSE &lt; 26 轉神經內科；神經內科做 CDR，CDR ≥ 1 分由個管師接手轉長照，CDR &lt; 1 分轉社區關懷據點。</span></span></button><button class="fc"><span class="fc-in"><span class="fc-f">CMS 在長照分流的切點</span><span class="fc-b">CMS &gt; 5 級（符合失能）到日間照顧中心；CMS 4 級以下到失智共照據點。</span></span></button><button class="fc"><span class="fc-in"><span class="fc-f">椅子起身測試怎麼做</span><span class="fc-b">雙手抱胸，連續起立坐下 5 次，須在 12 秒內完成；異常者續做平衡測試（並排／半並排／直線站立各 10 秒）。</span></span></button><button class="fc"><span class="fc-in"><span class="fc-f">三類介入的追蹤指標</span><span class="fc-b">血糖血壓血脂：半年至一年回診抽血複檢＋生活型態評值；體重：定期量體重腰圍肌肉體脂內臟脂肪＋總熱量與三大營養素比例；戒菸：戒菸治療個案紀錄表追半年。</span></span></button><button class="fc"><span class="fc-in"><span class="fc-f">體重管理為何需要跨專業</span><span class="fc-b">減重不只是飲食問題，還包含複雜的生理與心理問題，需多專業共同介入才能強化動機；可加入同儕支持課程與心理師的行為治療。</span></span></button></div></div></div>
+      </article>
+      <article class="note" id="c2-6">
+        <h3 class="ntitle">連結跨領域照護及溝通協調－以病人為中心的跨資源整合照護運用（三）</h3>
+        <div class="nbody"><div class="callout cx-note"><div class="cx-t">代謝症候群防治計畫教育訓練課程－下 · 單元 3-6 · 影片 10 分鐘 · 講者：徐慧君護理衛教師（李氏聯合診所）</div></div>
+<div class="callout cx-key"><div class="cx-t">一句話總結</div><div class="cx-b"><p>代謝症候群的長者照護要從<strong>多重用藥清查、肌少症篩檢、足量蛋白質與熱量、再到社區資源轉介</strong>串成一條線，由個案管理師擔任個案與醫療團隊之間的橋樑。</p></div></div>
+<div class="callout cx-key"><div class="cx-t">你會學到</div><div class="cx-b"><ul><li>多重用藥的兩個警戒線（5 種、10 種）與藥師介入、居家訪視的做法</li><li>從 ICOPE 篩檢銜接肌少症檢測，以及異常後的運動／營養介入路徑</li><li>老年人熱量與蛋白質的建議量，以及「一份蛋白質」的生活化換算</li><li>可以馬上轉介的社區資源清單（共照網、關懷據點、社區藥局、戒菸專線等）</li><li>講者對基層全人照護模式的總結主張</li></ul></div></div>
+<h3>內容筆記</h3>
+<h4>多重用藥：先清點，再列管 ⏱ 00:00</h4>
+<p>老年個案除了代謝症候群本身，還要評估有沒有多重用藥（polypharmacy）問題。</p>
+<div class="tablewrap"><table><thead><tr><th>用藥種類數</th><th>建議做法</th></tr></thead><tbody><tr><td>超過 5 種</td><td>提高警覺。請個案把<strong>所有</strong>在用的藥帶來，逐一說明「這是什麼藥、怎麼吃、吃多少、什麼時候吃」</td></tr><tr><td>超過 10 種</td><td>建立<strong>列管機制</strong>，並邀藥師共同參與</td></tr></tbody></table></div>
+<div class="callout cx-tip"><div class="cx-t">藥師介入的實際流程</div><div class="cx-b"><p>藥師用藥物審核系統／軟體檢查有無交互作用、或屬於「潛在不適合老年人使用」的藥品，把建議表送給主治醫師，<strong>最後由主治醫師決定是否調整用藥</strong>。藥師端則以 A／B／C 三段做紀錄與審查：A＝藥品治療問題、B＝藥師介入的活動、C＝藥師介入的結果。（影片此處發音為「AAVVCC」，依上下文應為 A、B、C 三段）</p></div></div>
+<h4>居家訪視：看到門診看不到的用藥全貌 ⏱ 01:00</h4>
+<p>當發現個案在家的用藥執行有狀況，可以考慮居家訪視——講者表示這是他們診所實際在做的事，因為居家才看得到自我照護的全貌：</p>
+<ul><li>有沒有自行購買的非處方品項：中藥材、中藥粉、健康食品等</li><li>因為不規律服藥而<strong>囤積成堆</strong>的藥</li><li>藥物管理混亂到個案自己根本搞不清楚在吃什麼、怎麼吃</li></ul>
+<p>發現之後就協助整理、歸類、加註記，改善用藥行為。</p>
+<div class="callout cx-fig"><div class="cx-t">圖示重建｜投影片「多重用藥～居家訪視」</div><div class="cx-b"><p>該張投影片為居家訪視實景照片：個案家中櫃子與整袋堆積的藥品、護理人員在個案家中以筆電記錄與清點藥物、藥師與個案面對面討論，以及整理後<strong>逐包標示日期與時段</strong>的分裝藥袋。重點在於「藥物散落囤積」與「整理後標示分裝」的前後對比。</p></div></div>
+<h4>從 ICOPE 篩檢銜接肌少症檢測 ⏱ 01:55</h4>
+<p>執行 ICOPE（Integrated Care for Older People，長者整合性功能評估）可以篩出肌少、衰弱的個案。發現個案行動能力異常時，就接著做肌少症檢測：</p>
+<div class="tablewrap"><table><thead><tr><th>面向</th><th>檢測工具</th></tr></thead><tbody><tr><td>上肢肌力</td><td>握力檢測</td></tr><tr><td>下肢肌力／身體活動功能</td><td>五次坐站測試、起立行走測試</td></tr><tr><td>肌肉量</td><td>小腿圍、InBody 等生物電阻抗（BIA）身體組成分析</td></tr><tr><td>問卷初篩</td><td>SARC-F 量表</td></tr></tbody></table></div>
+<p>檢測結果異常，就介入運動與營養衛教。</p>
+<h4>老年人的熱量與蛋白質：吃得夠才有肌肉 ⏱ 03:10</h4>
+<p>老年人牙口不好，飲食攝取（尤其蛋白質）常常不足；要有足夠熱量加上適度蛋白質，才能支應肌肉活動與代謝所需。</p>
+<ul><li><strong>熱量</strong>：依生理活動狀況估算，至少每公斤體重 25～35 大卡。例如 50 公斤的長者，一天至少約 1,500 大卡。</li><li><strong>蛋白質</strong>：建議<strong>每餐</strong> 25～30 克，約等於 3～4 份。理由是蛋白質中的白胺酸（leucine）能幫助老年人肌肉蛋白合成。</li></ul>
+<div class="callout cx-ex"><div class="cx-t">「一份蛋白質」怎麼估</div><div class="cx-b"><ul><li>豆漿一杯 250 c.c.</li><li>傳統（田字形）豆腐半塊</li><li>魚或肉一兩＝比出三根手指頭的大小</li><li>全蛋一顆</li></ul></div></div>
+<div class="callout cx-warn"><div class="cx-t">講者提醒</div><div class="cx-b"><p>一餐 3～4 份，實務上有些長者真的吃不了那麼多，要特別留意他們的營養攝取是否達標。</p></div></div>
+<p>過去研究提到維生素 D 可促進肌肉蛋白質合成，omega-3 脂肪酸也有助於提升肌肉蛋白質合成，適度補充維生素對老年人有好處，這些都可以考慮；營養諮詢可進一步轉介營養師。</p>
+<h4>衛教工具：講不完的，用單張、手冊與影片補 ⏱ 04:56</h4>
+<p>「如果講了半天怕他聽不懂，就給他簡單的衛教單張。」除了單張還有手冊，也可以協助個案掃 QR code 下載影片回家用：</p>
+<ul><li><strong>運動類</strong>：簡易運動影片，長度約 1～2 分鐘，依個案能力給建議（投影片所示為握力訓練、上肢訓練、下肢訓練、核心訓練等分段影片）</li><li><strong>營養類</strong>：銀髮族營養手冊，附 QR code；內含許多適合銀髮族的烹調方式，食材設計考量牙口不良並設法增加食物風味</li><li><strong>衛教單張主題</strong>（投影片所列）：正確用藥、心智飲食、動動生活、預防失智、預防跌倒</li></ul>
+<h4>資源盤點、連結與轉介 ⏱ 05:52</h4>
+<p>基層醫療其實握有很多可互相應用的資源：</p>
+<div class="tablewrap"><table><thead><tr><th>資源</th><th>能提供什麼</th></tr></thead><tbody><tr><td>自己的醫療群</td><td>群內有不同科別；若群內有做共照網或健康促進機構者，就有足夠的跨專業醫療人員</td></tr><tr><td>社區照顧關懷據點</td><td>健康促進活動、共餐服務；長者在家常沒人說話，據點可補足社會參與</td></tr><tr><td>國健署健康久久網站</td><td>大量衛教教材與影片，多數不到 5 分鐘，很適合直接給民眾看</td></tr><tr><td>糖尿病共同照護網</td><td>整合醫院／診所與相關專科及醫師、護理、營養、藥師等專業人員（投影片：全國 22 縣市均已成立，民眾可洽所在縣市衛生局或衛生所／健康服務中心）</td></tr><tr><td>糖尿病關懷基金會</td><td>衛教文章、醫療新知、飲食資訊，還有病友心聲</td></tr><tr><td>糖尿病支持團體</td><td>全國各醫療院所（含基層與醫院）皆有設立，pre-DM 或已確診糖尿病者都可轉介</td></tr><tr><td>社區藥局</td><td>資訊多，也歡迎民眾直接詢問</td></tr><tr><td>戒菸服務</td><td>若自己的醫療院所沒做戒菸，可做戒菸轉介；免費戒菸諮詢專線 <strong>0800-636363</strong></td></tr></tbody></table></div>
+<div class="callout cx-note"><div class="cx-t">其他投影片列出的社區民眾可用資源</div><div class="cx-b"><p>國民健康署與健康久久網站、中華民國糖尿病衛教學會、財團法人糖尿病關懷基金會、衛生局（健康服務中心／衛生所）、健康醫院（含戒菸醫事機構）、糖尿病健康促進機構、社區藥局、糖尿病支持團體、各縣市社區照顧關懷據點與社區大學及終身學習場域、運動中心與運動相關學／協會資源、戒菸諮詢專線。</p></div></div>
+<h4>課程總結 ⏱ 08:45</h4>
+<div class="callout cx-quote"><div class="cx-t">講者原話</div><div class="cx-b"><p>「代謝症候群其實就是著重在生活習慣的調整。」</p></div></div>
+<ul><li>因為重點在生活習慣，所以要特別關注個案<strong>社會、心理、行為</strong>面向的問題。</li><li>以人為本的健康照護，不只看個人，還要把<strong>家庭與社區</strong>的觀點納入照護系統，用尊重且整體的方式回應個案的需求與偏好。</li><li>老年個案除了代謝症候群的潛在風險，還可能有內在能力（intrinsic capacity）與身體功能的問題，需要更多關懷，也需要轉介跨專業團隊。</li><li><strong>個案管理師是個案與醫療團隊之間的橋樑</strong>；基層若能配置個管師最好，他能安排適當科別或專業人員進行評估與照護，並掌握個案整體身心狀況，達到預防及延緩失能的目標。</li><li>最終目標：基層醫療從<strong>門診、居家、社區</strong>三個場域，建立更完整的慢性病全人照護模式。</li></ul>
+<h3>關鍵詞</h3>
+<ul><li><strong>多重用藥（polypharmacy）</strong>：同時使用多種藥物；本課以 5 種以上為警覺線、10 種以上須列管。</li><li><strong>ICOPE</strong>：Integrated Care for Older People，長者整合性功能評估，用來篩出肌少、衰弱個案。</li><li><strong>SARC-F 量表</strong>：肌少症的簡易問卷式篩檢工具。</li><li><strong>五次坐站測試</strong>：請個案連續五次起立坐下，評估下肢肌力與身體活動功能。</li><li><strong>InBody／BIA</strong>：以生物電阻抗原理量測身體組成（含肌肉量）的檢查。</li><li><strong>白胺酸（leucine）</strong>：蛋白質中的胺基酸，有助老年人肌肉蛋白合成。</li><li><strong>糖尿病共同照護網</strong>：整合各層級院所與跨專業人員、訂定診療規範與轉診辦法的照護體系。</li></ul>
+<h3>可執行要點</h3>
+<ul><li class="task"><label><input type="checkbox" class="tk">對用藥 5 種以上的長者，請他下次回診把所有藥（含中藥、健康食品）帶來當面逐一核對。</label></li><li class="task"><label><input type="checkbox" class="tk">建立 10 種以上用藥者的列管名單，並約定藥師審查與回覆主治醫師的流程。</label></li><li class="task"><label><input type="checkbox" class="tk">個案出現行動能力異常時，加做握力、五次坐站測試、小腿圍或 SARC-F。</label></li><li class="task"><label><input type="checkbox" class="tk">把「每公斤 25～35 大卡、每餐蛋白質 25～30 克（3～4 份）」做成一張門診可直接發的換算小卡。</label></li><li class="task"><label><input type="checkbox" class="tk">盤點診所週邊的社區照顧關懷據點、社區藥局、糖尿病支持團體，做成一頁轉介清單。</label></li><li class="task"><label><input type="checkbox" class="tk">把戒菸諮詢專線 0800-636363 印在衛教單張上，沒做戒菸服務時直接轉介。</label></li></ul>
+<div class="quiz" id="qz10" data-total="5"><div class="wgh">📝 隨堂測驗<span class="wghint">（點選項作答）</span><span class="qzscore"></span><button class="qzretry" style="display:none">↺ 重做</button></div><div class="qzq"><div class="qzqt">依講者建議，老年個案用藥超過幾種時應建立列管機制並邀藥師共同參與？</div><div class="qzopts"><button class="qzopt" data-c="0">3 種</button><button class="qzopt" data-c="0">5 種</button><button class="qzopt" data-c="1">10 種</button><button class="qzopt" data-c="0">15 種</button></div><div class="qzex">超過 5 種即須提高警覺、請個案把所有用藥帶來逐一核對；超過 10 種則要有列管機制並由藥師共同參與。</div></div><div class="qzq"><div class="qzqt">藥師審查用藥時，最後決定是否調整藥物的是誰？</div><div class="qzopts"><button class="qzopt" data-c="0">藥師</button><button class="qzopt" data-c="0">個案管理師</button><button class="qzopt" data-c="1">主治醫師</button><button class="qzopt" data-c="0">營養師</button></div><div class="qzex">藥師以系統檢查交互作用與潛在不適當用藥後，將建議表送交主治醫師，由主治醫師決定是否調整。</div></div><div class="qzq"><div class="qzqt">講者建議老年人每餐攝取多少蛋白質？</div><div class="qzopts"><button class="qzopt" data-c="0">10～15 克</button><button class="qzopt" data-c="1">25～30 克</button><button class="qzopt" data-c="0">40～50 克</button><button class="qzopt" data-c="0">每公斤體重 1.5 克</button></div><div class="qzex">建議每餐 25～30 克，約 3～4 份；因蛋白質中的白胺酸有助肌肉蛋白合成。</div></div><div class="qzq"><div class="qzqt">下列何者屬於「一份蛋白質」的估算方式？</div><div class="qzopts"><button class="qzopt" data-c="1">豆漿一杯 250 c.c.</button><button class="qzopt" data-c="0">傳統豆腐兩塊</button><button class="qzopt" data-c="0">全蛋三顆</button><button class="qzopt" data-c="0">魚肉半斤</button></div><div class="qzex">一份＝豆漿 250 c.c.、傳統豆腐半塊、魚或肉一兩（約三根手指大小）或全蛋一顆。</div></div><div class="qzq"><div class="qzqt">講者在總結中認為基層照護裡「個案與醫療團隊之間的橋樑」是誰？</div><div class="qzopts"><button class="qzopt" data-c="0">主治醫師</button><button class="qzopt" data-c="1">個案管理師</button><button class="qzopt" data-c="0">社區藥師</button><button class="qzopt" data-c="0">關懷據點志工</button></div><div class="qzex">講者明確指出個案管理師是橋樑，可安排適當科別與專業人員評估照護，並掌握個案整體身心狀況。</div></div></div>
+<div class="flashcards"><div class="wgh">🎴 單字卡<span class="wghint">（點卡片翻面）</span></div><div class="fcgrid"><button class="fc"><span class="fc-in"><span class="fc-f">多重用藥的兩個行動門檻</span><span class="fc-b">超過 5 種：請個案帶所有藥來逐一核對；超過 10 種：建立列管機制並邀藥師共同參與。</span></span></button><button class="fc"><span class="fc-in"><span class="fc-f">藥師介入紀錄的 A／B／C</span><span class="fc-b">A＝藥品治療問題，B＝藥師介入的活動，C＝藥師介入的結果。</span></span></button><button class="fc"><span class="fc-in"><span class="fc-f">肌少症檢測的四個面向</span><span class="fc-b">上肢握力、下肢五次坐站／起立行走、肌肉量（小腿圍、InBody／BIA）、SARC-F 問卷。</span></span></button><button class="fc"><span class="fc-in"><span class="fc-f">老年人熱量與蛋白質建議</span><span class="fc-b">熱量每公斤體重 25～35 大卡（50 公斤者一天至少約 1,500 大卡）；蛋白質每餐 25～30 克（3～4 份）。</span></span></button><button class="fc"><span class="fc-in"><span class="fc-f">一份蛋白質的生活化換算</span><span class="fc-b">豆漿 250 c.c.／傳統豆腐半塊／魚或肉一兩（三根手指大小）／全蛋一顆。</span></span></button><button class="fc"><span class="fc-in"><span class="fc-f">免費戒菸諮詢專線</span><span class="fc-b">0800-636363。</span></span></button><button class="fc"><span class="fc-in"><span class="fc-f">課程總結的全人照護模式</span><span class="fc-b">基層醫療從門診、居家、社區三場域，結合跨專業團隊與個案管理師，建立完整的慢性病全人照護。</span></span></button></div></div></div>
+      </article>
+  </section>
+      <div class="noresults" id="noresults" style="display:none">找不到符合的筆記</div>
+      <div class="foot">由 Course2Notes 自動生成 · 內容為使用者自有課程的個人學習筆記</div>
+    </div>
+  </div>
+</div>
+<button class="totop" id="totop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+<div id="lightbox"><img alt=""></div>
+<script>
+function lsGet(k){try{return localStorage.getItem(k)}catch(_){return null}}
+function lsSet(k,v){try{localStorage.setItem(k,v)}catch(_){}}
+var _fs=parseFloat(lsGet('c2n_fs'))||16.5;
+function applyFs(){document.documentElement.style.setProperty('--fs',_fs+'px')}
+function setFs(d){_fs=d===0?16.5:Math.max(13,Math.min(27,_fs+d*2));applyFs();lsSet('c2n_fs',_fs)}
+applyFs();
+document.querySelectorAll('.navhead').forEach(function(b){b.addEventListener('click',function(){b.closest('.navgroup').classList.toggle('open')})});
+// 展開第一個
+document.querySelector('.navgroup')&&document.querySelector('.navgroup').classList.add('open');
+// active on scroll
+const subs=[...document.querySelectorAll('.navsub')];
+const map={};subs.forEach(a=>map[a.getAttribute('href').slice(1)]=a);
+const io=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){subs.forEach(s=>s.classList.remove('active'));const a=map[e.target.id];if(a){a.classList.add('active');a.closest('.navsubs').parentElement.classList.add('open')}}})},{rootMargin:'-10% 0px -80% 0px'});
+document.querySelectorAll('.note').forEach(n=>io.observe(n));
+// back to top
+addEventListener('scroll',()=>{document.getElementById('totop').classList.toggle('show',scrollY>500)});
+// 隨堂測驗：作答即時對錯＋計分；單字卡：點擊翻面
+var QZTPL="答對 {a}/{t}",QZPROG="已答 {a}/{t}";
+function _qzf(tpl,a,t){return tpl.replace('{a}',a).replace('{t}',t);}
+document.querySelectorAll('.quiz').forEach(function(q){
+  var total=+q.getAttribute('data-total'),sc=q.querySelector('.qzscore'),rb=q.querySelector('.qzretry');
+  function upd(){
+    var done=q.querySelectorAll('.qzq.done').length,wrong=q.querySelectorAll('.qzq .qzopt.wrong').length;
+    if(!done){sc.textContent='';if(rb)rb.style.display='none';return;}
+    // 沒答完先顯示進度，答完才給總分（避免中途分數被讀成最終成績）
+    sc.textContent=done<total?_qzf(QZPROG,done,total):_qzf(QZTPL,done-wrong,total);
+    if(rb)rb.style.display=done===total?'':'none';
+  }
+  q.querySelectorAll('.qzq').forEach(function(qq){
+    qq.querySelectorAll('.qzopt').forEach(function(op){
+      op.addEventListener('click',function(){
+        if(qq.classList.contains('done'))return;
+        qq.classList.add('done');
+        if(op.getAttribute('data-c')!=='1')op.classList.add('wrong');
+        qq.querySelectorAll('.qzopt').forEach(function(o){if(o.getAttribute('data-c')==='1')o.classList.add('right');o.disabled=true;});
+        upd();
+      });
+    });
+  });
+  if(rb)rb.addEventListener('click',function(){
+    q.querySelectorAll('.qzq').forEach(function(qq){qq.classList.remove('done');
+      qq.querySelectorAll('.qzopt').forEach(function(o){o.classList.remove('right','wrong');o.disabled=false;});});
+    upd();
+  });
+});
+document.querySelectorAll('.fc').forEach(function(c){c.addEventListener('click',function(){c.classList.toggle('flipped');});});
+// 圖片點擊放大（lightbox）
+(function(){var lb=document.getElementById('lightbox');if(!lb)return;var li=lb.querySelector('img');
+document.querySelectorAll('.nbody figure.fig img').forEach(function(img){img.addEventListener('click',function(){li.src=img.src;lb.classList.add('show')})});
+lb.addEventListener('click',function(){lb.classList.remove('show');li.src='';});
+document.addEventListener('keydown',function(e){if(e.key==='Escape'){lb.classList.remove('show');li.src='';}});})();
+// 待辦勾選狀態持久化（key＝標題+輸出檔名鹽＋筆記 id＋項次，避免兩份同名筆記在同 origin 下互相污染；localStorage 優先於 markdown 的 [x]）
+var TKSALT="代謝症候群防治計畫教育訓練課程 筆記（上・中・下）|mets-notes-public.html";
+document.querySelectorAll('.note').forEach(n=>{[...n.querySelectorAll('input.tk')].forEach((cb,idx)=>{
+  const k='c2n_tk:'+TKSALT+':'+n.id+':'+idx;const v=lsGet(k);if(v==='1')cb.checked=true;else if(v==='0')cb.checked=false;
+  cb.addEventListener('change',()=>lsSet(k,cb.checked?'1':'0'));});});
+// search: 隱藏不含關鍵字的 note
+function doSearch(q){q=q.trim().toLowerCase();let shown=0;
+  document.querySelectorAll('.note').forEach(n=>{const hit=!q||n.textContent.toLowerCase().includes(q);n.style.display=hit?'':'none';if(hit&&q)shown++;const a=document.querySelector('.navsub[href="#'+n.id+'"]');if(a)a.style.display=hit?'':'none'});
+  document.querySelectorAll('.course').forEach(c=>{const any=[...c.querySelectorAll('.note')].some(n=>n.style.display!=='none');c.style.display=any?'':'none'});
+  document.querySelectorAll('.navgroup').forEach(g=>{const any=[...g.querySelectorAll('.navsub')].some(a=>a.style.display!=='none');g.style.display=any?'':'none'});
+  const nr=document.getElementById('noresults');if(nr)nr.style.display=(q&&shown===0)?'':'none'}
+</script>
+</body>
+</html>
