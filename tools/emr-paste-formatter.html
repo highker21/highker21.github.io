@@ -81,7 +81,7 @@ details{margin-top:6px;font-size:.75rem;color:#678}
 </div>
 <div class="warn" id="warn" hidden></div>
 <details id="skipbox" hidden><summary>未解析的段落（點開檢查）</summary><pre id="skipped"></pre></details>
-<div class="foot">僅重排文字、不做醫療判斷，貼入病歷前請自行核對｜歷史記錄存於本機瀏覽器（localStorage）｜工具版本：2026-08-13c（用藥與抽血拆成兩個輸出框、各自可複製；重複用藥只留最新一筆；門診（開立）與藥局（調劑）分段）</div>
+<div class="foot">僅重排文字、不做醫療判斷，貼入病歷前請自行核對｜歷史記錄存於本機瀏覽器（localStorage）｜工具版本：2026-09-23（修正：條列式複製後貼上變成一行——改為同時寫入純文字 CRLF 與 HTML 格式，Word／病歷編輯區才吃得到分行）｜2026-08-13c（用藥與抽血拆兩個輸出框各自可複製；重複用藥只留最新一筆；門診與藥局分段）</div>
 <script>
 const $=id=>document.getElementById(id);
 const FREQ='QD|QAM|QPM|QDS|BID|TID|QID|QN|HS|PRN|QOD|QW|BIW|TIW|Q\\d+[HD]|ST|STAT|MEAL|AC|PC';
@@ -420,12 +420,40 @@ function newPatient(){
   $('inMed').addEventListener(e,render);$('inLab').addEventListener(e,render);
   document.querySelectorAll('.opts input').forEach(c=>c.addEventListener(e,render));
 });
+/* ⚠️ 2026-09-23 老闆回報：條列式複製後，貼上變成一行、沒有分行。
+ *  原因：原本只寫 text/plain 且用 \n 分行——
+ *    ①Windows／遠端桌面／部分 HIS 輸入框只認 \r\n；
+ *    ②貼進富文字（contenteditable、Word、病歷編輯區）時，純文字的換行會被吃掉。
+ *  修法：①純文字統一 \r\n；②同時寫 text/html（每行 <div>，空行 <div><br></div>），
+ *        讓富文字欄位也拿得到分行；③fallback 的 textarea 走同一份 \r\n 文字。
+ *  ⭐ 同根因也存在於健保雲端外掛的 wireCopy()（B 機 2026-09-23 診斷），兩者修法一致。 */
+const clipPlain=t=>String(t).replace(/\r?\n/g,'\r\n');
+const clipHtml=t=>{
+  const esc1=s=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  return String(t).split(/\r?\n/)
+    .map(l=>l?`<div>${esc1(l).replace(/ {2,}/g,m=>'&nbsp;'.repeat(m.length))}</div>`:'<div><br></div>')
+    .join('');
+};
 const doCopy=async(txt,label)=>{
-  try{await navigator.clipboard.writeText(txt)}catch(e){
-    const ta=document.createElement('textarea');ta.value=txt;ta.style.cssText='position:fixed;top:-9999px';
-    document.body.appendChild(ta);ta.select();try{document.execCommand('copy')}catch(e2){}ta.remove();
+  const t=clipPlain(txt);
+  let ok=false;
+  if(navigator.clipboard&&window.isSecureContext){
+    if(window.ClipboardItem&&navigator.clipboard.write){
+      try{
+        await navigator.clipboard.write([new ClipboardItem({
+          'text/plain':new Blob([t],{type:'text/plain'}),
+          'text/html' :new Blob([clipHtml(t)],{type:'text/html'})
+        })]);ok=true;
+      }catch(e){/* 落到下面的純文字路徑 */}
+    }
+    if(!ok){try{await navigator.clipboard.writeText(t);ok=true}catch(e){}}
   }
-  $('msg').textContent='已複製'+label+' ✅';setTimeout(()=>$('msg').textContent='',1500);
+  if(!ok){
+    const ta=document.createElement('textarea');ta.value=t;ta.style.cssText='position:fixed;top:-9999px';
+    document.body.appendChild(ta);ta.select();try{ok=document.execCommand('copy')}catch(e2){ok=false}ta.remove();
+  }
+  $('msg').textContent=ok?('已複製'+label+' ✅'):'複製失敗，請手動選取';
+  setTimeout(()=>$('msg').textContent='',1500);
 };
 const outText=id=>{const t=$(id).textContent;return /^（|^貼上後結果/.test(t)?'':t};
 $('copy').onclick=()=>{const a=outText('outMed'),b=outText('outLab');
