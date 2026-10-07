@@ -34,10 +34,11 @@
   .picker p { margin: 0 0 5px; font-weight: 600; color: #0b5563; }
   .picker .btns { display: flex; flex-wrap: wrap; gap: 6px; }
   .picker button { font: inherit; font-size: 10.5pt; padding: 6px 10px; border-radius: 18px; border: 1.5px solid #9aa5b1; background: #fff; cursor: pointer; }
+  .picker .printbtn { margin-left: auto; border-color: #0b5563; color: #0b5563; font-weight: 600; }
   .picker button.on { background: #0b5563; color: #fff; border-color: #0b5563; }
   .card.hide { display: none; }
   .card.focus { box-shadow: 0 0 0 3px rgba(11,85,99,.25); }
-  @media print { .picker { display: none; } .card.hide { display: block; } }
+  @media print { .picker { display: none; } .card.focus { box-shadow: none; } }
 </style>
 </head>
 <body>
@@ -54,6 +55,7 @@
     <button data-c="1">Ⅰ 無法診斷</button><button data-c="2">Ⅱ 良性</button><button data-c="3">Ⅲ 非典型病變</button>
     <button data-c="4">Ⅳ 濾泡性腫瘤</button><button data-c="5">Ⅴ 疑似惡性</button><button data-c="6">Ⅵ 惡性</button>
     <button data-c="all">顯示全部</button>
+    <button type="button" class="printbtn" onclick="window.print()">🖨 列印</button>
   </div>
 </div>
 <div class="card c1">
@@ -126,7 +128,7 @@
 <script>
 (function(){
   var cards=[].slice.call(document.querySelectorAll('.card'));
-  var btns=[].slice.call(document.querySelectorAll('.picker button'));
+  var btns=[].slice.call(document.querySelectorAll('.picker button[data-c]'));
   function show(c){
     cards.forEach(function(el){ var hit=(c==='all')||el.classList.contains('c'+c); el.classList.toggle('hide',!hit); el.classList.toggle('focus',hit&&c!=='all'); });
     btns.forEach(function(b){ b.classList.toggle('on', b.getAttribute('data-c')===c); });
