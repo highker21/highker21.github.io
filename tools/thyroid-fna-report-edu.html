@@ -35,6 +35,9 @@
   .picker .btns { display: flex; flex-wrap: wrap; gap: 6px; }
   .picker button { font: inherit; font-size: 10.5pt; padding: 6px 10px; border-radius: 18px; border: 1.5px solid #9aa5b1; background: #fff; cursor: pointer; }
   .picker .printbtn { margin-left: auto; border-color: #0b5563; color: #0b5563; font-weight: 600; }
+  .picker .onlysw { display: inline-flex; align-items: center; gap: 4px; font-size: 10.5pt; cursor: pointer; user-select: none; }
+  .picker .onlysw input { width: 18px; height: 18px; accent-color: #0b5563; }
+  @media screen { body.only.picked .card:not(.focus) { display: none; } }
   .picker button.on { background: #0b5563; color: #fff; border-color: #0b5563; }
   .card.focus { border-width: 3.5px; outline: 3px solid #0b5563; outline-offset: 2px; position: relative; }
   .card.focus::before { content: "◀ 您的報告結果"; position: absolute; top: -11px; right: 10px; background: #0b5563; color: #fff; font-size: 9.5pt; font-weight: 700; padding: 1px 8px; border-radius: 9px; }
@@ -55,6 +58,7 @@
     <button data-c="1">Ⅰ 無法診斷</button><button data-c="2">Ⅱ 良性</button><button data-c="3">Ⅲ 非典型病變</button>
     <button data-c="4">Ⅳ 濾泡性腫瘤</button><button data-c="5">Ⅴ 疑似惡性</button><button data-c="6">Ⅵ 惡性</button>
     <button data-c="all">清除標示</button>
+    <label class="onlysw"><input type="checkbox" id="onlysw">只顯示選取的類別</label>
     <button type="button" class="printbtn" onclick="window.print()">🖨 列印</button>
   </div>
 </div>
@@ -133,8 +137,16 @@
     var target=null; cards.forEach(function(el){ var hit=(c!=='all')&&el.classList.contains('c'+c); el.classList.toggle('focus',hit); if(hit) target=el; });
     if(target && scroll){ target.scrollIntoView({behavior:'smooth', block:'center'}); }
     btns.forEach(function(b){ b.classList.toggle('on', b.getAttribute('data-c')===c); });
-    try{ history.replaceState(null,'',c==='all'?location.pathname:location.pathname+'?c='+c); }catch(e){}
+    document.body.classList.toggle('picked', c!=='all'); cur=c; sync();
   }
+  var cur='all', sw=document.getElementById('onlysw');
+  function sync(){
+    document.body.classList.toggle('only', sw.checked);
+    var q=[]; if(cur!=='all') q.push('c='+cur); if(sw.checked) q.push('only=1');
+    try{ history.replaceState(null,'',location.pathname+(q.length?'?'+q.join('&'):'')); }catch(e){}
+  }
+  sw.addEventListener('change', function(){ sync(); var t=document.querySelector('.card.focus'); if(t) t.scrollIntoView({block:'center'}); });
+  sw.checked=/[?&]only=1/.test(location.search);
   btns.forEach(function(b){ b.addEventListener('click',function(){ show(b.getAttribute('data-c'), true); }); });
   var m=location.search.match(/[?&]c=([1-6])/); show(m?m[1]:'all', !!m);
 })();
