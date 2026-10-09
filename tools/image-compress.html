@@ -103,8 +103,8 @@
   <div id="drop">
     <i class="fa-solid fa-image"></i>
     <div class="big">把照片拖進來，或點這裡選擇（手機可直接拍）</div>
-    <div class="small">可一次選多張　·　JPG／PNG／WebP／GIF／BMP　·　HEIC（iPhone 原始格式）只有 Safari 能讀，其他瀏覽器請先在相簿選「最相容格式」或用 Safari 開</div>
-    <input type="file" id="picker" multiple accept="image/*" style="display:none">
+    <div class="small">可一次選多張　·　JPG／PNG／WebP／GIF／BMP　·　HEIC／HEIF（iPhone 原始格式）也可以直接丟進來，任何瀏覽器都能轉</div>
+    <input type="file" id="picker" multiple accept="image/*,.heic,.heif" style="display:none">
   </div>
 
   <div class="card" id="optCard" style="display:none">
@@ -156,6 +156,7 @@
       <li><b>JPG</b>：先維持原尺寸、只降畫質（最低到 50），畫質降到底還壓不進目標，才逐步縮小尺寸。多數手機照片（3–8 MB）縮到 1 MB 內不需要縮尺寸，肉眼幾乎看不出差別。</li>
       <li><b>PNG</b>：PNG 沒有畫質可調，只能靠縮尺寸，照片存 PNG 通常會比 JPG 大 5–10 倍，除非需要透明背景或是截圖／圖表，否則選 JPG。</li>
       <li><b>方向</b>：手機直拍的照片會依照片內的方向資訊自動轉正，不會壓完變橫的。</li>
+      <li><b>HEIC／HEIF</b>（iPhone 原始格式）：Safari 直接讀；其他瀏覽器會在第一次遇到 HEIC 時下載轉檔元件（約 1.3 MB，一樣只在你的裝置上轉，不上傳），轉成 JPG 後再壓縮。</li>
       <li><b>透明背景的 PNG 轉 JPG</b> 會補成白底（JPG 不支援透明）。</li>
       <li><b>超大照片</b>（4800 萬畫素以上）瀏覽器畫布放不下，會先縮到約 1600 萬畫素再處理，屬正常。</li>
       <li><b>原檔已經比目標小</b>且格式相同：直接沿用原檔不重新編碼（重新編碼只會讓小檔變大）；若你選了不同格式（例如 PNG 轉 JPG），仍會轉檔輸出。</li>
@@ -163,7 +164,8 @@
   </div>
 
   <footer>
-    工具版本：2026-09-10（首版：目標大小 300KB–5MB、JPG 二分搜尋畫質再縮尺寸、PNG 縮尺寸、EXIF 轉正、多張與 ZIP 打包）<br>
+    工具版本：2026-10-09（新增：任何瀏覽器都能讀 iPhone 的 HEIC／HEIF）<br>
+    2026-09-10 首版：目標大小 300KB–5MB、JPG 二分搜尋畫質再縮尺寸、PNG 縮尺寸、EXIF 轉正、多張與 ZIP 打包<br>
     純前端處理，照片不離開你的裝置。壓縮後請自行確認影像仍清楚可辨。
   </footer>
 </div>
@@ -181,7 +183,30 @@ const MAX_AREA=16e6;   // iOS Safari canvas 面積上限附近，超過會得到
 let items=[];   // {file, bitmap, w, h, el, out:{blob,w,h,q,scale,name}}
 
 // ── 解碼（含 EXIF 轉正） ──────────────────────────────
+const isHeic=f=>/\.(heic|heif)$/i.test(f.name)||/image\/hei[cf]/i.test(f.type);
+let heicLib=null;   // 只有遇到 HEIC 且瀏覽器原生讀不了時才載入（約 1.3 MB，載一次重複用）
+function loadHeicLib(){
+  if(window.heic2any) return Promise.resolve(window.heic2any);
+  if(!heicLib) heicLib=new Promise((res,rej)=>{
+    const sc=document.createElement('script');
+    sc.src='https://cdnjs.cloudflare.com/ajax/libs/heic2any/0.0.4/heic2any.min.js';
+    sc.onload=()=>window.heic2any?res(window.heic2any):rej(new Error('HEIC 解碼器載入失敗'));
+    sc.onerror=()=>{ heicLib=null; rej(new Error('HEIC 解碼器載入失敗（請確認網路）')); };
+    document.head.appendChild(sc);
+  });
+  return heicLib;
+}
+async function decodeHeic(file){
+  const h2a=await loadHeicLib();
+  let out=await h2a({blob:file, toType:'image/jpeg', quality:0.95});   // 本機轉檔，不上傳
+  if(Array.isArray(out)) out=out[0];   // 連拍／原況照片可能含多張，取第一張
+  return await decodeNative(out);      // HEIC 的旋轉資訊在轉檔時已套用
+}
 async function decode(file){
+  try{ return await decodeNative(file); }
+  catch(e){ if(isHeic(file)) return await decodeHeic(file); throw e; }
+}
+async function decodeNative(file){
   if(window.createImageBitmap){
     try{ return await createImageBitmap(file,{imageOrientation:'from-image'}); }
     catch(e){ try{ return await createImageBitmap(file); }catch(e2){} }
@@ -271,7 +296,7 @@ function addFiles(files){
       const im=new Image(); im.src=c.toDataURL('image/jpeg',0.8); li.querySelector('.thumb').replaceChildren(im);
       li.querySelector('.meta').innerHTML=`原檔 <b>${fmtKB(f.size)}</b>・${d.w}×${d.h}`;
     }).catch(()=>{ it.bad=true; li.querySelector('.badge').textContent='無法讀取'; li.querySelector('.badge').classList.add('bad');
-      li.querySelector('.meta').innerHTML=`<span class="bad">這個瀏覽器讀不了此格式</span>（HEIC 請用 Safari，或改存 JPG 再來）`; });
+      li.querySelector('.meta').innerHTML=`<span class="bad">讀不了這個檔案</span>（${isHeic(f)?'HEIC 轉檔失敗，請確認網路連線後重試，或在相簿改存 JPG':'格式不支援或檔案損毀'}）`; });
   }
   refresh();
 }
