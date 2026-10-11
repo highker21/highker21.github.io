@@ -53,7 +53,9 @@ def Xform "TV" (
     kind = "component"
 )
 {{
-    def Mesh "Body"
+    def Mesh "Body" (
+        prepend apiSchemas = ["MaterialBindingAPI"]
+    )
     {{
         float3[] extent = [({-bw}, {-bh}, {-d}), ({bw}, {bh}, {d})]
         int[] faceVertexCounts = [4, 4, 4, 4, 4, 4]
@@ -66,7 +68,9 @@ def Xform "TV" (
         rel material:binding = </TV/BodyMat>
     }}
 
-    def Mesh "Screen"
+    def Mesh "Screen" (
+        prepend apiSchemas = ["MaterialBindingAPI"]
+    )
     {{
         float3[] extent = [({-sw}, {-sh}, {sz}), ({sw}, {sh}, {sz})]
         int[] faceVertexCounts = [4]
