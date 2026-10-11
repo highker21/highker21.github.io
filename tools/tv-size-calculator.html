@@ -293,7 +293,8 @@
       note.style.display = 'block';
       note.innerHTML = '依官方規格的<b>機身實際尺寸（不含底座，壁掛情境）</b>：'
         + list.map(function(m){ return m.inch + '" ' + m.model + ' ' + r(m.body_mm[0]/10,1) + '×' + r(m.body_mm[1]/10,1) + '×' + r(m.body_mm[2]/10,1) + ' cm'; }).join('；')
-        + '。<br>外觀為示意（不含品牌外觀與 logo）。規格出處：' + list.map(function(m, i){ return '<a href="' + m.src + '" target="_blank" rel="noopener">' + m.inch + '"</a>'; }).join('、') + '。';
+        + '。' + (list.some(function(m){ return m.screen_est; }) ? '<br>此品牌官方未公布可視對角線，螢幕區以「標稱吋數 − 0.5 吋」估計（業界常見差距）。' : '')
+        + '<br>外觀為示意（不含品牌外觀與 logo）。規格出處：' + list.map(function(m, i){ return '<a href="' + m.src + '" target="_blank" rel="noopener">' + m.inch + '"</a>'; }).join('、') + '。';
     }
     fetch('ar/brand/index.json').then(function(r){ return r.json(); }).then(function(d){
       MODELS = d;

@@ -25,7 +25,9 @@ def main():
     index, fail = [], []
     for x in sorted(data, key=lambda x: (x["brand"], x["inch"])):
         w_mm, h_mm, d_mm = x["body_mm"]
-        diag_in = x.get("screen_diag_in") or x["inch"]
+        # 官方未給可視對角線時：業界「XX 吋級」的實際可視多半小約 0.5 吋（例 Sony 65 級＝64.5），以此估計
+        est = not x.get("screen_diag_in")
+        diag_in = x.get("screen_diag_in") or (x["inch"] - 0.5)
         sw = diag_in * 0.0254 / (K / 16)
         sh = sw * 9 / 16
         bw, bh, bd = w_mm / 1000, h_mm / 1000, d_mm / 1000
@@ -40,7 +42,8 @@ def main():
         if p.returncode != 0 or not out.exists():
             fail.append((name, p.stderr[:120])); continue
         index.append({"brand": x["brand"], "series": x["series"], "model": x["model"], "inch": x["inch"],
-                      "body_mm": [w_mm, h_mm, d_mm], "file": f"ar/brand/{out.name}", "src": x.get("src", "")})
+                      "body_mm": [w_mm, h_mm, d_mm], "file": f"ar/brand/{out.name}", "src": x.get("src", ""),
+                      "screen_est": est})
         print(f"  {out.name:40s} 機身 {w_mm/10:.1f} × {h_mm/10:.1f} × {d_mm/10:.1f} cm")
     json.dump(index, open(OUT / "index.json", "w", encoding="utf-8"), ensure_ascii=False, indent=1)
     if fail:

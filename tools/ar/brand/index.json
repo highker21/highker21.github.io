@@ -10,7 +10,8 @@
    45.1
   ],
   "file": "ar/brand/lg-oled-evo-c5-65.usdz",
-  "src": "https://www.lg.com/tw/tv-soundbars/oled-evo/oled65c5pta/"
+  "src": "https://www.lg.com/tw/tv-soundbars/oled-evo/oled65c5pta/",
+  "screen_est": true
  },
  {
   "brand": "LG",
@@ -23,7 +24,8 @@
    47.1
   ],
   "file": "ar/brand/lg-oled-evo-c5-77.usdz",
-  "src": "https://www.lg.com/tw/tv-soundbars/oled-evo/oled77c5pta/"
+  "src": "https://www.lg.com/tw/tv-soundbars/oled-evo/oled77c5pta/",
+  "screen_est": true
  },
  {
   "brand": "LG",
@@ -36,7 +38,8 @@
    52.9
   ],
   "file": "ar/brand/lg-oled-evo-c5-83.usdz",
-  "src": "https://www.lg.com/tw/tv-soundbars/oled-evo/oled83c5pta/"
+  "src": "https://www.lg.com/tw/tv-soundbars/oled-evo/oled83c5pta/",
+  "screen_est": true
  },
  {
   "brand": "Samsung",
@@ -49,7 +52,8 @@
    26.9
   ],
   "file": "ar/brand/samsung-neo-qled-qn90f-65.usdz",
-  "src": "https://www.samsung.com/tw/tvs/qled-tv/qn90f-65-inch-neo-qled-4k-mini-led-smart-tv-qa65qn90faxxzw/"
+  "src": "https://www.samsung.com/tw/tvs/qled-tv/qn90f-65-inch-neo-qled-4k-mini-led-smart-tv-qa65qn90faxxzw/",
+  "screen_est": false
  },
  {
   "brand": "Samsung",
@@ -62,7 +66,8 @@
    27.7
   ],
   "file": "ar/brand/samsung-neo-qled-qn90f-75.usdz",
-  "src": "https://www.samsung.com/tw/tvs/qled-tv/qn90f-75-inch-neo-qled-4k-mini-led-smart-tv-qa75qn90faxxzw/"
+  "src": "https://www.samsung.com/tw/tvs/qled-tv/qn90f-75-inch-neo-qled-4k-mini-led-smart-tv-qa75qn90faxxzw/",
+  "screen_est": false
  },
  {
   "brand": "Samsung",
@@ -75,7 +80,8 @@
    27.9
   ],
   "file": "ar/brand/samsung-neo-qled-qn90f-85.usdz",
-  "src": "https://www.samsung.com/tw/tvs/qled-tv/qn90f-85-inch-neo-qled-4k-mini-led-smart-tv-qa85qn90faxxzw/"
+  "src": "https://www.samsung.com/tw/tvs/qled-tv/qn90f-85-inch-neo-qled-4k-mini-led-smart-tv-qa85qn90faxxzw/",
+  "screen_est": false
  },
  {
   "brand": "Samsung",
@@ -88,7 +94,8 @@
    31.1
   ],
   "file": "ar/brand/samsung-neo-qled-qn90f-98.usdz",
-  "src": "https://www.samsung.com/tw/tvs/qled-tv/qn90f-98-inch-neo-qled-4k-mini-led-smart-tv-qa98qn90faxxzw/"
+  "src": "https://www.samsung.com/tw/tvs/qled-tv/qn90f-98-inch-neo-qled-4k-mini-led-smart-tv-qa98qn90faxxzw/",
+  "screen_est": false
  },
  {
   "brand": "Sony",
@@ -101,7 +108,8 @@
    57
   ],
   "file": "ar/brand/sony-bravia-7-65.usdz",
-  "src": "https://www.sony.com.tw/zh/bravia/products/bravia-7/spec"
+  "src": "https://www.sony.com.tw/zh/bravia/products/bravia-7/spec",
+  "screen_est": false
  },
  {
   "brand": "Sony",
@@ -114,7 +122,8 @@
    57
   ],
   "file": "ar/brand/sony-bravia-7-75.usdz",
-  "src": "https://www.sony.com.tw/zh/bravia/products/bravia-7/spec"
+  "src": "https://www.sony.com.tw/zh/bravia/products/bravia-7/spec",
+  "screen_est": false
  },
  {
   "brand": "Sony",
@@ -127,7 +136,8 @@
    57
   ],
   "file": "ar/brand/sony-bravia-7-85.usdz",
-  "src": "https://www.sony.com.tw/zh/bravia/products/bravia-7/spec"
+  "src": "https://www.sony.com.tw/zh/bravia/products/bravia-7/spec",
+  "screen_est": false
  },
  {
   "brand": "TCL",
@@ -140,7 +150,8 @@
    50
   ],
   "file": "ar/brand/tcl-c8k-65.usdz",
-  "src": "https://www.tcl.com/content/brandsite/global/en/tvs/85c8k/jcr:content/root/container/container/container/subnav_menus/specifications1/product_spec.L2NvbnRlbnQvYnJhbmRzaXRlLXByb2R1Y3QvZ2xvYmFsL2VuL3R2cy9jOGsvNjVjOGs=.json"
+  "src": "https://www.tcl.com/content/brandsite/global/en/tvs/85c8k/jcr:content/root/container/container/container/subnav_menus/specifications1/product_spec.L2NvbnRlbnQvYnJhbmRzaXRlLXByb2R1Y3QvZ2xvYmFsL2VuL3R2cy9jOGsvNjVjOGs=.json",
+  "screen_est": true
  },
  {
   "brand": "TCL",
@@ -153,7 +164,8 @@
    51
   ],
   "file": "ar/brand/tcl-c8k-75.usdz",
-  "src": "https://www.tcl.com/content/brandsite/global/en/tvs/85c8k/jcr:content/root/container/container/container/subnav_menus/specifications1/product_spec.L2NvbnRlbnQvYnJhbmRzaXRlLXByb2R1Y3QvZ2xvYmFsL2VuL3R2cy9jOGsvNzVjOGs=.json"
+  "src": "https://www.tcl.com/content/brandsite/global/en/tvs/85c8k/jcr:content/root/container/container/container/subnav_menus/specifications1/product_spec.L2NvbnRlbnQvYnJhbmRzaXRlLXByb2R1Y3QvZ2xvYmFsL2VuL3R2cy9jOGsvNzVjOGs=.json",
+  "screen_est": true
  },
  {
   "brand": "TCL",
@@ -166,7 +178,8 @@
    53
   ],
   "file": "ar/brand/tcl-c8k-85.usdz",
-  "src": "https://www.tcl.com/content/brandsite/global/en/tvs/85c8k/jcr:content/root/container/container/container/subnav_menus/specifications1/product_spec.L2NvbnRlbnQvYnJhbmRzaXRlLXByb2R1Y3QvZ2xvYmFsL2VuL3R2cy9jOGsvODVjOGs=.json"
+  "src": "https://www.tcl.com/content/brandsite/global/en/tvs/85c8k/jcr:content/root/container/container/container/subnav_menus/specifications1/product_spec.L2NvbnRlbnQvYnJhbmRzaXRlLXByb2R1Y3QvZ2xvYmFsL2VuL3R2cy9jOGsvODVjOGs=.json",
+  "screen_est": true
  },
  {
   "brand": "TCL",
@@ -179,6 +192,7 @@
    54
   ],
   "file": "ar/brand/tcl-c8k-98.usdz",
-  "src": "https://www.tcl.com/content/brandsite/global/en/tvs/85c8k/jcr:content/root/container/container/container/subnav_menus/specifications1/product_spec.L2NvbnRlbnQvYnJhbmRzaXRlLXByb2R1Y3QvZ2xvYmFsL2VuL3R2cy9jOGsvOThjOGs=.json"
+  "src": "https://www.tcl.com/content/brandsite/global/en/tvs/85c8k/jcr:content/root/container/container/container/subnav_menus/specifications1/product_spec.L2NvbnRlbnQvYnJhbmRzaXRlLXByb2R1Y3QvZ2xvYmFsL2VuL3R2cy9jOGsvOThjOGs=.json",
+  "screen_est": true
  }
 ]
