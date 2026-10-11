@@ -121,7 +121,8 @@ def main() -> int:
             continue
 
         out.unlink(missing_ok=True)
-        p = subprocess.run(["usdzip", str(out), str(src)], capture_output=True, text=True)
+        # 在 src 所在目錄執行、只給檔名：zip 內檔名才不會帶出本機完整路徑
+        p = subprocess.run(["usdzip", out.name, src.name], capture_output=True, text=True, cwd=str(src.parent))
         if p.returncode != 0 or not out.exists():
             fail.append((inch, "usdzip 失敗: " + (p.stderr or p.stdout).strip()[:120]))
             continue
