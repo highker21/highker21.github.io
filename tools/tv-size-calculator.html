@@ -134,13 +134,18 @@
 
   <div class="card">
     <h2>③ AR 實景模擬（iPhone／iPad）</h2>
+    <label for="arBrand">機型</label>
+    <select id="arBrand" style="width:100%;margin-bottom:10px">
+      <option value="">通用 16:9（螢幕＋0.8 cm 邊框）</option>
+    </select>
     <label>選一個吋數，用相機看它擺在你家有多大</label>
     <div class="argrid" id="argrid"></div>
+    <div id="arModelNote" class="note" style="display:none"></div>
     <div id="arNote"></div>
     <div class="warn" style="margin-top:14px">
       <b>怎麼用</b><br>
       點吋數 → 相機打開後<b>慢慢平移手機</b>讓它認出牆面 → 電視會出現，用手指拖到定位、雙指可旋轉。
-      模型是<b>螢幕實際尺寸＋0.8 公分邊框</b>，厚度抓 5.5 公分，可以直接比對牆面或電視櫃夠不夠。<br>
+      「通用」模型是<b>螢幕實際尺寸＋0.8 公分邊框</b>，厚度抓 5.5 公分；選了品牌機型則用<b>官方規格的機身尺寸</b>（不含底座）。可以直接比對牆面或電視櫃夠不夠。<br>
       <b>120 吋以上</b>市面上多半是投影布幕而不是電視，但同樣是 16:9，拿來比大小一樣準——
       200 吋寬達 4.4 公尺，通常要退到房間另一頭才看得完整。
     </div>
@@ -255,23 +260,53 @@
       '<rect x="2" y="4" width="20" height="13" rx="1.5"/><path d="M8 21h8M12 17v4"/></svg>');
 
     var grid = $('argrid');
-    AR_SIZES.forEach(function(inch){
-      var diag = inch * CM, w = diag / DIAG_PER_W;
-      // ⚠️ AR Quick Look 硬性要求：<a rel="ar"> 內必須有 <img> 子元素，
-      // 否則不會進 AR，而是直接把 usdz 當檔案下載。
+    // ⚠️ AR Quick Look 硬性要求：<a rel="ar"> 內必須有 <img> 子元素，
+    // 否則不會進 AR，而是直接把 usdz 當檔案下載。
+    function btn(href, title, sub){
       var a = document.createElement('a');
       a.className = 'arbtn';
       a.setAttribute('rel', 'ar');
-      a.href = 'ar/tv-' + inch + '.usdz';
+      a.href = href;
       var img = document.createElement('img');
       img.src = ICON; img.alt = '';
       var em = document.createElement('em');
-      em.textContent = r(w, 0) + ' cm 寬';
+      em.textContent = sub;
       a.appendChild(img);
-      a.appendChild(document.createTextNode(inch + ' 吋'));
+      a.appendChild(document.createTextNode(title));
       a.appendChild(em);
       grid.appendChild(a);
-    });
+    }
+    var MODELS = [];
+    function renderAR(){
+      var key = $('arBrand').value, note = $('arModelNote');
+      grid.innerHTML = '';
+      if (!key) {
+        AR_SIZES.forEach(function(inch){
+          var diag = inch * CM, w = diag / DIAG_PER_W;
+          btn('ar/tv-' + inch + '.usdz', inch + ' 吋', r(w, 0) + ' cm 寬');
+        });
+        note.style.display = 'none';
+        return;
+      }
+      var list = MODELS.filter(function(m){ return m.brand + '|' + m.series === key; });
+      list.forEach(function(m){ btn(m.file, m.inch + ' 吋', r(m.body_mm[0] / 10, 1) + ' cm 寬'); });
+      note.style.display = 'block';
+      note.innerHTML = '依官方規格的<b>機身實際尺寸（不含底座，壁掛情境）</b>：'
+        + list.map(function(m){ return m.inch + '" ' + m.model + ' ' + r(m.body_mm[0]/10,1) + '×' + r(m.body_mm[1]/10,1) + '×' + r(m.body_mm[2]/10,1) + ' cm'; }).join('；')
+        + '。<br>外觀為示意（不含品牌外觀與 logo）。規格出處：' + list.map(function(m, i){ return '<a href="' + m.src + '" target="_blank" rel="noopener">' + m.inch + '"</a>'; }).join('、') + '。';
+    }
+    fetch('ar/brand/index.json').then(function(r){ return r.json(); }).then(function(d){
+      MODELS = d;
+      var seen = {};
+      d.forEach(function(m){
+        var k = m.brand + '|' + m.series;
+        if (seen[k]) return; seen[k] = 1;
+        var o = document.createElement('option'); o.value = k; o.textContent = m.brand + ' ' + m.series;
+        $('arBrand').appendChild(o);
+      });
+    }).catch(function(){});
+    $('arBrand').addEventListener('change', renderAR);
+    renderAR();
 
     // Apple 建議的支援偵測法
     var probe = document.createElement('a');

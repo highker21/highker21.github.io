@@ -1,0 +1,380 @@
+[
+ {
+  "brand": "Sony",
+  "series": "BRAVIA 7",
+  "model": "Y-65XR70",
+  "inch": 65,
+  "body_mm": [
+   1445,
+   832,
+   57
+  ],
+  "with_stand_mm": [
+   1445,
+   856,
+   345
+  ],
+  "stand": "feet",
+  "feet_span_mm": 1217,
+  "screen_diag_in": 64.5,
+  "weight_kg": {
+   "body": 27.1,
+   "with_stand": 28.3
+  },
+  "src": "https://www.sony.com.tw/zh/bravia/products/bravia-7/spec",
+  "quote": "螢幕大小 65 吋 (64.5 吋)；不含底座架 (寬 X 高 X 深) 約 1445 x 832 x 57 mm；含底座 (標準位置) (寬 X 高 X 深) 約 1445 x 856 x 345 mm；底座寬度 (標準位置) 約 1,217 mm；不含底座架重量 約 27.1 kg；含底座架重量 約 28.3 kg",
+  "note": "台灣索尼官網規格頁(2024 型號年份)；BRAVIA 7 腳架為底墊立架、位置可調：標準位置底座寬度約 1217 mm、狹窄位置約 480 mm，另有單件式喇叭位置(寬度同標準位置，高度較高)；with_stand_mm 取標準位置；feet_span_mm 取官網「底座寬度(標準位置)」，原文未說明是外緣或中心；全部原文為 mm/kg 無換算",
+  "verified_by_B": "Playwright 讀官方規格頁 DOM，尺寸/重量/底座寬/對角線逐欄對上"
+ },
+ {
+  "brand": "Sony",
+  "series": "BRAVIA 7",
+  "model": "Y-75XR70",
+  "inch": 75,
+  "body_mm": [
+   1668,
+   960,
+   57
+  ],
+  "with_stand_mm": [
+   1668,
+   984,
+   405
+  ],
+  "stand": "feet",
+  "feet_span_mm": 1442,
+  "screen_diag_in": 74.5,
+  "weight_kg": {
+   "body": 38.3,
+   "with_stand": 40.1
+  },
+  "src": "https://www.sony.com.tw/zh/bravia/products/bravia-7/spec",
+  "quote": "螢幕大小 75 吋 (74.5 吋)；不含底座架 (寬 X 高 X 深) 約 1668 x 960 x 57 mm；含底座 (標準位置) (寬 X 高 X 深) 約 1668 x 984 x 405 mm；底座寬度 (標準位置) 約 1,442 mm；不含底座架重量 約 38.3 kg；含底座架重量 約 40.1 kg",
+  "note": "台灣索尼官網規格頁(2024 型號年份)；BRAVIA 7 腳架為底墊立架、位置可調：標準位置底座寬度約 1442 mm、狹窄位置約 518 mm，另有單件式喇叭位置(寬度同標準位置，高度較高)；with_stand_mm 取標準位置；feet_span_mm 取官網「底座寬度(標準位置)」，原文未說明是外緣或中心；全部原文為 mm/kg 無換算",
+  "verified_by_B": "Playwright 讀官方規格頁 DOM，尺寸/重量/底座寬/對角線逐欄對上"
+ },
+ {
+  "brand": "Sony",
+  "series": "BRAVIA 7",
+  "model": "Y-85XR70",
+  "inch": 85,
+  "body_mm": [
+   1891,
+   1087,
+   57
+  ],
+  "with_stand_mm": [
+   1891,
+   1111,
+   474
+  ],
+  "stand": "feet",
+  "feet_span_mm": 1566,
+  "screen_diag_in": 84.6,
+  "weight_kg": {
+   "body": 48.6,
+   "with_stand": 50.7
+  },
+  "src": "https://www.sony.com.tw/zh/bravia/products/bravia-7/spec",
+  "quote": "螢幕大小 85 吋 (84.6 吋)；不含底座架 (寬 X 高 X 深) 約 1891 x 1087 x 57 mm；含底座 (標準位置) (寬 X 高 X 深) 約 1891 x 1111 x 474 mm；底座寬度 (標準位置) 約 1,566 mm；不含底座架重量 約 48.6 kg；含底座架重量 約 50.7 kg",
+  "note": "台灣索尼官網規格頁(2024 型號年份)；BRAVIA 7 腳架為底墊立架、位置可調：標準位置底座寬度約 1566 mm、狹窄位置約 609 mm，另有單件式喇叭位置(寬度同標準位置，高度較高)；with_stand_mm 取標準位置；feet_span_mm 取官網「底座寬度(標準位置)」，原文未說明是外緣或中心；全部原文為 mm/kg 無換算",
+  "verified_by_B": "Playwright 讀官方規格頁 DOM，尺寸/重量/底座寬/對角線逐欄對上"
+ },
+ {
+  "brand": "LG",
+  "series": "OLED evo C5",
+  "model": "OLED65C5PTA",
+  "inch": 65,
+  "body_mm": [
+   1441,
+   826,
+   45.1
+  ],
+  "with_stand_mm": [
+   1441,
+   880,
+   230
+  ],
+  "stand": "pedestal",
+  "feet_span_mm": null,
+  "screen_diag_in": null,
+  "weight_kg": {
+   "body": 16.6,
+   "with_stand": 18.5
+  },
+  "src": "https://www.lg.com/tw/tv-soundbars/oled-evo/oled65c5pta/",
+  "quote": "尺寸不含底座 (WxHxD, mm) 1441 x 826 x 45.1 尺寸含底座 (WxHxD, mm) 1441 x 880 x 230 底座 (WxD, mm) 470 x 230 重量不含底座 (kg) 16.6 重量含底座 (kg) 18.5",
+  "note": "台灣 lg.com/tw 有 C5。台灣官網無 75 吋與 100 吋 C5（有 77 吋 OLED77C5PTA，已依指示略過）。底座為中央式，原文只給底座 WxD(mm)，無腳距故 feet_span_mm=null；screen_diag_in 頁面未載故 null；原文單位已是 mm/kg 未換算。 另有 OLED65C5ZTA 規格數字完全相同（未重複列）。",
+  "verified_by_B": "curl 官方頁，寬x高x深三數連續字串比對，含反例測試"
+ },
+ {
+  "brand": "LG",
+  "series": "OLED evo C5",
+  "model": "OLED83C5PTA",
+  "inch": 83,
+  "body_mm": [
+   1842,
+   1055,
+   52.9
+  ],
+  "with_stand_mm": [
+   1842,
+   null,
+   297
+  ],
+  "stand": "pedestal",
+  "feet_span_mm": null,
+  "screen_diag_in": null,
+  "weight_kg": {
+   "body": 28.3,
+   "with_stand": 33
+  },
+  "src": "https://www.lg.com/tw/tv-soundbars/oled-evo/oled83c5pta/",
+  "quote": "尺寸不含底座 (WxHxD, mm) 1842 x 1055 x 52.9 尺寸含底座 (WxHxD, mm) 1842 x 1096/1144 x 297 底座 (WxD, mm) 460 x 297 重量不含底座 (kg) 28.3 重量含底座 (kg) 33",
+  "note": "台灣 lg.com/tw 有 C5。台灣官網無 75 吋與 100 吋 C5（有 77 吋 OLED77C5PTA，已依指示略過）。底座為中央式，原文只給底座 WxD(mm)，無腳距故 feet_span_mm=null；screen_diag_in 頁面未載故 null；原文單位已是 mm/kg 未換算。 含底座高度原文為 '1096/1144'（兩段式高度，應為底座可調兩檔），with_stand_mm 高度無法確定單一值故填 null，寬 1842、深 297 照原文。 已在原頁查過：該欄位 descText 為 null，頁面其他處（含 soundbar、高度關鍵字）都沒有說明 1096/1144 的意思，故不推測。",
+  "verified_by_B": "curl 官方頁，寬x高x深三數連續字串比對，含反例測試"
+ },
+ {
+  "brand": "LG",
+  "series": "OLED evo C5",
+  "model": "OLED77C5PTA",
+  "inch": 77,
+  "body_mm": [
+   1711,
+   982,
+   47.1
+  ],
+  "with_stand_mm": [
+   1711,
+   1035,
+   267
+  ],
+  "stand": "pedestal",
+  "feet_span_mm": null,
+  "screen_diag_in": null,
+  "weight_kg": {
+   "body": 23.5,
+   "with_stand": 27.1
+  },
+  "src": "https://www.lg.com/tw/tv-soundbars/oled-evo/oled77c5pta/",
+  "quote": "尺寸不含底座 (WxHxD, mm) 1711 x 982 x 47.1 尺寸含底座 (WxHxD, mm) 1711 x 1035 x 267 底座 (WxD, mm) 520 x 267 重量不含底座 (kg) 23.5 重量含底座 (kg) 27.1",
+  "note": "台灣 lg.com/tw 官網。中央底座，原文僅給底座 WxD 520x267 mm，無腳距故 feet_span_mm=null；screen_diag_in 頁面未載故 null；原文單位已是 mm/kg 未換算。77 吋為應協調者要求補入（C5 無 75 吋）。",
+  "verified_by_B": "curl 官方頁，寬x高x深三數連續字串比對，含反例測試"
+ },
+ {
+  "brand": "Samsung",
+  "series": "Neo QLED QN90F (2025)",
+  "model": "QA65QN90FAXXZW",
+  "inch": 65,
+  "body_mm": [
+   1446.3,
+   828.7,
+   26.9
+  ],
+  "with_stand_mm": [
+   1446.3,
+   891.3,
+   270.6
+  ],
+  "stand": "pedestal",
+  "feet_span_mm": null,
+  "screen_diag_in": 65,
+  "weight_kg": {
+   "body": 24.2,
+   "with_stand": 27.5
+  },
+  "src": "https://www.samsung.com/tw/tvs/qled-tv/qn90f-65-inch-neo-qled-4k-mini-led-smart-tv-qa65qn90faxxzw/",
+  "quote": "含底座 1446.3 x 891.3 x 270.6 mm；不含底座 1446.3 x 828.7 x 26.9 mm；底座 (WxD) 390.0 x 270.6 mm；機身包含底座 27.5 kg；機身重量 (不含底座) 24.2 kg",
+  "note": "官網規格頁逐字數字，台灣官網順序為 WxHxD。底座尺寸為 WxD 390.0 x 270.6 mm（中央底座寬度）。screen_diag_in 為官網『螢幕尺寸』標示的名目值 65\"，非實測對角線。",
+  "verified_by_B": "curl 官方頁，寬x高x深三數連續字串比對，含反例測試"
+ },
+ {
+  "brand": "Samsung",
+  "series": "Neo QLED QN90F (2025)",
+  "model": "QA75QN90FAXXZW",
+  "inch": 75,
+  "body_mm": [
+   1670.0,
+   957.4,
+   27.7
+  ],
+  "with_stand_mm": [
+   1670.0,
+   1017.2,
+   301.2
+  ],
+  "stand": "pedestal",
+  "feet_span_mm": null,
+  "screen_diag_in": 75,
+  "weight_kg": {
+   "body": 34.1,
+   "with_stand": 39.7
+  },
+  "src": "https://www.samsung.com/tw/tvs/qled-tv/qn90f-75-inch-neo-qled-4k-mini-led-smart-tv-qa75qn90faxxzw/",
+  "quote": "含底座 1670.0 x 1017.2 x 301.2 mm；不含底座 1670.0 x 957.4 x 27.7 mm；底座 (WxD) 416.9 x 301.2 mm；機身包含底座 39.7 kg；機身重量 (不含底座) 34.1 kg",
+  "note": "官網規格頁逐字數字，台灣官網順序為 WxHxD。底座尺寸為 WxD 416.9 x 301.2 mm（中央底座寬度）。screen_diag_in 為官網『螢幕尺寸』標示的名目值 75\"，非實測對角線。",
+  "verified_by_B": "curl 官方頁，寬x高x深三數連續字串比對，含反例測試"
+ },
+ {
+  "brand": "Samsung",
+  "series": "Neo QLED QN90F (2025)",
+  "model": "QA85QN90FAXXZW",
+  "inch": 85,
+  "body_mm": [
+   1892.2,
+   1081.9,
+   27.9
+  ],
+  "with_stand_mm": [
+   1892.2,
+   1143.0,
+   321.3
+  ],
+  "stand": "pedestal",
+  "feet_span_mm": null,
+  "screen_diag_in": 85,
+  "weight_kg": {
+   "body": 43.5,
+   "with_stand": 49.9
+  },
+  "src": "https://www.samsung.com/tw/tvs/qled-tv/qn90f-85-inch-neo-qled-4k-mini-led-smart-tv-qa85qn90faxxzw/",
+  "quote": "含底座 1892.2 x 1143.0 x 321.3 mm；不含底座 1892.2 x 1081.9 x 27.9 mm；底座 (WxD) 417.6 x 321.3 mm；機身包含底座 49.9 kg；機身重量 (不含底座) 43.5 kg",
+  "note": "官網規格頁逐字數字，台灣官網順序為 WxHxD。底座尺寸為 WxD 417.6 x 321.3 mm（中央底座寬度）。screen_diag_in 為官網『螢幕尺寸』標示的名目值 85\"，非實測對角線。",
+  "verified_by_B": "curl 官方頁，寬x高x深三數連續字串比對，含反例測試"
+ },
+ {
+  "brand": "Samsung",
+  "series": "Neo QLED QN90F (2025)",
+  "model": "QA98QN90FAXXZW",
+  "inch": 98,
+  "body_mm": [
+   2185.1,
+   1249.3,
+   31.1
+  ],
+  "with_stand_mm": [
+   2185.1,
+   1305.9,
+   364.9
+  ],
+  "stand": "pedestal",
+  "feet_span_mm": null,
+  "screen_diag_in": 98,
+  "weight_kg": {
+   "body": 61.4,
+   "with_stand": 70.6
+  },
+  "src": "https://www.samsung.com/tw/tvs/qled-tv/qn90f-98-inch-neo-qled-4k-mini-led-smart-tv-qa98qn90faxxzw/",
+  "quote": "含底座 2185.1 x 1305.9 x 364.9 mm；不含底座 2185.1 x 1249.3 x 31.1 mm；底座 (WxD) 478.9 x 364.9 mm；機身包含底座 70.6 kg；機身重量 (不含底座) 61.4 kg",
+  "note": "官網規格頁逐字數字，台灣官網順序為 WxHxD。底座尺寸為 WxD 478.9 x 364.9 mm（中央底座寬度）。screen_diag_in 為官網『螢幕尺寸』標示的名目值 98\"，非實測對角線。 此系列無100吋，最大為98吋，inch 照實填98。",
+  "verified_by_B": "curl 官方頁，寬x高x深三數連續字串比對，含反例測試"
+ },
+ {
+  "brand": "TCL",
+  "series": "C8K (QD-Mini LED, 2025)",
+  "model": "65C8K",
+  "inch": 65,
+  "body_mm": [
+   1434,
+   824,
+   50
+  ],
+  "with_stand_mm": [
+   1434,
+   860,
+   368
+  ],
+  "stand": "pedestal",
+  "feet_span_mm": null,
+  "screen_diag_in": null,
+  "weight_kg": {
+   "body": 21.1,
+   "with_stand": 23.1
+  },
+  "src": "https://www.tcl.com/content/brandsite/global/en/tvs/85c8k/jcr:content/root/container/container/container/subnav_menus/specifications1/product_spec.L2NvbnRlbnQvYnJhbmRzaXRlLXByb2R1Y3QvZ2xvYmFsL2VuL3R2cy9jOGsvNjVjOGs=.json",
+  "quote": "Set Size with Stand (WxHxD)(mm): 1434*860*368; Set Size without Stand (WxHxD)(mm): 1434*824*50; Stand (Basic) (WxD)(mm): 388*368; Net Weight without Stand (kg): 21.1; Net Weight with Stand (kg): 23.1",
+  "note": "Source is TCL Global (tcl.com/global/en); tcl.com/tw 301-redirects to global and tcl.com.tw is only a lander, so no Taiwan page found. Data from the spec tab's JSON API (product_spec.<base64 of /content/brandsite-product/global/en/tvs/c8k/65c8k>.json) on the same official site; region tag in data is AP. Sizes labelled 'WxHxD'. Central pedestal; stand base 'WxD' = 388*368. screen diagonal not stated in spec data (null).；B 核對：src 改為官方規格 JSON API（產品頁 /tvs/65c8k、/tvs/75c8k 為 404；85、98 產品頁 200）",
+  "verified_by_B": "curl 官方規格 JSON，標籤後數值比對，含反例測試"
+ },
+ {
+  "brand": "TCL",
+  "series": "C8K (QD-Mini LED, 2025)",
+  "model": "75C8K",
+  "inch": 75,
+  "body_mm": [
+   1658,
+   949,
+   51
+  ],
+  "with_stand_mm": [
+   1658,
+   986,
+   368
+  ],
+  "stand": "pedestal",
+  "feet_span_mm": null,
+  "screen_diag_in": null,
+  "weight_kg": {
+   "body": 28.4,
+   "with_stand": 30.4
+  },
+  "src": "https://www.tcl.com/content/brandsite/global/en/tvs/85c8k/jcr:content/root/container/container/container/subnav_menus/specifications1/product_spec.L2NvbnRlbnQvYnJhbmRzaXRlLXByb2R1Y3QvZ2xvYmFsL2VuL3R2cy9jOGsvNzVjOGs=.json",
+  "quote": "Set Size with Stand (WxHxD)(mm): 1658*986*368; Set Size without Stand (WxHxD)(mm): 1658*949*51; Stand (Basic) (WxD)(mm): 388*368; Net Weight without Stand (kg): 28.4; Net Weight with Stand (kg): 30.4",
+  "note": "Source is TCL Global (tcl.com/global/en); tcl.com/tw 301-redirects to global and tcl.com.tw is only a lander, so no Taiwan page found. Data from the spec tab's JSON API (product_spec.<base64 of /content/brandsite-product/global/en/tvs/c8k/75c8k>.json) on the same official site; region tag in data is AP. Sizes labelled 'WxHxD'. Central pedestal; stand base 'WxD' = 388*368. screen diagonal not stated in spec data (null).；B 核對：src 改為官方規格 JSON API（產品頁 /tvs/65c8k、/tvs/75c8k 為 404；85、98 產品頁 200）",
+  "verified_by_B": "curl 官方規格 JSON，標籤後數值比對，含反例測試"
+ },
+ {
+  "brand": "TCL",
+  "series": "C8K (QD-Mini LED, 2025)",
+  "model": "85C8K",
+  "inch": 85,
+  "body_mm": [
+   1880,
+   1073,
+   53
+  ],
+  "with_stand_mm": [
+   1880,
+   1112,
+   379
+  ],
+  "stand": "pedestal",
+  "feet_span_mm": null,
+  "screen_diag_in": null,
+  "weight_kg": {
+   "body": 38.9,
+   "with_stand": 41.6
+  },
+  "src": "https://www.tcl.com/content/brandsite/global/en/tvs/85c8k/jcr:content/root/container/container/container/subnav_menus/specifications1/product_spec.L2NvbnRlbnQvYnJhbmRzaXRlLXByb2R1Y3QvZ2xvYmFsL2VuL3R2cy9jOGsvODVjOGs=.json",
+  "quote": "Set Size with Stand (WxHxD)(mm): 1880*1112*379; Set Size without Stand (WxHxD)(mm): 1880*1073*53; Stand (Basic) (WxD)(mm): 410*379; Net Weight without Stand (kg): 38.9; Net Weight with Stand (kg): 41.6",
+  "note": "Source is TCL Global (tcl.com/global/en); tcl.com/tw 301-redirects to global and tcl.com.tw is only a lander, so no Taiwan page found. Data from the spec tab's JSON API (product_spec.<base64 of /content/brandsite-product/global/en/tvs/c8k/85c8k>.json) on the same official site; region tag in data is AP. Sizes labelled 'WxHxD'. Central pedestal; stand base 'WxD' = 410*379. screen diagonal not stated in spec data (null).；B 核對：src 改為官方規格 JSON API（產品頁 /tvs/65c8k、/tvs/75c8k 為 404；85、98 產品頁 200）",
+  "verified_by_B": "curl 官方規格 JSON，標籤後數值比對，含反例測試"
+ },
+ {
+  "brand": "TCL",
+  "series": "C8K (QD-Mini LED, 2025)",
+  "model": "98C8K",
+  "inch": 98,
+  "body_mm": [
+   2166,
+   1236,
+   54
+  ],
+  "with_stand_mm": [
+   2166,
+   1272,
+   420
+  ],
+  "stand": "feet",
+  "feet_span_mm": 1855,
+  "screen_diag_in": null,
+  "weight_kg": {
+   "body": 55.0,
+   "with_stand": 56.0
+  },
+  "src": "https://www.tcl.com/content/brandsite/global/en/tvs/85c8k/jcr:content/root/container/container/container/subnav_menus/specifications1/product_spec.L2NvbnRlbnQvYnJhbmRzaXRlLXByb2R1Y3QvZ2xvYmFsL2VuL3R2cy9jOGsvOThjOGs=.json",
+  "quote": "Set Size with Stand (WxHxD)(mm): 2166*1272*420; Set Size without Stand (WxHxD)(mm): 2166*1236*54; Stand (Basic) (WxD)(mm): 1855*420; Net Weight without Stand (kg): 55; Net Weight with Stand (kg): 56",
+  "note": "Source is TCL Global (tcl.com/global/en); tcl.com/tw 301-redirects to global and tcl.com.tw is only a lander, so no Taiwan page found. Data from the spec tab's JSON API (product_spec.<base64 of /content/brandsite-product/global/en/tvs/c8k/98c8k>.json) on the same official site; region tag in data is AP. Sizes labelled 'WxHxD'. Stand is a wide two-side stand (Stand WxD 1855*420); feet_span_mm=1855 is stand width (outer edge), not verified as foot-to-foot. Official model is 98 inch (no 100 inch in C8K). screen diagonal not stated in spec data (null).；B 核對：src 改為官方規格 JSON API（產品頁 /tvs/65c8k、/tvs/75c8k 為 404；85、98 產品頁 200）",
+  "verified_by_B": "curl 官方規格 JSON，標籤後數值比對，含反例測試"
+ }
+]

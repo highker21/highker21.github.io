@@ -1,0 +1,184 @@
+[
+ {
+  "brand": "LG",
+  "series": "OLED evo C5",
+  "model": "OLED65C5PTA",
+  "inch": 65,
+  "body_mm": [
+   1441,
+   826,
+   45.1
+  ],
+  "file": "ar/brand/lg-oled-evo-c5-65.usdz",
+  "src": "https://www.lg.com/tw/tv-soundbars/oled-evo/oled65c5pta/"
+ },
+ {
+  "brand": "LG",
+  "series": "OLED evo C5",
+  "model": "OLED77C5PTA",
+  "inch": 77,
+  "body_mm": [
+   1711,
+   982,
+   47.1
+  ],
+  "file": "ar/brand/lg-oled-evo-c5-77.usdz",
+  "src": "https://www.lg.com/tw/tv-soundbars/oled-evo/oled77c5pta/"
+ },
+ {
+  "brand": "LG",
+  "series": "OLED evo C5",
+  "model": "OLED83C5PTA",
+  "inch": 83,
+  "body_mm": [
+   1842,
+   1055,
+   52.9
+  ],
+  "file": "ar/brand/lg-oled-evo-c5-83.usdz",
+  "src": "https://www.lg.com/tw/tv-soundbars/oled-evo/oled83c5pta/"
+ },
+ {
+  "brand": "Samsung",
+  "series": "Neo QLED QN90F (2025)",
+  "model": "QA65QN90FAXXZW",
+  "inch": 65,
+  "body_mm": [
+   1446.3,
+   828.7,
+   26.9
+  ],
+  "file": "ar/brand/samsung-neo-qled-qn90f-65.usdz",
+  "src": "https://www.samsung.com/tw/tvs/qled-tv/qn90f-65-inch-neo-qled-4k-mini-led-smart-tv-qa65qn90faxxzw/"
+ },
+ {
+  "brand": "Samsung",
+  "series": "Neo QLED QN90F (2025)",
+  "model": "QA75QN90FAXXZW",
+  "inch": 75,
+  "body_mm": [
+   1670.0,
+   957.4,
+   27.7
+  ],
+  "file": "ar/brand/samsung-neo-qled-qn90f-75.usdz",
+  "src": "https://www.samsung.com/tw/tvs/qled-tv/qn90f-75-inch-neo-qled-4k-mini-led-smart-tv-qa75qn90faxxzw/"
+ },
+ {
+  "brand": "Samsung",
+  "series": "Neo QLED QN90F (2025)",
+  "model": "QA85QN90FAXXZW",
+  "inch": 85,
+  "body_mm": [
+   1892.2,
+   1081.9,
+   27.9
+  ],
+  "file": "ar/brand/samsung-neo-qled-qn90f-85.usdz",
+  "src": "https://www.samsung.com/tw/tvs/qled-tv/qn90f-85-inch-neo-qled-4k-mini-led-smart-tv-qa85qn90faxxzw/"
+ },
+ {
+  "brand": "Samsung",
+  "series": "Neo QLED QN90F (2025)",
+  "model": "QA98QN90FAXXZW",
+  "inch": 98,
+  "body_mm": [
+   2185.1,
+   1249.3,
+   31.1
+  ],
+  "file": "ar/brand/samsung-neo-qled-qn90f-98.usdz",
+  "src": "https://www.samsung.com/tw/tvs/qled-tv/qn90f-98-inch-neo-qled-4k-mini-led-smart-tv-qa98qn90faxxzw/"
+ },
+ {
+  "brand": "Sony",
+  "series": "BRAVIA 7",
+  "model": "Y-65XR70",
+  "inch": 65,
+  "body_mm": [
+   1445,
+   832,
+   57
+  ],
+  "file": "ar/brand/sony-bravia-7-65.usdz",
+  "src": "https://www.sony.com.tw/zh/bravia/products/bravia-7/spec"
+ },
+ {
+  "brand": "Sony",
+  "series": "BRAVIA 7",
+  "model": "Y-75XR70",
+  "inch": 75,
+  "body_mm": [
+   1668,
+   960,
+   57
+  ],
+  "file": "ar/brand/sony-bravia-7-75.usdz",
+  "src": "https://www.sony.com.tw/zh/bravia/products/bravia-7/spec"
+ },
+ {
+  "brand": "Sony",
+  "series": "BRAVIA 7",
+  "model": "Y-85XR70",
+  "inch": 85,
+  "body_mm": [
+   1891,
+   1087,
+   57
+  ],
+  "file": "ar/brand/sony-bravia-7-85.usdz",
+  "src": "https://www.sony.com.tw/zh/bravia/products/bravia-7/spec"
+ },
+ {
+  "brand": "TCL",
+  "series": "C8K (QD-Mini LED, 2025)",
+  "model": "65C8K",
+  "inch": 65,
+  "body_mm": [
+   1434,
+   824,
+   50
+  ],
+  "file": "ar/brand/tcl-c8k-65.usdz",
+  "src": "https://www.tcl.com/content/brandsite/global/en/tvs/85c8k/jcr:content/root/container/container/container/subnav_menus/specifications1/product_spec.L2NvbnRlbnQvYnJhbmRzaXRlLXByb2R1Y3QvZ2xvYmFsL2VuL3R2cy9jOGsvNjVjOGs=.json"
+ },
+ {
+  "brand": "TCL",
+  "series": "C8K (QD-Mini LED, 2025)",
+  "model": "75C8K",
+  "inch": 75,
+  "body_mm": [
+   1658,
+   949,
+   51
+  ],
+  "file": "ar/brand/tcl-c8k-75.usdz",
+  "src": "https://www.tcl.com/content/brandsite/global/en/tvs/85c8k/jcr:content/root/container/container/container/subnav_menus/specifications1/product_spec.L2NvbnRlbnQvYnJhbmRzaXRlLXByb2R1Y3QvZ2xvYmFsL2VuL3R2cy9jOGsvNzVjOGs=.json"
+ },
+ {
+  "brand": "TCL",
+  "series": "C8K (QD-Mini LED, 2025)",
+  "model": "85C8K",
+  "inch": 85,
+  "body_mm": [
+   1880,
+   1073,
+   53
+  ],
+  "file": "ar/brand/tcl-c8k-85.usdz",
+  "src": "https://www.tcl.com/content/brandsite/global/en/tvs/85c8k/jcr:content/root/container/container/container/subnav_menus/specifications1/product_spec.L2NvbnRlbnQvYnJhbmRzaXRlLXByb2R1Y3QvZ2xvYmFsL2VuL3R2cy9jOGsvODVjOGs=.json"
+ },
+ {
+  "brand": "TCL",
+  "series": "C8K (QD-Mini LED, 2025)",
+  "model": "98C8K",
+  "inch": 98,
+  "body_mm": [
+   2166,
+   1236,
+   54
+  ],
+  "file": "ar/brand/tcl-c8k-98.usdz",
+  "src": "https://www.tcl.com/content/brandsite/global/en/tvs/85c8k/jcr:content/root/container/container/container/subnav_menus/specifications1/product_spec.L2NvbnRlbnQvYnJhbmRzaXRlLXByb2R1Y3QvZ2xvYmFsL2VuL3R2cy9jOGsvOThjOGs=.json"
+ }
+]
