@@ -37,9 +37,14 @@ def usda(inch: float) -> str:
     w = diag / (K / 16)      # 螢幕可視區寬
     h = w * 9 / 16           # 螢幕可視區高
     # 機身比可視區大一圈（含邊框）
-    bw, bh = w / 2 + BEZEL, h / 2 + BEZEL
-    sw, sh = w / 2, h / 2
-    d = DEPTH / 2
+    return usda_box(w + 2 * BEZEL, h + 2 * BEZEL, DEPTH, w, h)
+
+
+def usda_box(body_w: float, body_h: float, body_d: float, screen_w: float, screen_h: float) -> str:
+    """依實際尺寸（公尺）產生 USDA：機身 body_w×body_h×body_d，螢幕可視區 screen_w×screen_h 置中。"""
+    bw, bh = body_w / 2, body_h / 2
+    sw, sh = screen_w / 2, screen_h / 2
+    d = body_d / 2
     sz = d + 0.0005          # 螢幕面浮出 0.5mm，避免與機身共面閃爍(z-fighting)
 
     return f'''#usda 1.0

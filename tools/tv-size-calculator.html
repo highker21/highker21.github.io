@@ -228,7 +228,7 @@
 
   // 對照表
   (function buildTable(){
-    var rows = [32,43,50,55,65,75,85].map(function(i){
+    var rows = [32,43,50,55,65,75,85,100,120,150,200].map(function(i){
       var diag = i * CM, w = diag / DIAG_PER_W, h = w * 9 / 16;
       return '<tr><td>' + i + '</td><td>' + r(w, 1) + '</td><td>' + r(h, 1) + '</td><td>'
            + r(diag * 1.2 / 100, 2) + ' – ' + r(diag * 1.6 / 100, 2) + '</td></tr>';
