@@ -112,7 +112,7 @@ TSH(初始；2025 之後改依動態反應調整)：high &lt;0.1｜intermediate-
 RAI(Rec.32)：low 不建議常規(選擇性 30–50mCi)；low-int/int-high「可考慮 consider」(30–100，最高150mCi)；high / M1「建議常規 recommend」(100–150mCi，已知病灶可更高)。<br>
 AJCC 8th(年齡分界55)：&lt;55 → M0=Stage I、M1=II；≥55 → T1-2N0M0=I、T3或N1=II、T4a=III、T4b=IVA、M1=IVB。
 </div></details>
-<div class="foot">工具版本：2026-08-06（<b>ENE／M 否定語誤判修正</b>：報告寫 「Extranodal extension of lymph node: <b>not identified</b>」時，舊版只比對關鍵字有無出現，會把結外侵犯判成「有」→ 直接推到 High risk；現改為取冒號後的判讀文字再比對正反。遠端轉移同樣處理，並修正「pT2N1bM1」這種分期字串黏在一起時抓不到 M1 的問題。沿用 7/28 ETE 否定子句移除、T3b 需肉眼侵犯帶狀肌、報告 pT 優先、單一最大徑寫法，及碘131 排程單串接、ATA 2025 Fig.2/Rec.32）｜資料僅在瀏覽器本機處理</div>
+<div class="foot">工具版本：2026-10-19（<b>BRAF 判讀修正</b>：報告寫「Immunohistochemical stain of BRAFV600E: the lesion is cut through」這類沒有結果的寫法時，舊版會把檢驗名稱裡的 V600E 誤當成陽性；現在只看檢驗名稱後面的判讀結果，沒有明確陽性或陰性時設為「未提供」並提示。沿用 2026-08-06 <b>ENE／M 否定語誤判修正</b>：報告寫 「Extranodal extension of lymph node: <b>not identified</b>」時，舊版只比對關鍵字有無出現，會把結外侵犯判成「有」→ 直接推到 High risk；現改為取冒號後的判讀文字再比對正反。遠端轉移同樣處理，並修正「pT2N1bM1」這種分期字串黏在一起時抓不到 M1 的問題。沿用 7/28 ETE 否定子句移除、T3b 需肉眼侵犯帶狀肌、報告 pT 優先、單一最大徑寫法，及碘131 排程單串接、ATA 2025 Fig.2/Rec.32）｜資料僅在瀏覽器本機處理</div>
 
 <script>
 const $=id=>document.getElementById(id);
@@ -245,10 +245,19 @@ function parseReport(t){
   F.m=(/\bM1\b/.test(t)||/[TN][\dxX][a-z]?M1\b/i.test(t))?'1':decide(mLines);
   const tn=t.match(/\(?\s*[ryp]*T(\w+)\s*N([\dxX]\w*)\s*(M\d)?\s*\)?/);
   F.pt=tn?'pT'+tn[1]:'';F.pn=tn?'N'+tn[2]:'';
-  if(/TERT[^a-z]*(mutant|positive|\+|突變|V\d)/i.test(t))F.mol='tert';
-  else if(/BRAF[^a-z]*(V600E|mutant|positive|\+|突變)/i.test(t))F.mol='braf';
-  else if(/BRAF|TERT|RAS/i.test(t)&&/wild|negative|陰性|not\s*detect/i.test(t))F.mol='none';
+  // ⚠️ 2026-10-19 使用者回報：「Immunohistochemical stain of BRAFV600E: the lesion is cut through.」被判成 BRAF+。
+  //    舊版只要看到「BRAF」後接「V600E」就算陽性——但 V600E 是檢驗項目名稱，不是結果。
+  //    改為只看「標記名稱之後」的判讀文字；陰性優先；沒有明確結果（cut through／not evaluable）→ 未提供並提示。
+  //    陰性也只看該標記所在行，不再用全文的 negative（"negative for malignancy" 會誤判成分子陰性）。
+  const molSeg=re=>(t.match(new RegExp('[^\\n]*'+re+'[^\\n]*','ig'))||[]).map(ln=>ln.slice(ln.search(new RegExp(re,'i'))).replace(new RegExp(re+'\\s*[-(]?\\s*V600E\\s*\\)?','ig'),''));
+  const MNEG=/negative|wild|not\s*detect|absent|陰性|未檢出|未發現/i, MPOS=/positive|mutant|mutated|detected|\(\s*\+\s*\)|\+|突變|陽性/i;
+  const molCall=segs=>segs.some(x=>MPOS.test(x)&&!MNEG.test(x))?'pos':segs.some(x=>MNEG.test(x))?'neg':segs.length?'nores':'';
+  const tertC=molCall(molSeg('TERT')), brafC=molCall(molSeg('BRAF')), rasC=molCall(molSeg('[NHK]?RAS\\b'));
+  if(tertC==='pos')F.mol='tert';
+  else if(brafC==='pos')F.mol='braf';
+  else if([tertC,brafC,rasC].includes('neg'))F.mol='none';
   else F.mol='unknown';
+  if(F.mol==='unknown'&&[tertC,brafC,rasC].includes('nores'))F._warn.push('報告有提到分子／BRAF 檢測，但沒有明確陽性或陰性結果（例如病灶已切完、無法判讀），已設為「未提供」，請核對原始報告');
   return F;
 }
 function fill(F){for(const k of ['age','sex','hist','variant','grade','size','multi','ete','lvi','margin','lnpos','lntot','lnloc','lnsize','ene','m','pt','pn','mol'])$('f_'+k).value=F[k]??'';}
