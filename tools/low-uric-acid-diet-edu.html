@@ -88,6 +88,23 @@ table.food td.r{color:var(--warn);font-weight:800}
   #printall .sheet{max-width:100%;padding:4mm}
   #printall .sheet+.sheet{break-before:page;page-break-before:always}
 }
+/* 列印精簡（老闆 2026-10-20 TG 31657：印出來有空白頁）：每個分頁壓在一張 A4 內 */
+@media print{
+  html,body{height:auto}
+  .sheet,#printall .sheet{padding:0 1mm!important;margin:0!important}
+  .head{padding-bottom:8px}.kick{margin-bottom:5px}.langbadge{margin-bottom:6px}
+  .grid{gap:7px;margin-top:9px}
+  .c{min-height:0;padding:11px 9px}
+  .c i{margin:3px 0 5px;font-size:25px}
+  .note{margin-top:8px}.foot{margin-top:8px;padding-top:6px}.transnote{margin-top:3px}
+  .sheet>:last-child{margin-bottom:0;padding-bottom:0}
+}
+/* 量測用：螢幕上暫時套用列印寬度與精簡版面，算出要縮多少才塞得進一張 A4 */
+body.fitmeasure .sheet{width:194mm!important;max-width:none!important;padding:0 1mm!important;margin:0!important}
+body.fitmeasure .head{padding-bottom:8px}body.fitmeasure .kick{margin-bottom:5px}body.fitmeasure .langbadge{margin-bottom:6px}
+body.fitmeasure .grid{gap:7px;margin-top:9px}body.fitmeasure .c{min-height:0;padding:11px 9px}body.fitmeasure .c i{margin:3px 0 5px;font-size:25px}
+body.fitmeasure .note{margin-top:8px}body.fitmeasure .foot{margin-top:8px;padding-top:6px}body.fitmeasure .transnote{margin-top:3px}
+body.fitmeasure #printall{display:block}
 </style></head><body>
 <div class="langtabs no-print" id="langtabs"></div>
 <div class="tabs no-print" id="viewtabs"></div>
@@ -164,7 +181,7 @@ const L = {
    food:'份量換算：一份低脂乳品約 240 毫升；掌心大小的肉約 3 兩。外食三件事：湯不喝、飲料換無糖、酒不碰。',
    myth:'資料來源：2022 台灣痛風與高尿酸血症診治指引（中華民國風濕病醫學會）；2020 ACR 痛風管理指引（飲食項目為有條件建議）；2016 EULAR 痛風指引；內科學誌 2022 各國指引比較。'},
   trans:'',
-  foot:'高醫岡山醫院　內分泌新陳代謝科　盧子文醫師　｜　<b>本圖卡僅供衛教，用藥與目標值以醫師判斷為準</b>　｜　依 2022 台灣痛風與高尿酸血症診治指引、2020 ACR 痛風指引整理　｜　工具版本：2026-09-10'},
+  foot:'高醫岡山醫院　內分泌新陳代謝科　盧子文醫師　｜　<b>本圖卡僅供衛教，用藥與目標值以醫師判斷為準</b>　｜　依 2022 台灣痛風與高尿酸血症診治指引、2020 ACR 痛風指引整理　｜　工具版本：2026-10-20'},
 
 'en':{badge:'🇬🇧　英文　·　English',tab:'🇬🇧 English',tabsub:'英文　English',
   h1:'Low-Uric-Acid (Gout) Diet', kick:'Endocrinology &amp; Metabolism　·　Diet Education',
@@ -512,6 +529,20 @@ function printAll(){
   window.addEventListener('afterprint', done);
   setTimeout(() => { window.print(); setTimeout(done, 120000); }, 50);
 }
+// 列印前自動縮放（2026-10-20）：各電腦字型不同，超出一頁一點點就會多印一張空白頁；
+// 超出 25% 以內就等比縮進一張 A4，超出更多（外文雙語版）就照常分頁，不硬縮到看不清楚
+const PAGE_H = 281 * 96 / 25.4;
+function fitSheets(){
+  const sheets = [...document.querySelectorAll(document.body.classList.contains('printing-all') ? '#printall .sheet' : '#sheet')];
+  sheets.forEach(s => s.style.zoom = '');
+  document.body.classList.add('fitmeasure');
+  sheets.forEach(s => { const h = s.getBoundingClientRect().height, k = PAGE_H * 0.97 / h; s.dataset.fit = k < 1 && k >= 0.75 ? k.toFixed(3) : ''; });
+  document.body.classList.remove('fitmeasure');
+  sheets.forEach(s => { if (s.dataset.fit) s.style.zoom = s.dataset.fit; });
+}
+function unfitSheets(){ document.querySelectorAll('.sheet').forEach(s => s.style.zoom = ''); }
+window.addEventListener('beforeprint', fitSheets);
+window.addEventListener('afterprint', unfitSheets);
 function setLang(k){ LANG = k; render(); }
 function setV(v){ VIEW = v; render(); }
 
