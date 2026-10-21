@@ -59,7 +59,23 @@ button.ghost{background:#fff;color:var(--ink);border:1px solid var(--line)}
   .grid{grid-template-columns:repeat(2,1fr)}
   .res{grid-template-columns:1fr}
 }
-@media print{body{background:#fff;padding:0}.wrap{padding:0}textarea#paste,.bar{display:none}}
+#printAll,#printIn{display:none}
+@media print{
+  @page{size:A4;margin:12mm}
+  body{background:#fff;padding:0}
+  .wrap{padding:0;max-width:none}
+  .intro,.noprint,#paste,.bar,#fields,.chk,.chk-h,#rtabs,#res,#pending,.note{display:none!important}
+  #printAll,#printIn{display:block}
+  #printIn{font-size:12px;line-height:1.6;margin-bottom:8px}
+  #printAll h4{font-size:14px;color:var(--doc);margin:10px 0 6px;border-left:4px solid var(--doc);padding-left:6px;break-after:avoid}
+  #printAll .res{grid-template-columns:repeat(2,1fr);gap:6px}
+  .card{break-inside:avoid;padding:8px 10px}
+  .card .v{font-size:20px}
+  .card .i{font-size:12.5px}
+  .copybox{display:none}
+  #printAll pre{white-space:pre-wrap;font-family:inherit;font-size:11.5px;border:1px solid var(--line);border-radius:8px;padding:8px;margin-top:6px;break-inside:avoid}
+  .foot{margin-top:8px}
+}
 </style></head><body>
 <div class="wrap">
   <div class="head">
@@ -68,7 +84,7 @@ button.ghost{background:#fff;color:var(--ink);border:1px solid var(--line)}
     <p class="intro">貼上健保雲端或院內的檢驗資料，自動抓出需要的數值（同一項目取<b>最新日期</b>），算出 eGFR、FIB-4、HOMA-IR、心房顫動中風／出血分數、血脂風險分級，以及代謝、肝、腎與電解質、血管硬化等常用公式（結果分頁顯示）。抓到的值會標出來源，<b>請核對</b>；沒有的數值可以直接輸入。所有計算都在你的瀏覽器裡完成，資料不會上傳。</p>
   </div>
 
-  <h2>1. 貼上檢驗資料</h2>
+  <h2 class="noprint">1. 貼上檢驗資料</h2>
   <textarea id="paste" placeholder="把健保雲端「檢驗檢查結果」或院內報告整段複製貼在這裡……"></textarea>
   <div class="bar">
     <button onclick="doParse()">抓取數值</button>
@@ -76,10 +92,10 @@ button.ghost{background:#fff;color:var(--ink);border:1px solid var(--line)}
     <span class="msg" id="pmsg"></span>
   </div>
 
-  <h2>2. 基本資料與檢驗值（可修改、可補填）</h2>
+  <h2 class="noprint">2. 基本資料與檢驗值（可修改、可補填）</h2>
   <div class="grid" id="fields"></div>
 
-  <h2>3. 臨床狀況（勾選）</h2>
+  <h2 class="noprint">3. 臨床狀況（勾選）</h2>
   <div class="chk-h">共用</div>
   <div class="chk" id="c-common"></div>
   <div class="chk-h">血脂風險分級用（2025 台灣血脂管理臨床路徑共識）</div>
@@ -88,11 +104,13 @@ button.ghost{background:#fff;color:var(--ink);border:1px solid var(--line)}
   <div class="chk" id="c-af"></div>
 
   <h2>4. 計算結果</h2>
+  <div id="printIn"></div>
+  <div id="printAll"></div>
   <div class="rtabs" id="rtabs"></div>
   <div class="res" id="res"></div>
   <p class="msg" id="pending" style="margin-top:8px"></p>
   <div class="copybox">
-    <div class="bar"><button onclick="copySummary()">複製結果摘要（貼病歷用）</button><span class="msg" id="cmsg"></span></div>
+    <div class="bar"><button onclick="copySummary()">複製結果摘要（貼病歷用）</button><button class="ghost" onclick="window.print()">列印／存 PDF</button><span class="msg" id="cmsg"></span></div>
     <textarea id="summary" readonly></textarea>
   </div>
 
@@ -554,6 +572,19 @@ function extras(d){
   }else pv.push("CAVI");
   return [{cards:M,pend:pm},{cards:L,pend:pl},{cards:K,pend:pk},{cards:P,pend:pp},{cards:V,pend:pv}];
 }
+
+// 列印：輸入值精簡表＋全部分頁結果（只印有算出來的卡片）
+function buildPrint(){
+  const vals=F.map(f=>{const e=$("f-"+f.k);if(!e||!e.value)return "";const v=f.sel?e.selectedOptions[0].text:e.value;const u=f.k==="plt"?$("u-plt").selectedOptions[0].text:(f.u||"");return `${f.n} ${v}${u?" "+u:""}`}).filter(Boolean);
+  const cks=[...document.querySelectorAll(".chk input:checked")].map(c=>c.nextElementSibling.firstChild.textContent.trim());
+  const d=new Date(),ds=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+  $("printIn").innerHTML=`<b>列印日期</b> ${ds}<br><b>輸入值</b>：${vals.join("・")||"（無）"}${cks.length?`<br><b>臨床狀況</b>：${cks.join("；")}`:""}`;
+  $("printAll").innerHTML=TABS.map(t=>{
+    const h=(t.html||"").split('<div class="card ').filter(x=>x&&!x.startsWith('na"')||(x.startsWith('na"')&&!x.includes("缺：")&&!x.includes("目前資料不足"))).map(x=>'<div class="card '+x).join("");
+    return h?`<h4>${t.t}</h4><div class="res">${h}</div>`:"";
+  }).join("")+($("summary").value?`<h4>結果摘要</h4><pre>${$("summary").value.replace(/</g,"&lt;")}</pre>`:"");
+}
+window.addEventListener("beforeprint",buildPrint);
 
 function copySummary(){
   const t=$("summary").value.replace(/\n/g,"\r\n");
