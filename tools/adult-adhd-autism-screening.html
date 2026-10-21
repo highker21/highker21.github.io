@@ -1,0 +1,278 @@
+<!DOCTYPE html><html lang="zh-Hant"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="author" content="盧子文醫師 - Dr. Lu Tz-Wen">
+<meta name="description" content="成人注意力不足過動（WHO ASRS v1.1，18 題）與自閉症光譜（AQ-10 成人版）線上自填篩檢量表，填完自動計分並給建議。篩檢不等於診斷。">
+<title>成人過動與自閉症篩檢量表</title>
+<style>
+:root{
+  --ink:#1b1f1d;--sub:#5f655f;--line:#e6e2d8;--paper:#faf8f2;--card:#fff;--faint:#9a978c;
+  --ok:#27ae60;--mod:#e67e22;--warn:#c0392b;--doc:#2c3e50;--sel:#2c3e50;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#eceae2;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"PingFang TC","Noto Sans TC","Microsoft JhengHei",sans-serif;color:var(--ink);padding:20px 12px;-webkit-font-smoothing:antialiased}
+
+.tabs{max-width:900px;margin:0 auto 14px;display:flex;gap:6px;flex-wrap:wrap}
+.tab{flex:1 1 0;min-width:0;text-align:center;padding:10px 6px;border-radius:10px;border:1px solid var(--line);background:#fff;cursor:pointer;font-weight:800;color:var(--sub);font-size:15px;line-height:1.3}
+.tab small{display:block;font-weight:500;font-size:11px;color:var(--faint);margin-top:2px}
+.tab.active{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.tab.active small{color:#b9c7c3}
+
+.sheet{max-width:900px;margin:0 auto;background:var(--paper);padding:30px 30px 22px;display:none}
+.sheet.active{display:block}
+.head{border-bottom:2px solid var(--doc);padding-bottom:12px;margin-bottom:10px}
+.kick{font-size:12px;letter-spacing:.3em;color:var(--sub);font-weight:800;margin-bottom:8px}
+.head h1{font-size:24px;font-weight:900;line-height:1.3;color:var(--doc)}
+.intro{font-size:14.5px;line-height:1.75;color:var(--sub);margin:10px 0 4px}
+.intro b{color:var(--ink)}
+
+.who{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0 4px;align-items:center;font-size:14.5px;font-weight:700}
+.who label{display:inline-flex;align-items:center;gap:5px;background:#fff;border:1px solid var(--line);border-radius:8px;padding:7px 12px;cursor:pointer;font-weight:600}
+
+.grp{margin-top:18px;font-size:15px;font-weight:900;color:var(--doc);border-left:5px solid var(--doc);padding-left:9px}
+.q{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin-top:10px}
+.q.miss{border-color:var(--warn);box-shadow:0 0 0 2px #f5c6c0}
+.qt{overflow-wrap:anywhere;font-size:15.5px;line-height:1.6;font-weight:700}
+.qt .n{display:inline-block;min-width:26px;color:var(--doc)}
+.en{font-size:12px;color:var(--faint);line-height:1.5;margin:3px 0 0 26px}
+.opts{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:9px}
+.opts label{display:block;text-align:center;border:1px solid var(--line);border-radius:8px;padding:8px 4px;font-size:13.5px;cursor:pointer;background:#fdfcf9;line-height:1.35;user-select:none}
+.opts input{position:absolute;opacity:0;pointer-events:none}
+.opts.five{grid-template-columns:repeat(5,1fr)}
+.opts label:has(input:checked){background:var(--sel);color:#fff;border-color:var(--sel);font-weight:700}
+
+.bar{text-align:center;margin:20px 0 6px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.bar button{background:var(--ink);color:var(--paper);border:0;padding:11px 22px;font-size:15px;font-weight:700;border-radius:6px;cursor:pointer}
+.bar button.ghost{background:#fff;color:var(--ink);border:1px solid var(--line)}
+.prog{text-align:center;font-size:13px;color:var(--sub);margin-top:6px}
+
+.res{display:none;margin-top:18px}
+.res.show{display:block}
+.sec{margin-top:14px;background:var(--card);border:1px solid var(--line);border-left:6px solid var(--ok);border-radius:12px;padding:14px 18px}
+.sec.mod{border-left-color:var(--mod)}.sec.warn{border-left-color:var(--warn)}.sec.doc{border-left-color:var(--doc)}
+.sec h2{font-size:17px;font-weight:900;margin-bottom:8px;color:var(--doc)}
+.sec p,.sec li{font-size:15px;line-height:1.75}
+.sec ul{padding-left:20px}
+table.sc{width:100%;border-collapse:collapse;font-size:14.5px;margin-top:4px}
+table.sc th,table.sc td{border-bottom:1px solid var(--line);padding:8px 6px;text-align:left}
+table.sc th{font-size:13px;color:var(--sub)}
+.tag{display:inline-block;padding:2px 9px;border-radius:999px;font-size:12.5px;font-weight:800;color:#fff}
+.tag.hi{background:var(--warn)}.tag.lo{background:var(--ok)}
+.big{font-size:30px;font-weight:900;color:var(--doc)}
+
+.note{margin-top:16px;font-size:12.5px;color:var(--sub);line-height:1.75}
+.foot{margin-top:14px;text-align:center;font-size:11px;color:var(--faint);line-height:1.75;border-top:1px solid var(--line);padding-top:11px}
+.foot b{color:var(--sub)}
+
+@media (max-width:560px){
+  body{padding:12px 0}
+  .tabs{padding:0 16px}
+  .tab{font-size:13.5px}
+  .sheet{padding:20px 14px 16px}
+  .head h1{font-size:20px}
+  .opts{grid-template-columns:repeat(2,1fr)}
+  .opts.five{grid-template-columns:repeat(3,1fr)}
+  .en{margin-left:0}
+}
+@media print{
+  body{background:#fff;padding:0}
+  .tabs,.bar,.prog{display:none}
+  .sheet{padding:0;max-width:none}
+  .q{break-inside:avoid;padding:6px 10px;margin-top:5px}
+  .en{display:none}
+  .opts label{padding:4px}
+  .sec{break-inside:avoid}
+}
+</style></head><body>
+
+<div class="tabs">
+  <div class="tab active" data-t="asrs">成人過動篩檢 ASRS<small>18 題・18 歲以上・自己填</small></div>
+  <div class="tab" data-t="aq">成人自閉症／亞斯篩檢 AQ-10<small>10 題・成人・自己填</small></div>
+</div>
+
+<!-- ============ ASRS v1.1 ============ -->
+<div class="sheet active" id="asrs">
+  <div class="head">
+    <div class="kick">ADULT ADHD SCREENING</div>
+    <h1>ASRS v1.1 成人注意力不足過動症自填量表（18 題）</h1>
+  </div>
+  <p class="intro">請依照你<b>最近 6 個月</b>的感受和行為，每題選一個最符合的頻率。<b>第 1–6 題（A 部分）是篩檢重點</b>，第 7–18 題（B 部分）提供醫師進一步了解症狀。</p>
+  <div id="asrsQ"></div>
+  <div class="bar">
+    <button onclick="scoreAsrs()">計算結果</button>
+    <button class="ghost" onclick="resetForm('asrs')">清除重填</button>
+    <button class="ghost" onclick="window.print()">列印</button>
+  </div>
+  <div class="prog" id="asrsProg"></div>
+  <div class="res" id="asrsRes"></div>
+  <p class="note">
+    計分（依原量表的深色格）：第 1、2、3、9、12、16、18 題選「有時」以上算落在深色格；其餘題目選「經常」以上才算。<b>A 部分（第 1–6 題）有 4 題以上落在深色格，代表症狀與成人 ADHD 高度相符，建議進一步評估</b>。B 部分沒有總分切點，只作為與醫師討論的線索。<br>
+    題目原文：Adult ADHD Self-Report Scale (ASRS-v1.1) Symptom Checklist，世界衛生組織（WHO）與 Workgroup on Adult ADHD（Adler、Kessler、Spencer）編製；中文為本站翻譯，非官方版本。
+  </p>
+</div>
+
+<!-- ============ AQ-10 Adult ============ -->
+<div class="sheet" id="aq">
+  <div class="head">
+    <div class="kick">ADULT AUTISM SCREENING</div>
+    <h1>AQ-10 自閉症光譜商數（成人版，10 題）</h1>
+  </div>
+  <p class="intro">給<b>沒有智能障礙</b>、懷疑自己有自閉症光譜（包含過去所說的亞斯伯格）特質的成人自己填寫。每題選一個最符合的程度。</p>
+  <div id="aqQ"></div>
+  <div class="bar">
+    <button onclick="scoreAq()">計算分數</button>
+    <button class="ghost" onclick="resetForm('aq')">清除重填</button>
+    <button class="ghost" onclick="window.print()">列印</button>
+  </div>
+  <div class="prog" id="aqProg"></div>
+  <div class="res" id="aqRes"></div>
+  <p class="note">
+    計分：第 1、7、8、10 題選「同意」（非常或有點）得 1 分；第 2、3、4、5、6、9 題選「不同意」（非常或有點）得 1 分。總分 0–10，<b>6 分以上建議轉介專科做診斷評估</b>。<br>
+    題目原文：AQ-10 (Adult), © SBC/CA/BA/ARC/Cambridge University；Allison C, Auyeung B, Baron-Cohen S. J Am Acad Child Adolesc Psychiatry 2012;51(2):202-12；NICE CG142 建議使用。依 ARC 條款限非營利用途；中文為本站翻譯，非官方版本。
+  </p>
+</div>
+
+<div style="max-width:900px;margin:0 auto">
+  <div class="foot">
+    <b>篩檢量表只用來判斷「要不要進一步評估」，不能用來診斷。</b>結果請帶給精神科醫師參考。兒童請改用 <a href="child-adhd-autism-screening.html">兒童版篩檢量表</a>。<br>
+    盧子文醫師　｜　工具版本：2026-10-22
+  </div>
+</div>
+
+<script>
+// [中文, 原文, 深色格起點：2=有時 3=經常]
+const ASRS=[
+ ["一件事最困難的部分完成後，你有多常在收尾、處理最後細節時遇到困難？","How often do you have trouble wrapping up the final details of a project, once the challenging parts have been done?",2],
+ ["做需要條理的事情時，你有多常難以把事情安排妥當？","How often do you have difficulty getting things in order when you have to do a task that requires organization?",2],
+ ["你有多常記不住約會或該做的事？","How often do you have problems remembering appointments or obligations?",2],
+ ["遇到需要花很多心思的工作時，你有多常逃避或拖延開始？","When you have a task that requires a lot of thought, how often do you avoid or delay getting started?",3],
+ ["需要久坐時，你有多常手腳動來動去或坐不住？","How often do you fidget or squirm with your hands or feet when you have to sit down for a long time?",3],
+ ["你有多常覺得自己過度活躍、停不下來，好像「裝了馬達」一樣？","How often do you feel overly active and compelled to do things, like you were driven by a motor?",3],
+ ["做無聊或困難的工作時，你有多常粗心犯錯？","How often do you make careless mistakes when you have to work on a boring or difficult project?",3],
+ ["做無聊或重複的工作時，你有多常難以維持專注？","How often do you have difficulty keeping your attention when you are doing boring or repetitive work?",3],
+ ["即使別人直接跟你說話，你有多常難以專心聽對方在說什麼？","How often do you have difficulty concentrating on what people say to you, even when they are speaking to you directly?",2],
+ ["在家或在工作場所，你有多常亂放東西或找不到東西？","How often do you misplace or have difficulty finding things at home or at work?",3],
+ ["你有多常被周圍的活動或聲音分心？","How often are you distracted by activity or noise around you?",3],
+ ["開會或其他應該坐好的場合，你有多常離開座位？","How often do you leave your seat in meetings or other situations in which you are expected to remain seated?",2],
+ ["你有多常覺得坐立不安？","How often do you feel restless or fidgety?",3],
+ ["有自己的時間時，你有多常難以放鬆下來？","How often do you have difficulty unwinding and relaxing when you have time to yourself?",3],
+ ["在社交場合中，你有多常發現自己話太多？","How often do you find yourself talking too much when you are in social situations?",3],
+ ["跟人談話時，你有多常在對方還沒說完前，就替對方把話說完？","When you’re in a conversation, how often do you find yourself finishing the sentences of the people you are talking to, before they can finish them themselves?",2],
+ ["在需要輪流的場合，你有多常難以等待輪到自己？","How often do you have difficulty waiting your turn in situations when turn taking is required?",3],
+ ["別人在忙的時候，你有多常打斷他們？","How often do you interrupt others when they are busy?",2]
+];
+const ASRS_OPTS=["從不","很少","有時","經常","非常頻繁"];
+const ASRS_GRP={0:"A 部分（第 1–6 題・篩檢重點）",6:"B 部分（第 7–18 題）"};
+
+const AQ=[
+ ["我常常注意到別人沒注意到的細小聲音","I often notice small sounds when others do not",1],
+ ["我通常比較注意整體，而不是小細節","I usually concentrate more on the whole picture, rather than the small details",0],
+ ["我覺得同時做好幾件事很容易","I find it easy to do more than one thing at once",0],
+ ["被打斷之後，我能很快回到原本在做的事","If there is an interruption, I can switch back to what I was doing very quickly",0],
+ ["別人跟我說話時，我很容易聽出「弦外之音」","I find it easy to ‘read between the lines’ when someone is talking to me",0],
+ ["我知道怎麼看出聽我說話的人是不是覺得無聊了","I know how to tell if someone listening to me is getting bored",0],
+ ["讀故事的時候，我很難理解角色的意圖","When I’m reading a story I find it difficult to work out the characters’ intentions",1],
+ ["我喜歡蒐集某類事物的資訊（例如車子、鳥類、火車、植物的種類等）","I like to collect information about categories of things (e.g. types of car, types of bird, types of train, types of plant etc)",1],
+ ["我光看別人的臉，就能輕鬆看出對方在想什麼或有什麼感受","I find it easy to work out what someone is thinking or feeling just by looking at their face",0],
+ ["我很難理解別人的意圖","I find it difficult to work out people’s intentions",1]
+];
+const AQ_OPTS=["非常同意","有點同意","有點不同意","非常不同意"];
+
+function esc(s){return s.replace(/&/g,"&amp;").replace(/</g,"&lt;")}
+function build(id,items,opts,grp){
+  let h="";
+  items.forEach((it,i)=>{
+    if(grp&&grp[i])h+=`<div class="grp">${grp[i]}</div>`;
+    h+=`<div class="q" id="${id}-q${i}"><div class="qt"><span class="n">${i+1}.</span>${esc(it[0])}</div><div class="en">${esc(it[1])}</div><div class="opts${opts.length===5?' five':''}">`;
+    opts.forEach((o,v)=>{h+=`<label><input type="radio" name="${id}${i}" value="${v}">${o}</label>`});
+    h+=`</div></div>`;
+  });
+  document.getElementById(id+"Q").innerHTML=h;
+}
+build("asrs",ASRS,ASRS_OPTS,ASRS_GRP);
+build("aq",AQ,AQ_OPTS,null);
+const N={asrs:18,aq:10};
+
+function answers(id,n){
+  const a=[];let miss=[];
+  for(let i=0;i<n;i++){
+    const el=document.querySelector(`input[name="${id}${i}"]:checked`);
+    document.getElementById(`${id}-q${i}`).classList.toggle("miss",!el);
+    if(el)a.push(+el.value);else{a.push(null);miss.push(i+1)}
+  }
+  return {a,miss};
+}
+function progress(id){
+  const done=document.querySelectorAll(`#${id}Q input:checked`).length;
+  document.getElementById(id+"Prog").textContent=`已填 ${done} / ${N[id]} 題`;
+}
+document.addEventListener("change",e=>{
+  const m=(e.target.name||"").match(/^(asrs|aq)(\d+)$/);
+  if(m){progress(m[1]);document.getElementById(`${m[1]}-q${m[2]}`).classList.remove("miss")}
+});
+progress("asrs");progress("aq");
+
+function missMsg(id,miss){
+  const r=document.getElementById(id+"Res");
+  r.innerHTML=`<div class="sec warn"><h2>還有 ${miss.length} 題沒填</h2><p>第 ${miss.join("、")} 題（已用紅框標出）。全部填完才能計分。</p></div>`;
+  r.classList.add("show");
+  document.getElementById(`${id}-q${miss[0]-1}`).scrollIntoView({behavior:"smooth",block:"center"});
+}
+
+function scoreAsrs(){
+  const {a,miss}=answers("asrs",18);
+  if(miss.length)return missMsg("asrs",miss);
+  const hit=a.map((v,i)=>v>=ASRS[i][2]);
+  const pa=hit.slice(0,6).filter(Boolean).length;
+  const pbList=hit.map((h,i)=>h&&i>=6?i+1:0).filter(Boolean);
+  const pos=pa>=4;
+  let h=`<div class="sec doc"><h2>計算結果</h2>
+  <table class="sc"><tr><th>項目</th><th>落在深色格的題數</th><th>判讀</th></tr>
+  <tr><td>A 部分（第 1–6 題）</td><td><b>${pa}</b> / 6</td><td>${pos?'<span class="tag hi">4 題以上：高度相符</span>':'<span class="tag lo">未達 4 題</span>'}</td></tr>
+  <tr><td>B 部分（第 7–18 題）</td><td><b>${pbList.length}</b> / 12</td><td style="font-size:13.5px;color:var(--sub)">無切點，供醫師參考${pbList.length?`（第 ${pbList.join("、")} 題）`:""}</td></tr></table></div>`;
+  if(pos){
+    h+=`<div class="sec warn"><h2>建議：安排成人 ADHD 專業評估</h2><ul>
+    <li>你的症狀與成人 ADHD 高度相符，建議到<b>精神科</b>（部分醫院有成人 ADHD 門診）做完整評估。</li>
+    <li>診斷需要確認<b>12 歲以前就有部分症狀</b>，而且在工作、家庭、社交等<b>兩個以上場合</b>造成困擾。小時候沒被診斷過也沒關係。</li>
+    <li>看診時可以帶：這份結果、國小國中的成績單或聯絡簿評語；也可以請家人或伴侶描述你平常的狀況。</li>
+    <li>醫師也會評估其他會造成類似表現的原因：憂鬱、焦慮、躁鬱症、睡眠不足或睡眠呼吸中止、甲狀腺問題、酒精或藥物使用。</li></ul></div>`;
+  }else{
+    h+=`<div class="sec"><h2>建議：目前未達篩檢陽性</h2><ul>
+    <li>A 部分沒有達到 4 題，篩檢結果不支持成人 ADHD。</li>
+    <li>如果專注、拖延或衝動的問題已經明顯影響工作或人際，或 B 部分有很多題落在深色格，還是可以找精神科討論；篩檢陰性不代表一定沒有問題。</li></ul></div>`;
+  }
+  const r=document.getElementById("asrsRes");r.innerHTML=h;r.classList.add("show");r.scrollIntoView({behavior:"smooth"});
+}
+
+function scoreAq(){
+  const {a,miss}=answers("aq",10);
+  if(miss.length)return missMsg("aq",miss);
+  let s=0;
+  AQ.forEach((it,i)=>{const agree=a[i]<=1;if(it[2]===1?agree:!agree)s++});
+  const hi=s>=6;
+  let h=`<div class="sec doc"><h2>計分結果</h2><p>總分 <span class="big">${s}</span> / 10　${hi?'<span class="tag hi">6 分以上</span>':'<span class="tag lo">低於 6 分</span>'}</p></div>`;
+  if(hi){
+    h+=`<div class="sec warn"><h2>建議：轉介專科做自閉症光譜診斷評估</h2><ul>
+    <li>分數達到建議轉介的程度。請到<b>精神科</b>（部分醫院有成人自閉症特別門診）做完整評估。</li>
+    <li>正式診斷要靠醫師晤談與觀察（例如 ADOS-2 第 4 模組），並了解你<b>小時候的發展情形</b>，最好能請父母或了解你童年的家人一起提供資料。</li>
+    <li>成人自閉症光譜常合併焦慮、憂鬱或過動，建議也填「成人過動篩檢 ASRS」一起帶去。</li>
+    <li>確診的目的是了解自己、找到合適的支持方式（工作調整、社交技巧、情緒調適），不是貼標籤。</li></ul></div>`;
+  }else{
+    h+=`<div class="sec"><h2>建議：目前未達轉介切點</h2><ul>
+    <li>這份篩檢沒有達到建議轉介的分數。</li>
+    <li>如果社交困難、固執的習慣或感官敏感已經明顯影響工作或人際，還是可以找精神科諮詢；分數低不代表一定沒有問題。</li></ul></div>`;
+  }
+  const r=document.getElementById("aqRes");r.innerHTML=h;r.classList.add("show");r.scrollIntoView({behavior:"smooth"});
+}
+
+function resetForm(id){
+  document.querySelectorAll(`#${id}Q input`).forEach(i=>i.checked=false);
+  document.querySelectorAll(`#${id}Q .q`).forEach(q=>q.classList.remove("miss"));
+  const r=document.getElementById(id+"Res");r.innerHTML="";r.classList.remove("show");
+  progress(id);window.scrollTo({top:0,behavior:"smooth"});
+}
+document.querySelectorAll(".tab").forEach(t=>t.onclick=()=>{
+  document.querySelectorAll(".tab").forEach(x=>x.classList.toggle("active",x===t));
+  document.querySelectorAll(".sheet").forEach(s=>s.classList.toggle("active",s.id===t.dataset.t));
+});
+</script>
+</body></html>
