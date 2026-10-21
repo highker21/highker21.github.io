@@ -58,7 +58,20 @@ button.ghost{background:#fff;color:var(--ink);border:1px solid var(--line)}
   .tbl{font-size:13px}
   .tbl td,.tbl th{padding:5px 3px}
 }
-@media print{body{background:#fff;padding:0}.wrap{padding:0}.bar{display:none}}
+.printonly{display:none}
+@media print{
+  @page{size:A4;margin:12mm}
+  body{background:#fff;padding:0}.wrap{padding:0;max-width:none}
+  .bar,.grid,.chk,.tscroll,p.msg,.intro,.copybox textarea,.card.na,.noprint{display:none!important}
+  .printonly{display:block}
+  .res{grid-template-columns:1fr 1fr}
+  .card{break-inside:avoid}
+  #inPrint table{border-collapse:collapse;width:100%;font-size:11.5px}
+  #inPrint td{border:1px solid var(--line);padding:3px 6px}
+  #inPrint td:first-child{color:var(--doc);font-weight:700;width:55%}
+  #sumPrint{white-space:pre-wrap;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11.5px;border:1px solid var(--line);border-radius:8px;padding:8px}
+  .note{font-size:10.5px}
+}
 </style></head><body>
 <div class="wrap">
   <div class="head">
@@ -128,10 +141,15 @@ button.ghost{background:#fff;color:var(--ink);border:1px solid var(--line)}
   </div>
   <div class="res" id="r3"></div>
 
+  <h2 class="printonly" id="inPrintH">輸入數值</h2>
+  <div id="inPrint" class="printonly"></div>
+
   <h2>病歷摘要</h2>
   <div class="copybox">
     <textarea id="summary" readonly></textarea>
-    <div class="bar"><button onclick="copySummary()">複製摘要</button><span class="msg" id="cmsg"></span></div>
+    <div class="bar"><button onclick="copySummary()">複製摘要</button><button class="ghost" onclick="printPage()">列印／存 PDF</button><span class="msg" id="cmsg"></span></div>
+    <pre id="sumPrint" class="printonly"></pre>
+    <p class="printonly" id="printDate" style="font-size:11.5px;color:var(--sub);margin-top:6px"></p>
   </div>
 
   <p class="note">
@@ -274,6 +292,36 @@ function loadExample(){
   for(const k in v)$(k).value=v[k];
   calc();
 }
+function preparePrint(){
+  ["r1","r2","r3"].forEach(id=>{
+    const r=$(id), empty=!r.querySelector(".card:not(.na)");
+    r.classList.toggle("noprint",empty);
+    let h=r.previousElementSibling;while(h&&h.tagName!=="H2")h=h.previousElementSibling;
+    if(h)h.classList.toggle("noprint",empty);
+  });
+  const rows=[];
+  document.querySelectorAll(".f").forEach(f=>{
+    const el=f.querySelector("input,select");if(!el)return;
+    if(el.tagName==="INPUT"&&el.value==="")return;
+    const has=ids=>ids.some(i=>$(i).value!=="");
+    const avs=has(["aR","cR","aL","cL","aP","cP"]);
+    const dep={pacU:["pac","ren"],renU:["pac","ren"],assay:["pac","ren"],sitPos:["sit"]};
+    if(dep[el.id]&&!has(dep[el.id]))return;
+    if(["proto","siT","liT","liG"].includes(el.id)&&!avs)return;
+    const lab=f.querySelector("label").textContent.trim();
+    rows.push([lab,el.tagName==="SELECT"?el.selectedOptions[0].text:el.value]);
+  });
+  document.querySelectorAll(".chk input:checked").forEach(c=>rows.push([c.parentElement.textContent.trim(),"✓"]));
+  [["aR","右腎上腺靜脈 醛固酮"],["cR","右腎上腺靜脈 皮質醇"],["aL","左腎上腺靜脈 醛固酮"],["cL","左腎上腺靜脈 皮質醇"],["aP","周邊 醛固酮"],["cP","周邊 皮質醇"]].forEach(([id,l])=>{if($(id).value!=="")rows.push([l,$(id).value])});
+  const esc=t=>String(t).replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
+  $("inPrint").innerHTML=rows.length?`<table>${rows.map(r=>`<tr><td>${esc(r[0])}</td><td>${esc(r[1])}</td></tr>`).join("")}</table>`:"";
+  $("inPrintH").classList.toggle("noprint",!rows.length);
+  $("sumPrint").textContent=$("summary").value;
+  const d=new Date(),z=n=>String(n).padStart(2,"0");
+  $("printDate").textContent=`列印時間：${d.getFullYear()}-${z(d.getMonth()+1)}-${z(d.getDate())} ${z(d.getHours())}:${z(d.getMinutes())}`;
+}
+function printPage(){preparePrint();window.print()}
+window.addEventListener("beforeprint",preparePrint);
 function copySummary(){
   const t=$("summary").value.replace(/\n/g,"\r\n");
   const ok=()=>{$("cmsg").textContent="已複製 ✅"};
