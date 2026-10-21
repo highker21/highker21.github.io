@@ -1,0 +1,293 @@
+<!DOCTYPE html><html lang="zh-Hant"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="author" content="盧子文醫師 - Dr. Lu Tz-Wen">
+<meta name="description" content="原發性醛固酮症判讀計算機：ARR 篩檢（依 2025 Endocrine Society 各檢驗法切點）、確認試驗（生理食鹽水、captopril、口服鹽負荷、fludrocortisone）、腎上腺靜脈取樣 AVS 的 SI／LI／CSI 判讀。資料不離開瀏覽器。">
+<title>醛固酮症 ARR／AVS 判讀計算機</title>
+<style>
+:root{
+  --ink:#1b1f1d;--sub:#5f655f;--line:#e6e2d8;--paper:#faf8f2;--card:#fff;--faint:#9a978c;
+  --ok:#27ae60;--mod:#e67e22;--warn:#c0392b;--doc:#2c3e50;--hint:#2f80ed;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#eceae2;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"PingFang TC","Noto Sans TC","Microsoft JhengHei",sans-serif;color:var(--ink);padding:20px 12px;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1000px;margin:0 auto;background:var(--paper);padding:26px 26px 18px}
+.head{border-bottom:2px solid var(--doc);padding-bottom:10px;margin-bottom:12px}
+.kick{font-size:12px;letter-spacing:.3em;color:var(--sub);font-weight:800;margin-bottom:6px}
+h1{font-size:23px;font-weight:900;color:var(--doc);line-height:1.3}
+.intro{font-size:13.5px;color:var(--sub);line-height:1.7;margin-top:6px}
+h2{font-size:16px;font-weight:900;color:var(--doc);margin:22px 0 8px;border-left:5px solid var(--doc);padding-left:8px}
+h2 small{font-size:12.5px;font-weight:600;color:var(--sub)}
+.bar{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;align-items:center}
+button{background:var(--ink);color:var(--paper);border:0;padding:9px 18px;font-size:14.5px;font-weight:700;border-radius:6px;cursor:pointer}
+button.ghost{background:#fff;color:var(--ink);border:1px solid var(--line)}
+.msg{font-size:13px;color:var(--sub)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:8px}
+.f{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:8px 10px}
+.f label{display:block;font-size:13px;font-weight:800;color:var(--doc)}
+.f label small{font-weight:500;color:var(--faint)}
+.f input,.f select{width:100%;margin-top:4px;padding:6px 8px;border:1px solid var(--line);border-radius:6px;font-size:15px;background:#fdfcf9}
+.chk{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:6px;margin-top:8px}
+.chk label{display:flex;gap:7px;align-items:flex-start;background:var(--card);border:1px solid var(--line);border-radius:8px;padding:7px 9px;font-size:13.5px;line-height:1.45;cursor:pointer}
+.chk input{margin-top:3px;flex:none}
+.res{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:10px;margin-top:10px}
+.card{background:var(--card);border:1px solid var(--line);border-left:6px solid var(--faint);border-radius:12px;padding:12px 14px}
+.card.ok{border-left-color:var(--ok)}.card.mod{border-left-color:var(--mod)}.card.warn{border-left-color:var(--warn)}.card.na{border-left-color:var(--line)}
+.card h3{font-size:15px;font-weight:900;color:var(--doc)}
+.card .v{font-size:28px;font-weight:900;margin:4px 0 2px;color:var(--doc)}
+.card .v small{font-size:13px;font-weight:600;color:var(--sub)}
+.card .i{font-size:14px;line-height:1.65}
+.card .i b{font-weight:800}
+.card .ft{font-size:11.5px;color:var(--faint);margin-top:6px;line-height:1.55}
+.ok-t{color:var(--ok)}.mod-t{color:var(--mod)}.warn-t{color:var(--warn)}
+.tbl{width:100%;border-collapse:collapse;background:var(--card);font-size:14px}
+.tbl th,.tbl td{border:1px solid var(--line);padding:6px 6px;text-align:center}
+.tbl th{background:#f3f1ea;font-size:13px;color:var(--doc)}
+.tbl td input{width:100%;padding:6px 4px;border:1px solid var(--line);border-radius:6px;font-size:15px;background:#fdfcf9;text-align:center}
+.tbl td.k{font-weight:800;color:var(--doc);text-align:left;white-space:nowrap}
+.tscroll{overflow-x:auto}
+.copybox{margin-top:12px}
+.copybox textarea{width:100%;min-height:120px;border:1px solid var(--line);border-radius:10px;padding:10px;font-size:13px;font-family:ui-monospace,Menlo,Consolas,monospace;background:#fff;resize:vertical}
+.note{margin-top:14px;font-size:12px;color:var(--sub);line-height:1.75}
+.foot{margin-top:12px;text-align:center;font-size:11px;color:var(--faint);line-height:1.75;border-top:1px solid var(--line);padding-top:10px}
+@media (max-width:560px){
+  body{padding:0}
+  .wrap{padding:18px 16px}
+  h1{font-size:20px}
+  .grid{grid-template-columns:repeat(2,1fr)}
+  .res{grid-template-columns:1fr}
+  .tbl{font-size:13px}
+  .tbl td,.tbl th{padding:5px 3px}
+}
+@media print{body{background:#fff;padding:0}.wrap{padding:0}.bar{display:none}}
+</style></head><body>
+<div class="wrap">
+  <div class="head">
+    <div class="kick">CLINICAL CALCULATOR</div>
+    <h1>原發性醛固酮症 ARR／AVS 判讀計算機</h1>
+    <p class="intro">三個步驟各自獨立，有哪一段的數值就填哪一段：<b>①ARR 篩檢</b>（依檢驗法與單位自動套用 2025 Endocrine Society 切點）、<b>②確認試驗</b>、<b>③腎上腺靜脈取樣（AVS）</b>的 SI／LI／CSI。輸入即時計算，資料不會上傳。</p>
+  </div>
+
+  <h2>① ARR 篩檢</h2>
+  <div class="grid">
+    <div class="f"><label>醛固酮 PAC</label><input id="pac" type="number" step="any" inputmode="decimal"></div>
+    <div class="f"><label>醛固酮單位</label><select id="pacU"><option value="ngdl">ng/dL</option><option value="pmol">pmol/L</option><option value="pgml">pg/mL</option></select></div>
+    <div class="f"><label>醛固酮檢驗法</label><select id="assay"><option value="ia">免疫分析（immunoassay）</option><option value="ms">質譜（LC-MS/MS）</option></select></div>
+    <div class="f"><label>腎素</label><input id="ren" type="number" step="any" inputmode="decimal"></div>
+    <div class="f"><label>腎素種類／單位</label><select id="renU"><option value="pra">PRA ng/mL/h</option><option value="drcmu">DRC mU/L</option><option value="drcng">DRC ng/L（pg/mL）</option></select></div>
+    <div class="f"><label>血鉀 <small>mmol/L</small></label><input id="k" type="number" step="any" inputmode="decimal"></div>
+  </div>
+  <div class="chk">
+    <label><input type="checkbox" id="hypoK">自發性低血鉀（非利尿劑引起）</label>
+    <label><input type="checkbox" id="renUndet">腎素低於偵測下限（上面填下限值）</label>
+    <label><input type="checkbox" id="mBB">正在用 β-blocker 或 α2 致效劑（clonidine 等）</label>
+    <label><input type="checkbox" id="mACE">正在用 ACEI／ARB／DHP 鈣離子阻斷劑</label>
+    <label><input type="checkbox" id="mMRA">正在用 MRA（spironolactone／eplerenone）或利尿劑</label>
+  </div>
+  <div class="res" id="r1"></div>
+
+  <h2>② 確認試驗 <small>（醛固酮一律以 ng/dL 輸入）</small></h2>
+  <div class="grid">
+    <div class="f"><label>生理食鹽水輸注試驗<small>（2 L／4 h）</small></label>
+      <select id="sitPos"><option value="seat">坐姿</option><option value="rec">臥姿</option></select></div>
+    <div class="f"><label>輸注後 PAC <small>ng/dL</small></label><input id="sit" type="number" step="any" inputmode="decimal"></div>
+    <div class="f"><label>Captopril 前 PAC <small>ng/dL</small></label><input id="cap0" type="number" step="any" inputmode="decimal"></div>
+    <div class="f"><label>Captopril 後 PAC <small>ng/dL（1–2 h）</small></label><input id="cap1" type="number" step="any" inputmode="decimal"></div>
+    <div class="f"><label>Captopril 後 PRA <small>ng/mL/h</small></label><input id="capR" type="number" step="any" inputmode="decimal"></div>
+    <div class="f"><label>口服鹽負荷：24 h 尿醛固酮 <small>µg/天</small></label><input id="osl" type="number" step="any" inputmode="decimal"></div>
+    <div class="f"><label>同次 24 h 尿鈉 <small>mEq/天</small></label><input id="oslNa" type="number" step="any" inputmode="decimal"></div>
+    <div class="f"><label>Fludrocortisone 第 4 天 PAC <small>ng/dL</small></label><input id="fst" type="number" step="any" inputmode="decimal"></div>
+    <div class="f"><label>Fludrocortisone 第 4 天 PRA <small>ng/mL/h</small></label><input id="fstR" type="number" step="any" inputmode="decimal"></div>
+  </div>
+  <div class="res" id="r2"></div>
+
+  <h2>③ 腎上腺靜脈取樣 AVS</h2>
+  <div class="grid">
+    <div class="f" style="grid-column:1/-1"><label>判讀標準</label>
+      <select id="proto">
+        <option value="taipai_s">台灣 TAIPAI 共識・ACTH 刺激（SI ≥5、LI ≥4）</option>
+        <option value="taipai_u">台灣 TAIPAI 共識・未刺激（SI ≥2、LI ≥2）</option>
+        <option value="mayo">Mayo／Williams 15e・ACTH 持續輸注（SI ≥5、LI ≥4，3–4 灰色）</option>
+        <option value="jes">日本 JES・ACTH 刺激（SI ≥5、LI ≥2.6、CSI &lt;1）</option>
+        <option value="custom">自訂</option>
+      </select></div>
+    <div class="f"><label>SI 門檻</label><input id="siT" type="number" step="any" inputmode="decimal"></div>
+    <div class="f"><label>LI 門檻（側化）</label><input id="liT" type="number" step="any" inputmode="decimal"></div>
+    <div class="f"><label>LI 灰色區下限 <small>（不用就留空）</small></label><input id="liG" type="number" step="any" inputmode="decimal"></div>
+  </div>
+  <div class="tscroll" style="margin-top:8px">
+  <table class="tbl">
+    <tr><th></th><th>醛固酮</th><th>皮質醇</th></tr>
+    <tr><td class="k">右腎上腺靜脈</td><td><input id="aR" type="number" step="any" inputmode="decimal"></td><td><input id="cR" type="number" step="any" inputmode="decimal"></td></tr>
+    <tr><td class="k">左腎上腺靜脈</td><td><input id="aL" type="number" step="any" inputmode="decimal"></td><td><input id="cL" type="number" step="any" inputmode="decimal"></td></tr>
+    <tr><td class="k">下腔／周邊靜脈</td><td><input id="aP" type="number" step="any" inputmode="decimal"></td><td><input id="cP" type="number" step="any" inputmode="decimal"></td></tr>
+  </table></div>
+  <p class="msg" style="margin-top:4px">同一欄的單位要一致（醛固酮全用 ng/dL 或全用 pmol/L 都可以），比值本身沒有單位。</p>
+  <div class="bar">
+    <button class="ghost" onclick="loadExample()">載入範例（ACTH 刺激、雙側）</button>
+    <button class="ghost" onclick="clearAll()">全部清除</button>
+  </div>
+  <div class="res" id="r3"></div>
+
+  <h2>病歷摘要</h2>
+  <div class="copybox">
+    <textarea id="summary" readonly></textarea>
+    <div class="bar"><button onclick="copySummary()">複製摘要</button><span class="msg" id="cmsg"></span></div>
+  </div>
+
+  <p class="note">
+    <b>公式與依據</b><br>
+    ARR＝醛固酮 ÷ 腎素。篩檢陽性要三項同時成立：腎素被抑制、醛固酮達最低值、ARR 超過切點（2025 Endocrine Society 指引 Table 5；以免疫分析、ng/dL 為例：PRA ≤1 ng/mL/h 時 ARR &gt;20、DRC ≤8.2 mU/L 時 ARR &gt;2.5、DRC ≤5.2 ng/L 時 ARR &gt;4.0，且 PAC ≥10 ng/dL；質譜法 PAC ≥7.5 ng/dL、ARR 分別 &gt;15／&gt;1.8／&gt;2.8）。指引註明這些只是參考值，各實驗室有自己的切點就用實驗室的。台灣 TAIPAI 共識（2017）與台灣高血壓指引（2022）以 PAC/PRA &gt;35 為切點，一併列出。換算：醛固酮 1 ng/dL＝27.7 pmol/L＝10 pg/mL；PRA 與 DRC 之間沒有固定換算係數，所以不互換、各用各的切點。<br>
+    可略過確認試驗：自發性低血鉀＋腎素低於偵測下限＋PAC &gt;20 ng/dL；或篩檢時正在用會讓 ARR 偏低的藥（ACEI／ARB、MRA）仍然陽性。<br>
+    生理食鹽水試驗：坐姿輸注後 PAC &gt;6 ng/dL 確診；臥姿 &gt;10 確診、&lt;5 不太可能、5–10 灰色（Endocrine Society 2016）。Captopril 試驗：PAC 下降 &lt;30%，或服藥後 ARR 仍 &gt;35（TAIPAI），支持 PA。口服鹽負荷：尿鈉 &gt;200 mEq/天的前提下，24 h 尿醛固酮 &gt;12 µg 支持 PA、&lt;10 µg 不太可能（腎功能不全者不適用）。Fludrocortisone 抑制試驗：第 4 天直立 PAC &gt;6 ng/dL 且 PRA &lt;1 支持 PA；Williams 15e 指出多數中心已不再使用。<br>
+    AVS：選擇性指數 SI＝腎上腺靜脈皮質醇 ÷ 周邊皮質醇；側化指數 LI＝（優勢側 A/C）÷（非優勢側 A/C）；對側抑制指數 CSI＝（非優勢側 A/C）÷（周邊 A/C），&lt;1 支持單側病灶。兩側都要通過 SI 才能算 LI；ACTH 刺激與未刺激兩套數字不可混用。病人若合併皮質醇自主分泌（約 22%），以皮質醇校正會失真，判讀要保守。
+  </p>
+  <div class="foot">計算結果僅供臨床參考，請依病人整體狀況與各院實驗室切點判斷。　｜　盧子文醫師　｜　工具版本：2026-10-22</div>
+</div>
+
+<script>
+const $=id=>document.getElementById(id);
+const num=id=>{const v=parseFloat($(id).value);return isFinite(v)?v:null};
+const r1=x=>Math.round(x*10)/10, r2=x=>Math.round(x*100)/100;
+const card=(cls,t,v,i,ft)=>`<div class="card ${cls}"><h3>${t}</h3>${v!==null?`<div class="v">${v}</div>`:""}<div class="i">${i}</div>${ft?`<div class="ft">${ft}</div>`:""}</div>`;
+const need=(t,m)=>card("na",t,null,`<span style="color:var(--faint)">需要：${m.join("、")}</span>`);
+
+// 2025 ES Table 5：以 ng/dL 為基準
+const ES={ia:{pac:10,pra:[1,20],drcmu:[8.2,2.5],drcng:[5.2,4.0]},ms:{pac:7.5,pra:[1,15],drcmu:[8.2,1.8],drcng:[5.2,2.8]}};
+// 同表 pmol/L 欄（醛固酮 ≥277／≥208 pmol/L）
+const ESP={ia:{pac:277,pra:555,drcmu:70,drcng:111},ms:{pac:208,pra:416,drcmu:52,drcng:82}};
+const RENU={pra:"ng/mL/h",drcmu:"mU/L",drcng:"ng/L"};
+const PROTO={taipai_s:[5,4,null],taipai_u:[2,2,null],mayo:[5,4,3],jes:[5,2.6,null]};
+
+function toNgdl(v,u){return u==="pmol"?v/27.7:u==="pgml"?v/10:v}
+
+function calc(){
+  const sum=[];
+  // ---------- ① ARR ----------
+  const out1=[];
+  const pacRaw=num("pac"),ren=num("ren"),pacU=$("pacU").value,renU=$("renU").value,as=$("assay").value,k=num("k");
+  if(pacRaw!==null&&ren!==null&&ren>0){
+    const pac=toNgdl(pacRaw,pacU), c=ES[as], [renCut,arrCut]=c[renU], arr=pac/ren;
+    const pm=pacU==="pmol", arrU=pm?pacRaw/ren:arr, arrCutU=pm?ESP[as][renU]:arrCut, pacMinU=pm?ESP[as].pac:c.pac, pacUU=pm?pacRaw:pac;
+    const okRen=ren<=renCut, okPac=pacUU>=pacMinU, okArr=arrU>arrCutU, pos=okRen&&okPac&&okArr;
+    const yes=b=>b?'<b class="warn-t">符合</b>':'<b class="ok-t">不符合</b>';
+    let t=`腎素 ≤${renCut} ${RENU[renU]}：${yes(okRen)}<br>PAC ≥${pacMinU} ${pm?"pmol/L":"ng/dL"}：${yes(okPac)}（${r1(pacUU)} ${pm?"pmol/L":"ng/dL"}${pacU==="pgml"?"，已由 pg/mL 換算":""}）<br>ARR &gt;${arrCutU}：${yes(okArr)}`;
+    t+=pos?`<br><b class="warn-t">篩檢陽性</b>，建議轉內分泌科做確認試驗或直接進入分型。`:`<br><b class="ok-t">篩檢陰性</b>（依 2025 ES 切點）。`;
+    if(renU==="pra"){const tw=arr>35;t+=`<br>台灣 TAIPAI 切點 PAC/PRA &gt;35：${tw?'<b class="warn-t">超過</b>':"未超過"}`}
+    const warns=[];
+    if(k!==null&&k<3.5)warns.push("血鉀偏低會壓低醛固酮造成偽陰性，建議補鉀到正常後重測");
+    if($("mBB").checked)warns.push("β-blocker／α2 致效劑會壓低腎素，可能造成偽陽性");
+    if($("mACE").checked&&pos)warns.push("正在用 ACEI／ARB／DHP 仍篩檢陽性，強烈支持 PA");
+    if($("mACE").checked&&!pos)warns.push("ACEI／ARB／DHP 會拉高腎素，陰性不能完全排除；臨床懷疑高時考慮換藥後重測");
+    if($("mMRA").checked)warns.push("MRA／利尿劑會拉高腎素；若腎素仍被抑制，結果仍可判讀");
+    if($("renUndet").checked)warns.push("腎素低於偵測下限，ARR 依下限值計算（實際比值更高）");
+    if(warns.length)t+=`<br><span style="font-size:13px">⚠️ ${warns.join("<br>⚠️ ")}</span>`;
+    const skip=pos&&$("hypoK").checked&&$("renUndet").checked&&pac>20;
+    if(skip)t+=`<br><b>可略過確認試驗</b>：自發性低血鉀＋腎素測不到＋PAC &gt;20 ng/dL。`;
+    const unit=pacU==="pmol"?`pmol/L ÷ ${RENU[renU]}`:`ng/dL ÷ ${RENU[renU]}`;
+    const arrShow=r1(arrU);
+    out1.push(card(pos?"warn":"ok","ARR 篩檢",`${arrShow} <small>${unit}</small>`,t,`切點：2025 Endocrine Society（${as==="ia"?"免疫分析":"LC-MS/MS"}）`));
+    sum.push(`ARR: PAC ${pacRaw} ${$("pacU").selectedOptions[0].text}, ${RENU[renU]==="ng/mL/h"?"PRA":"DRC"} ${ren} ${RENU[renU]}${$("renUndet").checked?"(<LOD)":""}, ARR ${arrShow} → ${pos?"陽性":"陰性"} (ES 2025)${skip?"；符合免確認試驗條件":""}`);
+  }else out1.push(need("ARR 篩檢",[pacRaw===null&&"醛固酮",(ren===null||ren<=0)&&"腎素"].filter(Boolean)));
+  $("r1").innerHTML=out1.join("");
+
+  // ---------- ② 確認試驗 ----------
+  const out2=[];
+  const sit=num("sit");
+  if(sit!==null){
+    let cls,t;
+    if($("sitPos").value==="seat"){cls=sit>6?"warn":"ok";t=sit>6?'<b class="warn-t">支持 PA</b>（坐姿 &gt;6 ng/dL）':'<b class="ok-t">不支持 PA</b>（坐姿 ≤6 ng/dL）'}
+    else{if(sit>10){cls="warn";t='<b class="warn-t">支持 PA</b>（臥姿 &gt;10 ng/dL）'}else if(sit<5){cls="ok";t='<b class="ok-t">不太可能是 PA</b>（臥姿 &lt;5 ng/dL）'}else{cls="mod";t='<b class="mod-t">灰色地帶</b>（5–10 ng/dL），可改做其他確認試驗或坐姿重做'}}
+    out2.push(card(cls,"生理食鹽水輸注試驗",`${sit} <small>ng/dL</small>`,t,"2 L 0.9% NaCl 4 小時；試驗前血鉀要矯正"));
+    sum.push(`SIT(${$("sitPos").value==="seat"?"seated":"recumbent"}): post PAC ${sit} ng/dL → ${cls==="warn"?"支持PA":cls==="ok"?"不支持":"灰色"}`);
+  }
+  const c0=num("cap0"),c1=num("cap1"),cR=num("capR");
+  if(c0!==null&&c1!==null&&c0>0){
+    const supp=(c0-c1)/c0*100, a=supp<30;
+    let t=`PAC 下降 ${r1(supp)}%：${a?'<b class="warn-t">&lt;30%，未被抑制</b>':'<b class="ok-t">≥30%，有被抑制</b>'}`;
+    let b=false;
+    if(cR!==null&&cR>0){const arr=c1/cR;b=arr>35;t+=`<br>服藥後 ARR ${r1(arr)}：${b?'<b class="warn-t">&gt;35</b>':"≤35"}`}
+    const pos=a||b;
+    t+=`<br>${pos?'<b class="warn-t">支持 PA</b>':'<b class="ok-t">不支持 PA</b>'}`;
+    out2.push(card(pos?"warn":"ok","Captopril 挑戰試驗",`${r1(supp)}<small>% 抑制</small>`,t,"captopril 25–50 mg，服藥前與 1–2 小時後抽血；切點 TAIPAI／Endocrine Society 2016"));
+    sum.push(`Captopril test: PAC ${c0}→${c1} ng/dL (${r1(supp)}% suppression)${cR!==null?`, post PRA ${cR}`:""} → ${pos?"支持PA":"不支持"}`);
+  }else if(c0!==null||c1!==null)out2.push(need("Captopril 挑戰試驗",[c0===null&&"服藥前 PAC",c1===null&&"服藥後 PAC"].filter(Boolean)));
+  const osl=num("osl"),na=num("oslNa");
+  if(osl!==null){
+    let cls,t;
+    if(osl>12){cls="warn";t='<b class="warn-t">支持 PA</b>（&gt;12 µg/天）'}else if(osl<10){cls="ok";t='<b class="ok-t">不太可能是 PA</b>（&lt;10 µg/天）'}else{cls="mod";t='<b class="mod-t">灰色地帶</b>（10–12 µg/天）'}
+    if(na===null)t+='<br>⚠️ 缺尿鈉，無法確認鹽負荷是否足夠';
+    else if(na<=200)t+=`<br><b class="mod-t">⚠️ 尿鈉 ${na} mEq ≤200，鹽負荷不足，結果不可靠</b>`;
+    out2.push(card(cls,"口服鹽負荷試驗",`${osl} <small>µg/天</small>`,t,"高鹽飲食 3 天，第 3–4 天收 24 小時尿；腎功能不全者不適用"));
+    sum.push(`Oral salt loading: 24h U-aldo ${osl} µg/d${na!==null?`, U-Na ${na}`:""} → ${cls==="warn"?"支持PA":cls==="ok"?"不支持":"灰色"}`);
+  }
+  const fs=num("fst"),fr=num("fstR");
+  if(fs!==null){
+    const pos=fs>6&&(fr===null||fr<1);
+    let t=pos?'<b class="warn-t">支持 PA</b>（PAC &gt;6 ng/dL）':'<b class="ok-t">不支持 PA</b>';
+    if(fr===null)t+="<br>⚠️ 缺 PRA（判讀需同時 PRA &lt;1）";
+    out2.push(card(pos?"warn":"ok","Fludrocortisone 抑制試驗",`${fs} <small>ng/dL</small>`,t,"Williams 15e：多數中心已不再使用（QT 與左心室功能風險）"));
+    sum.push(`FST: day4 PAC ${fs}${fr!==null?`, PRA ${fr}`:""} → ${pos?"支持PA":"不支持"}`);
+  }
+  if(!out2.length)out2.push(need("確認試驗","任一試驗的數值".split(",")));
+  $("r2").innerHTML=out2.join("");
+
+  // ---------- ③ AVS ----------
+  const out3=[];
+  const siT=num("siT"),liT=num("liT"),liG=num("liG");
+  const aR=num("aR"),cRv=num("cR"),aL=num("aL"),cL=num("cL"),aP=num("aP"),cP=num("cP");
+  if([aR,cRv,aL,cL,aP,cP].every(x=>x!==null&&x>0)&&siT!==null&&liT!==null){
+    const siR=cRv/cP, siL=cL/cP, okR=siR>=siT, okL=siL>=siT;
+    const acR=aR/cRv, acL=aL/cL, acP=aP/cP;
+    out3.push(card(okR&&okL?"ok":"warn","選擇性指數 SI（插管是否成功）",`右 ${r1(siR)}｜左 ${r1(siL)}`,
+      `門檻 ≥${siT}<br>右側：${okR?'<b class="ok-t">成功</b>':'<b class="warn-t">失敗</b>'}　左側：${okL?'<b class="ok-t">成功</b>':'<b class="warn-t">失敗</b>'}`,
+      "SI＝腎上腺靜脈皮質醇 ÷ 周邊皮質醇"));
+    const dom=acR>=acL?"右":"左", acD=Math.max(acR,acL), acN=Math.min(acR,acL), li=acD/acN, csi=acN/acP;
+    let t=`A/C 比值：右 ${r2(acR)}、左 ${r2(acL)}、周邊 ${r2(acP)}<br>`;
+    let cls="na",concl;
+    if(okR&&okL){
+      if(li>=liT){cls="warn";concl=`<b class="warn-t">側化到${dom}側</b>（LI ${r1(li)} ≥${liT}），支持${dom}側單側病灶，可考慮${dom}側腎上腺切除`}
+      else if(liG!==null&&li>=liG){cls="mod";concl=`<b class="mod-t">灰色地帶</b>（LI ${r1(li)} 介於 ${liG}–${liT}），參考 CSI`}
+      else{cls="ok";concl=`<b class="ok-t">未側化</b>（LI ${r1(li)} &lt;${liT}），傾向雙側病灶，以藥物（MRA）治療為主`}
+    }else{
+      cls="mod";concl=`<b class="mod-t">SI 未全部通過，LI 不能判讀</b>；可參考 CSI，或重做 AVS`;
+    }
+    t+=concl;
+    t+=`<br>對側抑制指數 CSI（${dom==="右"?"左":"右"}側）＝${r2(csi)}：${csi<1?"&lt;1，對側被抑制，支持單側":"≥1，對側未被抑制"}`;
+    if(csi<0.47)t+=`<br>⚠️ CSI &lt;0.47：文獻顯示與術後高血鉀相關，術後要追蹤血鉀`;
+    if($("proto").value==="jes"&&okR&&okL)t+=`<br>JES 標準需 LI ≥2.6 且 CSI &lt;1：${li>=2.6&&csi<1?'<b class="warn-t">符合單側</b>':"不符合"}`;
+    out3.push(card(cls,"側化指數 LI／對側抑制 CSI",`LI ${r1(li)} <small>優勢側：${dom}</small>`,t,"LI＝優勢側 A/C ÷ 非優勢側 A/C；CSI＝非優勢側 A/C ÷ 周邊 A/C"));
+    sum.push(`AVS (${$("proto").selectedOptions[0].text}): SI R ${r1(siR)} / L ${r1(siL)}; A/C R ${r2(acR)}, L ${r2(acL)}, P ${r2(acP)}; LI ${r1(li)} (dominant ${dom==="右"?"R":"L"}), CSI ${r2(csi)} → ${concl.replace(/<[^>]+>/g,"").replace(/&lt;/g,"<").replace(/&gt;/g,">")}`);
+  }else out3.push(need("AVS 判讀",["右、左、周邊的醛固酮與皮質醇（共 6 格）"]));
+  $("r3").innerHTML=out3.join("");
+
+  $("summary").value=sum.join("\n");
+}
+
+function setProto(){
+  const p=PROTO[$("proto").value];
+  if(p){$("siT").value=p[0];$("liT").value=p[1];$("liG").value=p[2]??""}
+  calc();
+}
+function loadExample(){
+  $("proto").value="taipai_s";setProto();
+  const v={aR:4525.8,cR:597,aL:2406.4,cL:463,aP:33.4,cP:32};
+  for(const k in v)$(k).value=v[k];
+  calc();
+}
+function copySummary(){
+  const t=$("summary").value.replace(/\n/g,"\r\n");
+  const ok=()=>{$("cmsg").textContent="已複製 ✅"};
+  const fb=()=>{$("summary").select();try{document.execCommand("copy")?ok():$("cmsg").textContent="複製失敗，請手動選取"}catch(e){$("cmsg").textContent="複製失敗，請手動選取"}};
+  if(navigator.clipboard)navigator.clipboard.writeText(t).then(ok,fb);else fb();
+}
+function clearAll(){
+  document.querySelectorAll("input[type=number]").forEach(i=>{if(!["siT","liT","liG"].includes(i.id))i.value=""});
+  document.querySelectorAll("input[type=checkbox]").forEach(c=>c.checked=false);
+  $("cmsg").textContent="";calc();
+}
+document.querySelectorAll("input,select").forEach(el=>el.addEventListener(el.tagName==="SELECT"||el.type==="checkbox"?"change":"input",calc));
+$("proto").addEventListener("change",setProto);
+["siT","liT","liG"].forEach(id=>$(id).addEventListener("input",()=>{$("proto").value="custom"}));
+setProto();
+</script>
+</body></html>
