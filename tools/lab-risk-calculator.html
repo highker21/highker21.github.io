@@ -1,7 +1,7 @@
 <!DOCTYPE html><html lang="zh-Hant"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="author" content="盧子文醫師 - Dr. Lu Tz-Wen">
-<meta name="description" content="貼上檢驗資料（健保雲端或院內報告）自動抓值，計算 eGFR（CKD-EPI 2021）、FIB-4、HOMA-IR、心房顫動 CHA₂DS₂-VASc／CHA₂DS₂-VA／HAS-BLED、2025 台灣血脂風險分級與 LDL 目標。缺的數值可手動補。資料不離開瀏覽器。">
+<meta name="description" content="貼上檢驗資料（健保雲端或院內報告）自動抓值，計算 eGFR（CKD-EPI 2021）、FIB-4、HOMA-IR、心房顫動 CHA₂DS₂-VASc／CHA₂DS₂-VA／HAS-BLED、2025 台灣血脂風險分級與 LDL 目標，以及 BMI、TyG、HOMA-β、QUICKI、eAG、GA↔HbA1c、NFS、APRI、KFRE、校正鈣／鈉、滲透壓、陰離子間隙、FENa／FEUrea、Sampson LDL、ABI／baPWV／CAVI。缺的數值可手動補。資料不離開瀏覽器。">
 <title>檢驗資料臨床計算機</title>
 <style>
 :root{
@@ -44,6 +44,10 @@ button.ghost{background:#fff;color:var(--ink);border:1px solid var(--line)}
 .card .i b{font-weight:800}
 .card .ft{font-size:11.5px;color:var(--faint);margin-top:6px;line-height:1.55}
 .ok-t{color:var(--ok)}.mod-t{color:var(--mod)}.warn-t{color:var(--warn)}
+.rtabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.rtabs button{background:#fff;color:var(--sub);border:1px solid var(--line);padding:7px 13px;font-size:13.5px}
+.rtabs button.on{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.rtabs button small{font-weight:500;opacity:.75}
 .copybox{margin-top:12px}
 .copybox textarea{min-height:110px;font-size:13px}
 .note{margin-top:14px;font-size:12px;color:var(--sub);line-height:1.75}
@@ -61,7 +65,7 @@ button.ghost{background:#fff;color:var(--ink);border:1px solid var(--line)}
   <div class="head">
     <div class="kick">CLINICAL CALCULATOR</div>
     <h1>檢驗資料臨床計算機</h1>
-    <p class="intro">貼上健保雲端或院內的檢驗資料，自動抓出需要的數值（同一項目取<b>最新日期</b>），算出 eGFR、FIB-4、HOMA-IR、心房顫動中風／出血分數、血脂風險分級。抓到的值會標出來源，<b>請核對</b>；沒有的數值可以直接輸入。所有計算都在你的瀏覽器裡完成，資料不會上傳。</p>
+    <p class="intro">貼上健保雲端或院內的檢驗資料，自動抓出需要的數值（同一項目取<b>最新日期</b>），算出 eGFR、FIB-4、HOMA-IR、心房顫動中風／出血分數、血脂風險分級，以及代謝、肝、腎與電解質、血管硬化等常用公式（結果分頁顯示）。抓到的值會標出來源，<b>請核對</b>；沒有的數值可以直接輸入。所有計算都在你的瀏覽器裡完成，資料不會上傳。</p>
   </div>
 
   <h2>1. 貼上檢驗資料</h2>
@@ -84,7 +88,9 @@ button.ghost{background:#fff;color:var(--ink);border:1px solid var(--line)}
   <div class="chk" id="c-af"></div>
 
   <h2>4. 計算結果</h2>
+  <div class="rtabs" id="rtabs"></div>
   <div class="res" id="res"></div>
+  <p class="msg" id="pending" style="margin-top:8px"></p>
   <div class="copybox">
     <div class="bar"><button onclick="copySummary()">複製結果摘要（貼病歷用）</button><span class="msg" id="cmsg"></span></div>
     <textarea id="summary" readonly></textarea>
@@ -96,7 +102,8 @@ button.ghost{background:#fff;color:var(--ink);border:1px solid var(--line)}
     FIB-4＝年齡 × AST ÷（血小板[10⁹/L] × √ALT）；&lt;1.30 低風險（≥65 歲用 &lt;2.0）、1.30–2.67 不確定、&gt;2.67 高風險（AASLD 2023 MASLD 指引）。35 歲以下準確度差。<br>
     HOMA-IR＝空腹血糖(mg/dL) × 空腹胰島素(µU/mL) ÷ 405（Matthews 1985）。無統一切點，常用 &gt;2.0–2.5 提示胰島素阻抗；使用胰島素治療者不適用。<br>
     CHA₂DS₂-VASc：心衰竭 1、高血壓 1、年齡 ≥75 歲 2、糖尿病 1、中風／TIA／血栓栓塞 2、血管疾病 1、65–74 歲 1、女性 1。CHA₂DS₂-VA（2024 ESC，去掉性別）：≥2 建議抗凝血、1 應考慮。HAS-BLED ≥3 為出血高風險（應矯正可改善的因子，不是不抗凝的理由）。<br>
-    血脂：2025 台灣血脂管理臨床路徑共識（中華民國心臟學會等 10 個機構，內科學誌 2024;35(6)）五級風險與 LDL-C 目標 &lt;130／&lt;115／&lt;100／&lt;70／&lt;55 mg/dL；Non-HDL-C 目標＝LDL-C 目標 + 30。LDL 缺值時以 Friedewald 估算（TG &lt; 400）。
+    其他：BMI 依國健署成人標準；TyG＝ln(TG×FPG/2)；HOMA-β＝360×胰島素/(血糖−63)；QUICKI＝1/(log 胰島素 + log 血糖)，&lt;0.357 為健康成人 95% 下限；eAG＝28.7×A1c−46.7；GA↔HbA1c 用韓國兩段式迴歸（HbA1c &lt;5.868%：GA＝6.960＋0.8963×A1c；≥5.868%：GA＝−9.609＋3.720×A1c）；NFS（Angulo 2007，&lt;−1.455／&gt;0.676，≥65 歲低切點 0.12）；APRI＝(AST/40)/PLT×100；KFRE 4 變數（Tangri；非北美 S0 2 年 0.9832、5 年 0.9365）；校正鈣＝Ca＋0.8×(4−Alb)；校正鈉 Katz 1.6／Hillier 2.4；滲透壓＝2Na＋血糖/18＋BUN/2.8；AG＝Na−(Cl＋HCO₃)，白蛋白校正 ＋2.5×(4−Alb)；FENa、FEUrea（&lt;35% 腎前性、&gt;50% 腎性）；Sampson LDL＝TC/0.948−HDL/0.971−(TG/8.56＋TG×NonHDL/2140−TG²/16100)−9.44；ABI 依 AHA/ACC 2016；baPWV、CAVI 切點為研究慣例。<br>
+    血脂：2025 台灣血脂管理臨床路徑共識（中華民國心臟學會等 10 個機構，內科學誌 2024;35(6)）五級風險與 LDL-C 目標 &lt;130／&lt;115／&lt;100／&lt;70／&lt;55 mg/dL；Non-HDL-C 目標＝LDL-C 目標 + 30。LDL 缺值時優先以 Sampson（NIH 2）公式估算（TG ≤800），否則 Friedewald（TG &lt;400）。
   </p>
   <div class="foot">計算結果僅供臨床參考，請依病人整體狀況判斷。　｜　盧子文醫師　｜　工具版本：2026-10-22</div>
 </div>
@@ -119,11 +126,30 @@ const F=[
  {k:"ldl",n:"LDL-C",u:"mg/dL"},
  {k:"uacr",n:"UACR",u:"mg/g"},
  {k:"sbp",n:"收縮壓",u:"mmHg"},
- {k:"waist",n:"腰圍",u:"cm"}
+ {k:"waist",n:"腰圍",u:"cm"},
+ {k:"wt",n:"體重",u:"kg"},
+ {k:"ht",n:"身高",u:"cm"},
+ {k:"ga",n:"糖化白蛋白 GA",u:"%"},
+ {k:"alb",n:"Albumin",u:"g/dL"},
+ {k:"ca",n:"Calcium",u:"mg/dL"},
+ {k:"bun",n:"BUN",u:"mg/dL"},
+ {k:"na",n:"Na",u:"mmol/L"},
+ {k:"cl",n:"Cl",u:"mmol/L"},
+ {k:"hco3",n:"HCO₃⁻",u:"mmol/L"},
+ {k:"una",n:"尿鈉",u:"mmol/L"},
+ {k:"ucr",n:"尿 Creatinine",u:"mg/dL"},
+ {k:"uun",n:"尿素氮（尿）",u:"mg/dL"},
+ {k:"abi",n:"ABI（取兩側較低）",u:""},
+ {k:"bapwv",n:"baPWV（取兩側較高）",u:"cm/s"},
+ {k:"cavi",n:"CAVI（取兩側較高）",u:""}
 ];
 // 檢驗名稱對應（先比對檢驗室自己的項目名，抓不到再比對醫令名）
 const MAP=[
  ["_skip",/(egfr|\bgfr\b|腎絲球|ccr|clearance)/i],
+ ["una",/(u-?na\b|urine\s*sodium|尿鈉|sodium.*urine)/i],
+ ["ucr",/(u-?cre|urine\s*creatinine|尿肌酸酐|creatinine.*urine)/i],
+ ["uun",/(u-?bun|u-?un\b|urine\s*urea|尿.*尿素氮|尿素氮.*\(尿)/i],
+ ["ga",/(glycated\s*albumin|glyco-?albumin|^ga\b|糖化白蛋白)/i],
  ["cr",/^(?!.*(u-|urine|尿|clear|ccr|ratio|\/)).*(creatinine|crea|crtn|^cre\b|^cr\b|肌酸酐)/i],
  ["ast",/(^|\b|-)(s-?got|got|ast)\b|麩胺酸苯醋酸/i],
  ["alt",/(^|\b|-)(s-?gpt|gpt|alt)\b|麩胺酸丙酮酸/i],
@@ -135,7 +161,13 @@ const MAP=[
  ["tg",/(^tg\b|triglyceride|三酸甘油)/i],
  ["hdl",/^(?!.*(ratio|\/)).*(hdl|高密度)/i],
  ["ldl",/^(?!.*(ratio|\/|hdl)).*(ldl|低密度)/i],
- ["uacr",/(uacr|^acr\b|albumin.*creatinine|microalb.*cre|白蛋白.*肌酸酐)/i]
+ ["uacr",/(uacr|^acr\b|albumin.*creatinine|microalb.*cre|白蛋白.*肌酸酐)/i],
+ ["alb",/^(?!.*(micro|u-|urine|尿液|ratio|globulin|\/|glyc|糖化)).*(albumin|^alb\b|白蛋白)/i],
+ ["bun",/^(?!.*(u-|urine|尿液)).*(^bun\b|urea\s*nitrogen|尿素氮)/i],
+ ["na",/^(?!.*(u-|urine|尿)).*(^na\b|sodium|^鈉|血清鈉)/i],
+ ["cl",/^(?!.*(u-|urine|尿)).*(^cl\b|chloride|^氯)/i],
+ ["hco3",/(hco3|bicarbonate|碳酸氫|^tco2\b|total\s*co2)/i],
+ ["ca",/^(?!.*(u-|urine|尿|ion|free|游離|\/)).*(^ca\b(?![\s-]*\d)|calcium|^鈣|血清鈣)/i]
 ];
 const LIPID=[["htn","高血壓（診斷或用藥）"],["dm","糖尿病"],["smoke","抽菸"],["fhx","早發性冠心病家族史（男 ≤55、女 ≤65 歲）"]];
 const LIPID2=[
@@ -227,7 +259,7 @@ function parse(text){
     const g=line.match(/^([A-Za-z一-鿿][A-Za-z0-9一-鿿\-\s\/().,%]{0,40}?)(?:\s*[:=]\s*|\s+)([<>]?\s*\d+(?:\.\d+)?)\s*([A-Za-zµμ%\/\^0-9.萬]*)/);
     if(g){
       const k=keyOf(g[1]);
-      if(k&&k!=="_skip"){const dm=line.match(/(\d{2,4}\/\d{1,2}\/\d{1,2})/);put(k,parseFloat(g[2].replace(/[<>\s]/g,"")),dm?dm[1]:curDate,`${dm?dm[1]+" ":""}${g[1].trim()}`,g[3]);}
+      if(k&&k!=="_skip"&&!/^[-‐]\d/.test(line.slice(g[0].length))){const dm=line.match(/(\d{2,4}\/\d{1,2}\/\d{1,2})/);put(k,parseFloat(g[2].replace(/[<>\s]/g,"")),dm?dm[1]:curDate,`${dm?dm[1]+" ":""}${g[1].trim()}`,g[3]);}
     }
   }
   return {found,sexHint};
@@ -272,8 +304,11 @@ function calc(){
   const age=val("age"),sex=$("f-sex").value,cr=val("cr"),ast=val("ast"),alt=val("alt"),glu=val("glu"),ins=val("ins"),a1c=val("a1c");
   const plt0=val("plt"),plt=plt0===null?null:plt0*parseFloat($("u-plt").value);
   const tc=val("tc"),tg=val("tg"),hdl=val("hdl"),uacr=val("uacr"),sbp=val("sbp"),waist=val("waist");
-  let ldl=val("ldl"),ldlEst=false;
-  if(ldl===null&&tc!==null&&hdl!==null&&tg!==null&&tg<400){ldl=tc-hdl-tg/5;ldlEst=true}
+  let ldl=val("ldl"),ldlEst="";
+  const sampson=(tc!==null&&hdl!==null&&tg!==null&&tg<=800)?tc/0.948-hdl/0.971-(tg/8.56+tg*(tc-hdl)/2140-tg*tg/16100)-9.44:null;
+  const friede=(tc!==null&&hdl!==null&&tg!==null&&tg<400)?tc-hdl-tg/5:null;
+  if(ldl===null&&sampson!==null){ldl=sampson;ldlEst="Sampson 估算"}
+  else if(ldl===null&&friede!==null){ldl=friede;ldlEst="Friedewald 估算"}
   const out=[],sum=[];
   const auto=(id,txt)=>{const e=$("a-"+id);if(e)e.textContent=txt||""};
 
@@ -363,7 +398,7 @@ function calc(){
     let cls="na";
     if(ldl!==null){
       const at=ldl<goal;cls=at?"ok":(goal<=100?"warn":"mod");
-      t+=`<br>目前 LDL-C ${r1(ldl)}${ldlEst?"（Friedewald 估算）":""}：${at?'<b class="ok-t">已達標</b>':`<b class="warn-t">未達標</b>，需再降 ${r1(ldl-goal+1)} 以上（約 ${Math.round((1-(goal-1)/ldl)*100)}%）`}`;
+      t+=`<br>目前 LDL-C ${r1(ldl)}${ldlEst?`（${ldlEst}）`:""}：${at?'<b class="ok-t">已達標</b>':`<b class="warn-t">未達標</b>，需再降 ${r1(ldl-goal+1)} 以上（約 ${Math.round((1-(goal-1)/ldl)*100)}%）`}`;
       if(!at)t+=goal>=115?"<br>低／中風險：先生活型態 3–6 個月，未達標再共同決策用藥。":"<br>高風險以上：建議直接用藥；預期 statin 單用無法達標時早期合併 ezetimibe 等。";
     }else t+=`<br><span style="color:var(--faint)">缺 LDL-C（或 TC＋HDL＋TG）無法判斷是否達標</span>`;
     if(hdl!==null&&tc!==null)t+=`<br>Non-HDL-C 目前 ${r1(tc-hdl)}`;
@@ -373,8 +408,151 @@ function calc(){
     sum.push(`Lipid: ${tier}, LDL-C goal <${goal}${ldl!==null?`, LDL-C ${r1(ldl)}${ldlEst?"(calc)":""} ${ldl<goal?"達標":"未達標"}`:""}`);
   }else out.push(need("血脂風險分級（2025 台灣共識）",[age===null&&"年齡",!sex&&"性別"].filter(Boolean)));
 
-  $("res").innerHTML=out.join("");
+  const G=extras({age,sex,cr,ast,alt,plt,glu,ins,a1c,tc,tg,hdl,ldlM:val("ldl"),sampson,friede,uacr,egfr,waist,sum});
+  TABS[0].html=out.join("");
+  G.forEach((g,i)=>{TABS[i+1].html=g.cards.join("");TABS[i+1].n=g.cards.length;TABS[i+1].pend=g.pend});
+  TABS[0].n=out.filter(x=>!x.includes('class="card na"')).length;
+  renderTabs();
   $("summary").value=sum.join("\n");
+}
+
+
+// ---------- 其他常用公式（分頁） ----------
+const TABS=[{t:"主要五項"},{t:"代謝"},{t:"肝"},{t:"腎與電解質"},{t:"血脂補充"},{t:"血管硬化"}];
+let curTab=0;
+function renderTabs(){
+  $("rtabs").innerHTML=TABS.map((x,i)=>`<button class="${i===curTab?"on":""}" onclick="curTab=${i};renderTabs()">${x.t} <small>${i===0?"":(x.n||0)}</small></button>`).join("");
+  $("res").innerHTML=TABS[curTab].html||`<div class="card na"><div class="i" style="color:var(--faint)">目前資料不足，這一頁沒有可算的項目。</div></div>`;
+  $("pending").textContent=curTab>0&&TABS[curTab].pend&&TABS[curTab].pend.length?`尚缺資料：${TABS[curTab].pend.join("；")}`:"";
+}
+function extras(d){
+  const {age,sex,cr,ast,alt,plt,glu,ins,a1c,tc,tg,hdl,ldlM,sampson,friede,uacr,egfr,waist,sum}=d;
+  const wt=val("wt"),ht=val("ht"),ga=val("ga"),alb=val("alb"),ca=val("ca"),bun=val("bun"),na=val("na"),cl=val("cl"),hco3=val("hco3"),una=val("una"),ucr=val("ucr"),uun=val("uun"),abi=val("abi"),bapwv=val("bapwv"),cavi=val("cavi");
+  const male=sex==="M";
+  const M=[],L=[],K=[],P=[],V=[],pm=[],pl=[],pk=[],pp=[],pv=[];
+  const bmi=(wt!==null&&ht!==null&&ht>0)?wt/Math.pow(ht/100,2):null;
+  // ---- 代謝 ----
+  if(bmi!==null){
+    let c,cls;
+    if(bmi<18.5){c="過輕";cls="mod"}else if(bmi<24){c="正常";cls="ok"}else if(bmi<27){c="過重";cls="mod"}else{c="肥胖";cls="warn"}
+    let t=`<b>${c}</b>（台灣：<18.5 過輕、18.5–24 正常、24–27 過重、≥27 肥胖）`;
+    if(bmi>=27)t+=`<br>衛教常用細分：27–30 輕度、30–35 中度、≥35 重度肥胖`;
+    if(waist!==null)t+=`<br>腰圍 ${waist} cm：${(male?waist>=90:waist>=80)?'<b class="warn-t">腹部肥胖</b>（男 ≥90、女 ≥80）':"未達腹部肥胖"}`;
+    M.push(card(cls,"BMI",`${r1(bmi)} <small>kg/m²</small>`,t,`體重 ${wt} kg・身高 ${ht} cm`));sum.push(`BMI ${r1(bmi)} (${c})`);
+  }else pm.push("BMI（體重、身高）");
+  if(tg!==null&&glu!==null){
+    const tyg=Math.log(tg*glu/2);
+    M.push(card(tyg>=8.5?"mod":"ok","TyG 指數",r2(tyg),`ln(TG × 空腹血糖 ÷ 2)。<b>沒有公認切點</b>；研究常見最佳切點約 8.5（族群差異大），可用於追蹤同一人的變化。`,`TG ${tg}・空腹血糖 ${glu} mg/dL`));sum.push(`TyG ${r2(tyg)}`);
+  }else pm.push("TyG（TG、空腹血糖）");
+  if(tg!==null&&hdl!==null&&hdl>0){
+    M.push(card("na","TG/HDL-C 比值",r2(tg/hdl),`胰島素阻抗與小而密 LDL 的替代指標，沒有統一切點，族群差異大，僅供參考。`,`TG ${tg}・HDL ${hdl} mg/dL`));
+  }
+  if(glu!==null&&ins!==null&&ins>0){
+    let t="";
+    if(glu>63){const hb=360*ins/(glu-63);t+=`HOMA-β <b>${r1(hb)}%</b>（β 細胞功能；線性式為近似值，無公認切點）<br>`;sum.push(`HOMA-β ${r1(hb)}%`)}
+    const q=1/(Math.log10(ins)+Math.log10(glu));
+    t+=`QUICKI <b>${r2(q*1000)/1000}</b>：${q<0.357?'<b class="mod-t">低於 0.357</b>，提示胰島素敏感度下降':"≥0.357，在健康成人範圍"}`;
+    M.push(card(q<0.357?"mod":"ok","HOMA-β／QUICKI",null,t,`空腹血糖 ${glu} mg/dL・胰島素 ${ins} µU/mL；QUICKI 切點為 Hřebíček 2002 健康成人 95% 下限`));sum.push(`QUICKI ${Math.round(q*1000)/1000}`);
+  }else pm.push("HOMA-β／QUICKI（空腹血糖、胰島素）");
+  if(a1c!==null){
+    const eag=28.7*a1c-46.7;
+    M.push(card("na","eAG 估計平均血糖",`${Math.round(eag)} <small>mg/dL</small>`,`由 HbA1c ${a1c}% 換算（ADAG：28.7 × A1c − 46.7）`,`Nathan 2008`));sum.push(`eAG ${Math.round(eag)} mg/dL`);
+  }else pm.push("eAG（HbA1c）");
+  // GA <-> HbA1c（韓國 2,043 人兩段式迴歸，Lucica 酵素法）
+  const a2g=a=>a<5.868?6.960+0.8963*a:-9.609+3.720*a;
+  const g2a=g=>g<12.219?(g-6.960)/0.8963:(g+9.609)/3.720;
+  if(ga!==null||a1c!==null){
+    let t="",v=null;
+    if(ga!==null){t+=`GA ${ga}% → 推估 HbA1c <b>${r1(g2a(ga))}%</b><br>`;v=`${r1(g2a(ga))}<small>% HbA1c</small>`}
+    if(a1c!==null){t+=`HbA1c ${a1c}% → 推估 GA <b>${r1(a2g(a1c))}%</b><br>`;if(v===null)v=`${r1(a2g(a1c))}<small>% GA</small>`}
+    if(ga!==null&&a1c!==null){
+      const ratio=ga/a1c;
+      t+=`GA/HbA1c 比值 <b>${r2(ratio)}</b>（韓國非糖尿病約 2.2；糖尿病約 2.3–3.2）。`;
+      t+=ratio>=3?`<br>比值偏高：考慮 HbA1c 被低估（貧血、溶血、出血、輸血、透析、EPO 治療）或血糖波動大。`:ratio<2.2?`<br>比值偏低：考慮 GA 被低估（肥胖、腎病症候群、甲狀腺亢進等白蛋白代謝加快），或 HbA1c 被高估（缺鐵性貧血）。`:"";
+      sum.push(`GA ${ga}%, HbA1c ${a1c}%, GA/A1c ${r2(ratio)}`);
+    }
+    t+=`<br>參考：台灣宜蘭研究 GA 16.5% 約對應 HbA1c 6.5%；GA 參考區間依方法與族群不同（日本 JDS 12.3–16.9%）。`;
+    M.push(card("na","糖化白蛋白 GA ↔ HbA1c",v,t,"換算式：韓國 2,043 人兩段式迴歸（PMC3995757，Lucica 酵素法）；不同族群與檢驗法不可直接套用，僅供估計"));
+  }
+  // ---- 肝 ----
+  if(age!==null&&bmi!==null&&ast!==null&&alt!==null&&alt>0&&plt!==null&&alb!==null){
+    const ifg=chk("dm")||(glu!==null&&glu>=100);
+    const nfs=-1.675+0.037*age+0.094*bmi+1.13*(ifg?1:0)+0.99*ast/alt-0.013*plt-0.66*alb;
+    const lo=age>=65?0.12:-1.455;let cls,t;
+    if(nfs<lo){cls="ok";t=`<b class="ok-t">低風險</b>（< ${lo}）：可排除進展性纖維化`}
+    else if(nfs<=0.676){cls="mod";t=`<b class="mod-t">不確定</b>（${lo}–0.676）：建議做肝臟硬度檢查`}
+    else{cls="warn";t=`<b class="warn-t">高風險</b>（>0.676）：疑進展性纖維化`}
+    if(age<35)t+=`<br>35 歲以下不適用。`;
+    L.push(card(cls,"NAFLD Fibrosis Score",r2(nfs),t,`IFG/糖尿病：${ifg?"是":"否"}（勾糖尿病或空腹血糖 ≥100 視為是）・≥65 歲低切點用 0.12（McPherson 2017）・Angulo 2007`));sum.push(`NFS ${r2(nfs)}`);
+  }else pl.push("NFS（年齡、BMI、AST、ALT、血小板、Albumin）");
+  if(ast!==null&&plt!==null&&plt>0){
+    const apri=(ast/40)/plt*100;
+    let cls,t;
+    if(apri<0.5){cls="ok";t=`<b class="ok-t"><0.5</b>：顯著纖維化可能性低`}else if(apri<=1.0){cls="mod";t=`<b class="mod-t">0.5–1.0</b>：可能有顯著纖維化（≥F2）`}else{cls="warn";t=`<b class="warn-t">>1.0</b>：疑肝硬化${apri>2?"（>2.0 特異度約 91%）":""}`}
+    L.push(card(cls,"APRI",r2(apri),t+`<br>主要用於病毒性肝炎（B、C 肝），切點依疾病不同。`,`AST 上限以 40 U/L 計・WHO 2024 B 肝指引 >0.5／>1.0`));sum.push(`APRI ${r2(apri)}`);
+  }else pl.push("APRI（AST、血小板）");
+  // ---- 腎與電解質 ----
+  if(egfr!==null&&uacr!==null&&uacr>0&&age!==null&&sex){
+    if(egfr<60){
+      const Lp=-0.2201*(age/10-7.036)+0.2467*((male?1:0)-0.5642)-0.5567*(egfr/5-7.222)+0.4510*(Math.log(uacr)-5.137);
+      const k2=1-Math.pow(0.9832,Math.exp(Lp)),k5=1-Math.pow(0.9365,Math.exp(Lp));
+      const n2=1-Math.pow(0.9750,Math.exp(Lp)),n5=1-Math.pow(0.9240,Math.exp(Lp));
+      const cls=k5>=0.15||k2>=0.1?"warn":k5>=0.03?"mod":"ok";
+      let t=`2 年 <b>${r1(k2*100)}%</b>、5 年 <b>${r1(k5*100)}%</b> 進入透析或腎移植（非北美校正版）`;
+      t+=`<br>${k2>=0.4?"2 年風險 ≥40%：準備腎臟替代治療（血管通路、透析衛教）":k5>=0.05?"5 年風險 ≥5%：建議轉腎臟科共同照護":"風險較低，持續追蹤"}`;
+      K.push(card(cls,"KFRE 腎衰竭風險（4 變數）",`${r1(k5*100)}<small>% / 5 年</small>`,t,`北美版：2 年 ${r1(n2*100)}%、5 年 ${r1(n5*100)}%・Tangri 2011/2016；非北美基線存活率依 JAMA 2016 校正係數推得`));
+      sum.push(`KFRE 2y ${r1(k2*100)}%, 5y ${r1(k5*100)}%`);
+    }else K.push(card("na","KFRE 腎衰竭風險",null,`eGFR ${r1(egfr)} ≥60：KFRE 只適用 CKD G3–G5（eGFR <60）`,""));
+  }else pk.push("KFRE（eGFR、UACR）");
+  if(ca!==null&&alb!==null){
+    const cc=alb<4?ca+0.8*(4-alb):ca;
+    K.push(card(cc>10.5?"warn":cc<8.5?"mod":"ok","校正鈣",`${r1(cc)} <small>mg/dL</small>`,`Ca ${ca} + 0.8 ×（4.0 − Alb ${alb}）${alb>=4?"；Albumin ≥4 不需校正":""}<br>低白蛋白或腎衰竭時準確度有限，必要時直接驗游離鈣。`,`Payne 1973`));sum.push(`Corrected Ca ${r1(cc)}`);
+  }else pk.push("校正鈣（Calcium、Albumin）");
+  if(na!==null&&glu!==null&&glu>100){
+    const k1=na+1.6*(glu-100)/100,k4=na+2.4*(glu-100)/100;
+    K.push(card("na","高血糖校正鈉",`${r1(k1)} <small>mmol/L（Katz）</small>`,`Hillier 係數 2.4：${r1(k4)} mmol/L<br>血糖 ${glu} mg/dL；血糖 >400 時實際降幅可能更大。`,`Katz 1973、Hillier 1999`));sum.push(`Corrected Na ${r1(k1)}`);
+  }
+  if(na!==null&&glu!==null&&bun!==null){
+    const osm=2*na+glu/18+bun/2.8;
+    K.push(card(osm>295?"mod":osm<275?"mod":"ok","計算血漿滲透壓",`${Math.round(osm)} <small>mOsm/kg</small>`,`2×Na + 血糖/18 + BUN/2.8（正常約 275–295）<br>有實測滲透壓時，相差 >10 為滲透壓間隙增加（甲醇、乙二醇等）。`,`Na ${na}・血糖 ${glu}・BUN ${bun}`));sum.push(`Calc Osm ${Math.round(osm)}`);
+  }else pk.push("滲透壓（Na、血糖、BUN）");
+  if(na!==null&&cl!==null&&hco3!==null){
+    const ag=na-(cl+hco3);let t=`Na − (Cl + HCO₃⁻)，正常約 4–12（依實驗室）`;
+    let agc=null;if(alb!==null){agc=ag+2.5*(4-alb);t+=`<br>白蛋白校正 AG <b>${r1(agc)}</b>（+2.5 ×（4.0 − Alb））`}
+    const use=agc!==null?agc:ag;
+    t+=use>12?`<br><b class="warn-t">陰離子間隙增加</b>：考慮酮酸、乳酸、尿毒、毒物`:"";
+    K.push(card(use>12?"warn":"ok","陰離子間隙 AG",r1(ag),t,`StatPearls`));sum.push(`AG ${r1(ag)}${agc!==null?` (alb-corrected ${r1(agc)})`:""}`);
+  }else pk.push("陰離子間隙（Na、Cl、HCO₃⁻）");
+  if(una!==null&&ucr!==null&&na!==null&&cr!==null&&ucr>0&&na>0){
+    const fena=(una*cr)/(na*ucr)*100;
+    let t=fena<1?`<b class="ok-t"><1%</b>：支持腎前性`:`≥1%：偏向腎性（各文獻切點 2–4% 不一）`;
+    if(uun!==null&&bun!==null&&bun>0){const feu=(uun*cr)/(bun*ucr)*100;t+=`<br>FEUrea <b>${r1(feu)}%</b>：${feu<35?"<35% 支持腎前性":feu>50?">50% 支持腎性":"35–50% 無法分類"}`;sum.push(`FEUrea ${r1(feu)}%`)}
+    t+=`<br>使用利尿劑、慢性腎病、阻塞性或腎絲球疾病時 FENa 不可靠，改看 FEUrea。`;
+    K.push(card("na","FENa（鈉排泄分率）",`${r2(fena)}<small>%</small>`,t,`(UNa × PCr) ÷ (PNa × UCr) × 100・須同時採的血、尿`));sum.push(`FENa ${r2(fena)}%`);
+  }else pk.push("FENa（尿鈉、尿 Cr、血 Na、血 Cr）");
+  // ---- 血脂補充 ----
+  if(tc!==null&&hdl!==null){
+    let t=`Non-HDL-C <b>${r1(tc-hdl)}</b> mg/dL`;
+    if(sampson!==null)t+=`<br>Sampson（NIH 2）LDL-C <b>${r1(sampson)}</b>（TG ≤800 適用）`;else if(tg!==null)t+=`<br>TG >800，Sampson 不適用`;
+    if(friede!==null)t+=`<br>Friedewald LDL-C ${r1(friede)}（TG <400 適用；TG 高或 LDL 低時低估）`;
+    if(ldlM!==null)t+=`<br>實測 LDL-C ${ldlM}（判讀以實測為準）`;
+    P.push(card("na","LDL 估算公式比較",null,t,`Sampson 2020 JAMA Cardiol；Friedewald 1972`));
+  }else pp.push("LDL 估算（TC、HDL、TG）");
+  // ---- 血管硬化 ----
+  if(abi!==null){
+    let c,cls;
+    if(abi>1.4){c="不可壓縮血管（>1.40）：建議改測趾肱指數 TBI";cls="mod"}else if(abi>=1.0){c="正常（1.00–1.40）";cls="ok"}else if(abi>=0.91){c="臨界（0.91–0.99）";cls="mod"}else{c="異常（≤0.90）：周邊動脈疾病";cls="warn"}
+    V.push(card(cls,"ABI 踝肱指數",r2(abi),c,"AHA/ACC 2016 PAD 指引"));sum.push(`ABI ${abi}`);
+  }else pv.push("ABI");
+  if(bapwv!==null){
+    const cls=bapwv>=1800?"warn":bapwv>=1400?"mod":"ok";
+    V.push(card(cls,"baPWV 脈波傳導速度",`${bapwv} <small>cm/s</small>`,bapwv>=1800?`<b class="warn-t">≥1800</b>：心血管事件風險高`:bapwv>=1400?`<b class="mod-t">1400–1799</b>：中度風險，加強危險因子控制`:"<1400：未見明顯動脈硬化",`切點依日本研究（Hisayama 等），非正式指引；隨年齡、血壓上升`));sum.push(`baPWV ${bapwv}`);
+  }else pv.push("baPWV");
+  if(cavi!==null){
+    const cls=cavi>=9?"warn":cavi>=8?"mod":"ok";
+    V.push(card(cls,"CAVI 心踝血管指數",r1(cavi),cavi>=9?`<b class="warn-t">≥9.0</b>：疑動脈硬化`:cavi>=8?`<b class="mod-t">8.0–8.9</b>：臨界`:"<8.0：正常",`8.0／9.0 為研究慣例，日本指引未訂正式參考值；受年齡影響大`));sum.push(`CAVI ${cavi}`);
+  }else pv.push("CAVI");
+  return [{cards:M,pend:pm},{cards:L,pend:pl},{cards:K,pend:pk},{cards:P,pend:pp},{cards:V,pend:pv}];
 }
 
 function copySummary(){
