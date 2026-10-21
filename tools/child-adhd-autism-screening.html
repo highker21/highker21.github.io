@@ -1,0 +1,304 @@
+<!DOCTYPE html><html lang="zh-Hant"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="author" content="盧子文醫師 - Dr. Lu Tz-Wen">
+<meta name="description" content="兒童注意力不足過動（SNAP-IV 26 題）與自閉症光譜（AQ-10 兒童版）線上篩檢量表，填完自動計分並給建議。篩檢不等於診斷。">
+<title>兒童過動與自閉症篩檢量表</title>
+<style>
+:root{
+  --ink:#1b1f1d;--sub:#5f655f;--line:#e6e2d8;--paper:#faf8f2;--card:#fff;--faint:#9a978c;
+  --ok:#27ae60;--mod:#e67e22;--warn:#c0392b;--doc:#2c3e50;--sel:#2c3e50;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#eceae2;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"PingFang TC","Noto Sans TC","Microsoft JhengHei",sans-serif;color:var(--ink);padding:20px 12px;-webkit-font-smoothing:antialiased}
+
+.tabs{max-width:900px;margin:0 auto 14px;display:flex;gap:6px;flex-wrap:wrap}
+.tab{flex:1 1 0;min-width:0;text-align:center;padding:10px 6px;border-radius:10px;border:1px solid var(--line);background:#fff;cursor:pointer;font-weight:800;color:var(--sub);font-size:15px;line-height:1.3}
+.tab small{display:block;font-weight:500;font-size:11px;color:var(--faint);margin-top:2px}
+.tab.active{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.tab.active small{color:#b9c7c3}
+
+.sheet{max-width:900px;margin:0 auto;background:var(--paper);padding:30px 30px 22px;display:none}
+.sheet.active{display:block}
+.head{border-bottom:2px solid var(--doc);padding-bottom:12px;margin-bottom:10px}
+.kick{font-size:12px;letter-spacing:.3em;color:var(--sub);font-weight:800;margin-bottom:8px}
+.head h1{font-size:24px;font-weight:900;line-height:1.3;color:var(--doc)}
+.intro{font-size:14.5px;line-height:1.75;color:var(--sub);margin:10px 0 4px}
+.intro b{color:var(--ink)}
+
+.who{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0 4px;align-items:center;font-size:14.5px;font-weight:700}
+.who label{display:inline-flex;align-items:center;gap:5px;background:#fff;border:1px solid var(--line);border-radius:8px;padding:7px 12px;cursor:pointer;font-weight:600}
+
+.grp{margin-top:18px;font-size:15px;font-weight:900;color:var(--doc);border-left:5px solid var(--doc);padding-left:9px}
+.q{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin-top:10px}
+.q.miss{border-color:var(--warn);box-shadow:0 0 0 2px #f5c6c0}
+.qt{overflow-wrap:anywhere;font-size:15.5px;line-height:1.6;font-weight:700}
+.qt .n{display:inline-block;min-width:26px;color:var(--doc)}
+.en{font-size:12px;color:var(--faint);line-height:1.5;margin:3px 0 0 26px}
+.opts{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:9px}
+.opts label{display:block;text-align:center;border:1px solid var(--line);border-radius:8px;padding:8px 4px;font-size:13.5px;cursor:pointer;background:#fdfcf9;line-height:1.35;user-select:none}
+.opts input{position:absolute;opacity:0;pointer-events:none}
+.opts label:has(input:checked){background:var(--sel);color:#fff;border-color:var(--sel);font-weight:700}
+
+.bar{text-align:center;margin:20px 0 6px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.bar button{background:var(--ink);color:var(--paper);border:0;padding:11px 22px;font-size:15px;font-weight:700;border-radius:6px;cursor:pointer}
+.bar button.ghost{background:#fff;color:var(--ink);border:1px solid var(--line)}
+.prog{text-align:center;font-size:13px;color:var(--sub);margin-top:6px}
+
+.res{display:none;margin-top:18px}
+.res.show{display:block}
+.sec{margin-top:14px;background:var(--card);border:1px solid var(--line);border-left:6px solid var(--ok);border-radius:12px;padding:14px 18px}
+.sec.mod{border-left-color:var(--mod)}.sec.warn{border-left-color:var(--warn)}.sec.doc{border-left-color:var(--doc)}
+.sec h2{font-size:17px;font-weight:900;margin-bottom:8px;color:var(--doc)}
+.sec p,.sec li{font-size:15px;line-height:1.75}
+.sec ul{padding-left:20px}
+table.sc{width:100%;border-collapse:collapse;font-size:14.5px;margin-top:4px}
+table.sc th,table.sc td{border-bottom:1px solid var(--line);padding:8px 6px;text-align:left}
+table.sc th{font-size:13px;color:var(--sub)}
+.tag{display:inline-block;padding:2px 9px;border-radius:999px;font-size:12.5px;font-weight:800;color:#fff}
+.tag.hi{background:var(--warn)}.tag.lo{background:var(--ok)}
+.big{font-size:30px;font-weight:900;color:var(--doc)}
+
+.note{margin-top:16px;font-size:12.5px;color:var(--sub);line-height:1.75}
+.foot{margin-top:14px;text-align:center;font-size:11px;color:var(--faint);line-height:1.75;border-top:1px solid var(--line);padding-top:11px}
+.foot b{color:var(--sub)}
+
+@media (max-width:560px){
+  body{padding:12px 0}
+  .tabs{padding:0 16px}
+  .tab{font-size:13.5px}
+  .sheet{padding:20px 14px 16px}
+  .head h1{font-size:20px}
+  .opts{grid-template-columns:repeat(2,1fr)}
+  .en{margin-left:0}
+}
+@media print{
+  body{background:#fff;padding:0}
+  .tabs,.bar,.prog{display:none}
+  .sheet{padding:0;max-width:none}
+  .q{break-inside:avoid;padding:6px 10px;margin-top:5px}
+  .en{display:none}
+  .opts label{padding:4px}
+  .sec{break-inside:avoid}
+}
+</style></head><body>
+
+<div class="tabs">
+  <div class="tab active" data-t="snap">過動篩檢 SNAP-IV<small>26 題・學齡兒童・家長或老師填</small></div>
+  <div class="tab" data-t="aq">自閉症／亞斯篩檢 AQ-10<small>10 題・4–11 歲・家長填</small></div>
+</div>
+
+<!-- ============ SNAP-IV ============ -->
+<div class="sheet active" id="snap">
+  <div class="head">
+    <div class="kick">ADHD SCREENING</div>
+    <h1>SNAP-IV 注意力不足過動症狀量表（26 題）</h1>
+  </div>
+  <p class="intro">請依照孩子<b>最近 6 個月</b>的平常表現，每題選一個最符合的程度。第 1–9 題看<b>注意力</b>，10–18 題看<b>過動／衝動</b>，19–26 題看<b>對立反抗</b>。</p>
+  <div class="who">填寫者：
+    <label><input type="radio" name="rater" value="parent" checked> 家長</label>
+    <label><input type="radio" name="rater" value="teacher"> 老師</label>
+  </div>
+  <div id="snapQ"></div>
+  <div class="bar">
+    <button onclick="scoreSnap()">計算分數</button>
+    <button class="ghost" onclick="resetForm('snap')">清除重填</button>
+    <button class="ghost" onclick="window.print()">列印</button>
+  </div>
+  <div class="prog" id="snapProg"></div>
+  <div class="res" id="snapRes"></div>
+  <p class="note">
+    計分：每題 0–3 分（完全沒有＝0、有一點點＝1、還算不少＝2、非常多＝3），各分量表取「平均每題分數」。<br>
+    切點：Swanson 提出的「暫定 5% 切點」（家長：注意力 1.78、過動衝動 1.44、對立反抗 1.88、合併 1.67；老師：2.56、1.78、1.38、2.00）。此切點原始出處未完整公開，<b>也不是台灣常模</b>，只能當轉介參考。<br>
+    題目原文：SNAP-IV 26（Swanson, Nolan &amp; Pelham），取自 CADDRA ADHD Toolkit 2014 版；中文為本站翻譯，非官方版本。
+  </p>
+</div>
+
+<!-- ============ AQ-10 Child ============ -->
+<div class="sheet" id="aq">
+  <div class="head">
+    <div class="kick">AUTISM SCREENING</div>
+    <h1>AQ-10 自閉症光譜商數（兒童版，10 題）</h1>
+  </div>
+  <p class="intro">給家長填寫，適用 <b>4–11 歲</b>、<b>沒有智能障礙</b>、懷疑有自閉症光譜（包含過去所說的亞斯伯格）特質的孩子。每題選一個最符合的程度。</p>
+  <div id="aqQ"></div>
+  <div class="bar">
+    <button onclick="scoreAq()">計算分數</button>
+    <button class="ghost" onclick="resetForm('aq')">清除重填</button>
+    <button class="ghost" onclick="window.print()">列印</button>
+  </div>
+  <div class="prog" id="aqProg"></div>
+  <div class="res" id="aqRes"></div>
+  <p class="note">
+    計分：第 1、5、7、10 題選「同意」（非常或有點）得 1 分；第 2、3、4、6、8、9 題選「不同意」（非常或有點）得 1 分。總分 0–10，<b>6 分以上建議轉介專科做診斷評估</b>（原始研究敏感度 0.95、特異度 0.97）。<br>
+    題目原文：AQ-10 (Child Version), © SBC/CA/BA/ARC/Cambridge University；Allison C, Auyeung B, Baron-Cohen S. J Am Acad Child Adolesc Psychiatry 2012;51(2):202-12；NICE CG142 建議使用。依 ARC 條款限非營利用途；中文為本站翻譯，非官方版本。
+  </p>
+</div>
+
+<div style="max-width:900px;margin:0 auto">
+  <div class="foot">
+    <b>篩檢量表只用來判斷「要不要進一步評估」，不能用來診斷。</b>結果請帶給兒童心智科或兒童發展聯合評估中心的醫師參考。<br>
+    盧子文醫師　｜　工具版本：2026-10-22
+  </div>
+</div>
+
+<script>
+const SNAP=[
+ ["常常無法注意細節，或在學校作業、工作上粗心犯錯","Often fails to give close attention to details or makes careless mistakes in schoolwork or tasks"],
+ ["做事或遊戲時，常常很難持續專注","Often has difficulty sustaining attention in tasks or play activities"],
+ ["別人直接跟他說話時，常常好像沒在聽","Often does not seem to listen when spoken to directly"],
+ ["常常沒有照指示做完，學校作業、家事或該做的事做不完","Often does not follow through on instructions and fails to finish schoolwork, chores, or duties"],
+ ["常常很難安排、組織工作和活動","Often has difficulty organizing tasks and activities"],
+ ["常常逃避、不喜歡或不情願做需要持續動腦的事","Often avoids, dislikes, or reluctantly engages in tasks requiring sustained mental effort"],
+ ["常常弄丟活動要用的東西（例如玩具、作業、鉛筆或書）","Often loses things necessary for activities (e.g., toys, school assignments, pencils, or books)"],
+ ["常常被外界的聲音或事物分心","Often is distracted by extraneous stimuli"],
+ ["日常生活中常常忘東忘西","Often is forgetful in daily activities"],
+ ["常常手腳動來動去，或在座位上扭來扭去","Often fidgets with hands or feet or squirms in seat"],
+ ["在教室或其他應該坐好的場合，常常離開座位","Often leaves seat in classroom or in other situations in which remaining seated is expected"],
+ ["在不適當的場合，常常跑來跑去或爬上爬下","Often runs about or climbs excessively in situations in which it is inappropriate"],
+ ["常常很難安靜地玩或參加休閒活動","Often has difficulty playing or engaging in leisure activities quietly"],
+ ["常常動個不停，好像「裝了馬達」一樣","Often is “on the go” or often acts as if “driven by a motor”"],
+ ["常常話很多","Often talks excessively"],
+ ["常常問題還沒問完就搶著回答","Often blurts out answers before questions have been completed"],
+ ["常常很難等待輪到自己","Often has difficulty awaiting turn"],
+ ["常常打斷或干擾別人（例如插嘴、闖進別人的對話或遊戲）","Often interrupts or intrudes on others (e.g. butts into conversations/ games)"],
+ ["常常發脾氣","Often loses temper"],
+ ["常常跟大人爭辯","Often argues with adults"],
+ ["常常主動違抗或拒絕大人的要求或規定","Often actively defies or refuses adult requests or rules"],
+ ["常常故意做惹別人生氣的事","Often deliberately does things that annoy other people"],
+ ["常常把自己的錯誤或不當行為怪到別人身上","Often blames others for his or her mistakes or misbehavior"],
+ ["常常敏感、容易被別人惹惱","Often touchy or easily annoyed by others"],
+ ["常常生氣、心懷怨恨","Often is angry and resentful"],
+ ["常常懷恨在心或想報復","Often is spiteful or vindictive"]
+];
+const SNAP_OPTS=["完全沒有","有一點點","還算不少","非常多"];
+const SNAP_GRP={0:"一、注意力（第 1–9 題）",9:"二、過動／衝動（第 10–18 題）",18:"三、對立反抗（第 19–26 題）"};
+const CUT={parent:{ia:1.78,hi:1.44,odd:1.88,comb:1.67},teacher:{ia:2.56,hi:1.78,odd:1.38,comb:2.00}};
+
+const AQ=[
+ ["他常常注意到別人沒注意到的細小聲音","S/he often notices small sounds when others do not",1],
+ ["他通常比較注意整體，而不是小細節","S/he usually concentrates more on the whole picture, rather than the small details",0],
+ ["在一群人裡，他能輕鬆跟上好幾個人的對話","In a social group, s/he can easily keep track of several different people’s conversations",0],
+ ["他能輕鬆地在不同活動之間來回切換","S/he finds it easy to go back and forth between different activities",0],
+ ["他不知道怎麼跟同年齡的孩子把對話繼續下去","S/he doesn’t know how to keep a conversation going with his/her peers",1],
+ ["他很會跟人閒聊","S/he is good at social chit-chat",0],
+ ["聽故事的時候，他很難理解故事角色的意圖或感受","When s/he is read a story, s/he finds it difficult to work out the character’s intentions or feelings",1],
+ ["上幼兒園時，他喜歡跟其他小孩玩扮家家酒之類的假扮遊戲","When s/he was in preschool, s/he used to enjoy playing games involving pretending with other children",0],
+ ["他光看別人的臉，就能輕鬆看出對方在想什麼或有什麼感受","S/he finds it easy to work out what someone is thinking or feeling just by looking at their face",0],
+ ["他覺得交新朋友很難","S/he finds it hard to make new friends",1]
+];
+const AQ_OPTS=["非常同意","有點同意","有點不同意","非常不同意"];
+
+function esc(s){return s.replace(/&/g,"&amp;").replace(/</g,"&lt;")}
+function build(id,items,opts,grp){
+  let h="";
+  items.forEach((it,i)=>{
+    if(grp&&grp[i])h+=`<div class="grp">${grp[i]}</div>`;
+    h+=`<div class="q" id="${id}-q${i}"><div class="qt"><span class="n">${i+1}.</span>${esc(it[0])}</div><div class="en">${esc(it[1])}</div><div class="opts">`;
+    opts.forEach((o,v)=>{h+=`<label><input type="radio" name="${id}${i}" value="${v}">${o}</label>`});
+    h+=`</div></div>`;
+  });
+  document.getElementById(id+"Q").innerHTML=h;
+}
+build("snap",SNAP,SNAP_OPTS,SNAP_GRP);
+build("aq",AQ,AQ_OPTS,null);
+
+function answers(id,n){
+  const a=[];let miss=[];
+  for(let i=0;i<n;i++){
+    const el=document.querySelector(`input[name="${id}${i}"]:checked`);
+    document.getElementById(`${id}-q${i}`).classList.toggle("miss",!el);
+    if(el)a.push(+el.value);else{a.push(null);miss.push(i+1)}
+  }
+  return {a,miss};
+}
+function progress(id,n){
+  const done=document.querySelectorAll(`#${id}Q input:checked`).length;
+  document.getElementById(id+"Prog").textContent=`已填 ${done} / ${n} 題`;
+}
+document.addEventListener("change",e=>{
+  if(e.target.name&&e.target.name.startsWith("snap")){progress("snap",26);document.getElementById("snap-q"+e.target.name.slice(4)).classList.remove("miss")}
+  if(e.target.name&&e.target.name.startsWith("aq")){progress("aq",10);document.getElementById("aq-q"+e.target.name.slice(2)).classList.remove("miss")}
+});
+progress("snap",26);progress("aq",10);
+
+function missMsg(id,miss){
+  const r=document.getElementById(id+"Res");
+  r.innerHTML=`<div class="sec warn"><h2>還有 ${miss.length} 題沒填</h2><p>第 ${miss.join("、")} 題（已用紅框標出）。全部填完才能計分。</p></div>`;
+  r.classList.add("show");
+  document.getElementById(`${id}-q${miss[0]-1}`).scrollIntoView({behavior:"smooth",block:"center"});
+}
+const avg=(a,s,e)=>a.slice(s,e).reduce((x,y)=>x+y,0)/(e-s);
+const f2=x=>x.toFixed(2);
+const tag=h=>h?'<span class="tag hi">高於切點</span>':'<span class="tag lo">未達切點</span>';
+
+function scoreSnap(){
+  const {a,miss}=answers("snap",26);
+  if(miss.length)return missMsg("snap",miss);
+  const rater=document.querySelector('input[name="rater"]:checked').value;
+  const c=CUT[rater], who=rater==="parent"?"家長":"老師", other=rater==="parent"?"老師":"家長";
+  const ia=avg(a,0,9),hi=avg(a,9,18),odd=avg(a,18,26),comb=avg(a,0,18);
+  const H={ia:ia>=c.ia,hi:hi>=c.hi,odd:odd>=c.odd,comb:comb>=c.comb};
+  const adhd=H.ia||H.hi||H.comb;
+  let type="";
+  if(H.ia&&H.hi)type="注意力和過動衝動兩方面都偏高（類似「混合型」的表現）";
+  else if(H.ia)type="以注意力不足為主";
+  else if(H.hi)type="以過動／衝動為主";
+  else if(H.comb)type="單看各分量表未達切點，但合併分數偏高";
+  let h=`<div class="sec doc"><h2>計分結果（${who}填寫）</h2>
+  <table class="sc"><tr><th>分量表</th><th>平均每題分數</th><th>${who}版切點</th><th>判讀</th></tr>
+  <tr><td>注意力（1–9）</td><td><b>${f2(ia)}</b></td><td>${f2(c.ia)}</td><td>${tag(H.ia)}</td></tr>
+  <tr><td>過動／衝動（10–18）</td><td><b>${f2(hi)}</b></td><td>${f2(c.hi)}</td><td>${tag(H.hi)}</td></tr>
+  <tr><td>ADHD 合併（1–18）</td><td><b>${f2(comb)}</b></td><td>${f2(c.comb)}</td><td>${tag(H.comb)}</td></tr>
+  <tr><td>對立反抗（19–26）</td><td><b>${f2(odd)}</b></td><td>${f2(c.odd)}</td><td>${tag(H.odd)}</td></tr></table></div>`;
+  if(adhd){
+    h+=`<div class="sec warn"><h2>建議：安排專業評估</h2><ul>
+    <li>結果${type}，建議到<b>兒童心智科（兒童青少年精神科）</b>做完整評估；6 歲以下可先到<b>兒童發展聯合評估中心</b>。</li>
+    <li>ADHD 的診斷需要症狀<b>在兩個以上的場合</b>（例如家裡和學校）都出現，並且影響生活。建議也請<b>${other}</b>填一份帶去看診。</li>
+    <li>看診時可以帶：這份結果、聯絡簿或老師的書面觀察、成績單、兒童健康手冊。</li>
+    <li>先排除會造成類似表現的原因：睡眠不足或打鼾、聽力或視力問題、學習障礙、焦慮、3C 使用過多。</li></ul></div>`;
+  }else{
+    h+=`<div class="sec"><h2>建議：目前未達轉介切點</h2><ul>
+    <li>這份${who}評分沒有明顯的注意力或過動衝動問題。</li>
+    <li>如果孩子在<b>另一個場合</b>（${rater==="parent"?"學校":"家裡"}）表現明顯不同，可以請${other}再填一份比較。</li>
+    <li>如果仍然擔心，或課業、人際已經受到影響，還是可以找兒童心智科諮詢；量表分數低不代表一定沒有問題。</li></ul></div>`;
+  }
+  if(H.odd){
+    h+=`<div class="sec mod"><h2>對立反抗分數偏高</h2><ul>
+    <li>常和過動一起出現。治療以<b>親職訓練</b>（教家長一致的規則、正向增強、冷靜的後果處理）為主，看診時可以一起提出。</li></ul></div>`;
+  }
+  const r=document.getElementById("snapRes");r.innerHTML=h;r.classList.add("show");r.scrollIntoView({behavior:"smooth"});
+}
+
+function scoreAq(){
+  const {a,miss}=answers("aq",10);
+  if(miss.length)return missMsg("aq",miss);
+  let s=0;
+  AQ.forEach((it,i)=>{const agree=a[i]<=1;if(it[2]===1?agree:!agree)s++});
+  const hi=s>=6;
+  let h=`<div class="sec doc"><h2>計分結果</h2><p>總分 <span class="big">${s}</span> / 10　${hi?'<span class="tag hi">6 分以上</span>':'<span class="tag lo">低於 6 分</span>'}</p></div>`;
+  if(hi){
+    h+=`<div class="sec warn"><h2>建議：轉介專科做自閉症光譜診斷評估</h2><ul>
+    <li>分數達到建議轉介的程度。請到<b>兒童心智科</b>，或 6 歲以下到<b>兒童發展聯合評估中心</b>做完整評估。</li>
+    <li>正式診斷要靠專業人員的觀察與晤談（例如 ADOS-2 觀察評估、ADI-R 家長訪談），再由醫師依 DSM-5 準則判斷。</li>
+    <li>看診時可以帶：這份結果、兒童健康手冊、老師的書面觀察、孩子在家互動的影片。</li>
+    <li>自閉症光譜常合併過動或焦慮，建議也填「過動篩檢 SNAP-IV」一起帶去。</li></ul></div>`;
+  }else{
+    h+=`<div class="sec"><h2>建議：目前未達轉介切點</h2><ul>
+    <li>這份篩檢沒有達到建議轉介的分數。</li>
+    <li>如果老師或家人仍觀察到明顯的社交困難、固執行為或感官敏感，或已經影響上學和交友，還是建議找兒童心智科諮詢；分數低不代表一定沒有問題。</li></ul></div>`;
+  }
+  const r=document.getElementById("aqRes");r.innerHTML=h;r.classList.add("show");r.scrollIntoView({behavior:"smooth"});
+}
+
+function resetForm(id){
+  document.querySelectorAll(`#${id}Q input`).forEach(i=>i.checked=false);
+  document.querySelectorAll(`#${id}Q .q`).forEach(q=>q.classList.remove("miss"));
+  const r=document.getElementById(id+"Res");r.innerHTML="";r.classList.remove("show");
+  progress(id,id==="snap"?26:10);window.scrollTo({top:0,behavior:"smooth"});
+}
+document.querySelectorAll(".tab").forEach(t=>t.onclick=()=>{
+  document.querySelectorAll(".tab").forEach(x=>x.classList.toggle("active",x===t));
+  document.querySelectorAll(".sheet").forEach(s=>s.classList.toggle("active",s.id===t.dataset.t));
+});
+</script>
+</body></html>
