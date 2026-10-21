@@ -1,0 +1,395 @@
+<!DOCTYPE html><html lang="zh-Hant"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="author" content="盧子文醫師 - Dr. Lu Tz-Wen">
+<meta name="description" content="貼上檢驗資料（健保雲端或院內報告）自動抓值，計算 eGFR（CKD-EPI 2021）、FIB-4、HOMA-IR、心房顫動 CHA₂DS₂-VASc／CHA₂DS₂-VA／HAS-BLED、2025 台灣血脂風險分級與 LDL 目標。缺的數值可手動補。資料不離開瀏覽器。">
+<title>檢驗資料臨床計算機</title>
+<style>
+:root{
+  --ink:#1b1f1d;--sub:#5f655f;--line:#e6e2d8;--paper:#faf8f2;--card:#fff;--faint:#9a978c;
+  --ok:#27ae60;--mod:#e67e22;--warn:#c0392b;--doc:#2c3e50;--hint:#2f80ed;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#eceae2;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"PingFang TC","Noto Sans TC","Microsoft JhengHei",sans-serif;color:var(--ink);padding:20px 12px;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1000px;margin:0 auto;background:var(--paper);padding:26px 26px 18px}
+.head{border-bottom:2px solid var(--doc);padding-bottom:10px;margin-bottom:12px}
+.kick{font-size:12px;letter-spacing:.3em;color:var(--sub);font-weight:800;margin-bottom:6px}
+h1{font-size:23px;font-weight:900;color:var(--doc);line-height:1.3}
+.intro{font-size:13.5px;color:var(--sub);line-height:1.7;margin-top:6px}
+h2{font-size:16px;font-weight:900;color:var(--doc);margin:18px 0 8px;border-left:5px solid var(--doc);padding-left:8px}
+textarea{width:100%;min-height:130px;border:1px solid var(--line);border-radius:10px;padding:10px;font-size:13px;font-family:ui-monospace,Menlo,Consolas,monospace;background:#fff;resize:vertical}
+.bar{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;align-items:center}
+button{background:var(--ink);color:var(--paper);border:0;padding:9px 18px;font-size:14.5px;font-weight:700;border-radius:6px;cursor:pointer}
+button.ghost{background:#fff;color:var(--ink);border:1px solid var(--line)}
+.msg{font-size:13px;color:var(--sub)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:8px}
+.f{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:8px 10px}
+.f label{display:block;font-size:13px;font-weight:800;color:var(--doc)}
+.f label small{font-weight:500;color:var(--faint)}
+.f input,.f select{width:100%;margin-top:4px;padding:6px 8px;border:1px solid var(--line);border-radius:6px;font-size:15px;background:#fdfcf9}
+.f .src{font-size:11.5px;color:var(--faint);margin-top:3px;min-height:15px;overflow-wrap:anywhere}
+.f .src.got{color:var(--hint)}
+.f.filled{border-color:#9cc3f5;background:#f5f9ff}
+.chk{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:6px}
+.chk label{display:flex;gap:7px;align-items:flex-start;background:var(--card);border:1px solid var(--line);border-radius:8px;padding:7px 9px;font-size:13.5px;line-height:1.45;cursor:pointer}
+.chk input{margin-top:3px;flex:none}
+.chk .auto{color:var(--hint);font-size:11.5px;display:block}
+.chk-h{font-size:13px;font-weight:800;color:var(--sub);margin:10px 0 5px}
+.res{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:10px}
+.card{background:var(--card);border:1px solid var(--line);border-left:6px solid var(--faint);border-radius:12px;padding:12px 14px}
+.card.ok{border-left-color:var(--ok)}.card.mod{border-left-color:var(--mod)}.card.warn{border-left-color:var(--warn)}.card.na{border-left-color:var(--line)}
+.card h3{font-size:15px;font-weight:900;color:var(--doc)}
+.card .v{font-size:28px;font-weight:900;margin:4px 0 2px;color:var(--doc)}
+.card .v small{font-size:13px;font-weight:600;color:var(--sub)}
+.card .i{font-size:14px;line-height:1.65}
+.card .i b{font-weight:800}
+.card .ft{font-size:11.5px;color:var(--faint);margin-top:6px;line-height:1.55}
+.ok-t{color:var(--ok)}.mod-t{color:var(--mod)}.warn-t{color:var(--warn)}
+.copybox{margin-top:12px}
+.copybox textarea{min-height:110px;font-size:13px}
+.note{margin-top:14px;font-size:12px;color:var(--sub);line-height:1.75}
+.foot{margin-top:12px;text-align:center;font-size:11px;color:var(--faint);line-height:1.75;border-top:1px solid var(--line);padding-top:10px}
+@media (max-width:560px){
+  body{padding:0}
+  .wrap{padding:18px 16px}
+  h1{font-size:20px}
+  .grid{grid-template-columns:repeat(2,1fr)}
+  .res{grid-template-columns:1fr}
+}
+@media print{body{background:#fff;padding:0}.wrap{padding:0}textarea#paste,.bar{display:none}}
+</style></head><body>
+<div class="wrap">
+  <div class="head">
+    <div class="kick">CLINICAL CALCULATOR</div>
+    <h1>檢驗資料臨床計算機</h1>
+    <p class="intro">貼上健保雲端或院內的檢驗資料，自動抓出需要的數值（同一項目取<b>最新日期</b>），算出 eGFR、FIB-4、HOMA-IR、心房顫動中風／出血分數、血脂風險分級。抓到的值會標出來源，<b>請核對</b>；沒有的數值可以直接輸入。所有計算都在你的瀏覽器裡完成，資料不會上傳。</p>
+  </div>
+
+  <h2>1. 貼上檢驗資料</h2>
+  <textarea id="paste" placeholder="把健保雲端「檢驗檢查結果」或院內報告整段複製貼在這裡……"></textarea>
+  <div class="bar">
+    <button onclick="doParse()">抓取數值</button>
+    <button class="ghost" onclick="clearAll()">全部清除</button>
+    <span class="msg" id="pmsg"></span>
+  </div>
+
+  <h2>2. 基本資料與檢驗值（可修改、可補填）</h2>
+  <div class="grid" id="fields"></div>
+
+  <h2>3. 臨床狀況（勾選）</h2>
+  <div class="chk-h">共用</div>
+  <div class="chk" id="c-common"></div>
+  <div class="chk-h">血脂風險分級用（2025 台灣血脂管理臨床路徑共識）</div>
+  <div class="chk" id="c-lipid"></div>
+  <div class="chk-h">心房顫動用（CHA₂DS₂-VASc／HAS-BLED）</div>
+  <div class="chk" id="c-af"></div>
+
+  <h2>4. 計算結果</h2>
+  <div class="res" id="res"></div>
+  <div class="copybox">
+    <div class="bar"><button onclick="copySummary()">複製結果摘要（貼病歷用）</button><span class="msg" id="cmsg"></span></div>
+    <textarea id="summary" readonly></textarea>
+  </div>
+
+  <p class="note">
+    <b>公式與依據</b><br>
+    eGFR：CKD-EPI 2021 肌酸酐公式（不含種族係數）＝142 × min(Scr/κ,1)<sup>α</sup> × max(Scr/κ,1)<sup>−1.200</sup> × 0.9938<sup>年齡</sup> ×（女性 1.012）；κ 女 0.7／男 0.9，α 女 −0.241／男 −0.302（NKF）。分期依 KDIGO G1–G5。<br>
+    FIB-4＝年齡 × AST ÷（血小板[10⁹/L] × √ALT）；&lt;1.30 低風險（≥65 歲用 &lt;2.0）、1.30–2.67 不確定、&gt;2.67 高風險（AASLD 2023 MASLD 指引）。35 歲以下準確度差。<br>
+    HOMA-IR＝空腹血糖(mg/dL) × 空腹胰島素(µU/mL) ÷ 405（Matthews 1985）。無統一切點，常用 &gt;2.0–2.5 提示胰島素阻抗；使用胰島素治療者不適用。<br>
+    CHA₂DS₂-VASc：心衰竭 1、高血壓 1、年齡 ≥75 歲 2、糖尿病 1、中風／TIA／血栓栓塞 2、血管疾病 1、65–74 歲 1、女性 1。CHA₂DS₂-VA（2024 ESC，去掉性別）：≥2 建議抗凝血、1 應考慮。HAS-BLED ≥3 為出血高風險（應矯正可改善的因子，不是不抗凝的理由）。<br>
+    血脂：2025 台灣血脂管理臨床路徑共識（中華民國心臟學會等 10 個機構，內科學誌 2024;35(6)）五級風險與 LDL-C 目標 &lt;130／&lt;115／&lt;100／&lt;70／&lt;55 mg/dL；Non-HDL-C 目標＝LDL-C 目標 + 30。LDL 缺值時以 Friedewald 估算（TG &lt; 400）。
+  </p>
+  <div class="foot">計算結果僅供臨床參考，請依病人整體狀況判斷。　｜　盧子文醫師　｜　工具版本：2026-10-22</div>
+</div>
+
+<script>
+// ---------- 欄位定義 ----------
+const F=[
+ {k:"age",n:"年齡",u:"歲"},
+ {k:"sex",n:"性別",sel:[["","—"],["M","男"],["F","女"]]},
+ {k:"cr",n:"Creatinine",u:"mg/dL"},
+ {k:"ast",n:"AST (GOT)",u:"U/L"},
+ {k:"alt",n:"ALT (GPT)",u:"U/L"},
+ {k:"plt",n:"血小板",u:"10³/µL",unitSel:[["1","10³/µL（=10⁹/L）"],["10","萬/µL（10⁴/µL）"]]},
+ {k:"glu",n:"空腹血糖",u:"mg/dL"},
+ {k:"ins",n:"空腹胰島素",u:"µU/mL"},
+ {k:"a1c",n:"HbA1c",u:"%"},
+ {k:"tc",n:"總膽固醇",u:"mg/dL"},
+ {k:"tg",n:"三酸甘油酯",u:"mg/dL"},
+ {k:"hdl",n:"HDL-C",u:"mg/dL"},
+ {k:"ldl",n:"LDL-C",u:"mg/dL"},
+ {k:"uacr",n:"UACR",u:"mg/g"},
+ {k:"sbp",n:"收縮壓",u:"mmHg"},
+ {k:"waist",n:"腰圍",u:"cm"}
+];
+// 檢驗名稱對應（先比對檢驗室自己的項目名，抓不到再比對醫令名）
+const MAP=[
+ ["_skip",/(egfr|\bgfr\b|腎絲球|ccr|clearance)/i],
+ ["cr",/^(?!.*(u-|urine|尿|clear|ccr|ratio|\/)).*(creatinine|crea|crtn|^cre\b|^cr\b|肌酸酐)/i],
+ ["ast",/(^|\b|-)(s-?got|got|ast)\b|麩胺酸苯醋酸/i],
+ ["alt",/(^|\b|-)(s-?gpt|gpt|alt)\b|麩胺酸丙酮酸/i],
+ ["plt",/(platelet|^plt\b|血小板)/i],
+ ["glu",/^(?!.*(pc|post|飯後|ogtt|2\s*hr|尿|urine|u-)).*(glu\s*ac|glucose.*(ac|ante|fasting)|ac\s*sugar|fbg|fpg|空腹血糖|飯前血糖|葡萄糖-空腹)/i],
+ ["ins",/^(?!.*(pc|post|飯後|ab|抗體)).*(insulin|胰島素)/i],
+ ["a1c",/(hba1c|a1c|糖化血色素)/i],
+ ["tc",/^(?!.*(hdl|ldl|ratio|\/)).*(chol|t-cho|cholesterol|總膽固醇)/i],
+ ["tg",/(^tg\b|triglyceride|三酸甘油)/i],
+ ["hdl",/^(?!.*(ratio|\/)).*(hdl|高密度)/i],
+ ["ldl",/^(?!.*(ratio|\/|hdl)).*(ldl|低密度)/i],
+ ["uacr",/(uacr|^acr\b|albumin.*creatinine|microalb.*cre|白蛋白.*肌酸酐)/i]
+];
+const LIPID=[["htn","高血壓（診斷或用藥）"],["dm","糖尿病"],["smoke","抽菸"],["fhx","早發性冠心病家族史（男 ≤55、女 ≤65 歲）"]];
+const LIPID2=[
+ ["ckd","慢性腎臟病（UACR ≥30 或 eGFR <60，持續 ≥3 個月）"],
+ ["htnmed","正在使用降血壓藥（代謝症候群用）"],
+ ["tgmed","正在使用降 TG 藥物（代謝症候群用）"],
+ ["cac","冠狀動脈鈣化分數 CAC ≥ 400"],
+ ["ascvd","臨床 ASCVD：ACS 病史、PCI/CABG、缺血性中風/TIA 合併動脈硬化、PAD（血管再通/缺血症狀/截肢）"],
+ ["plaque","影像確認 ≥50% 狹窄（冠狀動脈攝影、CT、頸動脈或周邊血管超音波）"],
+ ["cad_ext","冠心病合併：1 年內 MI、≥2 次 MI、多支冠脈阻塞、ACS 合併糖尿病、或合併 PAD／頸動脈狹窄"],
+ ["pad_ext","周邊動脈疾病合併冠心病或頸動脈狹窄"]
+];
+const AF=[
+ ["chf","心衰竭／左心室功能不良"],
+ ["stroke","中風、TIA 或血栓栓塞病史"],
+ ["vasc","血管疾病（心肌梗塞、周邊動脈疾病、主動脈斑塊）"],
+ ["hb_h","HAS-BLED：未控制高血壓（收縮壓 >160）"],
+ ["hb_renal","HAS-BLED：腎功能異常（透析、腎移植或 Cr ≥2.26 mg/dL）"],
+ ["hb_liver","HAS-BLED：肝功能異常（肝硬化，或膽紅素 >2 倍且 AST/ALT >3 倍上限）"],
+ ["hb_bleed","HAS-BLED：出血病史或出血體質"],
+ ["hb_inr","HAS-BLED：INR 不穩定（服 warfarin 時 TTR <60%）"],
+ ["hb_drug","HAS-BLED：併用抗血小板藥或 NSAID"],
+ ["hb_alc","HAS-BLED：飲酒過量（每週 ≥8 單位）"]
+];
+
+// ---------- 介面 ----------
+const $=id=>document.getElementById(id);
+function buildUI(){
+  $("fields").innerHTML=F.map(f=>{
+    let inp;
+    if(f.sel)inp=`<select id="f-${f.k}">${f.sel.map(o=>`<option value="${o[0]}">${o[1]}</option>`).join("")}</select>`;
+    else inp=`<input id="f-${f.k}" inputmode="decimal" autocomplete="off">`;
+    if(f.unitSel)inp+=`<select id="u-${f.k}" style="margin-top:4px;font-size:12.5px">${f.unitSel.map(o=>`<option value="${o[0]}">${o[1]}</option>`).join("")}</select>`;
+    return `<div class="f" id="box-${f.k}"><label>${f.n} <small>${f.u||""}</small></label>${inp}<div class="src" id="src-${f.k}"></div></div>`;
+  }).join("");
+  const mk=(arr)=>arr.map(c=>`<label><input type="checkbox" id="c-${c[0]}"><span>${c[1]}<span class="auto" id="a-${c[0]}"></span></span></label>`).join("");
+  $("c-common").innerHTML=mk(LIPID);
+  $("c-lipid").innerHTML=mk(LIPID2);
+  $("c-af").innerHTML=mk(AF);
+  document.querySelectorAll("input,select").forEach(e=>{
+    e.addEventListener("input",ev=>{if(ev.target.id.startsWith("f-")){const k=ev.target.id.slice(2);$("box-"+k).classList.remove("filled");}calc()});
+    e.addEventListener("change",calc);
+  });
+}
+
+// ---------- 解析 ----------
+function norm(s){
+  return s.replace(/[！-～]/g,c=>String.fromCharCode(c.charCodeAt(0)-0xFEE0)).replace(/　/g," ").replace(/\r/g,"");
+}
+// 去掉開頭的 (醫令名)，支援巢狀括號
+function stripParen(s){
+  s=s.trim(); if(s[0]!=="(")return {order:"",rest:s};
+  let d=0;
+  for(let i=0;i<s.length;i++){if(s[i]==="(")d++;else if(s[i]===")"){d--;if(d===0)return {order:s.slice(1,i),rest:s.slice(i+1).trim()};}}
+  return {order:"",rest:s};
+}
+function keyOf(name){for(const [k,re] of MAP)if(re.test(name.trim()))return k;return null}
+// 檢驗名稱本身是別的項目（如 eGFR）時，不可退回用醫令名對應
+function pick(name,order,title){const k=keyOf(name);if(k==="_skip")return null;if(k)return k;const k2=keyOf(order)||keyOf(title);return k2==="_skip"?null:k2}
+function dateNum(d){if(!d)return -1;const m=d.match(/(\d{2,4})[\/\-.](\d{1,2})[\/\-.](\d{1,2})/);if(!m)return -1;let y=+m[1];if(y<1000)y+=1911;return y*10000+(+m[2])*100+(+m[3])}
+
+function parse(text){
+  const lines=norm(text).split("\n");
+  const found={};let sexHint=null;
+  const put=(k,v,date,label,unit)=>{
+    if(!k||isNaN(v))return;
+    const dn=dateNum(date);
+    if(!found[k]||dn>found[k].dn)found[k]={v,dn,date,label,unit:unit||""};
+  };
+  let curDate="",curTitle="";
+  for(const raw of lines){
+    const line=raw.trim(); if(!line)continue;
+    const idm=line.match(/[A-Z]([12])\d{2}\*{3}\d{3}/); if(idm&&!sexHint)sexHint=idm[1]==="1"?"M":"F";
+    const hd=line.match(/^\d+\s+(\d{2,4}\/\d{1,2}\/\d{1,2})\s+(.*)$/);
+    if(hd){curDate=hd[1];curTitle=hd[2];continue;}
+    // 健保雲端格式：(醫令名) 項目名 數值 單位 單位 [下限][上限]
+    if(line[0]==="("){
+      const {order,rest}=stripParen(line);
+      if(/健保署計算/.test(rest))continue;
+      const m=rest.match(/^(.*?)\s+([<>]?\s*\d+(?:\.\d+)?)\s+(\S+)\s+\3\s*\[/);
+      if(m){
+        const name=m[1],val=parseFloat(m[2].replace(/[<>\s]/g,""));
+        const k=pick(name,order,curTitle);
+        put(k,val,curDate,`${curDate} ${name}`,m[3]);
+        continue;
+      }
+    }
+    // 一般格式：名稱 [: =] 數值 [單位]
+    const g=line.match(/^([A-Za-z一-鿿][A-Za-z0-9一-鿿\-\s\/().,%]{0,40}?)(?:\s*[:=]\s*|\s+)([<>]?\s*\d+(?:\.\d+)?)\s*([A-Za-zµμ%\/\^0-9.萬]*)/);
+    if(g){
+      const k=keyOf(g[1]);
+      if(k&&k!=="_skip"){const dm=line.match(/(\d{2,4}\/\d{1,2}\/\d{1,2})/);put(k,parseFloat(g[2].replace(/[<>\s]/g,"")),dm?dm[1]:curDate,`${dm?dm[1]+" ":""}${g[1].trim()}`,g[3]);}
+    }
+  }
+  return {found,sexHint};
+}
+
+function doParse(){
+  const {found,sexHint}=parse($("paste").value);
+  let n=0;
+  F.forEach(f=>{$("src-"+f.k).textContent="";$("src-"+f.k).classList.remove("got")});
+  for(const k in found){
+    const r=found[k],el=$("f-"+k); if(!el)continue;
+    el.value=r.v; $("box-"+k).classList.add("filled"); n++;
+    let note=`抓自：${r.label}${r.unit?" "+r.unit:""}`;
+    if(k==="plt"){
+      if(/萬|10\^?4|10\*4/.test(r.unit)){$("u-plt").value="10";}
+      else if(/10\^?3|10\*3|k\/|千/.test(r.unit)||r.v>=100){$("u-plt").value="1";}
+      else if(r.v<100){$("u-plt").value="10";note+="（數值 <100，推定單位為萬/µL，請確認）";}
+    }
+    if(k==="cr"&&r.v>20)note+="（數值 >20，可能是 µmol/L，請改成 mg/dL）";
+    $("src-"+k).textContent=note;$("src-"+k).classList.add("got");
+  }
+  if(sexHint&&!$("f-sex").value){$("f-sex").value=sexHint;$("src-sex").textContent="由身分證字號第 2 碼推得，請確認";$("src-sex").classList.add("got");$("box-sex").classList.add("filled");}
+  $("pmsg").textContent=n?`抓到 ${n} 項，請核對藍色欄位；年齡與臨床狀況請自行填寫。`:"沒有抓到可用的數值，請直接在下方輸入。";
+  calc();
+}
+
+// ---------- 計算 ----------
+const val=k=>{const e=$("f-"+k);if(!e||e.value==="")return null;const x=parseFloat(e.value);return isNaN(x)?null:x};
+const chk=k=>$("c-"+k).checked;
+const r1=x=>Math.round(x*10)/10, r2=x=>Math.round(x*100)/100;
+
+function egfrCalc(cr,age,sex){
+  const F_=sex==="F",k=F_?0.7:0.9,a=F_?-0.241:-0.302;
+  return 142*Math.pow(Math.min(cr/k,1),a)*Math.pow(Math.max(cr/k,1),-1.2)*Math.pow(0.9938,age)*(F_?1.012:1);
+}
+function gStage(e){return e>=90?"G1":e>=60?"G2":e>=45?"G3a":e>=30?"G3b":e>=15?"G4":"G5"}
+
+function card(cls,title,v,body,foot){return `<div class="card ${cls}"><h3>${title}</h3>${v!==null?`<div class="v">${v}</div>`:""}<div class="i">${body}</div>${foot?`<div class="ft">${foot}</div>`:""}</div>`}
+const need=(title,list)=>card("na",title,null,`<span style="color:var(--faint)">缺：${list.join("、")}</span>`);
+
+function calc(){
+  const age=val("age"),sex=$("f-sex").value,cr=val("cr"),ast=val("ast"),alt=val("alt"),glu=val("glu"),ins=val("ins"),a1c=val("a1c");
+  const plt0=val("plt"),plt=plt0===null?null:plt0*parseFloat($("u-plt").value);
+  const tc=val("tc"),tg=val("tg"),hdl=val("hdl"),uacr=val("uacr"),sbp=val("sbp"),waist=val("waist");
+  let ldl=val("ldl"),ldlEst=false;
+  if(ldl===null&&tc!==null&&hdl!==null&&tg!==null&&tg<400){ldl=tc-hdl-tg/5;ldlEst=true}
+  const out=[],sum=[];
+  const auto=(id,txt)=>{const e=$("a-"+id);if(e)e.textContent=txt||""};
+
+  // eGFR
+  let egfr=null;
+  if(cr!==null&&age!==null&&sex){
+    egfr=egfrCalc(cr,age,sex);const st=gStage(egfr);
+    const cls=egfr>=60?"ok":egfr>=30?"mod":"warn";
+    let t=`CKD 分期 <b>${st}</b>`;
+    if(uacr!==null)t+=`，UACR ${uacr} mg/g（<b>${uacr<30?"A1":uacr<=300?"A2":"A3"}</b>）`;
+    if(egfr<60)t+=`<br>eGFR <60 需持續 3 個月以上才能診斷慢性腎臟病。`;
+    out.push(card(cls,"eGFR（CKD-EPI 2021）",`${r1(egfr)} <small>mL/min/1.73m²</small>`,t,`Cr ${cr} mg/dL・${age} 歲・${sex==="F"?"女":"男"}`));
+    sum.push(`eGFR(CKD-EPI 2021) ${r1(egfr)} (${st}${uacr!==null?(uacr<30?"A1":uacr<=300?"A2":"A3"):""})`);
+  }else out.push(need("eGFR（CKD-EPI 2021）",[cr===null&&"Creatinine",age===null&&"年齡",!sex&&"性別"].filter(Boolean)));
+
+  // FIB-4
+  if(age!==null&&ast!==null&&alt!==null&&plt!==null&&alt>0&&plt>0){
+    const f4=age*ast/(plt*Math.sqrt(alt));const low=age>=65?2.0:1.3;
+    let cls,t;
+    if(f4<low){cls="ok";t=`<b class="ok-t">低風險</b>（< ${low.toFixed(2)}）：進階纖維化可能性低，1–3 年後再評估。`}
+    else if(f4<=2.67){cls="mod";t=`<b class="mod-t">不確定</b>（${low.toFixed(2)}–2.67）：建議做肝臟硬度檢查（FibroScan）或 ELF。`}
+    else{cls="warn";t=`<b class="warn-t">高風險</b>（>2.67）：疑進階纖維化，建議轉肝膽腸胃科。`}
+    if(age<35)t+=`<br>35 歲以下 FIB-4 準確度差，僅供參考。`;
+    out.push(card(cls,"FIB-4 肝纖維化指數",r2(f4),t,`年齡 ${age}・AST ${ast}・ALT ${alt}・PLT ${r1(plt)} ×10⁹/L${age>=65?"・≥65 歲低風險切點用 2.0":""}`));
+    sum.push(`FIB-4 ${r2(f4)}`);
+  }else out.push(need("FIB-4 肝纖維化指數",[age===null&&"年齡",ast===null&&"AST",alt===null&&"ALT",plt===null&&"血小板"].filter(Boolean)));
+
+  // HOMA-IR
+  if(glu!==null&&ins!==null){
+    const h=glu*ins/405;
+    const cls=h<2?"ok":h<2.5?"mod":"warn";
+    const t=h<2?`<b class="ok-t">未見明顯胰島素阻抗</b>`:h<2.5?`<b class="mod-t">邊緣</b>：可能有胰島素阻抗`:`<b class="warn-t">提示胰島素阻抗</b>`;
+    out.push(card(cls,"HOMA-IR 胰島素阻抗",r2(h),t+`<br>須為空腹 8–12 小時的血糖與胰島素；正在打胰島素者不適用。`,`空腹血糖 ${glu} mg/dL・胰島素 ${ins} µU/mL・切點無統一標準`));
+    sum.push(`HOMA-IR ${r2(h)}`);
+  }else out.push(need("HOMA-IR 胰島素阻抗",[glu===null&&"空腹血糖",ins===null&&"空腹胰島素"].filter(Boolean)));
+
+  // 自動提示
+  const male=sex==="M";
+  auto("dm",(a1c!==null&&a1c>=6.5)||(glu!==null&&glu>=126)?`檢驗提示：${a1c!==null&&a1c>=6.5?"HbA1c "+a1c+"% ":""}${glu!==null&&glu>=126?"空腹血糖 "+glu:""}（確診需符合診斷標準）`:"");
+  auto("htn",sbp!==null&&sbp>=140?`收縮壓 ${sbp}（單次量測不等於診斷）`:"");
+  auto("ckd",(egfr!==null&&egfr<60)||(uacr!==null&&uacr>=30)?`檢驗提示：${egfr!==null&&egfr<60?"eGFR "+r1(egfr)+" ":""}${uacr!==null&&uacr>=30?"UACR "+uacr:""}（需持續 ≥3 個月）`:"");
+  auto("hb_renal",cr!==null&&cr>=2.26?`Cr ${cr} ≥ 2.26`:"");
+  auto("hb_h",sbp!==null&&sbp>160?`收縮壓 ${sbp}`:"");
+
+  // AF
+  if(age!==null&&sex){
+    const htn=chk("htn"),dm=chk("dm");
+    const pts=[];let s=0;
+    if(chk("chf")){s+=1;pts.push("心衰竭 1")}
+    if(htn){s+=1;pts.push("高血壓 1")}
+    if(age>=75){s+=2;pts.push("≥75 歲 2")}else if(age>=65){s+=1;pts.push("65–74 歲 1")}
+    if(dm){s+=1;pts.push("糖尿病 1")}
+    if(chk("stroke")){s+=2;pts.push("中風/TIA 2")}
+    if(chk("vasc")){s+=1;pts.push("血管疾病 1")}
+    const va=s;
+    if(sex==="F"){s+=1;pts.push("女性 1")}
+    let cls,t;
+    if(va>=2){cls="warn";t=`<b class="warn-t">建議口服抗凝血劑</b>（優先 DOAC）`}
+    else if(va===1){cls="mod";t=`<b class="mod-t">應考慮抗凝血劑</b>，與病人共同決策`}
+    else{cls="ok";t=`<b class="ok-t">極低風險</b>，不需抗凝血劑`}
+    const hb=[["hb_h",htn&&sbp!==null&&sbp>160||chk("hb_h")],["hb_renal",chk("hb_renal")],["hb_liver",chk("hb_liver")],["stroke",chk("stroke")],["hb_bleed",chk("hb_bleed")],["hb_inr",chk("hb_inr")],["age",age>65],["hb_drug",chk("hb_drug")],["hb_alc",chk("hb_alc")]];
+    const hbs=hb.filter(x=>x[1]).length;
+    t+=`<br>HAS-BLED <b>${hbs}</b> 分${hbs>=3?`：<b class="warn-t">出血高風險</b>，矯正可改善因子（血壓、併用 NSAID、飲酒、INR）並密切追蹤，不是不抗凝的理由`:"：出血風險非高"}`;
+    out.push(card(cls,"心房顫動中風風險",`${va} <small>CHA₂DS₂-VA</small>　${s} <small>CHA₂DS₂-VASc</small>`,t,`${pts.length?pts.join("、"):"無加分項目"}・建議依 2024 ESC（CHA₂DS₂-VA ≥2 建議、1 考慮）；HAS-BLED 年齡 >65 已自動計入、中風與 CHA₂DS₂ 共用勾選`));
+    sum.push(`AF: CHA2DS2-VA ${va}, CHA2DS2-VASc ${s}, HAS-BLED ${hbs}`);
+  }else out.push(need("心房顫動中風風險",[age===null&&"年齡",!sex&&"性別"].filter(Boolean)));
+
+  // 血脂
+  if(age!==null&&sex){
+    const hdlLow=hdl!==null&&(male?hdl<40:hdl<50);
+    const ms=[waist!==null&&(male?waist>=90:waist>=80),(sbp!==null&&sbp>=130)||chk("htnmed")||chk("htn"),(glu!==null&&glu>=100)||chk("dm"),(tg!==null&&tg>=150)||chk("tgmed"),hdlLow];
+    const msN=ms.filter(Boolean).length,metS=msN>=3;
+    const rf=[];
+    if(chk("htn"))rf.push("高血壓");
+    if(male?age>=45:age>=55)rf.push("年齡");
+    if(chk("fhx"))rf.push("早發冠心病家族史");
+    if(hdlLow)rf.push("HDL 偏低");
+    if(chk("smoke"))rf.push("抽菸");
+    if(metS)rf.push("代謝症候群");
+    let tier,goal,why;
+    if(chk("cad_ext")||chk("pad_ext")){tier="極高風險";goal=55;why="冠心病/周邊動脈疾病合併重大狀況"}
+    else if(chk("ascvd")||chk("plaque")){tier="非常高風險";goal=70;why=chk("ascvd")?"臨床 ASCVD":"影像 ≥50% 狹窄"}
+    else if(chk("dm")||chk("ckd")||(ldl!==null&&ldl>=190)||chk("cac")){tier="高風險";goal=100;why=[chk("dm")&&"糖尿病",chk("ckd")&&"慢性腎臟病",ldl!==null&&ldl>=190&&"LDL ≥190",chk("cac")&&"CAC ≥400"].filter(Boolean).join("、")}
+    else if(rf.length>=2){tier="中風險";goal=115;why=`${rf.length} 項風險因子：${rf.join("、")}`}
+    else{tier="低風險";goal=130;why=rf.length?`1 項風險因子：${rf[0]}`:"無風險因子（共識未定義 0 項，暫依低風險目標）"}
+    let t=`<b>${tier}</b>（${why}）<br>LDL-C 目標 <b>< ${goal}</b> mg/dL；Non-HDL-C 目標 < ${goal+30}`;
+    let cls="na";
+    if(ldl!==null){
+      const at=ldl<goal;cls=at?"ok":(goal<=100?"warn":"mod");
+      t+=`<br>目前 LDL-C ${r1(ldl)}${ldlEst?"（Friedewald 估算）":""}：${at?'<b class="ok-t">已達標</b>':`<b class="warn-t">未達標</b>，需再降 ${r1(ldl-goal+1)} 以上（約 ${Math.round((1-(goal-1)/ldl)*100)}%）`}`;
+      if(!at)t+=goal>=115?"<br>低／中風險：先生活型態 3–6 個月，未達標再共同決策用藥。":"<br>高風險以上：建議直接用藥；預期 statin 單用無法達標時早期合併 ezetimibe 等。";
+    }else t+=`<br><span style="color:var(--faint)">缺 LDL-C（或 TC＋HDL＋TG）無法判斷是否達標</span>`;
+    if(hdl!==null&&tc!==null)t+=`<br>Non-HDL-C 目前 ${r1(tc-hdl)}`;
+    if(tg!==null&&tg>=500)t+=`<br><b class="warn-t">TG ≥500：急性胰臟炎風險，優先降 TG</b>`;
+    if(ldl!==null&&ldl>=190)t+=`<br>LDL ≥190：考慮家族性高膽固醇血症篩檢`;
+    out.push(card(cls,"血脂風險分級（2025 台灣共識）",null,t,`代謝症候群 ${msN}/5 項${waist===null?"（缺腰圍）":""}・高風險以上每 6 個月、低中風險每 6–12 個月追蹤血脂`));
+    sum.push(`Lipid: ${tier}, LDL-C goal <${goal}${ldl!==null?`, LDL-C ${r1(ldl)}${ldlEst?"(calc)":""} ${ldl<goal?"達標":"未達標"}`:""}`);
+  }else out.push(need("血脂風險分級（2025 台灣共識）",[age===null&&"年齡",!sex&&"性別"].filter(Boolean)));
+
+  $("res").innerHTML=out.join("");
+  $("summary").value=sum.join("\n");
+}
+
+function copySummary(){
+  const t=$("summary").value.replace(/\n/g,"\r\n");
+  const ok=()=>{$("cmsg").textContent="已複製 ✅"};
+  const fb=()=>{$("summary").select();try{document.execCommand("copy")?ok():$("cmsg").textContent="複製失敗，請手動選取"}catch(e){$("cmsg").textContent="複製失敗，請手動選取"}};
+  if(navigator.clipboard)navigator.clipboard.writeText(t).then(ok,fb);else fb();
+}
+function clearAll(){
+  $("paste").value="";$("pmsg").textContent="";$("cmsg").textContent="";
+  F.forEach(f=>{$("f-"+f.k).value="";$("src-"+f.k).textContent="";$("box-"+f.k).classList.remove("filled")});
+  $("u-plt").value="1";
+  document.querySelectorAll(".chk input").forEach(c=>c.checked=false);
+  calc();
+}
+buildUI();calc();
+</script>
+</body></html>
