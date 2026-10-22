@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>副甲狀腺低下：鈣片與活性 D 調藥計算機</title>
+<style>
+  :root{ --accent:#7a3e12; --ink:#1f2328; --line:#e2dcd5; --soft:#faf6f1; --bg:#f3eee8; --muted:#6a6158;
+    --ok:#1e7a46; --okbg:#eaf7ef; --warn:#a85a00; --warnbg:#fff4e2; --bad:#b42318; --badbg:#fdecea; }
+  *{box-sizing:border-box;}
+  body{font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif; color:var(--ink); background:var(--bg); margin:0; padding:0 16px 60px; line-height:1.7;}
+  .wrap{max-width:900px; margin:0 auto;}
+  h1{font-size:22px; margin:22px 0 4px;}
+  h2{font-size:16.5px; margin:0 0 8px;}
+  .sub{color:var(--muted); font-size:14px; margin-bottom:10px;}
+  .card{background:#fff; border:1px solid var(--line); border-radius:10px; padding:14px 16px; margin:12px 0; overflow-wrap:anywhere;}
+  .grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(190px,1fr)); gap:10px 14px;}
+  label.f{display:flex; flex-direction:column; gap:3px; font-size:13.5px; color:var(--muted);}
+  label.f small{font-size:12px;}
+  input[type=number],select{border:1px solid var(--line); border-radius:7px; padding:8px 10px; font-size:16px; font-family:inherit; color:var(--ink); width:100%; background:#fff;}
+  .chk{display:flex; gap:8px; align-items:flex-start; font-size:14px; margin:4px 0;}
+  .btns{display:flex; flex-wrap:wrap; gap:8px; margin-top:10px;}
+  button{background:var(--accent); color:#fff; border:0; border-radius:8px; padding:9px 16px; font-size:15px; font-weight:600; cursor:pointer; font-family:inherit;}
+  button.ghost{background:#fff; color:var(--accent); border:1px solid var(--accent);}
+  table{border-collapse:collapse; width:100%; font-size:14px;}
+  th,td{border:1px solid var(--line); padding:7px 9px; text-align:left; vertical-align:top;}
+  th{background:var(--soft); font-weight:600;}
+  .tag{display:inline-block; padding:0 8px; border-radius:10px; font-size:12.5px; font-weight:600; white-space:nowrap;}
+  .t-ok{background:var(--okbg); color:var(--ok);} .t-warn{background:var(--warnbg); color:var(--warn);} .t-bad{background:var(--badbg); color:var(--bad);} .t-na{background:#eee; color:#777;}
+  .alert{border-radius:8px; padding:10px 12px; margin:8px 0; font-size:14.5px;}
+  .a-bad{background:var(--badbg); border:1px solid #f3b8b2;} .a-warn{background:var(--warnbg); border:1px solid #f0cf9c;} .a-ok{background:var(--okbg); border:1px solid #b9e2c8;}
+  ul{margin:4px 0; padding-left:20px;} li{margin:2px 0;}
+  .rx{font-size:16px; line-height:1.9;}
+  .rx b{color:var(--accent);}
+  .small{font-size:12.5px; color:var(--muted);}
+  footer{font-size:12px; color:var(--muted); margin-top:18px;}
+  #printIn{display:none;}
+  @media print{
+    body{background:#fff; padding:0; font-size:11pt;} .noprint{display:none!important;} #printIn{display:block;}
+    .card{border:1px solid #ccc; page-break-inside:avoid; margin:6px 0;} h1{font-size:16pt;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>副甲狀腺低下：鈣片與活性 D 調藥計算機</h1>
+  <div class="sub">依院內品項換算：<b>A-Cal 500 mg</b>（碳酸鈣，元素鈣 200 mg／錠）、<b>U-Ca 0.25 mcg</b>（calcitriol，活性維生素 D3）。依 2022 國際副甲狀腺低下指引（Khan, JBMR 2022）與 ESE 2015 指引的治療目標，提供調藥方向參考。<b>指引沒有固定公式，是依目標逐步滴定；最終劑量請依臨床判斷。</b>資料只在瀏覽器計算，不上傳。</div>
+
+  <div class="card noprint">
+    <h2>1. 檢驗值</h2>
+    <div class="grid">
+      <label class="f">性別<select id="sex"><option value="F">女</option><option value="M">男</option></select></label>
+      <label class="f">血鈣 Ca（mg/dL）<input id="ca" type="number" step="0.1" inputmode="decimal"></label>
+      <label class="f">白蛋白 Albumin（g/dL）<small>有填才做白蛋白校正</small><input id="alb" type="number" step="0.1" inputmode="decimal"></label>
+      <label class="f">游離鈣 iCa（mmol/L）<small>選填；白蛋白異常時較準</small><input id="ica" type="number" step="0.01" inputmode="decimal"></label>
+      <label class="f">磷 P（mg/dL）<input id="p" type="number" step="0.1" inputmode="decimal"></label>
+      <label class="f">鎂 Mg（mg/dL）<input id="mg" type="number" step="0.1" inputmode="decimal"></label>
+      <label class="f">25(OH)D（ng/mL）<input id="vd" type="number" step="1" inputmode="decimal"></label>
+      <label class="f">24 小時尿鈣（mg/24 h）<input id="uca" type="number" step="1" inputmode="decimal"></label>
+      <label class="f">eGFR（mL/min/1.73m²）<small>選填</small><input id="egfr" type="number" step="1" inputmode="decimal"></label>
+    </div>
+    <details style="margin-top:8px"><summary class="small">參考範圍（可依院內報告修改）</summary>
+      <div class="grid" style="margin-top:6px">
+        <label class="f">血鈣下限<input id="caLo" type="number" step="0.1" value="8.4"></label>
+        <label class="f">血鈣上限<input id="caHi" type="number" step="0.1" value="10.2"></label>
+        <label class="f">磷上限<input id="pHi" type="number" step="0.1" value="4.5"></label>
+        <label class="f">磷下限<input id="pLo" type="number" step="0.1" value="2.5"></label>
+        <label class="f">鎂下限<input id="mgLo" type="number" step="0.1" value="1.7"></label>
+        <label class="f">游離鈣下限（mmol/L）<input id="icaLo" type="number" step="0.01" value="1.12"></label>
+        <label class="f">游離鈣上限（mmol/L）<input id="icaHi" type="number" step="0.01" value="1.32"></label>
+      </div>
+    </details>
+  </div>
+
+  <div class="card noprint">
+    <h2>2. 目前用藥與狀況</h2>
+    <div class="grid">
+      <label class="f">A-Cal 500 mg（錠／天）<input id="tabs" type="number" step="1" min="0" value="0"></label>
+      <label class="f">U-Ca 0.25 mcg（粒／天）<input id="caps" type="number" step="1" min="0" value="0"></label>
+      <label class="f">其他來源元素鈣（mg／天）<small>如 Biocal、市售鈣片；選填</small><input id="otherCa" type="number" step="50" min="0" value="0"></label>
+    </div>
+    <label class="chk"><input type="checkbox" id="sym"> 有低血鈣症狀（手腳口周麻、抽筋、手足搐搦、喉部痙攣、癲癇、心律不整）</label>
+    <label class="chk"><input type="checkbox" id="ppi"> 正在使用制酸劑／PPI，或胃切除後（碳酸鈣吸收差）</label>
+    <label class="chk"><input type="checkbox" id="preg"> 懷孕或哺乳中</label>
+    <div class="btns">
+      <button id="go">計算</button>
+      <button class="ghost" id="copy">複製摘要（貼病歷）</button>
+      <button class="ghost" id="print">列印／存 PDF</button>
+    </div>
+  </div>
+
+  <div id="printIn" class="card"></div>
+  <div id="out"></div>
+
+  <div class="card small">
+    <b>依據</b>
+    <ul>
+      <li>Khan AA, et al. Evaluation and Management of Hypoparathyroidism: Summary Statement and Guidelines from the Second International Workshop. <i>J Bone Miner Res</i> 2022;37:2568–85.
+        <ul>
+          <li>血鈣維持在正常範圍下半段或略低於下限。</li>
+          <li>24 小時尿鈣：女性 &lt;250 mg、男性 &lt;300 mg。</li>
+          <li>避免高磷，鎂要矯正到正常，25(OH)D 維持 30–50 ng/mL。</li>
+          <li>元素鈣分次隨餐；calcitriol 0.25–3 mcg/天，分次給。</li>
+          <li>高尿鈣：thiazide 加限鈉。</li>
+          <li>鈣 &gt;2 g/天或活性 D &gt;2 mcg/天仍控制不佳時，考慮 PTH 補充療法。</li>
+        </ul>
+      </li>
+      <li>Bollerslev J, et al. ESE Clinical Guideline: Treatment of chronic hypoparathyroidism in adults. <i>Eur J Endocrinol</i> 2015;173:G1–20.
+        <ul>
+          <li>鈣磷乘積 &lt;55 mg²/dL²。</li>
+          <li>calcitriol 效力約為 alfacalcidol 的 2 倍。</li>
+          <li>調整間隔至少 2–3 天，調整後 1–2 週複查血鈣。</li>
+          <li>症狀性低血鈣或校正鈣 &lt;8.0 mg/dL（2.0 mmol/L）需治療。</li>
+        </ul>
+      </li>
+      <li>校正鈣（Payne）：Ca + 0.8 ×（4.0 − Albumin）。白蛋白 &lt;3 g/dL 或腎功能差時不準，建議改驗游離鈣。</li>
+      <li>急性低血鈣靜脈補鈣門檻：各文獻寫法不一（&lt;7.5 或 &lt;7.0 mg/dL），以症狀為主要依據。</li>
+      <li>建議的「每次調一級」（U-Ca 1 粒＝0.25 mcg；A-Cal 1–2 錠＝200–400 mg 元素鈣）是臨床常用的步幅，指引沒有規定固定步幅。</li>
+    </ul>
+  </div>
+  <div class="card small noprint">衛教單：<a href="calcium-supplement-compare-edu.html">鈣片怎麼選？院內與市售鈣片比較</a>（可下載 PDF）</div>
+  <footer>工具版本：2026-10-22</footer>
+</div>
+<script>
+const $=id=>document.getElementById(id);
+const num=id=>{const v=parseFloat($(id).value);return isNaN(v)?null:v};
+const r1=x=>Math.round(x*10)/10, r2=x=>Math.round(x*100)/100;
+const tag=(c,t)=>`<span class="tag t-${c}">${t}</span>`;
+
+function calc(){
+  const sex=$("sex").value, ca=num("ca"), alb=num("alb"), ica=num("ica"), p=num("p"), mg=num("mg"), vd=num("vd"), uca=num("uca"), egfr=num("egfr");
+  const caLo=num("caLo")??8.4, caHi=num("caHi")??10.2, pHi=num("pHi")??4.5, pLo=num("pLo")??2.5, mgLo=num("mgLo")??1.7, icaLo=num("icaLo")??1.12, icaHi=num("icaHi")??1.32;
+  const tabs=Math.max(0,num("tabs")||0), caps=Math.max(0,num("caps")||0), other=Math.max(0,num("otherCa")||0);
+  const sym=$("sym").checked, ppi=$("ppi").checked, preg=$("preg").checked;
+  const caMid=(caLo+caHi)/2;
+  const cca = ca!==null ? (alb!==null ? ca+0.8*(4.0-alb) : ca) : null;
+  const elemCa=tabs*200+other, calcitriol=caps*0.25;
+  const uLim= sex==="M"?300:250;
+  const rows=[], alerts=[], acts=[];
+  // ---- 血鈣 ----
+  let caState="na";
+  if(cca!==null){
+    if(cca<caLo-0.4) caState="low";            // 明顯低於下限
+    else if(cca<=caMid) caState="target";      // 目標：正常下半段或略低於下限
+    else if(cca<=caHi) caState="highnormal";
+    else caState="high";
+    const lbl={low:tag("bad","偏低"),target:tag("ok","在目標內"),highnormal:tag("warn","高於目標（正常上半段）"),high:tag("bad","高血鈣")}[caState];
+    rows.push(["血鈣"+(alb!==null?"（白蛋白校正）":""),`${r1(cca)} mg/dL${alb!==null?`（原始 ${ca}、Alb ${alb}）`:""}`,`${r1(caLo-0.4)}–${r1(caMid)}（正常下半段或略低於下限）`,lbl]);
+    if(alb!==null && (alb<3 || (egfr!==null&&egfr<30))) alerts.push(["warn","白蛋白 <3 g/dL 或腎功能差時，校正鈣不準，建議以游離鈣判斷。"]);
+  }
+  if(ica!==null){
+    const iState = ica<icaLo-0.1?"low":ica<=icaLo+0.15?"target":ica<=icaHi?"highnormal":"high";
+    rows.push(["游離鈣",`${ica} mmol/L`,`${r2(icaLo-0.1)}–${r2(icaLo+0.15)}（下限附近）`,{low:tag("bad","偏低"),target:tag("ok","在目標內"),highnormal:tag("warn","高於目標"),high:tag("bad","偏高（高血鈣）")}[iState]]);
+    // 沒有總鈣，或白蛋白 <3／eGFR <30（校正鈣不準）時，以游離鈣判斷（B review）
+    if(cca===null || (alb!==null && alb<3) || (egfr!==null && egfr<30)) caState=iState;
+  }
+  // ---- 尿鈣 ----
+  let hiU=null;
+  if(uca!==null){ hiU=uca>=uLim; rows.push(["24 小時尿鈣",`${uca} mg/24 h`,`< ${uLim}（${sex==="M"?"男":"女"}）`,hiU?tag("bad","高尿鈣"):tag("ok","正常")]); }
+  // ---- 磷、鈣磷乘積 ----
+  let hiP=null;
+  if(p!==null){ hiP=p>pHi; rows.push(["磷",`${p} mg/dL`,`${pLo}–${pHi}，避免高磷`,hiP?tag("bad","偏高"):p<pLo?tag("warn","偏低"):tag("ok","正常")]); }
+  if(p!==null && cca!==null){ const cp=cca*p; rows.push(["鈣磷乘積",`${r1(cp)} mg²/dL²`,"< 55",cp>=55?tag("bad","過高"):tag("ok","正常")]); if(cp>=55) alerts.push(["bad","鈣磷乘積 ≥ 55：軟組織／腎臟鈣化風險，優先降磷（低磷飲食、減少 calcitriol、鈣隨餐當磷結合劑）。"]); }
+  // ---- 鎂、25OHD ----
+  if(mg!==null){ rows.push(["鎂",`${mg} mg/dL`,`≥ ${mgLo}`,mg<mgLo?tag("bad","偏低"):tag("ok","正常")]); if(mg<mgLo) alerts.push(["warn","低血鎂會讓低血鈣難矯正：先補鎂到正常，再評估鈣與活性 D 劑量。"]); }
+  if(vd!==null){ rows.push(["25(OH)D",`${vd} ng/mL`,"30–50",vd<30?tag("warn","不足"):vd>50?tag("warn","偏高"):tag("ok","在目標內")]); if(vd<30) alerts.push(["warn","25(OH)D < 30 ng/mL：除了活性 D，另外補一般維生素 D3（cholecalciferol）；院內無單方，Biocal Plus 每錠含 D3 330 IU，或請病人使用市售 D3。活性 D 不能取代一般維生素 D。"]); }
+  // ---- 目前劑量 ----
+  rows.push(["目前元素鈣",`${elemCa} mg/天`,"一般 800–2000 mg/天，分次隨餐（Khan 2022 範圍 500–3000 mg）", elemCa>2000?tag("warn","> 2 g/天"):tag("na","—")]);
+  rows.push(["目前 calcitriol",`${r2(calcitriol)} mcg/天（U-Ca ${caps} 粒）`,"一般 0.25–2 mcg/天，分次給", calcitriol>2?tag("warn","> 2 mcg/天"):tag("na","—")]);
+
+  // ---- 緊急 ----
+  // 白蛋白 <3 或 eGFR <30 且有游離鈣時，校正鈣不準 → 只看游離鈣（B review r2）
+  const useICa = ica!==null && ((alb!==null && alb<3) || (egfr!==null && egfr<30));
+  const severe = sym || (!useICa && cca!==null && cca<7.5) || (ica!==null && ica<0.9);
+  const why=[sym&&"有低血鈣症狀", !useICa&&cca!==null&&cca<7.5&&`校正鈣 ${r1(cca)} mg/dL`, ica!==null&&ica<0.9&&`游離鈣 ${ica} mmol/L`].filter(Boolean).join("，且");
+  if(severe) alerts.unshift(["bad",`<b>需要立即處理：</b>${why}。症狀明顯（手足搐搦、喉部痙攣、癲癇、QT 延長）或血鈣明顯偏低（文獻門檻 <7.0–7.5 mg/dL）時，應靜脈補鈣（10% calcium gluconate 1–2 安瓿於 10–20 分鐘緩慢推注，接續點滴），並監測心電圖；不要只靠調整口服藥。`]);
+
+  // ---- 調整方向 ----
+  let dTabs=0, dCaps=0;
+  if(caState==="low"){
+    if(hiP){ dTabs=2; acts.push("血鈣偏低、磷偏高：<b>優先加鈣</b>（隨餐吃，同時當磷結合劑），暫不加 calcitriol（會升磷）。建議每天加 2 錠 A-Cal（+400 mg 元素鈣），分到三餐。"); }
+    else if(hiU){ acts.push("血鈣偏低但尿鈣已高：<b>不要再加鈣</b>（會讓尿鈣更高）。建議 thiazide＋限鈉（Khan 2022）；calcitriol 也會增加尿鈣，必要時才小幅加 1 粒並密切追蹤尿鈣（未自動加入下方處方）。這種組合代表傳統治療控制不佳，可評估 PTH 補充療法。"); }
+    else { dCaps=1; dTabs= elemCa<1000 ? 2 : 0;
+      acts.push(`血鈣偏低：建議增加 calcitriol 1 粒（+0.25 mcg/天）${dTabs?"，並每天加 2 錠 A-Cal（+400 mg 元素鈣）；目前元素鈣 <1 g/天":""}。`); }
+  } else if(caState==="target"){
+    if(hiU){ acts.push("血鈣在目標內但尿鈣偏高：<b>先減鈣</b>（每天減 1–2 錠 A-Cal），並建議限鈉飲食；仍高時加 thiazide（如 hydrochlorothiazide 12.5–25 mg/天起，監測血壓與血鉀）。"); dTabs=-Math.min(2,tabs); }
+    else if(hiP){ acts.push("血鈣在目標內但磷偏高：考慮減 calcitriol 1 粒（−0.25 mcg），鈣片改成完全隨餐吃，並建議低磷飲食。"); dCaps=caps>0?-1:0; }
+    else acts.push("血鈣在目標內：<b>維持目前劑量</b>。穩定後每 6–12 個月追蹤血鈣、磷、鎂、肌酸酐，並定期驗 24 小時尿鈣。");
+  } else if(caState==="highnormal"){
+    if(hiU || hiP){ dCaps=caps>0?-1:0; acts.push(`血鈣在正常上半段${hiU?"、尿鈣偏高":""}${hiP?"、磷偏高":""}：目標是正常下半段，建議減 calcitriol 1 粒（−0.25 mcg/天）。`); }
+    else { acts.push("血鈣在正常上半段：高於指引目標（正常下半段），長期易造成高尿鈣與腎鈣化。可考慮減 calcitriol 1 粒或減 1–2 錠 A-Cal；尿鈣正常、病人無症狀者也可維持並密切追蹤。"); }
+  } else if(caState==="high"){
+    dCaps=caps>0?-Math.min(caps,2):0; dTabs=tabs>0?-Math.min(tabs,2):0;
+    acts.push("高血鈣：建議減 calcitriol（1–2 粒）並減鈣片，嚴重或有症狀（口渴、多尿、噁心、意識改變）時先暫停 calcitriol，並盡快複驗血鈣與腎功能。");
+  }
+  if(severe) acts.unshift("<b>先處理急性低血鈣（見上方紅框）</b>；以下口服調整是穩定後的銜接參考。");
+  if(ppi && tabs>0) acts.push("使用 PPI／胃酸少：碳酸鈣需要胃酸才吸收得好，務必隨餐吃；吸收仍不佳時可改檸檬酸鈣（市售，院內無）。");
+  if(preg) acts.push("懷孕／哺乳：鈣需求變化大，建議每 3–4 週追蹤血鈣，目標正常中下段；thiazide 避免使用。");
+  if(elemCa+dTabs*200>2000 || calcitriol+dCaps*0.25>2) acts.push("元素鈣 >2 g/天或活性 D >2 mcg/天：屬於傳統治療需求偏高，可評估 PTH 補充療法（Khan 2022）。");
+  if(dTabs||dCaps) acts.push("調整後 <b>3–7 天內</b>複驗血鈣（ESE：1–2 週內），每次只調一級、間隔至少 2–3 天。");
+
+  // ---- 建議處方 ----
+  const nT=Math.max(0,tabs+dTabs), nC=Math.max(0,caps+dCaps);
+  const split=n=>{ if(!n) return "—"; const a=Math.ceil(n/3), rest=n-a, b=Math.ceil(rest/2), c=rest-b;
+    if(n===1) return "1 錠隨餐"; if(n===2) return "早 1／晚 1 錠，隨餐"; return `早 ${a}／午 ${b}／晚 ${c} 錠，隨餐`; };
+  const splitC=n=>!n?"—":n===1?"1 粒（早或晚）":`早 ${Math.ceil(n/2)}／晚 ${Math.floor(n/2)} 粒`;
+  let html="";
+  alerts.forEach(([c,t])=>html+=`<div class="alert a-${c}">${t}</div>`);
+  html+=`<div class="card"><h2>評估</h2><table><tr><th>項目</th><th>數值</th><th>目標</th><th>判讀</th></tr>${rows.map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td><td>${r[3]}</td></tr>`).join("")}</table></div>`;
+  html+=`<div class="card"><h2>建議調整</h2><ul>${acts.map(a=>`<li>${a}</li>`).join("")||"<li>請先輸入血鈣（或游離鈣）。</li>"}</ul>
+    <div class="rx" style="margin-top:8px">
+      <div>A-Cal 500 mg：目前 ${tabs} 錠 → <b>${nT} 錠／天</b>（元素鈣 ${nT*200+other} mg/天${other?`，含其他來源 ${other} mg`:""}）・${split(nT)}</div>
+      <div>U-Ca 0.25 mcg：目前 ${caps} 粒 → <b>${nC} 粒／天</b>（calcitriol ${r2(nC*0.25)} mcg/天）・${splitC(nC)}</div>
+    </div>
+    <div class="small">這是依指引目標推算的「下一步」參考，不是固定公式；請依症狀、腎功能、藥物交互作用與病人狀況調整。</div></div>`;
+  $("out").innerHTML=html;
+  window._summary=[`[副甲狀腺低下調藥評估] ${new Date().toLocaleDateString("zh-TW")}`,
+    ...alerts.map(([c,t])=>"⚠ "+t.replace(/<[^>]+>/g,"")),
+    ...rows.map(r=>`${r[0]}: ${r[1]}（目標 ${r[2]}）${r[3].replace(/<[^>]+>/g,"")}`),
+    "建議："+acts.map(a=>a.replace(/<[^>]+>/g,"")).join(" "),
+    `處方：A-Cal 500mg ${tabs}→${nT} 錠/天（${split(nT)}）；U-Ca 0.25mcg ${caps}→${nC} 粒/天（${splitC(nC)}）`].join("\n");
+  $("printIn").innerHTML=`<b>輸入</b>：性別 ${sex==="M"?"男":"女"}；Ca ${ca??"—"}、Alb ${alb??"—"}、iCa ${ica??"—"}、P ${p??"—"}、Mg ${mg??"—"}、25(OH)D ${vd??"—"}、24h 尿鈣 ${uca??"—"}、eGFR ${egfr??"—"}；A-Cal ${tabs} 錠、U-Ca ${caps} 粒、其他鈣 ${other} mg；${sym?"有症狀；":""}${ppi?"PPI；":""}${preg?"懷孕／哺乳；":""}`;
+}
+$("go").onclick=calc;
+document.querySelectorAll("input,select").forEach(e=>e.addEventListener("change",calc));
+$("copy").onclick=async()=>{calc(); try{await navigator.clipboard.writeText(window._summary); $("copy").textContent="已複製";}catch(e){$("copy").textContent="複製失敗";} setTimeout(()=>$("copy").textContent="複製摘要（貼病歷）",1500);};
+$("print").onclick=()=>{calc(); window.print();};
+window.addEventListener("beforeprint",calc);
+</script>
+</body>
+</html>
