@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>高醫甲狀腺超音波病理查詢（Chrome 插件）</title>
+<style>
+  :root{ --accent:#1f6b52; --ink:#1b1f24; --line:#dde2ea; --soft:#f3f6fb; --bg:#eef2f8; --muted:#5d6675; --warn:#b4540a; --warnbg:#fff4e8; }
+  *{box-sizing:border-box;}
+  body{font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif; color:var(--ink); background:var(--bg); margin:0; padding:0 16px 60px; line-height:1.75;}
+  .wrap{max-width:820px; margin:0 auto;}
+  h1{font-size:22px; margin:22px 0 4px;}
+  h2{font-size:17px; margin:0 0 8px;}
+  .sub{color:var(--muted); font-size:14px; margin-bottom:12px;}
+  .card{background:#fff; border:1px solid var(--line); border-radius:10px; padding:16px 18px; margin:14px 0; overflow-wrap:anywhere;}
+  .dl{display:flex; flex-wrap:wrap; gap:10px;}
+  a.btn{display:inline-block; background:var(--accent); color:#fff; text-decoration:none; border-radius:8px; padding:10px 16px; font-weight:600;}
+  a.btn.ghost{background:#fff; color:var(--accent); border:1px solid var(--accent);}
+  ol,ul{padding-left:22px; margin:6px 0;}
+  li{margin:3px 0;}
+  code{background:var(--soft); border:1px solid var(--line); border-radius:4px; padding:0 4px; font-size:13.5px;}
+  .warn{background:var(--warnbg); border-color:#f0c79c;}
+  .small{font-size:13px; color:var(--muted);}
+  footer{font-size:12px; color:var(--muted); margin-top:20px;}
+  table.g{border-collapse:collapse; width:100%; font-size:14px; margin-top:6px;}
+  table.g td{border:1px solid var(--line); padding:4px 8px;}
+  .ga{background:#fff6c7;} .gs{background:#ffd9a8;} .gm{background:#ffc4c4;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>高醫甲狀腺超音波病理查詢（Chrome 插件）</h1>
+  <div class="sub">複選日期與時段，自動抓甲狀腺超音波名單，再逐位取得甲狀腺與頸部淋巴結細胞學的最近一次報告，整理成一張表，可下載 CSV。atypia、suspicious、malignant 整列上底色。</div>
+
+  <div class="card">
+    <h2>下載</h2>
+    <div class="dl">
+      <a class="btn" href="downloads/kmu-echo-cyto-v1.0.0.zip" download>插件 v1.0.0（zip）</a>
+      <a class="btn ghost" href="kmu-thyroid-cyto.html">只查病歷號：甲狀腺細胞學批次查詢</a>
+    </div>
+    <p class="small">只在院內網路可用（高醫、岡山）。沿用你在 Chrome 已登入的院內連線，插件不處理帳號密碼；名單與報告只留在查詢頁，關掉分頁就清除，只記住院區、職編與科別代碼。</p>
+  </div>
+
+  <div class="card">
+    <h2>安裝（第一次）</h2>
+    <ol>
+      <li>下載 zip，解壓縮到一個<strong>固定的資料夾</strong>（之後不要搬動或刪除）。Windows 用「解壓縮全部」時會多包一層，請選到裡面有 <code>manifest.json</code> 的那一層。</li>
+      <li>Chrome 網址列輸入 <code>chrome://extensions</code>，打開右上角「開發人員模式」。</li>
+      <li>按「載入未封裝項目」，選剛才的資料夾。</li>
+      <li>點右上角拼圖圖示，把「高醫甲狀腺超音波病理查詢」（綠底「超」字圖示）釘選到工具列。</li>
+    </ol>
+  </div>
+
+  <div class="card">
+    <h2>更新到新版</h2>
+    <ol>
+      <li>新版解壓後，<strong>直接覆蓋</strong>原本的資料夾。</li>
+      <li>到 <code>chrome://extensions</code>，在這個插件上按「重新載入」↻。</li>
+    </ol>
+  </div>
+
+  <div class="card">
+    <h2>使用</h2>
+    <ol>
+      <li>先在 Chrome 打開一次院內系統，確認已登入。</li>
+      <li>點插件圖示，會開出查詢頁。選院區，第一次使用要填職編；科別代碼預設 0160，可改。</li>
+      <li>① 選日期：起訖日期＋勾星期幾，按「加入日期」。不連續的日期可以分好幾次加入，最多 31 天；單一天就起訖選同一天。</li>
+      <li>② 勾時段：上午、下午、夜診，可複選。</li>
+      <li>③ 按「抓名單」：每個日期×時段各查一次，同一位病人只列一次，保留他所有的超音波日期時段。今天以前的日期抓「已執行」，未來的日期抓「已排檢未執行」。</li>
+      <li>④ 按「抓報告」：逐位查細胞學報告（超過 100 位要再按一次確認）。查完按「下載 CSV」。</li>
+    </ol>
+  </div>
+
+  <div class="card">
+    <h2>分級上色（只看 Diagnosis 欄）</h2>
+    <table class="g">
+      <tr class="ga"><td>atypia</td><td>Atypia of undetermined significance／AUS／FLUS／Bethesda III／atypical cells</td></tr>
+      <tr class="gs"><td>suspicious</td><td>Suspicious for malignancy，以及 cannot rule out／cannot be excluded 這類無法排除的寫法</td></tr>
+      <tr class="gm"><td>malignant</td><td>Malignant、carcinoma、cancer、metastatic、lymphoma、Bethesda VI（已排除「Negative for…」這類否定句）</td></tr>
+    </table>
+    <p class="small">Benign、Nondiagnostic、Follicular neoplasm（Bethesda IV）不上色。上色只是提示，不能取代逐份閱讀報告。</p>
+  </div>
+
+  <div class="card warn">
+    <strong>注意</strong>
+    <ul>
+      <li>抓名單、抓報告時，插件會在背景開分頁、用完自動關掉，請不要去點它；查詢期間也不要在同一個 Chrome 另開別的病人病歷。</li>
+      <li>防串號：報告與頁面上的病歷號都要對得上名單的號碼；對不上會標「查詢失敗：與查詢不符」且不輸出報告。標「請抽查」的，請對照電子病歷確認。</li>
+      <li>院內連線過期、被導到登入頁時會整批停止，不會誤當成空名單或「沒有報告」。</li>
+      <li>查詢中途關掉查詢頁，可能留下沒關掉的背景分頁，請手動關掉。</li>
+    </ul>
+  </div>
+
+  <div class="card small">
+    <strong>版本紀錄</strong>
+    <ul>
+      <li>v1.0.0（2026-10-25）：第一版。報告判讀與防串號沿用甲狀腺細胞學批次查詢 v1.3.0。</li>
+    </ul>
+  </div>
+
+  <footer>工具版本：2026-10-25</footer>
+</div>
+</body>
+</html>
