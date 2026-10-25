@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>高醫電子病歷快速跳轉（Chrome 插件）</title>
+<style>
+  :root{ --accent:#19499D; --ink:#1b1f24; --line:#dde2ea; --soft:#f3f6fb; --bg:#eef2f8; --muted:#5d6675; --warn:#b4540a; --warnbg:#fff4e8; }
+  *{box-sizing:border-box;}
+  body{font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif; color:var(--ink); background:var(--bg); margin:0; padding:0 16px 60px; line-height:1.75;}
+  .wrap{max-width:820px; margin:0 auto;}
+  h1{font-size:22px; margin:22px 0 4px;}
+  h2{font-size:17px; margin:0 0 8px;}
+  .sub{color:var(--muted); font-size:14px; margin-bottom:12px;}
+  .card{background:#fff; border:1px solid var(--line); border-radius:10px; padding:16px 18px; margin:14px 0; overflow-wrap:anywhere;}
+  .dl{display:flex; flex-wrap:wrap; gap:10px;}
+  a.btn{display:inline-block; background:var(--accent); color:#fff; text-decoration:none; border-radius:8px; padding:10px 16px; font-weight:600;}
+  a.btn.ghost{background:#fff; color:var(--accent); border:1px solid var(--accent);}
+  ol,ul{padding-left:22px; margin:6px 0;}
+  li{margin:3px 0;}
+  code{background:var(--soft); border:1px solid var(--line); border-radius:4px; padding:0 4px; font-size:13.5px;}
+  .warn{background:var(--warnbg); border-color:#f0c79c;}
+  .small{font-size:13px; color:var(--muted);}
+  footer{font-size:12px; color:var(--muted); margin-top:20px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>高醫電子病歷快速跳轉（Chrome 插件）</h1>
+  <div class="sub">選院區、輸入病歷號，直接開啟該病人的電子病歷，不用一層層點選單。快捷鍵 Alt+E 叫出輸入框。</div>
+
+  <div class="card">
+    <h2>下載</h2>
+    <div class="dl">
+      <a class="btn" href="downloads/kmuh-emr-launcher-v1.1.1.zip" download>插件 v1.1.1（zip）</a>
+    </div>
+    <p class="small">只在院內網路可用。沿用你在 Chrome 已登入的院內帳號，插件不處理帳號密碼；病歷號不儲存，只記住院區與職編。</p>
+  </div>
+
+  <div class="card">
+    <h2>安裝（第一次）</h2>
+    <ol>
+      <li>下載 zip，解壓縮到一個<strong>固定的資料夾</strong>（之後不要搬動或刪除）。Windows 用「解壓縮全部」時會多包一層，請選到裡面有 <code>manifest.json</code> 的那一層。</li>
+      <li>Chrome 網址列輸入 <code>chrome://extensions</code>，打開右上角「開發人員模式」。</li>
+      <li>按「載入未封裝項目」，選剛才的資料夾。</li>
+      <li>點右上角拼圖圖示，把「高醫電子病歷快速跳轉」釘選到工具列。第一次使用請在「設定：職編」填入職編。</li>
+    </ol>
+  </div>
+
+  <div class="card">
+    <h2>更新到新版</h2>
+    <ol>
+      <li>新版解壓後，<strong>直接覆蓋</strong>原本的資料夾。</li>
+      <li>到 <code>chrome://extensions</code>，在這個插件上按「重新載入」↻。</li>
+    </ol>
+  </div>
+
+  <div class="card">
+    <h2>使用</h2>
+    <ol>
+      <li>點插件圖示（或按 Alt+E），選院區，輸入病歷號，按 Enter。</li>
+      <li>1～7 碼的純數字病歷號會自動補 0 成 8 碼。</li>
+      <li>還沒登入時，插件會在背景開登入頁；登入後再查一次即可。</li>
+    </ol>
+  </div>
+
+  <div class="card warn">
+    <strong>注意</strong>
+    <ul>
+      <li>支援院區：高醫、岡山、小港、旗津。</li>
+      <li>Windows 版 Chrome 的 Alt+E 可能和瀏覽器選單衝突；按了沒反應時，到 <code>chrome://extensions/shortcuts</code> 改成別的組合（例如 Alt+Shift+E）。</li>
+    </ul>
+  </div>
+
+  <div class="card small">
+    <strong>版本紀錄</strong>
+    <ul>
+      <li>v1.1.1（2026-10-25）：頁尾補上工具版本日期。</li>
+      <li>v1.1.0（2026-10-25）：由同事協助修正：院區網址更新、查無病歷判斷、病歷號自動補 0、逾時保護、Alt+E 快捷鍵。</li>
+      <li>v1.0.0（2026-10-25）：第一版。</li>
+    </ul>
+  </div>
+
+  <footer>工具版本：2026-10-25</footer>
+</div>
+</body>
+</html>
