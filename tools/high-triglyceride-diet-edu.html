@@ -49,6 +49,7 @@ table.food td.r{color:var(--warn);font-weight:800;white-space:nowrap}
 .bar button{background:var(--ink);color:var(--paper);border:0;padding:11px 24px;font-size:15px;font-weight:700;border-radius:6px;cursor:pointer}
 @media print{@page{size:A4 portrait;margin:8mm}body{background:#fff;padding:0}.tabs,.no-print{display:none!important}.sheet{max-width:100%;padding:4mm}.c,tr{break-inside:avoid}}
 @media(max-width:640px){.grid{grid-template-columns:repeat(2,1fr)}.c.lead{grid-column:span 2}.tabs{flex-wrap:wrap}.tab{min-width:30%}}
+@media(max-width:640px){.lv th,.myth th,table.food th{width:auto!important}.myth td.x{white-space:normal;width:38%}.lv td:nth-child(2){white-space:nowrap}}
 @media(max-width:420px){.grid{grid-template-columns:1fr}.c.lead{grid-column:span 1;flex-direction:column;text-align:center}}
 
 .lv{width:100%;border-collapse:collapse;margin-top:16px;font-size:14px;background:#fff;border:1px solid var(--line)}
