@@ -77,7 +77,7 @@ table.food td.r{color:var(--warn);font-weight:800}
   table.food th,table.food td,.myth th,.myth td{padding:8px 6px;font-size:13px}
   .myth{padding:12px 10px}}
 @media(max-width:420px){.grid{grid-template-columns:1fr}.c.lead{grid-column:span 1;flex-direction:column;text-align:center}}
-@media(max-width:640px){table.food th:nth-child(1),table.food td:nth-child(1),table.food th:nth-child(2),table.food td:nth-child(2){width:auto}.myth th:nth-child(1),.myth td:nth-child(1){width:38%;white-space:normal}}
+@media(max-width:640px){table.food th:nth-child(1),table.food td:nth-child(1),table.food th:nth-child(2),table.food td:nth-child(2){width:auto!important}table.food td:first-child{white-space:nowrap}.myth th:nth-child(1),.myth td:nth-child(1){width:38%;white-space:normal}}
 
 /* 三個分頁一起列印（老闆 2026-09-10 12:46 要求）：把三個 view 各渲染一份 .sheet 疊進 #printall，只在列印時顯示 */
 #printall{display:none}
