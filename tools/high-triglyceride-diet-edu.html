@@ -1,0 +1,156 @@
+<!DOCTYPE html><html lang="zh-Hant"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="author" content="高醫體系 內分泌新陳代謝科">
+<meta name="description" content="高三酸甘油酯飲食衛教圖卡（實證版）。依 2023 台灣糖尿病血脂指引、2025 台灣血脂管理臨床路徑共識、2019 ESC/EAS、2011 AHA 科學聲明整理，含分級、嚴重高三酸甘油酯與胰臟炎預防、食物紅綠燈與魚油迷思，可列印 A4。">
+<title>高三酸甘油酯飲食 · 衛教圖卡（實證版）</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+:root{--ink:#1b1f1d;--sub:#5f655f;--line:#e6e2d8;--accent:#0f6e64;--hot:#c0562c;--paper:#faf8f2;--card:#fff;--faint:#9a978c;--ok:#27ae60;--mod:#e67e22;--warn:#c0392b;}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#eceae2;font-family:"PingFang TC","Noto Sans TC","Microsoft JhengHei",sans-serif;color:var(--ink);padding:20px 12px;-webkit-font-smoothing:antialiased}
+.tabs{max-width:900px;margin:0 auto 14px;display:flex;gap:8px}
+.tab{flex:1;text-align:center;padding:12px 6px;border-radius:10px;border:1px solid var(--line);background:#fff;cursor:pointer;font-weight:800;color:var(--sub);font-size:15px}
+.tab small{display:block;font-weight:500;font-size:11px;color:var(--faint);margin-top:2px}
+.tab.active{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.tab.active small{color:#9fd8ce}
+.sheet{max-width:900px;margin:0 auto;background:var(--paper);padding:40px 38px 26px}
+.head{text-align:center;border-bottom:2px solid var(--ink);padding-bottom:15px;margin-bottom:4px}
+.kick{font-size:12px;letter-spacing:.34em;color:var(--accent);font-weight:800;margin-bottom:9px}
+.head h1{font-size:31px;font-weight:900;letter-spacing:-.01em;line-height:1.1}
+.head .zh{font-size:14px;color:var(--sub);margin-top:6px;letter-spacing:.04em}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px}
+.c{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px 15px;display:flex;flex-direction:column;align-items:center;text-align:center;justify-content:flex-start;min-height:168px;position:relative}
+.c .n{position:absolute;top:10px;left:14px;font-size:14px;font-weight:900;color:#cfcabb}
+.c i{font-size:33px;color:var(--accent);margin:10px 0 12px}
+.c.hot i{color:var(--hot)}
+.c .t{font-size:15.5px;font-weight:800;line-height:1.45}
+.c .t b{color:var(--hot)} .c .t .a{color:var(--accent)}
+.c .w{display:block;margin-top:6px;font-size:12.5px;font-weight:500;color:var(--sub);line-height:1.55}
+.c.lead{grid-column:span 3;flex-direction:row;gap:18px;justify-content:flex-start;text-align:left;min-height:auto;background:var(--ink);border:none}
+.c.lead i{color:var(--paper);font-size:28px;margin:0;flex:0 0 auto}
+.c.lead .t{color:var(--paper);font-size:16px;font-weight:600;line-height:1.6}
+.c.lead .t b{color:#7fd8cc}
+table.food{width:100%;border-collapse:collapse;margin-top:16px;font-size:14px;background:#fff;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+table.food th,table.food td{border-bottom:1px solid var(--line);padding:10px 10px;text-align:left;vertical-align:top;line-height:1.6}
+table.food th{background:var(--paper);font-weight:800;color:var(--sub);font-size:13px}
+table.food td.g{color:var(--ok);font-weight:800;white-space:nowrap}
+table.food td.y{color:var(--mod);font-weight:800;white-space:nowrap}
+table.food td.r{color:var(--warn);font-weight:800;white-space:nowrap}
+.myth{margin-top:16px;background:#fff;border:1px solid var(--line);border-radius:12px;padding:16px 18px}
+.myth h3{font-size:16px;color:var(--accent);margin-bottom:10px;border-left:4px solid var(--accent);padding-left:10px}
+.myth table{width:100%;border-collapse:collapse;font-size:14px}
+.myth th,.myth td{border-bottom:1px solid var(--line);padding:9px 8px;text-align:left;vertical-align:top;line-height:1.65}
+.myth th{background:var(--paper);font-weight:800;color:var(--sub);font-size:13px}
+.myth td.x{color:var(--warn);font-weight:700;white-space:nowrap}
+.note{margin-top:14px;font-size:12.5px;color:var(--sub);line-height:1.7}
+.foot{margin-top:15px;text-align:center;font-size:11px;color:var(--faint);line-height:1.7;border-top:1px solid var(--line);padding-top:11px}
+.foot b{color:var(--sub)}
+.bar{text-align:center;margin:16px 0}
+.bar button{background:var(--ink);color:var(--paper);border:0;padding:11px 24px;font-size:15px;font-weight:700;border-radius:6px;cursor:pointer}
+@media print{@page{size:A4 portrait;margin:8mm}body{background:#fff;padding:0}.tabs,.no-print{display:none!important}.sheet{max-width:100%;padding:4mm}.c,tr{break-inside:avoid}}
+@media(max-width:640px){.grid{grid-template-columns:repeat(2,1fr)}.c.lead{grid-column:span 2}.tabs{flex-wrap:wrap}.tab{min-width:30%}}
+@media(max-width:420px){.grid{grid-template-columns:1fr}.c.lead{grid-column:span 1;flex-direction:column;text-align:center}}
+
+.lv{width:100%;border-collapse:collapse;margin-top:16px;font-size:14px;background:#fff;border:1px solid var(--line)}
+.lv th,.lv td{border-bottom:1px solid var(--line);padding:10px;text-align:left;vertical-align:top;line-height:1.6}
+.lv th{background:var(--paper);font-weight:800;color:var(--sub);font-size:13px}
+.lv td.num{font-weight:900;white-space:nowrap}
+.sev{margin-top:16px;background:#fff4ef;border:2px solid var(--warn);border-radius:12px;padding:16px 18px}
+.sev h3{font-size:16.5px;color:var(--warn);margin-bottom:10px}
+.sev ul{padding-left:20px;font-size:14px;line-height:1.75}
+.sev li{margin-bottom:4px}
+.sev .alarm{margin-top:12px;background:var(--warn);color:#fff;border-radius:8px;padding:10px 14px;font-weight:700;font-size:14.5px;line-height:1.6}
+</style></head><body>
+<div class="tabs no-print">
+  <div class="tab active" data-v="core" onclick="setV('core')">九招圖卡<small>先從哪裡下手</small></div>
+  <div class="tab" data-v="food" onclick="setV('food')">食物紅綠燈<small>多吃 / 適量 / 少吃</small></div>
+  <div class="tab" data-v="level" onclick="setV('level')">分級與胰臟炎<small>超過 500 怎麼吃</small></div>
+  <div class="tab" data-v="myth" onclick="setV('myth')">魚油與迷思<small>處方藥 vs 保健品</small></div>
+</div>
+<div class="sheet" id="sheet">
+  <div class="head">
+    <div class="kick">內分泌新陳代謝科　·　飲食衛教</div>
+    <h1 id="h1">高三酸甘油酯飲食</h1>
+    <div class="zh" id="zh"></div>
+  </div>
+  <div id="body"></div>
+  <div class="note" id="note"></div>
+  <div class="foot">高醫體系　內分泌新陳代謝科　｜　<b>本圖卡僅供衛教，是否用藥、目標值以醫師判斷為準</b>　｜　依 2023 台灣糖尿病血脂指引、2025 台灣血脂管理臨床路徑共識、2019 ESC/EAS 血脂指引、2011 AHA 三酸甘油酯科學聲明整理　｜　工具版本：2026-10-29</div>
+</div>
+<div class="bar no-print"><button onclick="window.print()">🖨 列印目前這版 / 存成 PDF（A4）</button></div>
+<script>
+const V={
+core:{zh:'九招圖卡　·　三酸甘油酯（TG）對生活型態的反應比膽固醇大',
+  lead:{i:'fa-chart-line',t:'體重減 <b>5 到 10%</b>，TG 大約降 <b>20%</b>；少糖、少酒、運動一起做，研究中 TG 可以降 <b>50% 以上</b>。TG 超過 <b>500 mg/dL</b> 時，目標變成預防急性胰臟炎，請看「分級與胰臟炎」那一頁。'},
+  cards:[
+    {i:'fa-wine-glass',hot:1,t:'<b>酒</b>是第一個要動的<span class="w">TG 偏高時最好不喝；超過 500 要完全戒酒。限酒對 TG 的效果超過 10%，酒精也是誘發高 TG 胰臟炎最常見的因素。紅酒、啤酒、米酒都一樣。</span>'},
+    {i:'fa-glass-water',hot:1,t:'<b>含糖飲料、果汁</b>歸零<span class="w">手搖飲、汽水、運動飲料、果汁、蜂蜜水。果糖長期吃到熱量的 15 到 20%，TG 可以升 30 到 40%。改喝白開水、無糖茶。</span>'},
+    {i:'fa-bread-slice',hot:1,t:'<b>精緻澱粉</b>減量<span class="w">白飯、白麵、白吐司、麵包、蛋糕、餅乾。主食總量先減，一半換成糙米、燕麥、地瓜等全穀雜糧。減醣對 TG 的效果約 5 到 10%。</span>'},
+    {i:'fa-weight-scale',t:'體重減 <b>5 到 10%</b><span class="w">每減 1 公斤，TG 約降 2%。每天少吃 300 到 500 大卡就夠，不需要極端節食。</span>'},
+    {i:'fa-person-walking',t:'每週運動 <span class="a">150 分鐘</span>以上<span class="w">快走、騎車、游泳等中強度有氧，分散在一週多天。運動在減重之外，本身就會降 TG。</span>'},
+    {i:'fa-apple-whole',t:'水果吃<b>完整的</b>，每天 <span class="a">2 份</span><span class="w">一份約一個拳頭大。打成汁或喝果汁會一次吃進很多果糖，不算水果。</span>'},
+    {i:'fa-fish',t:'魚<b>每週 2 次</b><span class="w">鯖魚、秋刀魚、鮭魚，蒸烤取代油炸。吃魚對健康有益，但降 TG 的幅度遠小於處方魚油。</span>'},
+    {i:'fa-bottle-droplet',t:'好油取代<b>壞油</b>，少油炸<span class="w">豬油、牛油、肥肉、雞皮換成橄欖油、芥花油、苦茶油；蒸、煮、滷、烤取代油炸。TG 超過 500 時，連好油也要大幅減量。</span>'},
+    {i:'fa-stethoscope',t:'血糖控制、查<b>藥物</b><span class="w">糖尿病控制好，TG 會跟著降。部分藥物（如女性荷爾蒙、類固醇）會升 TG，回診時告訴醫師，不要自己停藥。</span>'},
+  ],
+  note:'降幅是研究平均值，個人差異大；照做 2 到 3 個月後抽血看變化才算數。已在服用降血脂藥的人，飲食照做，藥不要自己停。'},
+food:{zh:'食物紅綠燈　·　多吃、適量、少吃',
+  html:`<table class="food"><tr><th style="width:90px">燈號</th><th style="width:150px">類別</th><th>內容</th></tr>
+<tr><td class="g">多吃</td><td>蔬菜</td><td>每天 3 份以上（一份約煮熟半碗），餐盤一半是菜，先吃菜再吃飯</td></tr>
+<tr><td class="g">多吃</td><td>全穀雜糧</td><td>糙米、燕麥、地瓜、紅豆、綠豆；主食一半以上換成這些，但總量仍要控制</td></tr>
+<tr><td class="g">多吃</td><td>豆類與豆製品</td><td>黃豆、黑豆、毛豆、豆腐、無糖豆漿；可以取代部分肉類</td></tr>
+<tr><td class="g">多吃</td><td>魚</td><td>鯖魚、秋刀魚、鮭魚、鱸魚，每週 2 次，蒸烤取代油炸</td></tr>
+<tr><td class="g">多吃</td><td>飲料</td><td>白開水、無糖茶、黑咖啡</td></tr>
+<tr><td class="y">適量</td><td>水果</td><td>每天 2 份，吃完整的，一份約一個拳頭；不打汁</td></tr>
+<tr><td class="y">適量</td><td>瘦肉、去皮禽肉、蛋</td><td>每餐掌心大小；選里肌、雞胸，去皮去肥</td></tr>
+<tr><td class="y">適量</td><td>低脂乳製品</td><td>低脂或脫脂奶、無糖優格；調味乳與含糖優酪乳算含糖飲料</td></tr>
+<tr><td class="y">適量</td><td>好油與堅果</td><td>橄欖油、芥花油、苦茶油；無調味堅果每天一份（約 10 公克，免洗湯匙 1 匙）。TG 超過 500 時改為少量</td></tr>
+<tr><td class="r">少吃</td><td>酒</td><td>啤酒、紅酒、米酒、調酒；TG 偏高最好不喝，超過 500 完全不喝</td></tr>
+<tr><td class="r">少吃</td><td>含糖飲料與果汁</td><td>手搖飲、汽水、運動飲料、果汁、蜂蜜水、果糖糖漿</td></tr>
+<tr><td class="r">少吃</td><td>甜點與精緻澱粉</td><td>蛋糕、麵包、餅乾、糖果、白吐司；白飯白麵減量</td></tr>
+<tr><td class="r">少吃</td><td>油炸與高脂肉類</td><td>炸雞、鹽酥雞、五花、肥肉、雞皮、香腸、培根</td></tr></table>`,
+  note:'份量依衛福部每日飲食指南：蔬菜一份約煮熟半碗；水果一份約一個拳頭；油一份 5 公克（1 茶匙）；堅果一份約 10 公克（免洗湯匙 1 匙），算在油脂與堅果種子類。外食族先做三件事：飲料改無糖、不喝酒、主食減量。'},
+level:{zh:'分級與胰臟炎　·　TG 越高，處理重點越不一樣',
+  html:`<table class="lv"><tr><th style="width:150px">空腹 TG（mg/dL）</th><th style="width:110px">分級</th><th>處理重點</th></tr>
+<tr><td class="num" style="color:var(--ok)">&lt; 150</td><td>正常</td><td>糖尿病人的 TG 目標是 &lt; 150</td></tr>
+<tr><td class="num" style="color:var(--mod)">150 到 199</td><td>邊緣偏高</td><td>心血管風險因子之一；照第一頁九招做</td></tr>
+<tr><td class="num" style="color:var(--mod)">200 到 499</td><td>偏高</td><td>生活型態為主；心血管風險高的人，醫師會一起評估膽固醇與用藥</td></tr>
+<tr><td class="num" style="color:var(--warn)">≥ 500</td><td>非常高</td><td>急性胰臟炎風險上升；飲食要改成下方的極低脂版本，醫師通常會考慮用藥</td></tr>
+<tr><td class="num" style="color:var(--warn)">≥ 880</td><td>極高</td><td>胰臟炎風險明顯；有腹痛立刻急診，沒有症狀也要密集追蹤</td></tr></table>
+<div class="sev"><h3><i class="fa-solid fa-triangle-exclamation"></i>　TG 超過 500 的飲食：極低脂、完全戒酒</h3><ul>
+<li><b>完全不喝酒</b>，一口都不要。酒精是誘發高 TG 胰臟炎最常見的因素。</li>
+<li><b>脂肪只占總熱量的 10 到 15%</b>。以一天 1,800 大卡計算，全天脂肪約 <b>20 到 30 公克</b>，肉裡的油、堅果、烹調油全部算在內。</li>
+<li>烹調改<b>水煮、清蒸、燙、烤</b>，不炒不炸；不吃堅果、酪梨、肥肉、雞皮、豬皮、糕點。</li>
+<li>蛋白質選<b>魚、去皮雞胸、蛋白、豆腐、脫脂奶</b>。</li>
+<li>含糖飲料、果汁、甜點全停；主食減量，總熱量也要減。</li>
+<li>有糖尿病的人，血糖控制要同時加強。</li>
+<li>這個階段飲食是用藥的基礎，不是用藥的替代；用不用藥、用哪一種，由醫師決定。</li></ul>
+<div class="alarm"><i class="fa-solid fa-truck-medical"></i>　上腹劇痛、痛到背後、合併噁心嘔吐 → 可能是急性胰臟炎，請立刻到急診，並告訴醫師自己 TG 很高。</div></div>`,
+  note:'分級依 2011 AHA 三酸甘油酯科學聲明（150／200／500）；糖尿病人 TG 目標 < 150 與 ≥ 500 用藥預防胰臟炎依 2023 台灣糖尿病血脂指引；880 mg/dL（10 mmol/L）與脂肪 10 到 15% 熱量依 2019 ESC/EAS 指引。TG 在 440 到 880 之間也可能發生胰臟炎。'},
+myth:{zh:'魚油與迷思　·　實證上不成立的',
+  html:`<div class="myth"><h3>這些說法，指引與研究不支持</h3><table>
+<tr><th style="width:230px">常聽到的說法</th><th>實際上</th></tr>
+<tr><td class="x">「TG 高是因為吃太油」</td><td>TG 輕中度偏高時，最常見的推手是酒、糖、精緻澱粉和體重。只有 TG 超過 500 時，才需要極低脂飲食。</td></tr>
+<tr><td class="x">「買魚油保健品吃就好」</td><td>能降 TG 約 30% 的是處方級 omega-3，每天 2 到 4 公克 EPA 加 DHA，由醫師開立。保健品每顆含量與品質不一，吃到足量也要算進熱量；要不要用、用多少，請先問醫師。</td></tr>
+<tr><td class="x">「純 EPA 處方藥和一般魚油一樣」</td><td>REDUCE-IT 試驗用的是純 EPA 製劑（icosapent ethyl）每天 4 公克，對象是已服 statin、TG 仍偏高的心血管高風險者，減少了心血管事件。一般 EPA 加 DHA 魚油沒有同樣的證據，兩者不能互相替代。</td></tr>
+<tr><td class="x">「水果天然，多吃沒關係」</td><td>水果的果糖一樣會升 TG。每天 2 份、吃完整的就好，果汁不算水果。</td></tr>
+<tr><td class="x">「小酌對心臟好」</td><td>TG 偏高的人喝酒會讓 TG 再升；TG 超過 500 的人要完全戒酒。沒有喝酒習慣的人不需要為了心臟開始喝。</td></tr>
+<tr><td class="x">「我不胖，TG 高跟飲食無關」</td><td>酒、含糖飲料、精緻澱粉不管胖瘦都會升 TG；部分人有家族遺傳，需要醫師評估。</td></tr>
+<tr><td class="x">「TG 降下來就可以停藥」</td><td>飲食和藥物是一起作用的結果。藥物調整由醫師依抽血結果決定，不要自己停。</td></tr></table></div>`,
+  note:'資料來源：2023 台灣糖尿病血脂指引（Taiwan Diabetes Lipid Guideline 2023）；2025 台灣血脂管理臨床路徑共識（內科學誌 2024;35:426-430）；2019 ESC/EAS 血脂異常指引（Atherosclerosis 2019;290:140-205）；2011 AHA 三酸甘油酯與心血管疾病科學聲明（Circulation 2011;123:2292-2333）；REDUCE-IT（N Engl J Med 2019）。'},
+};
+function setV(k){
+  const v=V[k];
+  document.getElementById('zh').textContent=v.zh;
+  document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.dataset.v===k));
+  let h='';
+  if(v.cards){
+    h=`<div class="grid"><div class="c lead"><i class="fa-solid ${v.lead.i}"></i><div class="t">${v.lead.t}</div></div>`;
+    v.cards.forEach((c,idx)=>{h+=`<div class="c ${c.hot?'hot':''}"><span class="n">${String(idx+1).padStart(2,'0')}</span><i class="fa-solid ${c.i}"></i><div class="t">${c.t}</div></div>`;});
+    h+='</div>';
+  }else{h=v.html;}
+  document.getElementById('body').innerHTML=h;
+  document.getElementById('note').textContent=v.note;
+}
+setV((new URLSearchParams(location.search).get('v') in V)?new URLSearchParams(location.search).get('v'):'core');
+</script></body></html>
