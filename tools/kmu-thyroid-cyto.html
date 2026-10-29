@@ -24,18 +24,18 @@
   footer{font-size:12px; color:var(--muted); margin-top:20px;}
   table.g{border-collapse:collapse; width:100%; font-size:14px; margin-top:6px;}
   table.g td{border:1px solid var(--line); padding:4px 8px;}
-  .ga{background:#fff6c7;} .gs{background:#ffd9a8;} .gm{background:#ffc4c4;}
+  .gb{background:#d9f2df;} .gn{background:#dce6f5;} .ga{background:#fff6c7;} .gs{background:#ffd9a8;} .gm{background:#ffc4c4;}
 </style>
 </head>
 <body>
 <div class="wrap">
   <h1>高醫甲狀腺細胞學批次查詢（Chrome 插件）</h1>
-  <div class="sub">貼上一串病歷號，逐一取得甲狀腺與頸部淋巴結細胞學的最近一次報告，整理成一張表，可下載 CSV。atypia、suspicious、malignant 整列上底色。</div>
+  <div class="sub">貼上一串病歷號，逐一取得甲狀腺與頸部淋巴結細胞學的全部報告（新到舊），整理成一張表，可下載 CSV。依診斷整列上底色（benign、nondiagnostic、atypia、suspicious、malignant 各一色）。</div>
 
   <div class="card">
     <h2>下載</h2>
     <div class="dl">
-      <a class="btn" href="downloads/kmu-thyroid-cyto-v1.3.0.zip" download>插件 v1.3.0（zip）</a>
+      <a class="btn" href="downloads/kmu-thyroid-cyto-v1.4.0.zip" download>插件 v1.4.0（zip）</a>
     </div>
     <p class="small">只在院內網路可用（高醫、岡山）。沿用你在 Chrome 已登入的院內連線，插件不處理帳號密碼；病歷號與報告只留在查詢頁，關掉分頁就清除，只記住院區與職編。</p>
   </div>
@@ -64,18 +64,20 @@
       <li>先在 Chrome 打開一次院內系統，確認已登入。</li>
       <li>點插件圖示，會開出查詢頁。選院區，第一次使用要填職編。</li>
       <li>貼上病歷號（一行一個，或用空白、逗號分隔），按「開始查詢」。</li>
-      <li>查完按「下載 CSV」。同一位病人若同時有甲狀腺與淋巴結報告，會各列一列。</li>
+      <li>查完按「下載 CSV」。同一位病人每一份甲狀腺、淋巴結報告各列一列，新到舊；「筆數」欄的 1/3 表示該部位共 3 份中的第 1 份（最新）。</li>
     </ol>
   </div>
 
   <div class="card">
-    <h2>分級上色（只看 Diagnosis 欄）</h2>
+    <h2>分級上色（看 Diagnosis 欄；nondiagnostic 另看檢體適當性）</h2>
     <table class="g">
+      <tr class="gb"><td>benign</td><td>Benign／Bethesda II／Negative for malignancy／goiter、thyroiditis、colloid、adenomatous nodule、reactive、lymphadenitis、hyperplasia</td></tr>
+      <tr class="gn"><td>nondiagnostic</td><td>Nondiagnostic／Unsatisfactory／Insufficient／Inadequate／Cyst fluid only／Bethesda I</td></tr>
       <tr class="ga"><td>atypia</td><td>Atypia of undetermined significance／AUS／FLUS／Bethesda III／atypical cells</td></tr>
       <tr class="gs"><td>suspicious</td><td>Suspicious for malignancy，以及 cannot rule out／cannot be excluded 這類無法排除的寫法</td></tr>
       <tr class="gm"><td>malignant</td><td>Malignant、carcinoma、cancer、metastatic、lymphoma、Bethesda VI（已排除「Negative for…」這類否定句）</td></tr>
     </table>
-    <p class="small">Benign、Nondiagnostic、Follicular neoplasm（Bethesda IV）不上色。上色只是提示，不能取代逐份閱讀報告。</p>
+    <p class="small">判斷順序：suspicious → malignant → atypia → nondiagnostic → benign，先命中者為準（例如 reactive atypia 算 atypia）。Follicular neoplasm／Suspicious for a follicular（Hürthle、oncocytic）neoplasm（Bethesda IV）不上色。上色只是提示，不能取代逐份閱讀報告。</p>
   </div>
 
   <div class="card warn">
@@ -90,6 +92,7 @@
   <div class="card small">
     <strong>版本紀錄</strong>
     <ul>
+      <li>v1.4.0（2026-10-29）：同一位病人有多份報告時全部列出（新到舊，「筆數」欄顯示第幾份／共幾份，CSV 加「第幾筆」欄），每份各自核對病歷號；benign（淡綠）、nondiagnostic（淡藍）也上色；Suspicious for a follicular neoplasm（Bethesda IV）不再誤標為 suspicious。</li>
       <li>v1.3.0（2026-10-25）：加入頸部淋巴結細胞學；atypia／suspicious／malignant 整列上色；CSV 加「部位」「分級」欄。</li>
       <li>v1.2.1（2026-10-25）：支援報告上「號碼-檢查碼」的病歷號寫法。</li>
       <li>v1.2.0（2026-10-25）：改為在背景分頁開啟病歷頁再讀報告；新圖示。</li>
@@ -98,7 +101,7 @@
     </ul>
   </div>
 
-  <footer>工具版本：2026-10-25</footer>
+  <footer>工具版本：2026-10-29</footer>
 </div>
 </body>
 </html>
