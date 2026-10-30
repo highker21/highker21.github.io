@@ -61,6 +61,19 @@ table.food td.r{color:var(--warn);font-weight:800;white-space:nowrap}
 .sev ul{padding-left:20px;font-size:14px;line-height:1.75}
 .sev li{margin-bottom:4px}
 .sev .alarm{margin-top:12px;background:var(--warn);color:#fff;border-radius:8px;padding:10px 14px;font-weight:700;font-size:14.5px;line-height:1.6}
+/* 四個分頁一起列印（老闆 2026-10-30 TG 2475）：比照低膽固醇卡，把四個 view 各渲染一份 .sheet 疊進 #printall，只在列印時顯示 */
+#printall{display:none}
+.bar{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.bar button.ghost{background:#fff;color:var(--ink);border:1px solid var(--ink)}
+@media print{
+  body.printing-all #sheet,body.printing-all .bar{display:none!important}
+  body.printing-all #printall{display:block}
+  #printall .sheet{max-width:100%;padding:4mm}
+  #printall .sheet+.sheet{break-before:page;page-break-before:always}
+}
+/* 量測用：螢幕上暫時套用列印寬度，算出要縮多少才塞得進一張 A4 */
+body.fitmeasure .sheet{width:194mm!important;max-width:none!important;padding:4mm!important;margin:0!important}
+body.fitmeasure #printall{display:block}
 </style></head><body>
 <div class="tabs no-print">
   <div class="tab active" data-v="core" onclick="setV('core')">九招圖卡<small>先從哪裡下手</small></div>
@@ -76,9 +89,9 @@ table.food td.r{color:var(--warn);font-weight:800;white-space:nowrap}
   </div>
   <div id="body"></div>
   <div class="note" id="note"></div>
-  <div class="foot">高醫體系　內分泌新陳代謝科　｜　<b>本圖卡僅供衛教，是否用藥、目標值以醫師判斷為準</b>　｜　依 2023 台灣糖尿病血脂指引、2025 台灣血脂管理臨床路徑共識、2019 ESC/EAS 血脂指引、2011 AHA 三酸甘油酯科學聲明整理　｜　工具版本：2026-10-29</div>
+  <div class="foot">高醫體系　內分泌新陳代謝科　｜　<b>本圖卡僅供衛教，是否用藥、目標值以醫師判斷為準</b>　｜　依 2023 台灣糖尿病血脂指引、2025 台灣血脂管理臨床路徑共識、2019 ESC/EAS 血脂指引、2011 AHA 三酸甘油酯科學聲明整理　｜　工具版本：2026-10-30</div>
 </div>
-<div class="bar no-print"><button onclick="window.print()">🖨 列印目前這版 / 存成 PDF（A4）</button></div>
+<div class="bar no-print"><button onclick="window.print()">🖨 列印目前這版 / 存成 PDF（A4）</button><button onclick="printAll()" class="ghost">🖨 四個分頁一起列印 / 存成一份 PDF</button></div>
 <script>
 const V={
 core:{zh:'九招圖卡　·　三酸甘油酯（TG）對生活型態的反應比膽固醇大',
@@ -153,5 +166,33 @@ function setV(k){
   document.getElementById('body').innerHTML=h;
   document.getElementById('note').textContent=v.note;
 }
-setV((new URLSearchParams(location.search).get('v') in V)?new URLSearchParams(location.search).get('v'):'core');
+function buildPrintAll(){
+  const keep=document.querySelector('.tab.active').dataset.v,box=document.createElement('div');box.id='printall';
+  Object.keys(V).forEach(k=>{setV(k);const c=document.getElementById('sheet').cloneNode(true);c.removeAttribute('id');c.querySelectorAll('[id]').forEach(e=>e.removeAttribute('id'));box.appendChild(c);});
+  setV(keep);
+  return box;
+}
+function printAll(){
+  const old=document.getElementById('printall');if(old)old.remove();
+  const box=buildPrintAll();document.body.appendChild(box);document.body.classList.add('printing-all');
+  const done=()=>{document.body.classList.remove('printing-all');box.remove();window.removeEventListener('afterprint',done);};
+  window.addEventListener('afterprint',done);
+  setTimeout(()=>{window.print();setTimeout(done,120000);},50);
+}
+// 列印前自動縮放（比照低膽固醇卡）：各電腦字型不同，超出一頁一點點就會多印一張空白頁；超出 25% 以內就等比縮進一張 A4
+const PAGE_H=281*96/25.4;
+function fitSheets(){
+  const sheets=[...document.querySelectorAll(document.body.classList.contains('printing-all')?'#printall .sheet':'#sheet')];
+  sheets.forEach(s=>s.style.zoom='');
+  document.body.classList.add('fitmeasure');
+  sheets.forEach(s=>{const h=s.getBoundingClientRect().height,k=PAGE_H*0.97/h;s.dataset.fit=k<1&&k>=0.75?k.toFixed(3):'';});
+  document.body.classList.remove('fitmeasure');
+  sheets.forEach(s=>{if(s.dataset.fit)s.style.zoom=s.dataset.fit;});
+}
+function unfitSheets(){document.querySelectorAll('.sheet').forEach(s=>s.style.zoom='');}
+window.addEventListener('beforeprint',fitSheets);
+window.addEventListener('afterprint',unfitSheets);
+const q=new URLSearchParams(location.search);
+setV((q.get('v') in V)?q.get('v'):'core');
+if(q.get('printall')){document.body.appendChild(buildPrintAll());document.body.classList.add('printing-all');}
 </script></body></html>
