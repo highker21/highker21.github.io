@@ -67,7 +67,12 @@ details{font-size:.78rem;color:#675;margin-top:8px}
   <div>
     <label class="fld" for="rpt">📄 病理報告（整段貼上）</label>
     <textarea id="rpt" placeholder="貼上甲狀腺病理報告全文…（含 Microscopic Examination、pTNM、Tumor size、Extrathyroid extension、Lymph-vascular invasion、Surgical margin、lymph node 等）"></textarea>
-    <div class="bar"><button id="clr" class="ghost">清空</button><span class="note" style="font-size:.78rem">解析後請核對右側欄位</span></div>
+    <div class="bar"><button id="clr" class="ghost">清空</button><button id="add2" class="ghost">＋ 第二份報告（另一側／補切）</button><span class="note" style="font-size:.78rem">解析後請核對右側欄位</span></div>
+    <div id="rpt2box" style="display:none">
+      <label class="fld" for="rpt2">📄 第二份病理報告（例如先切一側、確診後再切另一側）</label>
+      <textarea id="rpt2" placeholder="貼上第二次手術的病理報告全文…兩份會分別解析再合併評估"></textarea>
+      <div class="bar"><button id="del2" class="ghost">✕ 移除第二份</button><span class="note" style="font-size:.78rem">合併規則：大小取最大、pT/pN 取最高、血管侵犯／ETE／切緣／ENE／M 取最差、淋巴結兩份相加；兩側都有癌＝雙側</span></div>
+    </div>
   </div>
   <div class="panel">
     <h2>🔬 擷取特徵（可核對／修正）</h2>
@@ -112,7 +117,7 @@ TSH(初始；2025 之後改依動態反應調整)：high &lt;0.1｜intermediate-
 RAI(Rec.32)：low 不建議常規(選擇性 30–50mCi)；low-int/int-high「可考慮 consider」(30–100，最高150mCi)；high / M1「建議常規 recommend」(100–150mCi，已知病灶可更高)。<br>
 AJCC 8th(年齡分界55)：&lt;55 → M0=Stage I、M1=II；≥55 → T1-2N0M0=I、T3或N1=II、T4a=III、T4b=IVA、M1=IVB。
 </div></details>
-<div class="foot">工具版本：2026-10-19（<b>BRAF 判讀修正</b>：報告寫「Immunohistochemical stain of BRAFV600E: the lesion is cut through」這類沒有結果的寫法時，舊版會把檢驗名稱裡的 V600E 誤當成陽性；現在只看檢驗名稱後面的判讀結果，沒有明確陽性或陰性時設為「未提供」並提示。沿用 2026-08-06 <b>ENE／M 否定語誤判修正</b>：報告寫 「Extranodal extension of lymph node: <b>not identified</b>」時，舊版只比對關鍵字有無出現，會把結外侵犯判成「有」→ 直接推到 High risk；現改為取冒號後的判讀文字再比對正反。遠端轉移同樣處理，並修正「pT2N1bM1」這種分期字串黏在一起時抓不到 M1 的問題。沿用 7/28 ETE 否定子句移除、T3b 需肉眼侵犯帶狀肌、報告 pT 優先、單一最大徑寫法，及碘131 排程單串接、ATA 2025 Fig.2/Rec.32）｜資料僅在瀏覽器本機處理</div>
+<div class="foot">工具版本：2026-10-30（<b>兩份報告合併評估</b>：先切一側、確診後再切另一側時，按「＋ 第二份報告」分別貼上，兩份各自解析再合併——大小取最大、pT/pN 取最高、血管侵犯／ETE／切緣／ENE／M 取最差、淋巴結相加、兩份都有癌判雙側。舊版兩份貼在同一格時只讀到第一份的 pT/pN、血管侵犯與淋巴結。沿用 2026-10-19 <b>BRAF 判讀修正</b>：報告寫「Immunohistochemical stain of BRAFV600E: the lesion is cut through」這類沒有結果的寫法時，舊版會把檢驗名稱裡的 V600E 誤當成陽性；現在只看檢驗名稱後面的判讀結果，沒有明確陽性或陰性時設為「未提供」並提示。沿用 2026-10-14 <b>報告 pT 優先修正</b>：報告寫 pT1a 時，舊版仍用抓到的腫瘤大小（例如被誤抓成腫瘤的檢體大小 6.5 cm）判成 T3a，連帶判成雙側多發 &gt;1cm，結果誤判為 High risk；現在風險分層和分期一樣以報告 pT 為準，超出 pT 大小上限的數字會排除並提示。同一顆腫瘤在 Gross 與 Microscopic 各寫一次時，也不再誤算成多發。沿用 8/06 ENE／M 否定語修正、<b>ENE／M 否定語誤判修正</b>：報告寫 「Extranodal extension of lymph node: <b>not identified</b>」時，舊版只比對關鍵字有無出現，會把結外侵犯判成「有」→ 直接推到 High risk；現改為取冒號後的判讀文字再比對正反。遠端轉移同樣處理，並修正「pT2N1bM1」這種分期字串黏在一起時抓不到 M1 的問題。沿用 7/28 ETE 否定子句移除、T3b 需肉眼侵犯帶狀肌、報告 pT 優先、單一最大徑寫法，及碘131 排程單串接、ATA 2025 Fig.2/Rec.32）｜資料僅在瀏覽器本機處理</div>
 
 <script>
 const $=id=>document.getElementById(id);
@@ -154,9 +159,21 @@ function parseReport(t){
   for(const m of t.matchAll(/Tumou?r\s*size[：:\s]*([\d.]+\s*[xX×][\d.\sxX×]+)/ig)){const d=maxdim(m[1]);if(d!=null){sizes.push(d);microSizes.push(d);}}
   for(const m of t.matchAll(/(?:^|\n)\s*[-●*]?\s*Size[：:\s]*([\d.]+\s*[xX×][\d.\sxX×]+)/ig)){const d=maxdim(m[1]);if(d!=null){sizes.push(d);grossSizes.push(d);}}
   for(const m of t.matchAll(/Tumou?r\s*size[：:\s]*([\d.]+)\s*cm/ig)){const d=parseFloat(m[1]);if(!isNaN(d)){sizes.push(d);microSizes.push(d);}}
-  F.size=sizes.length?String(Math.max(...sizes)):'';
   // Gross 與 Microscopic 對不起來時要講出來（本次事故就是這一型），不要默默取一個值
   F._warn=[];
+  // ⚠️ 2026-10-14 個管師回報：報告 pT1a，卻抓到 6.5 cm（多半是 Gross 段的檢體/整葉 Size 行）
+  //    → 推成 T3a、雙側多發>1cm → High。病理科載明的 pT 是權威：
+  //    超出該 pT 大小上限的數字一律排除（T1a≤1、T1b≤2、T2≤4），並提示人工核對。
+  const ptEarly=((t.match(/\(?\s*[ryp]*T(\w+)(?:\s*\(\s*(?:\d+|m)\s*\))?\s*N[\dxX]/i)||[])[1]||'').toLowerCase();
+  const ptCap=/^1a/.test(ptEarly)?1:/^1b/.test(ptEarly)?2:/^1/.test(ptEarly)?2:/^2/.test(ptEarly)?4:null;
+  if(ptCap!=null){
+    const bad=sizes.filter(d=>d>ptCap);
+    if(bad.length){
+      sizes=sizes.filter(d=>d<=ptCap);grossSizes=grossSizes.filter(d=>d<=ptCap);microSizes=microSizes.filter(d=>d<=ptCap);
+      F._warn.push('報告載明 pT'+ptEarly+'（≤'+ptCap+' cm），但抓到 '+bad.join('、')+' cm（可能是檢體大小），已排除，請核對腫瘤最大徑');
+    }
+  }
+  F.size=sizes.length?String(Math.max(...sizes)):'';
   if(grossSizes.length&&microSizes.length){
     const g=Math.max(...grossSizes),mi=Math.max(...microSizes);
     if(g!==mi)F._warn.push('Gross 最大 '+g+' cm 與 Microscopic 最大 '+mi+' cm 不一致，已採用較大者 '+Math.max(...sizes)+' cm，請核對原始報告');
@@ -173,10 +190,13 @@ function parseReport(t){
   const rptLines=t.split(/\n/);
   const rightCa=rptLines.some(ln=>/(^|[\s,，])right($|[\s,，])|右葉/i.test(ln)&&posCa(ln));
   const leftCa =rptLines.some(ln=>/(^|[\s,，])left($|[\s,，])|左葉/i.test(ln)&&posCa(ln));
-  const multiFoci=sizes.length>=2||fociByParen||fociByWord||(rightCa&&leftCa)||/bilateral\s*multifocal|multifocal|多發|multiple\s+(?:classic\s+|invasive\s+|foci|papillary|carcinoma|PTC|tumou?rs?)|Number[：:\s]*[2-9]/i.test(t);
+  // 同一顆腫瘤常在 Gross 與 Microscopic 各寫一次 → 不可把兩段加總當成 2 顆（2026-10-14 回歸測試發現）
+  const multiFoci=microSizes.length>=2||grossSizes.length>=2||fociByParen||fociByWord||(rightCa&&leftCa)||/bilateral\s*multifocal|multifocal|多發|multiple\s+(?:classic\s+|invasive\s+|foci|papillary|carcinoma|PTC|tumou?rs?)|Number[：:\s]*[2-9]/i.test(t);
   const bilateral=/bilateral\s*multifocal|multifocal.*bilateral|雙側.*多發|兩側.*多發/i.test(t)||(rightCa&&leftCa)||(/right\s*lobe/i.test(t)&&/left\s*lobe/i.test(t)&&multiFoci);
   if(bilateral&&sizes.length&&Math.max(...sizes)>1)F.multi='bilat';
-  else if(multiFoci)F.multi='uni';
+  else if(multiFoci){F.multi='uni';
+    // ATA 2025 Fig.2 只列「單側多發→low-int」「雙側多發>1cm→int-high」，雙側但每顆≤1cm 未明列 → 暫算 1 個 low-int 並提示
+    if(bilateral)F._warn.push('雙側多發但最大病灶 ≤1 cm（或大小不明）：ATA 2025 Fig.2 未明列，暫以「多發」計 1 個 low-int 因子，請醫師判讀');}
   else F.multi='none';
   // ETE：抓所有葉的 ETE 行，取最重（t4 > gross > micro）；報告常直接寫「grossly/microscopically to <構造>」而非"present"
   const eteRaw=((t.match(/Extra[- ]?thyroid(?:al)?\s*extension[：:\s]*[^\n]*/ig)||[]).concat(t.match(/Tumou?r\s*extension[：:\s]*[^\n]*/ig)||[])).join(' ').toLowerCase();
@@ -243,7 +263,7 @@ function parseReport(t){
   const mLines=t.match(/(?:distant\s*met\w*|遠端轉移)[^\n]*/ig)||[];
   //   ⚠️ M1 常黏在分期字串裡（"pT2N1bM1"），單用 \bM1\b 抓不到——b 與 M 之間沒有詞界。
   F.m=(/\bM1\b/.test(t)||/[TN][\dxX][a-z]?M1\b/i.test(t))?'1':decide(mLines);
-  const tn=t.match(/\(?\s*[ryp]*T(\w+)\s*N([\dxX]\w*)\s*(M\d)?\s*\)?/);
+  const tn=t.match(/\(?\s*[ryp]*T(\w+)(?:\s*\(\s*(?:\d+|m)\s*\))?\s*N([\dxX]\w*)\s*(M\d)?\s*\)?/);
   F.pt=tn?'pT'+tn[1]:'';F.pn=tn?'N'+tn[2]:'';
   // ⚠️ 2026-10-19 使用者回報：「Immunohistochemical stain of BRAFV600E: the lesion is cut through.」被判成 BRAF+。
   //    舊版只要看到「BRAF」後接「V600E」就算陽性——但 V600E 是檢驗項目名稱，不是結果。
@@ -258,7 +278,61 @@ function parseReport(t){
   else if([tertC,brafC,rasC].includes('neg'))F.mol='none';
   else F.mol='unknown';
   if(F.mol==='unknown'&&[tertC,brafC,rasC].includes('nores'))F._warn.push('報告有提到分子／BRAF 檢測，但沒有明確陽性或陰性結果（例如病灶已切完、無法判讀），已設為「未提供」，請核對原始報告');
+  // 合併兩份報告用：這份的甲狀腺本體有沒有癌（淋巴結轉移行、「no residual carcinoma」不算）
+  // 兩份貼在同一格：pT/pN、血管侵犯、淋巴結只會讀到第一份 → 提示改用第二格
+  if((t.match(/Pathologic(?:al)?\s*Diagnosis|病理診斷/ig)||[]).length>=2||(t.match(/\bp?T[0-4][a-d]?(?:\s*\(\s*(?:\d+|m)\s*\))?\s*N[\dxX]/ig)||[]).length>=2)
+    F._warn.push('這格看起來貼了 2 份報告：請把第二份移到「＋ 第二份報告」，否則 pT/pN、血管侵犯、淋巴結只會讀到第一份');
+  //   ⚠️ B 審查（2026-10-30）抓到兩種誤殺：「lymphocytic thyroiditis」的 lymph、「surgical margin negative」的 negative
+  //   都曾讓真的癌診斷行被排除 → 大小只取另一份、雙側消失（低估）。
+  //   改為：只排除以 Lymph node／LN／淋巴結 開頭的行；否定只認貼著癌／惡性的寫法。
+  const caNeg=/negative\s+for\s+(?:malignan\w*|carcinoma|tumou?r)|free\s+of\s+(?:malignan\w*|carcinoma|tumou?r)|\bno\s+(?:residual\s+|evidence\s+of\s+)?(?:malignan\w*|carcinoma|tumou?r)|carcinoma[^.\n]*?:\s*(?:not\s*identified|absent|none)/i;
+  F.hasCa=(dxSec.trim()?dxSec:t).split('\n').some(ln=>/carcinoma/i.test(ln)&&!caNeg.test(ln)&&!/^[\s\-*●•\d.)]*(?:lymph\s*nodes?|LN)\b|^[\s\-*●•\d.)]*淋巴結/i.test(ln));
   return F;
+}
+// ⚠️ 2026-10-30 老闆提問：臨床上常先切一側、確診癌症後再切另一側（completion）。
+//    兩份貼在同一格時，pT/pN、血管侵犯只抓「第一個出現的」，淋巴結只數第一份的 Pathologic Diagnosis 段
+//    → 先貼初次手術時，第二份的血管侵犯、淋巴結 3/6、pT1b 全部漏掉（實測），往低估的方向錯。
+//    改為兩格各自 parseReport，再依「取最差」合併；pT 大小上限排除也因此只作用在各自的報告內。
+const rptAll=()=>[$('rpt').value,$('rpt2').value].filter(s=>s.trim()).join('\n\n');
+function mergeReports(A,B){
+  const worst=(order,a,b)=>order.indexOf(a)>=order.indexOf(b)?a:b;
+  const tRank=s=>{const m=(s||'').match(/T(\d)([a-d]?)/i);return m?(+m[1])*10+(m[2]?m[2].toLowerCase().charCodeAt(0)-96:0):-1;};
+  const nRank=s=>({'':-1,NX:0,N0:1,N1:2,N1A:2,N1B:3})[(s||'').toUpperCase()]??0;
+  const F={};
+  for(const k of ['age','sex','pname'])F[k]=A[k]||B[k]||'';
+  F.hist=A.hasCa||!B.hasCa?A.hist:B.hist;
+  F.grade=worst(['0','aggr','high'],A.grade,B.grade);
+  F.variant=[...new Set([A.variant,B.variant].filter(Boolean))].join(' + ');
+  // 腫瘤大小只取「有癌」那份：良性那份抓到的是結節／整葉大小，不是腫瘤（實測：良性補切 4.5 cm 被當腫瘤）
+  const sz=(A.hasCa||B.hasCa?[A,B].filter(x=>x.hasCa):[A,B]).map(x=>x.size).filter(Boolean).map(parseFloat);
+  F.size=sz.length?String(Math.max(...sz)):'';
+  // 兩份都有癌＝左右葉各有病灶 → 雙側多發（>1cm 才算 bilat，與單份規則相同）
+  const bothCa=A.hasCa&&B.hasCa;
+  // 多發只看有癌那份：良性補切的多顆良性結節不算腫瘤多發（B 審查：曾使 Low → Low-intermediate，高估）
+  const caRpts=[A,B].filter(x=>x.hasCa);
+  F.multi=bothCa?(sz.length&&Math.max(...sz)>1?'bilat':'uni'):(caRpts.length?caRpts:[A,B]).map(x=>x.multi).reduce((a,b)=>worst(['none','uni','bilat'],a,b));
+  F.ete=worst(['none','micro','gross','t4'],A.ete,B.ete);
+  F.lvi=A.lvi==='1'||B.lvi==='1'?'1':'0';
+  F.margin=worst(['neg','microant','micropost','gross'],A.margin,B.margin);
+  F.lnpos=String(+A.lnpos+ +B.lnpos);F.lntot=String(+A.lntot+ +B.lntot);
+  F.lnloc=A.lnloc==='N1b'||B.lnloc==='N1b'?'N1b':+F.lnpos>0?'N1a':'none';
+  const ls=[A.lnsize,B.lnsize].filter(Boolean).map(parseFloat);F.lnsize=ls.length?String(Math.max(...ls)):'';
+  F.ene=A.ene==='1'||B.ene==='1'?'1':'0';
+  F.m=A.m==='1'||B.m==='1'?'1':'0';
+  F.pt=tRank(A.pt)>=tRank(B.pt)?A.pt:B.pt;
+  F.pn=nRank(A.pn)>=nRank(B.pn)?A.pn:B.pn;
+  F.mol=worst(['unknown','none','braf','tert'],A.mol,B.mol);
+  F._warn=[...A._warn.map(w=>'第1份：'+w),...B._warn.map(w=>'第2份：'+w),
+    '已合併 2 份報告（第1份 '+(A.pt||'無pT')+(A.pn?' '+A.pn:'')+'；第2份 '+(B.pt||'無pT')+(B.pn?' '+B.pn:'')+'），合併後 pT 請依兩側最大病灶由醫師確認'];
+  if(A.hasCa&&B.hasCa&&A.hist!==B.hist)F._warn.push('兩份組織型態不同（'+A.hist+'／'+B.hist+'），已採第1份，請核對');
+  if(!A.hasCa||!B.hasCa)F._warn.push((A.hasCa?'第2份':'第1份')+'未見癌診斷，雙側多發不成立');
+  return F;
+}
+function parseAll(){
+  const a=$('rpt').value,b=$('rpt2').value;
+  if(!b.trim())return parseReport(a);
+  if(!a.trim())return parseReport(b);
+  return mergeReports(parseReport(a),parseReport(b));
 }
 function fill(F){for(const k of ['age','sex','hist','variant','grade','size','multi','ete','lvi','margin','lnpos','lntot','lnloc','lnsize','ene','m','pt','pn','mol'])$('f_'+k).value=F[k]??'';}
 function readF(){return{age:+$('f_age').value||null,sex:$('f_sex').value,hist:$('f_hist').value,variant:$('f_variant').value.trim(),grade:$('f_grade').value,
@@ -269,7 +343,7 @@ function readF(){return{age:+$('f_age').value||null,sex:$('f_sex').value,hist:$(
 
 // 由 ETE 與大小推導 T（沒有載明 pT 時才用）
 function Tinferred(F){
-  const t4b=/prevertebral|carotid|mediastin/i.test($('rpt').value||'');
+  const t4b=/prevertebral|carotid|mediastin/i.test(rptAll());
   if(F.ete==='t4')return{t:'T4',t4:true,t4b};
   if(F.ete==='gross')return{t:'T3b',t4:false};
   const s=F.size;
@@ -306,7 +380,10 @@ function ajcc(F){const T=Tstage(F);const N=deriveN(F);const age=F.age;if(age==nu
 // ==== ATA 2025 Fig.2 risk engine (PTC) ====
 function risk(F){
   const hi=[],ih=[],li=[];
-  const T=Tstage(F), gt4=F.size!=null&&F.size>4, T3a=gt4&&F.ete!=='gross'&&F.ete!=='t4';
+  // ⚠️ 2026-10-14 個管師回報：報告寫 pT1a，工具卻用解析到的 6.5 cm 判 T3a → High。
+  //    分期那邊早已「報告 pT 優先」，風險這邊卻還直接看 F.size>4，兩處標準不一。
+  //    改為一律由 Tstage() 決定 T3a（有 pT 用 pT，沒有才用大小推導）。
+  const T=Tstage(F), T3a=/T3a/i.test(T.t)&&F.ete!=='gross'&&F.ete!=='t4';
   // HIGH
   if(F.ete==='t4')hi.push('肉眼甲外侵犯 T4（氣管/喉/食道/大血管等）');
   else if(F.ete==='gross')hi.push('肉眼甲外侵犯 gross ETE（T3b，帶狀肌）');
@@ -350,7 +427,7 @@ const raiLong=t=>t==='high'?'建議常規（recommend）：輔助治療＋殘餘
 
 function run(){
   const F=readF();
-  if(F.age==null&&!$('rpt').value.trim()){$('summary').textContent='貼上病理報告後，這裡會出現一行式結論。';$('reason').innerHTML='';return;}
+  if(F.age==null&&!rptAll().trim()){$('summary').textContent='貼上病理報告後，這裡會出現一行式結論。';$('reason').innerHTML='';return;}
   const R=risk(F),S=ajcc(F),T=Tstage(F),N=deriveN(F),Mst=F.m?'M1':'M0';
   const histName={PTC:'Papillary Thyroid Cancer',FTC:'Follicular Thyroid Cancer',OTC:'Oncocytic Thyroid Cancer'}[F.hist];
   const tnm=`(p${T.t} p${N.replace(/^N/,'N')} ${Mst})`;
@@ -405,12 +482,16 @@ function run(){
     ['一行式結論',$('summary').textContent],
   ]};
 }
-$('rpt').addEventListener('input',()=>{const F=parseReport($('rpt').value);fill(F);if(F.pname&&!$('pname').value.trim())$('pname').value=F.pname;// 解析警示要看得到：Gross/Micro 尺寸不一致這種事，靜靜取一個值正是 2026-08-25 那次低估的成因
-$('msg').textContent=(F._warn&&F._warn.length)?('⚠️ '+F._warn.join('；')):'';run();});
+function onRpt(){const F=parseAll();fill(F);if(F.pname&&!$('pname').value.trim())$('pname').value=F.pname;// 解析警示要看得到：Gross/Micro 尺寸不一致這種事，靜靜取一個值正是 2026-08-25 那次低估的成因
+$('msg').textContent=(F._warn&&F._warn.length)?('⚠️ '+F._warn.join('；')):'';run();}
+$('rpt').addEventListener('input',onRpt);$('rpt2').addEventListener('input',onRpt);
+const show2=on=>{$('rpt2box').style.display=on?'':'none';$('add2').style.display=on?'none':'';};
+$('add2').onclick=()=>{show2(true);$('rpt2').focus();};
+$('del2').onclick=()=>{$('rpt2').value='';show2(false);onRpt();};
 $('pname').addEventListener('input',run);
 document.querySelectorAll('.grid input,.grid select').forEach(e=>e.addEventListener('change',run));
 $('calc').onclick=run;
-$('clr').onclick=()=>{$('rpt').value='';run();};
+$('clr').onclick=()=>{$('rpt').value='';$('rpt2').value='';show2(false);onRpt();};
 $('copy').onclick=async()=>{await navigator.clipboard.writeText($('summary').textContent);$('msg').textContent='已複製結論 ✅';setTimeout(()=>$('msg').textContent='',1500);};
 $('copyfull').onclick=async()=>{await navigator.clipboard.writeText(window._fullText||$('summary').textContent);$('msg').textContent='已複製完整分析 ✅';setTimeout(()=>$('msg').textContent='',1500);};
 
@@ -439,21 +520,21 @@ function renderHist(){
 function saveCurrent(){
   const name=$('pname').value.trim();
   if(!name){$('msg2').textContent='請先填姓名/病歷號';setTimeout(()=>$('msg2').textContent='',1800);$('pname').focus();return;}
-  if(!$('rpt').value.trim()){$('msg2').textContent='沒有報告內容可存';setTimeout(()=>$('msg2').textContent='',1800);return;}
+  if(!rptAll().trim()){$('msg2').textContent='沒有報告內容可存';setTimeout(()=>$('msg2').textContent='',1800);return;}
   const arr=loadHist(),existing=arr.find(x=>x.name===name);
-  const rec={id:existing?existing.id:'p'+Date.now(),name,report:$('rpt').value,fields:snapFields(),date:nowStr()};
+  const rec={id:existing?existing.id:'p'+Date.now(),name,report:$('rpt').value,report2:$('rpt2').value,fields:snapFields(),date:nowStr()};
   activeId=rec.id;const na=arr.filter(x=>x.name!==name);na.unshift(rec);saveHist(na);renderHist();
   $('msg2').textContent=existing?'已更新 ✅':'已儲存 ✅';setTimeout(()=>$('msg2').textContent='',1600);
 }
 function loadItem(id){
   const it=loadHist().find(x=>x.id===id);if(!it)return;
-  $('pname').value=it.name||'';$('rpt').value=it.report||'';
-  fill(parseReport($('rpt').value));restoreFields(it.fields);
+  $('pname').value=it.name||'';$('rpt').value=it.report||'';$('rpt2').value=it.report2||'';show2(!!$('rpt2').value.trim());
+  fill(parseAll());restoreFields(it.fields);
   activeId=id;run();renderHist();
   $('msg2').textContent='已載入：'+(it.name||'未命名');setTimeout(()=>$('msg2').textContent='',1600);
 }
 function delItem(id){saveHist(loadHist().filter(x=>x.id!==id));if(activeId===id)activeId=null;renderHist();}
-function newPatient(){$('pname').value='';$('rpt').value='';FIELDS.forEach(id=>{const el=$(id);el.value=(el.tagName==='SELECT')?el.options[0].value:'';});activeId=null;run();renderHist();$('pname').focus();}
+function newPatient(){$('pname').value='';$('rpt').value='';$('rpt2').value='';show2(false);FIELDS.forEach(id=>{const el=$(id);el.value=(el.tagName==='SELECT')?el.options[0].value:'';});activeId=null;run();renderHist();$('pname').focus();}
 $('save').onclick=saveCurrent;$('newp').onclick=newPatient;renderHist();
 
 // ---- 匯出 Word / Excel / CSV / PDF / 列印 ----
