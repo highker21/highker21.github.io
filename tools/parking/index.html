@@ -62,6 +62,7 @@ footer a{color:var(--mute)}
 .news-tag{font-size:13px;font-weight:800;padding:1px 8px;border-radius:6px;flex:none}
 .news-body{font-size:16px;line-height:1.5;color:var(--ink);margin:4px 0}
 .news-body summary{cursor:pointer;list-style:none}
+.more{width:100%;font-weight:700;padding:10px;margin:4px 0 8px}
 .tab.on{background:var(--brand);border-color:var(--brand);color:#fff}
 .bk{display:inline-block;font-size:12px;font-weight:700;padding:1px 6px;border-radius:6px;border:1px solid var(--line);margin-left:6px;vertical-align:2px}
 .me-icon{position:relative}
@@ -143,10 +144,10 @@ footer a{color:var(--mute)}
 </dialog>
 
 <footer>
-  資料：<a href="https://tdx.transportdata.tw" target="_blank" rel="noopener">交通部 TDX</a>、新北市政府、新竹市政府開放資料，依<a href="https://data.gov.tw/license" target="_blank" rel="noopener">政府資料開放授權條款第 1 版</a>使用；合併與篩選不代表機關背書。<br>
+  資料：<a href="https://tdx.transportdata.tw" target="_blank" rel="noopener">交通部 TDX</a>、新北市政府、新竹市政府、警察廣播電臺（即時路況）開放資料，依<a href="https://data.gov.tw/license" target="_blank" rel="noopener">政府資料開放授權條款第 1 版</a>使用；合併與篩選不代表機關背書。<br>
   地圖：© <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors。<br>
   資料處理邏輯參考 opview（© 2026 Rick Lan，<a href="https://github.com/herizon1054/opview/blob/01f0f20/LICENSE" target="_blank" rel="noopener">非商業授權</a>）。<br>
-  工具版本：2026-11-04c
+  工具版本：2026-11-04d
 </footer>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js" integrity="sha512-puJW3E/qXDqYp9IfhAI54BJEaWIfloJ7JWs7OeD5i6ruC9JZL1gERT1wjtwXFlh7CjE7ZJ+/vcRZRkIYIb6p4g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
@@ -220,7 +221,7 @@ async function proxyGet(path, {auth, wait, progress} = {}){
     r = await fetch(PROXY + path, {headers: auth ? {Authorization: 'Bearer ' + auth} : {}, cache: 'no-store'});
   } catch { throw new ApiError('連不上轉送伺服器，請檢查網路', 'network'); }
   const up = r.headers.get('X-Upstream') || '';
-  const src = path.startsWith('/tdx/') ? 'TDX' : path.startsWith('/ntpc/') ? '新北市政府' : '新竹市政府';
+  const src = path.startsWith('/tdx/') ? 'TDX' : path.startsWith('/ntpc/') ? '新北市政府' : path.startsWith('/pbs/') ? '警廣' : '新竹市政府';
   if (r.status === 200) return r.text();
   if (up === 'rejected' || (r.status === 403 && up.startsWith('status-')))
     throw new ApiError(`${src}來源拒絕存取（即時空位暫時無法取得）`, 'rejected');
@@ -787,7 +788,7 @@ async function queryBike(manual){
 // 全台整包抓（不帶座標，座標不送 Worker），前端篩附近路段；線型與路名一天一次存 IndexedDB
 const ROADS = [['Freeway', '國道'], ['Highway', '省道']];
 const trafficLayer = L.layerGroup();
-let lastTraffic = null, trafficBusy = false;
+let lastTraffic = null, trafficBusy = false, trafficMore = false, newsMore = false;
 const tstatus = s => setStatus('traffic', s);
 const twarn = list => warnTo('warnsTraffic', list);
 const idb = {
@@ -835,6 +836,43 @@ function speedTone(road, v){ const [hi, lo] = road === 'Freeway' ? [60, 30] : [4
 // TDX Swagger NewsCategory：1 交管措施、2 事故、3 壅塞、4 施工、99 其他
 const NEWS_CAT = {1: ['low', '交管'], 2: ['full', '事故'], 3: ['low', '壅塞'], 4: ['low', '施工'], 99: ['unk', '其他']};
 function safeUrl(u){ try { const x = new URL(u); return x.protocol === 'https:' || x.protocol === 'http:' ? x.href : null; } catch { return null; } }
+// 警廣即時路況：不需金鑰、不吃 TDX 額度；全台最新 1000 筆，前端篩附近；60 秒內不重抓（保護警廣主機）
+let pbsCache = null, pbsMore = false;
+async function pbsLoad(){
+  if (pbsCache && Date.now() - pbsCache.at < 60000) return pbsCache.rows;
+  let r;
+  try { r = await fetch(PROXY + '/pbs/roadData', {cache: 'no-store'}); } catch { throw new ApiError('連不上警廣路況', 'network'); }
+  if (r.status !== 200) throw new ApiError(`警廣路況暫時無法使用（${r.status}）`);
+  let j; try { j = JSON.parse(await r.text()); } catch { throw new ApiError('警廣路況格式異常'); }
+  const arr = Array.isArray(j) ? j : j && typeof j === 'object' ? Object.values(j).find(Array.isArray) : null;
+  if (!arr) throw new ApiError('警廣路況格式異常');
+  const rows = [];
+  for (const x of arr) {
+    if (!x || typeof x !== 'object') continue;
+    const lat = parseFloat(x.y1), lon = parseFloat(x.x1);
+    if (!isFinite(lat) || !isFinite(lon) || lat < 21.5 || lat > 26.5 || lon < 118 || lon > 123) continue;
+    rows.push({lat, lon, type: String(x.roadtype ?? ''), road: String(x.road ?? ''), dir: String(x.direction ?? ''), area: String(x.areaNm ?? ''),
+      text: String(x.comment ?? '').replace(/\s+/g, ' ').trim(), when: `${x.happendate ?? ''} ${x.happentime ?? ''}`.trim(), src: String(x.srcdetail ?? '')});
+  }
+  pbsCache = {at: Date.now(), rows};
+  return rows;
+}
+const PBS_TONE = t => /事故|車禍/.test(t) ? 'full' : /施工|壅塞|阻塞|管制|故障|障礙/.test(t) ? 'low' : 'unk';
+function renderPbs(){
+  if (!lastTraffic || !lastTraffic.pbs) return '';
+  const {pbs, lat, lon} = lastTraffic;
+  let list = pbs.map(x => ({...x, d: dist(lat, lon, x.lat, x.lon)})).sort((a, b) => a.d - b.d);
+  const near = list.filter(x => x.d <= 5000);
+  const far = !near.length && list.length;
+  list = far ? list.slice(0, 1) : near;  // 附近沒有：只顯示最近 1 則（老闆 TG33189）
+  const shown = pbsMore ? list : list.slice(0, 5);
+  return `<h3>警廣即時路況${far ? '' : `（5 公里內 ${near.length} 則）`}</h3>` + (list.length ? shown.map(x => {
+    const body = x.text.length > 120 ? `<details><summary>${esc(x.text.slice(0, 120))}…</summary>${esc(x.text.slice(120))}</details>` : esc(x.text);
+    return `<div class="news"><div class="news-head"><span class="news-tag t-${PBS_TONE(x.type)}">${esc(x.type || '路況')}</span><b>${esc([x.road, x.dir].filter(Boolean).join(' ') || x.area || '警廣通報')}</b></div>`
+      + (x.text ? `<div class="news-body">${body}</div>` : '')
+      + `<div class="meta">${far ? '附近沒有通報，這是最近的一則 · ' : ''}${x.d >= 1000 ? (x.d / 1000).toFixed(1) + ' 公里' : Math.round(x.d) + ' 公尺'}${x.when ? ' · ' + esc(x.when) : ''}${x.src ? ' · ' + esc(x.src) : ''}</div></div>`;
+  }).join('') + (list.length > 5 && !pbsMore ? `<button class="more" id="pbsMoreBtn">更多…（還有 ${list.length - 5} 則）</button>` : '') : '<div class="meta">目前沒有警廣通報</div>');
+}
 function renderTraffic(){
   if (!lastTraffic) return;
   const now = Date.now(), {list, news} = lastTraffic;
@@ -845,25 +883,37 @@ function renderTraffic(){
     [t.text, t.tone] = t.pending ? ['車速更新中…', 'pend'] : !a ? ['無資料', 'unk'] : stale ? ['資料過期', 'unk'] : !(a.speed > 0) ? ['無資料', 'unk'] : [`${a.speed} km/h`, speedTone(t.kind, a.speed)];
     if (t.d <= 5000) for (const ln of t.lines) L.polyline(ln, {color: HEX[t.tone], weight: t.kind === 'Freeway' ? 7 : 5, opacity: .9}).bindPopup(`${esc(t.name)}<br><b>${esc(t.text)}</b>`).addTo(trafficLayer);
   }
+  // 老闆 TG33189：一次只顯示 5 筆，其餘收在「更多…」後面
   const sorted = [...list].sort((a, b) => a.d - b.d).slice(0, 40);
-  for (const t of sorted) {
+  sorted.forEach((t, i) => {
     const li = document.createElement('li');
+    if (i >= 5 && !trafficMore) li.hidden = true;
     li.innerHTML = `<span class="dot" style="background:${HEX[t.tone]}"></span><div class="grow"><div class="name">${esc(t.road || t.name)} ${esc(DIR[t.dir] || '')}<span class="bk">${t.kind === 'Freeway' ? '國道' : '省道'}</span></div>`
-      + `<div class="free t-${t.tone}">${esc(t.text)}</div><div class="meta">${esc(t.name)} · ${Math.round(t.d)} 公尺</div></div>`;
+      + `<div class="free t-${t.tone}">${esc(t.text)}</div><div class="meta">${t.far ? '附近沒有路況，這是最近的一段 · ' : ''}${esc(t.name)} · ${t.d >= 1000 ? (t.d / 1000).toFixed(1) + ' 公里' : Math.round(t.d) + ' 公尺'}</div></div>`;
     li.querySelector('.name').addEventListener('click', () => { const p = t.lines[0][Math.floor(t.lines[0].length / 2)]; map.setView(p, 16); });
+    $('listTraffic').appendChild(li);
+  });
+  if (sorted.length > 5 && !trafficMore) {
+    const li = document.createElement('li');
+    li.innerHTML = `<button class="more">更多…（還有 ${sorted.length - 5} 段）</button>`;
+    li.querySelector('button').onclick = () => { trafficMore = true; renderTraffic(); };
     $('listTraffic').appendChild(li);
   }
   if (!sorted.length) $('listTraffic').innerHTML = '<li><div class="grow meta">附近沒有國道或省道路段，可以把範圍調大再查。</div></li>';
   // 事件（老闆 TG33176）：直接顯示 Description 內容；標題高對比粗體＋依 NewsCategory 上色；
   // 不放 NewsURL（都只導到高公局首頁）。所有文字一律轉義
-  if (news) $('newsTraffic').innerHTML = '<h3>國道最新事件</h3>' + (news.length ? news.map(n => {
+  $('newsTraffic').innerHTML = '';
+  if (news) $('newsTraffic').innerHTML = '<h3>國道最新事件</h3>' + (news.length ? news.filter((_, i) => newsMore || i < 5).map(n => {
     const [tone, kind] = NEWS_CAT[n.NewsCategory] || ['unk', '其他'], when = Date.parse(n.PublishTime || '');
     const body = String(n.Description || '').replace(/\s+/g, ' ').trim();
     const short = body.length > 120 ? `<details><summary>${esc(body.slice(0, 120))}…</summary>${esc(body.slice(120))}</details>` : esc(body);
     return `<div class="news"><div class="news-head"><span class="news-tag t-${tone}">${esc(kind)}</span><b>${esc(n.Title || kind)}</b></div>`
       + (body ? `<div class="news-body">${short}</div>` : '')
       + `<div class="meta">${isNaN(when) ? '' : new Date(when).toLocaleString('zh-TW', {month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit'})}</div></div>`;
-  }).join('') : '<div class="meta">目前沒有事件</div>');
+  }).join('') + (news.length > 5 && !newsMore ? `<button class="more" id="newsMoreBtn">更多…（還有 ${news.length - 5} 則）</button>` : '') : '<div class="meta">目前沒有事件</div>');
+  if (lastTraffic.pbs) $('newsTraffic').innerHTML = ($('newsTraffic').innerHTML || '') + renderPbs();
+  if ($('newsMoreBtn')) $('newsMoreBtn').onclick = () => { newsMore = true; renderTraffic(); };
+  if ($('pbsMoreBtn')) $('pbsMoreBtn').onclick = () => { pbsMore = true; renderTraffic(); };
 }
 async function queryTraffic(manual){
   if (trafficBusy) return;
@@ -873,15 +923,22 @@ async function queryTraffic(manual){
   let sent = false;
   try {
     if (!(store.get('pk_cid') && store.get('pk_csec'))) {
-      lastTraffic = null; trafficLayer.clearLayers(); $('newsTraffic').innerHTML = '';
-      $('listTraffic').innerHTML = NOKEY_HTML('即時路況');
-      tstatus('尚未設定 TDX 金鑰'); return;
+      // 沒金鑰：國道／省道車速要 TDX，但警廣路況不用金鑰，照樣顯示
+      trafficLayer.clearLayers();
+      $('listTraffic').innerHTML = NOKEY_HTML('國道／省道即時車速');
+      const h = manual || !here || Date.now() - here.at > 120000 ? await locate(tstatus) : here;
+      lastTraffic = {list: [], lat: h.lat, lon: h.lon, seq: h.seq, news: null, pbs: null}; pbsMore = false;
+      try { lastTraffic.pbs = await pbsLoad(); } catch (e) { notes.push(e.message); }
+      renderTraffic(); $('listTraffic').innerHTML = NOKEY_HTML('國道／省道即時車速');
+      tstatus('警廣路況（國道／省道車速需 TDX 金鑰）'); return;
     }
     const h = manual || !here || Date.now() - here.at > 120000 ? await locate(tstatus) : here;
     const {lat, lon} = h, radius = Math.max(2000, +$('radius').value);
     const auth = await token();
     const list = [];
-    lastTraffic = {list, lat, lon, seq: h.seq, news: null};
+    lastTraffic = {list, lat, lon, seq: h.seq, news: null, pbs: null}; trafficMore = newsMore = pbsMore = false;
+    pbsLoad().then(r => { if (lastTraffic && lastTraffic.seq === h.seq) { lastTraffic.pbs = r; renderTraffic(); } }).catch(e => { notes.push(e.message); twarn(notes); });
+    let best = null; // 範圍內完全沒有路段時，改列最近的一段（老闆 TG33189）
     // 順序：國道路網 → 國道車速 → 事件 → 省道路網 → 省道車速（國道先出來）
     for (const [road] of ROADS) {
       sent = true;
@@ -891,7 +948,10 @@ async function queryTraffic(manual){
         let d = Infinity;
         for (const ln of x.lines) for (let i = 0; i < ln.length; i += 3) { const dd = dist(lat, lon, ln[i][0], ln[i][1]); if (dd < d) d = dd; }
         if (d <= radius) near.push({...x, kind: road, d, pending: true});
+        if (!best || d < best.d) best = {...x, kind: road, d, pending: true};
       }
+      // 省道這輪結束後若仍一段都沒有，把全台最近的一段補進來查車速
+      if (road === 'Highway' && !list.length && !near.length && best) near.push({...best, far: true});
       list.push(...near); renderTraffic();
       for (let i = 0; i < near.length; i += 40) {
         const batch = near.slice(i, i + 40);
