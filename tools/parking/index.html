@@ -25,7 +25,8 @@ header{display:flex;align-items:center;gap:8px;padding:10px 16px;padding-top:max
 header h1{font-size:18px;margin:0;flex:1}
 button{font:inherit;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:10px;padding:8px 12px;cursor:pointer}
 button.primary{background:var(--brand);border-color:var(--brand);color:#fff;font-weight:600}
-button:disabled{opacity:.5}
+button:disabled{opacity:.6}
+button.primary:disabled{opacity:1;background:#5b6661;border-color:#5b6661;color:#fff}
 #map{height:46vh;min-height:260px;margin:0 16px;border-radius:14px;border:1px solid var(--line)}
 .bar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:10px 16px}
 .bar select{font:inherit;padding:7px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink)}
@@ -36,7 +37,12 @@ ul#list{list-style:none;margin:6px 0 0;padding:0 16px 16px}
 .dot{width:12px;height:12px;border-radius:50%;margin-top:6px;flex:none}
 .grow{flex:1;min-width:0}
 .name{font-weight:600}
-.meta{color:var(--mute);font-size:13px}
+.meta{color:var(--mute);font-size:14px}
+.name{font-size:17px}
+.free{display:inline-block;margin:4px 0 2px;padding:3px 10px;border-radius:8px;font-size:22px;font-weight:800;line-height:1.3}
+.t-ok{background:#22c55e;color:#052e14}.t-low{background:#facc15;color:#3a2a00}.t-full{background:#ef4444;color:#fff}
+.t-unk{background:var(--line);color:var(--ink);font-size:16px;font-weight:600}.t-pend{background:#c4b5fd;color:#2e1065;font-size:16px}
+.dot{width:14px;height:14px}
 .nav{display:flex;gap:6px;margin-top:6px;flex-wrap:wrap}
 .nav a{font-size:14px;text-decoration:none;color:var(--brand);border:1px solid var(--line);border-radius:8px;padding:3px 8px}
 dialog{border:none;border-radius:14px;max-width:min(520px,calc(100vw - 32px));background:var(--card);color:var(--ink)}
@@ -47,6 +53,13 @@ dialog input,dialog select{width:100%;font:inherit;padding:8px;border-radius:8px
 footer{padding:8px 16px 24px;color:var(--mute);font-size:12px}
 footer a{color:var(--mute)}
 .leaflet-popup-content{font-size:14px}
+.me-icon{position:relative}
+.me-dot{position:absolute;left:5px;top:5px;width:18px;height:18px;border-radius:50%;background:#2563eb;border:3px solid #fff;box-shadow:0 0 0 2px #2563eb,0 2px 6px #0008}
+.me-pulse{position:absolute;left:-6px;top:-6px;width:40px;height:40px;border-radius:50%;background:#2563eb55;animation:mepulse 1.8s ease-out infinite}
+.me-tag{position:absolute;left:30px;top:2px;white-space:nowrap;background:#2563eb;color:#fff;font-weight:800;font-size:14px;padding:1px 7px;border-radius:7px;box-shadow:0 1px 4px #0007}
+@keyframes mepulse{0%{transform:scale(.4);opacity:1}100%{transform:scale(1.4);opacity:0}}
+@media (prefers-reduced-motion:reduce){.me-pulse{animation:none}}
+.locate-btn{background:#fff;color:#1d2421;border:2px solid #0003;border-radius:8px;padding:6px 10px;font-weight:700;font-size:14px}
 </style>
 </head>
 <body>
@@ -103,7 +116,7 @@ footer a{color:var(--mute)}
   資料：<a href="https://tdx.transportdata.tw" target="_blank" rel="noopener">交通部 TDX</a>、新北市政府、新竹市政府開放資料，依<a href="https://data.gov.tw/license" target="_blank" rel="noopener">政府資料開放授權條款第 1 版</a>使用；合併與篩選不代表機關背書。<br>
   地圖：© <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors。<br>
   資料處理邏輯參考 opview（© 2026 Rick Lan，<a href="https://github.com/herizon1054/opview/blob/01f0f20/LICENSE" target="_blank" rel="noopener">非商業授權</a>）。<br>
-  工具版本：2026-11-03
+  工具版本：2026-11-03b
 </footer>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js" integrity="sha512-puJW3E/qXDqYp9IfhAI54BJEaWIfloJ7JWs7OeD5i6ruC9JZL1gERT1wjtwXFlh7CjE7ZJ+/vcRZRkIYIb6p4g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
@@ -149,11 +162,13 @@ const getJSON = k => { try{ return JSON.parse(store.get(k) || 'null'); }catch{ r
 class ApiError extends Error { constructor(msg, kind){ super(msg); this.kind = kind || 'error'; } }
 
 // ---- 節流：本機每分鐘最多 5 筆資料請求（opview PARKING_zh-TW.md:27），手動查詢冷卻 30 秒 ----
+const COOLDOWN = 60000; // 老闆 TG33054：按下後倒數 60 秒才能再按
 const gate = {
   win(){ const now = Date.now(); return (getJSON('pk_gate') || []).filter(t => now - t < 60000); },
   waitMs(n = 1){ const w = this.win(); if (w.length + n <= 5) return 0; return 60000 - (Date.now() - w[w.length + n - 6]) + 50; },
   take(){ const w = this.win(); w.push(Date.now()); store.set('pk_gate', JSON.stringify(w)); },
-  cooldown(){ const t = +(store.get('pk_click') || 0); return Math.max(0, 30000 - (Date.now() - t)); },
+  cooldown(){ const t = +(store.get('pk_click') || 0); return Math.max(0, COOLDOWN - (Date.now() - t)); },
+  reset(){ store.del('pk_click'); },
   click(){ store.set('pk_click', String(Date.now())); },
 };
 const sleep = ms => new Promise(r => setTimeout(r, ms));
@@ -398,6 +413,7 @@ function tdxAvail(r){
 }
 // 顯示文字與顏色；區分「來源拒絕」和「此場沒有即時資料」
 function label(lot, now){
+  if (lot.pending) return ['空位更新中…', 'pend'];
   if (lot.rejected) return ['來源拒絕存取', 'unk'];
   const a = lot.avail;
   if (!a) return [lot.liveTried ? '此場沒有即時資料' : '未提供即時空位', 'unk'];
@@ -413,8 +429,8 @@ function label(lot, now){
   if (a.unclassified !== null) return [`未分類 ${a.unclassified} 位`, a.unclassified === 0 ? 'full' : a.unclassified < 10 ? 'low' : 'ok'];
   return ['空位未知', 'unk'];
 }
-const COLORS = {ok:'var(--ok)', low:'var(--low)', full:'var(--full)', unk:'var(--unk)'};
-const HEX = {ok:'#1f9d55', low:'#e08a00', full:'#d64545', unk:'#8a9490'};
+// 亮色系（老闆 TG33054：剩餘車位用粗體、亮度高的顏色）
+const HEX = {ok:'#22c55e', low:'#facc15', full:'#ef4444', unk:'#8a9490', pend:'#c4b5fd'};
 
 // ---- 定位與縣市 ----
 function position(){
@@ -448,7 +464,14 @@ const map = L.map('map', {zoomControl: true}).setView([23.7, 121], 7);
 L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {maxZoom: 19,
   attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'}).addTo(map);
 const layer = L.layerGroup().addTo(map);
-let me = null, ring = null;
+let me = null, ring = null, myPos = null;
+// 「回到我的位置」按鈕：只移動地圖，不觸發查詢
+const Locate = L.Control.extend({options: {position: 'topright'}, onAdd(){
+  const b = L.DomUtil.create('button', 'locate-btn'); b.type = 'button'; b.textContent = '◎ 我的位置'; b.title = '回到我的位置';
+  L.DomEvent.disableClickPropagation(b);
+  b.onclick = () => { if (myPos) map.setView(myPos, Math.max(map.getZoom(), 16)); else status('先按「查詢附近停車」取得定位'); };
+  return b; }});
+new Locate().addTo(map);
 
 const $ = id => document.getElementById(id);
 const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -469,12 +492,12 @@ function render(){
   for (const l of sorted) {
     const src = l.id.startsWith('local:ntpc') ? '新北市政府' : l.id.startsWith('local:hccg') ? '新竹市政府' : 'TDX';
     const kind = l.on ? '路邊' : '路外';
-    const html = `<div class="name">${esc(l.name)}</div><div class="meta">${kind} · ${Math.round(l.d)} 公尺 · ${esc(l.text)} · ${src}</div>`
+    const html = `<div class="name">${esc(l.name)}</div><div class="free t-${l.tone}">${esc(l.text)}</div><div class="meta">${kind} · ${Math.round(l.d)} 公尺 · ${src}</div>`
       + (l.address ? `<div class="meta">${esc(l.address)}</div>` : '') + `<div class="nav">${navLinks(l)}</div>`;
-    L.circleMarker([l.lat, l.lon], {radius: l.on ? 6 : 9, color: '#fff', weight: 2, fillColor: HEX[l.tone], fillOpacity: .95})
+    L.circleMarker([l.lat, l.lon], {radius: l.on ? 8 : 11, color: '#111', weight: 2, fillColor: HEX[l.tone], fillOpacity: .95})
       .bindPopup(html).addTo(layer);
     const li = document.createElement('li');
-    li.innerHTML = `<span class="dot" style="background:${COLORS[l.tone]}"></span><div class="grow">${html}</div>`;
+    li.innerHTML = `<span class="dot" style="background:${HEX[l.tone]}"></span><div class="grow">${html}</div>`;
     li.querySelector('.name').addEventListener('click', () => { map.setView([l.lat, l.lon], 17); });
     $('list').appendChild(li);
   }
@@ -491,14 +514,17 @@ async function query(){
   if (busy) return;
   const cd = gate.cooldown();
   if (cd > 0) { status(`請等 ${Math.ceil(cd/1000)} 秒再查詢（避免超過資料來源限制）`); return; }
-  busy = true; $('btnQuery').disabled = true; warn([]);
+  busy = true; gate.click(); tick(); warn([]);
   const notes = [];
+  let sent = false;
   try {
     status('定位中…');
     const p = await position();
     const lat = p.latitude, lon = p.longitude, radius = +$('radius').value;
     if (me) map.removeLayer(me); if (ring) map.removeLayer(ring);
-    me = L.circleMarker([lat, lon], {radius: 8, color: '#fff', weight: 3, fillColor: '#2563eb', fillOpacity: 1}).addTo(map).bindTooltip('你的位置');
+    // 老闆 TG33056：明顯的「我在哪」標記（divIcon 在 markerPane，永遠蓋在停車場圓點上面）
+    myPos = [lat, lon];
+    me = L.marker(myPos, {icon: L.divIcon({className: 'me-icon', html: '<span class="me-pulse"></span><span class="me-dot"></span><span class="me-tag">我在哪</span>', iconSize: [28, 28], iconAnchor: [14, 14]}), zIndexOffset: 1000, keyboard: false}).addTo(map);
     ring = L.circle([lat, lon], {radius, color: '#2563eb', weight: 1, fillOpacity: .04}).addTo(map);
     map.fitBounds(ring.getBounds());
     status('判斷縣市…');
@@ -508,7 +534,7 @@ async function query(){
     const hasKey = !!(store.get('pk_cid') && store.get('pk_csec'));
     // 有金鑰但快取只有地方資料、且還沒用這組金鑰試過 → 重新下載（改金鑰時會清快取）
     const stale = !c || Date.now() - c.at > 7 * 86400000 || (hasKey && !c.tdx && !c.tdxTried && (OFF_STATIC.has(city) || ON_STATIC.has(city)));
-    if (stale) { const r = await downloadStatic(city, status); c = r.c; notes.push(...r.notes); }
+    if (stale) { sent = true; const r = await downloadStatic(city, status); c = r.c; notes.push(...r.notes); }
     else if (!c.tdx && (OFF_STATIC.has(city) || ON_STATIC.has(city)) && !hasKey) notes.push('未設定 TDX 金鑰，只顯示地方政府資料');
     const all = unpack(c).filter(l => dist(lat, lon, l.lat, l.lon) <= radius).sort((a, b) => dist(lat, lon, a.lat, a.lon) - dist(lat, lon, b.lat, b.lon));
     const cand = [...all.filter(l => !l.on).slice(0, 20), ...all.filter(l => l.on).slice(0, 20)];
@@ -518,9 +544,14 @@ async function query(){
     const tdxKinds = [false, true].filter(on => (on ? ON_LIVE : OFF_LIVE).has(city) && cand.some(l => l.on === on && !l.id.startsWith('local:')));
     const localGroup = cand.filter(l => l.id.startsWith('local:'));
     const need = tdxKinds.length + (localGroup.length ? (city === 'NewTaipei' ? 2 : 1) : 0);
-    const wait = gate.waitMs(need);
-    if (wait > 0) throw new ApiError(`本機每分鐘 5 筆節流（位置資料剛下載），請等 ${Math.ceil(wait/1000)} 秒再查詢`, 'gate');
-    gate.click();
+    // 第一次查詢剛下載位置清單、用掉每分鐘額度時：先顯示位置，自動等額度恢復再補抓空位（不用再按一次）
+    const liveLots = cand.filter(l => l.id.startsWith('local:') || (l.on ? ON_LIVE : OFF_LIVE).has(city));
+    if (gate.waitMs(need) > 0) {
+      liveLots.forEach(l => l.pending = true); render();
+      for (let w; (w = gate.waitMs(need)) > 0;) { status(`已列出位置，空位更新中…（等資料額度 ${Math.ceil(w/1000)} 秒）`); await sleep(1000); }
+    }
+    liveLots.forEach(l => l.pending = false);
+    sent = true;
     status('查詢即時空位…');
     const tasks = [];
     for (const on of [false, true]) {
@@ -558,9 +589,10 @@ async function query(){
     render();
     status(`${CITIES[city]} · ${cand.length} 處 · ${new Date().toLocaleTimeString('zh-TW', {hour:'2-digit', minute:'2-digit'})} 更新`);
   } catch (e) {
+    if (!sent) gate.reset(); // 還沒送出任何資料請求（例如定位失敗）就不必倒數
     status(e instanceof ApiError ? e.message : '查詢失敗，請稍後再試');
   } finally {
-    warn(notes); busy = false; $('btnQuery').disabled = false;
+    warn(notes); busy = false; tick();
   }
 }
 
@@ -593,6 +625,14 @@ $('btnClear').onclick = () => {
   dlg.close(); status('金鑰與快取已清除');
 };
 $('btnQuery').onclick = query;
+// 按鈕上倒數：冷卻中顯示「N 秒後可再查」
+function tick(){
+  const cd = gate.cooldown(), b = $('btnQuery');
+  b.disabled = busy || cd > 0;
+  b.textContent = cd > 0 ? `${Math.ceil(cd/1000)} 秒後可再查` : '查詢附近停車';
+}
+setInterval(tick, 1000);
+tick();
 $('sort').onchange = render;
 $('btnIntroOk').onclick = () => { store.set('pk_intro', '1'); $('dlgIntro').close(); };
 if (!store.get('pk_intro')) $('dlgIntro').showModal();
