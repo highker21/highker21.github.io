@@ -32,8 +32,8 @@ button.primary:disabled{opacity:1;background:#5b6661;border-color:#5b6661;color:
 .bar select{font:inherit;padding:7px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink)}
 #status{padding:0 16px;color:var(--mute);font-size:14px;min-height:21px}
 .warn{margin:6px 16px;padding:8px 12px;border-radius:10px;background:var(--warn-bg);color:var(--warn-ink);font-size:14px}
-ul#list,ul#listBike{list-style:none;margin:6px 0 0;padding:0 16px 16px}
-#list li,#listBike li{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin-bottom:8px;display:flex;gap:10px;align-items:flex-start}
+ul#list,ul#listBike,ul#listTraffic{list-style:none;margin:6px 0 0;padding:0 16px 16px}
+#list li,#listBike li,#listTraffic li{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin-bottom:8px;display:flex;gap:10px;align-items:flex-start}
 .dot{width:12px;height:12px;border-radius:50%;margin-top:6px;flex:none}
 .grow{flex:1;min-width:0}
 .name{font-weight:600}
@@ -54,7 +54,10 @@ footer{padding:8px 16px 24px;color:var(--mute);font-size:12px}
 footer a{color:var(--mute)}
 .leaflet-popup-content{font-size:14px}
 .tabs{display:flex;gap:8px;padding:0 16px 10px}
-.tab{flex:1;font-size:17px;font-weight:700;padding:10px}
+.tab{flex:1;font-size:16px;font-weight:700;padding:10px 4px}
+#newsTraffic{padding:0 16px 16px}
+#newsTraffic h3{font-size:16px;margin:4px 0 8px}
+.news{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:8px 12px;margin-bottom:8px}
 .tab.on{background:var(--brand);border-color:var(--brand);color:#fff}
 .bk{display:inline-block;font-size:12px;font-weight:700;padding:1px 6px;border-radius:6px;border:1px solid var(--line);margin-left:6px;vertical-align:2px}
 .me-icon{position:relative}
@@ -74,6 +77,7 @@ footer a{color:var(--mute)}
 <div class="tabs" role="tablist">
   <button id="tabPark" class="tab on" role="tab" aria-selected="true">🅿️ 停車</button>
   <button id="tabBike" class="tab" role="tab" aria-selected="false">🚲 YouBike</button>
+  <button id="tabTraffic" class="tab" role="tab" aria-selected="false">🚦 路況</button>
 </div>
 <div id="map"></div>
 <div class="bar">
@@ -94,6 +98,9 @@ footer a{color:var(--mute)}
 <ul id="list"></ul>
 <div id="warnsBike" hidden></div>
 <ul id="listBike" hidden></ul>
+<div id="warnsTraffic" hidden></div>
+<ul id="listTraffic" hidden></ul>
+<div id="newsTraffic" hidden></div>
 
 <dialog id="dlgSettings">
   <h3 style="margin:0">設定</h3>
@@ -102,6 +109,7 @@ footer a{color:var(--mute)}
   <label for="csec">TDX Client Secret</label>
   <input id="csec" type="password" autocomplete="off" spellcheck="false">
   <p id="keyState" class="meta"></p>
+  <p class="meta">還沒有金鑰？<a href="https://tdx.transportdata.tw/" target="_blank" rel="noopener"><b>到 TDX 官網免費申請</b></a>：右上角「註冊」→ Email 驗證 → 等審核 → 登入後到「會員中心 → 資料服務 → API 金鑰」複製 Client ID 與 Client Secret，貼到上面。</p>
   <p class="meta">金鑰只存在這台裝置的這個瀏覽器，不會上傳到我們的伺服器；只會直接送到 TDX 換取通行證。iPhone「加到主畫面」後是另一個獨立空間，要再輸入一次。新北、新竹不填金鑰也能查。</p>
   <label for="cityPick">縣市</label>
   <select id="cityPick"></select>
@@ -116,7 +124,7 @@ footer a{color:var(--mute)}
   <h3 style="margin:0">使用說明</h3>
   <p>1. 按「查詢附近停車」，允許定位，地圖與清單會列出附近停車場和路邊停車格。</p>
   <p>2. 點停車場可一鍵用 Google 或 Apple 地圖導航。</p>
-  <p>3. 新北、新竹不用金鑰；其他縣市請到「設定」填 TDX 金鑰（到 tdx.transportdata.tw 免費申請）。</p>
+  <p>3. 停車：新北、新竹不用金鑰；其他縣市、YouBike、路況要 TDX 金鑰——<a href="https://tdx.transportdata.tw/" target="_blank" rel="noopener">到 TDX 官網免費申請</a>，再填到「設定」。</p>
   <p>4. iPhone 可用 Safari「分享 → 加入主畫面」當 App 用；加到主畫面後金鑰要重新輸入一次。</p>
   <p class="meta">定位只在你的手機上計算距離，不會送到我們的轉送伺服器；地圖圖資與縣市判斷由 OpenStreetMap 提供，會看到你所在的大致範圍。</p>
   <div class="row"><button id="btnIntroOk" class="primary">知道了</button></div>
@@ -126,7 +134,7 @@ footer a{color:var(--mute)}
   資料：<a href="https://tdx.transportdata.tw" target="_blank" rel="noopener">交通部 TDX</a>、新北市政府、新竹市政府開放資料，依<a href="https://data.gov.tw/license" target="_blank" rel="noopener">政府資料開放授權條款第 1 版</a>使用；合併與篩選不代表機關背書。<br>
   地圖：© <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors。<br>
   資料處理邏輯參考 opview（© 2026 Rick Lan，<a href="https://github.com/herizon1054/opview/blob/01f0f20/LICENSE" target="_blank" rel="noopener">非商業授權</a>）。<br>
-  工具版本：2026-11-04
+  工具版本：2026-11-04b
 </footer>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js" integrity="sha512-puJW3E/qXDqYp9IfhAI54BJEaWIfloJ7JWs7OeD5i6ruC9JZL1gERT1wjtwXFlh7CjE7ZJ+/vcRZRkIYIb6p4g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
@@ -516,7 +524,7 @@ function render(){
 }
 // 分頁：停車／YouBike 各自保留狀態列與提示，地圖與「我在哪」共用
 let mode = 'park';
-const st = {park: '按「查詢附近停車」開始', bike: '按「查詢附近 YouBike」開始'};
+const st = {park: '按「查詢附近停車」開始', bike: '按「查詢附近 YouBike」開始', traffic: '按「查詢附近路況」開始'};
 function setStatus(which, s){ st[which] = s; if (mode === which) $('status').textContent = s; }
 function warnTo(id, list){ $(id).innerHTML = [...new Set(list)].map(w => `<div class="warn">${esc(w)}</div>`).join(''); }
 const warn = list => warnTo('warns', list);
@@ -611,14 +619,17 @@ async function query(){
     render();
     status(`${CITIES[city]} · ${cand.length} 處 · ${new Date().toLocaleTimeString('zh-TW', {hour:'2-digit', minute:'2-digit'})} 更新`);
   } catch (e) {
-    if (!sent) gate.reset(); // 還沒送出任何資料請求（例如定位失敗）就不必倒數
+    if (!sent || e.kind === 'nokey') gate.reset(); // 沒真的送出資料請求（定位失敗、沒金鑰）就不必倒數
     status(e instanceof ApiError ? e.message : '查詢失敗，請稍後再試');
+    if (e.kind === 'nokey') { last = null; layer.clearLayers(); $('list').innerHTML = NOKEY_HTML('這個縣市的停車'); }
   } finally {
     warn(notes); busy = false; tick();
   }
 }
 
 // ---- YouBike（TDX 公共自行車 v2，Swagger「公共運輸-自行車」） ----
+// 沒金鑰時各分頁共用的提示（老闆 TG33156：導到 TDX 官方網站申請）
+const NOKEY_HTML = what => `<li><div class="grow">${what}需要 TDX 金鑰（免費）：<a href="https://tdx.transportdata.tw/" target="_blank" rel="noopener"><b>到 TDX 官網申請</b></a>，右上角「註冊」→ Email 驗證 → 審核通過後到「會員中心 → API 金鑰」複製，再填進右上角「設定」。</div></li>`;
 const BIKE_CITIES = new Set(['Taipei','NewTaipei','Taoyuan','Taichung','Tainan','Kaohsiung','Hsinchu','HsinchuCounty',
   'MiaoliCounty','ChanghuaCounty','YunlinCounty','Chiayi','ChiayiCounty','PingtungCounty','TaitungCounty']);
 const BIKE_TYPE = {1: 'YouBike 1.0', 2: 'YouBike 2.0', 3: 'Moovo'};
@@ -709,7 +720,7 @@ async function queryBike(manual){
   try {
     if (!(store.get('pk_cid') && store.get('pk_csec'))) {
       lastBike = null; bikeLayer.clearLayers();
-      $('listBike').innerHTML = '<li><div class="grow">YouBike 需要 TDX 金鑰：到 <a href="https://tdx.transportdata.tw" target="_blank" rel="noopener">tdx.transportdata.tw</a> 免費申請，再填進右上角「設定」。</div></li>';
+      $('listBike').innerHTML = NOKEY_HTML('YouBike ');
       bstatus('尚未設定 TDX 金鑰');
       return;
     }
@@ -760,20 +771,153 @@ async function queryBike(manual){
   }
 }
 
-// ---- 分頁切換：不重新定位；YouBike 這次定位還沒資料才自動查一次 ----
+// ---- 即時路況（TDX 高公局／公路局：國道 Freeway、省道 Highway） ----
+// 全台整包抓（不帶座標，座標不送 Worker），前端篩附近路段；線型與路名一天一次存 IndexedDB
+const ROADS = [['Freeway', '國道'], ['Highway', '省道']];
+const trafficLayer = L.layerGroup();
+let lastTraffic = null, trafficBusy = false;
+const tstatus = s => setStatus('traffic', s);
+const twarn = list => warnTo('warnsTraffic', list);
+const idb = {
+  open(){ return new Promise((ok, no) => { try { const r = indexedDB.open('pk', 1); r.onupgradeneeded = () => r.result.createObjectStore('kv'); r.onsuccess = () => ok(r.result); r.onerror = () => no(r.error); } catch (e) { no(e); } }); },
+  async get(k){ try { const db = await this.open(); return await new Promise(ok => { const q = db.transaction('kv').objectStore('kv').get(k); q.onsuccess = () => ok(q.result ?? null); q.onerror = () => ok(null); }); } catch { return mem['idb:' + k] ?? null; } },
+  async set(k, v){ mem['idb:' + k] = v; try { const db = await this.open(); await new Promise(ok => { const t = db.transaction('kv', 'readwrite'); t.objectStore('kv').put(v, k); t.oncomplete = t.onerror = t.onabort = () => ok(); }); } catch {} },
+  async clear(){ for (const k of Object.keys(mem)) if (k.startsWith('idb:')) delete mem[k]; try { const db = await this.open(); db.transaction('kv', 'readwrite').objectStore('kv').clear(); } catch {} },
+};
+// TDX 路況回應是物件外殼：{..., LiveTraffics|SectionShapes|Sections|Newses: [...]}
+async function roadGet(path, query, auth, key, opt = {}){
+  const text = await proxyGet('/tdx' + path + '?' + new URLSearchParams(query).toString(), {auth, ...opt});
+  let j; try { j = JSON.parse(text); } catch { throw new ApiError('TDX 路況回應不是有效 JSON'); }
+  if (!j || typeof j !== 'object' || !Array.isArray(j[key])) throw new ApiError('TDX 路況回應格式異常');
+  return j;
+}
+// WKT LINESTRING / MULTILINESTRING → [[lat, lon], ...] 的陣列（座標降到小數 4 位）
+function wkt(g){
+  const m = /^\s*(MULTI)?LINESTRING\s*\((.*)\)\s*$/i.exec(String(g || ''));
+  if (!m) return [];
+  const parts = m[1] ? m[2].split(/\)\s*,\s*\(/) : [m[2]];
+  return parts.map(part => part.replace(/[()]/g, '').split(',').map(p => p.trim().split(/\s+/).map(Number))
+    .filter(([x, y]) => isFinite(x) && isFinite(y) && y > 21 && y < 27 && x > 118 && x < 123).map(([x, y]) => [+y.toFixed(4), +x.toFixed(4)])).filter(a => a.length > 1);
+}
+async function roadNet(road, auth){
+  const k = 'road_' + road, c = await idb.get(k);
+  if (c && c.v === 1 && Date.now() - c.at < 86400000) return c;
+  tstatus(`下載${road === 'Freeway' ? '國道' : '省道'}路網…（第一次比較久）`);
+  const sh = await roadGet(`/api/basic/v2/Road/Traffic/SectionShape/${road}`, {'$format': 'JSON'}, auth, 'SectionShapes', {wait: true, progress: tstatus});
+  const nm = await roadGet(`/api/basic/v2/Road/Traffic/Section/${road}`, {'$select': 'SectionID,SectionName,RoadName,RoadDirection', '$format': 'JSON'}, auth, 'Sections', {wait: true, progress: tstatus});
+  const names = new Map(nm.Sections.map(x => [x.SectionID, x]));
+  const sec = [];
+  for (const x of sh.SectionShapes) {
+    if (typeof x.SectionID !== 'string') continue;
+    const lines = wkt(x.Geometry); if (!lines.length) continue;
+    const n = names.get(x.SectionID) || {};
+    sec.push({id: x.SectionID, name: String(n.SectionName ?? x.SectionID), road: String(n.RoadName ?? ''), dir: String(n.RoadDirection ?? ''), lines});
+  }
+  const out = {v: 1, at: Date.now(), road, sec};
+  await idb.set(k, out);
+  return out;
+}
+const DIR = {N: '北向', S: '南向', E: '東向', W: '西向'};
+// 國道速限高、省道低：分開門檻（km/h）
+function speedTone(road, v){ const [hi, lo] = road === 'Freeway' ? [60, 30] : [40, 20]; return v >= hi ? 'ok' : v >= lo ? 'low' : 'full'; }
+function safeUrl(u){ try { const x = new URL(u); return x.protocol === 'https:' || x.protocol === 'http:' ? x.href : null; } catch { return null; } }
+function renderTraffic(){
+  if (!lastTraffic) return;
+  const now = Date.now(), {list, news} = lastTraffic;
+  trafficLayer.clearLayers();
+  $('listTraffic').innerHTML = '';
+  for (const t of list) {
+    const a = t.live, stale = !a || a.source === null || now - a.source > 300000 || now - a.source < -60000;
+    [t.text, t.tone] = t.pending ? ['車速更新中…', 'pend'] : !a ? ['無資料', 'unk'] : stale ? ['資料過期', 'unk'] : !(a.speed > 0) ? ['無資料', 'unk'] : [`${a.speed} km/h`, speedTone(t.kind, a.speed)];
+    if (t.d <= 5000) for (const ln of t.lines) L.polyline(ln, {color: HEX[t.tone], weight: t.kind === 'Freeway' ? 7 : 5, opacity: .9}).bindPopup(`${esc(t.name)}<br><b>${esc(t.text)}</b>`).addTo(trafficLayer);
+  }
+  const sorted = [...list].sort((a, b) => a.d - b.d).slice(0, 40);
+  for (const t of sorted) {
+    const li = document.createElement('li');
+    li.innerHTML = `<span class="dot" style="background:${HEX[t.tone]}"></span><div class="grow"><div class="name">${esc(t.road || t.name)} ${esc(DIR[t.dir] || '')}<span class="bk">${t.kind === 'Freeway' ? '國道' : '省道'}</span></div>`
+      + `<div class="free t-${t.tone}">${esc(t.text)}</div><div class="meta">${esc(t.name)} · ${Math.round(t.d)} 公尺</div></div>`;
+    li.querySelector('.name').addEventListener('click', () => { const p = t.lines[0][Math.floor(t.lines[0].length / 2)]; map.setView(p, 16); });
+    $('listTraffic').appendChild(li);
+  }
+  if (!sorted.length) $('listTraffic').innerHTML = '<li><div class="grow meta">附近沒有國道或省道路段，可以把範圍調大再查。</div></li>';
+  // 事件：Title 轉義；NewsURL 只接受 http(s)，其他只顯示文字
+  if (news) $('newsTraffic').innerHTML = '<h3>國道最新事件</h3>' + (news.length ? news.map(n => {
+    const u = safeUrl(n.NewsURL), t = esc(n.Title || '（無標題）'), when = Date.parse(n.PublishTime || '');
+    return `<div class="news"><div class="name">${u ? `<a href="${esc(u)}" target="_blank" rel="noopener">${t}</a>` : t}</div><div class="meta">${isNaN(when) ? '' : new Date(when).toLocaleString('zh-TW', {month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit'})}</div></div>`;
+  }).join('') : '<div class="meta">目前沒有事件</div>');
+}
+async function queryTraffic(manual){
+  if (trafficBusy) return;
+  if (manual) { const cd = gate.cooldown(); if (cd > 0) { tstatus(`請等 ${Math.ceil(cd/1000)} 秒再查詢（避免超過資料來源限制）`); return; } }
+  trafficBusy = true; if (manual) gate.click(); tick(); twarn([]);
+  const notes = [];
+  let sent = false;
+  try {
+    if (!(store.get('pk_cid') && store.get('pk_csec'))) {
+      lastTraffic = null; trafficLayer.clearLayers(); $('newsTraffic').innerHTML = '';
+      $('listTraffic').innerHTML = NOKEY_HTML('即時路況');
+      tstatus('尚未設定 TDX 金鑰'); return;
+    }
+    const h = manual || !here || Date.now() - here.at > 120000 ? await locate(tstatus) : here;
+    const {lat, lon} = h, radius = Math.max(2000, +$('radius').value);
+    const auth = await token();
+    const list = [];
+    lastTraffic = {list, lat, lon, seq: h.seq, news: null};
+    // 順序：國道路網 → 國道車速 → 事件 → 省道路網 → 省道車速（國道先出來）
+    for (const [road] of ROADS) {
+      sent = true;
+      const net = await roadNet(road, auth);
+      const near = [];
+      for (const x of net.sec) {
+        let d = Infinity;
+        for (const ln of x.lines) for (let i = 0; i < ln.length; i += 3) { const dd = dist(lat, lon, ln[i][0], ln[i][1]); if (dd < d) d = dd; }
+        if (d <= radius) near.push({...x, kind: road, d, pending: true});
+      }
+      list.push(...near); renderTraffic();
+      for (let i = 0; i < near.length; i += 40) {
+        const batch = near.slice(i, i + 40);
+        tstatus(`查詢${road === 'Freeway' ? '國道' : '省道'}車速…`);
+        try {
+          const j = await roadGet(`/api/basic/v2/Road/Traffic/Live/${road}`,
+            {'$filter': batch.map(t => `SectionID eq '${t.id.replace(/'/g, "''")}'`).join(' or '), '$select': 'SectionID,TravelSpeed,CongestionLevel', '$format': 'JSON'},
+            auth, 'LiveTraffics', {wait: true, progress: tstatus});
+          const src = Date.parse(j.SrcUpdateTime ?? j.UpdateTime ?? ''), by = new Map(batch.map(t => [t.id, t]));
+          for (const r of j.LiveTraffics) { const t = by.get(r.SectionID); if (t) t.live = {speed: int(r.TravelSpeed), source: isNaN(src) ? null : src}; }
+        } catch (e) { notes.push(e.message || '車速更新失敗'); }
+        batch.forEach(t => t.pending = false); renderTraffic();
+      }
+      if (road === 'Freeway') {
+        try {
+          const j = await roadGet('/api/basic/v2/Road/Traffic/Live/News/Freeway', {'$format': 'JSON'}, auth, 'Newses', {wait: true, progress: tstatus});
+          lastTraffic.news = [...j.Newses].sort((a, b) => (Date.parse(b.PublishTime) || 0) - (Date.parse(a.PublishTime) || 0)).slice(0, 10);
+        } catch (e) { notes.push(e.message || '國道事件更新失敗'); }
+        renderTraffic();
+      }
+    }
+    tstatus(`即時路況 · ${radius / 1000} 公里內 ${list.length} 段 · ${new Date().toLocaleTimeString('zh-TW', {hour:'2-digit', minute:'2-digit'})} 更新`);
+  } catch (e) {
+    tstatus(e instanceof ApiError ? e.message : '路況查詢失敗，請稍後再試');
+  } finally {
+    if (!sent && manual) gate.reset();
+    twarn(notes); trafficBusy = false; tick();
+  }
+}
+
+// ---- 分頁切換：不重新定位；YouBike／路況這次定位還沒資料才自動查一次 ----
 function setMode(m){
   if (mode === m) return;
   mode = m;
-  $('tabPark').classList.toggle('on', m === 'park'); $('tabBike').classList.toggle('on', m === 'bike');
-  $('tabPark').setAttribute('aria-selected', m === 'park'); $('tabBike').setAttribute('aria-selected', m === 'bike');
-  for (const [id, show] of [['list', m === 'park'], ['warns', m === 'park'], ['listBike', m === 'bike'], ['warnsBike', m === 'bike']]) $(id).hidden = !show;
-  if (m === 'park') { map.removeLayer(bikeLayer); layer.addTo(map); } else { map.removeLayer(layer); bikeLayer.addTo(map); }
+  for (const [k, tab] of [['park', 'tabPark'], ['bike', 'tabBike'], ['traffic', 'tabTraffic']]) { $(tab).classList.toggle('on', m === k); $(tab).setAttribute('aria-selected', m === k); }
+  for (const [id, k] of [['list', 'park'], ['warns', 'park'], ['listBike', 'bike'], ['warnsBike', 'bike'], ['listTraffic', 'traffic'], ['warnsTraffic', 'traffic'], ['newsTraffic', 'traffic']]) $(id).hidden = m !== k;
+  for (const [lyr, k] of [[layer, 'park'], [bikeLayer, 'bike'], [trafficLayer, 'traffic']]) m === k ? lyr.addTo(map) : map.removeLayer(lyr);
   $('status').textContent = st[m];
   tick();
   if (m === 'bike' && here && (!lastBike || lastBike.seq !== here.seq)) queryBike(false);
+  if (m === 'traffic' && here && (!lastTraffic || lastTraffic.seq !== here.seq)) queryTraffic(false);
 }
 $('tabPark').onclick = () => setMode('park');
 $('tabBike').onclick = () => setMode('bike');
+$('tabTraffic').onclick = () => setMode('traffic');
 
 // ---- 設定 ----
 const dlg = $('dlgSettings');
@@ -800,15 +944,16 @@ $('btnSave').onclick = () => {
 $('btnClear').onclick = () => {
   for (const k of store.keys()) if (k.startsWith('pk_')) store.del(k);
   for (const k of Object.keys(mem)) delete mem[k];
+  idb.clear();
   $('cid').value = ''; $('csec').value = ''; $('cityPick').value = '';
   dlg.close(); status('金鑰與快取已清除');
 };
-$('btnQuery').onclick = () => mode === 'park' ? query() : queryBike(true);
+$('btnQuery').onclick = () => mode === 'park' ? query() : mode === 'bike' ? queryBike(true) : queryTraffic(true);
 // 按鈕上倒數：冷卻中顯示「N 秒後可再查」
 function tick(){
   const cd = gate.cooldown(), b = $('btnQuery');
-  b.disabled = (mode === 'park' ? busy : bikeBusy) || cd > 0;
-  b.textContent = cd > 0 ? `${Math.ceil(cd/1000)} 秒後可再查` : mode === 'park' ? '查詢附近停車' : '查詢附近 YouBike';
+  b.disabled = ({park: busy, bike: bikeBusy, traffic: trafficBusy})[mode] || cd > 0;
+  b.textContent = cd > 0 ? `${Math.ceil(cd/1000)} 秒後可再查` : ({park: '查詢附近停車', bike: '查詢附近 YouBike', traffic: '查詢附近路況'})[mode];
 }
 setInterval(tick, 1000);
 tick();
@@ -817,7 +962,7 @@ $('btnIntroOk').onclick = () => { store.set('pk_intro', '1'); $('dlgIntro').clos
 if (!store.get('pk_intro')) $('dlgIntro').showModal();
 // 已儲存金鑰（或已選過縣市）的使用者：打開就自動查詢
 else if ((store.get('pk_cid') && store.get('pk_csec')) || store.get('pk_city_auto') || store.get('pk_city_pick')) query();
-setInterval(() => { render(); renderBike(); }, 30000); // 每 30 秒重算「資料過期」
+setInterval(() => { render(); renderBike(); renderTraffic(); }, 30000); // 每 30 秒重算「資料過期」
 
 if ('serviceWorker' in navigator && location.protocol === 'https:') navigator.serviceWorker.register('sw.js').catch(() => {});
 </script>
