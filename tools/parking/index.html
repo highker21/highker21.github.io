@@ -1,0 +1,606 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>附近停車查詢</title>
+<meta name="description" content="用 TDX 與地方政府開放資料查附近停車場與即時空位，地圖一鍵導航">
+<meta name="theme-color" content="#1f6f5c">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="停車查詢">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" integrity="sha512-h9FcoyWjHcOcmEVkxOfTLnmZFWIH0iZhZT1H2TbOq55xssQGEJHEaIm+PgoUaZbRvQTNTluNOEfb1ZRy6D3BOw==" crossorigin="anonymous" referrerpolicy="no-referrer">
+<style>
+:root{--bg:#f6f7f5;--card:#fff;--ink:#1d2421;--mute:#66706b;--line:#dde2df;--brand:#1f6f5c;
+  --ok:#1f9d55;--low:#e08a00;--full:#d64545;--unk:#8a9490;--warn-bg:#fff4e0;--warn-ink:#8a5300}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#111614;--card:#1a211e;--ink:#e6ece9;
+  --mute:#9aa6a0;--line:#2c3631;--brand:#4fb397;--warn-bg:#3a2c12;--warn-ink:#f0c27a}}
+:root[data-theme="dark"]{--bg:#111614;--card:#1a211e;--ink:#e6ece9;--mute:#9aa6a0;--line:#2c3631;--brand:#4fb397;
+  --warn-bg:#3a2c12;--warn-ink:#f0c27a}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 -apple-system,"PingFang TC","Noto Sans TC",sans-serif}
+header{display:flex;align-items:center;gap:8px;padding:10px 16px;padding-top:max(10px,env(safe-area-inset-top))}
+header h1{font-size:18px;margin:0;flex:1}
+button{font:inherit;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:10px;padding:8px 12px;cursor:pointer}
+button.primary{background:var(--brand);border-color:var(--brand);color:#fff;font-weight:600}
+button:disabled{opacity:.5}
+#map{height:46vh;min-height:260px;margin:0 16px;border-radius:14px;border:1px solid var(--line)}
+.bar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:10px 16px}
+.bar select{font:inherit;padding:7px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink)}
+#status{padding:0 16px;color:var(--mute);font-size:14px;min-height:21px}
+.warn{margin:6px 16px;padding:8px 12px;border-radius:10px;background:var(--warn-bg);color:var(--warn-ink);font-size:14px}
+ul#list{list-style:none;margin:6px 0 0;padding:0 16px 16px}
+#list li{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin-bottom:8px;display:flex;gap:10px;align-items:flex-start}
+.dot{width:12px;height:12px;border-radius:50%;margin-top:6px;flex:none}
+.grow{flex:1;min-width:0}
+.name{font-weight:600}
+.meta{color:var(--mute);font-size:13px}
+.nav{display:flex;gap:6px;margin-top:6px;flex-wrap:wrap}
+.nav a{font-size:14px;text-decoration:none;color:var(--brand);border:1px solid var(--line);border-radius:8px;padding:3px 8px}
+dialog{border:none;border-radius:14px;max-width:min(520px,calc(100vw - 32px));background:var(--card);color:var(--ink)}
+dialog::backdrop{background:#0006}
+dialog label{display:block;margin:10px 0 4px;font-size:14px;color:var(--mute)}
+dialog input,dialog select{width:100%;font:inherit;padding:8px;border-radius:8px;border:1px solid var(--line);background:var(--bg);color:var(--ink)}
+.row{display:flex;gap:8px;justify-content:flex-end;margin-top:14px;flex-wrap:wrap}
+footer{padding:8px 16px 24px;color:var(--mute);font-size:12px}
+footer a{color:var(--mute)}
+.leaflet-popup-content{font-size:14px}
+</style>
+</head>
+<body>
+<header>
+  <h1>🅿️ 附近停車查詢</h1>
+  <button id="btnSettings" aria-label="設定">設定</button>
+</header>
+<div id="map"></div>
+<div class="bar">
+  <button id="btnQuery" class="primary">查詢附近停車</button>
+  <select id="radius" aria-label="範圍">
+    <option value="500">500 公尺</option>
+    <option value="1000" selected>1 公里</option>
+    <option value="2000">2 公里</option>
+  </select>
+  <select id="sort" aria-label="排序">
+    <option value="dist">依距離</option>
+    <option value="free">依空位</option>
+  </select>
+  <span id="cityLabel" class="meta"></span>
+</div>
+<div id="status">按「查詢附近停車」開始</div>
+<div id="warns"></div>
+<ul id="list"></ul>
+
+<dialog id="dlgSettings">
+  <h3 style="margin:0">設定</h3>
+  <label for="cid">TDX Client ID</label>
+  <input id="cid" autocomplete="off" spellcheck="false">
+  <label for="csec">TDX Client Secret</label>
+  <input id="csec" type="password" autocomplete="off" spellcheck="false">
+  <p id="keyState" class="meta"></p>
+  <p class="meta">金鑰只存在這台裝置的這個瀏覽器，不會上傳到我們的伺服器；只會直接送到 TDX 換取通行證。iPhone「加到主畫面」後是另一個獨立空間，要再輸入一次。新北、新竹不填金鑰也能查。</p>
+  <label for="cityPick">縣市</label>
+  <select id="cityPick"></select>
+  <div class="row">
+    <button id="btnClear">清除金鑰與快取</button>
+    <button id="btnClose">取消</button>
+    <button id="btnSave" class="primary">儲存</button>
+  </div>
+</dialog>
+
+<dialog id="dlgIntro">
+  <h3 style="margin:0">使用說明</h3>
+  <p>1. 按「查詢附近停車」，允許定位，地圖與清單會列出附近停車場和路邊停車格。</p>
+  <p>2. 點停車場可一鍵用 Google 或 Apple 地圖導航。</p>
+  <p>3. 新北、新竹不用金鑰；其他縣市請到「設定」填 TDX 金鑰（到 tdx.transportdata.tw 免費申請）。</p>
+  <p>4. iPhone 可用 Safari「分享 → 加入主畫面」當 App 用；加到主畫面後金鑰要重新輸入一次。</p>
+  <p class="meta">定位只在你的手機上計算距離，不會送到我們的轉送伺服器；地圖圖資與縣市判斷由 OpenStreetMap 提供，會看到你所在的大致範圍。</p>
+  <div class="row"><button id="btnIntroOk" class="primary">知道了</button></div>
+</dialog>
+
+<footer>
+  資料：<a href="https://tdx.transportdata.tw" target="_blank" rel="noopener">交通部 TDX</a>、新北市政府、新竹市政府開放資料，依<a href="https://data.gov.tw/license" target="_blank" rel="noopener">政府資料開放授權條款第 1 版</a>使用；合併與篩選不代表機關背書。<br>
+  地圖：© <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors。<br>
+  資料處理邏輯參考 opview（© 2026 Rick Lan，<a href="https://github.com/herizon1054/opview/blob/01f0f20/LICENSE" target="_blank" rel="noopener">非商業授權</a>）。<br>
+  工具版本：2026-11-03
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js" integrity="sha512-puJW3E/qXDqYp9IfhAI54BJEaWIfloJ7JWs7OeD5i6ruC9JZL1gERT1wjtwXFlh7CjE7ZJ+/vcRZRkIYIb6p4g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+'use strict';
+// 部署後改成正式 Worker 網址；本機測試用 wrangler dev
+const PROXY = location.hostname === 'highker21.github.io'
+  ? 'https://tdx-parking-proxy.highker.workers.dev'
+  : 'http://127.0.0.1:8787';
+const TOKEN_URL = 'https://tdx.transportdata.tw/auth/realms/TDXConnect/protocol/openid-connect/token';
+
+// ---- 縣市與 TDX 支援清單（opview parking_catalog.dart，2026-10-31 依 TDX OAS） ----
+const CITIES = {Taipei:'臺北市',NewTaipei:'新北市',Taoyuan:'桃園市',Taichung:'臺中市',Tainan:'臺南市',Kaohsiung:'高雄市',
+  Keelung:'基隆市',Hsinchu:'新竹市',HsinchuCounty:'新竹縣',MiaoliCounty:'苗栗縣',ChanghuaCounty:'彰化縣',NantouCounty:'南投縣',
+  YunlinCounty:'雲林縣',Chiayi:'嘉義市',ChiayiCounty:'嘉義縣',PingtungCounty:'屏東縣',YilanCounty:'宜蘭縣',HualienCounty:'花蓮縣',
+  TaitungCounty:'臺東縣',KinmenCounty:'金門縣',PenghuCounty:'澎湖縣',LienchiangCounty:'連江縣'};
+const ISO = {'TW-TPE':'Taipei','TW-NWT':'NewTaipei','TW-TAO':'Taoyuan','TW-TXG':'Taichung','TW-TNN':'Tainan','TW-KHH':'Kaohsiung',
+  'TW-KEE':'Keelung','TW-HSZ':'Hsinchu','TW-HSQ':'HsinchuCounty','TW-MIA':'MiaoliCounty','TW-CHA':'ChanghuaCounty',
+  'TW-NAN':'NantouCounty','TW-YUN':'YunlinCounty','TW-CYI':'Chiayi','TW-CYQ':'ChiayiCounty','TW-PIF':'PingtungCounty',
+  'TW-ILA':'YilanCounty','TW-HUA':'HualienCounty','TW-TTT':'TaitungCounty','TW-KIN':'KinmenCounty','TW-PEN':'PenghuCounty',
+  'TW-LIE':'LienchiangCounty'};
+const OFF_STATIC = new Set(['Taipei','Taoyuan','Taichung','Tainan','Kaohsiung','Keelung','Hsinchu','HsinchuCounty','MiaoliCounty',
+  'ChanghuaCounty','NantouCounty','YunlinCounty','ChiayiCounty','Chiayi','PingtungCounty','YilanCounty','HualienCounty',
+  'TaitungCounty','KinmenCounty','PenghuCounty','LienchiangCounty']);
+const OFF_LIVE = new Set(['Taipei','Taoyuan','Taichung','Tainan','Kaohsiung','Keelung','ChanghuaCounty','YunlinCounty',
+  'PingtungCounty','YilanCounty','HualienCounty','KinmenCounty']);
+const ON_STATIC = new Set(['Taipei','NewTaipei','Taoyuan','Taichung','Tainan','Kaohsiung','HsinchuCounty','ChanghuaCounty',
+  'PingtungCounty','HualienCounty','PenghuCounty']);
+const ON_LIVE = new Set(['Taipei','NewTaipei','Taoyuan','Taichung','Tainan','Kaohsiung','ChanghuaCounty','PingtungCounty','HualienCounty']);
+const LOCAL = new Set(['NewTaipei','Hsinchu']);
+const NTPC = {static:'B1464EF0-9C7C-4A6F-ABF7-6BDF32847E68', live:'e09b35a5-a738-48cc-b0f5-570b67ad9c78'};
+
+// ---- 儲存（每一次讀寫都包 try，私密模式或被封鎖時照常運作） ----
+const mem = {};
+const store = {
+  get(k){ try{ const v = localStorage.getItem(k); return v === null ? (mem[k] ?? null) : v; }catch{ return mem[k] ?? null; } },
+  set(k,v){ mem[k] = v; try{ localStorage.setItem(k,v); }catch{} },
+  del(k){ delete mem[k]; try{ localStorage.removeItem(k); }catch{} },
+  keys(){ try{ return Object.keys(localStorage); }catch{ return Object.keys(mem); } },
+};
+const getJSON = k => { try{ return JSON.parse(store.get(k) || 'null'); }catch{ return null; } };
+
+class ApiError extends Error { constructor(msg, kind){ super(msg); this.kind = kind || 'error'; } }
+
+// ---- 節流：本機每分鐘最多 5 筆資料請求（opview PARKING_zh-TW.md:27），手動查詢冷卻 30 秒 ----
+const gate = {
+  win(){ const now = Date.now(); return (getJSON('pk_gate') || []).filter(t => now - t < 60000); },
+  waitMs(n = 1){ const w = this.win(); if (w.length + n <= 5) return 0; return 60000 - (Date.now() - w[w.length + n - 6]) + 50; },
+  take(){ const w = this.win(); w.push(Date.now()); store.set('pk_gate', JSON.stringify(w)); },
+  cooldown(){ const t = +(store.get('pk_click') || 0); return Math.max(0, 30000 - (Date.now() - t)); },
+  click(){ store.set('pk_click', String(Date.now())); },
+};
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+async function slot(wait, progress){
+  for (;;) {
+    const ms = gate.waitMs();
+    if (ms === 0) { gate.take(); return; }
+    if (!wait) throw new ApiError(`本機每分鐘 5 筆節流，請等 ${Math.ceil(ms/1000)} 秒再查詢`, 'gate');
+    progress && progress(`資料下載節流等待 ${Math.ceil(ms/1000)} 秒…`);
+    await sleep(Math.min(ms, 1000));
+  }
+}
+
+// ---- 轉送請求（只帶縣市層級路徑，不帶座標） ----
+async function proxyGet(path, {auth, wait, progress} = {}){
+  await slot(wait, progress);
+  let r;
+  try {
+    r = await fetch(PROXY + path, {headers: auth ? {Authorization: 'Bearer ' + auth} : {}, cache: 'no-store'});
+  } catch { throw new ApiError('連不上轉送伺服器，請檢查網路', 'network'); }
+  const up = r.headers.get('X-Upstream') || '';
+  const src = path.startsWith('/tdx/') ? 'TDX' : path.startsWith('/ntpc/') ? '新北市政府' : '新竹市政府';
+  if (r.status === 200) return r.text();
+  if (up === 'rejected' || (r.status === 403 && up.startsWith('status-')))
+    throw new ApiError(`${src}來源拒絕存取（即時空位暫時無法取得）`, 'rejected');
+  if (r.status === 401) throw new ApiError(src === 'TDX' ? 'TDX 金鑰驗證失敗，請檢查 Client ID 與 Secret' : `${src}拒絕存取`, src === 'TDX' ? 'auth' : 'rejected');
+  if (r.status === 429) throw new ApiError(`${src}頻率或額度受限，請稍後再查（不自動重試）`, 'rate');
+  throw new ApiError(`${src}暫時無法使用（${up || r.status}）`, 'error');
+}
+
+// ---- TDX token：瀏覽器直接 POST TDX（不經轉送），Secret 只放在 body ----
+async function sha(s){ const b = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(s)); return [...new Uint8Array(b)].map(x => x.toString(16).padStart(2,'0')).join(''); }
+let tokenFlight = null;
+async function token(){
+  const id = (store.get('pk_cid') || '').trim(), sec = (store.get('pk_csec') || '').trim();
+  if (!id || !sec) throw new ApiError('尚未設定 TDX 金鑰（新北、新竹不需要）', 'nokey');
+  const fp = await sha(id + '\u0000' + sec);
+  const t = getJSON('pk_token');
+  if (t && t.fp === fp && Date.now() < t.exp && typeof t.v === 'string') return t.v;
+  if (tokenFlight) return tokenFlight;
+  tokenFlight = (async () => {
+    let r;
+    try {
+      r = await fetch(TOKEN_URL, {method:'POST', headers:{'Content-Type':'application/x-www-form-urlencoded'},
+        body: new URLSearchParams({grant_type:'client_credentials', client_id:id, client_secret:sec})});
+    } catch { throw new ApiError('連不上 TDX 認證伺服器', 'network'); }
+    if (r.status === 429) throw new ApiError('TDX 認證頻率受限，請稍後再試', 'rate');
+    if (!r.ok) throw new ApiError('TDX 金鑰驗證失敗，請檢查 Client ID 與 Secret', 'auth');
+    const j = await r.json();
+    const sec2 = j.expires_in;
+    if (typeof j.access_token !== 'string' || !(sec2 > 0)) throw new ApiError('TDX 通行證缺少有效期限', 'auth');
+    const life = Math.floor(sec2);
+    store.set('pk_token', JSON.stringify({fp, v:j.access_token, exp: Date.now() + Math.max(0, life - Math.min(60, Math.floor(life/10))) * 1000}));
+    return j.access_token;
+  })();
+  try { return await tokenFlight; } finally { tokenFlight = null; }
+}
+
+// ---- TDX 回應外殼：只接受認得的結構，錯誤物件不當成空資料 ----
+function envelope(data, path){
+  const on = path.includes('/OnStreet/'), live = path.includes('Availability');
+  const idField = on ? 'ParkingSegmentID' : 'CarParkID';
+  const named = live ? 'ParkingAvailabilities' : on ? 'ParkingSegments' : 'CarParks';
+  let rows, count;
+  if (Array.isArray(data)) rows = data;
+  else if (data && typeof data === 'object') {
+    if ('error' in data || 'Error' in data) throw new ApiError('TDX 回傳錯誤物件');
+    const keys = ['Items','items',named].concat(on && live ? ['CurbParkingSegmentAvailabilities'] : []).filter(k => k in data);
+    if (keys.length === 1) rows = data[keys[0]];
+    const c = data.Count ?? data.count;
+    if (c !== undefined) { if (!Number.isInteger(c) || c < 0) throw new ApiError('TDX Count 格式異常'); count = c; }
+  }
+  if (!Array.isArray(rows)) throw new ApiError('TDX 回應格式異常');
+  if (rows.some(r => !r || typeof r[idField] !== 'string' || !r[idField])) throw new ApiError(`TDX 資料列缺少 ${idField}`);
+  return {items: rows, count};
+}
+async function tdxGet(path, query, auth, opt = {}){
+  const qs = new URLSearchParams(query).toString();
+  const text = await proxyGet('/tdx' + path + '?' + qs, {auth, ...opt});
+  let j; try { j = JSON.parse(text); } catch { throw new ApiError('TDX 回應不是有效 JSON'); }
+  return envelope(j, path);
+}
+
+// ---- 距離與座標 ----
+function dist(a1, o1, a2, o2){
+  const r = Math.PI/180, a = Math.sin((a2-a1)*r/2)**2 + Math.cos(a1*r)*Math.cos(a2*r)*Math.sin((o2-o1)*r/2)**2;
+  return 6371000 * 2 * Math.asin(Math.sqrt(Math.min(1, Math.max(0, a))));
+}
+// TWD97 TM2 121 → WGS84（opview parking_local.dart twd97ToWgs84，EPSG:3826）
+function twd97(x, y){
+  if (!isFinite(x) || !isFinite(y) || x < 100000 || x > 400000 || y < 2400000 || y > 2900000) return null;
+  const a = 6378137, f = 1/298.257222101, k = 0.9999, e2 = f*(2-f), ep2 = e2/(1-e2);
+  const mu = (y/k) / (a*(1 - e2/4 - 3*e2*e2/64 - 5*e2*e2*e2/256));
+  const e1 = (1 - Math.sqrt(1-e2)) / (1 + Math.sqrt(1-e2));
+  const phi = mu + (3*e1/2 - 27*e1**3/32)*Math.sin(2*mu) + (21*e1*e1/16 - 55*e1**4/32)*Math.sin(4*mu)
+    + 151*e1**3/96*Math.sin(6*mu) + 1097*e1**4/512*Math.sin(8*mu);
+  const s = Math.sin(phi), c = Math.cos(phi), t0 = Math.tan(phi);
+  const n = a/Math.sqrt(1 - e2*s*s), r = a*(1-e2)/Math.pow(1 - e2*s*s, 1.5);
+  const t = t0*t0, cc = ep2*c*c, d = (x - 250000)/(n*k);
+  const lat = phi - n*t0/r*(d*d/2 - (5 + 3*t + 10*cc - 4*cc*cc - 9*ep2)*d**4/24
+    + (61 + 90*t + 298*cc + 45*t*t - 252*ep2 - 3*cc*cc)*d**6/720);
+  const lon = 121*Math.PI/180 + (d - (1 + 2*t + cc)*d**3/6 + (5 - 2*cc + 28*t - 3*cc*cc + 8*ep2 + 24*t*t)*d**5/120)/c;
+  return [lat*180/Math.PI, lon*180/Math.PI];
+}
+const int = x => { const n = typeof x === 'number' ? x : Number(String(x ?? '').trim()); return Number.isInteger(n) ? n : null; };
+const num = x => { const s = String(x ?? '').trim(); const n = s === '' ? NaN : Number(s); return isFinite(n) ? n : null; };
+
+// ---- 地方政府資料（opview parking_local.dart） ----
+async function ntpcAll(live, opt){
+  const all = [];
+  for (let page = 0; page < 5; page++) {
+    const text = await proxyGet(`/ntpc/${live ? NTPC.live : NTPC.static}/json?page=${page}&size=1000`, opt);
+    let v; try { v = JSON.parse(text); } catch {}
+    if (!Array.isArray(v)) throw new ApiError('新北市政府資料格式異常（不是 JSON 陣列）');
+    all.push(...v.map(e => Object.fromEntries(Object.entries(e).map(([k, x]) => [k.trim().toUpperCase(), x]))));
+    if (v.length < 1000) break;
+  }
+  return all;
+}
+async function localRows(city, live, opt){
+  if (city === 'NewTaipei') return ntpcAll(live, opt);
+  const text = await proxyGet('/hccg/GetParkInfo', opt);
+  let v; try { v = JSON.parse(text); } catch {}
+  if (!Array.isArray(v) || !v.length) throw new ApiError('新竹市停車資料格式異常或空白');
+  return v;
+}
+// 重複 ID：欄位相同就合併，衝突就整筆排除，不把別場的空位接過來
+function unique(rows, idf, fields){
+  const u = new Map(), bad = new Set();
+  for (const r of rows) {
+    const id = String(r[idf] ?? '').trim(); if (!id) continue;
+    const p = u.get(id);
+    if (p && fields.some(k => String(p[k] ?? '').trim() !== String(r[k] ?? '').trim())) bad.add(id);
+    if (!p) u.set(id, r);
+  }
+  return [...u].filter(([id]) => !bad.has(id)).map(([, r]) => r);
+}
+function localLots(city, rows){
+  const ntpc = city === 'NewTaipei';
+  const out = [];
+  for (const r of unique(rows, ntpc ? 'ID' : 'PARKNO', ntpc ? ['NAME','TW97X','TW97Y'] : ['PARKINGNAME','LONGITUDE','LATITUDE'])) {
+    if ((int(num(r[ntpc ? 'TOTALCAR' : 'TOTALQUANTITY'])) ?? 0) <= 0) continue;
+    const x = num(r[ntpc ? 'TW97X' : 'LONGITUDE']), y = num(r[ntpc ? 'TW97Y' : 'LATITUDE']);
+    if (x === null || y === null) continue;
+    const p = ntpc ? twd97(x, y) : [y, x];
+    if (!p || p[0] < 21.5 || p[0] > 26.5 || p[1] < 119 || p[1] > 123) continue;
+    const name = String(r[ntpc ? 'NAME' : 'PARKINGNAME'] ?? '').trim(); if (!name) continue;
+    out.push({id:`local:${ntpc ? 'ntpc' : 'hccg'}:${String(r[ntpc ? 'ID' : 'PARKNO']).trim()}`, city, name,
+      address: String(r.ADDRESS ?? ''), lat: p[0], lon: p[1], on: false});
+  }
+  return out;
+}
+function twTime(v){ let s = String(v ?? '').trim(); if (!s) return null; if (!/(Z|[+-]\d\d:\d\d)$/.test(s)) s += '+08:00'; const t = Date.parse(s.replace(' ', 'T')); return isNaN(t) ? null : t; }
+function localAvail(city, rows, now){
+  const ntpc = city === 'NewTaipei', res = {};
+  for (const r of unique(rows, ntpc ? 'ID' : 'PARKNO', ntpc ? ['AVAILABLECAR'] : ['FREEQUANTITY','TOTALQUANTITY','UPDATETIME'])) {
+    const id = String(r[ntpc ? 'ID' : 'PARKNO']).trim();
+    const n = int(num(r[ntpc ? 'AVAILABLECAR' : 'FREEQUANTITY'])), total = ntpc ? null : int(num(r.TOTALQUANTITY));
+    const cars = n !== null && n >= 0 && (total === null || total < 0 || n <= total) ? n : null;
+    res[`local:${ntpc ? 'ntpc' : 'hccg'}:${id}`] = {cars, source: ntpc ? null : twTime(r.UPDATETIME), received: now, noTime: ntpc};
+  }
+  return res;
+}
+
+// ---- TDX 靜態資料（7 天快取，opview downloadStatic） ----
+function parseTdxLot(r, city, on){
+  const p = r[on ? 'ParkingSegmentPosition' : 'CarParkPosition'];
+  if (!p || r.IsMotorcycle === 1) return null;
+  const lat = p.PositionLat, lon = p.PositionLon;
+  if (typeof lat !== 'number' || typeof lon !== 'number' || !isFinite(lat) || !isFinite(lon) || (lat === 0 && lon === 0)) return null;
+  const id = r[on ? 'ParkingSegmentID' : 'CarParkID'];
+  const n = r[on ? 'ParkingSegmentName' : 'CarParkName'];
+  return {id, city, name: n && typeof n === 'object' ? String(n.Zh_tw ?? n.En ?? id) : id,
+    address: String(r[on ? 'Description' : 'Address'] ?? ''), lat, lon, on};
+}
+function mergeLocal(base, local){
+  const norm = s => s.replace(/\s+/g, '').replace(/台/g, '臺');
+  return base.filter(a => a.on || !local.some(b => norm(a.name) === norm(b.name) && dist(a.lat, a.lon, b.lat, b.lon) < 80)).concat(local);
+}
+function cached(city){
+  const c = getJSON('pk_static_' + city);
+  return c && c.v === 1 && c.city === city && Array.isArray(c.lots) ? c : null;
+}
+async function downloadStatic(city, progress){
+  const notes = [];
+  let lots = [], hasTdx = false;
+  const needTdx = OFF_STATIC.has(city) || ON_STATIC.has(city);
+  let auth = null;
+  if (needTdx) {
+    try { auth = await token(); } catch (e) {
+      // 金鑰錯誤不能擋掉不需金鑰的地方資料
+      if (e.kind !== 'nokey' && !(LOCAL.has(city) && (e.kind === 'auth' || e.kind === 'network' || e.kind === 'rate'))) throw e;
+      notes.push(e.kind === 'nokey' ? '未設定 TDX 金鑰，只顯示地方政府資料' : e.message + '；先只顯示地方政府資料');
+    }
+  }
+  if (auth) {
+    for (const on of [false, true]) {
+      if (!(on ? ON_STATIC : OFF_STATIC).has(city)) continue;
+      const idf = on ? 'ParkingSegmentID' : 'CarParkID', kind = on ? 'OnStreet/ParkingSegment' : 'OffStreet/CarPark';
+      const select = on ? 'ParkingSegmentID,City,ParkingSegmentName,ParkingSegmentPosition,Description'
+                        : 'CarParkID,City,CarParkName,CarParkPosition,Address,IsMotorcycle';
+      let skip = 0; const seen = new Set();
+      for (;;) {
+        progress(`下載${CITIES[city]}${on ? '路邊' : '路外'}位置：已讀 ${skip} 筆`);
+        const d = await tdxGet(`/api/basic/v1/Parking/${kind}/City/${city}`,
+          {'$format':'JSON','$select':select,'$orderby':idf,'$top':'500','$skip':String(skip),'$count':'true'}, auth, {wait:true, progress});
+        if (!d.items.length) { if (d.count !== undefined && skip < d.count) throw new ApiError('TDX 位置分頁不完整'); break; }
+        for (const r of d.items) {
+          if (seen.has(r[idf])) throw new ApiError('TDX 位置分頁重複'); seen.add(r[idf]);
+          const lot = parseTdxLot(r, city, on); if (lot) lots.push(lot);
+        }
+        skip += d.items.length;
+        if (d.count !== undefined && skip >= d.count) break;
+        if (skip > 100000) throw new ApiError('TDX 位置筆數異常');
+      }
+    }
+    hasTdx = true;
+  }
+  if (LOCAL.has(city)) {
+    progress(`下載${CITIES[city]}政府停車場位置…`);
+    lots = mergeLocal(lots, localLots(city, await localRows(city, false, {wait:true, progress})));
+  }
+  if (!lots.length) throw new ApiError(notes[0] || '此縣市目前沒有可用的位置資料', notes.length ? 'nokey' : 'error');
+  const c = {v:1, city, at: Date.now(), tdx: hasTdx, tdxTried: !!store.get('pk_cid'), lots: lots.map(l => [l.id, l.name, l.address, +l.lat.toFixed(6), +l.lon.toFixed(6), l.on ? 1 : 0])};
+  store.set('pk_static_' + city, JSON.stringify(c));
+  return {c, notes};
+}
+const unpack = (c) => c.lots.map(([id, name, address, lat, lon, on]) => ({id, city: c.city, name, address, lat, lon, on: !!on}));
+
+// ---- TDX 即時空位解析（opview ParkingAvailability.parse） ----
+function tdxAvail(r){
+  let cars = null;
+  if (Array.isArray(r.Availabilities)) {
+    const m = r.Availabilities.filter(x => x && x.SpaceType === 1);
+    if (m.length === 1) {
+      const n = int(m[0].AvailableSpaces), tot = int(m[0].NumberOfSpaces);
+      if (n !== null && n >= 0 && (tot === null || tot < 0 || n <= tot)) cars = n;
+    }
+  }
+  const n = int(r.AvailableSpaces), t = Date.parse(r.DataCollectTime ?? '');
+  return {cars, unclassified: n !== null && n >= 0 ? n : null, status: int(r.ServiceStatus), source: isNaN(t) ? null : t};
+}
+// 顯示文字與顏色；區分「來源拒絕」和「此場沒有即時資料」
+function label(lot, now){
+  if (lot.rejected) return ['來源拒絕存取', 'unk'];
+  const a = lot.avail;
+  if (!a) return [lot.liveTried ? '此場沒有即時資料' : '未提供即時空位', 'unk'];
+  if (a.noTime && a.source === null) {
+    if (now - a.received > 300000) return ['資料過期', 'unk'];
+    return a.cars === null ? ['此場沒有即時資料', 'unk'] : [`回報 ${a.cars} 位*`, a.cars === 0 ? 'full' : a.cars < 10 ? 'low' : 'ok'];
+  }
+  const age = a.source === null ? null : (now - a.source) / 1000;
+  if (age === null) return ['時間不明', 'unk'];
+  if (age < -60 || age > 300) return ['資料過期', 'unk'];
+  if (a.status !== null && a.status !== undefined && a.status !== 1) return ['非營業中', 'unk'];
+  if (a.cars !== null) return a.cars === 0 ? ['汽車已滿', 'full'] : [`汽車 ${a.cars} 位`, a.cars < 10 ? 'low' : 'ok'];
+  if (a.unclassified !== null) return [`未分類 ${a.unclassified} 位`, a.unclassified === 0 ? 'full' : a.unclassified < 10 ? 'low' : 'ok'];
+  return ['空位未知', 'unk'];
+}
+const COLORS = {ok:'var(--ok)', low:'var(--low)', full:'var(--full)', unk:'var(--unk)'};
+const HEX = {ok:'#1f9d55', low:'#e08a00', full:'#d64545', unk:'#8a9490'};
+
+// ---- 定位與縣市 ----
+function position(){
+  return new Promise((ok, no) => {
+    if (!navigator.geolocation) return no(new ApiError('這個瀏覽器不支援定位'));
+    navigator.geolocation.getCurrentPosition(p => {
+      if (p.coords.accuracy > 150) return no(new ApiError(`定位誤差 ${Math.round(p.coords.accuracy)} 公尺，太大，請到空曠處再試`));
+      ok(p.coords);
+    }, e => no(new ApiError(e.code === 1 ? '請允許瀏覽器使用定位（iPhone：設定 → 隱私權 → 定位服務 → Safari）' : '定位失敗，請稍後再試')),
+    {enableHighAccuracy: true, timeout: 12000, maximumAge: 15000});
+  });
+}
+async function detectCity(lat, lon){
+  const pick = store.get('pk_city_pick');
+  if (pick && CITIES[pick]) return pick;
+  const last = getJSON('pk_city_auto');
+  if (last && dist(lat, lon, last.lat, last.lon) < 2000 && CITIES[last.city]) return last.city;
+  // OpenStreetMap Nominatim 只問縣市層級（zoom=5），座標四捨五入到約 1 公里
+  const q = new URLSearchParams({format:'jsonv2', lat: lat.toFixed(2), lon: lon.toFixed(2), zoom:'5', 'accept-language':'zh-TW'});
+  try {
+    const r = await fetch('https://nominatim.openstreetmap.org/reverse?' + q);
+    const j = await r.json();
+    const code = j?.address?.['ISO3166-2-lvl4'];
+    if (ISO[code]) { store.set('pk_city_auto', JSON.stringify({lat, lon, city: ISO[code]})); return ISO[code]; }
+  } catch {}
+  throw new ApiError('無法自動判斷縣市，請到「設定」選擇縣市');
+}
+
+// ---- 地圖 ----
+const map = L.map('map', {zoomControl: true}).setView([23.7, 121], 7);
+L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {maxZoom: 19,
+  attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'}).addTo(map);
+const layer = L.layerGroup().addTo(map);
+let me = null, ring = null;
+
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function navLinks(l){
+  const ll = `${l.lat},${l.lon}`;
+  return `<a href="https://www.google.com/maps/dir/?api=1&destination=${ll}&travelmode=driving" target="_blank" rel="noopener">Google 導航</a>`
+    + `<a href="https://maps.apple.com/?daddr=${ll}&dirflg=d" target="_blank" rel="noopener">Apple 導航</a>`;
+}
+let last = null;
+function render(){
+  if (!last) return;
+  const now = Date.now(), {lots, lat, lon} = last;
+  lots.forEach(l => { l.d = dist(lat, lon, l.lat, l.lon); [l.text, l.tone] = label(l, now); });
+  const free = l => l.avail?.cars ?? l.avail?.unclassified ?? -1;
+  const sorted = [...lots].sort($('sort').value === 'free' ? (a, b) => free(b) - free(a) || a.d - b.d : (a, b) => a.d - b.d);
+  layer.clearLayers();
+  $('list').innerHTML = '';
+  for (const l of sorted) {
+    const src = l.id.startsWith('local:ntpc') ? '新北市政府' : l.id.startsWith('local:hccg') ? '新竹市政府' : 'TDX';
+    const kind = l.on ? '路邊' : '路外';
+    const html = `<div class="name">${esc(l.name)}</div><div class="meta">${kind} · ${Math.round(l.d)} 公尺 · ${esc(l.text)} · ${src}</div>`
+      + (l.address ? `<div class="meta">${esc(l.address)}</div>` : '') + `<div class="nav">${navLinks(l)}</div>`;
+    L.circleMarker([l.lat, l.lon], {radius: l.on ? 6 : 9, color: '#fff', weight: 2, fillColor: HEX[l.tone], fillOpacity: .95})
+      .bindPopup(html).addTo(layer);
+    const li = document.createElement('li');
+    li.innerHTML = `<span class="dot" style="background:${COLORS[l.tone]}"></span><div class="grow">${html}</div>`;
+    li.querySelector('.name').addEventListener('click', () => { map.setView([l.lat, l.lon], 17); });
+    $('list').appendChild(li);
+  }
+  if (!sorted.length) $('list').innerHTML = '<li><div class="grow meta">這個範圍內沒有已知的停車場，可以把範圍調大再查。</div></li>';
+}
+function warn(list){
+  $('warns').innerHTML = [...new Set(list)].map(w => `<div class="warn">${esc(w)}</div>`).join('');
+}
+const status = s => { $('status').textContent = s; };
+
+// ---- 主流程（opview nearby） ----
+let busy = false;
+async function query(){
+  if (busy) return;
+  const cd = gate.cooldown();
+  if (cd > 0) { status(`請等 ${Math.ceil(cd/1000)} 秒再查詢（避免超過資料來源限制）`); return; }
+  busy = true; $('btnQuery').disabled = true; warn([]);
+  const notes = [];
+  try {
+    status('定位中…');
+    const p = await position();
+    const lat = p.latitude, lon = p.longitude, radius = +$('radius').value;
+    if (me) map.removeLayer(me); if (ring) map.removeLayer(ring);
+    me = L.circleMarker([lat, lon], {radius: 8, color: '#fff', weight: 3, fillColor: '#2563eb', fillOpacity: 1}).addTo(map).bindTooltip('你的位置');
+    ring = L.circle([lat, lon], {radius, color: '#2563eb', weight: 1, fillOpacity: .04}).addTo(map);
+    map.fitBounds(ring.getBounds());
+    status('判斷縣市…');
+    const city = await detectCity(lat, lon);
+    $('cityLabel').textContent = '縣市：' + CITIES[city];
+    let c = cached(city);
+    const hasKey = !!(store.get('pk_cid') && store.get('pk_csec'));
+    // 有金鑰但快取只有地方資料、且還沒用這組金鑰試過 → 重新下載（改金鑰時會清快取）
+    const stale = !c || Date.now() - c.at > 7 * 86400000 || (hasKey && !c.tdx && !c.tdxTried && (OFF_STATIC.has(city) || ON_STATIC.has(city)));
+    if (stale) { const r = await downloadStatic(city, status); c = r.c; notes.push(...r.notes); }
+    else if (!c.tdx && (OFF_STATIC.has(city) || ON_STATIC.has(city)) && !hasKey) notes.push('未設定 TDX 金鑰，只顯示地方政府資料');
+    const all = unpack(c).filter(l => dist(lat, lon, l.lat, l.lon) <= radius).sort((a, b) => dist(lat, lon, a.lat, a.lon) - dist(lat, lon, b.lat, b.lon));
+    const cand = [...all.filter(l => !l.on).slice(0, 20), ...all.filter(l => l.on).slice(0, 20)];
+    last = {lots: cand, lat, lon};
+    if (!cand.length) { render(); status(`${CITIES[city]}：${radius} 公尺內沒有已知停車場`); warn(notes); return; }
+    // 先檢查本次需要的請求數，避免冷卻開始後才被節流擋掉
+    const tdxKinds = [false, true].filter(on => (on ? ON_LIVE : OFF_LIVE).has(city) && cand.some(l => l.on === on && !l.id.startsWith('local:')));
+    const localGroup = cand.filter(l => l.id.startsWith('local:'));
+    const need = tdxKinds.length + (localGroup.length ? (city === 'NewTaipei' ? 2 : 1) : 0);
+    const wait = gate.waitMs(need);
+    if (wait > 0) throw new ApiError(`本機每分鐘 5 筆節流（位置資料剛下載），請等 ${Math.ceil(wait/1000)} 秒再查詢`, 'gate');
+    gate.click();
+    status('查詢即時空位…');
+    const tasks = [];
+    for (const on of [false, true]) {
+      const group = cand.filter(l => l.on === on && !l.id.startsWith('local:'));
+      if (!group.length) continue;
+      if (!(on ? ON_LIVE : OFF_LIVE).has(city)) { notes.push(`${CITIES[city]}${on ? '路邊' : '路外'}沒有提供即時空位`); continue; }
+      tasks.push((async () => {
+        const idf = on ? 'ParkingSegmentID' : 'CarParkID';
+        try {
+          const auth = await token();
+          const d = await tdxGet(`/api/basic/v1/Parking/${on ? 'OnStreet/ParkingSegmentAvailability' : 'OffStreet/ParkingAvailability'}/City/${city}`,
+            {'$filter': group.map(l => `${idf} eq '${l.id.replace(/'/g, "''")}'`).join(' or '),
+             '$select': `${idf},Availabilities,AvailableSpaces,ServiceStatus,DataCollectTime`, '$top':'100', '$format':'JSON'}, auth);
+          const by = new Map(group.map(l => [l.id, l]));
+          group.forEach(l => l.liveTried = true);
+          for (const r of d.items) { const l = by.get(r[idf]); if (l) l.avail = tdxAvail(r); }
+        } catch (e) {
+          if (e.kind === 'rejected') group.forEach(l => l.rejected = true);
+          notes.push(e.message || `${on ? '路邊' : '路外'}空位更新失敗`);
+        }
+      })());
+    }
+    if (localGroup.length) tasks.push((async () => {
+      try {
+        const v = localAvail(city, await localRows(city, true), Date.now());
+        localGroup.forEach(l => { l.liveTried = true; l.avail = v[l.id] || null; });
+        if (city === 'NewTaipei') notes.push('*新北回報值沒有附來源時間，顯示的是取得時間');
+      } catch (e) {
+        if (e.kind === 'rejected') localGroup.forEach(l => l.rejected = true);
+        notes.push(e.message || '地方政府空位更新失敗');
+      }
+    })());
+    await Promise.all(tasks);
+    if (Date.now() - c.at > 7 * 86400000) notes.push('位置資料超過 7 天');
+    render();
+    status(`${CITIES[city]} · ${cand.length} 處 · ${new Date().toLocaleTimeString('zh-TW', {hour:'2-digit', minute:'2-digit'})} 更新`);
+  } catch (e) {
+    status(e instanceof ApiError ? e.message : '查詢失敗，請稍後再試');
+  } finally {
+    warn(notes); busy = false; $('btnQuery').disabled = false;
+  }
+}
+
+// ---- 設定 ----
+const dlg = $('dlgSettings');
+$('cityPick').innerHTML = '<option value="">自動判斷</option>' + Object.entries(CITIES).map(([k, v]) => `<option value="${k}">${v}</option>`).join('');
+$('btnSettings').onclick = () => {
+  $('cid').value = store.get('pk_cid') || ''; $('csec').value = store.get('pk_csec') || '';
+  $('cityPick').value = store.get('pk_city_pick') || '';
+  const saved = store.get('pk_cid') && store.get('pk_csec');
+  $('keyState').textContent = saved ? `已儲存金鑰（Client ID 末 4 碼：${store.get('pk_cid').slice(-4)}）；打開網頁會自動查詢` : '尚未儲存金鑰';
+  dlg.showModal();
+};
+$('btnClose').onclick = () => dlg.close();
+$('btnSave').onclick = () => {
+  const id = $('cid').value.trim(), sec = $('csec').value.trim();
+  if (id !== (store.get('pk_cid') || '') || sec !== (store.get('pk_csec') || '')) {
+    // 金鑰變更：清掉通行證與位置快取，下次用新金鑰重新下載
+    store.del('pk_token');
+    for (const k of store.keys()) if (k.startsWith('pk_static_')) store.del(k);
+  }
+  if (id && sec) { store.set('pk_cid', id); store.set('pk_csec', sec); } else { store.del('pk_cid'); store.del('pk_csec'); }
+  const city = $('cityPick').value; city ? store.set('pk_city_pick', city) : store.del('pk_city_pick');
+  dlg.close(); status('設定已儲存');
+};
+$('btnClear').onclick = () => {
+  for (const k of store.keys()) if (k.startsWith('pk_')) store.del(k);
+  for (const k of Object.keys(mem)) delete mem[k];
+  $('cid').value = ''; $('csec').value = ''; $('cityPick').value = '';
+  dlg.close(); status('金鑰與快取已清除');
+};
+$('btnQuery').onclick = query;
+$('sort').onchange = render;
+$('btnIntroOk').onclick = () => { store.set('pk_intro', '1'); $('dlgIntro').close(); };
+if (!store.get('pk_intro')) $('dlgIntro').showModal();
+// 已儲存金鑰（或已選過縣市）的使用者：打開就自動查詢
+else if ((store.get('pk_cid') && store.get('pk_csec')) || store.get('pk_city_auto') || store.get('pk_city_pick')) query();
+setInterval(render, 30000); // 每 30 秒重算「資料過期」
+
+if ('serviceWorker' in navigator && location.protocol === 'https:') navigator.serviceWorker.register('sw.js').catch(() => {});
+</script>
+</body>
+</html>
