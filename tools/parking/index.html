@@ -32,8 +32,8 @@ button.primary:disabled{opacity:1;background:#5b6661;border-color:#5b6661;color:
 .bar select{font:inherit;padding:7px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink)}
 #status{padding:0 16px;color:var(--mute);font-size:14px;min-height:21px}
 .warn{margin:6px 16px;padding:8px 12px;border-radius:10px;background:var(--warn-bg);color:var(--warn-ink);font-size:14px}
-ul#list{list-style:none;margin:6px 0 0;padding:0 16px 16px}
-#list li{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin-bottom:8px;display:flex;gap:10px;align-items:flex-start}
+ul#list,ul#listBike{list-style:none;margin:6px 0 0;padding:0 16px 16px}
+#list li,#listBike li{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin-bottom:8px;display:flex;gap:10px;align-items:flex-start}
 .dot{width:12px;height:12px;border-radius:50%;margin-top:6px;flex:none}
 .grow{flex:1;min-width:0}
 .name{font-weight:600}
@@ -53,6 +53,10 @@ dialog input,dialog select{width:100%;font:inherit;padding:8px;border-radius:8px
 footer{padding:8px 16px 24px;color:var(--mute);font-size:12px}
 footer a{color:var(--mute)}
 .leaflet-popup-content{font-size:14px}
+.tabs{display:flex;gap:8px;padding:0 16px 10px}
+.tab{flex:1;font-size:17px;font-weight:700;padding:10px}
+.tab.on{background:var(--brand);border-color:var(--brand);color:#fff}
+.bk{display:inline-block;font-size:12px;font-weight:700;padding:1px 6px;border-radius:6px;border:1px solid var(--line);margin-left:6px;vertical-align:2px}
 .me-icon{position:relative}
 .me-dot{position:absolute;left:5px;top:5px;width:18px;height:18px;border-radius:50%;background:#2563eb;border:3px solid #fff;box-shadow:0 0 0 2px #2563eb,0 2px 6px #0008}
 .me-pulse{position:absolute;left:-6px;top:-6px;width:40px;height:40px;border-radius:50%;background:#2563eb55;animation:mepulse 1.8s ease-out infinite}
@@ -67,6 +71,10 @@ footer a{color:var(--mute)}
   <h1>🅿️ 附近停車查詢</h1>
   <button id="btnSettings" aria-label="設定">設定</button>
 </header>
+<div class="tabs" role="tablist">
+  <button id="tabPark" class="tab on" role="tab" aria-selected="true">🅿️ 停車</button>
+  <button id="tabBike" class="tab" role="tab" aria-selected="false">🚲 YouBike</button>
+</div>
 <div id="map"></div>
 <div class="bar">
   <button id="btnQuery" class="primary">查詢附近停車</button>
@@ -77,13 +85,15 @@ footer a{color:var(--mute)}
   </select>
   <select id="sort" aria-label="排序">
     <option value="dist">依距離</option>
-    <option value="free">依空位</option>
+    <option value="free">依空位／可借</option>
   </select>
   <span id="cityLabel" class="meta"></span>
 </div>
 <div id="status">按「查詢附近停車」開始</div>
 <div id="warns"></div>
 <ul id="list"></ul>
+<div id="warnsBike" hidden></div>
+<ul id="listBike" hidden></ul>
 
 <dialog id="dlgSettings">
   <h3 style="margin:0">設定</h3>
@@ -116,7 +126,7 @@ footer a{color:var(--mute)}
   資料：<a href="https://tdx.transportdata.tw" target="_blank" rel="noopener">交通部 TDX</a>、新北市政府、新竹市政府開放資料，依<a href="https://data.gov.tw/license" target="_blank" rel="noopener">政府資料開放授權條款第 1 版</a>使用；合併與篩選不代表機關背書。<br>
   地圖：© <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors。<br>
   資料處理邏輯參考 opview（© 2026 Rick Lan，<a href="https://github.com/herizon1054/opview/blob/01f0f20/LICENSE" target="_blank" rel="noopener">非商業授權</a>）。<br>
-  工具版本：2026-11-03b
+  工具版本：2026-11-04
 </footer>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js" integrity="sha512-puJW3E/qXDqYp9IfhAI54BJEaWIfloJ7JWs7OeD5i6ruC9JZL1gERT1wjtwXFlh7CjE7ZJ+/vcRZRkIYIb6p4g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
@@ -475,10 +485,11 @@ new Locate().addTo(map);
 
 const $ = id => document.getElementById(id);
 const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-function navLinks(l){
-  const ll = `${l.lat},${l.lon}`;
-  return `<a href="https://www.google.com/maps/dir/?api=1&destination=${ll}&travelmode=driving" target="_blank" rel="noopener">Google 導航</a>`
-    + `<a href="https://maps.apple.com/?daddr=${ll}&dirflg=d" target="_blank" rel="noopener">Apple 導航</a>`;
+// walk＝YouBike 步行導航；預設開車
+function navLinks(l, how = 'drive'){
+  const ll = `${l.lat},${l.lon}`, w = how === 'walk';
+  return `<a href="https://www.google.com/maps/dir/?api=1&destination=${ll}&travelmode=${w ? 'walking' : 'driving'}" target="_blank" rel="noopener">Google 導航</a>`
+    + `<a href="https://maps.apple.com/?daddr=${ll}&dirflg=${w ? 'w' : 'd'}" target="_blank" rel="noopener">Apple 導航</a>`;
 }
 let last = null;
 function render(){
@@ -503,10 +514,32 @@ function render(){
   }
   if (!sorted.length) $('list').innerHTML = '<li><div class="grow meta">這個範圍內沒有已知的停車場，可以把範圍調大再查。</div></li>';
 }
-function warn(list){
-  $('warns').innerHTML = [...new Set(list)].map(w => `<div class="warn">${esc(w)}</div>`).join('');
+// 分頁：停車／YouBike 各自保留狀態列與提示，地圖與「我在哪」共用
+let mode = 'park';
+const st = {park: '按「查詢附近停車」開始', bike: '按「查詢附近 YouBike」開始'};
+function setStatus(which, s){ st[which] = s; if (mode === which) $('status').textContent = s; }
+function warnTo(id, list){ $(id).innerHTML = [...new Set(list)].map(w => `<div class="warn">${esc(w)}</div>`).join(''); }
+const warn = list => warnTo('warns', list);
+const status = s => setStatus('park', s);
+
+// ---- 定位（兩個分頁共用；切分頁不重新定位） ----
+let here = null;
+async function locate(say){
+  say('定位中…');
+  const p = await position();
+  const lat = p.latitude, lon = p.longitude, radius = +$('radius').value;
+  if (me) map.removeLayer(me); if (ring) map.removeLayer(ring);
+  // 老闆 TG33056：明顯的「我在哪」標記（divIcon 在 markerPane，永遠蓋在停車場圓點上面）
+  myPos = [lat, lon];
+  me = L.marker(myPos, {icon: L.divIcon({className: 'me-icon', html: '<span class="me-pulse"></span><span class="me-dot"></span><span class="me-tag">我在哪</span>', iconSize: [28, 28], iconAnchor: [14, 14]}), zIndexOffset: 1000, keyboard: false}).addTo(map);
+  ring = L.circle([lat, lon], {radius, color: '#2563eb', weight: 1, fillOpacity: .04}).addTo(map);
+  map.fitBounds(ring.getBounds());
+  say('判斷縣市…');
+  const city = await detectCity(lat, lon);
+  $('cityLabel').textContent = '縣市：' + CITIES[city];
+  here = {lat, lon, radius, city, at: Date.now(), seq: (here?.seq || 0) + 1};
+  return here;
 }
-const status = s => { $('status').textContent = s; };
 
 // ---- 主流程（opview nearby） ----
 let busy = false;
@@ -518,18 +551,7 @@ async function query(){
   const notes = [];
   let sent = false;
   try {
-    status('定位中…');
-    const p = await position();
-    const lat = p.latitude, lon = p.longitude, radius = +$('radius').value;
-    if (me) map.removeLayer(me); if (ring) map.removeLayer(ring);
-    // 老闆 TG33056：明顯的「我在哪」標記（divIcon 在 markerPane，永遠蓋在停車場圓點上面）
-    myPos = [lat, lon];
-    me = L.marker(myPos, {icon: L.divIcon({className: 'me-icon', html: '<span class="me-pulse"></span><span class="me-dot"></span><span class="me-tag">我在哪</span>', iconSize: [28, 28], iconAnchor: [14, 14]}), zIndexOffset: 1000, keyboard: false}).addTo(map);
-    ring = L.circle([lat, lon], {radius, color: '#2563eb', weight: 1, fillOpacity: .04}).addTo(map);
-    map.fitBounds(ring.getBounds());
-    status('判斷縣市…');
-    const city = await detectCity(lat, lon);
-    $('cityLabel').textContent = '縣市：' + CITIES[city];
+    const {lat, lon, radius, city} = await locate(status);
     let c = cached(city);
     const hasKey = !!(store.get('pk_cid') && store.get('pk_csec'));
     // 有金鑰但快取只有地方資料、且還沒用這組金鑰試過 → 重新下載（改金鑰時會清快取）
@@ -596,6 +618,163 @@ async function query(){
   }
 }
 
+// ---- YouBike（TDX 公共自行車 v2，Swagger「公共運輸-自行車」） ----
+const BIKE_CITIES = new Set(['Taipei','NewTaipei','Taoyuan','Taichung','Tainan','Kaohsiung','Hsinchu','HsinchuCounty',
+  'MiaoliCounty','ChanghuaCounty','YunlinCounty','Chiayi','ChiayiCounty','PingtungCounty','TaitungCounty']);
+const BIKE_TYPE = {1: 'YouBike 1.0', 2: 'YouBike 2.0', 3: 'Moovo'};
+const bikeLayer = L.layerGroup();
+let lastBike = null, bikeBusy = false;
+const bstatus = s => setStatus('bike', s);
+const bwarn = list => warnTo('warnsBike', list);
+
+function cachedBike(city){
+  const c = getJSON('pk_bike_' + city);
+  return c && c.v === 1 && c.city === city && Array.isArray(c.st) && Date.now() - c.at < 86400000 ? c : null;
+}
+// 站點清單：一天一次；台北 1824 站一次就回完，保險起見 $top=5000 再用 $skip 續抓（最多 3 頁）
+async function downloadBike(city, auth){
+  const out = [], seen = new Set();
+  for (let page = 0; page < 3; page++) {
+    bstatus(`下載${CITIES[city]} YouBike 站點…`);
+    const d = await bikeGet(`/api/basic/v2/Bike/Station/City/${city}`,
+      {'$format':'JSON','$select':'StationUID,StationName,StationPosition,StationAddress,BikesCapacity,ServiceType','$top':'5000','$skip':String(page*5000)},
+      auth, {wait: true, progress: bstatus});
+    for (const r of d) {
+      if (seen.has(r.StationUID)) throw new ApiError('YouBike 站點分頁重複');
+      seen.add(r.StationUID);
+      const p = r.StationPosition || {}, lat = p.PositionLat, lon = p.PositionLon;
+      if (typeof lat !== 'number' || typeof lon !== 'number' || !isFinite(lat) || !isFinite(lon) || (lat === 0 && lon === 0)) continue;
+      const n = r.StationName || {}, a = r.StationAddress || {};
+      out.push([r.StationUID, String(n.Zh_tw ?? n.En ?? r.StationUID).replace(/^YouBike2\.0_/, ''), String(a.Zh_tw ?? ''), +lat.toFixed(6), +lon.toFixed(6), int(r.ServiceType) ?? 0, int(r.BikesCapacity)]);
+    }
+    if (d.length < 5000) break;
+  }
+  const c = {v: 1, city, at: Date.now(), st: out};
+  store.set('pk_bike_' + city, JSON.stringify(c));
+  return c;
+}
+// TDX 自行車 API 回傳 JSON 陣列；只接受陣列且每列有 StationUID
+async function bikeGet(path, query, auth, opt = {}){
+  const text = await proxyGet('/tdx' + path + '?' + new URLSearchParams(query).toString(), {auth, ...opt});
+  let v; try { v = JSON.parse(text); } catch { throw new ApiError('TDX 回應不是有效 JSON'); }
+  if (!Array.isArray(v)) throw new ApiError('TDX 自行車回應格式異常');
+  if (v.some(r => !r || typeof r.StationUID !== 'string' || !r.StationUID)) throw new ApiError('TDX 資料列缺少 StationUID');
+  return v;
+}
+function bikeLabel(b, now){
+  if (b.pending) return ['空位更新中…', 'pend'];
+  if (b.rejected) return ['來源拒絕存取', 'unk'];
+  const a = b.avail;
+  if (!a) return [b.liveTried ? '此站沒有即時資料' : '未取得即時資料', 'unk'];
+  if (a.source === null) return ['時間不明', 'unk'];
+  const age = (now - a.source) / 1000;
+  if (age < -60 || age > 300) return ['資料過期', 'unk'];
+  if (a.status === 0) return ['停止營運', 'unk'];
+  if (a.status === 2) return ['暫停營運', 'unk'];
+  if (a.rent === null || a.ret === null) return ['數量不明', 'unk'];
+  const e = a.ebike ? `（電輔 ${a.ebike}）` : '';
+  return [`借 ${a.rent}${e}／還 ${a.ret}`, a.rent === 0 ? 'full' : a.rent < 5 ? 'low' : 'ok'];
+}
+function renderBike(){
+  if (!lastBike) return;
+  const now = Date.now(), {list, lat, lon} = lastBike;
+  list.forEach(b => { b.d = dist(lat, lon, b.lat, b.lon); [b.text, b.tone] = bikeLabel(b, now); });
+  const rent = b => b.avail?.rent ?? -1;
+  const sorted = [...list].sort($('sort').value === 'free' ? (a, b) => rent(b) - rent(a) || a.d - b.d : (a, b) => a.d - b.d);
+  bikeLayer.clearLayers();
+  $('listBike').innerHTML = '';
+  for (const b of sorted) {
+    const noReturn = b.avail && b.avail.ret === 0 && b.tone !== 'unk' ? ' · <b>無空位可還</b>' : '';
+    const html = `<div class="name">${esc(b.name)}<span class="bk">${esc(BIKE_TYPE[b.type] || '公共自行車')}</span></div>`
+      + `<div class="free t-${b.tone}">${esc(b.text)}</div><div class="meta">${Math.round(b.d)} 公尺${b.cap ? ` · ${b.cap} 格` : ''}${noReturn}</div>`
+      + (b.address ? `<div class="meta">${esc(b.address)}</div>` : '') + `<div class="nav">${navLinks(b, 'walk')}</div>`;
+    L.circleMarker([b.lat, b.lon], {radius: 9, color: '#111', weight: 2, fillColor: HEX[b.tone], fillOpacity: .95}).bindPopup(html).addTo(bikeLayer);
+    const li = document.createElement('li');
+    li.innerHTML = `<span class="dot" style="background:${HEX[b.tone]}"></span><div class="grow">${html}</div>`;
+    li.querySelector('.name').addEventListener('click', () => { map.setView([b.lat, b.lon], 17); });
+    $('listBike').appendChild(li);
+  }
+  if (!sorted.length) $('listBike').innerHTML = '<li><div class="grow meta">這個範圍內沒有 YouBike 站點，可以把範圍調大再查。</div></li>';
+}
+// manual＝按「查詢」才算 60 秒冷卻；切分頁的自動查詢只走每分鐘 5 筆的額度
+async function queryBike(manual){
+  if (bikeBusy) return;
+  if (manual) {
+    const cd = gate.cooldown();
+    if (cd > 0) { bstatus(`請等 ${Math.ceil(cd/1000)} 秒再查詢（避免超過資料來源限制）`); return; }
+  }
+  bikeBusy = true; if (manual) gate.click(); tick(); bwarn([]);
+  const notes = [];
+  let sent = false;
+  try {
+    if (!(store.get('pk_cid') && store.get('pk_csec'))) {
+      lastBike = null; bikeLayer.clearLayers();
+      $('listBike').innerHTML = '<li><div class="grow">YouBike 需要 TDX 金鑰：到 <a href="https://tdx.transportdata.tw" target="_blank" rel="noopener">tdx.transportdata.tw</a> 免費申請，再填進右上角「設定」。</div></li>';
+      bstatus('尚未設定 TDX 金鑰');
+      return;
+    }
+    // 定位共用：手動查詢或還沒定位過才重新定位
+    const h = manual || !here || Date.now() - here.at > 120000 ? await locate(bstatus) : here;
+    const {lat, lon, radius, city} = h;
+    if (!BIKE_CITIES.has(city)) { lastBike = {list: [], lat, lon, seq: h.seq}; renderBike(); bstatus(`${CITIES[city]}目前沒有 TDX 公共自行車資料`); return; }
+    const auth = await token();
+    let c = cachedBike(city);
+    if (!c) { sent = true; c = await downloadBike(city, auth); }
+    const list = c.st.map(([id, name, address, la, lo, type, cap]) => ({id, name, address, lat: la, lon: lo, type, cap}))
+      .filter(b => dist(lat, lon, b.lat, b.lon) <= radius)
+      .sort((a, b) => dist(lat, lon, a.lat, a.lon) - dist(lat, lon, b.lat, b.lon)).slice(0, 30);
+    lastBike = {list, lat, lon, seq: h.seq};
+    if (!list.length) { renderBike(); bstatus(`${CITIES[city]}：${radius} 公尺內沒有 YouBike 站點`); return; }
+    // 額度不夠：先畫站點、標「空位更新中…」，等額度回來自動補抓
+    if (gate.waitMs(1) > 0) {
+      list.forEach(b => b.pending = true); renderBike();
+      for (let w; (w = gate.waitMs(1)) > 0;) { bstatus(`已列出站點，空位更新中…（等資料額度 ${Math.ceil(w/1000)} 秒）`); await sleep(1000); }
+    }
+    list.forEach(b => b.pending = false);
+    sent = true;
+    bstatus('查詢即時可借／可還…');
+    try {
+      const d = await bikeGet(`/api/basic/v2/Bike/Availability/City/${city}`,
+        {'$filter': list.map(b => `StationUID eq '${b.id.replace(/'/g, "''")}'`).join(' or '),
+         '$select': 'StationUID,ServiceStatus,AvailableRentBikes,AvailableReturnBikes,AvailableRentBikesDetail,SrcUpdateTime', '$top': '100', '$format': 'JSON'}, auth);
+      const by = new Map(list.map(b => [b.id, b]));
+      list.forEach(b => b.liveTried = true);
+      for (const r of d) {
+        const b = by.get(r.StationUID); if (!b) continue;
+        const t = Date.parse(r.SrcUpdateTime ?? ''), rent = int(r.AvailableRentBikes), ret = int(r.AvailableReturnBikes);
+        b.avail = {rent: rent !== null && rent >= 0 ? rent : null, ret: ret !== null && ret >= 0 ? ret : null,
+          ebike: int(r.AvailableRentBikesDetail?.ElectricBikes) || 0, status: int(r.ServiceStatus), source: isNaN(t) ? null : t};
+      }
+    } catch (e) {
+      if (e.kind === 'rejected') list.forEach(b => b.rejected = true);
+      notes.push(e.message || 'YouBike 即時資料更新失敗');
+    }
+    renderBike();
+    bstatus(`${CITIES[city]} YouBike · ${list.length} 站 · ${new Date().toLocaleTimeString('zh-TW', {hour:'2-digit', minute:'2-digit'})} 更新`);
+  } catch (e) {
+    bstatus(e instanceof ApiError ? e.message : 'YouBike 查詢失敗，請稍後再試');
+  } finally {
+    // 沒送出任何資料請求（沒金鑰、定位失敗、縣市不支援）就不必倒數
+    if (!sent && manual) gate.reset();
+    bwarn(notes); bikeBusy = false; tick();
+  }
+}
+
+// ---- 分頁切換：不重新定位；YouBike 這次定位還沒資料才自動查一次 ----
+function setMode(m){
+  if (mode === m) return;
+  mode = m;
+  $('tabPark').classList.toggle('on', m === 'park'); $('tabBike').classList.toggle('on', m === 'bike');
+  $('tabPark').setAttribute('aria-selected', m === 'park'); $('tabBike').setAttribute('aria-selected', m === 'bike');
+  for (const [id, show] of [['list', m === 'park'], ['warns', m === 'park'], ['listBike', m === 'bike'], ['warnsBike', m === 'bike']]) $(id).hidden = !show;
+  if (m === 'park') { map.removeLayer(bikeLayer); layer.addTo(map); } else { map.removeLayer(layer); bikeLayer.addTo(map); }
+  $('status').textContent = st[m];
+  tick();
+  if (m === 'bike' && here && (!lastBike || lastBike.seq !== here.seq)) queryBike(false);
+}
+$('tabPark').onclick = () => setMode('park');
+$('tabBike').onclick = () => setMode('bike');
+
 // ---- 設定 ----
 const dlg = $('dlgSettings');
 $('cityPick').innerHTML = '<option value="">自動判斷</option>' + Object.entries(CITIES).map(([k, v]) => `<option value="${k}">${v}</option>`).join('');
@@ -624,21 +803,21 @@ $('btnClear').onclick = () => {
   $('cid').value = ''; $('csec').value = ''; $('cityPick').value = '';
   dlg.close(); status('金鑰與快取已清除');
 };
-$('btnQuery').onclick = query;
+$('btnQuery').onclick = () => mode === 'park' ? query() : queryBike(true);
 // 按鈕上倒數：冷卻中顯示「N 秒後可再查」
 function tick(){
   const cd = gate.cooldown(), b = $('btnQuery');
-  b.disabled = busy || cd > 0;
-  b.textContent = cd > 0 ? `${Math.ceil(cd/1000)} 秒後可再查` : '查詢附近停車';
+  b.disabled = (mode === 'park' ? busy : bikeBusy) || cd > 0;
+  b.textContent = cd > 0 ? `${Math.ceil(cd/1000)} 秒後可再查` : mode === 'park' ? '查詢附近停車' : '查詢附近 YouBike';
 }
 setInterval(tick, 1000);
 tick();
-$('sort').onchange = render;
+$('sort').onchange = () => { render(); renderBike(); };
 $('btnIntroOk').onclick = () => { store.set('pk_intro', '1'); $('dlgIntro').close(); };
 if (!store.get('pk_intro')) $('dlgIntro').showModal();
 // 已儲存金鑰（或已選過縣市）的使用者：打開就自動查詢
 else if ((store.get('pk_cid') && store.get('pk_csec')) || store.get('pk_city_auto') || store.get('pk_city_pick')) query();
-setInterval(render, 30000); // 每 30 秒重算「資料過期」
+setInterval(() => { render(); renderBike(); }, 30000); // 每 30 秒重算「資料過期」
 
 if ('serviceWorker' in navigator && location.protocol === 'https:') navigator.serviceWorker.register('sw.js').catch(() => {});
 </script>
