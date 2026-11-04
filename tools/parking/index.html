@@ -193,7 +193,7 @@ ul#listPay{list-style:none;margin:6px 0 0;padding:0 16px 16px}#listPay li{backgr
   停車費率為各機關提供的文字說明，僅供參考，以現場公告為準。<br>
   地圖：© <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors。<br>
   資料處理邏輯參考 opview（© 2026 Rick Lan，<a href="https://github.com/herizon1054/opview/blob/01f0f20/LICENSE" target="_blank" rel="noopener">非商業授權</a>）。<br>
-  工具版本：2026-11-04q
+  工具版本：2026-11-04r
 </footer>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js" integrity="sha512-puJW3E/qXDqYp9IfhAI54BJEaWIfloJ7JWs7OeD5i6ruC9JZL1gERT1wjtwXFlh7CjE7ZJ+/vcRZRkIYIb6p4g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
@@ -230,7 +230,12 @@ const NTPC = {static:'B1464EF0-9C7C-4A6F-ABF7-6BDF32847E68', live:'e09b35a5-a738
 const mem = {};
 const store = {
   get(k){ try{ const v = localStorage.getItem(k); return v === null ? (mem[k] ?? null) : v; }catch{ return mem[k] ?? null; } },
-  set(k,v){ mem[k] = v; try{ localStorage.setItem(k,v); }catch{} },
+  // 寫入失敗（Safari 約 5MB 上限）時不能讓舊值留在 localStorage，否則下次開頁面讀到舊快取（B 審，老闆 TG33426 路邊不完整）；
+  // 位置快取先刪掉其他縣市的 pk_static_* 再試一次
+  set(k,v){ mem[k] = v; try{ localStorage.setItem(k,v); }catch{
+    try{ localStorage.removeItem(k);
+      if (k.startsWith('pk_static_')) { for (const o of Object.keys(localStorage)) if (o.startsWith('pk_static_') && o !== k) localStorage.removeItem(o); localStorage.setItem(k,v); }
+    }catch{} } },
   del(k){ delete mem[k]; try{ localStorage.removeItem(k); }catch{} },
   keys(){ try{ return Object.keys(localStorage); }catch{ return Object.keys(mem); } },
 };
@@ -458,7 +463,7 @@ function mergeLocal(base, local){
 }
 function cached(city){
   const c = getJSON('pk_static_' + city);
-  return c && c.v === 2 && c.city === city && Array.isArray(c.lots) ? c : null;
+  return c && c.v === 3 && c.city === city && Array.isArray(c.lots) ? c : null;
 }
 async function downloadStatic(city, progress){
   const notes = [];
@@ -500,8 +505,8 @@ async function downloadStatic(city, progress){
     lots = mergeLocal(lots, localLots(city, await localRows(city, false, {wait:true, progress})));
   }
   if (!lots.length) throw new ApiError(notes[0] || '此縣市目前沒有可用的位置資料', notes.length ? 'nokey' : 'error');
-  // v2（老闆 TG33275）：多存費率文字；v1 舊快取會自動重抓一次
-  const c = {v:2, city, at: Date.now(), tdx: hasTdx, tdxTried: !!store.get('pk_cid'), lots: lots.map(l => [l.id, l.name, l.address, +l.lat.toFixed(6), +l.lon.toFixed(6), l.on ? 1 : 0, l.fare || ''])};
+  // v2（老闆 TG33275）：多存費率文字；v3（老闆 TG33426）：手機上的舊快取路邊路段不完整（同點新下載 1 公里內 20+ 段、舊快取只剩 1 段），全部重抓一次
+  const c = {v:3, city, at: Date.now(), tdx: hasTdx, tdxTried: !!store.get('pk_cid'), lots: lots.map(l => [l.id, l.name, l.address, +l.lat.toFixed(6), +l.lon.toFixed(6), l.on ? 1 : 0, l.fare || ''])};
   store.set('pk_static_' + city, JSON.stringify(c));
   return {c, notes};
 }
@@ -661,8 +666,8 @@ async function query(){
     const {lat, lon, radius, city} = await locate(status);
     let c = cached(city);
     const hasKey = !!(store.get('pk_cid') && store.get('pk_csec'));
-    // 有金鑰但快取只有地方資料、且還沒用這組金鑰試過 → 重新下載（改金鑰時會清快取）
-    const stale = !c || Date.now() - c.at > 7 * 86400000 || (hasKey && !c.tdx && !c.tdxTried && (OFF_STATIC.has(city) || ON_STATIC.has(city)));
+    // 有金鑰但快取只有地方資料：還沒用這組金鑰試過、或上次試失敗已超過 1 小時 → 重新下載（新北、新竹在金鑰無效時會先存只有地方資料的快取，換好金鑰後 1 小時內會補抓 TDX）
+    const stale = !c || Date.now() - c.at > 7 * 86400000 || (hasKey && !c.tdx && (!c.tdxTried || Date.now() - c.at > 3600000) && (OFF_STATIC.has(city) || ON_STATIC.has(city)));
     if (stale) { sent = true; const r = await downloadStatic(city, status); c = r.c; notes.push(...r.notes); }
     else if (!c.tdx && (OFF_STATIC.has(city) || ON_STATIC.has(city)) && !hasKey) notes.push('未設定 TDX 金鑰，只顯示地方政府資料');
     const all = unpack(c).filter(l => dist(lat, lon, l.lat, l.lon) <= radius).sort((a, b) => dist(lat, lon, a.lat, a.lon) - dist(lat, lon, b.lat, b.lon));
