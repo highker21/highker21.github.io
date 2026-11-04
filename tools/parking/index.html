@@ -147,7 +147,7 @@ footer a{color:var(--mute)}
   資料：<a href="https://tdx.transportdata.tw" target="_blank" rel="noopener">交通部 TDX</a>、新北市政府、新竹市政府、警察廣播電臺（即時路況）開放資料，依<a href="https://data.gov.tw/license" target="_blank" rel="noopener">政府資料開放授權條款第 1 版</a>使用；合併與篩選不代表機關背書。<br>
   地圖：© <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors。<br>
   資料處理邏輯參考 opview（© 2026 Rick Lan，<a href="https://github.com/herizon1054/opview/blob/01f0f20/LICENSE" target="_blank" rel="noopener">非商業授權</a>）。<br>
-  工具版本：2026-11-04d
+  工具版本：2026-11-04e
 </footer>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js" integrity="sha512-puJW3E/qXDqYp9IfhAI54BJEaWIfloJ7JWs7OeD5i6ruC9JZL1gERT1wjtwXFlh7CjE7ZJ+/vcRZRkIYIb6p4g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
@@ -881,10 +881,13 @@ function renderTraffic(){
   for (const t of list) {
     const a = t.live, stale = !a || a.source === null || now - a.source > 300000 || now - a.source < -60000;
     [t.text, t.tone] = t.pending ? ['車速更新中…', 'pend'] : !a ? ['無資料', 'unk'] : stale ? ['資料過期', 'unk'] : !(a.speed > 0) ? ['無資料', 'unk'] : [`${a.speed} km/h`, speedTone(t.kind, a.speed)];
+    // 老闆 TG33208：省道「無資料」的路段不顯示（列表、地圖、段數都不算）
+    t.hide = t.kind === 'Highway' && t.text === '無資料';
+    if (t.hide) continue;
     if (t.d <= 5000) for (const ln of t.lines) L.polyline(ln, {color: HEX[t.tone], weight: t.kind === 'Freeway' ? 7 : 5, opacity: .9}).bindPopup(`${esc(t.name)}<br><b>${esc(t.text)}</b>`).addTo(trafficLayer);
   }
   // 老闆 TG33189：一次只顯示 5 筆，其餘收在「更多…」後面
-  const sorted = [...list].sort((a, b) => a.d - b.d).slice(0, 40);
+  const sorted = list.filter(t => !t.hide).sort((a, b) => a.d - b.d).slice(0, 40);
   sorted.forEach((t, i) => {
     const li = document.createElement('li');
     if (i >= 5 && !trafficMore) li.hidden = true;
@@ -899,7 +902,7 @@ function renderTraffic(){
     li.querySelector('button').onclick = () => { trafficMore = true; renderTraffic(); };
     $('listTraffic').appendChild(li);
   }
-  if (!sorted.length) $('listTraffic').innerHTML = '<li><div class="grow meta">附近沒有國道或省道路段，可以把範圍調大再查。</div></li>';
+  if (!sorted.length) $('listTraffic').innerHTML = `<li><div class="grow meta">${list.length ? '附近的省道目前都沒有車速資料' : '附近沒有國道或省道路段'}，可以把範圍調大再查。</div></li>`;
   // 事件（老闆 TG33176）：直接顯示 Description 內容；標題高對比粗體＋依 NewsCategory 上色；
   // 不放 NewsURL（都只導到高公局首頁）。所有文字一律轉義
   $('newsTraffic').innerHTML = '';
@@ -973,7 +976,8 @@ async function queryTraffic(manual){
         renderTraffic();
       }
     }
-    tstatus(`即時路況 · ${radius / 1000} 公里內 ${list.length} 段 · ${new Date().toLocaleTimeString('zh-TW', {hour:'2-digit', minute:'2-digit'})} 更新`);
+    const shown = list.filter(t => !t.hide).length, hidden = list.length - shown;
+    tstatus(`即時路況 · ${radius / 1000} 公里內 ${shown} 段${hidden ? `（另 ${hidden} 段省道無資料未顯示）` : ''} · ${new Date().toLocaleTimeString('zh-TW', {hour:'2-digit', minute:'2-digit'})} 更新`);
   } catch (e) {
     tstatus(e instanceof ApiError ? e.message : '路況查詢失敗，請稍後再試');
   } finally {
@@ -987,6 +991,7 @@ async function queryTraffic(manual){
 //   grid：只送自己所在 0.1° 格子（約 11 km）的邊界，固定不查相鄰格（避免洩漏靠哪一側）
 //   all ：下載全國清單、完全不送位置（第一次較久；最多 20 頁，超過改回格子）
 // 欄位只依 Swagger（未取得真實樣本），解析一律防禦式
+const TOUR_PAGE = 500;
 const TOUR_KINDS = {Attraction: '景點', Restaurant: '餐廳', Event: '活動'};
 const TOUR_SELECT = {
   Attraction: 'AttractionID,AttractionName,Description,PositionLat,PositionLon,AttractionClasses,PostalAddress,Images,ServiceTimeInfo,ServiceStatus,WebsiteUrl',
@@ -1041,12 +1046,17 @@ async function tourFetch(kind, auth, lat, lon, city){
   const base = `/api/tourism/service/odata/V2/Tourism/${kind}`;
   if (cell) {
     ustatus(`下載這一格的${TOUR_KINDS[kind]}…`);
-    const q = {'$filter': `PositionLat ge ${cell[0]} and PositionLat lt ${cell[1]} and PositionLon ge ${cell[2]} and PositionLon lt ${cell[3]}`, '$select': TOUR_SELECT[kind], '$top': '1000', '$format': 'JSON'};
-    const text = await proxyGet('/tdx' + base + '?' + new URLSearchParams(q).toString(), {auth, wait: true, progress: ustatus});
-    let j; try { j = JSON.parse(text); } catch { throw new ApiError('TDX 觀光回應不是有效 JSON'); }
-    for (const r of tourRows(j)) { const o = r && typeof r === 'object' ? tourParse(kind, r) : null; if (o) items.push(o); }
+    // V2 的 $top 上限 500、沒有 $format 參數（Swagger）；一格超過 500 筆就翻頁，最多 6 頁
+    for (let page = 0; page < 6; page++) {
+      const q = {'$filter': `PositionLat ge ${cell[0]} and PositionLat lt ${cell[1]} and PositionLon ge ${cell[2]} and PositionLon lt ${cell[3]}`, '$select': TOUR_SELECT[kind], '$top': String(TOUR_PAGE), ...(page ? {'$skip': String(page * TOUR_PAGE)} : {})};
+      const text = await proxyGet('/tdx' + base + '?' + new URLSearchParams(q).toString(), {auth, wait: true, progress: ustatus});
+      let j; try { j = JSON.parse(text); } catch { throw new ApiError('TDX 觀光回應不是有效 JSON'); }
+      const rows = tourRows(j);
+      for (const r of rows) { const o = r && typeof r === 'object' ? tourParse(kind, r) : null; if (o) items.push(o); }
+      if (rows.length < TOUR_PAGE) break;
+    }
   } else {
-    // 縣市／全國模式只下載目前選中的那一類；可隨時取消；每類上限 20 頁或約 20 MB
+    // 縣市／全國模式只下載目前選中的那一類；可隨時取消；每類上限 40 頁（2 萬筆）或約 20 MB
     const cityName = mode === 'city' ? CITIES[city] : null;
     tourCancel = false;
     $('warnsTour').innerHTML = `<div class="warn">正在下載${cityName ? esc(cityName) : '全國'}資料（第一次可能要幾分鐘）　<button id="btnTourCancel">取消下載</button></div>`;
@@ -1054,9 +1064,9 @@ async function tourFetch(kind, auth, lat, lon, city){
     let bytes = 0;
     for (let page = 0; ; page++) {
       if (tourCancel) throw new ApiError('已取消全國資料下載（可到「設定」改用 11 公里格子）');
-      if (page >= 20 || bytes > 20e6) { store.set('pk_tour_mode', 'grid'); throw new ApiError('全國資料超過上限（20 頁／20 MB），已改回「11 公里格子」模式，請再查一次'); }
-      ustatus(`下載${cityName || '全國'}${TOUR_KINDS[kind]}：第 ${page + 1} 頁（上限 20 頁）`);
-      const q = {...(cityName ? {'$filter': `PostalAddress/City eq '${cityName}'`} : {}), '$select': TOUR_SELECT[kind], '$top': '1000', '$skip': String(page * 1000), '$format': 'JSON'};
+      if (page >= 40 || bytes > 20e6) { store.set('pk_tour_mode', 'grid'); throw new ApiError('全國資料超過上限（2 萬筆／20 MB），已改回「11 公里格子」模式，請再查一次'); }
+      ustatus(`下載${cityName || '全國'}${TOUR_KINDS[kind]}：第 ${page + 1} 頁（上限 40 頁）`);
+      const q = {...(cityName ? {'$filter': `PostalAddress/City eq '${cityName}'`} : {}), '$select': TOUR_SELECT[kind], '$top': String(TOUR_PAGE), '$skip': String(page * TOUR_PAGE)};
       let text;
       try { text = await proxyGet('/tdx' + base + '?' + new URLSearchParams(q).toString(), {auth, wait: true, progress: ustatus}); }
       catch (e) {
@@ -1068,7 +1078,7 @@ async function tourFetch(kind, auth, lat, lon, city){
       bytes += text.length;
       const rows = tourRows(j);
       for (const r of rows) { const o = r && typeof r === 'object' ? tourParse(kind, r) : null; if (o) items.push(o); }
-      if (rows.length < 1000) break;
+      if (rows.length < TOUR_PAGE) break;
     }
   }
   await idb.set(key, {v: 1, at: Date.now(), items});
