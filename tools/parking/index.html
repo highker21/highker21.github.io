@@ -193,7 +193,7 @@ ul#listPay{list-style:none;margin:6px 0 0;padding:0 16px 16px}#listPay li{backgr
   停車費率為各機關提供的文字說明，僅供參考，以現場公告為準。<br>
   地圖：© <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors。<br>
   資料處理邏輯參考 opview（© 2026 Rick Lan，<a href="https://github.com/herizon1054/opview/blob/01f0f20/LICENSE" target="_blank" rel="noopener">非商業授權</a>）。<br>
-  工具版本：2026-11-04p
+  工具版本：2026-11-04q
 </footer>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js" integrity="sha512-puJW3E/qXDqYp9IfhAI54BJEaWIfloJ7JWs7OeD5i6ruC9JZL1gERT1wjtwXFlh7CjE7ZJ+/vcRZRkIYIb6p4g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
@@ -424,11 +424,12 @@ function fareHtml(f){
 function fareRate(f){
   if (!f) return null;
   const s = f.replace(/[０-９]/g, c => String.fromCharCode(c.charCodeAt(0) - 0xFEE0))
-    .replace(/汽機車/g, '汽車').replace(/機車[^，,；;。\n]*/g, '');
+    .replace(/(\d),(?=\d{3})/g, '$1').replace(/汽機車/g, '汽車').replace(/(?:機車|大客車|大型車)[^，,；;。\n]*/g, '')
+    .replace(/(半小時|半時|小時|時|分鐘|分)\s*(?:收費)?\s*(?:新[台臺]幣|NT\$?)\s*/g, '$1').replace(/(半小時|半時|小時|時|分鐘|分)\s*收費\s*(?=\d)/g, '$1');
   if (/免費|不收費/.test(s) && !/\d\s*元/.test(s)) return {v: 0, flat: false};
   const hour = [], flat = [];
   for (const m of s.matchAll(/(\d+)\s*元\s*[／\/每]?\s*(半小時|半時|30\s*分鐘?|小時|時|hr|h)(?![a-z段間])/gi)) hour.push(+m[1] * (/半|30/.test(m[2]) ? 2 : 1));
-  for (const m of s.matchAll(/(?:每|計時|首)\s*(半小時|半時|小時|時)?\s*(\d+)\s*元/g)) hour.push(+m[2] * (m[1] && m[1].includes('半') ? 2 : 1));
+  for (const m of s.matchAll(/(?:每|計時|首)\s*(半小時|半時|小時|時)?\s*(\d+)\s*元(?!\s*[／\/每])/g)) hour.push(+m[2] * (m[1] && m[1].includes('半') ? 2 : 1));
   for (const m of s.matchAll(/每\s*(\d+)\s*分鐘?\s*(\d+)\s*元/g)) if (+m[1] > 0) hour.push(+m[2] * 60 / +m[1]);
   for (const m of s.matchAll(/每\s*(\d+)\s*小時\s*(\d+)\s*元/g)) if (+m[1] > 0) hour.push(+m[2] / +m[1]);
   for (const m of s.matchAll(/(\d+)\s*元\s*[／\/每]?\s*次|(?:每|計)次\s*(\d+)\s*元/g)) flat.push(+(m[1] ?? m[2]));
