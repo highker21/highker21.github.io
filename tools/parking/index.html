@@ -119,7 +119,7 @@ ul#listPay{list-style:none;margin:6px 0 0;padding:0 16px 16px}#listPay li{backgr
   <label>車牌號碼 <input id="plate" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="12" placeholder="例如 ABC-1234"></label>
   <div class="payrow">
     <select id="ptype" aria-label="車種"><option value="C">汽車</option><option value="M">機車</option></select>
-    <select id="pscope" aria-label="查詢範圍"><option value="here">定位所在縣市</option><option value="all">全部縣市（約 25 秒）</option></select>
+    <select id="pscope" aria-label="查詢範圍"><option value="here">定位所在縣市</option><option value="all">全部縣市（約 10 秒）</option></select>
   </div>
   <label class="payrem"><input type="checkbox" id="premember"> 記住車牌（存在這支手機，同一台手機的人看得到）</label>
 </div>
@@ -159,7 +159,7 @@ ul#listPay{list-style:none;margin:6px 0 0;padding:0 16px 16px}#listPay li{backgr
   停車費率為各機關提供的文字說明，僅供參考，以現場公告為準。<br>
   地圖：© <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors。<br>
   資料處理邏輯參考 opview（© 2026 Rick Lan，<a href="https://github.com/herizon1054/opview/blob/01f0f20/LICENSE" target="_blank" rel="noopener">非商業授權</a>）。<br>
-  工具版本：2026-11-04k
+  工具版本：2026-11-04l
 </footer>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js" integrity="sha512-puJW3E/qXDqYp9IfhAI54BJEaWIfloJ7JWs7OeD5i6ruC9JZL1gERT1wjtwXFlh7CjE7ZJ+/vcRZRkIYIb6p4g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
@@ -1305,6 +1305,9 @@ async function queryTransit(manual){
 const PAY_CODE = {Taipei:'TPE',NewTaipei:'NWT',Keelung:'KEE',Taoyuan:'TAO',Hsinchu:'HSZ',HsinchuCounty:'HSQ',MiaoliCounty:'MIA',Taichung:'TXG',
   ChanghuaCounty:'CHA',YunlinCounty:'YUN',Chiayi:'CYI',ChiayiCounty:'CYQ',Tainan:'TNN',Kaohsiung:'KHH',PingtungCounty:'PIF',NantouCounty:'NAN',
   YilanCounty:'ILA',HualienCounty:'HUA',TaitungCounty:'TTT',KinmenCounty:'KIN',PenghuCounty:'PEN'};   // 連江縣沒有提供
+// 2026-11-04 12:0x 實測（Worker 用不可能是車牌的「--」打 21 縣市）：下列縣市從轉送站連不上，先標「暫不支援」並跳過不打
+const PAY_SKIP = {KHH:'只接受台灣境內連線', HSQ:'只接受台灣境內連線', CHA:'只接受台灣境內連線', CYI:'只接受台灣境內連線', NAN:'只接受台灣境內連線',
+  ILA:'只接受台灣境內連線', HUA:'只接受台灣境內連線', TPE:'對方主機憑證設定不完整', HSZ:'對方主機憑證設定不完整', NWT:'對方主機目前連不上', TAO:'對方主機目前連不上', YUN:'對方主機目前連不上'};
 const PAY_NAME = Object.fromEntries(Object.entries(PAY_CODE).map(([k, v]) => [v, CITIES[k]]));
 const PAY_PLATE = /^[A-Z0-9一-鿿-]{2,10}$/;   // 規範 ERR02：英數、中文、「-」
 const BILL_ST = {0: '未逾期', 1: '逾期轉催繳中', 2: '催繳', 3: '告發'};
@@ -1335,10 +1338,11 @@ function renderPay(){
   const ul = $('listPay'); ul.innerHTML = '';
   if (!lastPay) return;
   const res = lastPay.res, due = res.filter(x => x.state === 'due'), sum = due.reduce((a, x) => a + (x.total || 0), 0);
+  const checked = res.filter(x => x.state !== 'err'), skip = res.length - checked.length;
   const head = document.createElement('li');
   head.innerHTML = `<div class="name">${esc(lastPay.plate)}（${lastPay.type === 'M' ? '機車' : '汽車'}）</div>`
-    + `<div class="free t-${due.length ? 'full' : 'ok'}">${due.length ? `待繳 ${sum} 元` : res.length ? '目前沒有查到待繳' : '查詢中…'}</div>`
-    + `<div class="meta">已查 ${res.length}／${lastPay.cities.length} 縣市${due.length ? ` · ${due.length} 個縣市有待繳` : ''}</div>`
+    + `<div class="free t-${due.length ? 'full' : checked.length ? 'ok' : 'unk'}">${due.length ? `待繳 ${sum} 元` : checked.length ? '查得到的縣市都沒有待繳' : res.length ? '這次沒有查到任何縣市' : '查詢中…'}</div>`
+    + `<div class="meta">已查 ${checked.length} 縣市${due.length ? ` · ${due.length} 個縣市有待繳` : ''}${skip ? ` · ${skip} 個縣市暫不支援或查不到` : ''}${res.length < lastPay.cities.length ? ` · 還剩 ${lastPay.cities.length - res.length} 個` : ''}</div>`
     + '<div class="meta">超商臨櫃繳費後，可能延遲幾天才會消失；繳費請到各縣市官方管道。</div>';
   ul.appendChild(head);
   for (const x of [...due, ...res.filter(x => x.state === 'err'), ...res.filter(x => x.state === 'none')]) {
@@ -1372,7 +1376,10 @@ async function queryPay(){
       if (!PAY_CODE[h.city]) { pstatus(`${CITIES[h.city] || '所在縣市'}沒有提供停車費查詢，請改選「全部縣市」`); return; }
       cities = [PAY_CODE[h.city]];
     }
-    lastPay = {plate, type, cities, res: []}; renderPay();
+    const skipped = cities.filter(c => PAY_SKIP[c]).map(c => ({city: c, name: PAY_NAME[c], state: 'err', msg: `暫不支援：${PAY_SKIP[c]}`}));
+    cities = cities.filter(c => !PAY_SKIP[c]);
+    if (!cities.length) { lastPay = {plate, type, cities: skipped.map(x => x.city), res: skipped}; renderPay(); pstatus(`${skipped[0].name}的停車費查詢暫不支援（${PAY_SKIP[skipped[0].city]}），請到該縣市官方網站查詢`); return; }
+    lastPay = {plate, type, cities: [...cities, ...skipped.map(x => x.city)], res: [...skipped]}; renderPay();
     pstatus(cities.length > 1 ? `查詢 ${cities.length} 個縣市（每秒 1 個）…` : `查詢${PAY_NAME[cities[0]]}…`);
     gate.click(); sent = true;
     const r = await fetch(PROXY + '/paybill', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({cities, id: plate, type}), signal: payCtl.signal, cache: 'no-store'});
@@ -1385,7 +1392,7 @@ async function queryPay(){
       let i; while ((i = buf.indexOf('\n')) >= 0) {
         const t = buf.slice(0, i); buf = buf.slice(i + 1);
         let o; try { o = payParse(JSON.parse(t)); } catch { o = null; }
-        if (o && lastPay.res.length < cities.length && !lastPay.res.some(x => x.city === o.city)) { lastPay.res.push(o); renderPay(); pstatus(`已查 ${lastPay.res.length}／${cities.length} 縣市…`); }
+        if (o && cities.includes(o.city) && !lastPay.res.some(x => x.city === o.city)) { lastPay.res.push(o); renderPay(); pstatus(`已查 ${lastPay.res.filter(x => cities.includes(x.city)).length}／${cities.length} 縣市…`); }
       }
     }
     const miss = cities.filter(c => !lastPay.res.some(x => x.city === c));
