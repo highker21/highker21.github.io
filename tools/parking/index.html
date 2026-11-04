@@ -63,6 +63,9 @@ footer a{color:var(--mute)}
 .news-tag{font-size:13px;font-weight:800;padding:1px 8px;border-radius:6px;flex:none}
 .news-body{font-size:16px;line-height:1.5;color:var(--ink);margin:4px 0}
 .news-body summary{cursor:pointer;list-style:none}
+.fare{font-size:15px;color:var(--ink);margin:2px 0}.fare details{display:inline}.fare summary{display:inline;cursor:pointer;list-style:none}
+.payform{padding:0 16px 8px;display:grid;gap:8px;font-size:16px}.payform input#plate{font:inherit;font-size:20px;letter-spacing:1px;width:100%;padding:8px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink);text-transform:uppercase;box-sizing:border-box}.payrow{display:flex;gap:8px}.payrow select{font:inherit;flex:1;padding:7px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink)}.payrem{font-size:14px;color:var(--mute)}
+ul#listPay{list-style:none;margin:6px 0 0;padding:0 16px 16px}#listPay li{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin-bottom:8px}.bill{font-size:15px;margin:4px 0;padding-top:4px;border-top:1px dashed var(--line)}
 .more{width:100%;font-weight:700;padding:10px;margin:4px 0 8px}
 .row{display:flex;gap:8px;align-items:center;font-size:16px;margin:5px 0;color:var(--ink)}.tm{font-weight:800;font-variant-numeric:tabular-nums}.sm{font-size:15px;padding:1px 8px;border-radius:6px;flex:none}
 .tab.on{background:var(--brand);border-color:var(--brand);color:#fff}
@@ -86,6 +89,7 @@ footer a{color:var(--mute)}
   <button id="tabBike" class="tab" role="tab" aria-selected="false">🚲 YouBike</button>
   <button id="tabTraffic" class="tab" role="tab" aria-selected="false">🚦 路況</button>
   <button id="tabTransit" class="tab" role="tab" aria-selected="false">🚌 到站</button>
+  <button id="tabPay" class="tab" role="tab" aria-selected="false">🧾 欠費</button>
 </div>
 <div id="map"></div>
 <div class="bar">
@@ -111,6 +115,16 @@ footer a{color:var(--mute)}
 <div id="newsTraffic" hidden></div>
 <div id="warnsTransit" hidden></div>
 <ul id="listTransit" hidden></ul>
+<div id="payForm" class="payform" hidden>
+  <label>車牌號碼 <input id="plate" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="12" placeholder="例如 ABC-1234"></label>
+  <div class="payrow">
+    <select id="ptype" aria-label="車種"><option value="C">汽車</option><option value="M">機車</option></select>
+    <select id="pscope" aria-label="查詢範圍"><option value="here">定位所在縣市</option><option value="all">全部縣市（約 25 秒）</option></select>
+  </div>
+  <label class="payrem"><input type="checkbox" id="premember"> 記住車牌（存在這支手機，同一台手機的人看得到）</label>
+</div>
+<div id="warnsPay" hidden></div>
+<ul id="listPay" hidden></ul>
 
 <dialog id="dlgSettings">
   <h3 style="margin:0">設定</h3>
@@ -142,9 +156,10 @@ footer a{color:var(--mute)}
 
 <footer>
   資料：<a href="https://tdx.transportdata.tw" target="_blank" rel="noopener">交通部 TDX</a>、新北市政府、新竹市政府、警察廣播電臺（即時路況）開放資料，依<a href="https://data.gov.tw/license" target="_blank" rel="noopener">政府資料開放授權條款第 1 版</a>使用；合併與篩選不代表機關背書。<br>
+  停車費率為各機關提供的文字說明，僅供參考，以現場公告為準。<br>
   地圖：© <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors。<br>
   資料處理邏輯參考 opview（© 2026 Rick Lan，<a href="https://github.com/herizon1054/opview/blob/01f0f20/LICENSE" target="_blank" rel="noopener">非商業授權</a>）。<br>
-  工具版本：2026-11-04i
+  工具版本：2026-11-04k
 </footer>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js" integrity="sha512-puJW3E/qXDqYp9IfhAI54BJEaWIfloJ7JWs7OeD5i6ruC9JZL1gERT1wjtwXFlh7CjE7ZJ+/vcRZRkIYIb6p4g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
@@ -345,7 +360,7 @@ function localLots(city, rows){
     if (!p || p[0] < 21.5 || p[0] > 26.5 || p[1] < 119 || p[1] > 123) continue;
     const name = String(r[ntpc ? 'NAME' : 'PARKINGNAME'] ?? '').trim(); if (!name) continue;
     out.push({id:`local:${ntpc ? 'ntpc' : 'hccg'}:${String(r[ntpc ? 'ID' : 'PARKNO']).trim()}`, city, name,
-      address: String(r.ADDRESS ?? ''), lat: p[0], lon: p[1], on: false});
+      address: String(r.ADDRESS ?? ''), lat: p[0], lon: p[1], on: false, fare: fareText(r.PAYEX)});
   }
   return out;
 }
@@ -362,6 +377,14 @@ function localAvail(city, rows, now){
 }
 
 // ---- TDX 靜態資料（7 天快取，opview downloadStatic） ----
+// 費率文字（老闆 TG33275）：TDX FareDescription／新北 PAYEX；只收字串、去多餘空白、上限 120 字（localStorage 容量）
+function fareText(v){ return typeof v === 'string' ? v.replace(/\s+/g, ' ').trim().slice(0, 120) : ''; }
+// 清單顯示：超過 60 字收進 details；一律轉義；費率以現場公告為準
+function fareHtml(f){
+  if (!f) return '';
+  const body = f.length > 60 ? `<details><summary>${esc(f.slice(0, 60))}…</summary>${esc(f.slice(60))}</details>` : esc(f);
+  return `<div class="fare">💲 ${body}</div>`;
+}
 function parseTdxLot(r, city, on){
   const p = r[on ? 'ParkingSegmentPosition' : 'CarParkPosition'];
   if (!p || r.IsMotorcycle === 1) return null;
@@ -370,15 +393,18 @@ function parseTdxLot(r, city, on){
   const id = r[on ? 'ParkingSegmentID' : 'CarParkID'];
   const n = r[on ? 'ParkingSegmentName' : 'CarParkName'];
   return {id, city, name: n && typeof n === 'object' ? String(n.Zh_tw ?? n.En ?? id) : id,
-    address: String(r[on ? 'Description' : 'Address'] ?? ''), lat, lon, on};
+    address: String(r[on ? 'Description' : 'Address'] ?? ''), lat, lon, on, fare: fareText(r.FareDescription)};
 }
 function mergeLocal(base, local){
   const norm = s => s.replace(/\s+/g, '').replace(/台/g, '臺');
-  return base.filter(a => a.on || !local.some(b => norm(a.name) === norm(b.name) && dist(a.lat, a.lon, b.lat, b.lon) < 80)).concat(local);
+  const same = (a, b) => norm(a.name) === norm(b.name) && dist(a.lat, a.lon, b.lat, b.lon) < 80;
+  // 同一停車場以地方政府資料為準；地方資料沒有費率時沿用 TDX 的費率文字
+  for (const b of local) if (!b.fare) { const a = base.find(a => !a.on && a.fare && same(a, b)); if (a) b.fare = a.fare; }
+  return base.filter(a => a.on || !local.some(b => same(a, b))).concat(local);
 }
 function cached(city){
   const c = getJSON('pk_static_' + city);
-  return c && c.v === 1 && c.city === city && Array.isArray(c.lots) ? c : null;
+  return c && c.v === 2 && c.city === city && Array.isArray(c.lots) ? c : null;
 }
 async function downloadStatic(city, progress){
   const notes = [];
@@ -396,8 +422,8 @@ async function downloadStatic(city, progress){
     for (const on of [false, true]) {
       if (!(on ? ON_STATIC : OFF_STATIC).has(city)) continue;
       const idf = on ? 'ParkingSegmentID' : 'CarParkID', kind = on ? 'OnStreet/ParkingSegment' : 'OffStreet/CarPark';
-      const select = on ? 'ParkingSegmentID,City,ParkingSegmentName,ParkingSegmentPosition,Description'
-                        : 'CarParkID,City,CarParkName,CarParkPosition,Address,IsMotorcycle';
+      const select = on ? 'ParkingSegmentID,City,ParkingSegmentName,ParkingSegmentPosition,Description,FareDescription'
+                        : 'CarParkID,City,CarParkName,CarParkPosition,Address,IsMotorcycle,FareDescription';
       let skip = 0; const seen = new Set();
       for (;;) {
         progress(`下載${CITIES[city]}${on ? '路邊' : '路外'}位置：已讀 ${skip} 筆`);
@@ -420,11 +446,12 @@ async function downloadStatic(city, progress){
     lots = mergeLocal(lots, localLots(city, await localRows(city, false, {wait:true, progress})));
   }
   if (!lots.length) throw new ApiError(notes[0] || '此縣市目前沒有可用的位置資料', notes.length ? 'nokey' : 'error');
-  const c = {v:1, city, at: Date.now(), tdx: hasTdx, tdxTried: !!store.get('pk_cid'), lots: lots.map(l => [l.id, l.name, l.address, +l.lat.toFixed(6), +l.lon.toFixed(6), l.on ? 1 : 0])};
+  // v2（老闆 TG33275）：多存費率文字；v1 舊快取會自動重抓一次
+  const c = {v:2, city, at: Date.now(), tdx: hasTdx, tdxTried: !!store.get('pk_cid'), lots: lots.map(l => [l.id, l.name, l.address, +l.lat.toFixed(6), +l.lon.toFixed(6), l.on ? 1 : 0, l.fare || ''])};
   store.set('pk_static_' + city, JSON.stringify(c));
   return {c, notes};
 }
-const unpack = (c) => c.lots.map(([id, name, address, lat, lon, on]) => ({id, city: c.city, name, address, lat, lon, on: !!on}));
+const unpack = (c) => c.lots.map(([id, name, address, lat, lon, on, fare]) => ({id, city: c.city, name, address, lat, lon, on: !!on, fare: typeof fare === 'string' ? fare : ''}));
 
 // ---- TDX 即時空位解析（opview ParkingAvailability.parse） ----
 function tdxAvail(r){
@@ -522,7 +549,7 @@ function render(){
     const src = l.id.startsWith('local:ntpc') ? '新北市政府' : l.id.startsWith('local:hccg') ? '新竹市政府' : 'TDX';
     const kind = l.on ? '路邊' : '路外';
     const html = `<div class="name">${esc(l.name)}</div><div class="free t-${l.tone}">${esc(l.text)}</div><div class="meta">${kind} · ${Math.round(l.d)} 公尺 · ${src}</div>`
-      + (l.address ? `<div class="meta">${esc(l.address)}</div>` : '') + `<div class="nav">${navLinks(l)}</div>`;
+      + (l.address ? `<div class="meta">${esc(l.address)}</div>` : '') + fareHtml(l.fare) + `<div class="nav">${navLinks(l)}</div>`;
     L.circleMarker([l.lat, l.lon], {radius: l.on ? 8 : 11, color: '#111', weight: 2, fillColor: HEX[l.tone], fillOpacity: .95})
       .bindPopup(html).addTo(layer);
     const li = document.createElement('li');
@@ -534,7 +561,7 @@ function render(){
 }
 // 分頁：停車／YouBike 各自保留狀態列與提示，地圖與「我在哪」共用
 let mode = 'park';
-const st = {park: '按「查詢附近停車」開始', bike: '按「查詢附近 YouBike」開始', traffic: '按「查詢附近路況」開始', transit: '按「查詢附近到站」開始'};
+const st = {park: '按「查詢附近停車」開始', bike: '按「查詢附近 YouBike」開始', traffic: '按「查詢附近路況」開始', transit: '按「查詢附近到站」開始', pay: '輸入車牌後按「查詢停車費」'};
 function setStatus(which, s){ st[which] = s; if (mode === which) $('status').textContent = s; }
 function warnTo(id, list){ $(id).innerHTML = [...new Set(list)].map(w => `<div class="warn">${esc(w)}</div>`).join(''); }
 const warn = list => warnTo('warns', list);
@@ -1003,8 +1030,12 @@ async function queryTraffic(manual){
       if (road === 'Freeway') {
         // 先用道路事件（有地點）；失敗才退回最新消息（只有標題）
         try {
-          const j = await roadGet('/api/basic/v1/Traffic/RoadEvent/LiveEvent/Freeway', {'$top': '1000', '$format': 'JSON'}, auth, 'Items', {wait: true, progress: tstatus});
-          lastTraffic.events = j.Items.map(evParse).filter(e => e && (e.where || e.desc || e.title));
+          // 外殼欄位名稱以實測為準（老闆 TG33294：OAS 寫 Items，線上不是）：依序找 Items、LiveEvents、第一個陣列欄位，或整包就是陣列
+          const text = await proxyGet('/tdx/api/basic/v1/Traffic/RoadEvent/LiveEvent/Freeway?' + new URLSearchParams({'$top': '1000', '$format': 'JSON'}).toString(), {auth, wait: true, progress: tstatus});
+          let j; try { j = JSON.parse(text); } catch { throw new ApiError('TDX 道路事件回應不是有效 JSON'); }
+          const rows = Array.isArray(j) ? j : j && typeof j === 'object' ? (Array.isArray(j.Items) ? j.Items : Array.isArray(j.LiveEvents) ? j.LiveEvents : Object.values(j).find(Array.isArray)) : null;
+          if (!rows) throw new ApiError('TDX 道路事件回應格式異常（' + (j && typeof j === 'object' ? Object.keys(j).slice(0, 6).join(',') : typeof j) + '）');
+          lastTraffic.events = rows.map(evParse).filter(e => e && (e.where || e.desc || e.title));
         } catch (e) {
           notes.push('國道即時事件暫時無法取得，改顯示最新消息（' + (e.message || '失敗') + '）');
           try {
@@ -1269,14 +1300,119 @@ async function queryTransit(manual){
   }
 }
 
+// ---- 停車費（車牌查未繳路邊停車費；TDX 第三方服務，老闆 TG33276） ----
+// 車牌是個資：只放在 POST body 送到轉送站（不進網址、不記錄）；「記住車牌」預設不勾，勾了才存在這支手機
+const PAY_CODE = {Taipei:'TPE',NewTaipei:'NWT',Keelung:'KEE',Taoyuan:'TAO',Hsinchu:'HSZ',HsinchuCounty:'HSQ',MiaoliCounty:'MIA',Taichung:'TXG',
+  ChanghuaCounty:'CHA',YunlinCounty:'YUN',Chiayi:'CYI',ChiayiCounty:'CYQ',Tainan:'TNN',Kaohsiung:'KHH',PingtungCounty:'PIF',NantouCounty:'NAN',
+  YilanCounty:'ILA',HualienCounty:'HUA',TaitungCounty:'TTT',KinmenCounty:'KIN',PenghuCounty:'PEN'};   // 連江縣沒有提供
+const PAY_NAME = Object.fromEntries(Object.entries(PAY_CODE).map(([k, v]) => [v, CITIES[k]]));
+const PAY_PLATE = /^[A-Z0-9一-鿿-]{2,10}$/;   // 規範 ERR02：英數、中文、「-」
+const BILL_ST = {0: '未逾期', 1: '逾期轉催繳中', 2: '催繳', 3: '告發'};
+let payBusy = false, payCtl = null, lastPay = null;
+const pstatus = s => setStatus('pay', s);
+const pwarn = list => warnTo('warnsPay', list);
+// 全形轉半形、去空白、轉大寫
+function normPlate(s){ return String(s || '').normalize('NFKC').replace(/\s+/g, '').toUpperCase(); }
+const money = v => { const n = typeof v === 'number' ? v : typeof v === 'string' && /^\d+(\.\d+)?$/.test(v.trim()) ? +v : NaN; return isFinite(n) && n >= 0 ? Math.round(n) : null; };   // 有些縣市回字串
+const ymd = v => typeof v === 'string' && /^\d{4}-\d{2}-\d{2}/.test(v) ? v.slice(0, 10) : '';
+function payParse(line){
+  if (!line || typeof line !== 'object' || typeof line.city !== 'string' || !PAY_NAME[line.city]) return null;
+  const out = {city: line.city, name: PAY_NAME[line.city]};
+  if (!line.ok) return {...out, state: 'err', msg: `暫時查不到（${String(line.err || '錯誤').slice(0, 30)}）`};
+  const d = line.data;
+  if (!d || typeof d !== 'object') return {...out, state: 'err', msg: '暫時查不到（格式異常）'};
+  if (d.Status !== 'SUCCESS') return {...out, state: 'err', msg: `查詢失敗：${String(d.Message || d.Status || '').slice(0, 60)}`};
+  const r = d.Result;
+  if (!r || typeof r !== 'object' || !(money(r.TotalAmount) > 0 || (Array.isArray(r.Bills) && r.Bills.length) || (Array.isArray(r.Reminders) && r.Reminders.length))) return {...out, state: 'none'};
+  const bill = b => b && typeof b === 'object' ? {no: String(b.BillNo ?? ''), date: ymd(b.ParkingDate), limit: ymd(b.PayLimitDate), st: BILL_ST[b.BillStatus] || '', amt: money(b.PayAmount) ?? money(b.Amount)} : null;
+  const bills = (Array.isArray(r.Bills) ? r.Bills : []).map(bill).filter(Boolean);
+  const rems = (Array.isArray(r.Reminders) ? r.Reminders : []).filter(x => x && typeof x === 'object').map(x => ({no: String(x.ReminderNo ?? ''), limit: ymd(x.ReminderLimitDate),
+    amt: money(x.PayAmount), extra: money(x.ExtraCharge), pros: x.IsProsecuted === 1, prosLimit: ymd(x.ProsecuteLimitDate), n: Array.isArray(x.Bills) ? x.Bills.length : 0}));
+  const total = money(r.TotalAmount) ?? [...bills.map(b => b.amt || 0), ...rems.map(x => x.amt || 0)].reduce((a, b) => a + b, 0);
+  return {...out, state: 'due', total, bills, rems};
+}
+function renderPay(){
+  const ul = $('listPay'); ul.innerHTML = '';
+  if (!lastPay) return;
+  const res = lastPay.res, due = res.filter(x => x.state === 'due'), sum = due.reduce((a, x) => a + (x.total || 0), 0);
+  const head = document.createElement('li');
+  head.innerHTML = `<div class="name">${esc(lastPay.plate)}（${lastPay.type === 'M' ? '機車' : '汽車'}）</div>`
+    + `<div class="free t-${due.length ? 'full' : 'ok'}">${due.length ? `待繳 ${sum} 元` : res.length ? '目前沒有查到待繳' : '查詢中…'}</div>`
+    + `<div class="meta">已查 ${res.length}／${lastPay.cities.length} 縣市${due.length ? ` · ${due.length} 個縣市有待繳` : ''}</div>`
+    + '<div class="meta">超商臨櫃繳費後，可能延遲幾天才會消失；繳費請到各縣市官方管道。</div>';
+  ul.appendChild(head);
+  for (const x of [...due, ...res.filter(x => x.state === 'err'), ...res.filter(x => x.state === 'none')]) {
+    const li = document.createElement('li');
+    let body = '';
+    if (x.state === 'due') {
+      body = `<div class="free t-full">${x.total} 元</div>`
+        + x.rems.map(r => `<div class="bill"><b class="t-full sm">催繳單</b> ${esc(r.no)} · 應繳 ${r.amt ?? '?'} 元${r.extra ? `（含工本費 ${r.extra}）` : ''} · 期限 ${esc(r.limit)}${r.n ? ` · 含 ${r.n} 張停車單` : ''}`
+          + (r.pros ? `<br><b class="t-full">已告發${r.prosLimit ? `，期限 ${esc(r.prosLimit)}` : ''}</b>` : '') + '</div>').join('')
+        + x.bills.map(b => `<div class="bill">停車單 ${esc(b.no)} · ${esc(b.date)} · ${b.amt ?? '?'} 元 · 期限 ${esc(b.limit)}${b.st ? ` · ${esc(b.st)}` : ''}</div>`).join('');
+    } else body = `<div class="meta">${x.state === 'none' ? '沒有待繳' : esc(x.msg)}</div>`;
+    li.innerHTML = `<div class="name">${esc(x.name)}</div>${body}`;
+    ul.appendChild(li);
+  }
+}
+function payCancel(){ if (payCtl) payCtl.abort(); }
+async function queryPay(){
+  if (payBusy) return;
+  const cd = gate.cooldown(); if (cd > 0) { pstatus(`請等 ${Math.ceil(cd/1000)} 秒再查詢`); return; }
+  const plate = normPlate($('plate').value), type = $('ptype').value === 'M' ? 'M' : 'C';
+  $('plate').value = plate;
+  if (!PAY_PLATE.test(plate)) { pstatus('車牌格式不對：只能有英文、數字、中文和「-」，2 到 10 個字'); return; }
+  if ($('premember').checked) store.set('pk_plate', JSON.stringify({plate, type})); else store.del('pk_plate');
+  payBusy = true; payCtl = new AbortController(); tick(); pwarn([]);
+  let sent = false;
+  try {
+    let cities;
+    if ($('pscope').value === 'all') cities = Object.values(PAY_CODE);
+    else {
+      const h = here && Date.now() - here.at < 120000 ? here : await locate(pstatus);
+      if (!PAY_CODE[h.city]) { pstatus(`${CITIES[h.city] || '所在縣市'}沒有提供停車費查詢，請改選「全部縣市」`); return; }
+      cities = [PAY_CODE[h.city]];
+    }
+    lastPay = {plate, type, cities, res: []}; renderPay();
+    pstatus(cities.length > 1 ? `查詢 ${cities.length} 個縣市（每秒 1 個）…` : `查詢${PAY_NAME[cities[0]]}…`);
+    gate.click(); sent = true;
+    const r = await fetch(PROXY + '/paybill', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({cities, id: plate, type}), signal: payCtl.signal, cache: 'no-store'});
+    if (r.status === 429) throw new ApiError('查詢太頻繁，請 1 分鐘後再試');
+    if (r.status !== 200 || !r.body) throw new ApiError(`停車費查詢暫時無法使用（${r.status}）`);
+    const rd = r.body.getReader(), dec = new TextDecoder(); let buf = '';
+    for (;;) {
+      const {value, done} = await rd.read(); if (done) break;
+      buf += dec.decode(value, {stream: true});
+      let i; while ((i = buf.indexOf('\n')) >= 0) {
+        const t = buf.slice(0, i); buf = buf.slice(i + 1);
+        let o; try { o = payParse(JSON.parse(t)); } catch { o = null; }
+        if (o && lastPay.res.length < cities.length && !lastPay.res.some(x => x.city === o.city)) { lastPay.res.push(o); renderPay(); pstatus(`已查 ${lastPay.res.length}／${cities.length} 縣市…`); }
+      }
+    }
+    const miss = cities.filter(c => !lastPay.res.some(x => x.city === c));
+    for (const c of miss) lastPay.res.push({city: c, name: PAY_NAME[c], state: 'err', msg: '暫時查不到（沒有回應）'});
+    renderPay();
+    pstatus(`查詢完成 · ${hm(Date.now())}`);
+  } catch (e) {
+    if (e && e.name === 'AbortError') { pstatus('已取消查詢'); renderPay(); }
+    else pstatus(e instanceof ApiError ? e.message : '停車費查詢失敗，請稍後再試');
+  } finally {
+    if (!sent) gate.reset();
+    payBusy = false; payCtl = null; tick();
+  }
+}
+(() => { try { const p = JSON.parse(store.get('pk_plate') || 'null'); if (p && typeof p.plate === 'string') { $('plate').value = p.plate; $('ptype').value = p.type === 'M' ? 'M' : 'C'; $('premember').checked = true; } } catch {} })();
+$('premember').onchange = () => { if (!$('premember').checked) store.del('pk_plate'); };
+
 // ---- 分頁切換：不重新定位；YouBike／路況／到站這次定位還沒資料才自動查一次 ----
 function setMode(m){
   if (mode === m) return;
   mode = m;
-  for (const [k, tab] of [['park', 'tabPark'], ['bike', 'tabBike'], ['traffic', 'tabTraffic'], ['transit', 'tabTransit']]) { $(tab).classList.toggle('on', m === k); $(tab).setAttribute('aria-selected', m === k); }
-  for (const [id, k] of [['list', 'park'], ['warns', 'park'], ['listBike', 'bike'], ['warnsBike', 'bike'], ['listTraffic', 'traffic'], ['warnsTraffic', 'traffic'], ['newsTraffic', 'traffic'], ['warnsTransit', 'transit'], ['listTransit', 'transit']]) $(id).hidden = m !== k;
+  for (const [k, tab] of [['park', 'tabPark'], ['bike', 'tabBike'], ['traffic', 'tabTraffic'], ['transit', 'tabTransit'], ['pay', 'tabPay']]) { $(tab).classList.toggle('on', m === k); $(tab).setAttribute('aria-selected', m === k); }
+  for (const [id, k] of [['list', 'park'], ['warns', 'park'], ['listBike', 'bike'], ['warnsBike', 'bike'], ['listTraffic', 'traffic'], ['warnsTraffic', 'traffic'], ['newsTraffic', 'traffic'], ['warnsTransit', 'transit'], ['listTransit', 'transit'], ['payForm', 'pay'], ['warnsPay', 'pay'], ['listPay', 'pay']]) $(id).hidden = m !== k;
   // 到站分頁的範圍固定（公車 500 公尺、軌道 3 公里），不顯示範圍／排序選單
-  $('radius').hidden = $('sort').hidden = m === 'transit';
+  $('radius').hidden = $('sort').hidden = m === 'transit' || m === 'pay';
+  $('map').hidden = m === 'pay';   // 停車費分頁不用地圖
+  if (m !== 'pay') map.invalidateSize();
   for (const [lyr, k] of [[layer, 'park'], [bikeLayer, 'bike'], [trafficLayer, 'traffic'], [transitLayer, 'transit']]) m === k ? lyr.addTo(map) : map.removeLayer(lyr);
   $('status').textContent = st[m];
   tick();
@@ -1288,6 +1424,7 @@ $('tabPark').onclick = () => setMode('park');
 $('tabBike').onclick = () => setMode('bike');
 $('tabTraffic').onclick = () => setMode('traffic');
 $('tabTransit').onclick = () => setMode('transit');
+$('tabPay').onclick = () => setMode('pay');
 
 // ---- 設定 ----
 const dlg = $('dlgSettings');
@@ -1318,10 +1455,11 @@ $('btnClear').onclick = () => {
   $('cid').value = ''; $('csec').value = ''; $('cityPick').value = '';
   dlg.close(); status('金鑰與快取已清除');
 };
-$('btnQuery').onclick = () => mode === 'park' ? query() : mode === 'bike' ? queryBike(true) : mode === 'traffic' ? queryTraffic(true) : queryTransit(true);
+$('btnQuery').onclick = () => mode === 'park' ? query() : mode === 'bike' ? queryBike(true) : mode === 'traffic' ? queryTraffic(true) : mode === 'pay' ? (payBusy ? payCancel() : queryPay()) : queryTransit(true);
 // 按鈕上倒數：冷卻中顯示「N 秒後可再查」
 function tick(){
   const cd = gate.cooldown(), b = $('btnQuery');
+  if (mode === 'pay') { b.disabled = !payBusy && cd > 0; b.textContent = payBusy ? '取消查詢' : cd > 0 ? `${Math.ceil(cd/1000)} 秒後可再查` : '查詢停車費'; return; }
   b.disabled = ({park: busy, bike: bikeBusy, traffic: trafficBusy, transit: transitBusy})[mode] || cd > 0;
   b.textContent = cd > 0 ? `${Math.ceil(cd/1000)} 秒後可再查` : ({park: '查詢附近停車', bike: '查詢附近 YouBike', traffic: '查詢附近路況', transit: '查詢附近到站'})[mode];
 }
