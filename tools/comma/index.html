@@ -140,10 +140,16 @@ async function loadDevice(){
   $('dev').textContent = `${typeof device.alias === 'string' && device.alias ? device.alias.slice(0, 30) : 'comma 裝置'} · ${device.device_type === 'threex' ? 'comma 3X' : String(device.device_type || '')}`;
   return device;
 }
+// 最後位置：/location 只在停車後更新；開車中每上傳一段（約 1 分鐘）路線，routes_segments 的 end_lat/end_lng 會先更新（老闆 TG33490）→ 取比較新的那個
 async function lastLocation(){
-  const l = await rest(`/v1/devices/${encodeURIComponent(device.dongle_id)}/location`);
-  if (l && num(l.lat) !== null) { place(l.lat, l.lng, device.last_gps_bearing); return l; }
-  return null;
+  const id = encodeURIComponent(device.dongle_id);
+  const [l, rs] = await Promise.all([rest(`/v1/devices/${id}/location`).catch(() => null), rest(`/v1/devices/${id}/routes_segments?limit=1`).catch(() => null)]);
+  const r = Array.isArray(rs) && rs[0] && num(rs[0].end_lat) !== null && num(rs[0].end_lng) !== null && num(rs[0].end_time_utc_millis) !== null
+    ? {lat: rs[0].end_lat, lng: rs[0].end_lng, time: rs[0].end_time_utc_millis} : null;
+  const a = l && num(l.lat) !== null && num(l.lng) !== null ? {lat: l.lat, lng: l.lng, time: num(l.time)} : null;
+  const best = a && r ? (r.time > (a.time || 0) ? r : a) : a || r;
+  if (best) place(best.lat, best.lng, best === a ? device.last_gps_bearing : null);
+  return best;
 }
 
 // ---- 即時（經 Worker 代打 athena getMessage，只讀） ----
