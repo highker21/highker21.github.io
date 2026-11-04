@@ -14,11 +14,11 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" integrity="sha512-h9FcoyWjHcOcmEVkxOfTLnmZFWIH0iZhZT1H2TbOq55xssQGEJHEaIm+PgoUaZbRvQTNTluNOEfb1ZRy6D3BOw==" crossorigin="anonymous" referrerpolicy="no-referrer">
 <style>
 :root{--bg:#f6f7f5;--card:#fff;--ink:#1d2421;--mute:#66706b;--line:#dde2df;--brand:#1f6f5c;
-  --ok:#1f9d55;--low:#e08a00;--full:#d64545;--unk:#8a9490;--warn-bg:#fff4e0;--warn-ink:#8a5300}
+  --ok:#1f9d55;--low:#e08a00;--full:#d64545;--unk:#8a9490;--warn-bg:#fff4e0;--warn-ink:#8a5300;--fare:#a34f00}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#111614;--card:#1a211e;--ink:#e6ece9;
-  --mute:#9aa6a0;--line:#2c3631;--brand:#4fb397;--warn-bg:#3a2c12;--warn-ink:#f0c27a}}
+  --mute:#9aa6a0;--line:#2c3631;--brand:#4fb397;--warn-bg:#3a2c12;--warn-ink:#f0c27a;--fare:#f2a04a}}
 :root[data-theme="dark"]{--bg:#111614;--card:#1a211e;--ink:#e6ece9;--mute:#9aa6a0;--line:#2c3631;--brand:#4fb397;
-  --warn-bg:#3a2c12;--warn-ink:#f0c27a}
+  --warn-bg:#3a2c12;--warn-ink:#f0c27a;--fare:#f2a04a}
 *{box-sizing:border-box}
 html,body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 -apple-system,"PingFang TC","Noto Sans TC",sans-serif}
 header{display:flex;align-items:center;gap:8px;padding:10px 16px;padding-top:max(10px,env(safe-area-inset-top))}
@@ -64,7 +64,7 @@ footer a{color:var(--mute)}
 .news-tag{font-size:13px;font-weight:800;padding:1px 8px;border-radius:6px;flex:none}
 .news-body{font-size:16px;line-height:1.5;color:var(--ink);margin:4px 0}
 .news-body summary{cursor:pointer;list-style:none}
-.fare{font-size:15px;color:var(--ink);margin:2px 0}.fare details{display:inline}.fare summary{display:inline;cursor:pointer;list-style:none}
+.fare{font-size:17px;font-weight:600;color:var(--fare);margin:3px 0}.fare details{display:inline}.fare summary{display:inline;cursor:pointer;list-style:none}
 .payform{padding:0 16px 8px;display:grid;gap:8px;font-size:16px}.payform input#plate{font:inherit;font-size:20px;letter-spacing:1px;width:100%;padding:8px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink);text-transform:uppercase;box-sizing:border-box}.payrow{display:flex;gap:8px}.payrow select{font:inherit;flex:1;padding:7px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink)}.payrem{font-size:14px;color:var(--mute)}
 ul#listPay{list-style:none;margin:6px 0 0;padding:0 16px 16px}#listPay li{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin-bottom:8px}.bill{font-size:15px;margin:4px 0;padding-top:4px;border-top:1px dashed var(--line)}
 .more{width:100%;font-weight:700;padding:10px;margin:4px 0 8px}
@@ -103,6 +103,7 @@ ul#listPay{list-style:none;margin:6px 0 0;padding:0 16px 16px}#listPay li{backgr
   <select id="sort" aria-label="排序">
     <option value="dist">依距離</option>
     <option value="free">依空位／可借</option>
+    <option value="fee" id="sortFee">依費用</option>
   </select>
   <span id="cityLabel" class="meta"></span>
 </div>
@@ -160,7 +161,7 @@ ul#listPay{list-style:none;margin:6px 0 0;padding:0 16px 16px}#listPay li{backgr
   停車費率為各機關提供的文字說明，僅供參考，以現場公告為準。<br>
   地圖：© <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors。<br>
   資料處理邏輯參考 opview（© 2026 Rick Lan，<a href="https://github.com/herizon1054/opview/blob/01f0f20/LICENSE" target="_blank" rel="noopener">非商業授權</a>）。<br>
-  工具版本：2026-11-04n
+  工具版本：2026-11-04o
 </footer>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js" integrity="sha512-puJW3E/qXDqYp9IfhAI54BJEaWIfloJ7JWs7OeD5i6ruC9JZL1gERT1wjtwXFlh7CjE7ZJ+/vcRZRkIYIb6p4g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
@@ -386,6 +387,25 @@ function fareHtml(f){
   const body = f.length > 60 ? `<details><summary>${esc(f.slice(0, 60))}…</summary>${esc(f.slice(60))}</details>` : esc(f);
   return `<div class="fare">💲 ${body}</div>`;
 }
+// 依費用排序（老闆 TG2804／TG2865）：從費率文字抓汽車價格，抓不到算未知、排最後；只當參考，畫面標「約」
+// 回傳 {v: 元, flat: 計次} 或 null；多個價格取最低（首小時優惠、平假日不同時偏低，所以標「約」）
+function fareRate(f){
+  if (!f) return null;
+  const s = f.replace(/[０-９]/g, c => String.fromCharCode(c.charCodeAt(0) - 0xFEE0))
+    .replace(/汽機車/g, '汽車').replace(/機車[^，,；;。\n]*/g, '');
+  if (/免費|不收費/.test(s) && !/\d\s*元/.test(s)) return {v: 0, flat: false};
+  const hour = [], flat = [];
+  for (const m of s.matchAll(/(\d+)\s*元\s*[／\/每]?\s*(半小時|半時|30\s*分鐘?|小時|時|hr|h)(?![a-z段間])/gi)) hour.push(+m[1] * (/半|30/.test(m[2]) ? 2 : 1));
+  for (const m of s.matchAll(/(?:每|計時|首)\s*(半小時|半時|小時|時)?\s*(\d+)\s*元/g)) hour.push(+m[2] * (m[1] && m[1].includes('半') ? 2 : 1));
+  for (const m of s.matchAll(/每\s*(\d+)\s*分鐘?\s*(\d+)\s*元/g)) if (+m[1] > 0) hour.push(+m[2] * 60 / +m[1]);
+  for (const m of s.matchAll(/每\s*(\d+)\s*小時\s*(\d+)\s*元/g)) if (+m[1] > 0) hour.push(+m[2] / +m[1]);
+  for (const m of s.matchAll(/(\d+)\s*元\s*[／\/每]?\s*次|(?:每|計)次\s*(\d+)\s*元/g)) flat.push(+(m[1] ?? m[2]));
+  const ok = a => a.filter(v => isFinite(v) && v > 0 && v <= 500);
+  const h = ok(hour), c = ok(flat);
+  if (h.length) return {v: Math.round(Math.min(...h)), flat: false};
+  if (c.length) return {v: Math.min(...c), flat: true};
+  return null;
+}
 function parseTdxLot(r, city, on){
   const p = r[on ? 'ParkingSegmentPosition' : 'CarParkPosition'];
   if (!p || r.IsMotorcycle === 1) return null;
@@ -543,13 +563,18 @@ function render(){
   const now = Date.now(), {lots, lat, lon} = last;
   lots.forEach(l => { l.d = dist(lat, lon, l.lat, l.lon); [l.text, l.tone] = label(l, now); });
   const free = l => l.avail?.cars ?? l.avail?.unclassified ?? -1;
-  const sorted = [...lots].sort($('sort').value === 'free' ? (a, b) => free(b) - free(a) || a.d - b.d : (a, b) => a.d - b.d);
+  const byFee = $('sort').value === 'fee';
+  lots.forEach(l => { l.rate = fareRate(l.fare); });
+  // 同價時計時排在計次前面，未知最後；同價再依距離
+  const fee = l => l.rate ? l.rate.v + (l.rate.flat ? 0.5 : 0) : 1e9;
+  const sorted = [...lots].sort($('sort').value === 'free' ? (a, b) => free(b) - free(a) || a.d - b.d
+    : byFee ? (a, b) => fee(a) - fee(b) || a.d - b.d : (a, b) => a.d - b.d);
   layer.clearLayers();
   $('list').innerHTML = '';
   for (const l of sorted) {
     const src = l.id.startsWith('local:ntpc') ? '新北市政府' : l.id.startsWith('local:hccg') ? '新竹市政府' : 'TDX';
     const kind = l.on ? '路邊' : '路外';
-    const html = `<div class="name">${esc(l.name)}</div><div class="free t-${l.tone}">${esc(l.text)}</div><div class="meta">${kind} · ${Math.round(l.d)} 公尺 · ${src}</div>`
+    const html = `<div class="name">${esc(l.name)}</div><div class="free t-${l.tone}">${esc(l.text)}</div><div class="meta">${kind} · ${Math.round(l.d)} 公尺 · ${src}${byFee ? ` · ${l.rate ? (l.rate.v ? `約 ${l.rate.v} 元／${l.rate.flat ? '次' : '時'}` : '免費') : '費用未知'}` : ''}</div>`
       + (l.address ? `<div class="meta">${esc(l.address)}</div>` : '') + fareHtml(l.fare) + `<div class="nav">${navLinks(l)}</div>`;
     L.circleMarker([l.lat, l.lon], {radius: l.on ? 8 : 11, color: '#111', weight: 2, fillColor: HEX[l.tone], fillOpacity: .95})
       .bindPopup(html).addTo(layer);
@@ -1419,6 +1444,9 @@ function setMode(m){
   for (const [id, k] of [['list', 'park'], ['warns', 'park'], ['listBike', 'bike'], ['warnsBike', 'bike'], ['listTraffic', 'traffic'], ['warnsTraffic', 'traffic'], ['newsTraffic', 'traffic'], ['warnsTransit', 'transit'], ['listTransit', 'transit'], ['payForm', 'pay'], ['warnsPay', 'pay'], ['listPay', 'pay']]) $(id).hidden = m !== k;
   // 到站分頁的範圍固定（公車 500 公尺、軌道 3 公里），不顯示範圍／排序選單
   $('radius').hidden = $('sort').hidden = m === 'transit' || m === 'pay';
+  // 「依費用」只有停車分頁有資料；其他分頁藏起來，選著的話改回依距離
+  $('sortFee').hidden = $('sortFee').disabled = m !== 'park';   // iOS 原生選單不吃 hidden，靠 disabled
+  if (m !== 'park' && $('sort').value === 'fee') $('sort').value = 'dist';
   $('map').hidden = m === 'pay';   // 停車費分頁不用地圖
   if (m !== 'pay') map.invalidateSize();
   for (const [lyr, k] of [[layer, 'park'], [bikeLayer, 'bike'], [trafficLayer, 'traffic'], [transitLayer, 'transit']]) m === k ? lyr.addTo(map) : map.removeLayer(lyr);
