@@ -195,7 +195,7 @@ ul#listPay{list-style:none;margin:6px 0 0;padding:0 16px 16px}#listPay li{backgr
   停車費率為各機關提供的文字說明，僅供參考，以現場公告為準。<br>
   地圖：© <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors。<br>
   資料處理邏輯參考 opview（© 2026 Rick Lan，<a href="https://github.com/herizon1054/opview/blob/01f0f20/LICENSE" target="_blank" rel="noopener">非商業授權</a>）。<br>
-  工具版本：2026-11-04s
+  工具版本：2026-11-04t
 </footer>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js" integrity="sha512-puJW3E/qXDqYp9IfhAI54BJEaWIfloJ7JWs7OeD5i6ruC9JZL1gERT1wjtwXFlh7CjE7ZJ+/vcRZRkIYIb6p4g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
@@ -549,14 +549,14 @@ function label(lot, now){
 const HEX = {ok:'#22c55e', low:'#facc15', full:'#ef4444', unk:'#8a9490', pend:'#c4b5fd'};
 
 // ---- 定位與縣市 ----
-function position(){
+function position(maxAge = 15000){
   return new Promise((ok, no) => {
     if (!navigator.geolocation) return no(new ApiError('這個瀏覽器不支援定位'));
     navigator.geolocation.getCurrentPosition(p => {
       if (p.coords.accuracy > 150) return no(new ApiError(`定位誤差 ${Math.round(p.coords.accuracy)} 公尺，太大，請到空曠處再試`));
       ok(p.coords);
     }, e => no(new ApiError(e.code === 1 ? '請允許瀏覽器使用定位（iPhone：設定 → 隱私權 → 定位服務 → Safari）' : '定位失敗，請稍後再試')),
-    {enableHighAccuracy: true, timeout: 12000, maximumAge: 15000});
+    {enableHighAccuracy: true, timeout: 12000, maximumAge: maxAge});
   });
 }
 async function detectCity(lat, lon){
@@ -585,7 +585,24 @@ let me = null, ring = null, myPos = null;
 const Locate = L.Control.extend({options: {position: 'topright'}, onAdd(){
   const b = L.DomUtil.create('button', 'locate-btn'); b.type = 'button'; b.textContent = '◎ 我的位置'; b.title = '回到我的位置';
   L.DomEvent.disableClickPropagation(b);
-  b.onclick = () => { if (myPos) map.setView(myPos, Math.max(map.getZoom(), 16)); else status('先按「查詢附近停車」取得定位'); };
+  // 老闆 TG2886：按了就重新取一次 GPS 移過去（不查詢、不打 TDX）；選了最愛就回到最愛點
+  let busy = false;
+  b.onclick = async () => {
+    const fav = curFav();
+    if (fav) { map.setView([fav.lat, fav.lon], Math.max(map.getZoom(), 16)); return; }
+    if (busy) return;
+    busy = true; b.textContent = '◎ 定位中…';
+    try {
+      const p = await position(0), pos = [p.latitude, p.longitude];   // 不用 15 秒內的舊定位
+      if (me && !me.options.fav) me.setLatLng(pos);
+      else { if (me) map.removeLayer(me); me = meMarker(pos, null); }
+      const moved = myPos && dist(myPos[0], myPos[1], pos[0], pos[1]) > 200;
+      myPos = pos;
+      map.setView(pos, Math.max(map.getZoom(), 16));
+      if (moved) setStatus(mode, '已移到目前位置；清單還是上次查詢的位置，要更新請按查詢');
+    } catch (e) { setStatus(mode, e.message || '定位失敗'); }
+    finally { busy = false; b.textContent = '◎ 我的位置'; }
+  };
   return b; }});
 new Locate().addTo(map);
 
@@ -635,6 +652,9 @@ const status = s => setStatus('park', s);
 
 // ---- 定位（兩個分頁共用；切分頁不重新定位） ----
 let here = null, hereSeq = 0;   // seq 用模組計數：換最愛時 here 會清成 null，不能從 here.seq 接著算（B 審）
+function meMarker(pos, fav){
+  return L.marker(pos, {fav: !!fav, icon: L.divIcon({className: fav ? 'me-icon fav' : 'me-icon', html: `<span class="me-pulse"></span><span class="me-dot"></span><span class="me-tag">${fav ? '⭐ ' + esc(fav.name) : '我在哪'}</span>`, iconSize: [28, 28], iconAnchor: [14, 14]}), zIndexOffset: 1000, keyboard: false}).addTo(map);
+}
 async function locate(say){
   // 選了最愛地點（老闆 TG33395）：直接用最愛座標，不定位
   const fav = curFav();
@@ -645,7 +665,7 @@ async function locate(say){
   if (me) map.removeLayer(me); if (ring) map.removeLayer(ring);
   // 老闆 TG33056：明顯的「我在哪」標記（divIcon 在 markerPane，永遠蓋在停車場圓點上面）
   myPos = [lat, lon];
-  me = L.marker(myPos, {icon: L.divIcon({className: fav ? 'me-icon fav' : 'me-icon', html: `<span class="me-pulse"></span><span class="me-dot"></span><span class="me-tag">${fav ? '⭐ ' + esc(fav.name) : '我在哪'}</span>`, iconSize: [28, 28], iconAnchor: [14, 14]}), zIndexOffset: 1000, keyboard: false}).addTo(map);
+  me = meMarker(myPos, fav);
   ring = L.circle([lat, lon], {radius, color: '#2563eb', weight: 1, fillOpacity: .04}).addTo(map);
   map.fitBounds(ring.getBounds());
   say('判斷縣市…');
