@@ -152,7 +152,7 @@ footer a{color:var(--mute)}
   資料：<a href="https://tdx.transportdata.tw" target="_blank" rel="noopener">交通部 TDX</a>、新北市政府、新竹市政府、警察廣播電臺（即時路況）開放資料，依<a href="https://data.gov.tw/license" target="_blank" rel="noopener">政府資料開放授權條款第 1 版</a>使用；合併與篩選不代表機關背書。<br>
   地圖：© <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors。<br>
   資料處理邏輯參考 opview（© 2026 Rick Lan，<a href="https://github.com/herizon1054/opview/blob/01f0f20/LICENSE" target="_blank" rel="noopener">非商業授權</a>）。<br>
-  工具版本：2026-11-04f
+  工具版本：2026-11-04g
 </footer>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js" integrity="sha512-puJW3E/qXDqYp9IfhAI54BJEaWIfloJ7JWs7OeD5i6ruC9JZL1gERT1wjtwXFlh7CjE7ZJ+/vcRZRkIYIb6p4g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
@@ -1003,6 +1003,26 @@ const TOUR_SELECT = {
   Restaurant: 'RestaurantID,RestaurantName,Description,PositionLat,PositionLon,CuisineClasses,PostalAddress,Images,ServiceTimeInfo,ServiceStatus,WebsiteUrl',
   Event: 'EventID,EventName,Description,PositionLat,PositionLon,EventClasses,PostalAddress,Images,StartDateTime,EndDateTime,EventStatus,WebsiteUrl',
 };
+// 精簡版 $select（只有純量欄位）：完整版被 TDX 回 500／400 時自動改用（老闆 TG33251 實測完整版 status-500）
+const TOUR_SELECT_MIN = {
+  Attraction: 'AttractionID,AttractionName,Description,PositionLat,PositionLon,ServiceTimeInfo,WebsiteUrl',
+  Restaurant: 'RestaurantID,RestaurantName,Description,PositionLat,PositionLon,ServiceTimeInfo,WebsiteUrl',
+  Event: 'EventID,EventName,Description,PositionLat,PositionLon,StartDateTime,EndDateTime,EventStatus,WebsiteUrl',
+};
+const tourMin = {};   // 這次開網頁期間已降級的類別（不存 localStorage：TDX 修好後重開網頁就恢復完整版）
+const tourSel = kind => tourMin[kind] ? TOUR_SELECT_MIN[kind] : TOUR_SELECT[kind];
+// 上游 500／400：先換精簡版 $select 重試一次，成功就記住（之後直接用精簡版）
+async function tourGet(kind, base, q, auth){
+  const get = sel => proxyGet('/tdx' + base + '?' + new URLSearchParams({...q, '$select': sel}).toString(), {auth, wait: true, progress: ustatus});
+  try { return await get(tourSel(kind)); }
+  catch (e) {
+    if (!(e instanceof ApiError) || !/status-(400|500)|（(400|500)）/.test(e.message) || tourSel(kind) === TOUR_SELECT_MIN[kind]) throw e;
+    ustatus('TDX 不接受完整欄位，改用精簡欄位重試…');
+    const text = await get(TOUR_SELECT_MIN[kind]);
+    tourMin[kind] = true;
+    return text;
+  }
+}
 const tourLayer = L.layerGroup();
 let lastTour = null, tourBusy = false, tourKind = 'Attraction', tourCancel = false;
 const ustatus = s => setStatus('tour', s);
@@ -1054,7 +1074,7 @@ async function tourFetch(kind, auth, lat, lon, city){
     // V2 的 $top 上限 500、沒有 $format 參數（Swagger）；一格超過 500 筆就翻頁，最多 6 頁
     for (let page = 0; page < 6; page++) {
       const q = {'$filter': `PositionLat ge ${cell[0]} and PositionLat lt ${cell[1]} and PositionLon ge ${cell[2]} and PositionLon lt ${cell[3]}`, '$select': TOUR_SELECT[kind], '$top': String(TOUR_PAGE), ...(page ? {'$skip': String(page * TOUR_PAGE)} : {})};
-      const text = await proxyGet('/tdx' + base + '?' + new URLSearchParams(q).toString(), {auth, wait: true, progress: ustatus});
+      const text = await tourGet(kind, base, q, auth);
       let j; try { j = JSON.parse(text); } catch { throw new ApiError('TDX 觀光回應不是有效 JSON'); }
       const rows = tourRows(j);
       for (const r of rows) { const o = r && typeof r === 'object' ? tourParse(kind, r) : null; if (o) items.push(o); }
@@ -1073,10 +1093,10 @@ async function tourFetch(kind, auth, lat, lon, city){
       ustatus(`下載${cityName || '全國'}${TOUR_KINDS[kind]}：第 ${page + 1} 頁（上限 40 頁）`);
       const q = {...(cityName ? {'$filter': `PostalAddress/City eq '${cityName}'`} : {}), '$select': TOUR_SELECT[kind], '$top': String(TOUR_PAGE), '$skip': String(page * TOUR_PAGE)};
       let text;
-      try { text = await proxyGet('/tdx' + base + '?' + new URLSearchParams(q).toString(), {auth, wait: true, progress: ustatus}); }
+      try { text = await tourGet(kind, base, q, auth); }
       catch (e) {
         // 縣市篩選語法未經實測：TDX 不接受（400）就改走全國並提示
-        if (cityName && /400/.test(e.message)) { store.set('pk_tour_mode', 'all'); throw new ApiError('縣市篩選失敗，已改用「全國資料」模式，請再查一次'); }
+        if (cityName && /status-(400|500)|（(400|500)）/.test(e.message)) { store.set('pk_tour_mode', 'all'); throw new ApiError('縣市篩選失敗，已改用「全國資料」模式，請再查一次'); }
         throw e;
       }
       let j; try { j = JSON.parse(text); } catch { throw new ApiError('TDX 觀光回應不是有效 JSON'); }
