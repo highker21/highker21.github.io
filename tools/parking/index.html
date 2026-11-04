@@ -85,6 +85,10 @@ ul#listPay{list-style:none;margin:6px 0 0;padding:0 16px 16px}#listPay li{backgr
 .favrow{display:flex;gap:6px}.favrow input{flex:1;min-width:0}.favrow button{flex:none}
 #where{max-width:48vw}
 .me-icon.fav .me-dot{background:#d97706;box-shadow:0 0 0 2px #d97706,0 2px 6px #0008}.me-icon.fav .me-pulse{display:none}.me-icon.fav .me-tag{background:#b45309}
+.spots{font-size:15px;font-weight:700;margin:4px 0 2px}.spotbtn{font-size:14px;font-weight:700;padding:4px 10px;margin:4px 0 2px}
+.spotgrid{display:flex;flex-wrap:wrap;gap:3px;margin:4px 0}.spotgrid span{width:22px;height:22px;border-radius:5px;font-size:11px;line-height:22px;text-align:center;color:#fff;font-weight:700}
+.sg-ok{background:#16a34a}.sg-full{background:#dc2626}.sg-unk{background:#8a9490}
+#list li.morewrap{display:block;padding:0;border:none;background:none}
 .locate-btn{background:#fff;color:#1d2421;border:2px solid #0003;border-radius:8px;padding:6px 10px;font-weight:700;font-size:14px}
 </style>
 </head>
@@ -163,7 +167,7 @@ ul#listPay{list-style:none;margin:6px 0 0;padding:0 16px 16px}#listPay li{backgr
   <p>2. 點停車場可一鍵用 Google 或 Apple 地圖導航。</p>
   <p>3. 停車：新北、新竹不用金鑰；其他縣市、YouBike、路況要 TDX 金鑰——<a href="https://tdx.transportdata.tw/" target="_blank" rel="noopener">到 TDX 官網免費申請</a>，再填到「設定」。</p>
   <p>4. iPhone 可用 Safari「分享 → 加入主畫面」當 App 用；加到主畫面後金鑰要重新輸入一次。</p>
-  <p class="meta">定位只在你的手機上計算距離，不會送到我們的轉送伺服器；地圖圖資與縣市判斷由 OpenStreetMap 提供，會看到你所在的大致範圍。到站分頁查公車時會送出附近站牌的編號（等於透露你大約在哪幾個站牌附近），台鐵／高鐵送出最近一站的代碼。選了「我的最愛」地點時不會定位，改用該地點的座標；用地址搜尋新增最愛時，輸入的文字會送到 OpenStreetMap。</p>
+  <p class="meta">定位只在你的手機上計算距離，不會送到我們的轉送伺服器；地圖圖資與縣市判斷由 OpenStreetMap 提供，會看到你所在的大致範圍。到站分頁查公車時會送出附近站牌的編號（等於透露你大約在哪幾個站牌附近），台鐵／高鐵送出最近一站的代碼。停車分頁按路邊路段的「看每一格」時，會送出那一段的編號（透露你大約在哪條路附近）。選了「我的最愛」地點時不會定位，改用該地點的座標；用地址搜尋新增最愛時，輸入的文字會送到 OpenStreetMap。</p>
   <div class="row"><button id="btnIntroOk" class="primary">知道了</button></div>
 </dialog>
 
@@ -196,7 +200,7 @@ ul#listPay{list-style:none;margin:6px 0 0;padding:0 16px 16px}#listPay li{backgr
   停車費率為各機關提供的文字說明，僅供參考，以現場公告為準。<br>
   地圖：© <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors。<br>
   資料處理邏輯參考 opview（© 2026 Rick Lan，<a href="https://github.com/herizon1054/opview/blob/01f0f20/LICENSE" target="_blank" rel="noopener">非商業授權</a>）。<br>
-  工具版本：2026-11-04u
+  工具版本：2026-11-04v
 </footer>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js" integrity="sha512-puJW3E/qXDqYp9IfhAI54BJEaWIfloJ7JWs7OeD5i6ruC9JZL1gERT1wjtwXFlh7CjE7ZJ+/vcRZRkIYIb6p4g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
@@ -321,7 +325,9 @@ function envelope(data, path){
   if (Array.isArray(data)) rows = data;
   else if (data && typeof data === 'object') {
     if ('error' in data || 'Error' in data) throw new ApiError('TDX 回傳錯誤物件');
-    const keys = ['Items','items',named].concat(on && live ? ['CurbParkingSegmentAvailabilities'] : []).filter(k => k in data);
+    const spot = path.includes('/ParkingSpot');
+    const keys = spot ? ['Items','items',live ? 'CurbSpotParkingAvailabilities' : 'ParkingSegmentSpots'].filter(k => k in data)
+      : ['Items','items',named].concat(on && live ? ['CurbParkingSegmentAvailabilities'] : []).filter(k => k in data);
     if (keys.length === 1) rows = data[keys[0]];
     const c = data.Count ?? data.count;
     if (c !== undefined) { if (!Number.isInteger(c) || c < 0) throw new ApiError('TDX Count 格式異常'); count = c; }
@@ -615,7 +621,7 @@ function navLinks(l, how = 'drive'){
   return `<a href="https://www.google.com/maps/dir/?api=1&destination=${ll}&travelmode=${w ? 'walking' : 'driving'}" target="_blank" rel="noopener">Google 導航</a>`
     + `<a href="https://maps.apple.com/?daddr=${ll}&dirflg=${w ? 'w' : 'd'}" target="_blank" rel="noopener">Apple 導航</a>`;
 }
-let last = null;
+let last = null, parkMore = false;
 function render(){
   if (!last) return;
   const now = Date.now(), {lots, lat, lon} = last;
@@ -629,17 +635,26 @@ function render(){
     : byFee ? (a, b) => fee(a) - fee(b) || a.d - b.d : (a, b) => a.d - b.d);
   layer.clearLayers();
   $('list').innerHTML = '';
+  // 老闆 TG33446：清單預設只列前 10 筆（依目前排序），其餘收在「更多…」；地圖照樣全畫
+  let shown = 0;
   for (const l of sorted) {
     const src = l.id.startsWith('local:ntpc') ? '新北市政府' : l.id.startsWith('local:hccg') ? '新竹市政府' : 'TDX';
     const kind = l.on ? '路邊' : '路外';
     const html = `<div class="name">${esc(l.name)}</div><div class="free t-${l.tone}">${esc(l.text)}</div><div class="meta">${kind} · ${Math.round(l.d)} 公尺 · ${src}${byFee ? ` · ${l.rate ? (l.rate.v ? `約 ${l.rate.v} 元／${l.rate.flat ? '次' : '時'}` : '免費') : '費用未知'}` : ''}</div>`
-      + (l.address ? `<div class="meta">${esc(l.address)}</div>` : '') + fareHtml(l.fare) + `<div class="nav">${navLinks(l)}</div>`;
+      + (l.address ? `<div class="meta">${esc(l.address)}</div>` : '') + fareHtml(l.fare) + spotHtml(l) + `<div class="nav">${navLinks(l)}</div>`;
     L.circleMarker([l.lat, l.lon], {radius: l.on ? 8 : 11, color: '#111', weight: 2, fillColor: HEX[l.tone], fillOpacity: .95})
       .bindPopup(html).addTo(layer);
     const li = document.createElement('li');
     li.innerHTML = `<span class="dot" style="background:${HEX[l.tone]}"></span><div class="grow">${html}</div>`;
     li.querySelector('.name').addEventListener('click', () => { map.setView([l.lat, l.lon], 17); });
+    if (shown++ >= 10 && !parkMore) li.hidden = true;
     $('list').appendChild(li);
+  }
+  if (sorted.length > 10 && !parkMore) {
+    const li = document.createElement('li'), b = document.createElement('button');
+    li.className = 'morewrap'; b.type = 'button'; b.className = 'more'; b.textContent = `更多…（還有 ${sorted.length - 10} 處）`;
+    b.onclick = () => { parkMore = true; render(); };
+    li.append(b); $('list').appendChild(li);
   }
   if (!sorted.length) $('list').innerHTML = '<li><div class="grow meta">這個範圍內沒有已知的停車場，可以把範圍調大再查。</div></li>';
 }
@@ -682,7 +697,7 @@ async function query(){
   if (busy) return;
   const cd = gate.cooldown();
   if (cd > 0) { status(`請等 ${Math.ceil(cd/1000)} 秒再查詢（避免超過資料來源限制）`); return; }
-  busy = true; gate.click(); tick(); warn([]);
+  busy = true; gate.click(); tick(); warn([]); spotData.clear(); spotLayer.clearLayers(); parkMore = false;
   const notes = [];
   let sent = false;
   try {
@@ -695,7 +710,7 @@ async function query(){
     else if (!c.tdx && (OFF_STATIC.has(city) || ON_STATIC.has(city)) && !hasKey) notes.push('未設定 TDX 金鑰，只顯示地方政府資料');
     const all = unpack(c).filter(l => dist(lat, lon, l.lat, l.lon) <= radius).sort((a, b) => dist(lat, lon, a.lat, a.lon) - dist(lat, lon, b.lat, b.lon));
     const cand = [...all.filter(l => !l.on).slice(0, 20), ...all.filter(l => l.on).slice(0, 20)];
-    last = {lots: cand, lat, lon};
+    last = {lots: cand, lat, lon, city};
     if (!cand.length) { render(); status(`${CITIES[city]}：${radius} 公尺內沒有已知停車場`); warn(notes); return; }
     // 先檢查本次需要的請求數，避免冷卻開始後才被節流擋掉
     const tdxKinds = [false, true].filter(on => (on ? ON_LIVE : OFF_LIVE).has(city) && cand.some(l => l.on === on && !l.id.startsWith('local:')));
@@ -753,6 +768,89 @@ async function query(){
     warn(notes); busy = false; tick();
   }
 }
+
+// ---- 路邊每一格空／佔用（老闆 TG33419、TG33436）：點某個路邊路段的「看每一格」才抓那一段（ParkingSpot＋ParkingSpotAvailability 各 1 次） ----
+// SpotStatus：1 使用中、2 空位、3 已預約、254 其他、255 未知；ServiceStatus 非 1 或 DeviceStatus=0 → 灰（TDX 停車 OAS 945f57da）
+// DataCollectTime 是「狀態最後變動時間」（實測中位數約 20 小時前），不能拿來判斷過期，只顯示
+const SPOT_CITIES = new Set(['Kaohsiung']);   // 先只開實測過的高雄
+const spotLayer = L.layerGroup().addTo(map), spotCanvas = L.canvas({padding: 0.3});
+const spotData = new Map();   // 路段 ID → {spots: [[id, lat, lon]], st: Map, at}；換一次查詢就清掉
+let spotBusy = null;
+const SPOT_HEX = {ok: '#16a34a', full: '#dc2626', unk: '#8a9490'};
+function spotState(r){
+  if (!r || r.DeviceStatus === 0 || (r.ServiceStatus != null && r.ServiceStatus !== 1)) return 'unk';
+  return r.SpotStatus === 2 ? 'ok' : r.SpotStatus === 1 || r.SpotStatus === 3 ? 'full' : 'unk';
+}
+function spotHtml(l){
+  if (!l.on || l.id.startsWith('local:') || !last || !SPOT_CITIES.has(last.city)) return '';
+  const d = spotData.get(l.id);
+  if (!d) return `<button type="button" class="spotbtn" data-seg="${esc(l.id)}">${spotBusy === l.id ? '查詢中…' : '🅿️ 看每一格'}</button>`;
+  if (d.err) return `<div class="meta">${esc(d.err)}</div><button type="button" class="spotbtn" data-seg="${esc(l.id)}">重試</button>`;
+  if (!d.spots.length) return '<div class="meta">這一段沒有逐格感測資料</div>';
+  const tones = d.spots.map(([id]) => spotState(d.st.get(id)));
+  // 有格位位置、但這一段沒有任何一格的即時狀態（高雄約 1 成格位如此）
+  if (!d.st.size) return `<div class="spots">🅿️ 共 ${d.spots.length} 格（地圖灰點）</div><div class="meta">這一段沒有每一格的即時空／佔用資料，只能看路段剩餘格數</div>`;
+  const free = tones.filter(t => t === 'ok').length, unk = tones.filter(t => t === 'unk').length;
+  const seg = l.avail?.cars ?? l.avail?.unclassified;
+  return `<div class="spots">🅿️ 每一格：空 ${free}／共 ${d.spots.length} 格${unk ? `（${unk} 格不明）` : ''}${seg != null && seg !== free ? ` · 路段回報 ${seg} 格` : ''}</div>`
+    + `<div class="spotgrid">${tones.map((t, i) => `<span class="sg-${t}" title="第 ${i + 1} 格">${i + 1}</span>`).join('')}</div>`
+    + `<button type="button" class="spotbtn" data-seg="${esc(l.id)}">更新</button>`;
+}
+function drawSpots(){
+  spotLayer.clearLayers();
+  for (const [segId, d] of spotData) {
+    if (!d.spots) continue;
+    const l = last?.lots.find(x => x.id === segId), name = l ? l.name : '';
+    d.spots.forEach(([id, lat, lon], i) => {
+      const r = d.st.get(id), tone = spotState(r), t = r ? Date.parse(r.DataCollectTime ?? '') : NaN;
+      L.circleMarker([lat, lon], {renderer: spotCanvas, radius: 6, color: '#111', weight: 1, fillColor: SPOT_HEX[tone], fillOpacity: .95})
+        .bindPopup(`<b>${esc(name)}</b> 第 ${i + 1} 格<br>${tone === 'ok' ? '空位' : tone === 'full' ? '有車' : '狀態不明'}${isFinite(t) ? `<br><span class="meta">狀態變動：${esc(new Date(t).toLocaleString('zh-TW', {month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit', hour12: false}))}</span>` : ''}`)
+        .addTo(spotLayer);
+    });
+  }
+}
+async function loadSegSpots(segId){
+  if (spotBusy || !last || !SPOT_CITIES.has(last.city)) return;
+  const city = last.city, mark = last, seg = `ParkingSegmentID eq '${segId.replace(/'/g, "''")}'`, prev = st.park;
+  // 從地圖泡泡點了收在「更多」裡的路段：載入後把清單展開，才看得到方格（B 審）
+  const hiddenRow = [...document.querySelectorAll('#list [data-seg]')].find(b => b.dataset.seg === segId)?.closest('li')?.hidden;
+  spotBusy = segId; render();
+  try {
+    const auth = await token();
+    // 格位位置 7 天快取（IndexedDB）；空／佔用每次重抓
+    let spots = null;
+    const c = await idb.get(`spot_${city}_${segId}`);
+    if (c && c.v === 1 && Date.now() - c.at < 7 * 86400000 && Array.isArray(c.spots)) spots = c.spots;
+    else {
+      const d = await tdxGet(`/api/basic/v1/Parking/OnStreet/ParkingSpot/City/${city}`,
+        {'$filter': seg, '$select': 'ParkingSegmentID,ParkingSpotID,Position', '$top': '1000', '$count': 'true', '$format': 'JSON'}, auth, {wait: true, progress: status});
+      if (d.count !== undefined && d.count > d.items.length) throw new ApiError(`這一段格位太多（${d.count} 格）`);
+      spots = d.items.filter(r => r.ParkingSegmentID === segId && typeof r.ParkingSpotID === 'string' && r.Position && Number.isFinite(r.Position.PositionLat) && Number.isFinite(r.Position.PositionLon))
+        .map(r => [r.ParkingSpotID, +r.Position.PositionLat.toFixed(6), +r.Position.PositionLon.toFixed(6)]);
+      await idb.set(`spot_${city}_${segId}`, {v: 1, at: Date.now(), spots});
+    }
+    let stm = new Map();
+    if (spots.length) {
+      const a = await tdxGet(`/api/basic/v1/Parking/OnStreet/ParkingSpotAvailability/City/${city}`,
+        {'$filter': seg, '$select': 'ParkingSegmentID,ParkingSpotID,SpotStatus,ServiceStatus,DeviceStatus,DataCollectTime', '$top': '1000', '$count': 'true', '$format': 'JSON'}, auth, {wait: true, progress: status});
+      if (a.count !== undefined && a.count > a.items.length) throw new ApiError(`這一段格位太多（${a.count} 格）`);
+      stm = new Map(a.items.filter(r => typeof r.ParkingSpotID === 'string').map(r => [r.ParkingSpotID, r]));
+    }
+    if (last !== mark) return;   // 這段時間又查了別的地方
+    spotData.set(segId, {spots, st: stm, at: Date.now()});
+    if (hiddenRow) parkMore = true;
+    drawSpots();
+    if (spots.length) map.fitBounds(L.latLngBounds(spots.map(([, lat, lon]) => [lat, lon])).pad(0.3), {maxZoom: 19});
+  } catch (e) {
+    if (last === mark) spotData.set(segId, {err: e instanceof ApiError ? e.message : '格位查詢失敗，請稍後再試'});
+  } finally {
+    spotBusy = null;
+    if (last === mark) { render(); status(prev); }
+  }
+}
+// 清單和地圖泡泡裡的「看每一格」按鈕（innerHTML 產生，用事件委派）
+$('list').addEventListener('click', e => { const b = e.target.closest('[data-seg]'); if (b) loadSegSpots(b.dataset.seg); });
+map.on('popupopen', e => { const el = e.popup.getElement(); el && el.querySelectorAll('[data-seg]').forEach(b => { b.onclick = () => { map.closePopup(); loadSegSpots(b.dataset.seg); }; }); });
 
 // ---- YouBike（TDX 公共自行車 v2，Swagger「公共運輸-自行車」） ----
 // 沒金鑰時各分頁共用的提示（老闆 TG33156：導到 TDX 官方網站申請）
@@ -1705,7 +1803,7 @@ function setMode(m){
   if (m !== 'park' && $('sort').value === 'fee') $('sort').value = 'dist';
   $('map').hidden = m === 'pay';   // 停車費分頁不用地圖
   if (m !== 'pay') map.invalidateSize();
-  for (const [lyr, k] of [[layer, 'park'], [bikeLayer, 'bike'], [trafficLayer, 'traffic'], [transitLayer, 'transit']]) m === k ? lyr.addTo(map) : map.removeLayer(lyr);
+  for (const [lyr, k] of [[layer, 'park'], [spotLayer, 'park'], [bikeLayer, 'bike'], [trafficLayer, 'traffic'], [transitLayer, 'transit']]) m === k ? lyr.addTo(map) : map.removeLayer(lyr);
   $('status').textContent = st[m];
   tick();
   if (m === 'bike' && here && (!lastBike || lastBike.seq !== here.seq)) queryBike(false);
