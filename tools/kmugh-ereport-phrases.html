@@ -31,15 +31,16 @@
   <div class="card">
     <h2>下載</h2>
     <div class="dl">
-      <a class="btn" href="downloads/kmugh-ereport-phrases-v1.1.0.zip" download>插件 v1.1.0（zip）</a>
+      <a class="btn" href="downloads/kmugh-ereport-phrases-v1.2.1.zip" download>插件 v1.2.1（zip）</a>
+      <a class="btn" href="downloads/kmugh-ereport-phrases-default.json" download>內建片語（JSON，98 筆）</a>
     </div>
-    <p class="small">只在 <code>ereportap.kmugh.org.tw</code> 的報告頁面運作，需在院內網路使用。空白版：不含任何預設片語。片語只存在你這台電腦的 Chrome 裡，不會上傳；插件不會暫存或送出報告。</p>
+    <p class="small">只在 <code>ereportap.kmugh.org.tw</code> 的報告頁面運作，需在院內網路使用。內建 98 筆常用片語（甲狀腺超音波、備註、ABI、眼底、診斷書、Sudoscan 9 種分級等），第一次安裝自動放入。JSON 檔是同一份片語，可用面板的「匯入」加入。片語只存在你這台電腦的 Chrome 裡，不會上傳；插件不會暫存或送出報告。</p>
   </div>
 
   <div class="card">
     <h2>安裝（第一次）</h2>
     <ol>
-      <li>下載 zip，解壓縮到一個<strong>固定的資料夾</strong>（之後不要搬動、改名或刪除）。zip 裡直接就是 <code>manifest.json</code> 等 4 個檔案，請先自己建一個資料夾再解壓進去。</li>
+      <li>下載 zip，解壓縮到一個<strong>固定的資料夾</strong>（之後不要搬動、改名或刪除）。zip 裡直接就是 <code>manifest.json</code> 等 5 個檔案，請先自己建一個資料夾再解壓進去。</li>
       <li>Chrome 網址列輸入 <code>chrome://extensions</code>，打開右上角「開發人員模式」。</li>
       <li>按「載入未封裝項目」，選剛才的資料夾。</li>
       <li>重新整理 eReport 報告頁面，右上角就會出現「eReport 自訂片語」面板。</li>
@@ -49,9 +50,10 @@
   <div class="card warn">
     <h2>更新到新版（片語不會不見）</h2>
     <ol>
-      <li>新版解壓後，把 4 個檔案<strong>直接覆蓋</strong>原本資料夾裡的同名檔案。</li>
+      <li>新版解壓後，把 5 個檔案<strong>直接覆蓋</strong>（或放進）原本的資料夾。</li>
       <li>到 <code>chrome://extensions</code>，在這個插件上按「重新載入」↻。</li>
       <li>重新整理 eReport 頁面。</li>
+      <li>從 v1.1.0 更新的：原本的片語都還在，內建片語不會自動加入，請按面板上的「載入內建片語」。相同的片語不會重複。</li>
     </ol>
     <p class="small"><strong>請不要「移除」舊版再載入新資料夾。</strong>Chrome 是用資料夾位置認未封裝的插件，移除或換資料夾就會被當成另一個插件，原本建立的片語會讀不到。</p>
   </div>
@@ -61,7 +63,8 @@
     <ol>
       <li>先點一下報告裡要輸入的欄位，面板上方會顯示「插入目標」。</li>
       <li>在面板搜尋或切換分組頁簽，點片語就插入游標位置；多行片語插入大欄位時保留換行，插入單行欄位時換成空格。</li>
-      <li>「＋新增片語」建立片語與分組；每筆片語旁可編輯或刪除。</li>
+      <li>「＋新增片語」建立片語與分組，可加選填「標題」（只顯示在清單、不會插入報告）；每筆片語旁可編輯或刪除。</li>
+      <li>「匯出」把目前全部片語下載成 JSON 備份；「匯入」從 JSON 檔加入片語（相同的不重複，不會刪掉現有片語）。換電腦時先匯出再匯入。</li>
       <li><strong>移動面板</strong>：按住深藍色標題列拖曳。放開後位置會記住，下次開頁面沿用。<strong>雙擊標題列</strong>回到右上角預設位置。</li>
       <li>標題列右邊的 −／+ 可以縮小或展開面板。</li>
     </ol>
@@ -70,12 +73,13 @@
   <div class="card small">
     <strong>版本紀錄</strong>
     <ul>
+      <li>v1.2.1（2026-11-04）：內建 98 筆片語（第一次安裝自動放入、舊版更新按「載入內建片語」），Sudoscan 9 種分級合併在同一個頁簽；片語可加選填「標題」（只顯示在清單、不插入報告）；新增匯出／匯入 JSON。</li>
       <li>v1.1.0（2026-11-03）：面板可用滑鼠拖曳移動、記住位置、雙擊標題列復位；拖出視窗外會自動拉回畫面內。</li>
       <li>v1.0.0：第一版（自訂片語、分組、搜尋、插入游標位置）。</li>
     </ul>
   </div>
 
-  <footer>工具版本：2026-11-03</footer>
+  <footer>工具版本：2026-11-04</footer>
 </div>
 </body>
 </html>

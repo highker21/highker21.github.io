@@ -1,0 +1,403 @@
+[
+ {
+  "category": "Diagnosis",
+  "text": "Thyroid Size: ×  mm right lobe; mm isthmus; ×  mm left lobe"
+ },
+ {
+  "category": "Diagnosis",
+  "text": "- 右葉:  ××cm; \n- 峽部:  ××cm; \n- 左葉:  ××cm;"
+ },
+ {
+  "category": "Diagnosis",
+  "text": "Thyroid Size: ×  mm right lobe; \nStatus post left lobectomy"
+ },
+ {
+  "category": "Diagnosis",
+  "text": "Thyroid Size:  ×  mm left lobe\nStasut post right lobectomy"
+ },
+ {
+  "category": "Diagnosis",
+  "text": "×"
+ },
+ {
+  "category": "Diagnosis",
+  "text": "Stasut post right lobectomy\nStatus post left lobectomy"
+ },
+ {
+  "category": "Diagnosis",
+  "text": "××cm;"
+ },
+ {
+  "category": "Diagnosis",
+  "text": "Bilateral thyroid nodules\n - Right: \n - Isthmus: \n - Left:"
+ },
+ {
+  "category": "Diagnosis",
+  "text": "Thyroid Size: ×  mm right lobe; mm isthmus; ×  mm left lobe\nBilateral thyroid nodules\n- Right: \n- Isthmus: \n- Left:"
+ },
+ {
+  "category": "Diagnosis",
+  "text": "Multinodular goiter\n- Right: \n- Isthmus: \n- Left:"
+ },
+ {
+  "category": "Diagnosis",
+  "text": "Thyroid Size: ×  mm right lobe; mm isthmus; ×  mm left lobe\nMultinodular goiter\n- Right: \n- Isthmus: \n- Left:"
+ },
+ {
+  "category": "Diagnosis",
+  "text": "Grossly normal thyroid"
+ },
+ {
+  "category": "Diagnosis",
+  "text": "Thyroid Size: ×  mm right lobe; mm isthmus; ×  mm left lobe\nGrossly normal thyroid"
+ },
+ {
+  "category": "Diagnosis",
+  "text": "Status post total thyroidectomy without remnant"
+ },
+ {
+  "category": "Diagnosis",
+  "text": "Status post total thyroidectomy without remnant\nBilateral reactive lymph nodes　\n- Right:\n- Left:"
+ },
+ {
+  "category": "Diagnosis",
+  "text": "Diffuse goiter with heterogenous and hypoechoic parenchyma, compatible with autoimmue thyroid disease"
+ },
+ {
+  "category": "Diagnosis",
+  "text": "Thyroid Size: ×  mm right lobe; mm isthmus; ×  mm left lobe\nDiffuse goiter with heterogenous and hypoechoic parenchma, compatible with autoimmue thyroid disease"
+ },
+ {
+  "category": "Diagnosis",
+  "text": "Diffuse goiter with bilateral thyroid nodules\n- Right:\n- Isthmus:\n- Left:"
+ },
+ {
+  "category": "Diagnosis",
+  "text": "Thyroid Size: ×  mm right lobe; mm isthmus; ×  mm left lobe\nDiffuse goiter with bilateral thyroid nodules\n- Right: \n- Isthmus: \n- Left:"
+ },
+ {
+  "category": "Diagnosis",
+  "text": "Bilateral reactive lymph nodes　\n - Right: \n - Left:"
+ },
+ {
+  "category": "Diagnosis",
+  "text": "Heterogenous thyroid parenchyma, suspect autoimmune thyroid disease"
+ },
+ {
+  "category": "Diagnosis",
+  "text": "Thyroid Size: ×  mm right lobe; mm isthmus; ×  mm left lobe\nHeterogenous thyroid parenchyma, suspect autoimmune thyroid disease"
+ },
+ {
+  "category": "Diagnosis",
+  "text": "Heterogenous and hypoechoic parenchyma, compatible with autoimmune thyroid disease"
+ },
+ {
+  "category": "Diagnosis",
+  "text": "Thyroid Size: ×  mm right lobe; mm isthmus; ×  mm left lobe\nHeterogenous and hypoechoic parenchyma, compatible with autoimmune thyroid disease"
+ },
+ {
+  "category": "備註",
+  "text": "Please keep Eltroxin use and follow up thyroglobuin level"
+ },
+ {
+  "category": "備註",
+  "text": "please pursue FNA report, suggesty thyroid US+FNA every 3-6 months"
+ },
+ {
+  "category": "備註",
+  "text": "please correlation with clinical condition"
+ },
+ {
+  "category": "備註",
+  "text": "Pursue the result of thyroid function test."
+ },
+ {
+  "category": "備註",
+  "text": "suggest follow up thyroid echo every 6-12 months"
+ },
+ {
+  "category": "備註",
+  "text": "suggest follow up thyroid echo every 1-2 years"
+ },
+ {
+  "category": "備註",
+  "text": "Please keep Eltroxin use and follow up thyroid function test."
+ },
+ {
+  "category": "ABI",
+  "text": "suggest 6~12 months follow up"
+ },
+ {
+  "category": "ABI",
+  "text": "suggest to treat risk factors"
+ },
+ {
+  "category": "ABI",
+  "text": "suggest to refer to vascular specialist"
+ },
+ {
+  "category": "ABI",
+  "text": "Suspicion of arteriosclerosis"
+ },
+ {
+  "category": "ABI",
+  "text": "Suspicion of arteriosclerosis\nsuggest 6~12 months follow up"
+ },
+ {
+  "category": "眼底",
+  "text": "Suspect cataract"
+ },
+ {
+  "category": "眼底",
+  "text": "RP rather than DMRP"
+ },
+ {
+  "category": "眼底",
+  "text": "Suspect drusen"
+ },
+ {
+  "category": "死亡",
+  "text": "該員於年月日時分至年月日時分，因上述病情入本院急診施行檢查與治療，於年月日轉入病房施行檢查與治療，於年月日時分於本院宣告死亡（以下空白）。"
+ },
+ {
+  "category": "MBD(含急診)",
+  "text": "該員於年月日時分至年月日時分，因上述病情入本院急診施行檢查與治療，於年月日轉入病房施行檢查與治療，於年月日出院（以下空白）。"
+ },
+ {
+  "category": "MBD(含加護病房)",
+  "text": "該員於年月日時分至年月日時分，因上述病情入本院急診施行檢查與治療，於年月日轉入加護病房施行檢查與治療，於年月日轉至一般病房施行檢查與治療，於年月日出院（以下空白）。"
+ },
+ {
+  "category": "放射碘",
+  "text": "該員於年月日，因上述病情，入院接受放射碘治療，於年月日出院（以下空白）。"
+ },
+ {
+  "category": "CV-MI(MBD)",
+  "text": "該員於年月日時分至年月日時分，因上述病情入本院急診施行檢查與治療，於年月日施行心導管檢查及經皮冠狀動脈擴張術，並置放支架1支及塗藥支架1支，於年月日轉入內科加護病房施行檢查與治療，於年月日轉至心臟科病房施行檢查與治療，於年月日出院（以下空白）。"
+ },
+ {
+  "category": "Sudoscan",
+  "title": "1. Hand Normal / Foot Normal (雙手正常 / 雙腳正常)",
+  "text": "1. Optimal and healthy sudomotor function in both upper and lower extremities (Hands > 60 μs, Feet > 60 μs).\n2. No evidence of systemic metabolic neuropathy, autonomic dysfunction, or localized nerve entrapment.\n3. Microcirculation and small fiber nerve health are excellent. Continue current healthy lifestyle maintenance."
+ },
+ {
+  "category": "Sudoscan",
+  "title": "2. Hand Normal / Foot Moderate (雙手正常 / 雙腳中度異常)",
+  "text": "1. Normal sudomotor function in bilateral upper extremities (Hands > 60 μs).\n2. Moderate sudomotor dysfunction in bilateral lower extremities (Feet 40-60 μs).\n3. This pattern is consistent with early-stage, length-dependent systemic/metabolic stress (e.g., pre-diabetes).\n4. Highly reversible stage. Lifestyle modifications and routine metabolic screening are recommended."
+ },
+ {
+  "category": "Sudoscan",
+  "title": "3. Hand Normal / Foot Severe (雙手正常 / 雙腳嚴重異常)",
+  "text": "1. Normal sudomotor function in bilateral upper extremities (Hands > 60 μs) with severe sudomotor dysfunction in lower extremities (Feet < 40 μs).\n2. Classic presentation of advanced length-dependent peripheral polyneuropathy (e.g., Diabetic Sensorimotor Polyneuropathy).\n3. High risk of anhidrosis and loss of protective sensation (LOPS) in the feet.\n4. Strict metabolic control and diabetic foot care protocols are strongly mandated to prevent ulceration."
+ },
+ {
+  "category": "Sudoscan",
+  "title": "4. Hand Moderate / Foot Normal (雙手中度異常 / 雙腳正常)",
+  "text": "1. Moderate sudomotor dysfunction in bilateral upper extremities (Hands 40-60 μs) with normal function in lower extremities (Feet > 60 μs).\n2. This atypical, non-length-dependent pattern rules out advanced systemic metabolic neuropathy.\n3. Findings strongly suggest localized, mild bilateral upper extremity strain, occupational overuse, cervical muscle tension, or benign skin dryness.\n4. Postural/ergonomic adjustments are recommended."
+ },
+ {
+  "category": "Sudoscan",
+  "title": "5. Hand Moderate / Foot Moderate (雙手中度異常 / 雙腳中度異常)",
+  "text": "1. Generalized moderate sudomotor dysfunction across all four extremities (Hands & Feet 40-60 μs).\n2. Indicates early-stage, reversible systemic microcirculatory or metabolic stress (e.g., metabolic syndrome, chronic fatigue).\n3. Patient is in a highly reversible clinical window. Comprehensive metabolic screening and lifestyle modifications (aerobic exercise, diet) are recommended."
+ },
+ {
+  "category": "Sudoscan",
+  "title": "6. Hand Moderate / Foot Severe (雙手中度異常 / 雙腳嚴重異常)",
+  "text": "1. Moderate sudomotor dysfunction in upper extremities (Hands 40-60 μs) and severe dysfunction in lower extremities (Feet < 40 μs).\n2. Indicative of progressive, advanced length-dependent polyneuropathy where distal degeneration is advancing proximally to the upper limbs.\n3. High risk for foot ulceration and worsening systemic autonomic failure. Urgent medical intervention for strict metabolic control is required."
+ },
+ {
+  "category": "Sudoscan",
+  "title": "7. Hand Severe / Foot Normal (雙手嚴重異常 / 雙腳正常)",
+  "text": "1. Severe sudomotor dysfunction in bilateral upper extremities (Hands < 40 μs) with fully preserved, normal function in lower extremities (Feet > 60 μs).\n2. This stark, atypical non-length-dependent pattern points heavily to severe bilateral upper-body structural/mechanical pathology rather than systemic disease.\n3. Highly suspicious for central cervical spine pathology (e.g., cervical stenosis) or severe bilateral Carpal Tunnel Syndrome. Urgent neurological/orthopedic evaluation of the cervical spine and arms is recommended."
+ },
+ {
+  "category": "Sudoscan",
+  "title": "8. Hand Severe / Foot Moderate (雙手嚴重異常 / 雙腳中度異常)",
+  "text": "1. Severe sudomotor dysfunction in upper extremities (Hands < 40 μs) combined with moderate dysfunction in lower extremities (Feet 40-60 μs).\n2. Suggests a dual pathology: underlying mild-to-moderate systemic/metabolic stress compounded by a severe bilateral upper extremity nerve compromise.\n3. Urgent evaluation of the cervical spine and upper limbs (EMG/NCS) is needed, alongside routine metabolic screening."
+ },
+ {
+  "category": "Sudoscan",
+  "title": "9. Hand Severe / Foot Severe (雙手嚴重異常 / 雙腳嚴重異常)",
+  "text": "1. Global severe sudomotor dysfunction across all four extremities (Hands < 40 μs, Feet < 40 μs).\n2. Indicates profound, advanced systemic small fiber polyneuropathy and microcirculatory failure.\n3. Extreme risk of generalized anhidrosis, loss of protective sensation (LOPS), and painless ulceration.\n4. Urgent systemic medical workup, strict metabolic control, autonomic screening, and high-risk protective foot/hand care protocols are absolutely mandatory."
+ },
+ {
+  "category": "報告用片語",
+  "text": "Status post subtotal thyroidectomy"
+ },
+ {
+  "category": "報告用片語",
+  "text": "Status post total thyroidectomy without remnant\nBilateral reactive lymph nodes　\n-L: level 2: 0.893 cm, level 3: 0.459 cm, 0.535 cm, 0.638 cm　\n-R: level 2: 1.49 cm"
+ },
+ {
+  "category": "報告用片語",
+  "text": "Right intrathyroid coarse calcification"
+ },
+ {
+  "category": "報告用片語",
+  "text": "Multinodular Goiter"
+ },
+ {
+  "category": "報告用片語",
+  "text": "Multinodular goiter with left dominant nodule"
+ },
+ {
+  "category": "報告用片語",
+  "text": "Status post right lobectomy"
+ },
+ {
+  "category": "報告用片語",
+  "text": "Left single cystic goiter\nGrossly normal thyroid"
+ },
+ {
+  "category": "報告用片語",
+  "text": "Left tiny thyroid nodule"
+ },
+ {
+  "category": "報告用片語",
+  "text": "Left multi-cystic goiter\nHeterogenous and hypoechoic parenchyma, compatible with autoimmune thyroid disease"
+ },
+ {
+  "category": "報告用片語",
+  "text": "Heterogenous thyroid parenchyma, suspect autoimmune thyroid disease\n　Focal hypoechoic area, suspect subacute thyroiditis"
+ },
+ {
+  "category": "報告用片語",
+  "text": "Diffuse heterogeneous thyroid parenchyma, compatible with autoimmune thyroid disease"
+ },
+ {
+  "category": "報告用片語",
+  "text": "Diffuse goiter with heterogenous and hypoechoic parenchma, compatible with autoimmue thyroid disease"
+ },
+ {
+  "category": "報告用片語",
+  "text": "Heterogenous and hypoechoic parenchma, compatible with AITD\n　Left thyroid nodule, 0.806 × 0.634 cm, post FNA\n　Bilateral reactive lymph nodes\n　-L: level 3: 0.581 cm\n　-R: level 3: 0.822 cm"
+ },
+ {
+  "category": "報告用片語",
+  "text": "Atrophy thyroid gland\n　Bilateral thyroid nodules\n　-R: 1＊0.559 cm post FNA, 0.47 cm, 0.766＊03578 cm, 0.827 cm\n　-L: 0.476 cm, 0.518 cm, 0.472 cm, 0.527 cm,  0.914 cm\n　Eggshell calcification in right thyroid gland, 0.802 cm\n　Bilateral reactive lymph nodes\n　-L: level 2: 1.15 cm\n　-R: level 2: 0.797 cm"
+ },
+ {
+  "category": "報告用片語",
+  "text": "Sonodiagnosis：　Heterogenous parenchyma, favored AITD\n　Right thyroid nodules, 0.535 cm post FNA, 0.667＊0.454 cm with cyst\n　Bilateral reactive lymph nodes\n　-L: level 2: 1.04 cm\n　-R: level 2: 1.26 cm"
+ },
+ {
+  "category": "報告用片語",
+  "text": "No visible parathyroid nodule\n　S/p right lobectomy without remnant\n　Left thyroid nodules, 0.732＊0.67 cm post FNA, 1.11＊1.1 cm,  0.81＊0.58 cm\n　Heterogenous parenchyma, favored AITD"
+ },
+ {
+  "category": "報告用片語",
+  "text": "**Please keep Eltroxin use and follow up thyroglobuin level**"
+ },
+ {
+  "category": "報告用片語",
+  "text": "**please pursue FNA report, suggest thyroid US+FNA every 3-6 months**"
+ },
+ {
+  "category": "報告用片語",
+  "text": "Aspiration for left nodule x1->Sent for cytology."
+ },
+ {
+  "category": "報告用片語",
+  "text": "風險計算機"
+ },
+ {
+  "category": "報告用片語",
+  "text": "On a thyroid ultrasound, a nodule is classified into one of five categories:"
+ },
+ {
+  "category": "報告用片語",
+  "text": "- benign pattern (0% risk): no biopsy\n- very low suspicion pattern (<3% risk): biopsy if ≥2 cm (or ultrasound observation)\n- low suspicion pattern (5-10% risk): biopsy if ≥1.5 cm\n- intermediate suspicion pattern (10-20% risk): biopsy if ≥1 cm\n- high suspicion pattern (>70-90% risk): biopsy if ≥1 cm"
+ },
+ {
+  "category": "報告用片語",
+  "text": "- completely **cystic nodules with well-defined walls"
+ },
+ {
+  "category": "報告用片語",
+  "text": "- spongiform nodules and nodules with interspersed cystic spaces, without any of the features in more suspicious patterns"
+ },
+ {
+  "category": "報告用片語",
+  "text": "- isoechoic or hyperechoic nodule\n- partially cystic nodule with a peripheral solid component\n- none of the following features:\n    - microcalcifications (see other points below)\n    - irregular margins\n    - extrathyroidal extension\n    - taller than wide"
+ },
+ {
+  "category": "報告用片語",
+  "text": "- hypoechoic solid nodule with smooth margins\n- none of the following features:\n    - microcalcifications (see other points below)\n    - irregular margins\n    - extrathyroidal extension\n    - taller than wide"
+ },
+ {
+  "category": "報告用片語",
+  "text": "- solid hypoechoic nodule (or solid hypoechoic component of a partially cystic nodule), with at least one of these features:\n    - microcalcifications (see other points below)\n    - irregular margins (infiltrative, microlobulated)\n    - extrathyroidal extension\n    - taller than wide\n    - rim calcifications with an extrusive soft tissue component\n    - lymphadenopathy"
+ },
+ {
+  "category": "報告用片語",
+  "text": "Scoring is determined from five categories of ultrasound findings (figure 2). The higher the cumulative score, the higher the TR (TI-RADS) level and the likelihood of malignancy."
+ },
+ {
+  "category": "報告用片語",
+  "text": "One score is assigned from each of the following categories:"
+ },
+ {
+  "category": "報告用片語",
+  "text": "- **composition:** (choose one)\n    - cystic or completely cystic *: 0 points\n    - spongiform *: 0 points\n    - mixed cystic and solid: 1 point\n    - solid or almost completely solid: 2 points\n- **echogenicity:** (choose one)\n    - anechoic: 0 points\n    - hyper- or isoechoic: 1 point\n    - hypoechoic: 2 points\n    - very hypoechoic: 3 points\n- **shape:** (choose one) (assessed on the transverse plane)\n    - wider than tall: 0 points\n    - taller than wide: 3 points\n- **margin:** (choose one)\n    - smooth: 0 points\n    - ill-defined: 0 points\n    - lobulated/irregular: 2 points\n    - extra-thyroidal extension: 3 points"
+ },
+ {
+  "category": "報告用片語",
+  "text": "Any and all findings in the final category are also added to the other four scores."
+ },
+ {
+  "category": "報告用片語",
+  "text": "- **echogenic foci:** (choose one or more)\n    - none: 0 points\n    - large comet-tail artifact: 0 points\n    - macrocalcifications: 1 point\n    - peripheral/rim calcifications: 2 points\n    - punctate echogenic foci: 3 points"
+ },
+ {
+  "category": "報告用片語",
+  "text": "- **TR1**: 0 points\n    - benign\n- **TR2**: 2 points\n    - not suspicious\n- **TR3**: 3 points\n    - mildly suspicious\n- **TR4**: 4-6 points\n    - moderately suspicious\n- **TR5**: ≥7 points\n    - highly suspicious"
+ },
+ {
+  "category": "報告用片語",
+  "text": "- **TR1**: no FNA required\n- **TR2**: no FNA required\n- **TR3**: ≥1.5 cm follow up, ≥2.5 cm FNA\n    - follow up: 1, 3 and 5 years\n- **TR4**: ≥1.0 cm follow up, ≥1.5 cm FNA\n    - follow up: 1, 2, 3 and 5 years\n- **TR5**: ≥0.5 cm follow up, ≥1.0 cm FNA\n    - annual follow up for up to 5 years"
+ },
+ {
+  "category": "報告用片語",
+  "text": "- Right:\n- Isthmus:\n- Left:"
+ },
+ {
+  "category": "報告用片語",
+  "text": "please pursue FNA report, suggest thyroid US+FNA every 3-6 months"
+ },
+ {
+  "category": "報告用片語",
+  "text": "Protocol (Mixed meal test for suspected postprandial hypoglycemia & 72 hour fasting test)"
+ },
+ {
+  "category": "報告用片語",
+  "text": "1. 吃飯前先抽病人空腹血糖、insulin、C-peptide"
+ },
+ {
+  "category": "報告用片語",
+  "text": "2. 食用疑似造成病人餐後產生低血糖之食物，之後開始NPO， 但可以喝水"
+ },
+ {
+  "category": "報告用片語",
+  "text": "3. Check one touch sugar every 30 mins 直到 < 55 mg/dL，此時抽血測 serum glucose 確定真正小於 55 mg/dL 之後才送出 insulin, C-peptite"
+ },
+ {
+  "category": "報告用片語",
+  "text": "4. 若檢查當中出現嚴重低血糖症狀則直接抽 blood glucose, insulin, C-peptite 並中止檢查,給予病人補充糖分。"
+ },
+ {
+  "category": "報告用片語",
+  "text": "5. Check one touch sugar every 30 mins POCT 持續3小時後，如果沒有發生嚴重低血糖症狀或POCT < 55mg/dl，改成Q4H測POCT(進入連續72小時空腹測試)"
+ },
+ {
+  "category": "報告用片語",
+  "text": "6. Check one-touch glucose Q4H 直到 < 60 mg/dL，之後 check one-touch glucose Q1H 直到 <55 mg/dL，此時一起抽 plasma glucose+C-peptide+insulin+cortisol+hGH，但是 C-peptide+insulin+cortisol+hGH 先不要送出去，等到 plasma glucose data 確認為 <55 mg/dl 再送出"
+ },
+ {
+  "category": "報告用片語",
+  "text": "7. 若發生嚴重低血糖症狀(consiousness change)，抽C-peptide+insulin+cortisol+hGH 並補充糖分"
+ },
+ {
+  "category": "報告用片語",
+  "text": "Protocol (72 hour fasting test)"
+ }
+]
