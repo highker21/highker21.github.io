@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>comma 即時狀態</title>
+<meta name="description" content="讀取自己的 comma 裝置即時位置、車速、方向盤角度與 openpilot 狀態（只讀）">
+<meta name="theme-color" content="#1d3557">
+<meta name="referrer" content="no-referrer">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" integrity="sha512-h9FcoyWjHcOcmEVkxOfTLnmZFWIH0iZhZT1H2TbOq55xssQGEJHEaIm+PgoUaZbRvQTNTluNOEfb1ZRy6D3BOw==" crossorigin="anonymous" referrerpolicy="no-referrer">
+<style>
+:root{--bg:#f4f6f8;--card:#fff;--ink:#16202a;--mute:#5f6b76;--line:#d9dfe5;--brand:#1d4e89;--ok:#15803d;--warn:#b45309;--bad:#b91c1c;--warn-bg:#fff4e0}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1418;--card:#182028;--ink:#e6edf3;--mute:#9aa7b2;--line:#2a3540;--brand:#5b9bd5;--ok:#4ade80;--warn:#fbbf24;--bad:#f87171;--warn-bg:#3a2c12}}
+:root[data-theme="dark"]{--bg:#0f1418;--card:#182028;--ink:#e6edf3;--mute:#9aa7b2;--line:#2a3540;--brand:#5b9bd5;--ok:#4ade80;--warn:#fbbf24;--bad:#f87171;--warn-bg:#3a2c12}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 -apple-system,"PingFang TC","Noto Sans TC",sans-serif}
+header{display:flex;align-items:center;gap:8px;padding:10px 16px;padding-top:max(10px,env(safe-area-inset-top))}
+header h1{font-size:18px;margin:0;flex:1}
+button{font:inherit;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:10px;padding:8px 12px;cursor:pointer}
+button.primary{background:var(--brand);border-color:var(--brand);color:#fff;font-weight:700}
+#map{height:42vh;min-height:240px;margin:0 16px;border-radius:14px;border:1px solid var(--line)}
+.bar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:10px 16px}
+#status{padding:0 16px;color:var(--mute);font-size:14px;min-height:21px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:8px 16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 12px}
+.card .k{font-size:13px;color:var(--mute)}
+.card .v{font-size:30px;font-weight:800;line-height:1.2;font-variant-numeric:tabular-nums}
+.card .s{font-size:13px;color:var(--mute)}
+.wide{grid-column:1/-1}
+.op-on{color:var(--ok)}.op-off{color:var(--mute)}.op-alert{color:var(--warn)}
+.wheel{display:inline-block;width:30px;height:30px;vertical-align:-6px;margin-right:6px;transition:transform .3s}
+.warn{margin:6px 16px;padding:8px 12px;border-radius:10px;background:var(--warn-bg);color:var(--warn);font-size:14px}
+dialog{border:none;border-radius:14px;max-width:min(520px,calc(100vw - 32px));background:var(--card);color:var(--ink)}
+dialog::backdrop{background:#0006}
+dialog label{display:block;margin:10px 0 4px;font-size:14px;color:var(--mute)}
+dialog input[type=password]{width:100%;font:inherit;padding:8px;border-radius:8px;border:1px solid var(--line);background:var(--bg);color:var(--ink)}
+.row{display:flex;gap:8px;justify-content:flex-end;margin-top:14px;flex-wrap:wrap}
+.meta{color:var(--mute);font-size:13px}
+footer{padding:8px 16px 24px;color:var(--mute);font-size:12px}
+footer a{color:var(--mute)}
+.car-icon{font-size:26px;line-height:26px;text-align:center;filter:drop-shadow(0 1px 2px #0008)}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<header>
+  <h1>🚗 comma 即時狀態</h1>
+  <button id="btnSettings">設定</button>
+</header>
+<div class="warn">供乘客查看。駕駛行車中請勿操作手機。</div>
+<div id="map"></div>
+<div class="bar">
+  <button id="btnRun" class="primary">開始即時更新</button>
+  <span id="dev" class="meta"></span>
+</div>
+<div id="status">按「設定」貼上 comma 憑證後開始</div>
+<div class="grid">
+  <div class="card"><div class="k">車速</div><div class="v" id="spd">—</div><div class="s" id="gear"></div></div>
+  <div class="card"><div class="k">方向盤角度</div><div class="v"><svg class="wheel" id="wheel" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2.4"/><circle cx="12" cy="12" r="2.4" fill="currentColor"/><path d="M12 9.6V2.5M9.9 13.2 3.5 16M14.1 13.2 20.5 16" stroke="currentColor" stroke-width="2.4"/></svg><span id="steer">—</span></div><div class="s">正值＝向左</div></div>
+  <div class="card wide"><div class="k">openpilot</div><div class="v" id="op">—</div><div class="s" id="alert"></div></div>
+  <div class="card wide"><div class="k">資料時間</div><div class="s" id="when">—</div></div>
+</div>
+
+<dialog id="dlg">
+  <h3 style="margin:0">設定</h3>
+  <label for="jwt">comma 憑證（JWT）</label>
+  <input id="jwt" type="password" autocomplete="off" spellcheck="false">
+  <p class="meta">到 <a href="https://jwt.comma.ai" target="_blank" rel="noopener">jwt.comma.ai</a> 用自己的 comma 帳號登入後複製。這串等同你這台車的遠端讀取鑰匙：不要貼給別人，也不要在別人的手機勾「記住」。</p>
+  <label style="display:flex;gap:8px;align-items:center;color:var(--ink)"><input type="checkbox" id="remember"> 記住在這支手機（同一台手機的人看得到）</label>
+  <p class="meta">位置直接向 comma 官方（api.commadotai.com）查。車速、方向盤、openpilot 狀態只能透過 comma 的即時通道，它只開放給 comma 官方網頁，所以會經過我們的 Cloudflare 轉送：轉送只放行「讀取」一種指令、只限這一台車、不記錄內容。</p>
+  <div class="row">
+    <button id="btnClear">清除憑證</button>
+    <button id="btnClose">取消</button>
+    <button id="btnSave" class="primary">儲存</button>
+  </div>
+</dialog>
+
+<footer>
+  資料來自你自己的 comma 裝置（comma.ai API）；地圖：© <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors。<br>
+  只讀：不會對車子送出任何控制指令。每 2 秒更新一次，會用到車上的少量行動數據。<br>
+  工具版本：2026-11-04
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js" integrity="sha512-puJW3E/qXDqYp9IfhAI54BJEaWIfloJ7JWs7OeD5i6ruC9JZL1gERT1wjtwXFlh7CjE7ZJ+/vcRZRkIYIb6p4g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+'use strict';
+// comma 即時狀態（老闆 TG33281／TG33469，plan 2026-11-04_1145）：只讀
+const PROXY = location.hostname === 'highker21.github.io' ? 'https://tdx-parking-proxy.highker.workers.dev' : 'http://127.0.0.1:8787';
+const API = 'https://api.commadotai.com';
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const num = x => typeof x === 'number' && isFinite(x) ? x : null;
+
+// ---- 憑證：預設只放記憶體；勾「記住」才存 localStorage ----
+let jwt = null;
+try { jwt = localStorage.getItem('cm_jwt'); } catch {}
+const JWT_RE = /^[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+$/;
+function jwtExp(t){ try { return JSON.parse(atob(t.split('.')[1].replace(/-/g, '+').replace(/_/g, '/'))).exp * 1000; } catch { return null; } }
+$('btnSettings').onclick = () => { $('jwt').value = ''; $('remember').checked = (() => { try { return !!localStorage.getItem('cm_jwt'); } catch { return false; } })(); $('dlg').showModal(); };
+$('btnClose').onclick = () => $('dlg').close();
+$('btnClear').onclick = () => { stop(); jwt = null; device = null; try { localStorage.removeItem('cm_jwt'); } catch {} $('dlg').close(); say('憑證已清除'); $('dev').textContent = ''; };
+$('btnSave').onclick = () => {
+  const v = $('jwt').value.trim();
+  if (v) {
+    if (!JWT_RE.test(v)) { say('憑證格式不對，請重新從 jwt.comma.ai 複製'); return; }
+    jwt = v; device = null;
+  }
+  try { $('remember').checked && jwt ? localStorage.setItem('cm_jwt', jwt) : localStorage.removeItem('cm_jwt'); } catch {}
+  $('dlg').close(); say('已儲存，按「開始即時更新」');
+};
+
+// ---- 地圖 ----
+const map = L.map('map', {zoomControl: true}).setView([23.7, 121], 7);
+L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {maxZoom: 19, attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'}).addTo(map);
+let car = null, follow = true;
+map.on('dragstart', () => { follow = false; });
+function place(lat, lon, bearing){
+  if (num(lat) === null || num(lon) === null || Math.abs(lat) > 90 || Math.abs(lon) > 180) return;
+  const icon = L.divIcon({className: '', html: `<div class="car-icon" style="transform:rotate(${num(bearing) ?? 0}deg)">⬆️</div>`, iconSize: [26, 26], iconAnchor: [13, 13]});
+  if (car) { car.setLatLng([lat, lon]); car.setIcon(icon); } else car = L.marker([lat, lon], {icon, keyboard: false}).addTo(map);
+  if (follow) map.setView([lat, lon], Math.max(map.getZoom(), 16));
+}
+
+const say = s => { $('status').textContent = s; };
+class ApiError extends Error { constructor(m, kind){ super(m); this.kind = kind; } }
+
+// ---- comma REST（手機直連官方 API；api.commadotai.com 允許跨網域） ----
+let device = null;
+async function rest(path){
+  let r;
+  try { r = await fetch(API + path, {headers: {Authorization: 'JWT ' + jwt}, cache: 'no-store', referrerPolicy: 'no-referrer'}); } catch { throw new ApiError('連不上 comma 伺服器', 'network'); }
+  if (r.status === 401 || r.status === 403) throw new ApiError('comma 憑證無效或過期，請到 jwt.comma.ai 重新取得', 'auth');
+  if (r.status !== 200) throw new ApiError(`comma 伺服器回應 ${r.status}`);
+  try { return await r.json(); } catch { throw new ApiError('comma 回應格式異常'); }
+}
+async function loadDevice(){
+  const list = await rest('/v1/me/devices/');
+  if (!Array.isArray(list) || !list.length) throw new ApiError('這個 comma 帳號底下沒有裝置');
+  device = list.find(d => d && d.is_owner) || list[0];
+  $('dev').textContent = `${typeof device.alias === 'string' && device.alias ? device.alias.slice(0, 30) : 'comma 裝置'} · ${device.device_type === 'threex' ? 'comma 3X' : String(device.device_type || '')}`;
+  return device;
+}
+async function lastLocation(){
+  const l = await rest(`/v1/devices/${encodeURIComponent(device.dongle_id)}/location`);
+  if (l && num(l.lat) !== null) { place(l.lat, l.lng, device.last_gps_bearing); return l; }
+  return null;
+}
+
+// ---- 即時（經 Worker 代打 athena getMessage，只讀） ----
+let opService = 'selfdriveState';   // 舊版 openpilot 是 controlsState；第一次回錯誤就切換
+async function live(){
+  let r;
+  try { r = await fetch(PROXY + '/comma/live', {method: 'POST', headers: {Authorization: 'JWT ' + jwt, 'Content-Type': 'application/json'}, body: JSON.stringify({services: ['carState', opService, 'gpsLocationExternal']}), cache: 'no-store'}); }
+  catch { throw new ApiError('連不上轉送站', 'network'); }
+  if (r.status === 429) throw new ApiError('更新太頻繁，稍等一下', 'rate');
+  if (r.status === 401) throw new ApiError('comma 憑證格式不對', 'auth');
+  if (r.status !== 200) throw new ApiError(`轉送站回應 ${r.status}`);
+  return r.json();
+}
+
+let timer = null, running = false, lastAt = 0;
+function stop(){ running = false; clearTimeout(timer); $('btnRun').textContent = '開始即時更新'; }
+function stopWhenHidden(){ if (document.hidden && running) { stop(); say('畫面切到背景，已暫停更新；回來再按開始'); } }
+document.addEventListener('visibilitychange', stopWhenHidden);
+async function tick(){
+  if (!running) return;
+  let next = 2000;
+  try {
+    if (!device) await loadDevice();
+    const x = await live();
+    const cs = x.carState, op = x[opService], gps = x.gpsLocationExternal;
+    if ([cs, op, gps].every(v => v && v.err === 'offline')) {
+      say('車子目前沒有連線（熄火或沒有網路）；顯示最後位置，每 30 秒再試一次');
+      const l = await lastLocation().catch(() => null);
+      $('when').textContent = l && l.time ? `最後位置：${new Date(l.time).toLocaleString('zh-TW', {hour12: false})}` : '—';
+      next = 30000;
+    } else if ([cs, op, gps].some(v => v && v.err === 'auth')) {
+      throw new ApiError('comma 憑證無效或過期，請到 jwt.comma.ai 重新取得', 'auth');
+    } else {
+      if (op && op.err === 'rpc' && opService === 'selfdriveState') opService = 'controlsState';
+      const c = cs && cs.ok && cs.ok.carState, o = op && op.ok && op.ok[opService], g = gps && gps.ok && gps.ok.gpsLocationExternal;
+      if (c) {
+        const v = num(c.vEgo), a = num(c.steeringAngleDeg);
+        $('spd').textContent = v === null ? '—' : `${Math.round(v * 3.6)} km/h`;
+        $('gear').textContent = typeof c.gearShifter === 'string' ? `檔位：${c.gearShifter}` : '';
+        $('steer').textContent = a === null ? '—' : `${a > 0 ? '+' : ''}${a.toFixed(1)}°`;
+        $('wheel').style.transform = `rotate(${a === null ? 0 : -Math.max(-540, Math.min(540, a))}deg)`;
+      }
+      if (o) {
+        const on = !!o.enabled, act = !!o.active, t1 = typeof o.alertText1 === 'string' ? o.alertText1 : '', t2 = typeof o.alertText2 === 'string' ? o.alertText2 : '';
+        $('op').textContent = act ? '控制中' : on ? '已啟用（待命）' : '未啟用';
+        $('op').className = 'v ' + (t1 ? 'op-alert' : act || on ? 'op-on' : 'op-off');
+        $('alert').textContent = [t1, t2].filter(Boolean).join(' · ').slice(0, 120);
+      }
+      if (g) place(num(g.latitude), num(g.longitude), num(g.bearingDeg));
+      lastAt = Date.now();
+      $('when').textContent = new Date(lastAt).toLocaleTimeString('zh-TW', {hour12: false});
+      const bad = [cs, op, gps].filter(v => v && v.err).length;
+      say(bad ? `即時更新中（有 ${bad} 項這次沒拿到）` : '即時更新中');
+    }
+  } catch (e) {
+    say(e.message || '更新失敗');
+    if (e.kind === 'auth') { stop(); return; }
+    next = e.kind === 'rate' ? 10000 : 5000;
+  }
+  if (running) timer = setTimeout(tick, next);
+}
+$('btnRun').onclick = () => {
+  if (running) { stop(); say('已暫停'); return; }
+  if (!jwt) { $('btnSettings').click(); return; }
+  const exp = jwtExp(jwt);
+  if (exp && exp < Date.now()) { say('comma 憑證已過期，請到 jwt.comma.ai 重新取得'); return; }
+  running = true; follow = true; $('btnRun').textContent = '暫停'; say('連線中…'); tick();
+};
+if (jwt) say('已記住憑證，按「開始即時更新」');
+</script>
+</body>
+</html>
