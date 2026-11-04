@@ -160,7 +160,7 @@ ul#listPay{list-style:none;margin:6px 0 0;padding:0 16px 16px}#listPay li{backgr
   停車費率為各機關提供的文字說明，僅供參考，以現場公告為準。<br>
   地圖：© <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors。<br>
   資料處理邏輯參考 opview（© 2026 Rick Lan，<a href="https://github.com/herizon1054/opview/blob/01f0f20/LICENSE" target="_blank" rel="noopener">非商業授權</a>）。<br>
-  工具版本：2026-11-04m
+  工具版本：2026-11-04n
 </footer>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js" integrity="sha512-puJW3E/qXDqYp9IfhAI54BJEaWIfloJ7JWs7OeD5i6ruC9JZL1gERT1wjtwXFlh7CjE7ZJ+/vcRZRkIYIb6p4g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
@@ -1306,9 +1306,9 @@ async function queryTransit(manual){
 const PAY_CODE = {Taipei:'TPE',NewTaipei:'NWT',Keelung:'KEE',Taoyuan:'TAO',Hsinchu:'HSZ',HsinchuCounty:'HSQ',MiaoliCounty:'MIA',Taichung:'TXG',
   ChanghuaCounty:'CHA',YunlinCounty:'YUN',Chiayi:'CYI',ChiayiCounty:'CYQ',Tainan:'TNN',Kaohsiung:'KHH',PingtungCounty:'PIF',NantouCounty:'NAN',
   YilanCounty:'ILA',HualienCounty:'HUA',TaitungCounty:'TTT',KinmenCounty:'KIN',PenghuCounty:'PEN'};   // 連江縣沒有提供
-// 2026-11-04 12:0x 實測（Worker 用不可能是車牌的「--」打 21 縣市）：下列縣市從轉送站連不上，先標「暫不支援」並跳過不打
-const PAY_SKIP = {KHH:'只接受台灣境內連線', HSQ:'只接受台灣境內連線', CHA:'只接受台灣境內連線', CYI:'只接受台灣境內連線', NAN:'只接受台灣境內連線',
-  ILA:'只接受台灣境內連線', HUA:'只接受台灣境內連線', TPE:'對方主機憑證設定不完整', HSZ:'對方主機憑證設定不完整', NWT:'對方主機目前連不上', TAO:'對方主機目前連不上', YUN:'對方主機目前連不上'};
+// 2026-11-04 12:0x 實測（Worker 用不可能是車牌的「--」打 21 縣市）：下列縣市連台灣網路也連不上，標「暫不支援」並跳過不打
+const PAY_SKIP = {NWT:'對方主機目前連不上', TAO:'對方主機目前連不上', YUN:'對方主機目前連不上'};
+// 其餘從轉送站連不到的 9 縣市由 Worker 改經家中 mini（台灣網路）代查（shared/paybill_rules.json relayCities）
 const PAY_NAME = Object.fromEntries(Object.entries(PAY_CODE).map(([k, v]) => [v, CITIES[k]]));
 const PAY_PLATE = /^[A-Z0-9一-鿿-]{2,10}$/;   // 規範 ERR02：英數、中文、「-」
 const BILL_ST = {0: '未逾期', 1: '逾期轉催繳中', 2: '催繳', 3: '告發'};
@@ -1322,7 +1322,7 @@ const ymd = v => typeof v === 'string' && /^\d{4}-\d{2}-\d{2}/.test(v) ? v.slice
 function payParse(line){
   if (!line || typeof line !== 'object' || typeof line.city !== 'string' || !PAY_NAME[line.city]) return null;
   const out = {city: line.city, name: PAY_NAME[line.city]};
-  if (!line.ok) return {...out, state: 'err', msg: `暫時查不到（${String(line.err || '錯誤').slice(0, 30)}）`};
+  if (!line.ok) return {...out, state: 'err', msg: line.err === 'relay-down' ? '家用轉送站暫時離線，請稍後再查' : `暫時查不到（${String(line.err || '錯誤').slice(0, 30)}）`};
   const d = line.data;
   if (!d || typeof d !== 'object') return {...out, state: 'err', msg: '暫時查不到（格式異常）'};
   if (d.Status !== 'SUCCESS') return {...out, state: 'err', msg: `查詢失敗：${String(d.Message || d.Status || '').slice(0, 60)}`};
