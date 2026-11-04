@@ -148,9 +148,10 @@ async function lastLocation(){
 
 // ---- 即時（經 Worker 代打 athena getMessage，只讀） ----
 let opService = 'selfdriveState';   // 舊版 openpilot 是 controlsState；第一次回錯誤就切換
+let gpsService = 'gpsLocationExternal', gpsMiss = 0, lastRest = 0, restTime = null;   // 3X 是 gpsLocation；拿不到就輪流試，地圖改用 comma 伺服器上的最後位置（老闆 TG33485）
 async function live(){
   let r;
-  try { r = await fetch(PROXY + '/comma/live', {method: 'POST', headers: {Authorization: 'JWT ' + jwt, 'Content-Type': 'application/json'}, body: JSON.stringify({services: ['carState', opService, 'gpsLocationExternal']}), cache: 'no-store'}); }
+  try { r = await fetch(PROXY + '/comma/live', {method: 'POST', headers: {Authorization: 'JWT ' + jwt, 'Content-Type': 'application/json'}, body: JSON.stringify({services: ['carState', opService, gpsService]}), cache: 'no-store'}); }
   catch { throw new ApiError('連不上轉送站', 'network'); }
   if (r.status === 429) throw new ApiError('更新太頻繁，稍等一下', 'rate');
   if (r.status === 401) throw new ApiError('comma 憑證格式不對', 'auth');
@@ -168,7 +169,7 @@ async function tick(){
   try {
     if (!device) await loadDevice();
     const x = await live();
-    const cs = x.carState, op = x[opService], gps = x.gpsLocationExternal;
+    const cs = x.carState, op = x[opService], gps = x[gpsService];
     if ([cs, op, gps].every(v => v && v.err === 'offline')) {
       say('車子目前沒有連線（熄火或沒有網路）；顯示最後位置，每 30 秒再試一次');
       const l = await lastLocation().catch(() => null);
@@ -178,7 +179,7 @@ async function tick(){
       throw new ApiError('comma 憑證無效或過期，請到 jwt.comma.ai 重新取得', 'auth');
     } else {
       if (op && op.err === 'rpc' && opService === 'selfdriveState') opService = 'controlsState';
-      const c = cs && cs.ok && cs.ok.carState, o = op && op.ok && op.ok[opService], g = gps && gps.ok && gps.ok.gpsLocationExternal;
+      const c = cs && cs.ok && cs.ok.carState, o = op && op.ok && op.ok[opService], g = gps && gps.ok && gps.ok[gpsService];
       if (c) {
         const v = num(c.vEgo), a = num(c.steeringAngleDeg);
         $('spd').textContent = v === null ? '—' : `${Math.round(v * 3.6)} km/h`;
@@ -192,11 +193,17 @@ async function tick(){
         $('op').className = 'v ' + (t1 ? 'op-alert' : act || on ? 'op-on' : 'op-off');
         $('alert').textContent = [t1, t2].filter(Boolean).join(' · ').slice(0, 120);
       }
-      if (g) place(num(g.latitude), num(g.longitude), num(g.bearingDeg));
+      if (g && num(g.latitude) && num(g.longitude)) { place(num(g.latitude), num(g.longitude), num(g.bearingDeg)); gpsMiss = 0; }
+      else {
+        // 車上這次沒有發布 GPS：換另一個 GPS 來源再試；每 30 秒用 comma 伺服器上的最後位置更新地圖
+        gpsMiss++; gpsService = gpsService === 'gpsLocationExternal' ? 'gpsLocation' : 'gpsLocationExternal';
+        if (Date.now() - lastRest > 30000) { lastRest = Date.now(); lastLocation().then(l => { restTime = l && l.time; }).catch(() => {}); }
+      }
       lastAt = Date.now();
-      $('when').textContent = new Date(lastAt).toLocaleTimeString('zh-TW', {hour12: false});
+      $('when').textContent = new Date(lastAt).toLocaleTimeString('zh-TW', {hour12: false})
+        + (gpsMiss >= 2 && restTime ? ` · 地圖是最後回報位置（${new Date(restTime).toLocaleTimeString('zh-TW', {hour12: false})}），不是當下位置` : '');
       const bad = [cs, op, gps].filter(v => v && v.err).length;
-      say(bad ? `即時更新中（有 ${bad} 項這次沒拿到）` : '即時更新中');
+      say(gpsMiss >= 2 ? '即時更新中（車上暫時沒有即時 GPS，地圖顯示最後回報位置）' : bad ? `即時更新中（有 ${bad} 項這次沒拿到）` : '即時更新中');
     }
   } catch (e) {
     say(e.message || '更新失敗');
