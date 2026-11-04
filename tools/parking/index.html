@@ -70,6 +70,7 @@ ul#listPay{list-style:none;margin:6px 0 0;padding:0 16px 16px}#listPay li{backgr
 .more{width:100%;font-weight:700;padding:10px;margin:4px 0 8px}
 .row{display:flex;gap:8px;align-items:center;font-size:16px;margin:5px 0;color:var(--ink)}.tm{font-weight:800;font-variant-numeric:tabular-nums}.sm{font-size:15px;padding:1px 8px;border-radius:6px;flex:none}
 .tab.on{background:var(--brand);border-color:var(--brand);color:#fff}
+.subtabs{display:flex;gap:6px;padding:0 16px 8px}.subtab{flex:1;font-size:15px;font-weight:700;padding:8px 2px}.subtab.on{background:var(--brand);border-color:var(--brand);color:#fff}
 .bk{display:inline-block;font-size:12px;font-weight:700;padding:1px 6px;border-radius:6px;border:1px solid var(--line);margin-left:6px;vertical-align:2px}
 .me-icon{position:relative}
 .me-dot{position:absolute;left:5px;top:5px;width:18px;height:18px;border-radius:50%;background:#2563eb;border:3px solid #fff;box-shadow:0 0 0 2px #2563eb,0 2px 6px #0008}
@@ -123,6 +124,7 @@ ul#listPay{list-style:none;margin:6px 0 0;padding:0 16px 16px}#listPay li{backgr
 <div id="warnsTraffic" hidden></div>
 <ul id="listTraffic" hidden></ul>
 <div id="newsTraffic" hidden></div>
+<div id="transitSubs" class="subtabs" role="tablist" aria-label="到站類別" hidden><button class="subtab" data-sub="bus" role="tab">🚌 公車</button><button class="subtab" data-sub="tra" role="tab">🚆 火車</button><button class="subtab" data-sub="thsr" role="tab">🚄 高鐵</button><button class="subtab" data-sub="metro" role="tab">🚇 捷運</button></div>
 <div id="warnsTransit" hidden></div>
 <ul id="listTransit" hidden></ul>
 <div id="payForm" class="payform" hidden>
@@ -189,11 +191,11 @@ ul#listPay{list-style:none;margin:6px 0 0;padding:0 16px 16px}#listPay li{backgr
 </dialog>
 
 <footer>
-  資料：<a href="https://tdx.transportdata.tw" target="_blank" rel="noopener">交通部 TDX</a>、新北市政府、新竹市政府、警察廣播電臺（即時路況）開放資料，依<a href="https://data.gov.tw/license" target="_blank" rel="noopener">政府資料開放授權條款第 1 版</a>使用；合併與篩選不代表機關背書。<br>
+  資料：<a href="https://tdx.transportdata.tw" target="_blank" rel="noopener">交通部 TDX</a>、新北市政府、新竹市政府、警察廣播電臺（即時路況）開放資料；119 即時案件取自高雄市、臺南市、新竹市消防局公開網頁，依<a href="https://data.gov.tw/license" target="_blank" rel="noopener">政府資料開放授權條款第 1 版</a>使用；合併與篩選不代表機關背書。<br>
   停車費率為各機關提供的文字說明，僅供參考，以現場公告為準。<br>
   地圖：© <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors。<br>
   資料處理邏輯參考 opview（© 2026 Rick Lan，<a href="https://github.com/herizon1054/opview/blob/01f0f20/LICENSE" target="_blank" rel="noopener">非商業授權</a>）。<br>
-  工具版本：2026-11-04r
+  工具版本：2026-11-04s
 </footer>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js" integrity="sha512-puJW3E/qXDqYp9IfhAI54BJEaWIfloJ7JWs7OeD5i6ruC9JZL1gERT1wjtwXFlh7CjE7ZJ+/vcRZRkIYIb6p4g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
@@ -948,6 +950,84 @@ async function pbsLoad(){
   pbsCache = {at: Date.now(), rows};
   return rows;
 }
+// ---- 消防局 119 即時案件（老闆 TG2878）：同一套 DTS 系統的 HTML 表格；沒有座標，救護只到行政區 ----
+// 一律經 Worker → 家中 mini 轉送站（/fire/{code}，60 秒快取）：臺南、新竹市沒有 CORS；高雄也走轉送，不把手機 IP 直接給消防局主機（A 審）
+const FIRE = {Kaohsiung: {code: 'KHH', name: '高雄市政府消防局'}, Tainan: {code: 'TNN', name: '臺南市政府消防局'}, Hsinchu: {code: 'HCC', name: '新竹市消防局'}};
+const fireCache = {};
+let fireMore = false;
+// 依表頭文字對欄位（各縣市欄位不同、有註解掉的欄）；DOMParser 不執行腳本、不載圖
+function fireParse(html){
+  const t = new DOMParser().parseFromString(html, 'text/html').getElementById('dataTable');
+  if (!t) throw new ApiError('119 資料格式異常');
+  const rows = [...t.querySelectorAll('tr')];
+  const head = [...(rows.shift()?.querySelectorAll('th') || [])].map(th => th.textContent.replace(/\s+/g, ''));
+  const col = n => head.indexOf(n);
+  const at = col('受理時間'), type = col('案類'), place = col('發生地點'), unit = col('派遣分隊'), state = col('執行狀況'), sub = col('案別');
+  if ([at, type, place, unit, state].some(i => i < 0)) throw new ApiError('119 資料格式異常');
+  const out = [];
+  for (const tr of rows.slice(0, 200)) {
+    const td = [...tr.querySelectorAll('td')].map(x => x.textContent.replace(/\s+/g, ' ').trim().slice(0, 60));
+    if (td.length < head.length) continue;
+    const m = /^(\d{4})\/(\d{2})\/(\d{2}) (\d{2}):(\d{2}):(\d{2})$/.exec(td[at]);
+    if (!m) continue;
+    out.push({at: Date.parse(`${m[1]}-${m[2]}-${m[3]}T${m[4]}:${m[5]}:${m[6]}+08:00`), type: td[type], sub: sub >= 0 ? td[sub] : '', place: td[place], unit: td[unit], state: td[state]});
+  }
+  // 有資料列卻一筆都解析不出來＝上游改格式，不要顯示成「目前沒有案件」（A 審）
+  if (rows.some(tr => tr.querySelector('td')) && !out.length) throw new ApiError('119 資料格式異常');
+  return out;
+}
+// 60 秒內不重抓（保護消防局主機）
+async function fireLoad(city){
+  const f = FIRE[city];
+  if (!f) return null;
+  const c = fireCache[city];
+  if (c && Date.now() - c.at < 60000) return c.rows;
+  let r;
+  try { r = await fetch(PROXY + '/fire/' + f.code, {cache: 'no-store'}); } catch { throw new ApiError('連不上 119 即時案件', 'network'); }
+  if (r.status !== 200) {
+    const up = r.headers.get('X-Upstream') || '';
+    throw new ApiError(up === 'relay-down' ? '119 即時案件：家用轉送站或消防局網站暫時連不上' : `119 即時案件暫時無法使用（${r.status}）`);
+  }
+  const text = await r.text();
+  if (text.length > 512 * 1024) throw new ApiError('119 資料格式異常');
+  const rows = fireParse(text);
+  fireCache[city] = {at: Date.now(), rows};
+  return rows;
+}
+// 用停車快取裡最近一筆有地址的停車場推「你在哪一區」，不另外送座標出去
+function guessDistrict(city, lat, lon){
+  const c = cached(city);
+  if (!c) return '';
+  let best = null, bd = 3000;
+  for (const l of unpack(c)) {
+    const m = /[市縣]\s*([^\s市縣]{1,3}[區鄉鎮市])/.exec(l.address);
+    if (!m) continue;
+    const d = dist(lat, lon, l.lat, l.lon);
+    if (d < bd) { bd = d; best = m[1]; }
+  }
+  return best || '';
+}
+const FIRE_TONE = t => /火/.test(t) ? 'full' : /救護/.test(t) ? 'ok' : 'unk';
+function renderFire(){
+  if (!lastTraffic || !lastTraffic.fire) return '';
+  const {rows, city, district} = lastTraffic.fire, f = FIRE[city];
+  const inD = x => district && x.place.includes(district);
+  const list = [...rows].sort((a, b) => (inD(b) - inD(a)) || b.at - a.at).slice(0, 15);
+  const shown = fireMore ? list : list.slice(0, 5);
+  const nD = district ? rows.filter(inD).length : 0;
+  return `<h3>🚒 119 即時案件（${esc(CITIES[city])}${district ? `，${esc(district)} ${nD} 件` : ''}）</h3>` + (list.length ? shown.map(x => {
+    const kind = [x.type, x.sub].filter(Boolean).join('・');
+    return `<div class="news"><div class="news-head"><span class="news-tag t-${FIRE_TONE(x.type)}">${esc(kind || '案件')}</span><b>${esc(x.place)}</b>${inD(x) ? '<span class="bk">同區</span>' : ''}</div>`
+      + `<div class="meta">${new Date(x.at).toLocaleTimeString('zh-TW', {hour: '2-digit', minute: '2-digit', hour12: false})} 受理 · ${esc(x.unit)} · ${esc(x.state)}</div></div>`;
+  }).join('') + (list.length > 5 && !fireMore ? `<button class="more" id="fireMoreBtn">更多…（還有 ${list.length - 5} 件）</button>` : '')
+    : '<div class="meta">目前沒有案件</div>') + `<div class="meta">資料來源：${esc(f.name)}；救護案件地點只到行政區</div>`;
+}
+function fireStart(h, notes){
+  if (!FIRE[h.city]) return null;
+  return fireLoad(h.city).then(rows => {
+    if (lastTraffic && lastTraffic.seq === h.seq) { lastTraffic.fire = {rows, city: h.city, district: guessDistrict(h.city, h.lat, h.lon)}; renderTraffic(); }
+  }).catch(e => { notes.push(e.message); twarn(notes); });
+}
 const PBS_TONE = t => /事故|車禍/.test(t) ? 'full' : /施工|壅塞|阻塞|管制|故障|障礙/.test(t) ? 'low' : 'unk';
 function renderPbs(){
   if (!lastTraffic || !lastTraffic.pbs) return '';
@@ -1041,8 +1121,10 @@ function renderTraffic(){
       + `<div class="meta">${isNaN(when) ? '' : new Date(when).toLocaleString('zh-TW', {month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit'})}</div></div>`;
   }).join('') + (news.length > 5 && !newsMore ? `<button class="more" id="newsMoreBtn">更多…（還有 ${news.length - 5} 則）</button>` : '') : '<div class="meta">目前沒有事件</div>');
   if (lastTraffic.pbs) $('newsTraffic').innerHTML = ($('newsTraffic').innerHTML || '') + renderPbs();
+  if (lastTraffic.fire) $('newsTraffic').innerHTML = ($('newsTraffic').innerHTML || '') + renderFire();
   if ($('newsMoreBtn')) $('newsMoreBtn').onclick = () => { newsMore = true; renderTraffic(); };
   if ($('pbsMoreBtn')) $('pbsMoreBtn').onclick = () => { pbsMore = true; renderTraffic(); };
+  if ($('fireMoreBtn')) $('fireMoreBtn').onclick = () => { fireMore = true; renderTraffic(); };
 }
 async function queryTraffic(manual){
   if (trafficBusy) return;
@@ -1056,8 +1138,10 @@ async function queryTraffic(manual){
       trafficLayer.clearLayers();
       $('listTraffic').innerHTML = NOKEY_HTML('國道／省道即時車速');
       const h = manual || !here || Date.now() - here.at > 120000 ? await locate(tstatus) : here;
-      lastTraffic = {list: [], lat: h.lat, lon: h.lon, seq: h.seq, news: null, pbs: null}; pbsMore = false;
+      lastTraffic = {list: [], lat: h.lat, lon: h.lon, seq: h.seq, news: null, pbs: null, fire: null}; pbsMore = fireMore = false;
+      const fireP = fireStart(h, notes);
       try { lastTraffic.pbs = await pbsLoad(); } catch (e) { notes.push(e.message); }
+      await fireP;
       renderTraffic(); $('listTraffic').innerHTML = NOKEY_HTML('國道／省道即時車速');
       tstatus('警廣路況（國道／省道車速需 TDX 金鑰）'); return;
     }
@@ -1065,7 +1149,8 @@ async function queryTraffic(manual){
     const {lat, lon} = h, radius = Math.max(2000, +$('radius').value);
     const auth = await token();
     const list = [];
-    lastTraffic = {list, lat, lon, seq: h.seq, news: null, events: null, pbs: null}; trafficMore = newsMore = pbsMore = false;
+    lastTraffic = {list, lat, lon, seq: h.seq, news: null, events: null, pbs: null, fire: null}; trafficMore = newsMore = pbsMore = fireMore = false;
+    fireStart(h, notes);
     pbsLoad().then(r => { if (lastTraffic && lastTraffic.seq === h.seq) { lastTraffic.pbs = r; renderTraffic(); } }).catch(e => { notes.push(e.message); twarn(notes); });
     let best = null; // 範圍內完全沒有路段時，改列最近的一段（老闆 TG33189）
     // 順序：國道路網 → 國道車速 → 事件 → 省道路網 → 省道車速（國道先出來）
@@ -1199,6 +1284,11 @@ function railRow(t){
   const late = t.run === 2 ? '<b class="t-full sm">取消</b>' : t.live ? (t.delay > 0 ? `<b class="t-low sm">誤點 ${t.delay} 分</b>` : '<b class="t-ok sm">準點</b>') : '';
   return `<div class="row"><span class="tm">${t.time === null ? '--:--' : hm(t.time)}</span><span class="grow">${esc(t.type)} ${esc(t.no)} 往 ${esc(t.dest)}</span>${late}</div>`;
 }
+// 到站次分頁（老闆 TG2883）：一次查詢照舊抓四類，只切換顯示；選擇記在這支手機
+let transitSub = ['bus', 'tra', 'thsr', 'metro'].includes(store.get('pk_tsub')) ? store.get('pk_tsub') : 'bus';
+function renderSubs(){ for (const b of document.querySelectorAll('#transitSubs .subtab')) { const on = b.dataset.sub === transitSub; b.classList.toggle('on', on); b.setAttribute('aria-selected', on); } }
+document.querySelectorAll('#transitSubs .subtab').forEach(b => b.onclick = () => { transitSub = b.dataset.sub; store.set('pk_tsub', transitSub); renderSubs(); renderTransit(); });
+renderSubs();
 function renderTransit(){
   if (!lastTransit) return;
   const now = Date.now(), T = lastTransit;
@@ -1212,7 +1302,7 @@ function renderTransit(){
   };
   const empty = s => { const li = document.createElement('li'); li.innerHTML = `<div class="grow meta">${s}</div>`; ul.appendChild(li); };
   // 公車
-  if (T.bus) {
+  if (transitSub === 'bus' && T.bus) {
     if (!T.bus.near.length) empty(`附近 ${BUS_R} 公尺沒有公車站`);
     for (const [i, {s, d}] of T.bus.near.entries()) {
       const rows = [];
@@ -1235,7 +1325,7 @@ function renderTransit(){
   }
   // 台鐵／高鐵
   for (const [k, icon, label] of [['tra', '🚆', '台鐵'], ['thsr', '🚄', '高鐵']]) {
-    const R = T[k]; if (!R) continue;
+    const R = T[k]; if (k !== transitSub || !R) continue;
     if (!R.st) { empty(`附近 ${RAIL_R / 1000} 公里沒有${label}站`); continue; }
     const list = (R.trains || []).filter(t => t.time !== null && t.time + (t.delay || 0) * 60000 >= now - 60000).sort((a, b) => a.time - b.time).slice(0, 4);
     const note = k === 'thsr' ? '<div class="meta">依時刻表（高鐵沒有即時到站資料）</div>' : R.live ? '<div class="meta">即時看板（含誤點）</div>' : R.trains ? '<div class="meta">依今日時刻表</div>' : '';
@@ -1243,7 +1333,7 @@ function renderTransit(){
     card(icon, `${label} ${stn(R.st[1])}`, R.d, body, [R.st[2], R.st[3]]);
   }
   // 捷運
-  if (T.metro) {
+  if (transitSub === 'metro' && T.metro) {
     if (!T.metro.length) empty(METRO_BY_CITY[T.city] ? `附近 ${RAIL_R / 1000} 公里沒有捷運／輕軌站` : `${CITIES[T.city]}沒有捷運`);
     for (const M of T.metro) {
       let body;
@@ -1255,6 +1345,7 @@ function renderTransit(){
       card('🚇', `${METRO_NAME[M.sys]} ${stn(M.st[1])}`, M.d, body, [M.st[2], M.st[3]]);
     }
   }
+  if (!ul.children.length) empty(transitBusy ? '更新中…' : '這一類這次沒有查到，請看上方提示或重新查詢');
   ul.querySelectorAll('button[data-more]').forEach(b => b.onclick = () => { transitMore[b.dataset.more] = true; renderTransit(); });
 }
 async function queryTransit(manual){
@@ -1363,7 +1454,7 @@ async function queryTransit(manual){
     rstatus(e instanceof ApiError ? e.message : '公車／軌道查詢失敗，請稍後再試');
   } finally {
     if (!sent && manual) gate.reset();
-    rwarn(notes); transitBusy = false; tick();
+    rwarn(notes); transitBusy = false; tick(); if (lastTransit) renderTransit();
   }
 }
 
@@ -1575,7 +1666,7 @@ function setMode(m){
   if (mode === m) return;
   mode = m;
   for (const [k, tab] of [['park', 'tabPark'], ['bike', 'tabBike'], ['traffic', 'tabTraffic'], ['transit', 'tabTransit'], ['pay', 'tabPay']]) { $(tab).classList.toggle('on', m === k); $(tab).setAttribute('aria-selected', m === k); }
-  for (const [id, k] of [['list', 'park'], ['warns', 'park'], ['listBike', 'bike'], ['warnsBike', 'bike'], ['listTraffic', 'traffic'], ['warnsTraffic', 'traffic'], ['newsTraffic', 'traffic'], ['warnsTransit', 'transit'], ['listTransit', 'transit'], ['payForm', 'pay'], ['warnsPay', 'pay'], ['listPay', 'pay']]) $(id).hidden = m !== k;
+  for (const [id, k] of [['list', 'park'], ['warns', 'park'], ['listBike', 'bike'], ['warnsBike', 'bike'], ['listTraffic', 'traffic'], ['warnsTraffic', 'traffic'], ['newsTraffic', 'traffic'], ['transitSubs', 'transit'], ['warnsTransit', 'transit'], ['listTransit', 'transit'], ['payForm', 'pay'], ['warnsPay', 'pay'], ['listPay', 'pay']]) $(id).hidden = m !== k;
   // 到站分頁的範圍固定（公車 500 公尺、軌道 3 公里），不顯示範圍／排序選單
   $('radius').hidden = $('sort').hidden = m === 'transit' || m === 'pay';
   // 「依費用」只有停車分頁有資料；其他分頁藏起來，選著的話改回依距離
