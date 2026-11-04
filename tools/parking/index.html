@@ -200,7 +200,7 @@ ul#listPay{list-style:none;margin:6px 0 0;padding:0 16px 16px}#listPay li{backgr
   停車費率為各機關提供的文字說明，僅供參考，以現場公告為準。<br>
   地圖：© <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors。<br>
   資料處理邏輯參考 opview（© 2026 Rick Lan，<a href="https://github.com/herizon1054/opview/blob/01f0f20/LICENSE" target="_blank" rel="noopener">非商業授權</a>）。<br>
-  工具版本：2026-11-04v
+  工具版本：2026-11-04w
 </footer>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js" integrity="sha512-puJW3E/qXDqYp9IfhAI54BJEaWIfloJ7JWs7OeD5i6ruC9JZL1gERT1wjtwXFlh7CjE7ZJ+/vcRZRkIYIb6p4g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
@@ -1105,7 +1105,8 @@ async function fireLoad(city){
   try { r = await fetch(PROXY + '/fire/' + f.code, {cache: 'no-store'}); } catch { throw new ApiError('連不上 119 即時案件', 'network'); }
   if (r.status !== 200) {
     const up = r.headers.get('X-Upstream') || '';
-    throw new ApiError(up === 'relay-down' ? '119 即時案件：家用轉送站或消防局網站暫時連不上' : `119 即時案件暫時無法使用（${r.status}）`);
+    // relay-down＝mini 轉送站沒回應；upstream＝轉送站有通、消防局網站自己回錯誤（例如 502）
+    throw new ApiError(up === 'relay-down' ? '119 即時案件：家用轉送站暫時連不上，請稍後再試' : up === 'upstream' ? '119 即時案件：消防局網站暫時沒回應，請稍後再試' : `119 即時案件暫時無法使用（${r.status}）`);
   }
   const text = await r.text();
   if (text.length > 512 * 1024) throw new ApiError('119 資料格式異常');
