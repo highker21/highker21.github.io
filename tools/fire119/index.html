@@ -39,6 +39,9 @@ ul#list{list-style:none;margin:6px 0 0;padding:0 16px 16px}
 #list li{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin-bottom:8px;display:flex;gap:10px}
 #list li.new{background:var(--new)}
 #list li.out{opacity:.62}
+#list li.done{opacity:.5}
+#list .tl{font-size:12px;color:var(--mute);margin-top:2px}
+#summary{padding:0 16px 6px;font-size:14px}
 .tag{flex:none;align-self:flex-start;border-radius:8px;padding:2px 8px;font-size:14px;font-weight:700;color:#fff;background:var(--other)}
 .tag.fire{background:var(--fire)}.tag.ems{background:var(--ems)}
 .grow{flex:1;min-width:0}
@@ -91,12 +94,13 @@ footer a{color:var(--mute)}
 
 <div id="banner" class="banner" hidden></div>
 <div id="status">尚未開始。按「開始監測」後每 2 分鐘檢查一次。</div>
+<div id="summary" hidden></div>
 <ul id="list"></ul>
 
 <footer>
   <div>資料來源：<a href="https://119dts.fdkc.gov.tw/DTS/caselist/html" target="_blank" rel="noopener">高雄市政府消防局即時案件</a>（官方頁面約每 2 分鐘更新；本頁每 2 分鐘檢查，最慢約 4 分鐘內看到新案件）。</div>
   <div>iPhone 鎖螢幕或切到別的 App 時會暫停，回到本頁才補抓；官方頁只列最新十多筆，暫停太久中間的案件可能看不到。出動、到達等時間為本裝置每 2 分鐘觀察狀態變化推估，誤差約 ±2 分鐘。</div>
-  <div>簡易版＝官方網頁清單（只列處理中的案件）；完整版＝消防局同站的完整資料（含火災、其他、返隊中／已返隊、路名、出動人車數，只收受理 24 小時內）。兩版紀錄分開存，切換後先建立基準、不會重複提示。</div>
+  <div>簡易版＝官方網頁清單（只列處理中的案件）；完整版＝消防局同站的完整資料（含火災、其他、返隊中／已返隊、路名、出動人車數，只收受理 24 小時內）。兩版紀錄分開存，切換後先建立基準、不會重複提示。完整版卡片下方的狀態時間軸是本裝置第一次看到該狀態的時間（開始監測前就已是該狀態的，記的是第一次看到的時間）。</div>
   <div>緊急狀況請直接撥 119。</div>
   <div>工具版本：2026-11-05</div>
 </footer>
@@ -166,6 +170,8 @@ function fireParse(html){
 }
 // 穩定鍵：受理時間（秒）＋案類＋行政區（B 審：地點、案別、狀態會更新，不進鍵；序號會滾動）
 const keyOf = r => r.no || `${r.at}|${r.type}|${districtOf(r.place) || r.place}`;
+// 消防局 ADDR 偶爾被截斷（2026-11-05 實例：路竹區的案件 ADDR 只有「高雄市路」），不含 TOWN_NAME 就改用區名，不然範圍判斷會落空
+const placeOf = (addr, town) => town && !addr.includes(town) ? '高雄市' + town : addr || '高雄市' + town;
 // 完整版 xml：<Data><case><CS_NO>…；同樣只取 textContent，解析失敗或根節點不對就當格式異常（不顯示成「沒有案件」）
 function xmlParse(text, now){
   const d = new DOMParser().parseFromString(text, 'application/xml');
@@ -179,7 +185,7 @@ function xmlParse(text, now){
     const at = Date.parse(`${m[1]}-${m[2]}-${m[3]}T${m[4]}:${m[5]}:${m[6]}+08:00`);
     if (now - at > FULL_WINDOW_MS) continue;
     const num = n => { const x = /(\d+)/.exec(v(n)); return x ? +x[1] : null; };
-    out.push({no: v('CS_NO'), at, type: v('KIND'), sub: v('CS_CODE'), place: v('ADDR') || ('高雄市' + v('TOWN_NAME')),
+    out.push({no: v('CS_NO'), at, type: v('KIND'), sub: v('CS_CODE'), place: placeOf(v('ADDR'), v('TOWN_NAME')),
               unit: v('DEPT_NAME'), state: v('STATUS'), people: num('PERSION_COUNT'), cars: num('CAR_COUNT')});
   }
   if (cases.length && !out.length && cases.every(e => !e.getElementsByTagName('CS_NO').length)) throw new FormatError();
@@ -272,7 +278,17 @@ const bc = 'BroadcastChannel' in window ? new BroadcastChannel('fire119') : null
 if (bc) bc.onmessage = () => render();
 
 let running = false, timer = null, lastOk = store.get(lastOkKey(), 0), lastErr = '', newKeys = new Map();
+// 同一時間只跑一次檢查：計時器、回到前景補抓、切換版本可能同時觸發，兩次一起讀舊紀錄會把同一案當兩次新案件嗶
+let pollBusy = false, pollAgain = false;
 async function poll(){
+  if (pollBusy) { pollAgain = true; return; }
+  pollBusy = true;
+  try { await pollOnce(); } finally {
+    pollBusy = false;
+    if (pollAgain) { pollAgain = false; if (running) setTimeout(poll, 0); }
+  }
+}
+async function pollOnce(){
   if (!running) return;
   if (!isLeader()) { lastErr = ''; status('另一個分頁正在監測，這裡只顯示結果。'); await render(); return; }
   const now = Date.now(), mode = MODE;
@@ -330,15 +346,25 @@ function status(s, g = ''){ statusText = s; gapText = g; }
 async function render(){
   const all = (await getAll('cases')).sort((a, b) => b.at - a.at);
   const now = Date.now(), rs = rangeSet(), only = $('onlyIn').checked;
-  const cur = all.filter(c => now - c.lastSeen < POLL_MS * 1.5 || c.lastSeen === lastOk);
-  const shown = (cur.length ? cur : all.slice(0, 20)).filter(c => !only || inRange(c, rs));
+  const full = MODE === 'full';
+  // 完整版（老闆 TG33795：畫面要跟 CSV 一樣完整）：列出本裝置記錄到、受理 24 小時內的全部案件，含已返隊
+  const cur = full ? all.filter(c => now - c.at < FULL_WINDOW_MS) : all.filter(c => now - c.lastSeen < POLL_MS * 1.5 || c.lastSeen === lastOk);
+  const shown = (cur.length || full ? cur : all.slice(0, 20)).filter(c => !only || inRange(c, rs));
+  const done = c => c.state === '已返隊';
+  const timeline = c => Object.entries(c.states).sort((a, b) => a[1] - b[1]).map(([k, t]) => `${esc(k)} ${hm(t)}`).join(' → ');
   $('list').innerHTML = shown.map(c => {
     const isNew = newKeys.has(c.key) && now - newKeys.get(c.key) < 30 * 60000;
     const out = !inRange(c, rs), mute = !out && !typeOn(c.type);
-    return `<li class="${isNew ? 'new' : ''} ${out || mute ? 'out' : ''}"><span class="tag ${kind(c.type)}">${esc(c.type)}</span><div class="grow">` +
+    const crew = full && c.people != null ? `｜${c.people} 人 ${c.cars ?? '?'} 車` : '';
+    return `<li class="${isNew ? 'new' : ''} ${out || mute ? 'out' : ''} ${full && done(c) ? 'done' : ''}"><span class="tag ${kind(c.type)}">${esc(c.type)}</span><div class="grow">` +
       `<div class="place">${isNew ? '<span class="newmark">NEW</span>' : ''}${esc(c.place)}</div>` +
-      `<div class="meta">${hm(c.at)} 受理｜${esc(c.sub || '—')}｜${esc(c.unit)}<span class="st">${esc(c.state)}</span>${out ? '｜範圍外' : mute ? '｜不通知' : ''}</div></div></li>`;
+      `<div class="meta">${hm(c.at)} 受理｜${esc(c.sub || '—')}｜${esc(c.unit)}${crew}<span class="st">${esc(c.state)}</span>${out ? '｜範圍外' : mute ? '｜不通知' : ''}</div>` +
+      (full ? `<div class="tl">${timeline(c)}${c.no ? `｜案號 ${esc(c.no)}` : ''}</div>` : '') + `</div></li>`;
   }).join('') || '<li><div class="grow meta">目前沒有符合條件的案件</div></li>';
+  // 時間軸是本裝置「第一次看到該狀態」的時間；開始監測前就有的狀態，時間是第一次看到的時間
+  const n = k => shown.filter(c => kind(c.type) === k).length;
+  $('summary').hidden = !full || !shown.length;
+  $('summary').textContent = `${only ? '範圍內 24 小時' : '24 小時內'} ${shown.length} 件：救護 ${n('ems')}／火災 ${n('fire')}／其他 ${n('other')}｜處理中 ${shown.filter(c => !done(c)).length}｜已返隊 ${shown.filter(done).length}`;
   const b = [lastErr || gapText, notifyErr].filter(Boolean).join('｜');
   $('banner').hidden = !b; $('banner').textContent = b;
   $('status').textContent = running ? statusText : '尚未開始。按「開始監測」後每 2 分鐘檢查一次。';
