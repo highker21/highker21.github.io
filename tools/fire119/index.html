@@ -102,7 +102,7 @@ footer a{color:var(--mute)}
   <div>iPhone 鎖螢幕或切到別的 App 時會暫停，回到本頁才補抓；官方頁只列最新十多筆，暫停太久中間的案件可能看不到。出動、到達等時間為本裝置每 2 分鐘觀察狀態變化推估，誤差約 ±2 分鐘。</div>
   <div>簡易版＝官方網頁清單（只列處理中的案件）；完整版＝消防局同站的完整資料（含火災、其他、返隊中／已返隊、路名、出動人車數，只收受理 24 小時內）。兩版紀錄分開存，切換後先建立基準、不會重複提示。完整版卡片下方的狀態時間軸是本裝置第一次看到該狀態的時間（開始監測前就已是該狀態的，記的是第一次看到的時間）。</div>
   <div>緊急狀況請直接撥 119。</div>
-  <div>工具版本：2026-11-05</div>
+  <div>工具版本：2026-11-06</div>
 </footer>
 
 <script>
@@ -262,7 +262,14 @@ async function showNote(title, body, tag){
     return false;
   }
 }
-const notify = c => showNote(`🚒 ${c.type}${c.sub ? '／' + c.sub : ''}`, `${c.place}\n${c.unit} ${hm(c.at)} 受理`, c.key);
+// 系統通知開關（老闆 TG33814）：關掉只是不跳系統通知，監測、清單、嗶聲照舊；預設開
+const notifyOn = () => store.get('f119-notify', true) !== false;
+function notifyLabel(){
+  const p = 'Notification' in window ? Notification.permission : 'unsupported';
+  $('notifyBtn').textContent = p === 'granted' ? (notifyOn() ? '系統通知：開（點一下關）' : '系統通知：關（點一下開）')
+    : p === 'denied' ? '系統通知：未允許' : '開啟系統通知';
+}
+const notify = c => notifyOn() && showNote(`🚒 ${c.type}${c.sub ? '／' + c.sub : ''}`, `${c.place}\n${c.unit} ${hm(c.at)} 受理`, c.key);
 
 // ---- 檢查（同一瀏覽器只讓一個分頁抓：localStorage 心跳鎖）----
 const TAB = Math.random().toString(36).slice(2);
@@ -455,7 +462,7 @@ ${tbl('24 小時分布（範圍內，依受理時間）', hours)}
 <p>${m === null ? '尚無資料' : `中位數 ${m.toFixed(1)} 分鐘｜P90 ${p90.toFixed(1)} 分鐘`}（±2 分鐘）</p>
 ${leaveSec}
 ${tbl('資料缺口（兩次檢查間隔超過 5 分鐘）', gaps.length ? gaps : [['無', '']])}
-<p class="note">工具版本：2026-11-05</p></body></html>`;
+<p class="note">工具版本：2026-11-06</p></body></html>`;
   download(`kh119_report_${full ? 'full_' : ''}${stamp()}.html`, 'text/html;charset=utf-8', html);
 };
 $('clearBtn').onclick = async () => {
@@ -473,8 +480,11 @@ $('startBtn').onclick = async () => {
 };
 $('notifyBtn').onclick = async () => {
   if (!('Notification' in window)) { alert('這個瀏覽器不支援系統通知（iPhone 要先「加入主畫面」再從主畫面打開）'); return; }
+  // 已允許且開著 → 關掉；其他情況 → 要權限並打開
+  if (Notification.permission === 'granted' && notifyOn()) { store.set('f119-notify', false); notifyErr = ''; notifyLabel(); await render(); return; }
   const p = await Notification.requestPermission();
-  $('notifyBtn').textContent = p === 'granted' ? '系統通知：已開啟' : '系統通知：未允許';
+  if (p === 'granted') store.set('f119-notify', true);
+  notifyLabel();
   // 當場發一則測試通知，讓使用者確認這台手機收得到
   if (p === 'granted') { const ok = await showNote('🚒 119 通知測試', '收到這則就代表系統通知可以用', 'f119-test'); if (!ok) await render(); }
 };
@@ -499,13 +509,14 @@ async function applyMode(m){
 }
 $('mode').value = MODE;
 $('mode').addEventListener('change', () => { store.set('f119-mode', $('mode').value); applyMode($('mode').value); });
+window.addEventListener('storage', e => { if (e.key === 'f119-notify') notifyLabel(); });
 window.addEventListener('storage', e => { if (e.key === 'f119-mode') applyMode(store.get('f119-mode', 'simple') === 'full' ? 'full' : 'simple'); });
 for (const id of ['center', 'fFire', 'fEms', 'fOther', 'onlyIn']) {
   const k = 'f119-' + id, el = $(id), v = store.get(k, null);
   if (v !== null) el.type === 'checkbox' ? (el.checked = v) : (el.value = v);
   el.addEventListener('change', () => { store.set(k, el.type === 'checkbox' ? el.checked : el.value); renderChips(); render(); });
 }
-if ('Notification' in window && Notification.permission === 'granted') $('notifyBtn').textContent = '系統通知：已開啟';
+notifyLabel();
 renderChips(); render();
 if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => {});
 </script>
