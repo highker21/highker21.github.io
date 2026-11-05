@@ -40,6 +40,10 @@ ul#list{list-style:none;margin:6px 0 0;padding:0 16px 16px}
 #list li.new{background:var(--new)}
 #list li.out{opacity:.62}
 #list li.done{opacity:.5}
+#list li.pin{border:2px solid var(--fire)}
+.pinBtn{flex:none;align-self:flex-start;padding:2px 8px;font-size:15px;filter:grayscale(1);opacity:.5}
+.pinBtn.on{filter:none;opacity:1;border-color:var(--fire)}
+.pinmark{color:var(--fire);font-weight:800;margin-right:4px}
 #list .tl{font-size:12px;color:var(--mute);margin-top:2px}
 #summary{padding:0 16px 6px;font-size:14px}
 .tag{flex:none;align-self:flex-start;border-radius:8px;padding:2px 8px;font-size:14px;font-weight:700;color:#fff;background:var(--other)}
@@ -358,15 +362,22 @@ async function render(){
   const cur = full ? all.filter(c => now - c.at < FULL_WINDOW_MS) : all.filter(c => now - c.lastSeen < POLL_MS * 1.5 || c.lastSeen === lastOk);
   const shown = (cur.length || full ? cur : all.slice(0, 20)).filter(c => !only || inRange(c, rs));
   const done = c => c.state === '已返隊';
+  // 置頂（老闆 TG33828）：火警還沒「已返隊」的自動置頂（簡易版＝還在官方清單上）；📌 可手動置頂／取消，手動優先
+  const pins = (store.get(pinKey(), {}) || {}), act = new Set((full ? cur.filter(c => !done(c)) : cur).map(c => c.key));
+  const autoPin = c => kind(c.type) === 'fire' && act.has(c.key);
+  const pinned = c => typeof pins[c.key] === 'boolean' ? pins[c.key] : autoPin(c);
+  shown.sort((a, b) => pinned(b) - pinned(a) || b.at - a.at);
   const timeline = c => Object.entries(c.states).sort((a, b) => a[1] - b[1]).map(([k, t]) => `${esc(k)} ${hm(t)}`).join(' → ');
   $('list').innerHTML = shown.map(c => {
     const isNew = newKeys.has(c.key) && now - newKeys.get(c.key) < 30 * 60000;
     const out = !inRange(c, rs), mute = !out && !typeOn(c.type);
     const crew = full && c.people != null ? `｜${c.people} 人 ${c.cars ?? '?'} 車` : '';
-    return `<li class="${isNew ? 'new' : ''} ${out || mute ? 'out' : ''} ${full && done(c) ? 'done' : ''}"><span class="tag ${kind(c.type)}">${esc(c.type)}</span><div class="grow">` +
-      `<div class="place">${isNew ? '<span class="newmark">NEW</span>' : ''}${esc(c.place)}</div>` +
+    const pin = pinned(c);
+    return `<li class="${isNew ? 'new' : ''} ${out || mute ? 'out' : ''} ${full && done(c) ? 'done' : ''} ${pin ? 'pin' : ''}"><span class="tag ${kind(c.type)}">${esc(c.type)}</span><div class="grow">` +
+      `<div class="place">${pin ? `<span class="pinmark">${pins[c.key] === true ? '置頂' : '火警進行中'}</span>` : ''}${isNew ? '<span class="newmark">NEW</span>' : ''}${esc(c.place)}</div>` +
       `<div class="meta">${hm(c.at)} 受理｜${esc(c.sub || '—')}｜${esc(c.unit)}${crew}<span class="st">${esc(c.state)}</span>${out ? '｜範圍外' : mute ? '｜不通知' : ''}</div>` +
-      (full ? `<div class="tl">${timeline(c)}${c.no ? `｜案號 ${esc(c.no)}` : ''}</div>` : '') + `</div></li>`;
+      (full ? `<div class="tl">${timeline(c)}${c.no ? `｜案號 ${esc(c.no)}` : ''}</div>` : '') + `</div>` +
+      `<button class="pinBtn ${pin ? 'on' : ''}" data-pin="${esc(c.key)}" data-auto="${autoPin(c) ? 1 : 0}" title="${pin ? '取消置頂' : '置頂'}" aria-pressed="${pin}">📌</button></li>`;
   }).join('') || '<li><div class="grow meta">目前沒有符合條件的案件</div></li>';
   // 時間軸是本裝置「第一次看到該狀態」的時間；開始監測前就有的狀態，時間是第一次看到的時間
   const n = k => shown.filter(c => kind(c.type) === k).length;
@@ -376,6 +387,17 @@ async function render(){
   $('banner').hidden = !b; $('banner').textContent = b;
   $('status').textContent = running ? statusText : '尚未開始。按「開始監測」後每 2 分鐘檢查一次。';
 }
+
+const pinKey = () => MODE === 'full' ? 'f119-full-pins' : 'f119-pins';
+// 手動置頂：和自動判斷相同就不存（之後狀態變了照自動走）；只保留目前紀錄裡還有的案件
+$('list').addEventListener('click', async e => {
+  const b = e.target.closest('button[data-pin]'); if (!b) return;
+  const k = b.dataset.pin, want = b.getAttribute('aria-pressed') !== 'true', pins = (store.get(pinKey(), {}) || {});
+  if (want === (b.dataset.auto === '1')) delete pins[k]; else pins[k] = want;
+  const keep = new Set((await getAll('cases')).map(c => c.key));
+  for (const x of Object.keys(pins)) if (!keep.has(x)) delete pins[x];
+  store.set(pinKey(), pins); await render();
+});
 
 // ---- 匯出 ----
 // 已知狀態的順序；實際資料裡出現其他狀態（例如 12:56 首見「已派遣」）也一併成欄，排在後面
@@ -509,7 +531,7 @@ async function applyMode(m){
 }
 $('mode').value = MODE;
 $('mode').addEventListener('change', () => { store.set('f119-mode', $('mode').value); applyMode($('mode').value); });
-window.addEventListener('storage', e => { if (e.key === 'f119-notify') notifyLabel(); });
+window.addEventListener('storage', e => { if (e.key === 'f119-notify') notifyLabel(); if (e.key === 'f119-pins' || e.key === 'f119-full-pins') render(); });
 window.addEventListener('storage', e => { if (e.key === 'f119-mode') applyMode(store.get('f119-mode', 'simple') === 'full' ? 'full' : 'simple'); });
 for (const id of ['center', 'fFire', 'fEms', 'fOther', 'onlyIn']) {
   const k = 'f119-' + id, el = $(id), v = store.get(k, null);
