@@ -26,6 +26,7 @@ button{font:inherit;border:1px solid var(--line);background:var(--card);color:va
 button.primary{background:var(--brand);border-color:var(--brand);color:#fff;font-weight:600}
 select,input[type=text]{font:inherit;padding:7px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink);max-width:100%}
 .bar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:6px 16px}
+.bar .grp{font-size:14px;color:var(--mute)}
 .bar label{font-size:14px;color:var(--mute);display:flex;align-items:center;gap:4px}
 #status{padding:4px 16px;color:var(--mute);font-size:14px}
 .banner{margin:6px 16px;padding:8px 12px;border-radius:10px;background:var(--warn-bg);color:var(--warn-ink);font-size:14px;font-weight:600}
@@ -57,14 +58,19 @@ footer a{color:var(--mute)}
 </header>
 
 <div class="bar">
+  <label>資料 <select id="mode">
+    <option value="simple">簡易版</option>
+    <option value="full">完整版</option>
+  </select></label>
   <label>中心 <select id="center">
     <option value="kmuh">高醫附院</option>
     <option value="kmugs">高醫附設岡山醫院</option>
     <option value="xg">小港醫院</option>
     <option value="all">全高雄（不過濾）</option>
   </select></label>
-  <label><input type="checkbox" id="fFire" checked>火災</label>
+  <span class="grp">通知：</span>
   <label><input type="checkbox" id="fEms" checked>救護</label>
+  <label><input type="checkbox" id="fFire" checked>火災</label>
   <label><input type="checkbox" id="fOther" checked>其他</label>
   <label><input type="checkbox" id="onlyIn">只看範圍內</label>
 </div>
@@ -90,6 +96,7 @@ footer a{color:var(--mute)}
 <footer>
   <div>資料來源：<a href="https://119dts.fdkc.gov.tw/DTS/caselist/html" target="_blank" rel="noopener">高雄市政府消防局即時案件</a>（官方頁面約每 2 分鐘更新；本頁每 2 分鐘檢查，最慢約 4 分鐘內看到新案件）。</div>
   <div>iPhone 鎖螢幕或切到別的 App 時會暫停，回到本頁才補抓；官方頁只列最新十多筆，暫停太久中間的案件可能看不到。出動、到達等時間為本裝置每 2 分鐘觀察狀態變化推估，誤差約 ±2 分鐘。</div>
+  <div>簡易版＝官方網頁清單（只列處理中的案件）；完整版＝消防局同站的完整資料（含火災、其他、返隊中／已返隊、路名、出動人車數，只收受理 24 小時內）。兩版紀錄分開存，切換後先建立基準、不會重複提示。</div>
   <div>緊急狀況請直接撥 119。</div>
   <div>工具版本：2026-11-05</div>
 </footer>
@@ -98,6 +105,10 @@ footer a{color:var(--mute)}
 'use strict';
 // ---- 設定 ----
 const SRC = 'https://119dts.fdkc.gov.tw/DTS/caselist/html';   // 老闆 TG33733：終端直連、不經轉送站
+// 完整版（老闆 TG33785，預設簡易版）：同站 xml 只收 POST，含火災／其他／返隊中／已返隊、案號、路名、人車數（B 2026-11-05 調查）；
+// 會殘留幾個月前的舊案，只收受理 24 小時內；POST 參數一律被忽略，沒有歷史查詢
+const SRC_FULL = 'https://119dts.fdkc.gov.tw/DTS/caselist/xml';
+const FULL_WINDOW_MS = 24 * 3600000;
 const POLL_MS = 120000;                                          // 老闆 TG33733：2 分鐘一次（官方頁 meta refresh 120）
 const RADIUS_KM = 10;
 const EDGE_KM = 14;                                              // 10–14 km 的區列為可勾選
@@ -119,6 +130,9 @@ const fmt = t => { const d = new Date(t); const p = n => String(n).padStart(2, '
 const hm = t => fmt(t).slice(11, 16);
 const store = {get(k, d){ try { const v = localStorage.getItem(k); return v === null ? d : JSON.parse(v); } catch { return d; } },
                set(k, v){ try { localStorage.setItem(k, JSON.stringify(v)); } catch {} }};
+let MODE = store.get('f119-mode', 'simple') === 'full' ? 'full' : 'simple';
+// 兩種來源的去重鍵不同（簡易版：時間＋案類＋區；完整版：案號），紀錄分開存，切換不混、不丟
+const lastOkKey = () => MODE === 'full' ? 'f119-full-lastok' : 'f119-lastok';
 
 function km(a, b){
   const R = 6371, r = x => x * Math.PI / 180, dp = r(b[0] - a[0]), dl = r(b[1] - a[1]);
@@ -151,13 +165,32 @@ function fireParse(html){
   return out;
 }
 // 穩定鍵：受理時間（秒）＋案類＋行政區（B 審：地點、案別、狀態會更新，不進鍵；序號會滾動）
-const keyOf = r => `${r.at}|${r.type}|${districtOf(r.place) || r.place}`;
+const keyOf = r => r.no || `${r.at}|${r.type}|${districtOf(r.place) || r.place}`;
+// 完整版 xml：<Data><case><CS_NO>…；同樣只取 textContent，解析失敗或根節點不對就當格式異常（不顯示成「沒有案件」）
+function xmlParse(text, now){
+  const d = new DOMParser().parseFromString(text, 'application/xml');
+  if (d.getElementsByTagName('parsererror').length || d.documentElement.nodeName !== 'Data') throw new FormatError();
+  const cases = [...d.documentElement.getElementsByTagName('case')];
+  const out = [];
+  for (const e of cases.slice(0, 500)) {
+    const v = n => (e.getElementsByTagName(n)[0]?.textContent || '').replace(/\s+/g, ' ').trim().slice(0, 60);
+    const m = /^(\d{4})\/(\d{2})\/(\d{2}) (\d{2}):(\d{2}):(\d{2})$/.exec(v('IN_TIME'));
+    if (!m || !/^\d{8,20}$/.test(v('CS_NO'))) continue;
+    const at = Date.parse(`${m[1]}-${m[2]}-${m[3]}T${m[4]}:${m[5]}:${m[6]}+08:00`);
+    if (now - at > FULL_WINDOW_MS) continue;
+    const num = n => { const x = /(\d+)/.exec(v(n)); return x ? +x[1] : null; };
+    out.push({no: v('CS_NO'), at, type: v('KIND'), sub: v('CS_CODE'), place: v('ADDR') || ('高雄市' + v('TOWN_NAME')),
+              unit: v('DEPT_NAME'), state: v('STATUS'), people: num('PERSION_COUNT'), cars: num('CAR_COUNT')});
+  }
+  if (cases.length && !out.length && cases.every(e => !e.getElementsByTagName('CS_NO').length)) throw new FormatError();
+  return out;
+}
 
 // ---- IndexedDB：cases（案件與狀態首見時間）、polls（每次檢查結果，算資料缺口）----
 let dbp = null;
 function db(){
   if (!dbp) dbp = new Promise((res, rej) => {
-    const q = indexedDB.open('fire119', 1);
+    const q = indexedDB.open(MODE === 'full' ? 'fire119-full' : 'fire119', 1);
     q.onupgradeneeded = () => { q.result.createObjectStore('cases', {keyPath: 'key'}); q.result.createObjectStore('polls', {keyPath: 't'}); };
     q.onsuccess = () => res(q.result); q.onerror = () => rej(q.error);
   });
@@ -194,6 +227,7 @@ $('chips').addEventListener('change', e => {
   const k = 'f119-extra-' + $('center').value, s = new Set(store.get(k, []));
   e.target.checked ? s.add(d) : s.delete(d); store.set(k, [...s]); renderChips(); render();
 });
+// 老闆 TG33779：案類勾選只決定要不要嗶／通知，清單、CSV、報告照常記錄全部案類
 const typeOn = t => ({fire: $('fFire').checked, ems: $('fEms').checked, other: $('fOther').checked})[kind(t)];
 const inRange = (c, rs) => !rs || rs.has(c.district);
 const alertable = (c, rs) => inRange(c, rs) && typeOn(c.type);
@@ -237,26 +271,30 @@ function releaseLock(){ const l = store.get(LOCK, null); if (l && l.id === TAB) 
 const bc = 'BroadcastChannel' in window ? new BroadcastChannel('fire119') : null;
 if (bc) bc.onmessage = () => render();
 
-let running = false, timer = null, lastOk = store.get('f119-lastok', 0), lastErr = '', newKeys = new Map();
+let running = false, timer = null, lastOk = store.get(lastOkKey(), 0), lastErr = '', newKeys = new Map();
 async function poll(){
   if (!running) return;
   if (!isLeader()) { lastErr = ''; status('另一個分頁正在監測，這裡只顯示結果。'); await render(); return; }
-  const now = Date.now();
+  const now = Date.now(), mode = MODE;
   let rows;
   try {
-    const r = await fetch(SRC, {cache: 'no-store', credentials: 'omit', referrerPolicy: 'no-referrer'});
+    // 完整版 POST 不帶自訂 header＝simple request，CORS * 可直接讀（2026-11-05 從 github.io 實測 200）
+    const r = await fetch(mode === 'full' ? SRC_FULL : SRC, {method: mode === 'full' ? 'POST' : 'GET', cache: 'no-store', credentials: 'omit', referrerPolicy: 'no-referrer'});
     if (r.status !== 200) throw new Error('HTTP ' + r.status);
     const text = await r.text();
     if (text.length > 512 * 1024) throw new FormatError();
-    rows = fireParse(text);
+    rows = mode === 'full' ? xmlParse(text, now) : fireParse(text);
   } catch (e) {
+    if (mode !== MODE) return;   // 抓取途中切換了版本，這次結果作廢
     lastErr = e instanceof FormatError ? '119 資料格式異常，監測暫停（官方頁面可能改版）' : '連不上消防局網站，監測暫停，2 分鐘後自動重試';
     await tx(['polls'], 'readwrite', t => t.objectStore('polls').put({t: now, ok: false}));
     await render(); return;
   }
+  if (mode !== MODE) return;
   lastErr = '';
   const gap = lastOk ? now - lastOk : 0;
   const prev = new Map((await getAll('cases')).map(c => [c.key, c]));
+  if (mode !== MODE) return;   // B 審：await 期間切了版本，不寫進另一版的 DB
   const baseline = !lastOk;   // 第一次只建基準、不提示
   const rs = rangeSet(), fresh = [];
   await tx(['cases', 'polls'], 'readwrite', t => {
@@ -265,6 +303,7 @@ async function poll(){
       const key = keyOf(r), old = prev.get(key);
       const c = old || {key, at: r.at, type: r.type, firstSeen: now, states: {}};
       Object.assign(c, {sub: r.sub, place: r.place, district: districtOf(r.place), unit: r.unit, state: r.state, lastSeen: now});
+      if (r.no) Object.assign(c, {no: r.no, people: r.people, cars: r.cars});
       if (!c.states[r.state]) c.states[r.state] = now;
       os.put(c);
       if (!old && !baseline) fresh.push(c);
@@ -274,11 +313,12 @@ async function poll(){
     for (const c of prev.values()) if (c.lastSeen < cut) os.delete(c.key);
     t.objectStore('polls').put({t: now, ok: true, n: rows.length});
   });
-  lastOk = now; store.set('f119-lastok', now); store.set(LOCK, {id: TAB, ts: now});
+  if (mode !== MODE) return;   // B 審：寫入期間切了版本，不要把這次時間記到新版 lastOk（否則新版不當基準、一次嗶一串）
+  lastOk = now; store.set(lastOkKey(), now); store.set(LOCK, {id: TAB, ts: now});
   for (const c of fresh) newKeys.set(c.key, now);
   const ring = fresh.filter(c => alertable(c, rs));
   if (ring.length) { beep(); for (const c of ring) await notify(c); }
-  status(`上次檢查 ${hm(now)}，下次約 ${hm(now + POLL_MS)}｜官方清單 ${rows.length} 筆` + (baseline ? '｜第一次載入只建立基準，之後的新案件才提示' : ''),
+  status(`上次檢查 ${hm(now)}，下次約 ${hm(now + POLL_MS)}｜${MODE === 'full' ? '完整版 24 小時內' : '官方清單'} ${rows.length} 筆` + (baseline ? '｜第一次載入只建立基準，之後的新案件才提示' : ''),
          gap > GAP_WARN_MS ? `距上次成功檢查已 ${Math.round(gap / 60000)} 分鐘（曾暫停），中間可能漏掉部分案件` : '');
   if (bc) bc.postMessage('updated');
   await render();
@@ -291,13 +331,13 @@ async function render(){
   const all = (await getAll('cases')).sort((a, b) => b.at - a.at);
   const now = Date.now(), rs = rangeSet(), only = $('onlyIn').checked;
   const cur = all.filter(c => now - c.lastSeen < POLL_MS * 1.5 || c.lastSeen === lastOk);
-  const shown = (cur.length ? cur : all.slice(0, 20)).filter(c => typeOn(c.type) && (!only || inRange(c, rs)));
+  const shown = (cur.length ? cur : all.slice(0, 20)).filter(c => !only || inRange(c, rs));
   $('list').innerHTML = shown.map(c => {
     const isNew = newKeys.has(c.key) && now - newKeys.get(c.key) < 30 * 60000;
-    const out = !inRange(c, rs);
-    return `<li class="${isNew ? 'new' : ''} ${out ? 'out' : ''}"><span class="tag ${kind(c.type)}">${esc(c.type)}</span><div class="grow">` +
+    const out = !inRange(c, rs), mute = !out && !typeOn(c.type);
+    return `<li class="${isNew ? 'new' : ''} ${out || mute ? 'out' : ''}"><span class="tag ${kind(c.type)}">${esc(c.type)}</span><div class="grow">` +
       `<div class="place">${isNew ? '<span class="newmark">NEW</span>' : ''}${esc(c.place)}</div>` +
-      `<div class="meta">${hm(c.at)} 受理｜${esc(c.sub || '—')}｜${esc(c.unit)}<span class="st">${esc(c.state)}</span>${out ? '｜範圍外' : ''}</div></div></li>`;
+      `<div class="meta">${hm(c.at)} 受理｜${esc(c.sub || '—')}｜${esc(c.unit)}<span class="st">${esc(c.state)}</span>${out ? '｜範圍外' : mute ? '｜不通知' : ''}</div></div></li>`;
   }).join('') || '<li><div class="grow meta">目前沒有符合條件的案件</div></li>';
   const b = [lastErr || gapText, notifyErr].filter(Boolean).join('｜');
   $('banner').hidden = !b; $('banner').textContent = b;
@@ -306,10 +346,11 @@ async function render(){
 
 // ---- 匯出 ----
 // 已知狀態的順序；實際資料裡出現其他狀態（例如 12:56 首見「已派遣」）也一併成欄，排在後面
-const STATE_ORDER = ['已派遣', '已出動', '已到達', '送醫中', '已到院'];
+const STATE_ORDER = ['已派遣', '已出動', '已到達', '送醫中', '已到院', '火已滅', '返隊中', '已返隊'];
 // 離開清單：lastSeen 之後的下一次成功檢查若在 POLL_MS×1.5 內，就是「觀察到離開」，時間記那次檢查；
 // 中間有暫停（頁面關掉、鎖螢幕）就不知道何時離開，不列入統計（B 審）
 const LEFT_UNKNOWN = '暫停期間離開（時間不明）';
+const LEAVE_FULL_LABEL = '離開完整資料時間';   // 完整版返隊看「已返隊首見時間」；這欄只是 xml 不再列出的時間
 function leaveOf(c, okTimes){
   const next = okTimes.find(t => t > c.lastSeen);
   if (next === undefined) return {state: 'listed'};
@@ -329,11 +370,12 @@ $('csvBtn').onclick = async () => {
   // 還在清單上的案件沒有「離開清單時間」，留空；暫停期間離開的寫 LEFT_UNKNOWN
   const okTimes = await okPollTimes();
   const leaveCell = c => { const l = leaveOf(c, okTimes); return l.state === 'left' ? fmt(l.at) : l.state === 'unknown' ? LEFT_UNKNOWN : ''; };
-  const head = ['受理時間', '案類', '案別', '發生地點', '行政區', '派遣分隊', '目前狀態', ...STATES.map(s => s + '首見時間'), '第一次看到', LAST_SEEN_LABEL, '範圍內'];
-  const lines = [`# 以本裝置監測期間、每 2 分鐘取樣推估，狀態時間誤差約 ±2 分鐘；範圍：${$('center').selectedOptions[0].text}`, head.join(',')];
-  for (const c of all) lines.push([fmt(c.at), c.type, c.sub, c.place, c.district ? c.district + '區' : '', c.unit, c.state,
+  const full = MODE === 'full';
+  const head = [...(full ? ['案號'] : []), '受理時間', '案類', '案別', '發生地點', '行政區', '派遣分隊', ...(full ? ['出動人數', '出動車數'] : []), '目前狀態', ...STATES.map(s => s + '首見時間'), '第一次看到', full ? LEAVE_FULL_LABEL : LAST_SEEN_LABEL, '範圍內'];
+  const lines = [`# ${full ? '完整版' : '簡易版'}；以本裝置監測期間、每 2 分鐘取樣推估，狀態時間誤差約 ±2 分鐘；範圍：${$('center').selectedOptions[0].text}`, head.join(',')];
+  for (const c of all) lines.push([...(full ? [c.no] : []), fmt(c.at), c.type, c.sub, c.place, c.district ? c.district + '區' : '', c.unit, ...(full ? [c.people, c.cars] : []), c.state,
     ...STATES.map(s => c.states[s] ? fmt(c.states[s]) : ''), fmt(c.firstSeen), leaveCell(c), inRange(c, rs) ? '是' : '否'].map(csvCell).join(','));
-  download(`kh119_${stamp()}.csv`, 'text/csv;charset=utf-8', '﻿' + lines.join('\r\n'));
+  download(`kh119_${MODE === 'full' ? 'full_' : ''}${stamp()}.csv`, 'text/csv;charset=utf-8', '﻿' + lines.join('\r\n'));
 };
 const median = a => { if (!a.length) return null; const s = [...a].sort((x, y) => x - y), m = s.length >> 1; return s.length % 2 ? s[m] : (s[m - 1] + s[m]) / 2; };
 const pct = (a, p) => { if (!a.length) return null; const s = [...a].sort((x, y) => x - y); return s[Math.min(s.length - 1, Math.ceil(p * s.length) - 1)]; };
@@ -358,11 +400,26 @@ $('reportBtn').onclick = async () => {
   }
   const unknownLeft = inr.filter(c => leaveOf(c, okTimes).state === 'unknown').length;
   const cm = median(closed), cp90 = pct(closed, 0.9);
+  // 完整版：返隊直接可見；只算「先看到返隊前的狀態、之後才看到已返隊」的案件（第一次看到就已返隊的，返隊時間不知道）
+  const full = MODE === 'full';
+  const back = inr.filter(c => { const b = c.states['已返隊']; return b && Object.entries(c.states).some(([k, t]) => k !== '已返隊' && t < b); })
+    .map(c => (c.states['已返隊'] - c.at) / 60000).filter(x => x >= 0);
+  const bm = median(back), bp90 = pct(back, 0.9);
+  const crew = count(inr.filter(c => c.people != null), c => c.type).map(([k]) => {
+    const xs = inr.filter(c => c.type === k && c.people != null);
+    const sum = f => xs.reduce((a, c) => a + (c[f] || 0), 0);
+    return [k, `${xs.length} 件｜共 ${sum('people')} 人次、${sum('cars')} 車次｜平均每件 ${(sum('people') / xs.length).toFixed(1)} 人、${(sum('cars') / xs.length).toFixed(1)} 車`];
+  });
+  const leaveSec = full ? `<h2>受理 → 已返隊（範圍內，有觀察到「返隊前狀態→已返隊」變化的 ${back.length} 件）</h2>
+<p>${bm === null ? '尚無資料' : `中位數 ${bm.toFixed(1)} 分鐘｜P90 ${bp90.toFixed(1)} 分鐘`}（±2 分鐘）</p>
+${tbl('出動人車數（範圍內，依案類）', crew.length ? crew : [['尚無資料', '']])}` : `<h2>受理 → 離開清單（推估結案／返隊；範圍內，離開前看過「已到達」或「已到院」的 ${closed.length} 件）</h2>
+<p>${cm === null ? '尚無資料' : `中位數 ${cm.toFixed(1)} 分鐘｜P90 ${cp90.toFixed(1)} 分鐘`}（±2 分鐘）</p>
+<p class="note">消防局清單只列處理中的案件；救護案多在「已到院」後離開清單，火災案尚無觀察。另有 ${unknownLeft} 件在本裝置暫停期間離開清單，時間不明，未列入。</p>`;
   const html = `<!doctype html><html lang="zh-Hant-TW"><head><meta charset="utf-8"><title>高雄 119 出勤統計 ${esc(stamp())}</title>
 <style>body{font:15px/1.6 -apple-system,"PingFang TC","Noto Sans TC",sans-serif;margin:24px;color:#222}h1{font-size:20px}h2{font-size:16px;margin-top:20px}
 table{border-collapse:collapse;min-width:260px}td{border:1px solid #ccc;padding:3px 10px}.note{color:#666;font-size:13px}</style></head><body>
 <h1>高雄市消防局 119 出勤統計</h1>
-<p>監測期間：${esc(span)}<br>範圍：${esc($('center').selectedOptions[0].text)}（行政區判斷）｜範圍內 ${inr.length} 件／全部 ${all.length} 件</p>
+<p>資料：${full ? '完整版（消防局完整資料，受理 24 小時內）' : '簡易版（官方網頁清單，處理中案件）'}<br>監測期間：${esc(span)}<br>範圍：${esc($('center').selectedOptions[0].text)}（行政區判斷）｜範圍內 ${inr.length} 件／全部 ${all.length} 件</p>
 <p class="note">以本裝置監測期間、每 2 分鐘取樣推估；狀態時間為「第一次看到該狀態」的時間，誤差約 ±2 分鐘；裝置關閉或暫停期間沒有資料。資料來源：高雄市政府消防局即時案件。</p>
 ${tbl('各案類件數（範圍內）', count(inr, c => c.type))}
 ${tbl('各案別件數（範圍內）', count(inr, c => c.sub || '—'))}
@@ -370,17 +427,15 @@ ${tbl('各行政區件數（範圍內）', count(inr, c => c.district ? c.distri
 ${tbl('24 小時分布（範圍內，依受理時間）', hours)}
 <h2>受理 → 已到達（範圍內，有觀察到「已派遣／已出動→已到達」變化的 ${arrive.length} 件）</h2>
 <p>${m === null ? '尚無資料' : `中位數 ${m.toFixed(1)} 分鐘｜P90 ${p90.toFixed(1)} 分鐘`}（±2 分鐘）</p>
-<h2>受理 → 離開清單（推估結案／返隊；範圍內，離開前看過「已到達」或「已到院」的 ${closed.length} 件）</h2>
-<p>${cm === null ? '尚無資料' : `中位數 ${cm.toFixed(1)} 分鐘｜P90 ${cp90.toFixed(1)} 分鐘`}（±2 分鐘）</p>
-<p class="note">消防局清單只列處理中的案件；救護案多在「已到院」後離開清單，火災案尚無觀察。另有 ${unknownLeft} 件在本裝置暫停期間離開清單，時間不明，未列入。</p>
+${leaveSec}
 ${tbl('資料缺口（兩次檢查間隔超過 5 分鐘）', gaps.length ? gaps : [['無', '']])}
 <p class="note">工具版本：2026-11-05</p></body></html>`;
-  download(`kh119_report_${stamp()}.html`, 'text/html;charset=utf-8', html);
+  download(`kh119_report_${full ? 'full_' : ''}${stamp()}.html`, 'text/html;charset=utf-8', html);
 };
 $('clearBtn').onclick = async () => {
   if (!confirm('清除本裝置所有監測紀錄？')) return;
   await tx(['cases', 'polls'], 'readwrite', t => { t.objectStore('cases').clear(); t.objectStore('polls').clear(); });
-  lastOk = 0; store.set('f119-lastok', 0); newKeys.clear(); await render();
+  lastOk = 0; store.set(lastOkKey(), 0); newKeys.clear(); await render();
 };
 
 // ---- 控制 ----
@@ -410,6 +465,15 @@ document.addEventListener('visibilitychange', async () => {
   if ($('wake').checked && !wakeLock) { try { wakeLock = await navigator.wakeLock.request('screen'); } catch {} }
   if (running && Date.now() - lastOk > POLL_MS) poll();   // 回到前景立刻補抓
 });
+// 簡易版／完整版切換：紀錄分開存（不同 IndexedDB），切換後重新建立基準、不會把對方的案件當新案件嗶
+async function applyMode(m){
+  if (m === MODE) return;
+  MODE = m; $('mode').value = m; dbp = null; lastOk = store.get(lastOkKey(), 0); newKeys.clear(); lastErr = ''; statusText = '';
+  if (running) await poll(); else await render();
+}
+$('mode').value = MODE;
+$('mode').addEventListener('change', () => { store.set('f119-mode', $('mode').value); applyMode($('mode').value); });
+window.addEventListener('storage', e => { if (e.key === 'f119-mode') applyMode(store.get('f119-mode', 'simple') === 'full' ? 'full' : 'simple'); });
 for (const id of ['center', 'fFire', 'fEms', 'fOther', 'onlyIn']) {
   const k = 'f119-' + id, el = $(id), v = store.get(k, null);
   if (v !== null) el.type === 'checkbox' ? (el.checked = v) : (el.value = v);
