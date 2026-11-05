@@ -103,8 +103,8 @@ const RADIUS_KM = 10;
 const EDGE_KM = 14;                                              // 10–14 km 的區列為可勾選
 const GAP_WARN_MS = 5 * 60000;                                   // 兩次成功檢查間隔超過 5 分鐘＝曾暫停
 const KEEP_DAYS = 90;
-// 消失時間是否等於返隊尚未證實（清單規則觀察中）→ 先叫「最後看到時間」
-const LAST_SEEN_LABEL = '最後看到時間';
+// 2026-11-05 12:39–12:59 觀察：清單筆數 15–21 不固定、離開的不是最舊的、5 件離開前都是「已到院」→ 清單只列處理中，離開≈結案（B 審）
+const LAST_SEEN_LABEL = '離開清單時間（推估結案／返隊）';
 const HOSPITALS = {   // OSM 座標（2026-11-05 Overpass 查）
   kmuh: {name: '高醫附院', at: [22.64595, 120.31007]},
   kmugs: {name: '高醫附設岡山醫院', at: [22.77917, 120.30115]},
@@ -307,6 +307,15 @@ async function render(){
 // ---- 匯出 ----
 // 已知狀態的順序；實際資料裡出現其他狀態（例如 12:56 首見「已派遣」）也一併成欄，排在後面
 const STATE_ORDER = ['已派遣', '已出動', '已到達', '送醫中', '已到院'];
+// 離開清單：lastSeen 之後的下一次成功檢查若在 POLL_MS×1.5 內，就是「觀察到離開」，時間記那次檢查；
+// 中間有暫停（頁面關掉、鎖螢幕）就不知道何時離開，不列入統計（B 審）
+const LEFT_UNKNOWN = '暫停期間離開（時間不明）';
+function leaveOf(c, okTimes){
+  const next = okTimes.find(t => t > c.lastSeen);
+  if (next === undefined) return {state: 'listed'};
+  return next - c.lastSeen <= POLL_MS * 1.5 ? {state: 'left', at: next} : {state: 'unknown'};
+}
+const okPollTimes = async () => (await getAll('polls')).filter(x => x.ok).map(x => x.t).sort((a, b) => a - b);
 const statesIn = all => { const seen = new Set(all.flatMap(c => Object.keys(c.states))); return [...STATE_ORDER.filter(s => seen.has(s)), ...[...seen].filter(s => !STATE_ORDER.includes(s)).sort()]; };
 const csvCell = v => { const s = String(v ?? ''); return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s; };
 function download(name, type, body){
@@ -317,10 +326,13 @@ const stamp = () => fmt(Date.now()).replace(/[-: ]/g, '').slice(0, 12);
 $('csvBtn').onclick = async () => {
   const rs = rangeSet(), all = (await getAll('cases')).sort((a, b) => a.at - b.at);
   const STATES = statesIn(all);
+  // 還在清單上的案件沒有「離開清單時間」，留空；暫停期間離開的寫 LEFT_UNKNOWN
+  const okTimes = await okPollTimes();
+  const leaveCell = c => { const l = leaveOf(c, okTimes); return l.state === 'left' ? fmt(l.at) : l.state === 'unknown' ? LEFT_UNKNOWN : ''; };
   const head = ['受理時間', '案類', '案別', '發生地點', '行政區', '派遣分隊', '目前狀態', ...STATES.map(s => s + '首見時間'), '第一次看到', LAST_SEEN_LABEL, '範圍內'];
   const lines = [`# 以本裝置監測期間、每 2 分鐘取樣推估，狀態時間誤差約 ±2 分鐘；範圍：${$('center').selectedOptions[0].text}`, head.join(',')];
   for (const c of all) lines.push([fmt(c.at), c.type, c.sub, c.place, c.district ? c.district + '區' : '', c.unit, c.state,
-    ...STATES.map(s => c.states[s] ? fmt(c.states[s]) : ''), fmt(c.firstSeen), fmt(c.lastSeen), inRange(c, rs) ? '是' : '否'].map(csvCell).join(','));
+    ...STATES.map(s => c.states[s] ? fmt(c.states[s]) : ''), fmt(c.firstSeen), leaveCell(c), inRange(c, rs) ? '是' : '否'].map(csvCell).join(','));
   download(`kh119_${stamp()}.csv`, 'text/csv;charset=utf-8', '﻿' + lines.join('\r\n'));
 };
 const median = a => { if (!a.length) return null; const s = [...a].sort((x, y) => x - y), m = s.length >> 1; return s.length % 2 ? s[m] : (s[m - 1] + s[m]) / 2; };
@@ -337,6 +349,15 @@ $('reportBtn').onclick = async () => {
   const gaps = []; for (let i = 1; i < polls.length; i++) if (polls[i].t - polls[i - 1].t > GAP_WARN_MS) gaps.push([`${fmt(polls[i - 1].t)} → ${fmt(polls[i].t)}`, `${Math.round((polls[i].t - polls[i - 1].t) / 60000)} 分鐘`]);
   const span = polls.length ? `${fmt(polls[0].t)} ～ ${fmt(polls[polls.length - 1].t)}` : '（尚無資料）';
   const m = median(arrive), p90 = pct(arrive, 0.9);
+  // 受理 → 離開清單：只算已經離開清單（最後一次成功檢查時已不在）、且離開前看過「已到達」或「已到院」的案件（B 審）
+  const okTimes = polls.filter(x => x.ok).map(x => x.t);
+  const closed = [];
+  for (const c of inr) {
+    const l = leaveOf(c, okTimes);
+    if (l.state === 'left' && (c.states['已到達'] || c.states['已到院']) && l.at >= c.at) closed.push((l.at - c.at) / 60000);
+  }
+  const unknownLeft = inr.filter(c => leaveOf(c, okTimes).state === 'unknown').length;
+  const cm = median(closed), cp90 = pct(closed, 0.9);
   const html = `<!doctype html><html lang="zh-Hant-TW"><head><meta charset="utf-8"><title>高雄 119 出勤統計 ${esc(stamp())}</title>
 <style>body{font:15px/1.6 -apple-system,"PingFang TC","Noto Sans TC",sans-serif;margin:24px;color:#222}h1{font-size:20px}h2{font-size:16px;margin-top:20px}
 table{border-collapse:collapse;min-width:260px}td{border:1px solid #ccc;padding:3px 10px}.note{color:#666;font-size:13px}</style></head><body>
@@ -348,7 +369,10 @@ ${tbl('各案別件數（範圍內）', count(inr, c => c.sub || '—'))}
 ${tbl('各行政區件數（範圍內）', count(inr, c => c.district ? c.district + '區' : c.place))}
 ${tbl('24 小時分布（範圍內，依受理時間）', hours)}
 <h2>受理 → 已到達（範圍內，有觀察到「已派遣／已出動→已到達」變化的 ${arrive.length} 件）</h2>
-<p>${m === null ? '尚無資料' : `中位數 ${m.toFixed(1)} 分鐘｜P90 ${p90.toFixed(1)} 分鐘`}</p>
+<p>${m === null ? '尚無資料' : `中位數 ${m.toFixed(1)} 分鐘｜P90 ${p90.toFixed(1)} 分鐘`}（±2 分鐘）</p>
+<h2>受理 → 離開清單（推估結案／返隊；範圍內，離開前看過「已到達」或「已到院」的 ${closed.length} 件）</h2>
+<p>${cm === null ? '尚無資料' : `中位數 ${cm.toFixed(1)} 分鐘｜P90 ${cp90.toFixed(1)} 分鐘`}（±2 分鐘）</p>
+<p class="note">消防局清單只列處理中的案件；救護案多在「已到院」後離開清單，火災案尚無觀察。另有 ${unknownLeft} 件在本裝置暫停期間離開清單，時間不明，未列入。</p>
 ${tbl('資料缺口（兩次檢查間隔超過 5 分鐘）', gaps.length ? gaps : [['無', '']])}
 <p class="note">工具版本：2026-11-05</p></body></html>`;
   download(`kh119_report_${stamp()}.html`, 'text/html;charset=utf-8', html);

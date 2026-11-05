@@ -1,5 +1,5 @@
 // 只快取本頁靜態檔；消防局資料一律走網路、不進快取
-const CACHE = 'f119-static-2026-11-05c';
+const CACHE = 'f119-static-2026-11-05d';
 const STATIC = ['./', 'index.html', 'manifest.webmanifest', 'icon.svg', 'icon-180.png', 'icon-192.png', 'icon-512.png'];
 self.addEventListener('install', e => e.waitUntil(caches.open(CACHE).then(c => c.addAll(STATIC)).then(() => self.skipWaiting())));
 self.addEventListener('activate', e => e.waitUntil(caches.keys()
