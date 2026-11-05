@@ -305,7 +305,9 @@ async function render(){
 }
 
 // ---- 匯出 ----
-const STATES = ['已出動', '已到達', '送醫中', '已到院'];
+// 已知狀態的順序；實際資料裡出現其他狀態（例如 12:56 首見「已派遣」）也一併成欄，排在後面
+const STATE_ORDER = ['已派遣', '已出動', '已到達', '送醫中', '已到院'];
+const statesIn = all => { const seen = new Set(all.flatMap(c => Object.keys(c.states))); return [...STATE_ORDER.filter(s => seen.has(s)), ...[...seen].filter(s => !STATE_ORDER.includes(s)).sort()]; };
 const csvCell = v => { const s = String(v ?? ''); return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s; };
 function download(name, type, body){
   const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([body], {type})); a.download = name;
@@ -314,6 +316,7 @@ function download(name, type, body){
 const stamp = () => fmt(Date.now()).replace(/[-: ]/g, '').slice(0, 12);
 $('csvBtn').onclick = async () => {
   const rs = rangeSet(), all = (await getAll('cases')).sort((a, b) => a.at - b.at);
+  const STATES = statesIn(all);
   const head = ['受理時間', '案類', '案別', '發生地點', '行政區', '派遣分隊', '目前狀態', ...STATES.map(s => s + '首見時間'), '第一次看到', LAST_SEEN_LABEL, '範圍內'];
   const lines = [`# 以本裝置監測期間、每 2 分鐘取樣推估，狀態時間誤差約 ±2 分鐘；範圍：${$('center').selectedOptions[0].text}`, head.join(',')];
   for (const c of all) lines.push([fmt(c.at), c.type, c.sub, c.place, c.district ? c.district + '區' : '', c.unit, c.state,
@@ -329,7 +332,8 @@ $('reportBtn').onclick = async () => {
   const tbl = (title, rows) => `<h2>${esc(title)}</h2><table>${rows.map(([k, v]) => `<tr><td>${esc(k)}</td><td>${esc(v)}</td></tr>`).join('')}</table>`;
   const hours = Array.from({length: 24}, (_, h) => [`${String(h).padStart(2, '0')} 時`, inr.filter(c => new Date(c.at).getHours() === h).length]);
   // 只算「先看到已出動、之後才看到已到達」的案件；第一次看到就已到達的，到達時間其實不知道
-  const arrive = inr.filter(c => c.states['已出動'] && c.states['已到達'] > c.states['已出動']).map(c => (c.states['已到達'] - c.at) / 60000).filter(x => x >= 0);
+  const arrive = inr.filter(c => { const pre = Math.min(c.states['已派遣'] || Infinity, c.states['已出動'] || Infinity); return isFinite(pre) && c.states['已到達'] > pre; })
+    .map(c => (c.states['已到達'] - c.at) / 60000).filter(x => x >= 0);
   const gaps = []; for (let i = 1; i < polls.length; i++) if (polls[i].t - polls[i - 1].t > GAP_WARN_MS) gaps.push([`${fmt(polls[i - 1].t)} → ${fmt(polls[i].t)}`, `${Math.round((polls[i].t - polls[i - 1].t) / 60000)} 分鐘`]);
   const span = polls.length ? `${fmt(polls[0].t)} ～ ${fmt(polls[polls.length - 1].t)}` : '（尚無資料）';
   const m = median(arrive), p90 = pct(arrive, 0.9);
@@ -343,7 +347,7 @@ ${tbl('各案類件數（範圍內）', count(inr, c => c.type))}
 ${tbl('各案別件數（範圍內）', count(inr, c => c.sub || '—'))}
 ${tbl('各行政區件數（範圍內）', count(inr, c => c.district ? c.district + '區' : c.place))}
 ${tbl('24 小時分布（範圍內，依受理時間）', hours)}
-<h2>受理 → 已到達（範圍內，有觀察到「已出動→已到達」變化的 ${arrive.length} 件）</h2>
+<h2>受理 → 已到達（範圍內，有觀察到「已派遣／已出動→已到達」變化的 ${arrive.length} 件）</h2>
 <p>${m === null ? '尚無資料' : `中位數 ${m.toFixed(1)} 分鐘｜P90 ${p90.toFixed(1)} 分鐘`}</p>
 ${tbl('資料缺口（兩次檢查間隔超過 5 分鐘）', gaps.length ? gaps : [['無', '']])}
 <p class="note">工具版本：2026-11-05</p></body></html>`;
