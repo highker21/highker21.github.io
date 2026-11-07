@@ -70,6 +70,7 @@ h1 span{color:var(--glu)}
 .ctl{display:flex;align-items:center;gap:8px;margin-top:14px}
 .ctl button{appearance:none;border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:10px;padding:9px 14px;font:inherit;font-weight:700;cursor:pointer;min-width:44px}
 .ctl button:disabled{opacity:.35;cursor:default}
+.ctl #say[aria-pressed="true"]{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
 .ctl .next{background:var(--accent);border-color:var(--accent);color:#fff;margin-left:auto}
 .dots{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}
 .dots button{width:10px;height:10px;border-radius:50%;border:0;padding:0;background:var(--line);cursor:pointer}
@@ -207,10 +208,11 @@ footer{color:var(--mute);font-size:13px;padding:22px 0 40px;border-top:1px solid
     <div class="ctl">
       <button id="prev" type="button" aria-label="上一步">←</button>
       <button id="play" type="button" aria-label="自動播放">▶ 自動</button>
+      <button id="say" type="button" aria-pressed="false" aria-label="語音朗讀">🔊 朗讀</button>
       <button class="next" id="next" type="button">下一步 →</button>
     </div>
     <div class="dots" id="dots"></div>
-    <div class="hint">鍵盤 ← → 切換，手機可在圖上左右滑動。</div>
+    <div class="hint">鍵盤 ← → 切換，手機可在圖上左右滑動。開「🔊 朗讀」再按「▶ 自動」，會唸完一步自動換下一步。</div>
   </div>
 </div>
 
@@ -225,7 +227,7 @@ footer{color:var(--mute);font-size:13px;padding:22px 0 40px;border-top:1px solid
 
 <footer>
   教學示意圖，器官位置與比例經過簡化，數字為典型值，非個別病人的用藥建議；實際用藥依仿單、腎功能與最新指引（ADA Standards of Care）判斷。<br>
-  工具版本：2026-11-08
+  工具版本：2026-11-08（加語音朗讀）
 </footer>
 </div>
 
@@ -441,6 +443,7 @@ function go(i){
   setFlows(s.flows||[]);
   tgtG=s.g;
   prevB.disabled=idx===0;
+  afterStep(s);
   nextB.textContent=idx===steps.length-1?(mode==='A'?'看藥物 →':(drug<D.length-1?'下一類藥 →':'回到開頭 ↺')):'下一步 →';
   dots.textContent='';
   steps.forEach(function(_,k){var b=document.createElement('button');b.type='button';b.setAttribute('aria-label','第 '+(k+1)+' 步');if(k===idx)b.setAttribute('aria-current','true');b.onclick=function(){stopAuto();go(k)};dots.appendChild(b)});
@@ -463,9 +466,55 @@ map.addEventListener('touchstart',function(e){sx=e.touches[0].clientX;sy=e.touch
 map.addEventListener('touchend',function(e){if(sx==null)return;var dx=e.changedTouches[0].clientX-sx,dy=e.changedTouches[0].clientY-sy;if(Math.abs(dx)>40&&Math.abs(dx)>Math.abs(dy)){stopAuto();dx<0?next():prev()}sx=null},{passive:true});
 
 /* 自動播放 */
-var autoT=0;
-function stopAuto(){if(autoT){clearInterval(autoT);autoT=0;playB.textContent='▶ 自動'}}
-playB.onclick=function(){if(autoT)return stopAuto();playB.textContent='❚❚ 暫停';autoT=setInterval(next,6500)};
+/* 自動播放＋語音朗讀（Web Speech API，用裝置內建語音） */
+var autoOn=false,autoT=0,narr=false,sid=0,voice=null;
+var SS=window.speechSynthesis,sayB=$('#say');
+function pickVoice(){
+  if(!SS)return;var vs=SS.getVoices();if(!vs.length)return;
+  var pref=['zh-TW','zh_TW','zh-Hant','zh-HK','zh-CN','zh'];
+  for(var k=0;k<pref.length&&!voice;k++){voice=vs.filter(function(v){return v.lang.replace('_','-').indexOf(pref[k].replace('_','-'))===0})[0]||null}
+}
+if(SS){pickVoice();if('onvoiceschanged' in SS)SS.onvoiceschanged=pickVoice}else{sayB.hidden=true}
+function plain(s){
+  var t=s.t+'。'+s.d.replace(/<\/(li|p|div)>/g,'。').replace(/<[^>]+>/g,'');
+  var el=document.createElement('textarea');el.innerHTML=t;t=el.value;
+  [[/mg\/dL/g,'毫克每公合'],[/NYHA III–IV/g,'NYHA 第三到第四級'],[/HbA1c/g,'糖化血色素'],[/GLP-1\/GIP/g,'GLP 1 和 GIP'],[/GLP-1/g,'GLP 1'],[/DPP-4/g,'DPP 4'],[/SGLT2/g,'SGLT 2'],[/SGLT1/g,'SGLT 1'],[/GLUT4/g,'GLUT 4'],[/GLUT2/g,'GLUT 2'],[/K-ATP/g,'K ATP'],[/PPAR-γ/g,'PPAR gamma'],[/SUR1/g,'SUR 1'],
+   [/α/g,'阿法'],[/β/g,'貝他'],[/✚/g,''],[/✕/g,'被阻斷'],[/↑/g,'增加'],[/↓/g,'減少'],[/→/g,'，接著'],[/＋/g,'和'],[/(\d)\s*–\s*(\d)/g,'$1到$2'],[/–/g,'到'],[/≥/g,'大於等於'],[/</g,'小於'],[/>/g,'大於'],[/[｜|]/g,'，'],[/\s+/g,' '],[/[。，]\s*[。，]+/g,'。']]
+   .forEach(function(r){t=t.replace(r[0],r[1])});
+  return t;
+}
+function chunks(t){
+  var out=[];t.split(/(?<=[。！？；])/).forEach(function(x){x=x.trim();if(!x||x==='。')return;
+    while(x.length>110){var cut=x.lastIndexOf('，',110);cut=cut>20?cut+1:110;out.push(x.slice(0,cut));x=x.slice(cut)}
+    if(x)out.push(x)});
+  return out;
+}
+function stopNarr(){sid++;if(SS)SS.cancel()}
+function speak(text,done){
+  stopNarr();var my=sid,cs=chunks(text),i=0;
+  function nx(){
+    if(my!==sid)return;
+    if(i>=cs.length){done&&done();return}
+    var u=new SpeechSynthesisUtterance(cs[i++]);u.lang=voice?voice.lang:'zh-TW';if(voice)u.voice=voice;u.rate=1;
+    u.onend=function(){if(my===sid)nx()};
+    u.onerror=function(e){if(my===sid&&e.error!=='interrupted'&&e.error!=='canceled')nx()};
+    SS.speak(u);
+  }
+  setTimeout(nx,80);
+}
+function schedule(ms){clearTimeout(autoT);autoT=setTimeout(function(){if(autoOn)next()},ms)}
+function afterStep(s){
+  clearTimeout(autoT);
+  if(narr&&SS){speak(plain(s),function(){if(autoOn)schedule(700)})}
+  else{stopNarr();if(autoOn)schedule(6500)}
+}
+function stopAuto(){autoOn=false;clearTimeout(autoT);playB.textContent='▶ 自動'}
+playB.onclick=function(){if(autoOn)return stopAuto();autoOn=true;playB.textContent='❚❚ 暫停';if(!narr)schedule(6500);else if(!SS.speaking)afterStep(steps[idx])};
+sayB.onclick=function(){
+  narr=!narr;sayB.setAttribute('aria-pressed',narr);sayB.textContent=narr?'🔇 停止朗讀':'🔊 朗讀';
+  afterStep(steps[idx]);
+};
+document.addEventListener('visibilitychange',function(){if(document.hidden&&narr){stopNarr();stopAuto()}});
 
 /* ---------------- 粒子 ---------------- */
 var P={},flows=[],parts=[],last=0;
