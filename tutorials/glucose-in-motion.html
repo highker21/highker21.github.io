@@ -468,6 +468,7 @@ map.addEventListener('touchend',function(e){if(sx==null)return;var dx=e.changedT
 /* 自動播放 */
 /* 自動播放＋語音朗讀（Web Speech API，用裝置內建語音） */
 var autoOn=false,autoT=0,narr=false,sid=0,voice=null;
+var KEEP=[];
 var SS=window.speechSynthesis,sayB=$('#say');
 function pickVoice(){
   if(!SS)return;var vs=SS.getVoices();if(!vs.length)return;
@@ -499,6 +500,8 @@ function speak(text,done,sync){
     var u=new SpeechSynthesisUtterance(cs[i++]);u.lang=voice?voice.lang:'zh-TW';if(voice)u.voice=voice;u.rate=1;
     u.onend=function(){if(my===sid)nx()};
     u.onerror=function(e){if(my===sid&&e.error!=='interrupted'&&e.error!=='canceled')nx()};
+    // iOS WebKit 會把沒被引用的 utterance 回收掉而不出聲，留住最近幾個
+    KEEP.push(u);if(KEEP.length>6)KEEP.shift();
     SS.speak(u);
   }
   // iOS／Safari 只允許在使用者點擊的同一個呼叫堆疊裡開始朗讀，所以點按鈕時要同步呼叫

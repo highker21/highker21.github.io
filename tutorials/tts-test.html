@@ -1,0 +1,18 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>朗讀測試</title>
+<style>body{font-family:-apple-system,"PingFang TC",sans-serif;padding:20px;max-width:560px;margin:auto;line-height:1.6}button{font-size:20px;padding:14px 20px;border-radius:12px;border:1px solid #888;margin:6px 6px 6px 0;background:#f4f4f4}pre{background:#f4f4f4;padding:10px;border-radius:8px;white-space:pre-wrap;font-size:13px}</style></head>
+<body><h2>手機朗讀測試</h2><p>依序按下面的按鈕，再把畫面截圖傳回來。</p>
+<button id="a">① 中文（台灣）</button><button id="b">② 不指定語言</button><button id="c">③ English</button>
+<pre id="log"></pre><p style="color:#666;font-size:13px">工具版本：2026-11-08</p>
+<script>
+var L=document.getElementById('log'),K=[];function log(s){L.textContent+=s+'\n'}
+var ss=window.speechSynthesis;log('speechSynthesis：'+(ss?'有':'沒有'));log('UA：'+navigator.userAgent);
+function vinfo(){var v=ss?ss.getVoices():[];log('語音數 '+v.length+'，中文 '+v.filter(function(x){return /^zh/.test(x.lang)}).map(function(x){return x.name+'('+x.lang+')'}).join('、'))}
+vinfo();if(ss&&'onvoiceschanged' in ss)ss.onvoiceschanged=vinfo;
+function say(t,lang,tag){if(!ss)return;var u=new SpeechSynthesisUtterance(t);if(lang)u.lang=lang;K.push(u);
+ u.onstart=function(){log(tag+' 開始')};u.onend=function(){log(tag+' 結束')};u.onerror=function(e){log(tag+' 錯誤：'+e.error)};
+ ss.speak(u);log(tag+' 已送出；speaking='+ss.speaking+' pending='+ss.pending+' paused='+ss.paused);
+ setTimeout(function(){log(tag+' 1 秒後 speaking='+ss.speaking)},1000)}
+document.getElementById('a').onclick=function(){say('這是語音朗讀測試','zh-TW','①')};
+document.getElementById('b').onclick=function(){say('這是語音朗讀測試','','②')};
+document.getElementById('c').onclick=function(){say('This is a speech test','en-US','③')};
+</script></body></html>
