@@ -1,0 +1,544 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>鈣磷，動起來</title>
+<meta name="description" content="一步一步看副甲狀腺、維生素 D、FGF23 如何調控鈣磷平衡，相關疾病與藥物，以及骨質疏鬆的機轉與用藥。">
+<style>
+:root{
+  --bg:#f5f3ee;--paper:#fffdf8;--ink:#1f2328;--mute:#5d6470;--line:#d9d4c7;
+  --accent:#2a6f97;--accent-soft:#dbe9f2;
+  --ca:#2f72c4;--ph:#d98a12;--pth:#7a4fc4;--vd:#1f9d55;--fgf:#d1452b;--drug:#c0262d;--up:#d1452b;--down:#2f72c4;
+  --organ:#ffffff;--organ-line:#b9b2a3;--organ-on:#fff4d6;--organ-on-line:#d98a12;
+  --shadow:0 1px 2px rgba(0,0,0,.06),0 6px 20px rgba(0,0,0,.06);
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#14171b;--paper:#1c2026;--ink:#e8e6e1;--mute:#a3a9b3;--line:#323844;
+  --accent:#6fb3db;--accent-soft:#1f3442;
+  --ca:#6aa8f5;--ph:#f2b441;--pth:#a98cf0;--vd:#4cd08a;--fgf:#ff7a5c;--drug:#ff6b6b;--up:#ff7a5c;--down:#6aa8f5;
+  --organ:#232831;--organ-line:#4a5260;--organ-on:#3a3220;--organ-on-line:#f2b441;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 6px 20px rgba(0,0,0,.35);
+}}
+:root[data-theme="dark"]{
+  --bg:#14171b;--paper:#1c2026;--ink:#e8e6e1;--mute:#a3a9b3;--line:#323844;
+  --accent:#6fb3db;--accent-soft:#1f3442;
+  --ca:#6aa8f5;--ph:#f2b441;--pth:#a98cf0;--vd:#4cd08a;--fgf:#ff7a5c;--drug:#ff6b6b;--up:#ff7a5c;--down:#6aa8f5;
+  --organ:#232831;--organ-line:#4a5260;--organ-on:#3a3220;--organ-on-line:#f2b441;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 6px 20px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink)}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang TC","Noto Sans TC","Microsoft JhengHei",sans-serif;line-height:1.65;-webkit-text-size-adjust:100%}
+a{color:var(--accent)}
+.wrap{max-width:1180px;margin:0 auto;padding:0 16px}
+header.hero{padding:40px 0 18px}
+.kick{font-size:13px;letter-spacing:.12em;color:var(--accent);font-weight:700}
+h1{font-size:clamp(30px,6vw,52px);line-height:1.15;margin:.2em 0 .25em;letter-spacing:.02em}
+h1 span{color:var(--ca)}
+.lead{color:var(--mute);max-width:740px;margin:0}
+.legend{display:flex;flex-wrap:wrap;gap:8px 16px;margin:16px 0 0;padding:0;list-style:none;font-size:14px;color:var(--mute)}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:50%;margin-right:6px;vertical-align:-1px}
+.tabs{display:flex;gap:8px;margin:22px 0 14px;flex-wrap:wrap}
+.tabs button{appearance:none;border:1px solid var(--line);background:var(--paper);color:var(--ink);padding:9px 14px;border-radius:999px;font:inherit;font-weight:700;cursor:pointer;line-height:1.3}
+.tabs button small{display:block;font-weight:400;font-size:11.5px;opacity:.8}
+.tabs button[aria-selected="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+.player{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:18px;align-items:start}
+.stage{position:sticky;top:10px;background:var(--paper);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);padding:8px}
+.stage svg{display:block;width:100%;height:auto;max-height:calc(100vh - 40px);touch-action:pan-y}
+.panel{background:var(--paper);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);padding:18px 20px;min-height:440px;display:flex;flex-direction:column}
+.where{font-size:13px;color:var(--mute);display:flex;justify-content:space-between;gap:8px}
+.where b{color:var(--accent)}
+.kind{display:inline-block;font-size:12px;font-weight:700;border-radius:999px;padding:1px 9px;margin-right:6px;vertical-align:2px}
+.kind.phy{background:var(--accent-soft);color:var(--accent)}
+.kind.dz{background:color-mix(in srgb,var(--ph) 18%,transparent);color:var(--ph)}
+.kind.drg{background:color-mix(in srgb,var(--drug) 14%,transparent);color:var(--drug)}
+.panel h2{font-size:23px;line-height:1.3;margin:6px 0 8px}
+.panel .txt{flex:1}
+.panel .txt p{margin:.35em 0}
+.panel .txt ul{margin:.35em 0;padding-left:1.2em}
+.panel .txt li{margin:.2em 0}
+.tag{display:inline-block;font-size:12px;padding:1px 8px;border-radius:999px;background:var(--accent-soft);color:var(--accent);font-weight:700;margin-right:4px}
+.warn{border-left:3px solid var(--drug);padding:4px 10px;margin:.6em 0;background:color-mix(in srgb,var(--drug) 8%,transparent);border-radius:0 8px 8px 0}
+.ctl{display:flex;align-items:center;gap:8px;margin-top:14px;flex-wrap:wrap}
+.ctl button{appearance:none;border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:10px;padding:9px 14px;font:inherit;font-weight:700;cursor:pointer;min-width:44px}
+.ctl button:disabled{opacity:.35;cursor:default}
+.ctl #say[aria-pressed="true"]{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.ctl .next{background:var(--accent);border-color:var(--accent);color:#fff;margin-left:auto}
+.dots{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}
+.dots button{width:10px;height:10px;border-radius:50%;border:0;padding:0;background:var(--line);cursor:pointer}
+.dots button[aria-current="true"]{background:var(--accent);transform:scale(1.25)}
+.hint{font-size:12px;color:var(--mute);margin-top:8px}
+
+.org path.shape,.org ellipse,.org rect{fill:var(--organ);stroke:var(--organ-line);stroke-width:2;transition:fill .35s,stroke .35s}
+.org text{fill:var(--ink);font-size:17px;font-weight:700;text-anchor:middle}
+.org text.sub{font-size:11.5px;font-weight:400;fill:var(--mute)}
+.org .gland{fill:var(--pth);stroke:none;opacity:.65}
+.org.on path.shape,.org.on ellipse,.org.on rect{fill:var(--organ-on);stroke:var(--organ-on-line);stroke-width:3}
+.org{transition:opacity .35s}
+.org.dim{opacity:.35}
+.vessel{fill:none;stroke:var(--line);stroke-width:2;stroke-dasharray:3 5}
+.ring{fill:none;stroke:var(--drug);stroke-width:3;stroke-dasharray:6 5;opacity:0;transition:opacity .3s}
+.ring.on{opacity:1;animation:spin 6s linear infinite}
+@keyframes spin{to{stroke-dashoffset:-110}}
+.hub circle{fill:color-mix(in srgb,var(--ca) 10%,var(--paper));stroke:var(--ca);stroke-width:2.5}
+.hub text{text-anchor:middle;fill:var(--ink)}
+.hub .lbl{font-size:12px;font-weight:700;fill:var(--mute)}
+.hub .val{font-size:27px;font-weight:800}
+.hub .val2{font-size:17px;font-weight:800}
+.hub .unit{font-size:10.5px;fill:var(--mute)}
+.chip rect{rx:9;ry:9;stroke-width:1.5}
+.chip text{font-size:12.5px;font-weight:700}
+.chip.up rect{fill:color-mix(in srgb,var(--up) 13%,var(--paper));stroke:var(--up)}
+.chip.up text{fill:var(--up)}
+.chip.down rect{fill:color-mix(in srgb,var(--down) 13%,var(--paper));stroke:var(--down)}
+.chip.down text{fill:var(--down)}
+.chip.info rect{fill:var(--paper);stroke:var(--organ-line)}
+.chip.info text{fill:var(--ink)}
+.chip.drug rect{fill:var(--drug);stroke:var(--drug)}
+.chip.drug text{fill:#fff}
+.chips g.chip{animation:pop .35s ease-out both}
+@keyframes pop{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.meter rect.box{fill:var(--paper);stroke:var(--line)}
+.meter text{font-size:12px;fill:var(--ink)}
+.meter text.ttl{font-size:11px;fill:var(--mute)}
+.meter .trk{fill:var(--line)}
+.meter .mid{stroke:var(--mute);stroke-width:1.5}
+.meter .bar{transition:width .5s ease,x .5s ease,fill .3s}
+.meter text.v{font-weight:700}
+.pt{pointer-events:none}
+
+section.cmp{margin:34px 0 10px}
+section.cmp h2{font-size:24px;margin:0 0 6px}
+.tblw{overflow-x:auto;border:1px solid var(--line);border-radius:14px;background:var(--paper);margin-bottom:18px}
+table{border-collapse:collapse;width:100%;min-width:820px;font-size:14px}
+th,td{padding:9px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{background:var(--accent-soft);white-space:nowrap}
+td.c{text-align:center;white-space:nowrap}
+tr:last-child td{border-bottom:0}
+footer{color:var(--mute);font-size:13px;padding:22px 0 40px;border-top:1px solid var(--line);margin-top:28px}
+.theme{position:absolute;top:14px;right:16px;appearance:none;border:1px solid var(--line);background:var(--paper);color:var(--ink);border-radius:999px;padding:6px 12px;font:inherit;font-size:13px;cursor:pointer}
+@media (max-width:860px){
+  .player{grid-template-columns:1fr}
+  .stage{position:sticky;top:0;z-index:2;border-radius:0 0 16px 16px;margin:0 -16px;border-left:0;border-right:0;padding:4px}
+  .stage svg{max-height:52vh}
+  .panel{min-height:0}
+  .chip text{font-size:14px}
+  header.hero{padding-top:52px}
+}
+@media (prefers-reduced-motion:reduce){.chips g.chip,.ring.on{animation:none}}
+</style>
+</head>
+<body>
+<button class="theme" id="theme" type="button" aria-label="切換深淺色">◐ 深淺色</button>
+<div class="wrap">
+<header class="hero">
+  <div class="kick">內分泌新陳代謝科 · 教學互動</div>
+  <h1>鈣磷，<span>動起來</span></h1>
+  <p class="lead">副甲狀腺素（PTH）、活性維生素 D、FGF23 三個激素，在腸道、骨頭、腎臟之間把血鈣和血磷拉回設定點。一步一步看生理、常見疾病、藥物作用在哪裡，最後一個分頁看骨質疏鬆與用藥。</p>
+  <ul class="legend">
+    <li><i style="background:var(--ca)"></i>鈣</li>
+    <li><i style="background:var(--ph)"></i>磷</li>
+    <li><i style="background:var(--pth)"></i>PTH</li>
+    <li><i style="background:var(--vd)"></i>維生素 D</li>
+    <li><i style="background:var(--fgf)"></i>FGF23</li>
+    <li><i style="background:var(--drug)"></i>藥物作用點</li>
+  </ul>
+</header>
+
+<div class="tabs" role="tablist" id="tabs"></div>
+
+<div class="player">
+  <div class="stage">
+<svg id="map" viewBox="0 0 600 610" role="img" aria-label="副甲狀腺、骨頭、腎臟、腸道、肝臟、皮膚與血中鈣磷示意圖">
+  <g id="paths">
+    <path class="vessel" id="p-food" d="M22 590 Q48 530 92 506"/>
+    <path class="vessel" id="p-gut2blood" d="M168 450 Q215 390 250 340"/>
+    <path class="vessel" id="p-blood2pth" d="M300 224 L300 104"/>
+    <path class="vessel" id="p-pth2kid" d="M368 70 C590 85 600 395 528 446"/>
+    <path class="vessel" id="p-pth2bone" d="M352 92 Q430 118 452 162"/>
+    <path class="vessel" id="p-bone2blood" d="M428 230 Q385 248 360 266"/>
+    <path class="vessel" id="p-blood2bone" d="M362 300 Q415 282 448 240"/>
+    <path class="vessel" id="p-kid2blood" d="M440 440 Q395 385 352 336"/>
+    <path class="vessel" id="p-blood2kid" d="M338 350 Q382 410 428 452"/>
+    <path class="vessel" id="p-kid2urine" d="M522 506 Q548 552 590 566"/>
+    <path class="vessel" id="p-skin2liver" d="M95 134 L95 204"/>
+    <path class="vessel" id="p-liver2kid" d="M140 282 Q300 470 428 472"/>
+    <path class="vessel" id="p-kid2gut" d="M430 500 Q300 560 176 500"/>
+    <path class="vessel" id="p-kid2pth" d="M455 432 Q345 160 340 104"/>
+    <path class="vessel" id="p-bone2kid" d="M512 238 Q548 340 512 432"/>
+  </g>
+
+  <g class="org" id="o-pth"><rect x="228" y="24" width="144" height="80" rx="30"/><circle class="gland" cx="244" cy="40" r="6"/><circle class="gland" cx="356" cy="40" r="6"/><circle class="gland" cx="244" cy="88" r="6"/><circle class="gland" cx="356" cy="88" r="6"/><text x="300" y="60">副甲狀腺</text><text class="sub" x="300" y="80">CaSR 感鈣・PTH</text></g>
+  <g class="org" id="o-skin"><rect x="40" y="72" width="110" height="62" rx="16"/><text x="95" y="100">皮膚</text><text class="sub" x="95" y="119">陽光 → D3</text></g>
+  <g class="org" id="o-liver"><path class="shape" d="M42 232 Q50 205 110 208 Q152 212 148 242 Q144 286 96 288 Q38 288 42 232z"/><text x="95" y="246">肝臟</text><text class="sub" x="95" y="265">25-OH D</text></g>
+  <g class="org" id="o-bone"><path class="shape" d="M430 172 Q422 160 436 156 Q448 154 452 166 L540 166 Q544 154 556 156 Q570 160 562 172 Q570 184 562 196 L562 214 Q570 226 562 238 Q550 248 540 236 L452 236 Q446 248 434 244 Q422 238 430 226 L430 184 Q422 178 430 172z"/><text x="496" y="198">骨頭</text><text class="sub" x="496" y="218">骨細胞・FGF23</text></g>
+  <g class="org" id="o-kid"><path class="shape" d="M436 448 Q478 428 520 446 Q546 470 528 500 Q508 522 470 516 Q430 510 426 480 Q424 458 436 448z"/><text x="478" y="475">腎臟</text><text class="sub" x="478" y="494">1α-羥化・排磷</text></g>
+  <g class="org" id="o-gut"><path class="shape" d="M92 448 Q140 432 178 456 Q196 492 166 516 Q122 536 96 508 Q78 480 92 448z"/><text x="136" y="483">腸道</text><text class="sub" x="136" y="502">吸收鈣磷</text></g>
+  <text x="586" y="590" font-size="12" fill="var(--mute)" text-anchor="end">尿液</text>
+  <text x="20" y="604" font-size="12" fill="var(--mute)">食物</text>
+
+  <g class="hub" id="hub"><circle cx="300" cy="290" r="66"/>
+    <text class="lbl" x="300" y="258">血鈣</text>
+    <text class="val" id="vca" x="300" y="287">9.4</text>
+    <text class="lbl" x="300" y="306">血磷</text>
+    <text class="val2" id="vp" x="300" y="326">3.5</text>
+    <text class="unit" x="300" y="341">mg/dL</text>
+  </g>
+
+  <g id="rings">
+    <rect class="ring" id="r-pth" x="218" y="14" width="164" height="100" rx="38"/>
+    <rect class="ring" id="r-skin" x="30" y="62" width="130" height="82" rx="22"/>
+    <ellipse class="ring" id="r-liver" cx="95" cy="248" rx="66" ry="52"/>
+    <ellipse class="ring" id="r-bone" cx="496" cy="200" rx="84" ry="56"/>
+    <ellipse class="ring" id="r-kid" cx="478" cy="478" rx="66" ry="52"/>
+    <ellipse class="ring" id="r-gut" cx="136" cy="484" rx="62" ry="56"/>
+  </g>
+
+  <g class="meter" id="meter">
+    <rect class="box" x="212" y="520" width="176" height="86" rx="10"/>
+    <text class="ttl" x="222" y="537">激素量（中線＝正常）</text>
+    <g id="mrows"></g>
+  </g>
+
+  <g id="parts" class="pt"></g>
+  <g id="chips" class="chips"></g>
+</svg>
+  </div>
+
+  <div class="panel" aria-live="polite">
+    <div class="where"><span id="where"></span><span id="cnt"></span></div>
+    <h2 id="ttl"></h2>
+    <div class="txt" id="txt"></div>
+    <div class="ctl">
+      <button id="prev" type="button" aria-label="上一步">←</button>
+      <button id="play" type="button" aria-label="自動播放">▶ 自動</button>
+      <button id="say" type="button" aria-pressed="false" aria-label="語音朗讀">🔊 朗讀</button>
+      <button class="next" id="next" type="button">下一步 →</button>
+    </div>
+    <div class="dots" id="dots"></div>
+    <div class="hint">鍵盤 ← → 切換，手機可在圖上左右滑動。開「🔊 朗讀」再按「▶ 自動」，會唸完一步自動換下一步。</div>
+  </div>
+</div>
+
+<section class="cmp">
+  <h2>三個激素一覽</h2>
+  <div class="tblw"><table>
+    <thead><tr><th>激素</th><th>來源</th><th>什麼時候增加</th><th>腎臟</th><th>腸道</th><th>骨頭</th><th>血鈣／血磷</th></tr></thead>
+    <tbody>
+      <tr><td><b>PTH</b></td><td>副甲狀腺</td><td>血鈣 ↓（CaSR 感測）、血磷 ↑</td><td>留鈣、排磷、活化維生素 D</td><td>間接（經活性 D）</td><td>釋放鈣磷</td><td class="c">鈣 ↑／磷 ↓</td></tr>
+      <tr><td><b>活性維生素 D</b><br><small>1,25-(OH)₂D</small></td><td>腎臟活化</td><td>PTH ↑、血磷 ↓</td><td>—</td><td>吸收鈣、磷 ↑</td><td>礦化</td><td class="c">鈣 ↑／磷 ↑</td></tr>
+      <tr><td><b>FGF23</b></td><td>骨細胞</td><td>血磷 ↑、活性 D ↑</td><td>排磷、抑制活性 D</td><td>間接 ↓</td><td>—</td><td class="c">磷 ↓</td></tr>
+    </tbody>
+  </table></div>
+  <h2>藥物一覽</h2>
+  <div class="tblw"><table>
+    <thead><tr><th>藥物</th><th>作用部位</th><th>機轉</th><th>主要用途</th><th>注意</th></tr></thead>
+    <tbody id="tbody"></tbody>
+  </table></div>
+</section>
+
+<footer>
+  教學示意圖，器官位置與比例經過簡化；血鈣磷數字為示意的典型值，不含藥物劑量，非個別病人的用藥建議，實際用藥請依仿單與最新指引判斷。<br>
+  工具版本：2026-11-08
+</footer>
+</div>
+
+<script>
+(function(){
+'use strict';
+var $=function(s){return document.querySelector(s)};
+var SVGNS='http://www.w3.org/2000/svg';
+var COL={c:'var(--ca)',p:'var(--ph)',h:'var(--pth)',d:'var(--vd)',f:'var(--fgf)'};
+var AT={pth:[300,124],skin:[95,154],liver:[95,312],bone:[496,264],kid:[478,540],gut:[136,556],hub:[300,378]};
+var ORG=['pth','skin','liver','bone','kid','gut'];
+var LAB1=['PTH','活性 D','FGF23'],LAB2=['蝕骨','造骨','骨量'];
+
+/* 每一步：t 標題、k 類型、on 亮起器官、g [血鈣,血磷]、lv 三格量表(-2~2)、flows、chips、rx 藥物圈、d 說明 */
+var AX=[
+{id:'phy',n:'A 生理',s:'三個激素怎麼合作',lab:LAB1,steps:[
+ {t:'鈣和磷：絕大部分在骨頭',k:'phy',on:['bone'],g:[9.4,3.5],lv:[0,0,0],
+  flows:[['bone2blood','c',.8],['blood2bone','c',.8],['bone2blood','p',.4]],
+  chips:[['bone','鈣 99%、磷約 85% 存在骨頭','info'],['hub','游離鈣才有生理作用','info']],
+  d:'<p>全身的鈣約 99%、磷約 85% 存在骨頭，血中只是很小的一部分，卻要維持在很窄的範圍：總鈣約 8.5–10.2 mg/dL、磷約 2.5–4.5 mg/dL（依各實驗室參考值）。</p><ul><li>血鈣約一半是<b>游離鈣</b>，真正有生理作用；約 40% 和白蛋白結合</li><li>白蛋白低時，總鈣看起來偏低，要<b>校正</b>（校正鈣＝測得鈣＋0.8 ×（4 − 白蛋白））或直接測游離鈣</li></ul>'},
+ {t:'副甲狀腺：血鈣的感測器',k:'phy',on:['pth'],g:[8.8,3.5],lv:[1,0,0],
+  flows:[['blood2pth','c',1.6]],
+  chips:[['pth','CaSR 感到鈣 ↓ → 數分鐘內 PTH ↑','up']],
+  d:'<p>副甲狀腺主細胞表面的<b>鈣感應受體（CaSR）</b>隨時監測游離鈣。鈣一下降，幾分鐘內就釋放 PTH；持續偏低則增加合成，長期甚至讓腺體增生。</p><div class="warn"><b>鎂</b>很關鍵：嚴重低血鎂時 PTH 分泌不出來，組織對 PTH 也沒反應，造成補鈣也補不起來的低血鈣，要<b>先補鎂</b>。</div>'},
+ {t:'PTH 到腎臟：留鈣、排磷、活化維生素 D',k:'phy',on:['kid'],g:[9.1,3.0],lv:[1,1,0],
+  flows:[['pth2kid','h',2],['kid2blood','c',2],['kid2urine','p',1.6]],
+  chips:[['kid','留鈣、排磷','up'],['hub','鈣 ↑、磷 ↓','info']],
+  d:'<ul><li><b>遠端小管</b>：增加鈣的再吸收，少從尿流失</li><li><b>近端小管</b>：減少磷轉運蛋白（NaPi-2a／2c），把磷排到尿裡</li><li>啟動 <b>1α-羥化酶</b>，把維生素 D 轉成活性形式</li></ul><p>一邊升鈣、一邊降磷，避免鈣磷乘積過高而沉積在組織。</p>'},
+ {t:'PTH 到骨頭：釋放鈣磷',k:'phy',on:['bone'],g:[9.3,3.2],lv:[1,1,0],
+  flows:[['pth2bone','h',1.6],['bone2blood','c',2.2],['bone2blood','p',1]],
+  chips:[['bone','RANKL ↑ → 蝕骨細胞 → 釋放鈣磷','up']],
+  d:'<p>PTH 作用在造骨細胞與骨細胞，增加 <b>RANKL</b>、減少它的誘餌受體 OPG，間接活化<b>蝕骨細胞</b>，把骨頭裡的鈣磷釋放出來。</p><ul><li><b>持續</b>高 PTH：骨流失，以皮質骨（如前臂遠端）最明顯</li><li><b>間歇性</b> PTH（每天一針）：反而促進骨生成，這是 teriparatide 的原理，見 D 分頁</li></ul>'},
+ {t:'維生素 D 的三站活化',k:'phy',on:['skin','liver','kid'],g:[9.3,3.3],lv:[0,1,0],
+  flows:[['skin2liver','d',1.6],['liver2kid','d',1.6]],
+  chips:[['skin','陽光 UVB → 維生素 D3','info'],['liver','25-OH D：體內庫存','info'],['kid','1α-羥化 → 活性 D','up']],
+  d:'<ul><li><b>皮膚</b>：陽光 UVB 把膽固醇前驅物轉成 D3；食物與補充劑也提供 D2／D3</li><li><b>肝臟</b>：轉成 <b>25-OH D</b>，半衰期約 2–3 週，是判斷「有沒有缺乏」的指標</li><li><b>腎臟</b>：1α-羥化成<b>活性 D</b>（1,25-(OH)₂D）。PTH、低磷促進；FGF23、高鈣抑制</li></ul><div class="warn">測活性 D 不能判斷是否缺乏：缺乏時 PTH 升高，會把活性 D 推到正常甚至偏高。</div>'},
+ {t:'活性維生素 D 到腸道：吸收鈣磷',k:'phy',on:['gut'],g:[9.5,3.6],lv:[0,1,0],
+  flows:[['kid2gut','d',1.6],['food','c',2],['gut2blood','c',2.4],['gut2blood','p',1.6]],
+  chips:[['gut','鈣吸收 ↑、磷吸收 ↑','up']],
+  d:'<p>活性 D 讓小腸增加鈣通道與鈣結合蛋白，提高鈣和磷的吸收。缺乏維生素 D 時，飲食中的鈣只能吸收約 10–15%，充足時約 30–40%。</p><p>PTH 對腸道沒有直接作用，是<b>透過活性 D 間接</b>增加吸收。</p>'},
+ {t:'FGF23：骨頭發出的排磷訊號',k:'phy',on:['bone','kid'],g:[9.4,3.3],lv:[0,-1,1],
+  flows:[['bone2kid','f',2],['kid2urine','p',2]],
+  chips:[['bone','磷 ↑、活性 D ↑ → FGF23 ↑','up'],['kid','排磷 ↑、抑制活性 D','down']],
+  d:'<p>骨細胞分泌 <b>FGF23</b>，在腎臟要靠輔助受體 <b>Klotho</b> 才能作用：</p><ul><li>減少磷再吸收 → 尿磷增加</li><li>抑制 1α-羥化酶、增加 24-羥化酶 → 活性 D 下降</li><li>也抑制 PTH</li></ul><p>FGF23 過多會造成低血磷與骨軟化：X 染色體性低磷佝僂症（XLH）、腫瘤引起的骨軟化症，以及部分靜脈鐵劑（ferric carboxymaltose）引起的低血磷。</p>'},
+ {t:'負回饋：回到設定點',k:'phy',on:['pth'],g:[9.4,3.5],lv:[0,0,0],
+  flows:[['blood2pth','c',1],['kid2pth','d',1]],
+  chips:[['pth','鈣 ↑、活性 D ↑ → PTH ↓','down'],['hub','降鈣素在人體作用很小','info']],
+  d:'<ul><li>血鈣回升 → CaSR 抑制 PTH</li><li>活性 D 直接抑制 PTH 基因表現</li><li>甲狀腺 C 細胞的<b>降鈣素</b>在人體調鈣作用很小：甲狀腺全切除後不需要補降鈣素，血鈣也不受影響</li></ul>'}
+]},
+{id:'dz',n:'B 疾病',s:'看數字判斷',lab:LAB1,steps:[
+ {t:'原發性副甲狀腺亢進',k:'dz',on:['pth','kid','bone'],g:[11.2,2.4],lv:[2,1,0],
+  flows:[['pth2kid','h',2.6],['pth2bone','h',2.4],['bone2blood','c',2.4],['kid2urine','p',2],['kid2urine','c',1]],
+  chips:[['pth','腺瘤自主分泌 PTH','up'],['kid','尿鈣 ↑ → 腎結石','up'],['bone','骨質流失','down']],
+  d:'<p>多數（約 80–85%）是單一顆腺瘤。檢驗：<b>鈣高、PTH 高或「不適當地正常」</b>、磷偏低。</p><p>典型表現是腎結石、骨鬆、便秘腹痛、情緒認知症狀，但現在多數是抽血意外發現、沒有症狀。手術是唯一根治方法。</p><div class="warn">要排除<b>家族性低尿鈣高血鈣（FHH）</b>：CaSR 基因變異，鈣與 PTH 也偏高，但尿鈣很低（鈣／肌酸酐清除比 &lt; 0.01），不需要手術。</div>'},
+ {t:'維生素 D 缺乏：次發性亢進',k:'dz',on:['gut','pth','bone'],g:[9.0,2.8],lv:[2,0,0],
+  flows:[['food','c',2],['gut2blood','c',.6],['pth2kid','h',2],['pth2bone','h',2],['bone2blood','c',1.6]],
+  chips:[['gut','鈣吸收 ↓','down'],['pth','PTH ↑ 代償','up'],['bone','骨軟化、骨流失','down']],
+  d:'<p>25-OH D 不足 → 腸道吸收鈣變差 → PTH 升高代償。血鈣通常維持在正常偏低，磷偏低，<b>代價是骨頭</b>；長期嚴重缺乏會造成骨軟化（兒童為佝僂病）。</p><p>補充一般維生素 D 後 PTH 會下降。診斷原發性副甲狀腺亢進之前，要先把維生素 D 補足。</p>'},
+ {t:'慢性腎病的鈣磷異常',k:'dz',on:['kid','bone','pth'],g:[8.8,5.8],lv:[2,-2,2],
+  flows:[['kid2urine','p',.3],['gut2blood','p',1.6],['bone2kid','f',2.4],['pth2kid','h',2.4],['pth2bone','h',2.4]],
+  chips:[['bone','FGF23 最早升高','up'],['kid','排磷 ↓、活性 D ↓','down'],['pth','PTH ↑↑ → 腺體增生','up']],
+  d:'<p>腎功能下降時的連鎖反應：</p><ul><li>FGF23 很早就升高，把活性 D 壓低</li><li>活性 D 下降 → 鈣吸收變差 → PTH 升高（<b>次發性</b>副甲狀腺亢進）</li><li>到晚期，腎臟排不掉磷 → <b>高血磷</b></li><li>長期刺激讓腺體增生、變得自主，即使換腎後仍分泌過多，稱為<b>三級</b>副甲狀腺亢進</li></ul><p>結果是骨病變加上血管鈣化，統稱慢性腎病礦物質與骨骼異常（CKD-MBD）。</p>'},
+ {t:'不靠 PTH 的高血鈣',k:'dz',on:['bone','pth'],g:[13.2,3.0],lv:[-2,-1,0],
+  flows:[['bone2blood','c',3],['blood2pth','c',2]],
+  chips:[['pth','PTH 被壓到很低','down'],['bone','PTHrP 或骨轉移溶骨','up'],['hub','住院高血鈣最常見的原因','info']],
+  d:'<p>高血鈣時先看 PTH：<b>PTH 高</b>→原發性副甲狀腺亢進（門診最常見）；<b>PTH 低</b>→找以下原因：</p><ul><li><b>PTHrP</b>：腫瘤分泌、作用像 PTH，但 PTH 檢驗測不到（鱗狀細胞癌、乳癌、腎癌）</li><li><b>骨轉移溶骨</b>：乳癌、多發性骨髓瘤</li><li><b>活性 D 過多</b>：淋巴瘤、類肉瘤等肉芽腫疾病會自己製造；維生素 D 補充過量</li></ul>'},
+ {t:'副甲狀腺功能低下',k:'dz',on:['pth','kid'],g:[7.4,5.0],lv:[-2,-1,0],
+  flows:[['pth2kid','h',.2],['kid2urine','c',1.2]],
+  chips:[['pth','頸部手術後最常見','down'],['kid','留不住鈣、排不掉磷','info'],['hub','口周麻、手腳抽筋','down']],
+  d:'<p>最常見原因是甲狀腺或副甲狀腺手術後（可能暫時或永久），其次是自體免疫與嚴重低血鎂。檢驗：<b>鈣低、磷高、PTH 低</b>。</p><p>症狀：口周與手指麻、抽筋（手足搐搦）、QT 延長，嚴重時癲癇。</p><p><b>偽副甲狀腺功能低下</b>則是組織對 PTH 沒反應：鈣低、磷高，但 <b>PTH 高</b>。</p>'}
+]},
+{id:'drg',n:'C 鈣磷藥物',s:'作用在哪一站',lab:LAB1,steps:[
+ {t:'鈣片＋活性維生素 D',k:'drg',on:['gut','kid'],rx:['gut'],g:[8.4,4.4],lv:[-2,2,0],
+  flows:[['food','c',2.6],['gut2blood','c',2.6],['kid2urine','c',1.4]],
+  chips:[['gut','✚ 活性 D＋鈣片','drug'],['kid','注意尿鈣 ↑','up']],
+  d:'<p>副甲狀腺低下時缺 PTH，腎臟無法自行活化維生素 D，所以要補<b>活性 D</b>：calcitriol 已經是活性形式，alfacalcidol 只需肝臟活化。再加上鈣片。</p><ul><li>目標是<b>正常偏低</b>的血鈣（沒有症狀即可），因為沒有 PTH，腎臟留不住鈣，補太高會尿鈣過多、結石、腎鈣化</li><li>thiazide 可減少尿鈣</li><li>新選擇：長效 PTH 補充（palopegteriparatide），直接補回缺少的激素</li></ul>'},
+ {t:'一般維生素 D（D3、D2）',k:'drg',on:['liver','pth'],rx:['liver'],g:[9.3,3.3],lv:[-1,0,0],
+  flows:[['skin2liver','d',1.8],['liver2kid','d',1.4]],
+  chips:[['liver','✚ D3 → 25-OH D ↑','drug'],['pth','PTH 回落','down']],
+  d:'<p>單純維生素 D 缺乏用一般維生素 D（cholecalciferol、ergocalciferol）。它要經肝、腎活化，身體仍能調控，較不易高血鈣。</p><ul><li>追蹤 <b>25-OH D</b>，不看活性 D</li><li>單純缺乏<b>不用活性 D 治療</b>，因為活性 D 繞過了身體的調控，容易高血鈣、高尿鈣</li></ul>'},
+ {t:'擬鈣劑：cinacalcet、etelcalcetide',k:'drg',on:['pth'],rx:['pth'],g:[9.0,4.2],lv:[-1,0,0],
+  flows:[['blood2pth','c',2.4],['pth2kid','h',.5],['pth2bone','h',.5]],
+  chips:[['pth','✚ CaSR 更敏感 → PTH ↓','drug'],['hub','血鈣 ↓，注意低血鈣','down']],
+  d:'<p>讓副甲狀腺的 CaSR 對鈣<b>更敏感</b>，同樣的血鈣就能壓住 PTH。</p><ul><li>透析病人的次發性副甲狀腺亢進：cinacalcet（口服）、etelcalcetide（透析後靜脈注射）</li><li>副甲狀腺癌</li><li>無法開刀的原發性亢進：可降血鈣，但不改善骨密度</li><li>副作用：低血鈣、噁心</li></ul>'},
+ {t:'降磷藥（磷結合劑）',k:'drg',on:['gut'],rx:['gut'],g:[9.0,4.8],lv:[0,0,-1],
+  flows:[['food','p',2.4],['gut2blood','p',.5]],
+  chips:[['gut','✚ 腸道綁住磷','drug']],
+  d:'<p>慢性腎病高血磷時，<b>隨餐</b>服用，在腸道把食物的磷綁住，從糞便排出：</p><ul><li>含鈣：碳酸鈣、醋酸鈣（要注意鈣負荷與血管鈣化）</li><li>不含鈣：sevelamer、lanthanum、含鐵的磷結合劑（ferric citrate、sucroferric oxyhydroxide）</li></ul><p>同時限制飲食中的磷，尤其加工食品的磷添加物，吸收率特別高。</p>'},
+ {t:'高血鈣急救',k:'drg',on:['kid','bone'],rx:['kid','bone'],g:[12.0,3.0],lv:[-1,0,0],
+  flows:[['blood2kid','c',2.4],['kid2urine','c',2.6],['bone2blood','c',.3]],
+  chips:[['kid','✚ 先大量生理食鹽水','drug'],['bone','✚ calcitonin 快但短；zoledronic acid 慢但久','drug'],['hub','同時找原因：PTH 高或低','info']],
+  d:'<ol style="padding-left:1.2em;margin:.35em 0"><li><b>靜脈生理食鹽水</b>：高血鈣讓腎臟濃縮尿液能力變差、病人常脫水，補水本身就能增加排鈣</li><li><b>Calcitonin</b>：數小時內起效，但約 48 小時後效果變差（快速耐受）</li><li><b>Zoledronic acid</b>：2–4 天起效，維持數週；腎功能差可改用 <b>denosumab</b></li><li>淋巴瘤、肉芽腫、維生素 D 中毒（活性 D 過多）：<b>類固醇</b></li><li>嚴重或腎衰竭：<b>透析</b></li></ol><p>Loop 利尿劑只在補足水分後、有水分過多疑慮時才用。停掉 thiazide、鈣片、維生素 D、鋰鹽。</p>'},
+ {t:'利尿劑與尿鈣',k:'drg',on:['kid'],rx:['kid'],g:[9.8,3.4],lv:[0,0,0],
+  flows:[['kid2blood','c',2],['kid2urine','c',.3]],
+  chips:[['kid','✚ thiazide：尿鈣 ↓','drug'],['hub','loop 利尿劑：尿鈣 ↑','info']],
+  d:'<ul><li><b>thiazide</b>：增加遠端小管的鈣再吸收 → 尿鈣減少。用於高尿鈣的腎結石、副甲狀腺低下；也可能讓原本輕微的原發性亢進「現形」</li><li><b>loop 利尿劑</b>（furosemide）：尿鈣增加</li><li><b>鋰鹽</b>：把副甲狀腺的設定點往上調，可能造成高血鈣與 PTH 偏高</li></ul>'},
+ {t:'Burosumab：擋住 FGF23',k:'drg',on:['bone','kid'],rx:['bone'],g:[9.4,3.0],lv:[0,1,-2],
+  flows:[['bone2kid','f',.3],['kid2blood','p',1.8]],
+  chips:[['bone','✚ 抗 FGF23 抗體','drug'],['kid','磷回收 ↑、活性 D ↑','up']],
+  d:'<p>單株抗體中和 FGF23，讓腎臟重新回收磷、活性 D 回升，血磷改善，骨軟化與佝僂病跟著好轉。</p><ul><li>X 染色體性低磷佝僂症（XLH）的兒童與成人</li><li>無法切除腫瘤的腫瘤性骨軟化症</li></ul><p>以前只能一天多次補磷加上活性 D，效果有限且容易造成次發性副甲狀腺亢進與腎鈣化。</p>'}
+]},
+{id:'op',n:'D 骨質疏鬆',s:'蝕骨與造骨',lab:LAB2,steps:[
+ {t:'骨重塑：拆舊屋、蓋新屋',k:'phy',on:['bone'],g:[9.4,3.5],lv:[0,0,0],
+  flows:[['bone2blood','c',1],['blood2bone','c',1]],
+  chips:[['bone','蝕骨 → 轉換 → 造骨 → 礦化','info'],['hub','成人每年約一成骨骼被更新','info']],
+  d:'<p>骨頭一直在更新：<b>蝕骨細胞</b>先挖掉舊骨，<b>造骨細胞</b>再填上新的骨基質，之後慢慢礦化。兩者平衡時骨量不變。</p><ul><li><b>RANKL／OPG</b>：RANKL 促進蝕骨細胞形成，OPG 是它的誘餌受體</li><li><b>Wnt／sclerostin</b>：骨細胞分泌的 sclerostin 會踩住造骨的 Wnt 訊號</li></ul><p>骨量在 20–30 歲達到高峰，之後逐漸流失。</p>'},
+ {t:'為什麼會骨鬆：停經、老化、類固醇',k:'phy',on:['bone'],g:[9.4,3.5],lv:[1,-1,-1],
+  flows:[['bone2blood','c',1.8],['blood2bone','c',.6]],
+  chips:[['bone','雌激素 ↓ → RANKL ↑ → 蝕骨 > 造骨','up']],
+  d:'<ul><li><b>停經</b>：雌激素下降 → RANKL 增加，蝕骨加速，停經後前幾年流失最快</li><li><b>老化</b>：造骨能力下降、維生素 D 不足、活動量減少</li><li><b>類固醇</b>：主要<b>抑制造骨</b>，用藥前幾個月骨折風險就上升，是最常見的次發性骨鬆</li><li>其他：性腺低下、甲狀腺亢進、原發性副甲狀腺亢進、抽菸、酒精</li></ul>'},
+ {t:'診斷：DXA 與脆弱性骨折',k:'phy',on:['bone'],g:[9.4,3.5],lv:[1,-1,-2],
+  flows:[['bone2blood','c',1.2]],
+  chips:[['bone','T 值 ≤ −2.5 或脆弱性骨折','down']],
+  d:'<ul><li>雙能量 X 光吸收儀（DXA）：停經後女性與 50 歲以上男性，<b>T 值 ≤ −2.5</b> 即為骨質疏鬆</li><li>髖部或脊椎的<b>脆弱性骨折</b>（站立高度跌倒就骨折），即使 T 值未達標準也可診斷</li><li><b>FRAX</b> 估算 10 年骨折風險，協助決定是否治療</li><li>脊椎骨折常<b>沒有症狀</b>，只表現為變矮、駝背，要主動照 X 光</li></ul>'},
+ {t:'鈣＋維生素 D：打底',k:'drg',on:['gut','bone'],rx:['gut'],g:[9.4,3.5],lv:[0,0,0],
+  flows:[['food','c',2],['gut2blood','c',2],['blood2bone','c',1.6]],
+  chips:[['gut','✚ 鈣＋維生素 D','drug'],['bone','所有骨鬆藥的基礎','info']],
+  d:'<p>足夠的鈣與維生素 D 是所有骨鬆藥物的<b>基礎</b>，本身降低骨折的效果有限；以飲食攝取為主，不足再補充。</p><p>開始雙磷酸鹽或 denosumab 前要先補足維生素 D，避免低血鈣。加上負重運動、肌力訓練與防跌。</p>'},
+ {t:'雙磷酸鹽：讓蝕骨細胞停工',k:'drg',on:['bone'],rx:['bone'],g:[9.3,3.4],lv:[-2,-1,1],
+  flows:[['bone2blood','c',.4],['blood2bone','c',1]],
+  chips:[['bone','✚ 黏在骨表面 → 蝕骨細胞凋亡','drug']],
+  d:'<p>alendronate、risedronate、ibandronate、zoledronic acid。藥物黏附在骨頭的羥磷灰石上，被蝕骨細胞吞入後抑制 FPPS 酵素，使蝕骨細胞凋亡。造骨也跟著減少（兩者偶聯），但淨效果是骨量增加。</p><ul><li>口服：空腹、大杯白開水、服藥後保持上身直立</li><li>靜脈（zoledronic acid）：可能有發燒、肌肉痛的類流感反應</li><li>藥物長期留在骨頭 → 使用數年後，風險較低者可考慮<b>藥物假期</b></li><li>罕見：顎骨壞死、非典型股骨骨折；腎功能不佳有使用限制</li></ul>'},
+ {t:'Denosumab：擋住 RANKL',k:'drg',on:['bone','kid'],rx:['bone'],g:[9.0,3.2],lv:[-2,-2,1],
+  flows:[['bone2blood','c',.2]],
+  chips:[['bone','✚ 抗 RANKL 抗體 → 蝕骨細胞形成 ↓','drug'],['kid','腎功能差的人更易低血鈣','down']],
+  d:'<p>單株抗體中和 RANKL，蝕骨細胞無法形成，骨吸收強力下降，每半年皮下注射。</p><ul><li>不經腎臟排除，腎功能差仍可使用，但<b>低血鈣風險高</b>（尤其透析病人），要先補足鈣與維生素 D 並追蹤血鈣</li></ul><div class="warn"><b>不能有藥物假期</b>：停藥或延遲打針後骨吸收會反彈，可能在數月內發生<b>多處脊椎骨折</b>。要停用時必須接著使用雙磷酸鹽。</div>'},
+ {t:'Raloxifene 與荷爾蒙治療',k:'drg',on:['bone'],rx:['bone'],g:[9.4,3.5],lv:[-1,0,1],
+  flows:[['bone2blood','c',.8],['blood2bone','c',1]],
+  chips:[['bone','✚ 在骨頭模仿雌激素 → 蝕骨 ↓','drug']],
+  d:'<ul><li><b>Raloxifene</b>（選擇性雌激素受體調節劑）：在骨頭模仿雌激素，降低<b>脊椎</b>骨折（髖部證據不足）；也降低侵襲性乳癌風險。副作用：靜脈血栓、熱潮紅</li><li><b>荷爾蒙治療</b>：停經初期有更年期症狀的女性可考慮，能預防骨流失，但需評估血栓、乳癌、心血管風險</li><li><b>降鈣素</b>：目前在骨鬆治療角色很小，長期使用有惡性腫瘤風險的疑慮</li></ul>'},
+ {t:'Teriparatide、abaloparatide：間歇性 PTH',k:'drg',on:['bone','pth'],rx:['bone'],g:[9.6,3.4],lv:[1,2,2],
+  flows:[['pth2bone','h',1.2],['blood2bone','c',2]],
+  chips:[['bone','✚ 每天一針：造骨 > 蝕骨','drug'],['hub','可能暫時性血鈣偏高','up']],
+  d:'<p>teriparatide（PTH 片段）、abaloparatide（PTHrP 類似物）。持續高 PTH 會骨流失，但<b>每天短暫的高峰</b>讓造骨先於蝕骨啟動，形成「促骨生成窗口」。</p><ul><li>用於骨折風險非常高的病人，療程通常約 2 年</li><li>停藥後要接著使用抑制蝕骨的藥物，否則增加的骨量會流失</li><li>避免用於骨肉瘤風險較高者：Paget 病、曾接受骨骼放射治療、無法解釋的鹼性磷酸酶升高</li></ul>'},
+ {t:'Romosozumab：擋住 sclerostin',k:'drg',on:['bone'],rx:['bone'],g:[9.4,3.5],lv:[-1,2,2],
+  flows:[['blood2bone','c',2.2],['bone2blood','c',.5]],
+  chips:[['bone','✚ 抗 sclerostin：造骨 ↑、蝕骨 ↓','drug']],
+  d:'<p>中和骨細胞分泌的 sclerostin，放開 Wnt 訊號的煞車：<b>造骨增加、蝕骨減少</b>的雙重作用，骨密度在一年內快速上升。</p><ul><li>每月注射，療程 12 個月，之後接抑制蝕骨藥物</li><li>試驗中觀察到心肌梗塞、中風增加的訊號：<b>近一年內有心肌梗塞或中風者不建議使用</b></li></ul>'},
+ {t:'用藥順序與藥物假期',k:'drg',on:['bone'],rx:['bone'],g:[9.4,3.5],lv:[0,1,2],
+  flows:[['blood2bone','c',1.4]],
+  chips:[['bone','極高風險：先促骨生成，再抑制蝕骨','info']],
+  d:'<ul><li><b>骨折風險極高</b>（近期骨折、多處脊椎骨折、T 值很低）：先用促骨生成藥（teriparatide、abaloparatide、romosozumab），<b>再接</b>抑制蝕骨藥，骨密度增加最多</li><li>先用抑制蝕骨藥再換促骨生成藥，效果較打折</li><li><b>雙磷酸鹽</b>：使用數年後重新評估，風險較低者可休息（藥物假期），期間定期追蹤</li><li><b>Denosumab</b>：沒有藥物假期，停用一定要接雙磷酸鹽</li></ul>'}
+]}
+];
+
+var DRUGS=[
+ ['鈣片＋calcitriol／alfacalcidol','腸道（活性 D）','直接提供活性 D，不需腎臟活化','副甲狀腺低下、慢性腎病','目標正常偏低血鈣；注意尿鈣'],
+ ['palopegteriparatide','全身（PTH 受體）','長效 PTH 補充','副甲狀腺低下','新藥'],
+ ['cholecalciferol（D3）','肝 → 腎活化','補 25-OH D','維生素 D 缺乏','追蹤 25-OH D'],
+ ['cinacalcet、etelcalcetide','副甲狀腺 CaSR','擬鈣劑，PTH ↓','透析次發性亢進、副甲狀腺癌、無法開刀的原發性','低血鈣、噁心'],
+ ['磷結合劑','腸道','綁住食物中的磷','慢性腎病高血磷','隨餐服用；含鈣者注意鈣負荷'],
+ ['thiazide','腎臟遠端小管','增加鈣再吸收','高尿鈣結石、副甲狀腺低下','可能讓輕微原發性亢進現形'],
+ ['burosumab','FGF23','中和 FGF23 → 磷 ↑','XLH、腫瘤性骨軟化症',''],
+ ['雙磷酸鹽','骨（蝕骨細胞）','抑制 FPPS → 蝕骨細胞凋亡','骨鬆、惡性高血鈣','口服服藥規則；顎骨壞死、非典型骨折；藥物假期'],
+ ['denosumab','骨（RANKL）','抗 RANKL 抗體','骨鬆、惡性高血鈣','低血鈣（腎病）；停藥反彈，須接雙磷酸鹽'],
+ ['raloxifene','骨（雌激素受體）','選擇性雌激素受體調節','停經後骨鬆（脊椎）','靜脈血栓'],
+ ['teriparatide、abaloparatide','骨（PTH 受體）','間歇性刺激 → 造骨 > 蝕骨','極高骨折風險','之後接抑制蝕骨藥'],
+ ['romosozumab','骨（sclerostin）','造骨 ↑、蝕骨 ↓','極高骨折風險','近一年心肌梗塞或中風不建議'],
+ ['calcitonin','骨、腎','短暫抑制蝕骨、增加尿鈣','高血鈣急救（短期）','約 48 小時後快速耐受']
+];
+
+/* ================= 畫面 ================= */
+var axi=0,steps=AX[0].steps,idx=0,cur=[9.4,3.5],tgt=[9.4,3.5];
+var ttl=$('#ttl'),txt=$('#txt'),cnt=$('#cnt'),where=$('#where'),dots=$('#dots'),chipsG=$('#chips'),partsG=$('#parts');
+var prevB=$('#prev'),nextB=$('#next'),playB=$('#play'),tabs=$('#tabs'),vca=$('#vca'),vp=$('#vp');
+var RM=matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+AX.forEach(function(a,k){var b=document.createElement('button');b.type='button';b.setAttribute('role','tab');b.innerHTML=a.n+'<small>'+a.s+'</small>';b.onclick=function(){stopAuto();setAx(k,0,true)};tabs.appendChild(b)});
+DRUGS.forEach(function(r){var tr=document.createElement('tr');tr.innerHTML='<td><b>'+r[0]+'</b></td><td>'+r[1]+'</td><td>'+r[2]+'</td><td>'+r[3]+'</td><td>'+r[4]+'</td>';$('#tbody').appendChild(tr)});
+
+var mrows=$('#mrows'),MB=[];
+for(var r=0;r<3;r++){
+  var y=556+r*17,g=document.createElementNS(SVGNS,'g');
+  g.innerHTML='<text x="222" y="'+(y+4)+'"></text><rect class="trk" x="276" y="'+(y-4)+'" width="72" height="8" rx="4"/><rect class="bar" x="312" y="'+(y-4)+'" width="0" height="8" rx="4"/><line class="mid" x1="312" x2="312" y1="'+(y-7)+'" y2="'+(y+7)+'"/><text class="v" x="354" y="'+(y+4)+'"></text>';
+  mrows.appendChild(g);MB.push({lab:g.children[0],bar:g.children[2],v:g.children[4]});
+}
+function setMeter(lab,lv){
+  var sym={'-2':'↓↓','-1':'↓','0':'—','1':'↑','2':'↑↑'};
+  for(var r=0;r<3;r++){var v=lv?lv[r]:0,w=Math.abs(v)*18;
+    MB[r].lab.textContent=lab[r];MB[r].bar.setAttribute('x',v<0?312-w:312);MB[r].bar.setAttribute('width',w);
+    MB[r].bar.setAttribute('fill',v>0?'var(--up)':'var(--down)');MB[r].v.textContent=sym[String(v)];
+    MB[r].v.setAttribute('fill',v>0?'var(--up)':v<0?'var(--down)':'var(--mute)')}
+}
+function chip(at,text,cls){
+  var p=AT[at],g=document.createElementNS(SVGNS,'g');g.setAttribute('class','chip '+cls);
+  var t=document.createElementNS(SVGNS,'text');t.textContent=text;t.setAttribute('text-anchor','middle');g.appendChild(t);chipsG.appendChild(g);
+  var w=t.getComputedTextLength()+18,h=22,x=Math.max(4+w/2,Math.min(596-w/2,p[0]));
+  var rr=document.createElementNS(SVGNS,'rect');rr.setAttribute('x',x-w/2);rr.setAttribute('y',p[1]-h/2);rr.setAttribute('width',w);rr.setAttribute('height',h);
+  g.insertBefore(rr,t);t.setAttribute('x',x);t.setAttribute('y',p[1]+4.5);return g;
+}
+var STACK={kid:-1,gut:-1};
+function layoutChips(list){chipsG.textContent='';var used={};
+  list.forEach(function(c,k){var n=used[c[0]]||0;used[c[0]]=n+1;var g=chip(c[0],c[1],c[2]);
+    if(n)g.setAttribute('transform','translate(0,'+((STACK[c[0]]||1)*n*26)+')');g.style.animationDelay=(k*80)+'ms'})}
+
+function setAx(k,i,sync){axi=k;steps=AX[k].steps;[].forEach.call(tabs.children,function(b,j){b.setAttribute('aria-selected',j===k)});go(i||0,sync)}
+function go(i,sync){
+  idx=Math.max(0,Math.min(steps.length-1,i));
+  var a=AX[axi],s=steps[idx];
+  var kt={phy:'生理',dz:'疾病',drg:'藥物'}[s.k];
+  ttl.innerHTML='<span class="kind '+s.k+'">'+kt+'</span>'+s.t;txt.innerHTML=s.d;
+  cnt.textContent=(idx+1)+' / '+steps.length;where.innerHTML='<b>'+a.n+'</b> · '+a.s;
+  ORG.forEach(function(o){var e=$('#o-'+o);e.classList.toggle('on',s.on.indexOf(o)>=0);e.classList.toggle('dim',axi>0&&s.on.indexOf(o)<0);$('#r-'+o).classList.toggle('on',(s.rx||[]).indexOf(o)>=0)});
+  layoutChips(s.chips||[]);setFlows(s.flows||[]);setMeter(a.lab,s.lv);tgt=s.g.slice();
+  prevB.disabled=idx===0&&axi===0;
+  nextB.textContent=idx<steps.length-1?'下一步 →':(axi<AX.length-1?'下一個分頁 →':'回到開頭 ↺');
+  dots.textContent='';
+  steps.forEach(function(st,k){var b=document.createElement('button');b.type='button';b.setAttribute('aria-label','第 '+(k+1)+' 步');if(k===idx)b.setAttribute('aria-current','true');b.onclick=function(){stopAuto();go(k,true)};dots.appendChild(b)});
+  afterStep(s,sync);
+}
+function next(sync){if(idx<steps.length-1)return go(idx+1,sync);setAx(axi<AX.length-1?axi+1:0,0,sync)}
+function prev(sync){if(idx>0)return go(idx-1,sync);if(axi>0)setAx(axi-1,AX[axi-1].steps.length-1,sync)}
+prevB.onclick=function(){stopAuto();prev(true)};
+nextB.onclick=function(){stopAuto();next(true)};
+document.addEventListener('keydown',function(e){if(e.target.closest&&e.target.closest('input,textarea'))return;
+  if(e.key==='ArrowRight'){stopAuto();next(true)}else if(e.key==='ArrowLeft'){stopAuto();prev(true)}});
+var sx=null,sy=null,map=$('#map');
+map.addEventListener('touchstart',function(e){sx=e.touches[0].clientX;sy=e.touches[0].clientY},{passive:true});
+map.addEventListener('touchend',function(e){if(sx==null)return;var dx=e.changedTouches[0].clientX-sx,dy=e.changedTouches[0].clientY-sy;if(Math.abs(dx)>40&&Math.abs(dx)>Math.abs(dy)){stopAuto();dx<0?next(true):prev(true)}sx=null},{passive:true});
+
+/* 粒子＋數字 */
+var P={},flows=[],parts=[],last=0;
+[].forEach.call(document.querySelectorAll('#paths path'),function(p){P[p.id.slice(2)]={el:p,len:p.getTotalLength()}});
+function setFlows(f){flows=f.map(function(x){return {p:P[x[0]],c:COL[x[1]],r:x[2],acc:Math.random()}}).filter(function(x){return x.p})}
+function spawn(f){var c=document.createElementNS(SVGNS,'circle');c.setAttribute('r',(f.c===COL.c||f.c===COL.p)?4.2:3.4);c.setAttribute('fill',f.c);partsG.appendChild(c);parts.push({el:c,p:f.p,t:0,d:1700+Math.random()*500})}
+function col(v,lo,hi){return v>hi?'var(--up)':v<lo?'var(--down)':'var(--ink)'}
+function tick(ts){
+  var dt=last?Math.min(100,ts-last):16;last=ts;
+  if(!RM){flows.forEach(function(f){f.acc+=f.r*dt/1000;while(f.acc>=1){f.acc-=1;spawn(f)}});
+    for(var k=parts.length-1;k>=0;k--){var q=parts[k];q.t+=dt;var u=q.t/q.d;if(u>=1){q.el.remove();parts.splice(k,1);continue}
+      var pt=q.p.el.getPointAtLength(u*q.p.len);q.el.setAttribute('cx',pt.x);q.el.setAttribute('cy',pt.y);q.el.setAttribute('opacity',u<.1?u*10:u>.85?(1-u)/.15:1)}}
+  for(var j=0;j<2;j++){if(Math.abs(cur[j]-tgt[j])>.02)cur[j]+=(tgt[j]-cur[j])*Math.min(1,dt/350);else cur[j]=tgt[j]}
+  vca.textContent=cur[0].toFixed(1);vp.textContent=cur[1].toFixed(1);
+  vca.setAttribute('fill',col(cur[0],8.5,10.5));vp.setAttribute('fill',col(cur[1],2.5,4.5));
+  requestAnimationFrame(tick);
+}
+requestAnimationFrame(tick);
+
+/* 自動播放＋語音朗讀（Web Speech API，用裝置內建語音） */
+var autoOn=false,autoT=0,narr=false,sid=0,voice=null;
+var KEEP=[];
+var SS=window.speechSynthesis,sayB=$('#say');
+function pickVoice(){
+  if(!SS)return;var vs=SS.getVoices();if(!vs.length)return;
+  var pref=['zh-TW','zh_TW','zh-Hant','zh-HK','zh-CN','zh'];
+  for(var k=0;k<pref.length&&!voice;k++){voice=vs.filter(function(v){return v.lang.replace('_','-').indexOf(pref[k].replace('_','-'))===0})[0]||null}
+}
+if(SS){pickVoice();if('onvoiceschanged' in SS)SS.onvoiceschanged=pickVoice}else{sayB.hidden=true}
+function plain(s){
+  var t=s.t+'。'+s.d.replace(/<\/(li|p|div)>/g,'。').replace(/<[^>]+>/g,'');
+  var el=document.createElement('textarea');el.innerHTML=t;t=el.value;
+  [[/mg\/dL/g,'毫克每公合'],[/1,25-\(OH\)₂D/g,'1,25 雙羥基維生素 D'],[/25-OH D/g,'25 羥基維生素 D'],[/1α/g,'1 阿法'],[/FGF23/g,'FGF 23'],[/NaPi-2a／2c/g,'NaPi 2a 和 2c'],[/CKD-MBD/g,'CKD MBD'],[/T 值 ≤ −2.5/g,'T 值小於等於負 2.5'],[/≤/g,'小於等於'],[/−/g,'負'],
+   [/α/g,'阿法'],[/β/g,'貝他'],[/✚/g,''],[/✕/g,'被阻斷'],[/↑↑/g,'大幅增加'],[/↓↓/g,'大幅減少'],[/↑/g,'增加'],[/↓/g,'減少'],[/→/g,'，接著'],[/＋/g,'和'],[/(\d)\s*–\s*(\d)/g,'$1到$2'],[/–/g,'到'],[/</g,'小於'],[/>/g,'大於'],[/[／\/]/g,'、'],[/\s+/g,' '],[/[。，]\s*[。，]+/g,'。']]
+   .forEach(function(r){t=t.replace(r[0],r[1])});
+  return t;
+}
+function chunks(t){
+  var out=[];(t.match(/[^。！？；]+[。！？；]?/g)||[]).forEach(function(x){x=x.trim();if(!x||x==='。')return;
+    while(x.length>110){var cut=x.lastIndexOf('，',110);cut=cut>20?cut+1:110;out.push(x.slice(0,cut));x=x.slice(cut)}
+    if(x)out.push(x)});
+  return out;
+}
+function stopNarr(){sid++;if(SS&&(SS.speaking||SS.pending))SS.cancel()}
+function speak(text,done,sync){
+  var busy=SS.speaking||SS.pending;
+  stopNarr();var my=sid,cs=chunks(text),i=0;
+  function nx(){
+    if(my!==sid)return;
+    if(i>=cs.length){done&&done();return}
+    var u=new SpeechSynthesisUtterance(cs[i++]);u.lang=voice?voice.lang:'zh-TW';if(voice)u.voice=voice;u.rate=1;
+    u.onend=function(){if(my===sid)nx()};
+    u.onerror=function(e){if(my===sid&&e.error!=='interrupted'&&e.error!=='canceled')nx()};
+    // iOS WebKit 會把沒被引用的 utterance 回收掉而不出聲，留住最近幾個
+    KEEP.push(u);if(KEEP.length>6)KEEP.shift();
+    SS.speak(u);
+  }
+  // iOS／Safari 只允許在使用者點擊的同一個呼叫堆疊裡開始朗讀，所以點按鈕時要同步呼叫；
+  // 若剛 cancel 正在唸的句子，WebKit 立刻 speak 可能被吞掉，此時（已解鎖）改延遲
+  if(sync&&!busy)nx();else setTimeout(nx,80);
+}
+function schedule(ms){clearTimeout(autoT);autoT=setTimeout(function(){if(autoOn)next()},ms)}
+function afterStep(s,sync){
+  clearTimeout(autoT);
+  if(narr&&SS){speak(plain(s),function(){if(autoOn)schedule(700)},sync)}
+  else{stopNarr();if(autoOn)schedule(7000)}
+}
+function stopAuto(){autoOn=false;clearTimeout(autoT);playB.textContent='▶ 自動'}
+playB.onclick=function(){if(autoOn)return stopAuto();autoOn=true;playB.textContent='❚❚ 暫停';if(!narr)schedule(7000);else if(!SS.speaking)afterStep(steps[idx],true)};
+sayB.onclick=function(){narr=!narr;sayB.setAttribute('aria-pressed',narr);sayB.textContent=narr?'🔇 停止朗讀':'🔊 朗讀';afterStep(steps[idx],true)};
+document.addEventListener('visibilitychange',function(){if(document.hidden&&narr){stopNarr();stopAuto()}});
+
+var root=document.documentElement;
+try{var th=localStorage.getItem('cim-theme');if(th)root.setAttribute('data-theme',th)}catch(e){}
+$('#theme').onclick=function(){var dark=root.getAttribute('data-theme')?root.getAttribute('data-theme')==='dark':matchMedia('(prefers-color-scheme: dark)').matches;
+  var n=dark?'light':'dark';root.setAttribute('data-theme',n);try{localStorage.setItem('cim-theme',n)}catch(e){}};
+
+setAx(0,0);
+})();
+</script>
+</body>
+</html>
