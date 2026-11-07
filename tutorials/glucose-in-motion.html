@@ -1,0 +1,510 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>血糖，動起來</title>
+<meta name="description" content="一步一步看一餐飯後血糖怎麼被調控，以及各類降血糖藥卡在哪個器官、哪一步。">
+<style>
+:root{
+  --bg:#f6f4ef;--paper:#fffdf8;--ink:#1f2328;--mute:#5d6470;--line:#d9d4c7;
+  --accent:#0f6e64;--accent-soft:#d8ece8;
+  --glu:#e09a1a;--ins:#6a4fc4;--gcg:#d1552b;--inc:#1f9d55;--drug:#c0262d;
+  --organ:#ffffff;--organ-line:#b9b2a3;--organ-on:#fff6dc;--organ-on-line:#e09a1a;
+  --shadow:0 1px 2px rgba(0,0,0,.06),0 6px 20px rgba(0,0,0,.06);
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#14171b;--paper:#1c2026;--ink:#e8e6e1;--mute:#a3a9b3;--line:#323844;
+  --accent:#4fc1b3;--accent-soft:#1f3a37;
+  --glu:#f2b441;--ins:#a08cf0;--gcg:#ff8a5c;--inc:#4cd08a;--drug:#ff6b6b;
+  --organ:#232831;--organ-line:#4a5260;--organ-on:#3a3220;--organ-on-line:#f2b441;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 6px 20px rgba(0,0,0,.35);
+}}
+:root[data-theme="dark"]{
+  --bg:#14171b;--paper:#1c2026;--ink:#e8e6e1;--mute:#a3a9b3;--line:#323844;
+  --accent:#4fc1b3;--accent-soft:#1f3a37;
+  --glu:#f2b441;--ins:#a08cf0;--gcg:#ff8a5c;--inc:#4cd08a;--drug:#ff6b6b;
+  --organ:#232831;--organ-line:#4a5260;--organ-on:#3a3220;--organ-on-line:#f2b441;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 6px 20px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink)}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang TC","Noto Sans TC","Microsoft JhengHei",sans-serif;line-height:1.65;-webkit-text-size-adjust:100%}
+a{color:var(--accent)}
+.wrap{max-width:1180px;margin:0 auto;padding:0 16px}
+header.hero{padding:40px 0 18px}
+.kick{font-size:13px;letter-spacing:.12em;color:var(--accent);font-weight:700}
+h1{font-size:clamp(30px,6vw,52px);line-height:1.15;margin:.2em 0 .25em;letter-spacing:.02em}
+h1 span{color:var(--glu)}
+.lead{color:var(--mute);max-width:720px;margin:0}
+.legend{display:flex;flex-wrap:wrap;gap:8px 16px;margin:16px 0 0;padding:0;list-style:none;font-size:14px;color:var(--mute)}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:50%;margin-right:6px;vertical-align:-1px}
+.tabs{display:flex;gap:8px;margin:22px 0 14px;flex-wrap:wrap}
+.tabs button{appearance:none;border:1px solid var(--line);background:var(--paper);color:var(--ink);padding:10px 16px;border-radius:999px;font:inherit;font-weight:700;cursor:pointer}
+.tabs button[aria-selected="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+.tabs small{font-weight:400;opacity:.8;margin-left:6px}
+
+/* 藥物站選單 */
+#drugs{display:none;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;margin:0 0 14px}
+#drugs.show{display:grid}
+#drugs button{appearance:none;text-align:left;border:1px solid var(--line);background:var(--paper);color:var(--ink);border-radius:12px;padding:10px 12px;font:inherit;cursor:pointer;line-height:1.35}
+#drugs button b{display:block;font-size:15px}
+#drugs button span{font-size:12px;color:var(--mute)}
+#drugs button[aria-pressed="true"]{border-color:var(--drug);box-shadow:inset 0 0 0 1px var(--drug)}
+#drugs button .no{font-size:11px;color:var(--drug);font-weight:700;letter-spacing:.05em}
+
+/* 播放器 */
+.player{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:18px;align-items:start}
+.stage{position:sticky;top:10px;background:var(--paper);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);padding:8px}
+.stage svg{display:block;width:100%;height:auto;max-height:calc(100vh - 40px);touch-action:pan-y}
+.panel{background:var(--paper);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);padding:18px 20px;min-height:420px;display:flex;flex-direction:column}
+.where{font-size:13px;color:var(--mute);display:flex;justify-content:space-between;gap:8px}
+.where b{color:var(--accent)}
+.panel h2{font-size:23px;line-height:1.3;margin:6px 0 8px}
+.panel .txt{flex:1}
+.panel .txt p{margin:.35em 0}
+.panel .txt ul{margin:.35em 0;padding-left:1.2em}
+.panel .txt li{margin:.2em 0}
+.tag{display:inline-block;font-size:12px;padding:1px 8px;border-radius:999px;background:var(--accent-soft);color:var(--accent);font-weight:700;margin-right:4px}
+.warn{border-left:3px solid var(--drug);padding:4px 10px;margin:.6em 0;background:color-mix(in srgb,var(--drug) 8%,transparent);border-radius:0 8px 8px 0}
+.ctl{display:flex;align-items:center;gap:8px;margin-top:14px}
+.ctl button{appearance:none;border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:10px;padding:9px 14px;font:inherit;font-weight:700;cursor:pointer;min-width:44px}
+.ctl button:disabled{opacity:.35;cursor:default}
+.ctl .next{background:var(--accent);border-color:var(--accent);color:#fff;margin-left:auto}
+.dots{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}
+.dots button{width:10px;height:10px;border-radius:50%;border:0;padding:0;background:var(--line);cursor:pointer}
+.dots button[aria-current="true"]{background:var(--accent);transform:scale(1.25)}
+.hint{font-size:12px;color:var(--mute);margin-top:8px}
+
+/* SVG 內 */
+.org rect,.org ellipse,.org path.shape{fill:var(--organ);stroke:var(--organ-line);stroke-width:2;transition:fill .35s,stroke .35s}
+.org text{fill:var(--ink);font-size:17px;font-weight:700;text-anchor:middle}
+.org text.sub{font-size:11.5px;font-weight:400;fill:var(--mute)}
+.org.on rect,.org.on ellipse,.org.on path.shape{fill:var(--organ-on);stroke:var(--organ-on-line);stroke-width:3}
+.org.dim{opacity:.45}
+.org{transition:opacity .35s}
+.vessel{fill:none;stroke:var(--line);stroke-width:2;stroke-dasharray:3 5}
+.hub circle{fill:color-mix(in srgb,var(--glu) 12%,var(--paper));stroke:var(--glu);stroke-width:2.5}
+.hub text{text-anchor:middle;fill:var(--ink)}
+.hub .val{font-size:30px;font-weight:800}
+.hub .unit{font-size:11px;fill:var(--mute)}
+.hub .lbl{font-size:13px;font-weight:700}
+.chip rect{rx:9;ry:9;stroke-width:1.5}
+.chip text{font-size:12.5px;font-weight:700}
+.chip.up rect{fill:color-mix(in srgb,var(--inc) 14%,var(--paper));stroke:var(--inc)}
+.chip.up text{fill:var(--inc)}
+.chip.down rect{fill:color-mix(in srgb,var(--gcg) 14%,var(--paper));stroke:var(--gcg)}
+.chip.down text{fill:var(--gcg)}
+.chip.info rect{fill:var(--paper);stroke:var(--organ-line)}
+.chip.info text{fill:var(--ink)}
+.chip.drug rect{fill:var(--drug);stroke:var(--drug)}
+.chip.drug text{fill:#fff}
+.chips g.chip{animation:pop .35s ease-out both}
+@keyframes pop{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.pt{pointer-events:none}
+.pill{animation:pulse 1.6s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.55}}
+
+/* 比較表 */
+section.cmp{margin:34px 0 10px}
+section.cmp h2{font-size:24px;margin:0 0 6px}
+.tblw{overflow-x:auto;border:1px solid var(--line);border-radius:14px;background:var(--paper)}
+table{border-collapse:collapse;width:100%;min-width:760px;font-size:14px}
+th,td{padding:9px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{background:var(--accent-soft);color:var(--ink);white-space:nowrap}
+tr:last-child td{border-bottom:0}
+td.c{text-align:center;white-space:nowrap}
+.hi{color:var(--drug);font-weight:700}.lo{color:var(--inc);font-weight:700}
+footer{color:var(--mute);font-size:13px;padding:22px 0 40px;border-top:1px solid var(--line);margin-top:28px}
+.theme{position:absolute;top:14px;right:16px;appearance:none;border:1px solid var(--line);background:var(--paper);color:var(--ink);border-radius:999px;padding:6px 12px;font:inherit;font-size:13px;cursor:pointer}
+@media (max-width:860px){
+  .player{grid-template-columns:1fr}
+  .stage{position:sticky;top:0;z-index:2;border-radius:0 0 16px 16px;margin:0 -16px;border-left:0;border-right:0;padding:4px}
+  .panel{min-height:0}
+  .stage svg{max-height:52vh}
+  .chip text{font-size:14px}
+  header.hero{padding-top:52px}
+}
+@media (prefers-reduced-motion:reduce){.chips g.chip,.pill{animation:none}}
+</style>
+</head>
+<body>
+<button class="theme" id="theme" type="button" aria-label="切換深淺色">◐ 深淺色</button>
+<div class="wrap">
+<header class="hero">
+  <div class="kick">內分泌新陳代謝科 · 教學互動</div>
+  <h1>血糖，<span>動起來</span></h1>
+  <p class="lead">一步一步看一餐飯後，腸道、胰臟、肝臟、肌肉、脂肪、腎臟和大腦怎麼一起把血糖拉回來；再看每一類降血糖藥，是卡在哪個器官、哪一步。</p>
+  <ul class="legend">
+    <li><i style="background:var(--glu)"></i>葡萄糖</li>
+    <li><i style="background:var(--ins)"></i>胰島素</li>
+    <li><i style="background:var(--gcg)"></i>升糖素</li>
+    <li><i style="background:var(--inc)"></i>腸泌素（GLP-1／GIP）</li>
+    <li><i style="background:var(--drug)"></i>藥物作用點</li>
+  </ul>
+</header>
+
+<div class="tabs" role="tablist">
+  <button role="tab" id="tabA" aria-selected="true">A 一餐的旅程<small>9 步</small></button>
+  <button role="tab" id="tabB" aria-selected="false">B 藥物作用點<small>10 類</small></button>
+</div>
+<div id="drugs" role="group" aria-label="選擇藥物類別"></div>
+
+<div class="player">
+  <div class="stage">
+<svg id="map" viewBox="0 0 600 580" role="img" aria-label="血糖調控器官示意圖">
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="var(--organ-line)"/></marker>
+  </defs>
+  <!-- 血管路徑（粒子沿著走） -->
+  <g id="paths">
+    <path class="vessel" id="p-food" d="M30 470 Q60 405 100 402"/>
+    <path class="vessel" id="p-gut2blood" d="M160 392 Q215 360 248 330"/>
+    <path class="vessel" id="p-liver2blood" d="M175 205 Q230 230 250 262"/>
+    <path class="vessel" id="p-blood2liver" d="M240 280 Q195 270 172 232"/>
+    <path class="vessel" id="p-blood2muscle" d="M360 300 Q420 320 452 352"/>
+    <path class="vessel" id="p-blood2fat" d="M345 340 Q385 420 398 470"/>
+    <path class="vessel" id="p-blood2kidney" d="M280 360 Q260 420 245 468"/>
+    <path class="vessel" id="p-kidney2blood" d="M222 468 Q228 410 262 356"/>
+    <path class="vessel" id="p-kidney2urine" d="M196 528 Q140 552 70 548"/>
+    <path class="vessel" id="p-blood2brain" d="M300 220 L300 112"/>
+    <path class="vessel" id="p-blood2panc" d="M350 255 Q410 225 440 212"/>
+    <path class="vessel" id="p-gut2panc" d="M130 368 C70 300 330 110 445 168"/>
+    <path class="vessel" id="p-gut2brain" d="M112 366 C40 260 150 70 245 70"/>
+    <path class="vessel" id="p-ins2liver" d="M440 185 Q300 140 178 180"/>
+    <path class="vessel" id="p-gcg2liver" d="M445 205 Q310 175 180 198"/>
+    <path class="vessel" id="p-ins2muscle" d="M500 240 Q530 290 505 338"/>
+    <path class="vessel" id="p-ins2fat" d="M470 242 Q470 380 432 462"/>
+  </g>
+
+  <!-- 器官 -->
+  <g class="org" id="o-brain"><rect x="230" y="22" width="140" height="88" rx="40"/><text x="300" y="62">大腦</text><text class="sub" x="300" y="82">下視丘・食慾</text></g>
+  <g class="org" id="o-liver"><path class="shape" d="M60 165 Q70 130 150 140 Q200 148 195 185 Q190 240 120 245 Q55 245 60 165z"/><text x="125" y="192">肝臟</text><text class="sub" x="125" y="212">肝醣・糖質新生</text></g>
+  <g class="org" id="o-panc"><path class="shape" d="M425 160 Q470 140 540 150 Q575 160 565 195 Q550 235 470 240 Q420 238 425 200z"/><text x="495" y="190">胰臟</text><text class="sub" x="495" y="210">β 細胞・α 細胞</text></g>
+  <g class="org" id="o-gut"><path class="shape" d="M95 360 Q150 345 190 375 Q205 420 170 450 Q120 470 95 440 Q75 410 95 360z"/><text x="143" y="405">腸道</text><text class="sub" x="143" y="425">吸收・腸泌素</text></g>
+  <g class="org" id="o-muscle"><rect x="440" y="330" width="130" height="78" rx="18"/><text x="505" y="365">肌肉</text><text class="sub" x="505" y="385">飯後最大去處</text></g>
+  <g class="org" id="o-fat"><ellipse cx="420" cy="500" rx="70" ry="38"/><text x="420" y="500">脂肪</text><text class="sub" x="420" y="518">儲存・脂解</text></g>
+  <g class="org" id="o-kidney"><path class="shape" d="M195 470 Q230 455 260 480 Q275 520 240 540 Q200 552 185 520 Q178 490 195 470z"/><text x="228" y="505">腎臟</text><text class="sub" x="228" y="524">過濾・回收</text></g>
+  <text x="58" y="566" font-size="12" fill="var(--mute)" text-anchor="middle">尿液</text>
+  <text x="26" y="488" font-size="12" fill="var(--mute)" text-anchor="middle">食物</text>
+
+  <!-- 血液（血糖） -->
+  <g class="hub" id="hub"><circle cx="300" cy="290" r="66"/>
+    <text class="lbl" x="300" y="262">血液中的血糖</text>
+    <text class="val" id="gval" x="300" y="300">90</text>
+    <text class="unit" x="300" y="318">mg/dL</text>
+  </g>
+
+  <g id="parts" class="pt"></g>
+  <g id="chips" class="chips"></g>
+</svg>
+  </div>
+
+  <div class="panel" aria-live="polite">
+    <div class="where"><span id="where"><b>A 一餐的旅程</b></span><span id="cnt">1 / 9</span></div>
+    <h2 id="ttl"></h2>
+    <div class="txt" id="txt"></div>
+    <div class="ctl">
+      <button id="prev" type="button" aria-label="上一步">←</button>
+      <button id="play" type="button" aria-label="自動播放">▶ 自動</button>
+      <button class="next" id="next" type="button">下一步 →</button>
+    </div>
+    <div class="dots" id="dots"></div>
+    <div class="hint">鍵盤 ← → 切換，手機可在圖上左右滑動。</div>
+  </div>
+</div>
+
+<section class="cmp">
+  <h2>各類藥物一覽</h2>
+  <p class="lead" style="margin-bottom:10px">主要作用部位、低血糖與體重的影響，以及臨床上最常被問的重點。</p>
+  <div class="tblw"><table>
+    <thead><tr><th>類別</th><th>主要作用部位</th><th>機轉一句話</th><th>單用低血糖</th><th>體重</th><th>重點</th></tr></thead>
+    <tbody id="tbody"></tbody>
+  </table></div>
+</section>
+
+<footer>
+  教學示意圖，器官位置與比例經過簡化，數字為典型值，非個別病人的用藥建議；實際用藥依仿單、腎功能與最新指引（ADA Standards of Care）判斷。<br>
+  工具版本：2026-11-08
+</footer>
+</div>
+
+<script>
+(function(){
+'use strict';
+var $=function(s){return document.querySelector(s)};
+var SVGNS='http://www.w3.org/2000/svg';
+var COL={g:'var(--glu)',i:'var(--ins)',c:'var(--gcg)',n:'var(--inc)'};
+// 晶片位置（每個器官旁的錨點）
+var AT={brain:[300,128],liver:[125,118],panc:[495,128],gut:[143,478],muscle:[505,428],fat:[470,556],kidney:[300,562],hub:[300,372],blood:[300,372]};
+
+/* ---------------- 內容 ---------------- */
+// flows: [路徑, 顏色代碼, 每秒粒子數]；chips: [位置, 文字, 樣式 up|down|info|drug]
+var A=[
+ {t:'空腹：肝臟負責供糖',g:90,on:['liver','brain'],
+  flows:[['liver2blood','g',1.4],['blood2brain','g',1],['blood2muscle','g',.4],['gcg2liver','c',.6],['ins2liver','i',.4]],
+  chips:[['liver','肝醣分解＋糖質新生','info'],['brain','大腦一天約用 120 g 糖','info'],['panc','基礎胰島素＋升糖素','info']],
+  d:'<p>沒吃東西時，血糖靠<b>肝臟</b>把肝醣分解、並用胺基酸、乳酸等原料做出新的葡萄糖（糖質新生），持續送進血液。</p><p>大腦幾乎只用葡萄糖當燃料，所以空腹時最重要的任務是「別讓血糖掉太低」。胰臟同時分泌少量<b>基礎胰島素</b>與<b>升糖素</b>，兩者互相拉住，讓血糖穩在約 70–100 mg/dL。</p>'},
+ {t:'吃飯：腸道把澱粉切成葡萄糖',g:115,on:['gut'],
+  flows:[['food','g',3],['gut2blood','g',3],['liver2blood','g',.6],['blood2brain','g',1]],
+  chips:[['gut','α-葡萄糖苷酶 把澱粉、蔗糖切成單醣','info'],['hub','血糖開始上升','down']],
+  d:'<p>澱粉和蔗糖不能直接吸收，要先在小腸絨毛表面被<b>α-葡萄糖苷酶</b>切成葡萄糖等單醣，再經腸壁的 <b>SGLT1</b> 吸收進血液。</p><p>這一步的速度決定飯後血糖衝多快——之後講的 acarbose 就是在這裡踩煞車。</p>'},
+ {t:'腸泌素：腸道先通知胰臟',g:130,on:['gut','panc','brain'],
+  flows:[['gut2blood','g',2.5],['gut2panc','n',2.2],['gut2brain','n',1.2],['blood2brain','g',1]],
+  chips:[['gut','L 細胞分泌 GLP-1、K 細胞分泌 GIP','up'],['panc','先替胰島素分泌「暖身」','up'],['brain','GLP-1：飽足感、胃排空變慢','up']],
+  d:'<p>食物一碰到腸道，腸壁就分泌兩種<b>腸泌素</b>：L 細胞的 <b>GLP-1</b> 與 K 細胞的 <b>GIP</b>。它們提早通知胰臟「糖要來了」。</p><p>同樣的葡萄糖用吃的，引起的胰島素反應比直接打點滴多出許多，這就是<b>腸泌素效應</b>，約占飯後胰島素分泌的 50–70%。</p><div class="warn">天然 GLP-1 在血中只撐 1–2 分鐘，就被 <b>DPP-4</b> 酵素分解。這個弱點正是兩類藥物的切入點。</div>'},
+ {t:'胰臟：β 細胞釋放胰島素',g:140,on:['panc'],
+  flows:[['blood2panc','g',2.5],['ins2liver','i',2],['ins2muscle','i',2],['ins2fat','i',1.5],['gut2blood','g',1.5]],
+  chips:[['panc','β 細胞：胰島素 ↑','up'],['liver','α 細胞的升糖素 ↓','down'],['hub','飯後高峰（正常人 < 140）','info']],
+  d:'<p>β 細胞感受血糖的方式像一條連鎖反應：</p><ul><li>葡萄糖經 GLUT2 進入 β 細胞，被代謝產生 <b>ATP</b></li><li>ATP 升高，關閉細胞膜上的 <b>K-ATP 通道</b></li><li>細胞去極化、鈣離子流入</li><li>胰島素顆粒釋放</li></ul><p>同時 α 細胞的<b>升糖素被壓下來</b>，肝臟不再拚命供糖。記住 K-ATP 通道，磺醯脲類（SU）就是直接去關它。</p>'},
+ {t:'肌肉與脂肪：把糖收進去',g:120,on:['muscle','fat'],
+  flows:[['ins2muscle','i',1.6],['ins2fat','i',1.2],['blood2muscle','g',3.4],['blood2fat','g',1.4]],
+  chips:[['muscle','GLUT4 移到細胞膜 → 吸糖','up'],['fat','吸糖＋抑制脂肪分解','up']],
+  d:'<p>胰島素一到，肌肉和脂肪細胞把藏在細胞內的 <b>GLUT4</b> 運輸蛋白送到細胞膜上，葡萄糖才進得去。</p><p><b>肌肉是飯後葡萄糖最大的去處</b>，所以運動和肌肉量對血糖這麼重要（運動收縮本身也能讓 GLUT4 上膜，不必靠胰島素）。</p><p>脂肪組織除了吸糖，更重要的是胰島素讓它<b>停止分解脂肪</b>，游離脂肪酸下降，肝臟和肌肉對胰島素也更敏感。</p>'},
+ {t:'肝臟：從「供糖」切換成「存糖」',g:105,on:['liver'],
+  flows:[['ins2liver','i',1.8],['blood2liver','g',2.4]],
+  chips:[['liver','肝糖輸出 ↓、合成肝醣 ↑','up']],
+  d:'<p>門靜脈裡的胰島素濃度最高，肝臟最先收到訊號：<b>關掉糖質新生與肝醣分解</b>，反過來把多的葡萄糖存成肝醣。</p><p>空腹時的「供糖工廠」，飯後變成「倉庫」。這個開關失靈，就是第 2 型糖尿病空腹血糖偏高的主因——也是 metformin 的主戰場。</p>'},
+ {t:'腎臟：過濾後再全部撿回來',g:100,on:['kidney'],
+  flows:[['blood2kidney','g',2.4],['kidney2blood','g',2.4]],
+  chips:[['kidney','每天過濾約 180 g 葡萄糖','info'],['hub','近端小管 SGLT2 回收約 90%','info']],
+  d:'<p>腎絲球每天會把約 <b>180 g</b> 葡萄糖濾進原尿，但正常人尿裡幾乎沒有糖，因為近端腎小管把它全部撿回來：</p><ul><li><b>SGLT2</b> 回收約 90%</li><li><b>SGLT1</b> 回收剩下的約 10%</li></ul><p>血糖超過約 <b>180 mg/dL</b>（腎閾值）時回收不完，才會出現尿糖。</p>'},
+ {t:'回到空腹：系統歸位',g:90,on:['liver','panc'],
+  flows:[['liver2blood','g',1.2],['blood2brain','g',1],['gcg2liver','c',.6],['ins2liver','i',.4],['blood2muscle','g',.4]],
+  chips:[['hub','2–3 小時內回到基線','info'],['liver','肝臟恢復供糖','info']],
+  d:'<p>正常人飯後 2–3 小時，血糖回到空腹水準：胰島素回到基礎量，升糖素恢復，肝臟再度接手供糖。</p><p>整個過程中血糖大約只在 70–140 mg/dL 之間擺動——靠的是上面每一個器官都準時做好自己的事。</p>'},
+ {t:'第 2 型糖尿病：八個環節一起出錯',g:210,on:['muscle','liver','panc','fat','gut','kidney','brain'],
+  flows:[['food','g',2],['gut2blood','g',3],['liver2blood','g',2.4],['gcg2liver','c',1.4],['blood2kidney','g',2.4],['kidney2blood','g',2],['kidney2urine','g',.8],['blood2muscle','g',.6],['ins2muscle','i',.5]],
+  chips:[['muscle','胰島素阻抗：吸糖變少','down'],['liver','肝糖輸出關不掉','down'],['panc','β 細胞不足＋升糖素過多','down'],['fat','脂解增加，游離脂肪酸↑','down'],['gut','腸泌素效應變弱','down'],['kidney','SGLT2 回收反而增加','down'],['brain','食慾調控失常','down']],
+  d:'<p>第 2 型糖尿病不是只有「胰島素不夠」。DeFronzo 把它整理成<b>八個環節</b>（ominous octet）：</p><ul><li>肌肉、肝臟、脂肪的<b>胰島素阻抗</b></li><li>胰臟 β 細胞分泌不足、α 細胞<b>升糖素過多</b></li><li>腸道<b>腸泌素效應</b>變弱</li><li>腎臟<b>回收更多葡萄糖</b></li><li>大腦的<b>食慾調控</b>失常</li></ul><p>每一類藥物各修其中一到幾個環節，所以常需要組合使用。切到 <b>B 藥物作用點</b> 看每一類藥卡在哪裡。</p>'}
+];
+
+var D=[
+ {id:'met',n:'Metformin',s:'雙胍類',
+  tbl:['肝臟（主）、腸道','降低肝糖輸出','<span class="lo">低</span>','中性／略減','第一線基礎藥；腸胃不適、B12；eGFR &lt; 30 禁用'],
+  steps:[
+  {t:'主戰場：關小肝臟的供糖',g:150,on:['liver'],flows:[['liver2blood','g',.5],['blood2brain','g',1]],chips:[['liver','✚ Metformin：糖質新生 ↓','drug']],
+   d:'<p>Metformin 最主要的作用在<b>肝臟</b>：抑制糖質新生，降低肝糖輸出，所以對<b>空腹血糖</b>特別有效。</p><p>它不刺激胰臟分泌胰島素，是修好「肝臟開關關不掉」這個環節。</p>'},
+  {t:'也作用在腸道與周邊組織',g:130,on:['gut','muscle'],flows:[['gut2panc','n',1],['blood2muscle','g',1.6]],chips:[['gut','✚ 腸道葡萄糖利用 ↑、GLP-1 ↑','drug'],['muscle','胰島素敏感性改善','up']],
+   d:'<p>近年研究發現 metformin 有相當部分作用發生在<b>腸道</b>：增加腸道對葡萄糖的利用、提高 GLP-1 分泌，也改變腸道菌相。</p><p>周邊組織（肌肉）的胰島素敏感性也會稍微改善。</p>'},
+  {t:'臨床重點',g:120,on:['liver','kidney'],flows:[['liver2blood','g',.7],['blood2brain','g',1]],chips:[['kidney','注意腎功能','info']],
+   d:'<ul><li><span class="tag">低血糖</span>單獨使用不易發生</li><li><span class="tag">體重</span>中性或略減</li><li><span class="tag">副作用</span>腹瀉、腹脹最常見，從小劑量、隨餐開始可減輕；長期使用注意維生素 B12</li><li><span class="tag">腎功能</span>由腎臟排除，<b>eGFR &lt; 30 禁用</b>，30–45 不建議新開始</li></ul>'}
+ ]},
+ {id:'su',n:'磺醯脲類 SU',s:'Glimepiride 等',
+  tbl:['胰臟 β 細胞','直接關 K-ATP 通道','<span class="hi">高</span>','增加','便宜有效；長者、腎差要小心低血糖'],
+  steps:[
+  {t:'直接把 K-ATP 通道關掉',g:150,on:['panc'],flows:[['ins2liver','i',2],['ins2muscle','i',2],['ins2fat','i',1.4]],chips:[['panc','✚ SU 結合 SUR1 → 關 K-ATP','drug']],
+   d:'<p>回想 A 第 4 步：β 細胞靠「ATP 升高 → 關 K-ATP 通道」來決定要不要分泌胰島素。</p><p>SU 直接結合通道上的 <b>SUR1</b> 次單元，<b>跳過感測血糖這一步</b>，強迫通道關閉、胰島素釋放。</p>'},
+  {t:'代價：血糖不高也照樣分泌',g:62,on:['panc','brain'],flows:[['ins2muscle','i',2],['blood2muscle','g',2],['blood2brain','g',.4]],chips:[['hub','低血糖風險','down'],['brain','頭暈、冒冷汗、意識改變','down']],
+   d:'<p>因為不看血糖，就算血糖已經偏低，β 細胞仍被逼著分泌胰島素——這就是 SU 的<b>低血糖</b>風險，尤其在<b>跳餐、長者、腎功能不好</b>時。</p>'},
+  {t:'臨床重點',g:130,on:['panc'],flows:[['ins2muscle','i',1.2]],chips:[['panc','需要還有 β 細胞功能','info']],
+   d:'<ul><li><span class="tag">例</span>glimepiride、gliclazide、glibenclamide</li><li><span class="tag">低血糖</span>高（glibenclamide 最明顯）</li><li><span class="tag">體重</span>增加</li><li><span class="tag">限制</span>靠剩餘的 β 細胞，病程越久效果越差</li></ul>'}
+ ]},
+ {id:'glin',n:'Glinide 類',s:'Repaglinide 等',
+  tbl:['胰臟 β 細胞','同 SU 但快又短','中','增加','飯前吃，跳餐就跳藥'],
+  steps:[
+  {t:'同樣關 K-ATP，但又快又短',g:140,on:['panc'],flows:[['ins2muscle','i',2.4],['ins2liver','i',1.6]],chips:[['panc','✚ Glinide：快速、短效刺激分泌','drug']],
+   d:'<p>Glinide 類也是關閉 β 細胞的 K-ATP 通道，但結合位置與 SU 不同，<b>起效快、作用時間短</b>，主要壓<b>飯後</b>血糖。</p>'},
+  {t:'臨床重點',g:120,on:['panc','gut'],flows:[['food','g',2],['gut2blood','g',2],['ins2muscle','i',2]],chips:[['gut','跟著餐吃','info']],
+   d:'<ul><li><span class="tag">例</span>repaglinide、nateglinide</li><li><span class="tag">用法</span>每餐飯前吃，<b>跳餐就不吃</b>，適合進食不規律的人</li><li><span class="tag">低血糖</span>比 SU 低，但仍會發生</li><li><span class="tag">體重</span>增加</li></ul>'}
+ ]},
+ {id:'tzd',n:'TZD',s:'Pioglitazone',
+  tbl:['脂肪（主）、肌肉、肝臟','PPAR-γ 增敏','<span class="lo">低</span>','增加','水腫、心衰竭禁用；脂肪肝有益'],
+  steps:[
+  {t:'從脂肪細胞開始改善胰島素阻抗',g:150,on:['fat'],flows:[['blood2fat','g',2.4],['ins2fat','i',1.4]],chips:[['fat','✚ 活化 PPAR-γ（細胞核受體）','drug']],
+   d:'<p>Pioglitazone 活化脂肪細胞核內的 <b>PPAR-γ</b>，改變一群基因的表現：皮下脂肪細胞變多變小、能安全地儲存脂肪，內臟脂肪與游離脂肪酸下降。</p>'},
+  {t:'肌肉、肝臟跟著變敏感',g:125,on:['muscle','liver'],flows:[['blood2muscle','g',2.8],['ins2muscle','i',1.4],['liver2blood','g',.6]],chips:[['muscle','胰島素敏感性 ↑','up'],['liver','肝臟脂肪 ↓','up']],
+   d:'<p>游離脂肪酸下降後，<b>肌肉與肝臟對胰島素更敏感</b>，肝臟脂肪減少，對代謝性脂肪肝炎（MASH）也有好處。是「增敏劑」，不刺激胰島素分泌。</p>'},
+  {t:'臨床重點',g:120,on:['fat','kidney'],flows:[['blood2fat','g',1.2]],chips:[['kidney','鈉水滯留 → 水腫','down']],
+   d:'<ul><li><span class="tag">起效</span>慢，數週才看到完整效果</li><li><span class="tag">低血糖</span>單用低</li><li><span class="tag">副作用</span>體重增加、水腫；<b>心衰竭（NYHA III–IV）禁用</b>；骨折風險增加</li></ul>'}
+ ]},
+ {id:'agi',n:'α-葡萄糖苷酶抑制劑',s:'Acarbose',
+  tbl:['腸道','延緩澱粉分解','<span class="lo">低</span>','中性','和第一口飯一起吃；脹氣'],
+  steps:[
+  {t:'在腸道踩煞車',g:115,on:['gut'],flows:[['food','g',3],['gut2blood','g',1]],chips:[['gut','✚ Acarbose：α-葡萄糖苷酶 ✕','drug']],
+   d:'<p>回想 A 第 2 步：澱粉要先被<b>α-葡萄糖苷酶</b>切成葡萄糖才能吸收。Acarbose 抑制這個酵素，讓分解與吸收<b>變慢、往後延</b>，飯後血糖高峰被削平。</p>'},
+  {t:'臨床重點',g:110,on:['gut'],flows:[['food','g',2],['gut2blood','g',1]],chips:[['gut','沒吸收的醣 → 腸道發酵','info']],
+   d:'<ul><li><span class="tag">用法</span>要和<b>第一口飯</b>一起吃，飯後才吃效果差</li><li><span class="tag">副作用</span>脹氣、排氣多（未吸收的醣在大腸發酵）</li><li><span class="tag">低血糖</span>單用不會</li></ul><div class="warn">若同時用 SU 或胰島素而發生低血糖，要補充<b>葡萄糖</b>（葡萄糖錠或葡萄糖水），吃蔗糖、方糖或餅乾會因被抑制分解而升得很慢。</div>'}
+ ]},
+ {id:'dpp4',n:'DPP-4 抑制劑',s:'Sitagliptin 等',
+  tbl:['腸道→胰臟（腸泌素）','延長自身 GLP-1/GIP','<span class="lo">低</span>','中性','口服好耐受；不和 GLP-1 RA 併用'],
+  steps:[
+  {t:'保護自己分泌的腸泌素',g:140,on:['gut'],flows:[['gut2blood','g',2],['gut2panc','n',2.8]],chips:[['gut','✚ DPP-4 ✕ → GLP-1、GIP 撐更久','drug']],
+   d:'<p>天然 GLP-1 只撐 1–2 分鐘就被 <b>DPP-4</b> 分解。DPP-4 抑制劑擋住這個酵素，讓病人<b>自己分泌</b>的 GLP-1、GIP 活性濃度提高約 2–3 倍。</p>'},
+  {t:'看血糖才作用',g:125,on:['panc'],flows:[['gut2panc','n',2],['ins2liver','i',1.6],['ins2muscle','i',1.6],['gcg2liver','c',.2]],chips:[['panc','胰島素 ↑、升糖素 ↓','up'],['hub','血糖高才有效 → 少低血糖','info']],
+   d:'<p>腸泌素的作用是<b>葡萄糖依賴性</b>的：血糖高時才增強胰島素、壓升糖素；血糖正常時就不太作用。所以單用<b>很少低血糖</b>。</p>'},
+  {t:'臨床重點',g:120,on:['gut','panc'],flows:[['gut2panc','n',1.4]],chips:[['kidney','多數需依腎功能調劑量','info']],
+   d:'<ul><li><span class="tag">例</span>sitagliptin、linagliptin、saxagliptin、vildagliptin、alogliptin</li><li><span class="tag">體重</span>中性；降糖效果中等</li><li><span class="tag">腎功能</span>多數要調劑量，<b>linagliptin 不必調</b></li><li><span class="tag">注意</span>不要和 GLP-1 受體促效劑併用（作用重疊，沒有加成）</li></ul>'}
+ ]},
+ {id:'glp1',n:'GLP-1 受體促效劑',s:'Semaglutide 等',
+  tbl:['胰臟、腸胃、大腦','藥理濃度的 GLP-1','<span class="lo">低</span>','<span class="lo">減少</span>','心血管實證；噁心；MTC/MEN2 禁用'],
+  steps:[
+  {t:'比天然 GLP-1 強、又不怕 DPP-4',g:150,on:['panc'],flows:[['gut2panc','n',3.2],['ins2muscle','i',1.8],['ins2liver','i',1.6]],chips:[['panc','✚ GLP-1 受體持續被活化','drug']],
+   d:'<p>GLP-1 受體促效劑經過結構改造，<b>不會被 DPP-4 很快分解</b>，血中濃度遠高於自身分泌，效果比 DPP-4 抑制劑強得多。</p>'},
+  {t:'胰臟與肝臟：葡萄糖依賴的雙向調整',g:125,on:['panc','liver'],flows:[['ins2liver','i',1.8],['ins2muscle','i',1.8],['gcg2liver','c',.15],['liver2blood','g',.4]],chips:[['panc','胰島素 ↑','up'],['liver','升糖素 ↓ → 肝糖輸出 ↓','up']],
+   d:'<p>和 DPP-4 抑制劑一樣是<b>葡萄糖依賴性</b>：血糖高時增加胰島素、壓低升糖素，肝臟供糖跟著減少。單用低血糖風險低。</p>'},
+  {t:'胃與大腦：吃得慢、吃得少',g:115,on:['brain','gut'],flows:[['gut2brain','n',2.4],['food','g',.8],['gut2blood','g',.8]],chips:[['brain','✚ 下視丘飽足感 ↑','drug'],['gut','胃排空變慢','up']],
+   d:'<p>GLP-1 受體也在<b>腦部</b>：增加飽足感、減少食慾；同時<b>延緩胃排空</b>，飯後血糖上升變平緩。這是它能明顯<b>減重</b>的原因。</p>'},
+  {t:'臨床重點',g:110,on:['brain','panc'],flows:[['gut2brain','n',1.2]],chips:[['hub','心血管保護實證','up']],
+   d:'<ul><li><span class="tag">例</span>liraglutide（每天）、dulaglutide、semaglutide（每週）；semaglutide 另有口服劑型</li><li><span class="tag">好處</span>降糖強、減重；多個藥有<b>減少心血管事件</b>的實證</li><li><span class="tag">副作用</span>噁心、嘔吐、便秘，從低劑量慢慢加</li><li><span class="tag">禁用</span>本人或家族有<b>甲狀腺髓質癌</b>、或 MEN2</li></ul>'}
+ ]},
+ {id:'tirz',n:'GIP/GLP-1 雙重促效劑',s:'Tirzepatide',
+  tbl:['胰臟、大腦、脂肪','同時活化 GIP 與 GLP-1 受體','<span class="lo">低</span>','<span class="lo">明顯減少</span>','每週注射一次；降糖、減重幅度大；腸胃副作用'],
+  steps:[
+  {t:'一個分子，兩把鑰匙',g:150,on:['panc','brain','fat'],flows:[['gut2panc','n',3.4],['gut2brain','n',2],['ins2muscle','i',1.8],['ins2fat','i',1.2]],chips:[['panc','✚ GIP 受體＋GLP-1 受體','drug'],['brain','食慾 ↓','up'],['fat','GIP：脂肪組織作用','up']],
+   d:'<p>Tirzepatide 同時活化 <b>GIP</b> 與 <b>GLP-1</b> 兩種腸泌素受體。GLP-1 的作用（胰島素↑、升糖素↓、胃排空慢、飽足感）全都有，再加上 GIP 對胰臟與脂肪組織的作用。</p>'},
+  {t:'臨床重點',g:110,on:['panc','brain'],flows:[['gut2brain','n',1.4]],chips:[['hub','降糖、減重幅度大','up']],
+   d:'<ul><li><span class="tag">用法</span>每週皮下注射一次</li><li><span class="tag">效果</span>直接比較試驗（SURPASS-2）中，降 HbA1c 與減重幅度都大於 semaglutide 1 mg</li><li><span class="tag">副作用</span>以噁心、腹瀉、嘔吐等腸胃症狀為主</li><li><span class="tag">禁用</span>同 GLP-1 受體促效劑：甲狀腺髓質癌、MEN2</li></ul>'}
+ ]},
+ {id:'sglt2',n:'SGLT2 抑制劑',s:'Empagliflozin 等',
+  tbl:['腎臟','讓糖從尿排出','<span class="lo">低</span>','<span class="lo">減少</span>','心衰竭、腎臟保護；黴菌感染、DKA'],
+  steps:[
+  {t:'在腎臟打開「排糖閥」',g:140,on:['kidney'],flows:[['blood2kidney','g',2.6],['kidney2blood','g',.9],['kidney2urine','g',1.8]],chips:[['kidney','✚ SGLT2 ✕ → 每天多排約 70 g 糖','drug']],
+   d:'<p>回想 A 第 7 步：近端腎小管靠 <b>SGLT2</b> 把濾出的葡萄糖撿回來。SGLT2 抑制劑擋住它，把腎閾值往下拉，每天多從尿液排出約 <b>60–80 g</b> 葡萄糖（約 240–320 大卡）。</p>'},
+  {t:'不靠胰島素',g:120,on:['kidney','panc'],flows:[['blood2kidney','g',2],['kidney2urine','g',1.2],['kidney2blood','g',.8]],chips:[['panc','不依賴 β 細胞','info']],
+   d:'<p>作用完全<b>不需要胰島素</b>，病程哪個階段都有效。但它靠腎臟過濾：<b>腎功能越差，降血糖效果越弱</b>（心、腎保護效果則仍保留）。</p>'},
+  {t:'臨床重點',g:115,on:['kidney'],flows:[['kidney2urine','g',1]],chips:[['hub','心衰竭、慢性腎病保護','up']],
+   d:'<ul><li><span class="tag">例</span>empagliflozin、dapagliflozin、canagliflozin、ertugliflozin</li><li><span class="tag">好處</span>減少心衰竭住院、延緩慢性腎病惡化；部分適應症不限糖尿病</li><li><span class="tag">注意</span>生殖器黴菌感染、脫水；<b>正常血糖型酮酸中毒</b>（手術前、急性病、禁食時要暫停）</li></ul>'}
+ ]},
+ {id:'ins',n:'胰島素',s:'基礎＋餐前',
+  tbl:['肌肉、脂肪、肝臟','直接補充胰島素','<span class="hi">高</span>','增加','最強、無上限；需衛教低血糖'],
+  steps:[
+  {t:'直接補上缺少的胰島素',g:150,on:['muscle','fat','liver'],flows:[['ins2muscle','i',2.6],['ins2fat','i',1.6],['ins2liver','i',2],['blood2muscle','g',3],['blood2fat','g',1.2],['blood2liver','g',1.6]],chips:[['muscle','✚ 胰島素注射','drug'],['liver','肝糖輸出 ↓','up']],
+   d:'<p>外打的胰島素做的就是 A 第 5、6 步的事：讓肌肉、脂肪吸糖，並關掉肝臟供糖。不需要靠 β 細胞，也是<b>降糖效果最強、沒有劑量上限</b>的選項。</p>'},
+  {t:'基礎型 vs. 餐前型',g:120,on:['liver','gut'],flows:[['ins2liver','i',1.2],['food','g',1.6],['gut2blood','g',1.6],['ins2muscle','i',1.8]],chips:[['liver','基礎型：壓空腹肝糖輸出','info'],['gut','餐前速效型：接住飯後血糖','info']],
+   d:'<ul><li><b>基礎型</b>（glargine、degludec、detemir）：一天一次，平穩地壓住肝臟的空腹供糖</li><li><b>餐前速效型</b>（aspart、lispro、glulisine）：飯前打，對應這一餐吸收進來的糖</li></ul>'},
+  {t:'臨床重點',g:70,on:['brain'],flows:[['blood2brain','g',.5],['ins2muscle','i',1.4]],chips:[['brain','低血糖症狀要會辨認','down']],
+   d:'<ul><li><span class="tag">低血糖</span>主要風險，病人與家屬要會辨認與處理</li><li><span class="tag">體重</span>增加</li><li><span class="tag">搭配</span>常與 metformin、GLP-1 受體促效劑或 SGLT2 抑制劑合用，以減少胰島素劑量與體重增加</li></ul>'}
+ ]}
+];
+
+/* ---------------- 狀態 ---------------- */
+var mode='A',drug=null,steps=A,idx=0,curG=90,tgtG=90;
+var ttl=$('#ttl'),txt=$('#txt'),cnt=$('#cnt'),where=$('#where'),dots=$('#dots'),chipsG=$('#chips'),partsG=$('#parts'),gval=$('#gval');
+var prevB=$('#prev'),nextB=$('#next'),playB=$('#play');
+var RM=matchMedia('(prefers-reduced-motion: reduce)').matches;
+var ORG=['brain','liver','panc','gut','muscle','fat','kidney'];
+
+/* 藥物選單＋比較表 */
+var dg=$('#drugs'),tb=$('#tbody');
+D.forEach(function(x,k){
+  var b=document.createElement('button');b.type='button';b.setAttribute('aria-pressed','false');b.dataset.k=k;
+  b.innerHTML='<span class="no">'+(k<9?'0':'')+(k+1)+'</span><b>'+x.n+'</b><span>'+x.s+'</span>';
+  b.onclick=function(){pickDrug(k)};dg.appendChild(b);
+  var tr=document.createElement('tr');
+  tr.innerHTML='<td><b>'+x.n+'</b><br><small>'+x.s+'</small></td><td>'+x.tbl[0]+'</td><td>'+x.tbl[1]+'</td><td class="c">'+x.tbl[2]+'</td><td class="c">'+x.tbl[3]+'</td><td>'+x.tbl[4]+'</td>';
+  tb.appendChild(tr);
+});
+
+function setTab(m){
+  mode=m;$('#tabA').setAttribute('aria-selected',m==='A');$('#tabB').setAttribute('aria-selected',m==='B');
+  dg.classList.toggle('show',m==='B');
+  if(m==='A'){steps=A;drug=null;go(0)}else{pickDrug(drug==null?0:drug)}
+}
+function pickDrug(k){
+  drug=k;steps=D[k].steps;
+  [].forEach.call(dg.children,function(b,i){b.setAttribute('aria-pressed',i===k)});
+  go(0);
+}
+$('#tabA').onclick=function(){setTab('A')};
+$('#tabB').onclick=function(){setTab('B')};
+
+/* ---------------- 畫面更新 ---------------- */
+function chip(at,text,cls){
+  var p=AT[at]||AT.hub,g=document.createElementNS(SVGNS,'g');g.setAttribute('class','chip '+cls);
+  var t=document.createElementNS(SVGNS,'text');t.textContent=text;t.setAttribute('text-anchor','middle');
+  g.appendChild(t);chipsG.appendChild(g);
+  var w=t.getComputedTextLength()+18,h=22,x=Math.max(4+w/2,Math.min(596-w/2,p[0]));
+  var r=document.createElementNS(SVGNS,'rect');r.setAttribute('x',x-w/2);r.setAttribute('y',p[1]-h/2);r.setAttribute('width',w);r.setAttribute('height',h);
+  g.insertBefore(r,t);t.setAttribute('x',x);t.setAttribute('y',p[1]+4.5);
+  if(cls==='drug')g.classList.add('pill');
+  return g;
+}
+function layoutChips(list){
+  chipsG.textContent='';
+  var used={};
+  list.forEach(function(c,k){
+    var n=used[c[0]]||0;used[c[0]]=n+1;
+    var g=chip(c[0],c[1],c[2]);
+    if(n)g.setAttribute('transform','translate(0,'+(n*26)+')');
+    g.style.animationDelay=(k*80)+'ms';
+  });
+}
+function go(i){
+  idx=Math.max(0,Math.min(steps.length-1,i));
+  var s=steps[idx];
+  ttl.textContent=s.t;txt.innerHTML=s.d;
+  cnt.textContent=(idx+1)+' / '+steps.length;
+  where.innerHTML=mode==='A'?'<b>A 一餐的旅程</b>':'<b>B 藥物作用點</b> · '+D[drug].n;
+  ORG.forEach(function(o){var e=$('#o-'+o);e.classList.toggle('on',s.on.indexOf(o)>=0);e.classList.toggle('dim',s.on.length>0&&s.on.indexOf(o)<0&&mode==='B')});
+  layoutChips(s.chips||[]);
+  setFlows(s.flows||[]);
+  tgtG=s.g;
+  prevB.disabled=idx===0;
+  nextB.textContent=idx===steps.length-1?(mode==='A'?'看藥物 →':(drug<D.length-1?'下一類藥 →':'回到開頭 ↺')):'下一步 →';
+  dots.textContent='';
+  steps.forEach(function(_,k){var b=document.createElement('button');b.type='button';b.setAttribute('aria-label','第 '+(k+1)+' 步');if(k===idx)b.setAttribute('aria-current','true');b.onclick=function(){stopAuto();go(k)};dots.appendChild(b)});
+}
+function next(){
+  if(idx<steps.length-1)return go(idx+1);
+  if(mode==='A')return setTab('B');
+  if(drug<D.length-1)return pickDrug(drug+1);
+  setTab('A');
+}
+function prev(){if(idx>0)go(idx-1)}
+prevB.onclick=function(){stopAuto();prev()};
+nextB.onclick=function(){stopAuto();next()};
+document.addEventListener('keydown',function(e){
+  if(e.target.closest&&e.target.closest('input,textarea'))return;
+  if(e.key==='ArrowRight'){stopAuto();next()}else if(e.key==='ArrowLeft'){stopAuto();prev()}
+});
+var sx=null,sy=null,map=$('#map');
+map.addEventListener('touchstart',function(e){sx=e.touches[0].clientX;sy=e.touches[0].clientY},{passive:true});
+map.addEventListener('touchend',function(e){if(sx==null)return;var dx=e.changedTouches[0].clientX-sx,dy=e.changedTouches[0].clientY-sy;if(Math.abs(dx)>40&&Math.abs(dx)>Math.abs(dy)){stopAuto();dx<0?next():prev()}sx=null},{passive:true});
+
+/* 自動播放 */
+var autoT=0;
+function stopAuto(){if(autoT){clearInterval(autoT);autoT=0;playB.textContent='▶ 自動'}}
+playB.onclick=function(){if(autoT)return stopAuto();playB.textContent='❚❚ 暫停';autoT=setInterval(next,6500)};
+
+/* ---------------- 粒子 ---------------- */
+var P={},flows=[],parts=[],last=0;
+[].forEach.call(document.querySelectorAll('#paths path'),function(p){P[p.id.slice(2)]={el:p,len:p.getTotalLength()}});
+function setFlows(f){flows=f.map(function(x){return {p:P[x[0]],c:COL[x[1]],r:x[2],acc:Math.random()}}).filter(function(x){return x.p})}
+function spawn(f){
+  var c=document.createElementNS(SVGNS,'circle');c.setAttribute('r',f.c===COL.g?4.2:3.2);c.setAttribute('fill',f.c);
+  partsG.appendChild(c);parts.push({el:c,p:f.p,t:0,d:1800+Math.random()*500});
+}
+function tick(ts){
+  var dt=last?Math.min(100,ts-last):16;last=ts;
+  if(!RM){
+    flows.forEach(function(f){f.acc+=f.r*dt/1000;while(f.acc>=1){f.acc-=1;spawn(f)}});
+    for(var k=parts.length-1;k>=0;k--){
+      var q=parts[k];q.t+=dt;var u=q.t/q.d;
+      if(u>=1){q.el.remove();parts.splice(k,1);continue}
+      var pt=q.p.el.getPointAtLength(u*q.p.len);
+      q.el.setAttribute('cx',pt.x);q.el.setAttribute('cy',pt.y);
+      q.el.setAttribute('opacity',u<.1?u*10:u>.85?(1-u)/.15:1);
+    }
+  }
+  // 血糖數字緩動
+  if(Math.abs(curG-tgtG)>.5){curG+=(tgtG-curG)*Math.min(1,dt/350)}else curG=tgtG;
+  gval.textContent=Math.round(curG);
+  var hc=curG>=180?'var(--drug)':curG<70?'var(--gcg)':'var(--ink)';gval.setAttribute('fill',hc);
+  requestAnimationFrame(tick);
+}
+requestAnimationFrame(tick);
+
+/* 深淺色 */
+var root=document.documentElement;
+try{var th=localStorage.getItem('gim-theme');if(th)root.setAttribute('data-theme',th)}catch(e){}
+$('#theme').onclick=function(){
+  var dark=root.getAttribute('data-theme')?root.getAttribute('data-theme')==='dark':matchMedia('(prefers-color-scheme: dark)').matches;
+  var n=dark?'light':'dark';root.setAttribute('data-theme',n);try{localStorage.setItem('gim-theme',n)}catch(e){}
+};
+
+go(0);
+})();
+</script>
+</body>
+</html>
