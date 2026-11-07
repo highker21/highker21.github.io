@@ -1,0 +1,613 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>腦下垂體，動起來</title>
+<meta name="description" content="一步一步看腦下垂體前葉五條軸線的生理與負回饋，以及常見藥物作用在哪一層。">
+<style>
+:root{
+  --bg:#f5f3ee;--paper:#fffdf8;--ink:#1f2328;--mute:#5d6470;--line:#d9d4c7;
+  --accent:#3b5bab;--accent-soft:#dfe6f6;
+  --rh:#0f8a7e;--ph:#7a4fc4;--th:#d98a12;--xh:#d1452b;--drug:#c0262d;--up:#d1452b;--down:#2f72c4;
+  --organ:#ffffff;--organ-line:#b9b2a3;--organ-on:#fff4d6;--organ-on-line:#d98a12;
+  --shadow:0 1px 2px rgba(0,0,0,.06),0 6px 20px rgba(0,0,0,.06);
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#14171b;--paper:#1c2026;--ink:#e8e6e1;--mute:#a3a9b3;--line:#323844;
+  --accent:#8aa6f0;--accent-soft:#232d45;
+  --rh:#3cc7b8;--ph:#a98cf0;--th:#f2b441;--xh:#ff7a5c;--drug:#ff6b6b;--up:#ff7a5c;--down:#6aa8f5;
+  --organ:#232831;--organ-line:#4a5260;--organ-on:#3a3220;--organ-on-line:#f2b441;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 6px 20px rgba(0,0,0,.35);
+}}
+:root[data-theme="dark"]{
+  --bg:#14171b;--paper:#1c2026;--ink:#e8e6e1;--mute:#a3a9b3;--line:#323844;
+  --accent:#8aa6f0;--accent-soft:#232d45;
+  --rh:#3cc7b8;--ph:#a98cf0;--th:#f2b441;--xh:#ff7a5c;--drug:#ff6b6b;--up:#ff7a5c;--down:#6aa8f5;
+  --organ:#232831;--organ-line:#4a5260;--organ-on:#3a3220;--organ-on-line:#f2b441;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 6px 20px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink)}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang TC","Noto Sans TC","Microsoft JhengHei",sans-serif;line-height:1.65;-webkit-text-size-adjust:100%}
+a{color:var(--accent)}
+.wrap{max-width:1180px;margin:0 auto;padding:0 16px}
+header.hero{padding:40px 0 18px}
+.kick{font-size:13px;letter-spacing:.12em;color:var(--accent);font-weight:700}
+h1{font-size:clamp(30px,6vw,52px);line-height:1.15;margin:.2em 0 .25em;letter-spacing:.02em}
+h1 span{color:var(--ph)}
+.lead{color:var(--mute);max-width:740px;margin:0}
+.legend{display:flex;flex-wrap:wrap;gap:8px 16px;margin:16px 0 0;padding:0;list-style:none;font-size:14px;color:var(--mute)}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:50%;margin-right:6px;vertical-align:-1px}
+.tabs{display:flex;gap:8px;margin:22px 0 14px;flex-wrap:wrap}
+.tabs button{appearance:none;border:1px solid var(--line);background:var(--paper);color:var(--ink);padding:9px 14px;border-radius:999px;font:inherit;font-weight:700;cursor:pointer;line-height:1.3}
+.tabs button small{display:block;font-weight:400;font-size:11.5px;opacity:.8}
+.tabs button[aria-selected="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+.player{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:18px;align-items:start}
+.stage{position:sticky;top:10px;background:var(--paper);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);padding:8px}
+.stage svg{display:block;width:100%;height:auto;max-height:calc(100vh - 40px);touch-action:pan-y}
+.panel{background:var(--paper);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);padding:18px 20px;min-height:440px;display:flex;flex-direction:column}
+.where{font-size:13px;color:var(--mute);display:flex;justify-content:space-between;gap:8px}
+.where b{color:var(--accent)}
+.kind{display:inline-block;font-size:12px;font-weight:700;border-radius:999px;padding:1px 9px;margin-right:6px;vertical-align:2px}
+.kind.phy{background:var(--accent-soft);color:var(--accent)}
+.kind.drg{background:color-mix(in srgb,var(--drug) 14%,transparent);color:var(--drug)}
+.kind.lab{background:color-mix(in srgb,var(--th) 18%,transparent);color:var(--th)}
+.panel h2{font-size:23px;line-height:1.3;margin:6px 0 8px}
+.panel .txt{flex:1}
+.panel .txt p{margin:.35em 0}
+.panel .txt ul{margin:.35em 0;padding-left:1.2em}
+.panel .txt li{margin:.2em 0}
+.tag{display:inline-block;font-size:12px;padding:1px 8px;border-radius:999px;background:var(--accent-soft);color:var(--accent);font-weight:700;margin-right:4px}
+.warn{border-left:3px solid var(--drug);padding:4px 10px;margin:.6em 0;background:color-mix(in srgb,var(--drug) 8%,transparent);border-radius:0 8px 8px 0}
+.ctl{display:flex;align-items:center;gap:8px;margin-top:14px;flex-wrap:wrap}
+.ctl button{appearance:none;border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:10px;padding:9px 14px;font:inherit;font-weight:700;cursor:pointer;min-width:44px}
+.ctl button:disabled{opacity:.35;cursor:default}
+.ctl #say[aria-pressed="true"]{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.ctl .next{background:var(--accent);border-color:var(--accent);color:#fff;margin-left:auto}
+.dots{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}
+.dots button{width:10px;height:10px;border-radius:50%;border:0;padding:0;background:var(--line);cursor:pointer}
+.dots button.d{background:color-mix(in srgb,var(--drug) 40%,var(--line))}
+.dots button[aria-current="true"]{background:var(--accent);transform:scale(1.25)}
+.hint{font-size:12px;color:var(--mute);margin-top:8px}
+
+.org path.shape,.org ellipse,.org rect{fill:var(--organ);stroke:var(--organ-line);stroke-width:2;transition:fill .35s,stroke .35s}
+.org text{fill:var(--ink);font-size:17px;font-weight:700;text-anchor:middle}
+.org text.sub{font-size:11.5px;font-weight:400;fill:var(--mute)}
+.org.on path.shape,.org.on ellipse,.org.on rect{fill:var(--organ-on);stroke:var(--organ-on-line);stroke-width:3}
+.org{transition:opacity .35s}
+.org.dim{opacity:.3}
+.vessel{fill:none;stroke:var(--line);stroke-width:2;stroke-dasharray:3 5;transition:opacity .35s}
+.vessel.dim{opacity:.25}
+.ring{fill:none;stroke:var(--drug);stroke-width:3;stroke-dasharray:6 5;opacity:0;transition:opacity .3s}
+.ring.on{opacity:1;animation:spin 6s linear infinite}
+@keyframes spin{to{stroke-dashoffset:-110}}
+.chip rect{rx:9;ry:9;stroke-width:1.5}
+.chip text{font-size:12.5px;font-weight:700}
+.chip.up rect{fill:color-mix(in srgb,var(--up) 13%,var(--paper));stroke:var(--up)}
+.chip.up text{fill:var(--up)}
+.chip.down rect{fill:color-mix(in srgb,var(--down) 13%,var(--paper));stroke:var(--down)}
+.chip.down text{fill:var(--down)}
+.chip.info rect{fill:var(--paper);stroke:var(--organ-line)}
+.chip.info text{fill:var(--ink)}
+.chip.drug rect{fill:var(--drug);stroke:var(--drug)}
+.chip.drug text{fill:#fff}
+.chips g.chip{animation:pop .35s ease-out both}
+@keyframes pop{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.meter rect.box{fill:var(--paper);stroke:var(--line)}
+.meter text{font-size:12px;fill:var(--ink)}
+.meter text.ttl{font-size:11px;fill:var(--mute)}
+.meter .trk{fill:var(--line)}
+.meter .mid{stroke:var(--mute);stroke-width:1.5}
+.meter .bar{transition:width .5s ease,x .5s ease,fill .3s}
+.meter text.v{font-weight:700}
+.pt{pointer-events:none}
+
+section.cmp{margin:34px 0 10px}
+section.cmp h2{font-size:24px;margin:0 0 6px}
+.tblw{overflow-x:auto;border:1px solid var(--line);border-radius:14px;background:var(--paper)}
+table{border-collapse:collapse;width:100%;min-width:820px;font-size:14px}
+th,td{padding:9px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{background:var(--accent-soft);white-space:nowrap}
+tr:last-child td{border-bottom:0}
+footer{color:var(--mute);font-size:13px;padding:22px 0 40px;border-top:1px solid var(--line);margin-top:28px}
+.theme{position:absolute;top:14px;right:16px;appearance:none;border:1px solid var(--line);background:var(--paper);color:var(--ink);border-radius:999px;padding:6px 12px;font:inherit;font-size:13px;cursor:pointer}
+@media (max-width:860px){
+  .player{grid-template-columns:1fr}
+  .stage{position:sticky;top:0;z-index:2;border-radius:0 0 16px 16px;margin:0 -16px;border-left:0;border-right:0;padding:4px}
+  .stage svg{max-height:52vh}
+  .panel{min-height:0}
+  .chip text{font-size:14px}
+  header.hero{padding-top:52px}
+}
+@media (prefers-reduced-motion:reduce){.chips g.chip,.ring.on{animation:none}}
+</style>
+</head>
+<body>
+<button class="theme" id="theme" type="button" aria-label="切換深淺色">◐ 深淺色</button>
+<div class="wrap">
+<header class="hero">
+  <div class="kick">內分泌新陳代謝科 · 教學互動</div>
+  <h1>腦下垂體，<span>動起來</span></h1>
+  <p class="lead">腦下垂體前葉的五條軸線：腎上腺、甲狀腺、性腺、生長激素、泌乳素。一步一步看下視丘怎麼下指令、目標腺體怎麼回報（負回饋），再看每一類藥物是作用在哪一層、會讓哪個數字往哪裡走。</p>
+  <ul class="legend">
+    <li><i style="background:var(--rh)"></i>下視丘釋放激素</li>
+    <li><i style="background:var(--ph)"></i>腦下垂體激素</li>
+    <li><i style="background:var(--th)"></i>目標腺體激素（含負回饋）</li>
+    <li><i style="background:var(--xh)"></i>抑制訊號（體抑素、dopamine）</li>
+    <li><i style="background:var(--drug)"></i>藥物作用點</li>
+  </ul>
+</header>
+
+<div class="tabs" role="tablist" id="tabs"></div>
+
+<div class="player">
+  <div class="stage">
+<svg id="map" viewBox="0 0 600 620" role="img" aria-label="下視丘、腦下垂體與五個目標器官示意圖">
+  <g id="paths">
+    <path class="vessel" id="p-hyp2pit" d="M300 108 L300 163"/>
+    <path class="vessel" id="p-hyp2pitx" d="M282 110 L282 166"/>
+    <path class="vessel" id="p-pit2hyp" d="M318 166 L318 110"/>
+    <path class="vessel" id="p-pit2thy" d="M235 228 Q150 262 112 312"/>
+    <path class="vessel" id="p-pit2adr" d="M262 243 Q228 330 218 416"/>
+    <path class="vessel" id="p-pit2gon" d="M338 243 Q372 330 382 420"/>
+    <path class="vessel" id="p-pit2liv" d="M365 228 Q450 262 488 312"/>
+    <path class="vessel" id="p-pit2br" d="M300 247 L300 522"/>
+    <path class="vessel" id="p-thy2hyp" d="M62 318 Q30 140 190 62"/>
+    <path class="vessel" id="p-thy2pit" d="M128 336 Q205 300 244 240"/>
+    <path class="vessel" id="p-adr2hyp" d="M180 440 Q70 260 192 92"/>
+    <path class="vessel" id="p-adr2pit" d="M228 418 Q258 330 284 247"/>
+    <path class="vessel" id="p-gon2hyp" d="M420 440 Q530 260 408 92"/>
+    <path class="vessel" id="p-gon2pit" d="M372 422 Q342 330 316 247"/>
+    <path class="vessel" id="p-liv2hyp" d="M538 318 Q570 140 410 62"/>
+    <path class="vessel" id="p-liv2pit" d="M472 336 Q395 300 356 240"/>
+  </g>
+
+  <g class="org" id="o-hyp"><rect x="190" y="28" width="220" height="80" rx="30"/><text x="300" y="64">下視丘</text><text class="sub" x="300" y="84">釋放激素・抑制激素</text></g>
+  <g class="org" id="o-pit"><ellipse cx="300" cy="205" rx="78" ry="42"/><text x="300" y="203">腦下垂體前葉</text><text class="sub" x="300" y="222">5 種細胞・6 種激素</text></g>
+  <g class="org" id="o-thy"><path class="shape" d="M52 330 Q56 302 84 312 L106 312 Q134 302 138 330 Q142 378 110 384 L80 384 Q48 378 52 330z"/><text x="95" y="346">甲狀腺</text><text class="sub" x="95" y="364">T4・T3</text></g>
+  <g class="org" id="o-adr"><path class="shape" d="M168 478 Q186 418 218 416 Q250 418 266 478 Q218 498 168 478z"/><text x="217" y="455">腎上腺</text><text class="sub" x="217" y="473">皮質・皮質醇</text></g>
+  <g class="org" id="o-gon"><ellipse cx="386" cy="455" rx="52" ry="34"/><text x="386" y="452">性腺</text><text class="sub" x="386" y="470">睪丸・卵巢</text></g>
+  <g class="org" id="o-liv"><path class="shape" d="M462 330 Q470 300 530 306 Q568 312 562 342 Q556 388 506 390 Q458 390 462 330z"/><text x="512" y="346">肝臟</text><text class="sub" x="512" y="364">IGF-1</text></g>
+  <g class="org" id="o-br"><ellipse cx="300" cy="552" rx="58" ry="32"/><text x="300" y="550">乳腺</text><text class="sub" x="300" y="568">泌乳</text></g>
+
+  <g id="rings">
+    <rect class="ring" id="r-hyp" x="180" y="18" width="240" height="100" rx="38"/>
+    <ellipse class="ring" id="r-pit" cx="300" cy="205" rx="90" ry="54"/>
+    <ellipse class="ring" id="r-thy" cx="95" cy="346" rx="58" ry="50"/>
+    <ellipse class="ring" id="r-adr" cx="217" cy="456" rx="62" ry="46"/>
+    <ellipse class="ring" id="r-gon" cx="386" cy="455" rx="64" ry="46"/>
+    <ellipse class="ring" id="r-liv" cx="512" cy="348" rx="64" ry="52"/>
+    <ellipse class="ring" id="r-br" cx="300" cy="552" rx="70" ry="44"/>
+  </g>
+
+  <g class="meter" id="meter">
+    <rect class="box" x="6" y="528" width="176" height="88" rx="10"/>
+    <text class="ttl" x="16" y="545">激素量（中線＝正常）</text>
+    <g id="mrows"></g>
+  </g>
+
+  <g id="parts" class="pt"></g>
+  <g id="chips" class="chips"></g>
+</svg>
+  </div>
+
+  <div class="panel" aria-live="polite">
+    <div class="where"><span id="where"></span><span id="cnt"></span></div>
+    <h2 id="ttl"></h2>
+    <div class="txt" id="txt"></div>
+    <div class="ctl">
+      <button id="prev" type="button" aria-label="上一步">←</button>
+      <button id="play" type="button" aria-label="自動播放">▶ 自動</button>
+      <button id="say" type="button" aria-pressed="false" aria-label="語音朗讀">🔊 朗讀</button>
+      <button class="next" id="next" type="button">下一步 →</button>
+    </div>
+    <div class="dots" id="dots"></div>
+    <div class="hint">鍵盤 ← → 切換，手機可在圖上左右滑動。開「🔊 朗讀」再按「▶ 自動」，會唸完一步自動換下一步。紅點是藥物或檢查步驟。</div>
+  </div>
+</div>
+
+<section class="cmp">
+  <h2>五條軸線一覽</h2>
+  <p class="lead" style="margin-bottom:10px">判讀檢驗的口訣：原發性（目標腺體壞）＝下游低、上游高；中樞性（腦下垂體或下視丘壞）＝兩個都低，或上游「不適當地正常」。</p>
+  <div class="tblw"><table>
+    <thead><tr><th>軸線</th><th>下視丘</th><th>腦下垂體</th><th>目標</th><th>負回饋</th><th>常見藥物（作用層）</th></tr></thead>
+    <tbody id="tbody"></tbody>
+  </table></div>
+</section>
+
+<footer>
+  教學示意圖，器官位置與比例經過簡化；不含劑量，非個別病人的用藥建議，實際用藥請依仿單與最新指引判斷。<br>
+  工具版本：2026-11-08
+</footer>
+</div>
+
+<script>
+(function(){
+'use strict';
+var $=function(s){return document.querySelector(s)};
+var SVGNS='http://www.w3.org/2000/svg';
+var COL={r:'var(--rh)',p:'var(--ph)',t:'var(--th)',x:'var(--xh)'};
+var AT={hyp:[300,136],pit:[300,272],thy:[95,404],adr:[178,512],gon:[424,512],liv:[512,404],br:[300,604]};
+var ORG=['hyp','pit','thy','adr','gon','liv','br'];
+var PATHORG={thy:['pit2thy','thy2hyp','thy2pit'],adr:['pit2adr','adr2hyp','adr2pit'],gon:['pit2gon','gon2hyp','gon2pit'],liv:['pit2liv','liv2hyp','liv2pit'],br:['pit2br']};
+
+/* ================= 內容 =================
+ 每一步：t 標題、k 類型(phy 生理／drg 藥物／lab 檢查)、on 亮起的器官、flows [路徑,顏色,每秒粒子]、
+ chips [位置,文字,樣式]、lv 三層激素量(-2~2)、rx 藥物作用圈、d 說明 */
+var AX=[
+{id:'all',n:'總覽',s:'共同模式',lab:['下視丘','腦下垂體','目標腺體'],org:null,
+ tbl:null,
+ steps:[
+ {t:'五條軸線，同一個模式',k:'phy',on:['hyp','pit'],lv:[0,0,0],
+  flows:[['hyp2pit','r',2],['pit2thy','p',.9],['pit2adr','p',.9],['pit2gon','p',.9],['pit2liv','p',.9],['pit2br','p',.7],['thy2hyp','t',.5],['adr2hyp','t',.5],['gon2hyp','t',.5],['liv2hyp','t',.5]],
+  chips:[['hyp','下視丘：釋放／抑制激素','info'],['pit','前葉：5 種細胞、6 種激素','info']],
+  d:'<p>下視丘的神經把激素送進一小段專用血管（<b>垂體門脈</b>），直接流到腦下垂體前葉，指揮五種細胞：</p><ul><li>促腎上腺皮質素細胞 → <b>ACTH</b> → 腎上腺</li><li>甲促素細胞 → <b>TSH</b> → 甲狀腺</li><li>促性腺素細胞 → <b>LH、FSH</b> → 睪丸、卵巢</li><li>生長激素細胞 → <b>GH</b> → 肝臟（IGF-1）與全身</li><li>泌乳素細胞 → <b>PRL</b> → 乳腺</li></ul><p>目標腺體做出的激素再回頭抑制上游，這就是<b>負回饋</b>。</p>'},
+ {t:'負回饋：判讀檢驗的鑰匙',k:'phy',on:['pit','thy'],lv:[1,2,-2],
+  flows:[['hyp2pit','r',2.6],['pit2thy','p',2.6],['thy2hyp','t',.2],['thy2pit','t',.2]],
+  chips:[['thy','目標腺體壞了 → 激素 ↓','down'],['pit','上游拚命催 → 激素 ↑','up']],
+  d:'<p>負回饋讓每條軸線都有一個「設定點」。看檢驗時一定要<b>上下游一起看</b>：</p><ul><li><b>原發性</b>（目標腺體本身壞）：下游激素低，上游因為沒被抑制而<b>升高</b>。例：橋本氏甲狀腺炎 → T4 低、TSH 高</li><li><b>中樞性</b>（腦下垂體或下視丘壞）：下游低，上游也低，或「不適當地正常」</li><li><b>外來的目標激素</b>（吃藥補充）：上游被壓低</li></ul><p>右邊量表會隨每一步顯示三層激素往哪裡走。</p>'},
+ {t:'例外：泌乳素靠「煞車」管',k:'phy',on:['hyp','pit','br'],lv:[0,0,0],
+  flows:[['hyp2pitx','x',2.4],['pit2br','p',.6]],
+  chips:[['hyp','dopamine 持續抑制 PRL','info'],['br','沒有目標激素可回饋','info']],
+  d:'<p>其他四條軸線是下視丘「踩油門」，<b>泌乳素</b>卻主要是下視丘的 <b>dopamine 持續踩煞車</b>。</p><p>所以垂體柄受損時，其他激素下降，<b>泌乳素反而上升</b>（煞車斷了）。這個反差在判讀腦下垂體腫瘤時很重要，第 5 個分頁會細講。</p>'}
+ ]},
+
+{id:'hpa',n:'① 腎上腺軸',s:'CRH → ACTH → 皮質醇',lab:['CRH','ACTH','皮質醇'],org:'adr',
+ tbl:['CRH（＋AVP）','ACTH','腎上腺皮質 → 皮質醇','皮質醇抑制 CRH、ACTH','hydrocortisone（補充）；外源類固醇（壓抑全軸）；osilodrostat、metyrapone、ketoconazole（腎上腺）；pasireotide（腦下垂體）；mifepristone（受體）'],
+ steps:[
+ {t:'下視丘 CRH 啟動',k:'phy',on:['hyp','pit'],lv:[1,1,0],
+  flows:[['hyp2pit','r',2.4],['pit2adr','p',1.2]],
+  chips:[['hyp','CRH（＋AVP 加乘）','up'],['pit','POMC 切出 ACTH','up']],
+  d:'<p>下視丘室旁核分泌 <b>CRH</b>，抗利尿激素（AVP）有加乘作用。腦下垂體的促腎上腺皮質素細胞把一個大分子前驅物 <b>POMC</b> 切開，得到 <b>ACTH</b>。</p><p>POMC 同時會切出黑色素刺激素（α-MSH），所以原發性腎上腺功能低下（ACTH 很高）的病人皮膚會變黑。</p>'},
+ {t:'ACTH → 腎上腺皮質 → 皮質醇',k:'phy',on:['adr'],lv:[0,0,1],
+  flows:[['pit2adr','p',2.2]],
+  chips:[['adr','束狀帶合成皮質醇','up']],
+  d:'<p>ACTH 作用在腎上腺皮質<b>束狀帶</b>，合成<b>皮質醇</b>：升血糖、抗發炎、幫忙維持血壓。</p><div class="warn">醛固酮（球狀帶）主要受<b>腎素-血管收縮素系統與血鉀</b>調控，不太靠 ACTH。所以<b>中樞性</b>腎上腺功能低下通常不缺醛固酮，不會出現高血鉀；原發性（Addison 病）才會兩者都缺。</div>'},
+ {t:'晝夜節律與壓力',k:'phy',on:['hyp','adr'],lv:[2,2,2],
+  flows:[['hyp2pit','r',3],['pit2adr','p',2.6]],
+  chips:[['hyp','壓力、感染、低血糖 → CRH ↑','up'],['adr','清晨最高、午夜最低','info']],
+  d:'<p>皮質醇有明顯的<b>晝夜節律</b>：起床前後最高，午夜最低。抽血時間因此很重要：</p><ul><li>評估功能低下：抽<b>早晨</b>皮質醇</li><li>評估庫欣症候群：看<b>深夜</b>唾液皮質醇是否該低而不低</li></ul><p>手術、感染、低血糖等壓力會越過負回饋，讓皮質醇大幅上升，這是身體應付壓力的必要反應。</p>'},
+ {t:'負回饋與判讀',k:'phy',on:['hyp','pit','adr'],lv:[0,0,0],
+  flows:[['adr2hyp','t',1.6],['adr2pit','t',1.6],['hyp2pit','r',.6],['pit2adr','p',.6]],
+  chips:[['hyp','皮質醇抑制 CRH','down'],['pit','皮質醇抑制 ACTH','down']],
+  d:'<p>皮質醇回頭抑制 CRH 與 ACTH。ACTH 和皮質醇要<b>一起看</b>：</p><ul><li>原發性腎上腺低下：皮質醇 ↓、ACTH ↑</li><li>中樞性腎上腺低下：皮質醇 ↓、ACTH 低或正常</li><li>庫欣病（腦下垂體腫瘤）：皮質醇 ↑、ACTH 正常或 ↑</li><li>腎上腺腫瘤造成的庫欣：皮質醇 ↑、ACTH ↓</li></ul>'},
+ {t:'外源性類固醇：最強的負回饋',k:'drg',on:['hyp','pit','adr'],rx:['hyp','pit'],lv:[-2,-2,-2],
+  flows:[['hyp2pit','r',.2],['pit2adr','p',.2]],
+  chips:[['hyp','✚ prednisolone、dexamethasone','drug'],['pit','ACTH 被壓住','down'],['adr','自身皮質醇 ↓，久了萎縮','down']],
+  d:'<p>長期（數週以上）使用口服、注射，甚至大量吸入或外用的類固醇，會強力抑制 CRH 與 ACTH，腎上腺缺乏刺激而<b>萎縮</b>。</p><ul><li>病人體內「類固醇作用」很強（可能有庫欣樣外觀），但<b>自身皮質醇很低</b></li><li><b>突然停藥</b>會引發腎上腺危象，所以要漸進減量</li><li>抽血測皮質醇時，prednisolone 會被部分檢驗誤測進去；dexamethasone 則幾乎測不到</li></ul>'},
+ {t:'Hydrocortisone：補回皮質醇',k:'drg',on:['adr'],rx:['adr'],lv:[0,1,0],
+  flows:[['adr2hyp','t',1],['adr2pit','t',1]],
+  chips:[['adr','✚ 補充皮質醇','drug'],['pit','原發性：ACTH 常仍偏高','info']],
+  d:'<p>腎上腺功能低下時，用 hydrocortisone 模擬生理分泌：一天分次給，<b>早上的量最大</b>，貼近晝夜節律。</p><ul><li>調整依據是症狀與臨床狀況，<b>不追 ACTH</b>（原發性病人補足後 ACTH 常仍偏高）</li><li><b>生病規則</b>：發燒、感染時要加量；嘔吐吃不下藥要打針並就醫</li><li>原發性另需補<b>礦物皮質素</b>（fludrocortisone）；中樞性通常不需要</li></ul>'},
+ {t:'庫欣：擋住皮質醇的製造',k:'drg',on:['adr','pit'],rx:['adr'],lv:[1,1,-1],
+  flows:[['hyp2pit','r',1.6],['pit2adr','p',2.4]],
+  chips:[['adr','✚ osilodrostat、metyrapone：11β-羥化酶 ✕','drug'],['pit','回饋變弱 → ACTH ↑','up']],
+  d:'<p>這類藥在腎上腺擋住皮質醇合成：</p><ul><li><b>osilodrostat、metyrapone</b>：抑制最後一步的 11β-羥化酶</li><li><b>ketoconazole、levoketoconazole</b>：抑制多個步驟，需追蹤肝功能</li></ul><p>皮質醇一降，對 ACTH 的負回饋減少；庫欣病的腫瘤會分泌更多 ACTH 試圖「衝破」阻斷，所以需要逐步調整。上游前驅物堆積可能造成高血壓、低血鉀、多毛；藥量過頭則會變成腎上腺功能低下。</p>'},
+ {t:'作用在腦下垂體或受體',k:'drg',on:['pit','adr'],rx:['pit'],lv:[0,-1,-1],
+  flows:[['pit2adr','p',.5]],
+  chips:[['pit','✚ pasireotide：SSTR5 → ACTH ↓','drug'],['adr','mifepristone：擋糖皮質素受體','info']],
+  d:'<ul><li><b>Pasireotide</b>：體抑素類似物，作用在促腎上腺皮質素腫瘤上常見的 <b>SSTR5</b> 受體，降低 ACTH 與皮質醇。常見副作用是<b>高血糖</b>（抑制胰島素與腸泌素）</li><li><b>Mifepristone</b>：擋住糖皮質素受體。皮質醇與 ACTH 反而<b>上升</b>，所以<b>不能用皮質醇數字追蹤</b>療效，只能看血糖、血壓、體重等臨床表現；過多的皮質醇會作用在礦物皮質素受體，造成低血鉀</li></ul>'},
+ {t:'檢查：Dexamethasone 抑制試驗',k:'lab',on:['pit','adr'],rx:['hyp','pit'],lv:[-1,-2,-2],
+  flows:[['hyp2pit','r',.3],['pit2adr','p',.2]],
+  chips:[['pit','正常人：ACTH 被壓住','down'],['adr','隔天早上皮質醇 < 1.8 µg/dL','info']],
+  d:'<p>篩檢庫欣症候群：前一晚 11 點口服 dexamethasone 1 mg，隔天早上 8 點抽皮質醇。</p><ul><li>正常人 ACTH 被壓住 → 皮質醇 <b>&lt; 1.8 µg/dL</b></li><li>庫欣症候群壓不下來</li><li>dexamethasone 不會被皮質醇檢驗測到，所以測到的是自己的皮質醇</li></ul><p><span class="tag">偽陽性</span>口服避孕藥（結合蛋白增加）、加速藥物代謝的藥（carbamazepine、phenytoin、rifampin）。</p>'}
+ ]},
+
+{id:'hpt',n:'② 甲狀腺軸',s:'TRH → TSH → T4/T3',lab:['TRH','TSH','T4/T3'],org:'thy',
+ tbl:['TRH','TSH','甲狀腺 → T4（周邊轉 T3）','T3 抑制 TRH、TSH','levothyroxine（補充）；methimazole、PTU（甲狀腺）；放射碘；amiodarone、碘、類固醇、dopamine（干擾）'],
+ steps:[
+ {t:'TRH → TSH',k:'phy',on:['hyp','pit'],lv:[1,1,0],
+  flows:[['hyp2pit','r',2],['pit2thy','p',1.6]],
+  chips:[['hyp','TRH','up'],['pit','甲促素細胞分泌 TSH','up']],
+  d:'<p>下視丘分泌 <b>TRH</b>，刺激甲促素細胞分泌 <b>TSH</b>。</p><p>TRH 也會刺激泌乳素，所以<b>原發性甲狀腺低下</b>（TRH 升高）常合併輕度泌乳素上升。</p>'},
+ {t:'TSH → 甲狀腺製造 T4',k:'phy',on:['thy'],lv:[0,0,1],
+  flows:[['pit2thy','p',2]],
+  chips:[['thy','碘攝取 → TPO → 主要分泌 T4','up']],
+  d:'<p>TSH 讓甲狀腺攝取碘，經過氧化酶（<b>TPO</b>）把碘接到甲狀腺球蛋白上，做出甲狀腺素。</p><ul><li>甲狀腺分泌的大多是 <b>T4</b>（約 80%），T3 只占少數</li><li>周邊組織的去碘酶把 T4 轉成活性較強的 <b>T3</b></li><li>Graves 病的 TSH 受體抗體會<b>模仿 TSH</b>，讓甲狀腺自己一直做，TSH 則被壓到很低</li></ul>'},
+ {t:'負回饋：TSH 是最靈敏的指標',k:'phy',on:['hyp','pit','thy'],lv:[0,0,0],
+  flows:[['thy2hyp','t',1.4],['thy2pit','t',1.6],['hyp2pit','r',.6],['pit2thy','p',.6]],
+  chips:[['pit','T4 在垂體轉成 T3 抑制 TSH','down'],['hyp','抑制 TRH','down']],
+  d:'<p>T4 進到腦下垂體後被轉成 T3，抑制 TSH。<b>fT4 一點小變化，TSH 就會大幅變化</b>，所以篩檢原發性甲狀腺疾病首選 TSH。</p><div class="warn">前提是腦下垂體正常。<b>中樞性甲狀腺低下</b>時，TSH 可能偏低、正常，甚至輕微偏高（活性差），<b>要看 fT4，不能看 TSH</b>。</div>'},
+ {t:'Levothyroxine：補充 T4',k:'drg',on:['thy','pit'],rx:['thy'],lv:[0,0,0],
+  flows:[['thy2pit','t',1.8],['thy2hyp','t',1.2],['pit2thy','p',.4]],
+  chips:[['thy','✚ 補充 T4','drug'],['pit','TSH 回到正常範圍','info']],
+  d:'<ul><li>空腹服用，與鈣片、鐵劑、制酸劑分開</li><li>調整後約 <b>6–8 週</b>再驗，才達到穩定狀態</li><li><b>原發性看 TSH；中樞性看 fT4</b></li></ul><div class="warn">中樞性甲狀腺低下的病人，要<b>先確認腎上腺功能</b>（必要時先補類固醇）再補甲狀腺素，否則可能誘發腎上腺危象。</div>'},
+ {t:'抗甲狀腺藥：methimazole、PTU',k:'drg',on:['thy','pit'],rx:['thy'],lv:[0,-2,-1],
+  flows:[['pit2thy','p',.2]],
+  chips:[['thy','✚ TPO ✕ → 新的 T4 合成 ↓','drug'],['pit','TSH 可被壓抑好幾個月','down']],
+  d:'<p>抑制 TPO，擋住<b>新的</b>甲狀腺素合成；已經存好的還會釋放，所以要數週才見效。</p><ul><li><b>methimazole</b>：一般首選</li><li><b>PTU</b>：另外抑制周邊 T4 轉 T3，用於甲狀腺風暴與懷孕初期；肝毒性較多</li><li>治療初期 TSH 會被壓抑好幾個月，<b>要看 fT4（與 T3）調藥</b></li><li>心悸、手抖可加 β 阻斷劑</li></ul><div class="warn">罕見但嚴重：顆粒性白血球缺乏。服藥中<b>發燒、喉嚨痛</b>要馬上停藥抽血。</div>'},
+ {t:'放射碘',k:'drg',on:['thy'],rx:['thy'],lv:[0,1,-1],
+  flows:[['pit2thy','p',1.4]],
+  chips:[['thy','✚ I-131 被攝取 → 破壞濾泡','drug'],['pit','之後常需補 LT4','info']],
+  d:'<p>甲狀腺會主動攝取碘，放射碘因此集中在甲狀腺，慢慢破壞濾泡細胞，數週到數月見效。</p><ul><li>之後常會變成甲狀腺低下，需要長期補充 levothyroxine</li><li>懷孕、哺乳禁用</li><li>Graves 眼病變可能惡化，必要時合併類固醇</li></ul>'},
+ {t:'其他會干擾的藥與檢驗',k:'drg',on:['thy','pit'],rx:['thy','pit'],lv:[0,-1,0],
+  flows:[['pit2thy','p',.8]],
+  chips:[['thy','amiodarone、碘：亢進或低下都可能','drug'],['pit','高劑量類固醇、dopamine：壓 TSH','down']],
+  d:'<ul><li><b>amiodarone</b>：含大量碘加上直接毒性，可能造成亢進或低下；含碘顯影劑也會影響</li><li><b>免疫檢查點抑制劑</b>：甲狀腺炎、垂體炎</li><li><b>高劑量類固醇、dopamine、體抑素類似物</b>：暫時壓低 TSH（加護病房常見）</li><li><b>高劑量生物素（biotin）</b>：部分檢驗出現假性 TSH 偏低、fT4 偏高，抽血前要停用</li></ul>'}
+ ]},
+
+{id:'hpg',n:'③ 性腺軸',s:'GnRH → LH/FSH → 性類固醇',lab:['GnRH','LH/FSH','睪固酮/E2'],org:'gon',
+ tbl:['GnRH（脈衝式）','LH、FSH','睪丸、卵巢 → 睪固酮、雌二醇、inhibin','性類固醇抑制 GnRH、LH；inhibin 抑制 FSH（女性排卵前轉為正回饋）','GnRH 致效劑／拮抗劑（垂體）；睪固酮、雌激素（回饋）；hCG、FSH（性腺）；clomiphene、letrozole（解除回饋）'],
+ steps:[
+ {t:'GnRH 要「脈衝」才有效',k:'phy',on:['hyp','pit'],lv:[0,0,0],
+  flows:[['hyp2pit','r',1.6],['pit2gon','p',1.6]],
+  chips:[['hyp','kisspeptin 驅動 GnRH 脈衝','info'],['pit','分泌 LH、FSH','up']],
+  d:'<p>GnRH 一陣一陣地分泌（大約每 1–2 小時一次，隨月經週期變化），由 <b>kisspeptin</b> 神經元驅動；能量不足、壓力、高泌乳素都會在這裡踩煞車。</p><ul><li>脈衝較快 → 偏向分泌 LH</li><li>脈衝較慢 → 偏向分泌 FSH</li><li><b>持續不斷</b>的 GnRH 反而讓受體去敏感、LH/FSH 下降，這正是 GnRH 致效劑的原理</li></ul>'},
+ {t:'LH、FSH 到性腺',k:'phy',on:['gon'],lv:[0,0,1],
+  flows:[['pit2gon','p',2.2]],
+  chips:[['gon','男：LH→睪固酮；FSH→精子','up']],
+  d:'<ul><li><b>男性</b>：LH 刺激間質細胞做睪固酮；FSH 加上睪丸內高濃度的睪固酮，支持精子生成；支持細胞分泌 inhibin B</li><li><b>女性</b>：FSH 促進濾泡發育、把雄性素轉成雌二醇；LH 刺激莢膜細胞做雄性素，週期中段的 <b>LH 高峰</b>觸發排卵；排卵後黃體分泌黃體素</li></ul>'},
+ {t:'負回饋，以及女性的正回饋',k:'phy',on:['hyp','pit','gon'],lv:[0,0,0],
+  flows:[['gon2hyp','t',1.4],['gon2pit','t',1.4],['hyp2pit','r',.6],['pit2gon','p',.6]],
+  chips:[['hyp','睪固酮／雌二醇抑制 GnRH','down'],['pit','inhibin 專門抑制 FSH','down']],
+  d:'<p>性類固醇抑制 GnRH 與 LH，inhibin 選擇性抑制 FSH。女性排卵前雌二醇持續升高，會短暫轉成<b>正回饋</b>，引發 LH 高峰。</p><ul><li><b>原發性</b>性腺低下（Klinefelter 症、停經）：LH、FSH 高</li><li><b>中樞性</b>：LH、FSH 低或不適當地正常，原因包括高泌乳素、腦下垂體腫瘤、體重過輕或過度運動、長期鴉片類藥物</li></ul>'},
+ {t:'GnRH 致效劑：先衝高，再關掉',k:'drg',on:['pit','gon'],rx:['pit'],lv:[0,-2,-2],
+  flows:[['hyp2pit','r',2.6],['pit2gon','p',.3]],
+  chips:[['pit','✚ 持續刺激 → 受體去敏感','drug'],['gon','睪固酮降到去勢濃度','down']],
+  d:'<p>leuprolide、triptorelin、goserelin 是長效 GnRH 類似物。</p><ul><li>開始 1–2 週會先<b>衝高</b>（flare）：LH、睪固酮上升。攝護腺癌可能骨痛加劇或尿路阻塞，所以初期要合併抗雄性素</li><li>之後受體去敏感 → LH、FSH 與性類固醇大幅下降</li><li>用途：攝護腺癌、中樞性性早熟、子宮內膜異位、子宮肌瘤</li><li>副作用：熱潮紅、骨質流失、代謝變差</li></ul>'},
+ {t:'GnRH 拮抗劑：直接關，不會衝高',k:'drg',on:['pit','gon'],rx:['pit'],lv:[0,-2,-2],
+  flows:[['hyp2pit','r',1.4],['pit2gon','p',.2]],
+  chips:[['pit','✚ 阻斷 GnRH 受體','drug'],['gon','性類固醇快速下降','down']],
+  d:'<p>直接擋住 GnRH 受體，<b>立即</b>抑制 LH、FSH，沒有 flare，停藥後可逆。</p><ul><li>degarelix（注射）、relugolix（口服）：攝護腺癌</li><li>elagolix、relugolix 複方：子宮內膜異位、子宮肌瘤</li><li>cetrorelix、ganirelix：試管嬰兒療程中防止提早排卵</li></ul>'},
+ {t:'外源性睪固酮的代價',k:'drg',on:['hyp','pit','gon'],rx:['hyp','pit'],lv:[-1,-2,1],
+  flows:[['gon2hyp','t',1.4],['gon2pit','t',1.6],['pit2gon','p',.2]],
+  chips:[['pit','✚ 回饋壓低 LH、FSH','drug'],['gon','睪丸內睪固酮 ↓ → 精子生成 ↓','down']],
+  d:'<p>外用或注射睪固酮讓血中濃度正常，但同時強力抑制 LH、FSH，<b>睪丸內</b>的睪固酮下降，精子生成被抑制（可逆，但恢復可能要好幾個月）。</p><ul><li><b>近期想生育的男性不要用</b>睪固酮補充</li><li>需追蹤血球容積（紅血球增多）與攝護腺</li><li>女性補充雌激素同樣會回饋抑制上游</li></ul>'},
+ {t:'想生育：從上游補起',k:'drg',on:['gon','hyp'],rx:['gon'],lv:[-1,-1,1],
+  flows:[['pit2gon','p',1.2]],
+  chips:[['gon','✚ hCG（作用像 LH）＋ FSH','drug'],['hyp','下視丘性：脈衝式 GnRH 幫浦','info']],
+  d:'<p>中樞性性腺低下又想生育時，要讓<b>睪丸或卵巢自己</b>工作，而不是直接補性類固醇：</p><ul><li><b>hCG</b>：作用像 LH，提高睪丸內睪固酮</li><li>再加 <b>FSH</b>（重組 FSH 或 hMG）促進精子生成或濾泡發育</li><li>病灶在下視丘、腦下垂體正常時：可用<b>脈衝式 GnRH 幫浦</b></li></ul>'},
+ {t:'解除雌激素回饋：clomiphene、letrozole',k:'drg',on:['hyp','pit','gon'],rx:['hyp'],lv:[1,1,1],
+  flows:[['hyp2pit','r',2.2],['pit2gon','p',2.4]],
+  chips:[['hyp','✚ 下視丘「以為」雌激素不夠','drug'],['pit','LH、FSH ↑','up']],
+  d:'<ul><li><b>clomiphene</b>：在下視丘擋住雌激素受體</li><li><b>letrozole</b>：芳香酶抑制劑，降低雌二醇</li></ul><p>兩者都解除負回饋 → GnRH、FSH 上升 → 用於<b>排卵誘導</b>（多囊性卵巢症候群常以 letrozole 為首選）。男性有時用來提高自身睪固酮、同時保留精子生成（屬仿單外使用）。</p>'}
+ ]},
+
+{id:'gh',n:'④ 生長激素軸',s:'GHRH/體抑素 → GH → IGF-1',lab:['GHRH','GH','IGF-1'],org:'liv',
+ tbl:['GHRH（＋）、體抑素（－）；胃的 ghrelin（＋）','GH','肝臟 → IGF-1；GH 也直接作用全身','IGF-1 抑制 GH、增加體抑素；高血糖抑制 GH','octreotide、lanreotide、pasireotide（垂體）；pegvisomant（GH 受體）；cabergoline；GH 補充'],
+ steps:[
+ {t:'GHRH 踩油門、體抑素踩煞車',k:'phy',on:['hyp','pit'],lv:[0,0,0],
+  flows:[['hyp2pit','r',1.6],['hyp2pitx','x',1],['pit2liv','p',1.2]],
+  chips:[['hyp','GHRH（＋）／體抑素（－）','info'],['pit','GH 脈衝式分泌','up']],
+  d:'<p>GH 同時受兩個訊號調控：<b>GHRH</b> 刺激、<b>體抑素</b>抑制；胃分泌的 <b>ghrelin</b> 也會刺激。</p><p>GH 一陣一陣分泌，最大的脈衝出現在<b>入睡後的深睡期</b>。單次隨機抽 GH 意義不大，篩檢要看 IGF-1。</p>'},
+ {t:'GH → 肝臟製造 IGF-1',k:'phy',on:['liv'],lv:[0,0,1],
+  flows:[['pit2liv','p',2.2]],
+  chips:[['liv','肝臟製造 IGF-1','up'],['pit','GH 直接作用：脂解、抗胰島素','info']],
+  d:'<ul><li>GH 讓肝臟製造 <b>IGF-1</b>，由 IGF-1 推動骨骼、軟骨、肌肉生長</li><li>GH 本身也直接作用：分解脂肪、<b>對抗胰島素</b>（肢端肥大症常合併糖尿病）、讓身體留鈉</li><li>IGF-1 一整天相對穩定，是篩檢指標，但要依<b>年齡、性別</b>的參考值判讀</li></ul>'},
+ {t:'負回饋，以及血糖的影響',k:'phy',on:['hyp','pit','liv'],lv:[0,0,0],
+  flows:[['liv2hyp','t',1.2],['liv2pit','t',1.4],['hyp2pitx','x',1.4]],
+  chips:[['pit','IGF-1 抑制 GH','down'],['hyp','IGF-1 ↑ → 體抑素 ↑','down']],
+  d:'<p>IGF-1 直接抑制 GH，同時增加下視丘的體抑素。</p><ul><li><b>高血糖</b>抑制 GH：這是 OGTT 抑制試驗的原理</li><li><b>低血糖</b>、運動、深睡、精胺酸刺激 GH：這是刺激試驗的原理</li></ul>'},
+ {t:'體抑素類似物',k:'drg',on:['pit','liv'],rx:['pit'],lv:[0,-1,-1],
+  flows:[['hyp2pitx','x',2.4],['pit2liv','p',.4]],
+  chips:[['pit','✚ octreotide、lanreotide：SSTR2','drug'],['liv','IGF-1 ↓','down']],
+  d:'<p>模仿體抑素，作用在生長激素腫瘤的 <b>SSTR2</b> 受體，降低 GH 與 IGF-1，部分腫瘤也會縮小。手術無法治癒時是主要的藥物治療，長效針劑每月注射。</p><ul><li>副作用：膽結石、腹瀉腹脹、血糖變化</li><li><b>pasireotide</b> 還作用在 SSTR5，對部分病人更有效，但<b>高血糖</b>更常見</li></ul>'},
+ {t:'Pegvisomant：擋住 GH 受體',k:'drg',on:['liv','pit'],rx:['liv'],lv:[0,1,-2],
+  flows:[['pit2liv','p',2.4],['liv2pit','t',.2]],
+  chips:[['liv','✚ GH 受體拮抗劑 → IGF-1 ↓','drug'],['pit','GH 反而 ↑（不能拿來追蹤）','up']],
+  d:'<p>Pegvisomant 佔住 GH 受體卻不啟動訊號，<b>IGF-1 在多數病人可降到正常</b>。</p><ul><li>IGF-1 下降 → 負回饋減少 → <b>GH 反而上升</b>，所以療效<b>只看 IGF-1，不看 GH</b></li><li>它不治療腫瘤本身，要定期追蹤 MRI</li><li>需追蹤肝功能</li></ul>'},
+ {t:'Cabergoline',k:'drg',on:['pit'],rx:['pit'],lv:[0,-1,-1],
+  flows:[['pit2liv','p',.8]],
+  chips:[['pit','✚ D2 致效劑：輕度降 GH','drug']],
+  d:'<p>dopamine 致效劑對生長激素腫瘤效果較溫和，適合 IGF-1 只<b>輕度升高</b>，或腫瘤<b>同時分泌泌乳素</b>的病人，也可以加在體抑素類似物上合併使用。</p>'},
+ {t:'GH 補充',k:'drg',on:['liv','pit'],rx:['liv'],lv:[0,1,0],
+  flows:[['pit2liv','p',1.6],['liv2pit','t',.8]],
+  chips:[['liv','✚ somatropin、長效 GH','drug'],['pit','依 IGF-1 調整','info']],
+  d:'<ul><li>兒童：生長激素缺乏、Turner 症、Prader-Willi 症等</li><li>確診的<b>成人</b>生長激素缺乏：改善身體組成與生活品質</li><li>以 IGF-1 維持在年齡參考範圍內來調整；有每週一次的長效劑型</li><li>副作用：水腫、關節痛、血糖上升；活動性惡性腫瘤不使用</li></ul>'},
+ {t:'檢查：抑制試驗與刺激試驗',k:'lab',on:['pit','liv'],rx:['pit'],lv:[0,0,0],
+  flows:[['pit2liv','p',1]],
+  chips:[['pit','OGTT 壓不下 GH＝肢端肥大','up'],['liv','刺激後升不起來＝缺乏','down']],
+  d:'<ul><li><b>肢端肥大症</b>：IGF-1 高，喝 75 g 葡萄糖後 GH 無法降到 &lt; 1 µg/L（較敏感的檢驗用 0.4）</li><li><b>生長激素缺乏</b>：刺激試驗 GH 升不起來。胰島素低血糖試驗是傳統標準，但有低血糖風險；也可用 glucagon 試驗或口服 macimorelin</li><li>已有 3 種以上其他腦下垂體激素缺乏、IGF-1 又低時，生長激素缺乏的可能性很高，可不必再做刺激試驗</li></ul>'}
+ ]},
+
+{id:'prl',n:'⑤ 泌乳素',s:'dopamine ⊣ PRL',lab:['dopamine','PRL','LH/FSH'],org:'br',
+ tbl:['dopamine（持續抑制）；TRH、雌激素（刺激）','PRL','乳腺；高 PRL 抑制性腺軸','短回饋：PRL 增加下視丘 dopamine','cabergoline、bromocriptine（D2 致效）；抗精神病藥、metoclopramide、domperidone（D2 拮抗 → PRL ↑）'],
+ steps:[
+ {t:'dopamine 一直踩著煞車',k:'phy',on:['hyp','pit'],lv:[0,0,0],
+  flows:[['hyp2pitx','x',2.4],['pit2br','p',.6]],
+  chips:[['hyp','dopamine 持續抑制','info'],['pit','泌乳素細胞上的 D2 受體','info']],
+  d:'<p>和其他軸線不同，泌乳素主要受下視丘 <b>dopamine</b> 經門脈作用在泌乳素細胞的 <b>D2 受體</b>，持續抑制。</p><p>會刺激泌乳素的因素：TRH、雌激素（懷孕）、哺乳吸吮、壓力、睡眠、胸壁刺激。</p>'},
+ {t:'PRL 作用在乳腺，回饋走短路',k:'phy',on:['br','pit','hyp'],lv:[1,1,0],
+  flows:[['pit2br','p',2],['pit2hyp','p',1]],
+  chips:[['br','泌乳','up'],['pit','短回饋：PRL → dopamine ↑','info']],
+  d:'<p>泌乳素促進乳腺分泌乳汁。它沒有「目標激素」可以回饋，而是靠<b>短回饋</b>：泌乳素升高會讓下視丘分泌更多 dopamine，把自己壓回來。</p>'},
+ {t:'高泌乳素 → 性腺軸被關掉',k:'phy',on:['hyp','gon','br'],lv:[1,2,-2],
+  flows:[['pit2br','p',2.4],['pit2hyp','p',1.4],['pit2gon','p',.2],['hyp2pit','r',.3]],
+  chips:[['hyp','kisspeptin／GnRH ↓','down'],['gon','月經不規則、不孕、性慾 ↓','down']],
+  d:'<p>泌乳素過高會抑制 kisspeptin 與 GnRH 脈衝 → LH、FSH 下降 → <b>中樞性性腺低下</b>：</p><ul><li>女性：月經稀少或無月經、溢乳、不孕</li><li>男性：性慾下降、勃起功能障礙</li><li>兩者：長期骨質流失</li></ul>'},
+ {t:'「煞車斷了」也會升高：垂體柄效應',k:'phy',on:['hyp','pit'],lv:[-2,1,-1],
+  flows:[['hyp2pitx','x',.2],['pit2br','p',1.6]],
+  chips:[['hyp','垂體柄被壓 → dopamine 送不到','down'],['pit','PRL 輕中度 ↑','up']],
+  d:'<p>無功能的腦下垂體大腫瘤，或垂體柄病灶，會擋住 dopamine 的通路，泌乳素因此<b>輕到中度上升</b>（多數 &lt; 100 ng/mL），不要誤判成泌乳素瘤。</p><p>其他常見原因：原發性甲狀腺低下（TRH 升高）、慢性腎病（清除變慢）、懷孕、胸壁刺激。</p>'},
+ {t:'Dopamine 致效劑：補回煞車',k:'drg',on:['pit','br'],rx:['pit'],lv:[0,-2,1],
+  flows:[['hyp2pitx','x',2.6],['pit2br','p',.3]],
+  chips:[['pit','✚ cabergoline、bromocriptine：D2','drug'],['br','PRL ↓、腫瘤縮小','down']],
+  d:'<p>泌乳素瘤的<b>第一線治療</b>，即使是壓迫視神經的大腺瘤，也常能快速縮小。</p><ul><li><b>cabergoline</b> 效果較好、副作用較少，每週服用 1–2 次</li><li>副作用：噁心、姿勢性低血壓、<b>衝動控制障礙</b>（賭博、購物）</li><li>巴金森病使用的高劑量曾與心臟瓣膜病變有關，長期高累積劑量時可考慮心臟超音波追蹤</li></ul>'},
+ {t:'會讓泌乳素升高的藥',k:'drg',on:['pit','br'],rx:['pit'],lv:[-1,2,-1],
+  flows:[['hyp2pitx','x',.2],['pit2br','p',2.4]],
+  chips:[['pit','✚ D2 被擋：抗精神病藥、止吐藥','drug'],['br','藥物性高泌乳素','up']],
+  d:'<p>擋住 D2 受體＝拿掉煞車：</p><ul><li>抗精神病藥：<b>risperidone、paliperidone</b>（最常見）、haloperidol、sulpiride、amisulpride</li><li>腸胃藥：<b>metoclopramide、domperidone</b></li><li>其他較輕微：verapamil、鴉片類、雌激素、部分抗憂鬱劑</li></ul><p>精神科用藥不要自行停藥；可與精神科討論改用 aripiprazole（部分致效劑，反而會降低泌乳素）。</p>'},
+ {t:'檢驗陷阱：macroprolactin 與 hook effect',k:'lab',on:['pit','br'],rx:['pit'],lv:[0,1,0],
+  flows:[['pit2br','p',1.2]],
+  chips:[['br','macroprolactin：數字高但沒症狀','info'],['pit','大腫瘤 PRL 假性偏低 → 稀釋重驗','up']],
+  d:'<ul><li><b>Macroprolactin</b>：泌乳素與抗體結合的大分子，沒有生物活性、清除慢 → 數字偏高卻沒有症狀。可請檢驗科用 PEG 沉澱確認</li><li><b>Hook effect</b>：巨大泌乳素瘤的泌乳素濃度極高，讓檢驗試劑飽和，反而測出「正常或只輕度升高」。腫瘤很大、數字卻不高時，要請檢驗科<b>稀釋後重驗</b></li></ul>'}
+ ]}
+];
+
+/* ================= 狀態與畫面 ================= */
+var axi=0,steps=AX[0].steps,idx=0;
+var ttl=$('#ttl'),txt=$('#txt'),cnt=$('#cnt'),where=$('#where'),dots=$('#dots'),chipsG=$('#chips'),partsG=$('#parts');
+var prevB=$('#prev'),nextB=$('#next'),playB=$('#play'),tabs=$('#tabs');
+var RM=matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+AX.forEach(function(a,k){
+  var b=document.createElement('button');b.type='button';b.setAttribute('role','tab');
+  b.innerHTML=a.n+'<small>'+a.s+'</small>';b.onclick=function(){stopAuto();setAx(k,0,true)};tabs.appendChild(b);
+  if(a.tbl){var tr=document.createElement('tr');tr.innerHTML='<td><b>'+a.n.replace(/^\S+\s/,'')+'</b></td>'+a.tbl.map(function(c){return '<td>'+c+'</td>'}).join('');$('#tbody').appendChild(tr)}
+});
+
+/* 量表 */
+var mrows=$('#mrows'),MB=[];
+for(var r=0;r<3;r++){
+  var y=562+r*18,g=document.createElementNS(SVGNS,'g');
+  g.innerHTML='<text x="14" y="'+(y+4)+'"></text><rect class="trk" x="78" y="'+(y-4)+'" width="72" height="8" rx="4"/><rect class="bar" x="114" y="'+(y-4)+'" width="0" height="8" rx="4"/><line class="mid" x1="114" x2="114" y1="'+(y-7)+'" y2="'+(y+7)+'"/><text class="v" x="156" y="'+(y+4)+'"></text>';
+  mrows.appendChild(g);MB.push({lab:g.children[0],bar:g.children[2],v:g.children[4]});
+}
+function setMeter(lab,lv){
+  var sym={'-2':'↓↓','-1':'↓','0':'—','1':'↑','2':'↑↑'};
+  for(var r=0;r<3;r++){
+    var v=lv?lv[r]:0,w=Math.abs(v)*18;
+    MB[r].lab.textContent=lab[r];
+    MB[r].bar.setAttribute('x',v<0?114-w:114);MB[r].bar.setAttribute('width',w);
+    MB[r].bar.setAttribute('fill',v>0?'var(--up)':'var(--down)');
+    MB[r].v.textContent=sym[String(v)];MB[r].v.setAttribute('fill',v>0?'var(--up)':v<0?'var(--down)':'var(--mute)');
+  }
+}
+
+function chip(at,text,cls){
+  var p=AT[at],g=document.createElementNS(SVGNS,'g');g.setAttribute('class','chip '+cls);
+  var t=document.createElementNS(SVGNS,'text');t.textContent=text;t.setAttribute('text-anchor','middle');
+  g.appendChild(t);chipsG.appendChild(g);
+  var w=t.getComputedTextLength()+18,h=22,x=Math.max(4+w/2,Math.min(596-w/2,p[0]));
+  var rr=document.createElementNS(SVGNS,'rect');rr.setAttribute('x',x-w/2);rr.setAttribute('y',p[1]-h/2);rr.setAttribute('width',w);rr.setAttribute('height',h);
+  g.insertBefore(rr,t);t.setAttribute('x',x);t.setAttribute('y',p[1]+4.5);
+  return g;
+}
+function layoutChips(list){
+  chipsG.textContent='';var used={};
+  list.forEach(function(c,k){var n=used[c[0]]||0;used[c[0]]=n+1;var g=chip(c[0],c[1],c[2]);
+    if(n)g.setAttribute('transform','translate(0,'+(at_dir(c[0])*n*26)+')');g.style.animationDelay=(k*80)+'ms'});
+}
+function at_dir(o){return o==='br'?-1:1}
+
+function setAx(k,i,sync){
+  axi=k;steps=AX[k].steps;
+  [].forEach.call(tabs.children,function(b,j){b.setAttribute('aria-selected',j===k)});
+  go(i||0,sync);
+}
+function go(i,sync){
+  idx=Math.max(0,Math.min(steps.length-1,i));
+  var a=AX[axi],s=steps[idx];
+  var kindTxt={phy:'生理',drg:'藥物',lab:'檢查'}[s.k];
+  ttl.innerHTML='<span class="kind '+s.k+'">'+kindTxt+'</span>'+s.t;txt.innerHTML=s.d;
+  cnt.textContent=(idx+1)+' / '+steps.length;
+  where.innerHTML='<b>'+a.n+'</b> · '+a.s;
+  var keep=a.org?['hyp','pit',a.org].concat(s.on):ORG;
+  ORG.forEach(function(o){var e=$('#o-'+o);e.classList.toggle('on',s.on.indexOf(o)>=0);e.classList.toggle('dim',keep.indexOf(o)<0);$('#r-'+o).classList.toggle('on',(s.rx||[]).indexOf(o)>=0)});
+  [].forEach.call(document.querySelectorAll('#paths path'),function(p){
+    var id=p.id.slice(2),own=null;for(var o in PATHORG)if(PATHORG[o].indexOf(id)>=0)own=o;
+    p.classList.toggle('dim',!!(own&&keep.indexOf(own)<0));
+  });
+  layoutChips(s.chips||[]);setFlows(s.flows||[]);setMeter(a.lab,s.lv);
+  prevB.disabled=idx===0&&axi===0;
+  nextB.textContent=idx<steps.length-1?'下一步 →':(axi<AX.length-1?'下一條軸線 →':'回到總覽 ↺');
+  dots.textContent='';
+  steps.forEach(function(st,k){var b=document.createElement('button');b.type='button';if(st.k!=='phy')b.className='d';b.setAttribute('aria-label','第 '+(k+1)+' 步');if(k===idx)b.setAttribute('aria-current','true');b.onclick=function(){stopAuto();go(k,true)};dots.appendChild(b)});
+  afterStep(s,sync);
+}
+function next(sync){
+  if(idx<steps.length-1)return go(idx+1,sync);
+  setAx(axi<AX.length-1?axi+1:0,0,sync);
+}
+function prev(sync){
+  if(idx>0)return go(idx-1,sync);
+  if(axi>0)setAx(axi-1,AX[axi-1].steps.length-1,sync);
+}
+prevB.onclick=function(){stopAuto();prev(true)};
+nextB.onclick=function(){stopAuto();next(true)};
+document.addEventListener('keydown',function(e){
+  if(e.target.closest&&e.target.closest('input,textarea'))return;
+  if(e.key==='ArrowRight'){stopAuto();next(true)}else if(e.key==='ArrowLeft'){stopAuto();prev(true)}
+});
+var sx=null,sy=null,map=$('#map');
+map.addEventListener('touchstart',function(e){sx=e.touches[0].clientX;sy=e.touches[0].clientY},{passive:true});
+map.addEventListener('touchend',function(e){if(sx==null)return;var dx=e.changedTouches[0].clientX-sx,dy=e.changedTouches[0].clientY-sy;if(Math.abs(dx)>40&&Math.abs(dx)>Math.abs(dy)){stopAuto();dx<0?next(true):prev(true)}sx=null},{passive:true});
+
+/* 粒子 */
+var P={},flows=[],parts=[],last=0;
+[].forEach.call(document.querySelectorAll('#paths path'),function(p){P[p.id.slice(2)]={el:p,len:p.getTotalLength()}});
+function setFlows(f){flows=f.map(function(x){return {p:P[x[0]],c:COL[x[1]],r:x[2],acc:Math.random()}}).filter(function(x){return x.p})}
+function spawn(f){var c=document.createElementNS(SVGNS,'circle');c.setAttribute('r',f.c===COL.t?4.2:3.6);c.setAttribute('fill',f.c);partsG.appendChild(c);parts.push({el:c,p:f.p,t:0,d:1600+Math.random()*500})}
+function tick(ts){
+  var dt=last?Math.min(100,ts-last):16;last=ts;
+  if(!RM){
+    flows.forEach(function(f){f.acc+=f.r*dt/1000;while(f.acc>=1){f.acc-=1;spawn(f)}});
+    for(var k=parts.length-1;k>=0;k--){var q=parts[k];q.t+=dt;var u=q.t/q.d;
+      if(u>=1){q.el.remove();parts.splice(k,1);continue}
+      var pt=q.p.el.getPointAtLength(u*q.p.len);q.el.setAttribute('cx',pt.x);q.el.setAttribute('cy',pt.y);
+      q.el.setAttribute('opacity',u<.1?u*10:u>.85?(1-u)/.15:1)}
+  }
+  requestAnimationFrame(tick);
+}
+requestAnimationFrame(tick);
+
+/* 自動播放＋語音朗讀（Web Speech API，用裝置內建語音） */
+var autoOn=false,autoT=0,narr=false,sid=0,voice=null;
+var KEEP=[];
+var SS=window.speechSynthesis,sayB=$('#say');
+function pickVoice(){
+  if(!SS)return;var vs=SS.getVoices();if(!vs.length)return;
+  var pref=['zh-TW','zh_TW','zh-Hant','zh-HK','zh-CN','zh'];
+  for(var k=0;k<pref.length&&!voice;k++){voice=vs.filter(function(v){return v.lang.replace('_','-').indexOf(pref[k].replace('_','-'))===0})[0]||null}
+}
+if(SS){pickVoice();if('onvoiceschanged' in SS)SS.onvoiceschanged=pickVoice}else{sayB.hidden=true}
+function plain(s){
+  var t=s.t+'。'+s.d.replace(/<\/(li|p|div)>/g,'。').replace(/<[^>]+>/g,'');
+  var el=document.createElement('textarea');el.innerHTML=t;t=el.value;
+  [[/µg\/dL/g,'微克每公合'],[/µg\/L/g,'微克每公升'],[/ng\/mL/g,'奈克每毫升'],[/IGF-1/g,'IGF 1'],[/T4\/T3/g,'T4 和 T3'],[/LH\/FSH/g,'LH 和 FSH'],[/11β/g,'11 貝他'],[/SSTR(\d)/g,'SSTR $1'],[/\bD2\b/g,'D 2'],[/I-131/g,'碘 131'],[/α-MSH/g,'阿法 MSH'],
+   [/α/g,'阿法'],[/β/g,'貝他'],[/✚/g,''],[/✕/g,'被阻斷'],[/⊣/g,'抑制'],[/↑↑/g,'大幅增加'],[/↓↓/g,'大幅減少'],[/↑/g,'增加'],[/↓/g,'減少'],[/→/g,'，接著'],[/＋/g,'和'],[/(\d)\s*–\s*(\d)/g,'$1到$2'],[/–/g,'到'],[/</g,'小於'],[/>/g,'大於'],[/[／\/]/g,'、'],[/\s+/g,' '],[/[。，]\s*[。，]+/g,'。']]
+   .forEach(function(r){t=t.replace(r[0],r[1])});
+  return t;
+}
+function chunks(t){
+  var out=[];(t.match(/[^。！？；]+[。！？；]?/g)||[]).forEach(function(x){x=x.trim();if(!x||x==='。')return;
+    while(x.length>110){var cut=x.lastIndexOf('，',110);cut=cut>20?cut+1:110;out.push(x.slice(0,cut));x=x.slice(cut)}
+    if(x)out.push(x)});
+  return out;
+}
+function stopNarr(){sid++;if(SS&&(SS.speaking||SS.pending))SS.cancel()}
+function speak(text,done,sync){
+  var busy=SS.speaking||SS.pending;
+  stopNarr();var my=sid,cs=chunks(text),i=0;
+  function nx(){
+    if(my!==sid)return;
+    if(i>=cs.length){done&&done();return}
+    var u=new SpeechSynthesisUtterance(cs[i++]);u.lang=voice?voice.lang:'zh-TW';if(voice)u.voice=voice;u.rate=1;
+    u.onend=function(){if(my===sid)nx()};
+    u.onerror=function(e){if(my===sid&&e.error!=='interrupted'&&e.error!=='canceled')nx()};
+    // iOS WebKit 會把沒被引用的 utterance 回收掉而不出聲，留住最近幾個
+    KEEP.push(u);if(KEEP.length>6)KEEP.shift();
+    SS.speak(u);
+  }
+  // iOS／Safari 只允許在使用者點擊的同一個呼叫堆疊裡開始朗讀，所以點按鈕時要同步呼叫；
+  // 若剛 cancel 正在唸的句子，WebKit 立刻 speak 可能被吞掉，此時（已解鎖）改延遲
+  if(sync&&!busy)nx();else setTimeout(nx,80);
+}
+function schedule(ms){clearTimeout(autoT);autoT=setTimeout(function(){if(autoOn)next()},ms)}
+function afterStep(s,sync){
+  clearTimeout(autoT);
+  if(narr&&SS){speak(plain(s),function(){if(autoOn)schedule(700)},sync)}
+  else{stopNarr();if(autoOn)schedule(7000)}
+}
+function stopAuto(){autoOn=false;clearTimeout(autoT);playB.textContent='▶ 自動'}
+playB.onclick=function(){if(autoOn)return stopAuto();autoOn=true;playB.textContent='❚❚ 暫停';if(!narr)schedule(7000);else if(!SS.speaking)afterStep(steps[idx],true)};
+sayB.onclick=function(){
+  narr=!narr;sayB.setAttribute('aria-pressed',narr);sayB.textContent=narr?'🔇 停止朗讀':'🔊 朗讀';
+  afterStep(steps[idx],true);
+};
+document.addEventListener('visibilitychange',function(){if(document.hidden&&narr){stopNarr();stopAuto()}});
+
+/* 深淺色 */
+var root=document.documentElement;
+try{var th=localStorage.getItem('pim-theme');if(th)root.setAttribute('data-theme',th)}catch(e){}
+$('#theme').onclick=function(){
+  var dark=root.getAttribute('data-theme')?root.getAttribute('data-theme')==='dark':matchMedia('(prefers-color-scheme: dark)').matches;
+  var n=dark?'light':'dark';root.setAttribute('data-theme',n);try{localStorage.setItem('pim-theme',n)}catch(e){}
+};
+
+setAx(0,0);
+})();
+</script>
+</body>
+</html>
