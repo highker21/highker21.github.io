@@ -227,7 +227,7 @@ footer{color:var(--mute);font-size:13px;padding:22px 0 40px;border-top:1px solid
 
 <footer>
   教學示意圖，器官位置與比例經過簡化，數字為典型值，非個別病人的用藥建議；實際用藥依仿單、腎功能與最新指引（ADA Standards of Care）判斷。<br>
-  工具版本：2026-11-08（加語音朗讀）
+  工具版本：2026-11-08（語音朗讀修正 iPhone）
 </footer>
 </div>
 
@@ -484,13 +484,13 @@ function plain(s){
   return t;
 }
 function chunks(t){
-  var out=[];t.split(/(?<=[。！？；])/).forEach(function(x){x=x.trim();if(!x||x==='。')return;
+  var out=[];(t.match(/[^。！？；]+[。！？；]?/g)||[]).forEach(function(x){x=x.trim();if(!x||x==='。')return;
     while(x.length>110){var cut=x.lastIndexOf('，',110);cut=cut>20?cut+1:110;out.push(x.slice(0,cut));x=x.slice(cut)}
     if(x)out.push(x)});
   return out;
 }
-function stopNarr(){sid++;if(SS)SS.cancel()}
-function speak(text,done){
+function stopNarr(){sid++;if(SS&&(SS.speaking||SS.pending))SS.cancel()}
+function speak(text,done,sync){
   stopNarr();var my=sid,cs=chunks(text),i=0;
   function nx(){
     if(my!==sid)return;
@@ -500,19 +500,20 @@ function speak(text,done){
     u.onerror=function(e){if(my===sid&&e.error!=='interrupted'&&e.error!=='canceled')nx()};
     SS.speak(u);
   }
-  setTimeout(nx,80);
+  // iOS／Safari 只允許在使用者點擊的同一個呼叫堆疊裡開始朗讀，所以點按鈕時要同步呼叫
+  if(sync)nx();else setTimeout(nx,80);
 }
 function schedule(ms){clearTimeout(autoT);autoT=setTimeout(function(){if(autoOn)next()},ms)}
-function afterStep(s){
+function afterStep(s,sync){
   clearTimeout(autoT);
-  if(narr&&SS){speak(plain(s),function(){if(autoOn)schedule(700)})}
+  if(narr&&SS){speak(plain(s),function(){if(autoOn)schedule(700)},sync)}
   else{stopNarr();if(autoOn)schedule(6500)}
 }
 function stopAuto(){autoOn=false;clearTimeout(autoT);playB.textContent='▶ 自動'}
-playB.onclick=function(){if(autoOn)return stopAuto();autoOn=true;playB.textContent='❚❚ 暫停';if(!narr)schedule(6500);else if(!SS.speaking)afterStep(steps[idx])};
+playB.onclick=function(){if(autoOn)return stopAuto();autoOn=true;playB.textContent='❚❚ 暫停';if(!narr)schedule(6500);else if(!SS.speaking)afterStep(steps[idx],true)};
 sayB.onclick=function(){
   narr=!narr;sayB.setAttribute('aria-pressed',narr);sayB.textContent=narr?'🔇 停止朗讀':'🔊 朗讀';
-  afterStep(steps[idx]);
+  afterStep(steps[idx],true);
 };
 document.addEventListener('visibilitychange',function(){if(document.hidden&&narr){stopNarr();stopAuto()}});
 
