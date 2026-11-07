@@ -374,7 +374,7 @@ var D=[
   {t:'直接補上缺少的胰島素',g:150,on:['muscle','fat','liver'],flows:[['ins2muscle','i',2.6],['ins2fat','i',1.6],['ins2liver','i',2],['blood2muscle','g',3],['blood2fat','g',1.2],['blood2liver','g',1.6]],chips:[['muscle','✚ 胰島素注射','drug'],['liver','肝糖輸出 ↓','up']],
    d:'<p>外打的胰島素做的就是 A 第 5、6 步的事：讓肌肉、脂肪吸糖，並關掉肝臟供糖。不需要靠 β 細胞，也是<b>降糖效果最強、沒有劑量上限</b>的選項。</p>'},
   {t:'基礎型 vs. 餐前型',g:120,on:['liver','gut'],flows:[['ins2liver','i',1.2],['food','g',1.6],['gut2blood','g',1.6],['ins2muscle','i',1.8]],chips:[['liver','基礎型：壓空腹肝糖輸出','info'],['gut','餐前速效型：接住飯後血糖','info']],
-   d:'<ul><li><b>基礎型</b>（glargine、degludec、detemir）：一天一次，平穩地壓住肝臟的空腹供糖</li><li><b>餐前速效型</b>（aspart、lispro、glulisine）：飯前打，對應這一餐吸收進來的糖</li></ul>'},
+   d:'<ul><li><b>基礎型</b>（glargine、degludec）：一天一次，平穩地壓住肝臟的空腹供糖</li><li><b>餐前速效型</b>（aspart、lispro、glulisine）：飯前打，對應這一餐吸收進來的糖</li></ul>'},
   {t:'臨床重點',g:70,on:['brain'],flows:[['blood2brain','g',.5],['ins2muscle','i',1.4]],chips:[['brain','低血糖症狀要會辨認','down']],
    d:'<ul><li><span class="tag">低血糖</span>主要風險，病人與家屬要會辨認與處理</li><li><span class="tag">體重</span>增加</li><li><span class="tag">搭配</span>常與 metformin、GLP-1 受體促效劑或 SGLT2 抑制劑合用，以減少胰島素劑量與體重增加</li></ul>'}
  ]}
@@ -432,7 +432,7 @@ function layoutChips(list){
     g.style.animationDelay=(k*80)+'ms';
   });
 }
-function go(i){
+function go(i,sync){
   idx=Math.max(0,Math.min(steps.length-1,i));
   var s=steps[idx];
   ttl.textContent=s.t;txt.innerHTML=s.d;
@@ -443,27 +443,27 @@ function go(i){
   setFlows(s.flows||[]);
   tgtG=s.g;
   prevB.disabled=idx===0;
-  afterStep(s);
+  afterStep(s,sync);
   nextB.textContent=idx===steps.length-1?(mode==='A'?'看藥物 →':(drug<D.length-1?'下一類藥 →':'回到開頭 ↺')):'下一步 →';
   dots.textContent='';
-  steps.forEach(function(_,k){var b=document.createElement('button');b.type='button';b.setAttribute('aria-label','第 '+(k+1)+' 步');if(k===idx)b.setAttribute('aria-current','true');b.onclick=function(){stopAuto();go(k)};dots.appendChild(b)});
+  steps.forEach(function(_,k){var b=document.createElement('button');b.type='button';b.setAttribute('aria-label','第 '+(k+1)+' 步');if(k===idx)b.setAttribute('aria-current','true');b.onclick=function(){stopAuto();go(k,true)};dots.appendChild(b)});
 }
-function next(){
-  if(idx<steps.length-1)return go(idx+1);
+function next(sync){
+  if(idx<steps.length-1)return go(idx+1,sync);
   if(mode==='A')return setTab('B');
   if(drug<D.length-1)return pickDrug(drug+1);
   setTab('A');
 }
-function prev(){if(idx>0)go(idx-1)}
-prevB.onclick=function(){stopAuto();prev()};
-nextB.onclick=function(){stopAuto();next()};
+function prev(sync){if(idx>0)go(idx-1,sync)}
+prevB.onclick=function(){stopAuto();prev(true)};
+nextB.onclick=function(){stopAuto();next(true)};
 document.addEventListener('keydown',function(e){
   if(e.target.closest&&e.target.closest('input,textarea'))return;
-  if(e.key==='ArrowRight'){stopAuto();next()}else if(e.key==='ArrowLeft'){stopAuto();prev()}
+  if(e.key==='ArrowRight'){stopAuto();next(true)}else if(e.key==='ArrowLeft'){stopAuto();prev(true)}
 });
 var sx=null,sy=null,map=$('#map');
 map.addEventListener('touchstart',function(e){sx=e.touches[0].clientX;sy=e.touches[0].clientY},{passive:true});
-map.addEventListener('touchend',function(e){if(sx==null)return;var dx=e.changedTouches[0].clientX-sx,dy=e.changedTouches[0].clientY-sy;if(Math.abs(dx)>40&&Math.abs(dx)>Math.abs(dy)){stopAuto();dx<0?next():prev()}sx=null},{passive:true});
+map.addEventListener('touchend',function(e){if(sx==null)return;var dx=e.changedTouches[0].clientX-sx,dy=e.changedTouches[0].clientY-sy;if(Math.abs(dx)>40&&Math.abs(dx)>Math.abs(dy)){stopAuto();dx<0?next(true):prev(true)}sx=null},{passive:true});
 
 /* 自動播放 */
 /* 自動播放＋語音朗讀（Web Speech API，用裝置內建語音） */
@@ -491,6 +491,7 @@ function chunks(t){
 }
 function stopNarr(){sid++;if(SS&&(SS.speaking||SS.pending))SS.cancel()}
 function speak(text,done,sync){
+  var busy=SS.speaking||SS.pending;
   stopNarr();var my=sid,cs=chunks(text),i=0;
   function nx(){
     if(my!==sid)return;
@@ -501,7 +502,8 @@ function speak(text,done,sync){
     SS.speak(u);
   }
   // iOS／Safari 只允許在使用者點擊的同一個呼叫堆疊裡開始朗讀，所以點按鈕時要同步呼叫
-  if(sync)nx();else setTimeout(nx,80);
+  // 若剛 cancel 正在唸的句子，WebKit 立刻 speak 可能被吞掉，此時（已解鎖）改延遲
+  if(sync&&!busy)nx();else setTimeout(nx,80);
 }
 function schedule(ms){clearTimeout(autoT);autoT=setTimeout(function(){if(autoOn)next()},ms)}
 function afterStep(s,sync){
