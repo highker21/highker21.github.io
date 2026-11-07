@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>內分泌新陳代謝科 醫學互動教學</title>
+<meta name="description" content="內分泌新陳代謝科的互動動畫教學入口：血糖調控、糖尿病分型、代謝症候群與血脂、腦下垂體前葉與後葉、鈣磷與骨質疏鬆。">
+<style>
+:root{--bg:#f5f3ee;--paper:#fffdf8;--ink:#1f2328;--mute:#5d6470;--line:#d9d4c7;--accent:#0f6e64;--shadow:0 1px 2px rgba(0,0,0,.06),0 6px 20px rgba(0,0,0,.06)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#14171b;--paper:#1c2026;--ink:#e8e6e1;--mute:#a3a9b3;--line:#323844;--accent:#4fc1b3;--shadow:0 1px 2px rgba(0,0,0,.4),0 6px 20px rgba(0,0,0,.35)}}
+:root[data-theme="dark"]{--bg:#14171b;--paper:#1c2026;--ink:#e8e6e1;--mute:#a3a9b3;--line:#323844;--accent:#4fc1b3;--shadow:0 1px 2px rgba(0,0,0,.4),0 6px 20px rgba(0,0,0,.35)}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink)}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang TC","Noto Sans TC","Microsoft JhengHei",sans-serif;line-height:1.65;-webkit-text-size-adjust:100%}
+.wrap{max-width:1100px;margin:0 auto;padding:0 16px}
+header{padding:48px 0 10px}
+.kick{font-size:13px;letter-spacing:.12em;color:var(--accent);font-weight:700}
+h1{font-size:clamp(28px,5.5vw,46px);line-height:1.2;margin:.25em 0 .3em}
+.lead{color:var(--mute);max-width:760px;margin:0}
+.how{display:flex;flex-wrap:wrap;gap:8px 18px;margin:16px 0 0;padding:0;list-style:none;font-size:14px;color:var(--mute)}
+.how li::before{content:"✓ ";color:var(--accent);font-weight:700}
+h2{font-size:20px;margin:34px 0 12px;display:flex;align-items:center;gap:10px}
+h2::after{content:"";flex:1;height:1px;background:var(--line)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px}
+a.card{display:flex;flex-direction:column;text-decoration:none;color:inherit;background:var(--paper);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);overflow:hidden;transition:transform .15s,box-shadow .15s}
+a.card:hover,a.card:focus-visible{transform:translateY(-2px);box-shadow:0 2px 4px rgba(0,0,0,.08),0 12px 28px rgba(0,0,0,.1)}
+.band{height:8px;background:var(--c)}
+.body{padding:16px 18px 18px;display:flex;flex-direction:column;gap:8px;flex:1}
+.no{font-size:12px;font-weight:800;color:var(--c);letter-spacing:.08em}
+.card h3{margin:0;font-size:21px;line-height:1.3}
+.card h3 span{color:var(--c)}
+.card p{margin:0;color:var(--mute);font-size:14.5px}
+.tabs{display:flex;flex-wrap:wrap;gap:6px;margin-top:2px}
+.tabs span{font-size:12px;border:1px solid var(--line);border-radius:999px;padding:1px 9px;color:var(--ink)}
+.meta{margin-top:auto;padding-top:6px;font-size:13px;color:var(--mute);display:flex;justify-content:space-between}
+.meta b{color:var(--c)}
+.order{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:12px 16px;margin-top:30px;font-size:14.5px;color:var(--mute)}
+.order b{color:var(--ink)}
+footer{color:var(--mute);font-size:13px;padding:22px 0 40px;border-top:1px solid var(--line);margin-top:30px}
+footer a{color:var(--accent)}
+.theme{position:absolute;top:14px;right:16px;appearance:none;border:1px solid var(--line);background:var(--paper);color:var(--ink);border-radius:999px;padding:6px 12px;font:inherit;font-size:13px;cursor:pointer}
+@media (max-width:420px){.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<button class="theme" id="theme" type="button" aria-label="切換深淺色">◐ 深淺色</button>
+<div class="wrap">
+<header>
+  <div class="kick">ENDOCRINOLOGY &amp; METABOLISM · INTERACTIVE</div>
+  <h1>內分泌新陳代謝科 醫學互動教學</h1>
+  <p class="lead">把激素、器官與藥物的作用畫成會動的示意圖，一步一步看生理、病理與藥理。適合醫學生、住院醫師、護理與藥學同仁，也可以在門診拿來跟病人說明。</p>
+  <ul class="how">
+    <li>動畫示意激素與物質流動</li>
+    <li>即時數值與激素量表</li>
+    <li>語音朗讀＋自動播放</li>
+    <li>手機可左右滑動</li>
+    <li>深淺色模式</li>
+  </ul>
+  <p class="lead" style="margin-top:10px;font-size:14px">🔊 iPhone 朗讀沒有聲音時，請先關掉靜音模式並調大音量。</p>
+</header>
+
+<h2>糖尿病與代謝</h2>
+<div class="grid">
+  <a class="card" href="glucose-in-motion.html" style="--c:#e09a1a">
+    <div class="band"></div><div class="body">
+      <div class="no">01</div>
+      <h3>血糖，<span>動起來</span></h3>
+      <p>一餐飯後的血糖調控：腸道、胰臟、肝臟、肌肉、腎臟、大腦各做什麼；10 類降血糖藥卡在哪一步。</p>
+      <div class="tabs"><span>一餐的旅程</span><span>藥物作用點</span></div>
+      <div class="meta"><span>即時血糖</span><b>37 步</b></div>
+    </div></a>
+  <a class="card" href="diabetes-types-in-motion.html" style="--c:#9b3d5e">
+    <div class="band"></div><div class="body">
+      <div class="no">02</div>
+      <h3>糖尿病分型，<span>動起來</span></h3>
+      <p>第一型（含 LADA、猛爆型）、第二型、妊娠糖尿病，以及新生兒、MODY、粒線體、胰臟疾病、藥物引起的其他型。</p>
+      <div class="tabs"><span>第一型</span><span>第二型</span><span>妊娠</span><span>其他型</span></div>
+      <div class="meta"><span>β 細胞功能動畫</span><b>25 步</b></div>
+    </div></a>
+  <a class="card" href="metabolic-in-motion.html" style="--c:#8a4b1f">
+    <div class="band"></div><div class="body">
+      <div class="no">03</div>
+      <h3>代謝，<span>動起來</span></h3>
+      <p>能量平衡與食慾訊號、脂蛋白運輸；肥胖、代謝症候群、高血脂的病理；減重藥、代謝手術與降血脂藥。</p>
+      <div class="tabs"><span>生理</span><span>病理</span><span>肥胖治療</span><span>降血脂藥</span></div>
+      <div class="meta"><span>即時 LDL／TG／HDL、斑塊</span><b>27 步</b></div>
+    </div></a>
+</div>
+
+<h2>內分泌軸線</h2>
+<div class="grid">
+  <a class="card" href="pituitary-in-motion.html" style="--c:#7a4fc4">
+    <div class="band"></div><div class="body">
+      <div class="no">04</div>
+      <h3>腦下垂體，<span>動起來</span></h3>
+      <p>前葉五條軸線：腎上腺、甲狀腺、性腺、生長激素、泌乳素的生理、負回饋判讀，以及常見藥物與檢查。</p>
+      <div class="tabs"><span>總覽</span><span>腎上腺</span><span>甲狀腺</span><span>性腺</span><span>生長激素</span><span>泌乳素</span></div>
+      <div class="meta"><span>三層激素量表</span><b>42 步</b></div>
+    </div></a>
+  <a class="card" href="posterior-pituitary-in-motion.html" style="--c:#2f72c4">
+    <div class="band"></div><div class="body">
+      <div class="no">05</div>
+      <h3>腦下垂體後葉，<span>動起來</span></h3>
+      <p>AVP 與催產素；尿崩症（AVP 缺乏／AVP 抗性）、原發性多飲、低血鈉與 SIADH 的判讀，以及相關藥物。</p>
+      <div class="tabs"><span>總覽</span><span>AVP 生理</span><span>尿崩症</span><span>低血鈉</span><span>藥物</span><span>血管與催產素</span></div>
+      <div class="meta"><span>即時血鈉、滲透壓</span><b>31 步</b></div>
+    </div></a>
+  <a class="card" href="calcium-in-motion.html" style="--c:#2a6f97">
+    <div class="band"></div><div class="body">
+      <div class="no">06</div>
+      <h3>鈣磷，<span>動起來</span></h3>
+      <p>PTH、活性維生素 D、FGF23 如何調控鈣磷；副甲狀腺疾病、慢性腎病、高血鈣急救，以及骨質疏鬆與用藥順序。</p>
+      <div class="tabs"><span>生理</span><span>疾病</span><span>鈣磷藥物</span><span>骨質疏鬆</span></div>
+      <div class="meta"><span>即時血鈣、血磷</span><b>30 步</b></div>
+    </div></a>
+</div>
+
+<div class="order"><b>建議順序：</b>第一次看，從「血糖」開始，再看「糖尿病分型」與「代謝」；內分泌軸線先看「腦下垂體」的總覽分頁，理解負回饋判讀後，其他幾個網站會更好懂。</div>
+
+<footer>
+  教學示意圖，器官位置與比例經過簡化；不含藥物劑量，非個別病人的診斷或用藥建議，實際判斷請依仿單與最新指引。<br>
+  <a href="../">← 回到首頁</a>　·　工具版本：2026-11-08
+</footer>
+</div>
+<script>
+(function(){var root=document.documentElement;
+try{var th=localStorage.getItem('endo-theme');if(th)root.setAttribute('data-theme',th)}catch(e){}
+document.getElementById('theme').onclick=function(){var dark=root.getAttribute('data-theme')?root.getAttribute('data-theme')==='dark':matchMedia('(prefers-color-scheme: dark)').matches;
+var n=dark?'light':'dark';root.setAttribute('data-theme',n);try{localStorage.setItem('endo-theme',n)}catch(e){}};})();
+</script>
+</body>
+</html>
