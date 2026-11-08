@@ -1,0 +1,630 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>性腺，動起來</title>
+<meta name="description" content="一步一步看下視丘—腦下垂體—性腺軸、月經週期、男性性腺低下、PCOS、無月經與更年期，以及荷爾蒙藥物作用在哪裡。">
+<style>
+:root{
+  --bg:#f5f3ee;--paper:#fffdf8;--ink:#1f2328;--mute:#5d6470;--line:#d9d4c7;
+  --accent:#8a3d6e;--accent-soft:#f2dfea;
+  --blood:#b0407a;--nerve:#1f9d8f;--gn:#1f9d55;--lh:#7a4fc4;--t:#2f72c4;--e:#d0447c;--p:#d98a12;--inh:#1f9d8f;--an:#8a5a14;--dmg:#7a2730;--drug:#c0262d;--up:#d1452b;--down:#2f72c4;
+  --organ:#ffffff;--organ-line:#b9b2a3;--organ-on:#fff1e6;--organ-on-line:#d9741a;
+  --shadow:0 1px 2px rgba(0,0,0,.06),0 6px 20px rgba(0,0,0,.06);
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#14171b;--paper:#1c2026;--ink:#e8e6e1;--mute:#a3a9b3;--line:#323844;
+  --accent:#e08ac0;--accent-soft:#3a2032;
+  --blood:#e07ab0;--nerve:#4cd0c0;--gn:#4cd08a;--lh:#a98cf0;--t:#6aa8f5;--e:#f07aa8;--p:#f2b441;--inh:#4cd0c0;--an:#d9a050;--dmg:#e08a94;--drug:#ff6b6b;--up:#ff7a5c;--down:#6aa8f5;
+  --organ:#232831;--organ-line:#4a5260;--organ-on:#3a2c20;--organ-on-line:#f5a04a;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 6px 20px rgba(0,0,0,.35);
+}}
+:root[data-theme="dark"]{
+  --bg:#14171b;--paper:#1c2026;--ink:#e8e6e1;--mute:#a3a9b3;--line:#323844;
+  --accent:#e08ac0;--accent-soft:#3a2032;
+  --blood:#e07ab0;--nerve:#4cd0c0;--gn:#4cd08a;--lh:#a98cf0;--t:#6aa8f5;--e:#f07aa8;--p:#f2b441;--inh:#4cd0c0;--an:#d9a050;--dmg:#e08a94;--drug:#ff6b6b;--up:#ff7a5c;--down:#6aa8f5;
+  --organ:#232831;--organ-line:#4a5260;--organ-on:#3a2c20;--organ-on-line:#f5a04a;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 6px 20px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink)}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang TC","Noto Sans TC","Microsoft JhengHei",sans-serif;line-height:1.65;-webkit-text-size-adjust:100%}
+a{color:var(--accent)}
+.wrap{max-width:1180px;margin:0 auto;padding:0 16px}
+header.hero{padding:40px 0 18px}
+.kick{font-size:13px;letter-spacing:.12em;color:var(--accent);font-weight:700}
+h1{font-size:clamp(30px,6vw,52px);line-height:1.15;margin:.2em 0 .25em;letter-spacing:.02em}
+h1 span{color:var(--blood)}
+.lead{color:var(--mute);max-width:740px;margin:0}
+.legend{display:flex;flex-wrap:wrap;gap:8px 16px;margin:16px 0 0;padding:0;list-style:none;font-size:14px;color:var(--mute)}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:50%;margin-right:6px;vertical-align:-1px}
+.tabs{display:flex;gap:8px;margin:22px 0 14px;flex-wrap:wrap}
+.tabs button{appearance:none;border:1px solid var(--line);background:var(--paper);color:var(--ink);padding:9px 14px;border-radius:999px;font:inherit;font-weight:700;cursor:pointer;line-height:1.3}
+.tabs button small{display:block;font-weight:400;font-size:11.5px;opacity:.8}
+.tabs button[aria-selected="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+.player{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:18px;align-items:start}
+.stage{position:sticky;top:10px;background:var(--paper);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);padding:8px}
+.stage svg{display:block;width:100%;height:auto;max-height:calc(100vh - 40px);touch-action:pan-y}
+.panel{background:var(--paper);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);padding:18px 20px;min-height:440px;display:flex;flex-direction:column}
+.where{font-size:13px;color:var(--mute);display:flex;justify-content:space-between;gap:8px}
+.where b{color:var(--accent)}
+.kind{display:inline-block;font-size:12px;font-weight:700;border-radius:999px;padding:1px 9px;margin-right:6px;vertical-align:2px}
+.kind.phy{background:var(--accent-soft);color:var(--accent)}
+.kind.dz{background:color-mix(in srgb,var(--blood) 15%,transparent);color:var(--blood)}
+.kind.dx{background:color-mix(in srgb,var(--nerve) 15%,transparent);color:var(--nerve)}
+.kind.drg{background:color-mix(in srgb,var(--drug) 14%,transparent);color:var(--drug)}
+.panel h2{font-size:23px;line-height:1.3;margin:6px 0 8px}
+.panel .txt{flex:1}
+.panel .txt p{margin:.35em 0}
+.panel .txt ul,.panel .txt ol{margin:.35em 0;padding-left:1.2em}
+.panel .txt li{margin:.2em 0}
+.warn{border-left:3px solid var(--drug);padding:4px 10px;margin:.6em 0;background:color-mix(in srgb,var(--drug) 8%,transparent);border-radius:0 8px 8px 0}
+.ctl{display:flex;align-items:center;gap:8px;margin-top:14px;flex-wrap:wrap}
+.ctl button{appearance:none;border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:10px;padding:9px 14px;font:inherit;font-weight:700;cursor:pointer;min-width:44px}
+.ctl button:disabled{opacity:.35;cursor:default}
+.ctl #say[aria-pressed="true"]{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.ctl .next{background:var(--accent);border-color:var(--accent);color:#fff;margin-left:auto}
+.dots{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}
+.dots button{width:10px;height:10px;border-radius:50%;border:0;padding:0;background:var(--line);cursor:pointer}
+.dots button[aria-current="true"]{background:var(--accent);transform:scale(1.25)}
+.hint{font-size:12px;color:var(--mute);margin-top:8px}
+
+.org path.shape,.org ellipse,.org rect.shape{fill:var(--organ);stroke:var(--organ-line);stroke-width:2;transition:fill .35s,stroke .35s}
+.org text{fill:var(--ink);font-size:17px;font-weight:700;text-anchor:middle}
+.org text.sub{font-size:11.5px;font-weight:400;fill:var(--mute)}
+.org.on path.shape,.org.on ellipse,.org.on rect.shape{fill:var(--organ-on);stroke:var(--organ-on-line);stroke-width:3}
+.org{transition:opacity .35s}
+.org.dim{opacity:.35}
+#o-tes ellipse{transform-box:view-box;transform-origin:110px 300px;transition:fill .35s,stroke .35s,transform .5s}
+#o-tes.small ellipse{transform:scale(.72)}
+#o-ova ellipse{transition:fill .35s,stroke .35s}
+#o-ova .f{fill:var(--paper);stroke:var(--e);stroke-width:1.5;transition:opacity .35s}
+#pfol{opacity:0;transition:opacity .35s}#o-ova.pcos #pfol{opacity:1}
+#o-ova.none #fols{opacity:0}
+#dom{fill:color-mix(in srgb,var(--e) 25%,var(--paper));stroke:var(--e);stroke-width:2;transition:r .45s,fill .35s,stroke .35s}
+#dom.cl{fill:color-mix(in srgb,var(--p) 55%,var(--paper));stroke:var(--p)}
+#o-ute rect.shape{transition:fill .35s,stroke .35s,stroke-width .35s}
+#o-ute.thick rect.shape{stroke-width:5}
+.vessel{fill:none;stroke:var(--line);stroke-width:2;stroke-dasharray:3 5}
+.ring{fill:none;stroke:var(--drug);stroke-width:3;stroke-dasharray:6 5;opacity:0;transition:opacity .3s}
+.ring.on{opacity:1;animation:spin 6s linear infinite}
+@keyframes spin{to{stroke-dashoffset:-110}}
+.hub circle{fill:color-mix(in srgb,var(--lh) 8%,var(--paper));stroke:var(--lh);stroke-width:2.5}
+.hub text{text-anchor:middle;fill:var(--ink)}
+.hub .lbl{font-size:12px;font-weight:700;fill:var(--mute)}
+.hub .val{font-size:26px;font-weight:800}
+.chip rect{rx:9;ry:9;stroke-width:1.5}
+.chip text{font-size:12.5px;font-weight:700}
+.chip.up rect{fill:color-mix(in srgb,var(--up) 13%,var(--paper));stroke:var(--up)}
+.chip.up text{fill:var(--up)}
+.chip.down rect{fill:color-mix(in srgb,var(--down) 13%,var(--paper));stroke:var(--down)}
+.chip.down text{fill:var(--down)}
+.chip.info rect{fill:var(--paper);stroke:var(--organ-line)}
+.chip.info text{fill:var(--ink)}
+.chip.drug rect{fill:var(--drug);stroke:var(--drug)}
+.chip.drug text{fill:#fff}
+.chips g.chip{animation:pop .35s ease-out both}
+@keyframes pop{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.meter rect.box{fill:var(--paper);stroke:var(--line)}
+.meter text{font-size:12px;fill:var(--ink)}
+.meter text.ttl{font-size:11px;fill:var(--mute)}
+.meter .trk{fill:var(--line)}
+.meter .mid{stroke:var(--mute);stroke-width:1.5}
+.meter .bar{transition:width .5s ease,x .5s ease,fill .3s}
+.meter text.v{font-weight:700}
+.pt{pointer-events:none}
+.xref{display:inline-block;margin:.3em 0;font-weight:700}
+section.cmp{margin:34px 0 10px}
+section.cmp h2{font-size:24px;margin:0 0 6px}
+.tblw{overflow-x:auto;border:1px solid var(--line);border-radius:14px;background:var(--paper);margin-bottom:18px}
+table{border-collapse:collapse;width:100%;min-width:820px;font-size:14px}
+th,td{padding:9px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{background:var(--accent-soft);white-space:nowrap}
+td.c{text-align:center;white-space:nowrap}
+tr:last-child td{border-bottom:0}
+footer{color:var(--mute);font-size:13px;padding:22px 0 40px;border-top:1px solid var(--line);margin-top:28px}
+.theme{position:absolute;top:14px;right:16px;appearance:none;border:1px solid var(--line);background:var(--paper);color:var(--ink);border-radius:999px;padding:6px 12px;font:inherit;font-size:13px;cursor:pointer}
+@media (max-width:860px){
+  .player{grid-template-columns:1fr}
+  .stage{position:sticky;top:0;z-index:2;border-radius:0 0 16px 16px;margin:0 -16px;border-left:0;border-right:0;padding:4px}
+  .stage svg{max-height:52vh}
+  .panel{min-height:0}
+  .chip text{font-size:14px}
+  header.hero{padding-top:52px}
+}
+@media (prefers-reduced-motion:reduce){.chips g.chip,.ring.on{animation:none}}
+tr[data-go]{cursor:pointer;transition:background .15s}
+tr[data-go]:hover,tr[data-go]:focus-visible{background:color-mix(in srgb,var(--accent) 12%,transparent);outline:none}
+tr[data-go]:focus-visible td:first-child{box-shadow:inset 3px 0 0 var(--accent)}
+.goto{display:inline-block;margin-left:6px;font-size:11.5px;font-weight:700;color:var(--accent);white-space:nowrap}
+.gohint{font-size:13.5px;color:var(--accent);margin:-4px 0 10px;font-weight:600}
+</style>
+</head>
+<body>
+<button class="theme" id="theme" type="button" aria-label="切換深淺色">◐ 深淺色</button>
+<div class="wrap">
+<header class="hero">
+  <div class="kick"><a href="endo-interactive.html" style="color:inherit;text-decoration:none">← 內分泌新陳代謝科 醫學互動教學</a></div>
+  <h1>性腺，<span>動起來</span></h1>
+  <p class="lead">從下視丘的 GnRH 脈衝開始，看 LH、FSH 怎麼指揮睪丸與卵巢、月經週期怎麼由回饋推動；再看男性性腺低下、PCOS、無月經、早發性卵巢功能不全、更年期與青春期異常怎麼判讀，以及每一種荷爾蒙藥物作用在哪一站；最後一章是跨性別的性別肯定荷爾蒙治療。</p>
+  <p class="lead" style="margin-top:6px"><a href="pituitary-in-motion.html#t3s0">→ 腦下垂體，動起來：性腺軸分頁（LH／FSH 判讀與 GnRH 藥物）</a></p>
+  <ul class="legend">
+    <li><i style="background:var(--gn)"></i>GnRH</li>
+    <li><i style="background:var(--lh)"></i>LH、FSH</li>
+    <li><i style="background:var(--t)"></i>睪固酮</li>
+    <li><i style="background:var(--e)"></i>雌二醇</li>
+    <li><i style="background:var(--p)"></i>黃體素</li>
+    <li><i style="background:var(--inh)"></i>抑制素（inhibin）</li>
+    <li><i style="background:var(--an)"></i>腎上腺雄性素</li>
+    <li><i style="background:var(--drug)"></i>藥物作用點</li>
+  </ul>
+</header>
+
+<div class="tabs" role="tablist" id="tabs"></div>
+
+<div class="player">
+  <div class="stage">
+<svg id="map" viewBox="0 0 600 610" role="img" aria-label="下視丘、腦下垂體、睪丸、卵巢、子宮內膜、男性標的組織、脂肪與乳房、腎上腺，以及血中 LH、FSH 示意圖">
+  <g id="paths">
+    <path class="vessel" id="p-hyp2pit" d="M300 74 L300 120"/>
+    <path class="vessel" id="p-pit2tes" d="M248 166 Q170 196 132 260"/>
+    <path class="vessel" id="p-pit2ova" d="M352 166 Q430 196 468 260"/>
+    <path class="vessel" id="p-tes2tis" d="M110 338 L110 412"/>
+    <path class="vessel" id="p-ova2ute" d="M490 340 L490 412"/>
+    <path class="vessel" id="p-tes2fb" d="M168 292 C226 250 206 82 236 52"/>
+    <path class="vessel" id="p-ova2fb" d="M432 292 C374 250 394 82 364 52"/>
+    <path class="vessel" id="p-tes2fat" d="M74 268 Q44 170 82 92"/>
+    <path class="vessel" id="p-fat2hyp" d="M150 52 Q200 40 236 36"/>
+    <path class="vessel" id="p-adr2ova" d="M520 92 Q572 180 524 266"/>
+    <path class="vessel" id="p-tes2pit" d="M158 312 Q236 262 258 176"/>
+    <path class="vessel" id="p-ova2pit" d="M442 312 Q364 262 342 176"/>
+  </g>
+
+  <g class="org" id="o-hyp"><rect class="shape" x="236" y="16" width="128" height="58" rx="18"/><text x="300" y="42">下視丘</text><text class="sub" x="300" y="62">GnRH 脈衝</text></g>
+  <g class="org" id="o-pit"><ellipse cx="300" cy="148" rx="62" ry="30"/><text x="300" y="146">腦下垂體</text><text class="sub" x="300" y="165">LH、FSH</text></g>
+  <g class="org" id="o-fat"><rect class="shape" x="40" y="30" width="110" height="58" rx="16"/><text x="95" y="56">脂肪、乳房</text><text class="sub" x="95" y="75">芳香酶 T → E2</text></g>
+  <g class="org" id="o-adr"><rect class="shape" x="450" y="30" width="110" height="58" rx="16"/><text x="505" y="56">腎上腺</text><text class="sub" x="505" y="75">DHEA-S</text></g>
+  <g class="org" id="o-tes"><ellipse cx="110" cy="300" rx="62" ry="38"/><text x="110" y="296">睪丸</text><text class="sub" x="110" y="316">Leydig、Sertoli</text></g>
+  <g class="org" id="o-ova"><ellipse cx="490" cy="300" rx="62" ry="38"/><text x="490" y="292">卵巢</text>
+    <g id="fols"><circle class="f" cx="458" cy="312" r="4"/><circle class="f" cx="472" cy="318" r="4"/><circle class="f" cx="508" cy="318" r="4"/><circle class="f" cx="522" cy="312" r="4"/></g>
+    <g id="pfol"><circle class="f" cx="446" cy="296" r="3.5"/><circle class="f" cx="450" cy="284" r="3.5"/><circle class="f" cx="462" cy="275" r="3.5"/><circle class="f" cx="518" cy="275" r="3.5"/><circle class="f" cx="530" cy="284" r="3.5"/><circle class="f" cx="534" cy="296" r="3.5"/><circle class="f" cx="490" cy="326" r="3.5"/><circle class="f" cx="456" cy="324" r="3.5"/><circle class="f" cx="524" cy="324" r="3.5"/></g>
+    <circle id="dom" cx="490" cy="313" r="0"/></g>
+  <g class="org" id="o-tis"><rect class="shape" x="40" y="414" width="140" height="58" rx="16"/><text x="110" y="440">男性標的組織</text><text class="sub" x="110" y="459">肌肉、骨、紅血球、前列腺</text></g>
+  <g class="org" id="o-ute"><rect class="shape" x="420" y="414" width="140" height="58" rx="16"/><text x="490" y="440">子宮內膜</text><text class="sub" x="490" y="459">增生、分泌、剝落</text></g>
+
+  <g class="hub" id="hub"><circle cx="300" cy="300" r="62"/>
+    <text class="lbl" x="300" y="265">LH（IU/L）</text>
+    <text class="val" id="vlh" x="300" y="292">5</text>
+    <text class="lbl" x="300" y="314">FSH（IU/L）</text>
+    <text class="val" id="vfsh" x="300" y="341">5</text>
+  </g>
+
+  <g id="rings">
+    <rect class="ring" id="r-hyp" x="226" y="6" width="148" height="78" rx="24"/>
+    <ellipse class="ring" id="r-pit" cx="300" cy="148" rx="76" ry="42"/>
+    <rect class="ring" id="r-fat" x="30" y="20" width="130" height="78" rx="22"/>
+    <rect class="ring" id="r-adr" x="440" y="20" width="130" height="78" rx="22"/>
+    <ellipse class="ring" id="r-tes" cx="110" cy="300" rx="76" ry="50"/>
+    <ellipse class="ring" id="r-ova" cx="490" cy="300" rx="76" ry="50"/>
+    <rect class="ring" id="r-tis" x="30" y="404" width="160" height="78" rx="22"/>
+    <rect class="ring" id="r-ute" x="410" y="404" width="160" height="78" rx="22"/>
+  </g>
+
+  <g class="meter" id="meter">
+    <rect class="box" x="212" y="520" width="176" height="86" rx="10"/>
+    <text class="ttl" x="222" y="537">相對量（中線＝正常）</text>
+    <g id="mrows"></g>
+  </g>
+
+  <g id="parts" class="pt"></g>
+  <g id="chips" class="chips"></g>
+</svg>
+  </div>
+
+  <div class="panel" aria-live="polite">
+    <div class="where"><span id="where"></span><span id="cnt"></span></div>
+    <h2 id="ttl"></h2>
+    <div class="txt" id="txt"></div>
+    <div class="ctl">
+      <button id="prev" type="button" aria-label="上一步">←</button>
+      <button id="play" type="button" aria-label="自動播放">▶ 自動</button>
+      <button id="say" type="button" aria-pressed="false" aria-label="語音朗讀">🔊 朗讀</button>
+      <button class="next" id="next" type="button">下一步 →</button>
+    </div>
+    <div class="dots" id="dots"></div>
+    <div class="hint">鍵盤 ← → 切換，手機可在圖上左右滑動。開「🔊 朗讀」再按「▶ 自動」，會唸完一步自動換下一步。</div>
+  </div>
+</div>
+
+<section class="cmp">
+  <h2>LH、FSH 與性類固醇一起看</h2>
+  <p class="lead" style="margin-bottom:10px">性類固醇低時，LH／FSH 高＝問題在性腺（原發性）；LH／FSH 低或「正常」＝問題在下視丘或腦下垂體（次發性）。</p>
+  <div class="tblw"><table style="min-width:680px">
+    <thead><tr><th>狀況</th><th>性類固醇</th><th>LH／FSH</th><th>先想到</th></tr></thead>
+    <tbody>
+      <tr><td><b>男性原發性低下</b></td><td>睪固酮低</td><td>高（FSH 常更高）</td><td>Klinefelter 症候群、睪丸炎、化療或放療、隱睪</td></tr>
+      <tr><td><b>男性次發性低下</b></td><td>睪固酮低</td><td>低或不當正常</td><td>Kallmann 症候群、腦下垂體腫瘤、高泌乳素、鐵沉積</td></tr>
+      <tr><td><b>男性功能性低下</b></td><td>睪固酮偏低（游離睪固酮可能正常）</td><td>低到正常</td><td>肥胖、睡眠呼吸中止、鴉片、類固醇、重病</td></tr>
+      <tr><td><b>外源睪固酮、合成類固醇</b></td><td>睪固酮可高可低，血比容高</td><td>被壓到很低</td><td>補充治療或濫用；停用後可能長期低下</td></tr>
+      <tr><td><b>多囊性卵巢症候群</b></td><td>雄性素偏高，雌二醇正常</td><td>LH 常偏高、LH／FSH 比值高</td><td>排除甲狀腺、泌乳素、非典型 CAH</td></tr>
+      <tr><td><b>下視丘性無月經</b></td><td>雌二醇低</td><td>低到正常</td><td>能量不足、過度運動、壓力</td></tr>
+      <tr><td><b>高泌乳素血症</b></td><td>雌二醇或睪固酮低</td><td>低到正常</td><td>泌乳素瘤、藥物、甲狀腺低下</td></tr>
+      <tr><td><b>早發性卵巢功能不全、更年期</b></td><td>雌二醇低</td><td>高（FSH 為主）</td><td>40 歲前＝早發性卵巢功能不全；Turner、自體免疫、FMR1</td></tr>
+    </tbody>
+  </table></div>
+  <h2>藥物一覽</h2>
+  <div class="tblw"><table>
+    <thead><tr><th>藥物</th><th>作用部位</th><th>機轉</th><th>主要用途</th><th>注意</th></tr></thead>
+    <tbody id="tbody"></tbody>
+  </table></div>
+</section>
+
+<footer>
+  教學示意圖，器官位置與比例經過簡化；LH、FSH 數字為示意的典型值，各實驗室參考範圍與月經週期時間點不同；不含藥物劑量，非個別病人的診斷或用藥建議，實際判斷請依仿單與最新指引（Endocrine Society 男性性腺低下、2023 國際 PCOS 指引、2024 ESHRE 早發性卵巢功能不全、The Menopause Society 2022 荷爾蒙治療立場聲明、Endocrine Society 2017 性別不一致指引、WPATH SOC8）。頁中藥物核准狀態僅指美國 FDA 等，不涉及健保給付或國內是否上市。<br>
+  相關：<a href="pituitary-in-motion.html">腦下垂體，動起來</a>、<a href="pituitary-disease-in-motion.html">腦下垂體疾病，動起來</a>、<a href="adrenal-in-motion.html">腎上腺，動起來</a>、<a href="calcium-in-motion.html">鈣磷，動起來</a><br>
+  工具版本：2026-11-08
+</footer>
+</div>
+
+<script>
+(function(){
+'use strict';
+var $=function(s){return document.querySelector(s)};
+var SVGNS='http://www.w3.org/2000/svg';
+var COL={g:'var(--gn)',l:'var(--lh)',t:'var(--t)',e:'var(--e)',p:'var(--p)',i:'var(--inh)',a:'var(--an)',x:'var(--drug)'};
+var AT={hyp:[300,96],pit:[300,200],fat:[95,112],adr:[505,112],tes:[110,362],ova:[490,362],tis:[110,494],ute:[490,494],hub:[300,388]};
+var STACK={};
+var ORG=['hyp','pit','fat','adr','tes','ova','tis','ute'];
+var LM=['睪固酮','精子生成','雌二醇'],LF=['雌二醇','黃體素','雄性素'],LP=['GnRH','LH／FSH','性類固醇'];
+var PI='pituitary-in-motion.html',PD='pituitary-disease-in-motion.html';
+
+/* 每一步：t 標題、k 類型（phy/dx/dz/drg）、on 亮起器官、rx 藥物圈、g [LH, FSH]、lv 三格量表(-2~2)、lab 量表標籤（覆寫分頁）、flows、chips、ov 卵巢狀態（dom/cl/pcos/none）、ts 睪丸變小、ut 內膜增厚、d 說明 */
+var AX=[
+{id:'phy',n:'A 生理',s:'軸線與月經週期',lab:LP,steps:[
+ {t:'GnRH 要一陣一陣地放',k:'phy',on:['hyp','pit','tes','ova'],g:[5,5],lv:[0,0,0],
+  flows:[['hyp2pit','g',1.6],['pit2tes','l',1.6],['pit2ova','l',1.6]],
+  chips:[['hyp','GnRH 脈衝','up'],['pit','LH、FSH','up']],
+  d:'<p>下視丘以<b>脈衝</b>的方式分泌 GnRH，大約每 1–2 小時一次，腦下垂體才會持續分泌 LH 與 FSH：</p><ul><li>脈衝<b>快</b>偏向 LH，<b>慢</b>偏向 FSH；女性在週期中靠改變脈衝頻率來調配兩者</li><li>GnRH 若<b>持續</b>給予，受體反而被關掉，LH、FSH 下降：這是 GnRH 促效劑長效針劑的原理（D 分頁）</li><li>GnRH 神經元上游受 <b>kisspeptin</b>（KNDy 神經元）推動，青春期就是這個開關重新啟動</li></ul><p><a class="xref" href="'+PI+'#t3s0">→ 腦下垂體，動起來：GnRH 脈衝</a></p>'},
+ {t:'睪丸：LH 管睪固酮，FSH 管精子',k:'phy',on:['pit','tes','tis'],g:[5,5],lv:[0,0,0],lab:LM,
+  flows:[['pit2tes','l',2],['tes2tis','t',2],['tes2fb','t',1],['tes2pit','i',1]],
+  chips:[['tes','Leydig：睪固酮；Sertoli：精子','info'],['tis','肌肉、骨、紅血球、性功能','info']],
+  d:'<ul><li><b>LH → Leydig 細胞</b>：製造睪固酮，送到全身，也讓睪丸內的睪固酮濃度遠高於血中</li><li><b>FSH ＋ 睪丸內高濃度睪固酮 → Sertoli 細胞</b>：支持精子生成，一輪約 2–3 個月</li><li>Sertoli 細胞分泌<b>抑制素 B</b>，專門回饋抑制 FSH</li><li>睪固酮（以及轉成的雌二醇）回饋抑制 GnRH 與 LH</li></ul><p>所以從外面補睪固酮時，LH、FSH 被壓低、睪丸內睪固酮下降，<b>精子生成會停止</b>：想生育的人不能用睪固酮治療。</p>'},
+ {t:'睪固酮在血中：SHBG 與兩條轉換路',k:'phy',on:['tes','fat','tis'],g:[5,5],lv:[0,0,0],lab:LM,
+  flows:[['tes2tis','t',1.6],['tes2fat','t',1.6],['fat2hyp','e',1]],
+  chips:[['fat','芳香酶：T → 雌二醇','info'],['tis','5α 還原酶：T → DHT','info']],
+  d:'<p>血中睪固酮大部分與 <b>SHBG</b>（性荷爾蒙結合球蛋白）緊密結合，其餘鬆鬆地綁在白蛋白上，真正游離的只有 1–4%。</p><ul><li><b>SHBG 下降</b>：肥胖、胰島素阻抗、第 2 型糖尿病、甲狀腺低下 → 總睪固酮看起來低，游離的可能正常</li><li><b>SHBG 上升</b>：老化、甲狀腺亢進、肝病、雌激素、HIV → 總睪固酮正常，游離的可能偏低</li><li>遇到這些情況要算或測<b>游離睪固酮</b></li></ul><p>睪固酮有兩條轉換路：<b>5α 還原酶</b>轉成作用更強的 DHT（攝護腺、毛髮、外生殖器）；<b>芳香酶</b>轉成雌二醇（骨骼、生長板關閉、回饋腦部）。</p><p>抽血要在<b>早上空腹</b>，數值偏低要重驗確認。</p>'},
+ {t:'卵巢：兩種細胞接力做雌二醇',k:'phy',on:['pit','ova','adr'],g:[5,6],lv:[0,0,0],lab:LF,
+  flows:[['pit2ova','l',2],['ova2ute','e',1.6]],
+  chips:[['ova','LH → 莢膜細胞：雄性素','info'],['ova','FSH → 顆粒細胞：轉成雌二醇','info']],
+  d:'<p><b>兩細胞、兩促性腺激素</b>模型：</p><ul><li><b>LH → 莢膜細胞</b>：從膽固醇做出雄性素（androstenedione、睪固酮）</li><li>雄性素擴散到<b>顆粒細胞</b>，<b>FSH</b> 誘導芳香酶，把它們轉成<b>雌二醇</b></li><li>顆粒細胞也分泌抑制素、AMH；AMH 反映剩下的小濾泡數量（卵巢庫存）</li></ul><p>卵巢、睪丸、腎上腺用的是同一套類固醇合成酵素，差別在各自表現哪些酵素。</p><p><a class="xref" href="adrenal-in-motion.html#t0s1">→ 腎上腺，動起來：類固醇生合成路線圖</a></p>'},
+ {t:'濾泡期：一顆優勢濾泡勝出',k:'phy',on:['pit','ova','ute'],g:[6,7],lv:[0,0,0],lab:LF,ov:'dom',ut:1,
+  flows:[['pit2ova','l',1.8],['ova2ute','e',2.2],['ova2fb','e',1.2]],
+  chips:[['ova','FSH 招募 → 優勢濾泡','up'],['ute','雌二醇讓內膜增生','up']],
+  d:'<p>月經來的時候，前一個週期的黃體退化，雌二醇與黃體素都低，FSH 稍微上升，招募一批濾泡：</p><ul><li>其中對 FSH 最敏感的一顆變成<b>優勢濾泡</b>，分泌越來越多的雌二醇</li><li>雌二醇與抑制素回頭壓低 FSH，其他濾泡因為 FSH 不夠而萎縮</li><li>雌二醇讓<b>子宮內膜增生</b>變厚、子宮頸黏液變稀</li></ul><p>濾泡期長短因人而異，是週期長度不同的主要原因。</p>'},
+ {t:'排卵：雌二醇從煞車變成油門',k:'phy',on:['hyp','pit','ova'],g:[45,15],lv:[1,2,0],lab:LP,ov:'dom',ut:1,
+  flows:[['ova2fb','e',2.6],['hyp2pit','g',2.6],['pit2ova','l',3]],
+  chips:[['pit','LH 高峰','up'],['ova','約 1–1.5 天後排卵','up']],
+  d:'<p>雌二醇平常是<b>負回饋</b>。但當優勢濾泡讓雌二醇維持在高濃度約兩天以上，就轉為<b>正回饋</b>：GnRH 脈衝加快、腦下垂體對 GnRH 更敏感，引發 <b>LH 高峰</b>（FSH 也小幅上升）。</p><ul><li>LH 高峰後約 1 到 1.5 天排卵</li><li>LH 讓卵子恢復減數分裂、濾泡破裂</li><li>排卵試紙就是在尿中偵測這個 LH 高峰</li></ul><p>正回饋只發生在女性，這也是用雌激素無法在男性誘發 LH 高峰的原因。</p><p><a class="xref" href="'+PI+'#t3s2">→ 腦下垂體，動起來：正回饋與負回饋</a></p>'},
+ {t:'黃體期：黃體素準備著床',k:'phy',on:['ova','ute','hyp'],g:[4,3],lv:[-1,-1,1],lab:LF,ov:'cl',ut:1,
+  flows:[['ova2ute','p',2.4],['ova2ute','e',1.2],['ova2fb','p',1.4]],
+  chips:[['ova','黃體：黃體素＋雌二醇','up'],['ute','內膜轉為分泌期','up']],
+  d:'<p>排卵後的濾泡變成<b>黃體</b>，大量分泌黃體素，也分泌雌二醇：</p><ul><li>子宮內膜轉為<b>分泌期</b>，準備胚胎著床</li><li>黃體素讓 GnRH 脈衝變慢，LH、FSH 被壓低；基礎體溫上升約 0.3–0.5 °C</li><li>沒有懷孕：黃體約 14 天後退化，黃體素與雌二醇下降 → 內膜剝落＝月經，FSH 再度上升，開始下一個週期</li><li>懷孕：胚胎分泌的 <b>hCG</b>（結構像 LH）維持黃體，直到胎盤接手</li></ul><p>黃體中期（月經前約 7 天）驗黃體素，可以確認有沒有排卵。</p>'},
+ {t:'青春期：kisspeptin 重新打開開關',k:'phy',on:['hyp','pit','tes','ova','adr'],g:[3,4],lv:[1,1,1],lab:LP,
+  flows:[['hyp2pit','g',1.6],['pit2tes','l',1.4],['pit2ova','l',1.4],['adr2ova','a',.8]],
+  chips:[['hyp','先在夜間出現 GnRH 脈衝','up'],['adr','腎上腺雄性素另外啟動','info']],
+  d:'<p>胎兒與新生兒時期 HPG 軸曾短暫活躍（「迷你青春期」），之後被壓抑多年。青春期由 <b>kisspeptin</b> 等訊號重新啟動 GnRH 脈衝，先在睡眠時出現。體脂與營養（瘦素）會影響時機。</p><ul><li><b>女孩</b>：第一個徵象是乳房發育，正常約 8–13 歲；之後陰毛、生長加速，初經多在乳房發育後 2–3 年</li><li><b>男孩</b>：第一個徵象是睪丸變大（≥ 4 mL），正常約 9–14 歲；生長加速比女孩晚</li><li><b>腎上腺功能初現</b>：腎上腺雄性素（DHEA-S）上升，造成陰毛、腋毛、體味，與 HPG 軸無關</li></ul><p>太早或太晚見 C 分頁。</p>'}
+]},
+{id:'male',n:'B 男性',s:'性腺低下、女乳、不孕',lab:LM,steps:[
+ {t:'男性性腺低下：症狀＋兩次低睪固酮',k:'dx',on:['tes','tis'],g:[5,5],lv:[-1,0,0],
+  flows:[['tes2tis','t',.6]],
+  chips:[['tis','性慾低、晨間勃起少、骨質疏鬆','down'],['hub','早上空腹抽、要重驗','info']],
+  d:'<p>診斷要同時有<b>症狀或徵象</b>，加上<b>至少兩次早上空腹</b>的睪固酮偏低：</p><ul><li>較特異：性慾降低、晨間勃起減少、勃起功能障礙、男性女乳、體毛減少、睪丸變小、低創傷骨折或骨質疏鬆</li><li>較不特異：疲倦、情緒低落、肌肉量下降、注意力差</li></ul><p>不建議沒有症狀就篩檢。生病、急性壓力時不要驗。SHBG 異常（肥胖、老化等）時看游離睪固酮。</p><p>確認偏低後，驗 <b>LH、FSH</b>：高＝原發性（睪丸），低或正常＝次發性（下視丘或腦下垂體）。</p>'},
+ {t:'原發性：睪丸本身壞掉',k:'dz',on:['tes','pit'],g:[25,38],lv:[-2,-2,1],ts:1,
+  flows:[['pit2tes','l',3],['tes2tis','t',.4]],
+  chips:[['tes','睪丸小而硬','down'],['pit','LH、FSH 衝很高','up']],
+  d:'<p>睪丸無法回應 LH、FSH，回饋消失，LH、FSH 都升高（FSH 通常更明顯）。精子生成幾乎都受影響。</p><ul><li><b>Klinefelter 症候群（47,XXY）</b>：最常見的先天原因；睪丸小而硬、身材高、手腳長、男性女乳、無精症；常到成年因不孕才診斷。要驗染色體</li><li>腮腺炎睪丸炎、化療、放射線、外傷、睪丸扭轉、隱睪</li><li>年紀大睪丸功能也會慢慢下降</li></ul><p>Klinefelter 的雌二醇相對偏高，乳癌、靜脈血栓、自體免疫疾病風險增加。部分人仍可經睪丸取精配合試管嬰兒生育。</p>'},
+ {t:'次發性：下視丘或腦下垂體沒有指令',k:'dz',on:['hyp','pit','tes'],g:[1,1.5],lv:[-2,-2,-1],
+  flows:[['hyp2pit','g',.3],['pit2tes','l',.4]],
+  chips:[['hyp','Kallmann：GnRH 神經元沒到位','down'],['pit','腫瘤、泌乳素、鐵沉積','down']],
+  d:'<p>LH、FSH 低或「不當正常」（睪固酮已經低，LH、FSH 卻沒升高）：</p><ul><li><b>Kallmann 症候群</b>：GnRH 神經元在胚胎時期沒有遷移到下視丘，合併<b>嗅覺喪失</b>；嗅覺正常者稱先天性低促性腺激素性性腺低下。青春期不來、小陰莖、隱睪</li><li>腦下垂體腫瘤或手術、放射線、垂體炎</li><li><b>高泌乳素血症</b>：抑制 GnRH 脈衝</li><li>血色素沉著症（鐵沉積在腦下垂體）</li></ul><p>睪固酮很低（例如 &lt; 150 ng/dL）、泌乳素升高、有其他腦下垂體功能異常或視野症狀時，要做腦下垂體 MRI。</p><p><a class="xref" href="'+PD+'#t1s0">→ 泌乳素瘤</a>　<a class="xref" href="'+PD+'#t5s0">→ 腦下垂體功能低下</a></p>'},
+ {t:'功能性：肥胖、睡眠呼吸中止、藥物',k:'dz',on:['hyp','fat','pit'],g:[3,4],lv:[-1,0,1],
+  flows:[['tes2fat','t',2],['fat2hyp','e',2],['hyp2pit','g',.8]],
+  chips:[['fat','芳香酶多、SHBG 低','up'],['hyp','雌二醇、胰島素阻抗壓抑 GnRH','down']],
+  d:'<p>下視丘—腦下垂體結構正常，但被其他狀況壓抑，可以回復：</p><ul><li><b>肥胖、第 2 型糖尿病</b>：脂肪的芳香酶把睪固酮轉成雌二醇、胰島素阻抗與發炎壓抑 GnRH；SHBG 低，總睪固酮看起來更低，要看游離睪固酮</li><li><b>阻塞型睡眠呼吸中止</b></li><li><b>鴉片類藥物</b>：直接抑制 GnRH；<b>長期類固醇</b></li><li>重病、營養不良、過度運動</li></ul><p>先處理原因：<b>減重</b>（包括減重藥物與手術）可以讓睪固酮明顯回升；減少鴉片類藥物；治療睡眠呼吸中止。</p>'},
+ {t:'合成類固醇濫用：先壯後萎',k:'dz',on:['hyp','pit','tes','tis'],g:[.2,.2],lv:[1,-2,1],ts:1,
+  flows:[['tes2fb','x',2],['tes2tis','x',2]],
+  chips:[['pit','LH、FSH 被壓到測不到','down'],['tes','睪丸萎縮、無精症','down'],['tis','紅血球增多、HDL 下降','up']],
+  d:'<p>健身或運動員使用合成類固醇、高劑量睪固酮時，外來的雄性素強力回饋，LH、FSH 幾乎消失：</p><ul><li>睪丸萎縮、<b>無精症</b>、男性女乳（部分轉成雌二醇）</li><li>紅血球增多、HDL 下降、高血壓、心肌病變、肝毒性（口服製劑）、痤瘡、情緒與攻擊性改變</li><li><b>停用之後</b>：自己的軸線可能數月到一年以上才恢復，期間出現明顯的性腺低下症狀（戒斷），常因此又回頭使用</li></ul><p>檢驗：LH、FSH 極低，睪固酮依使用的藥物可高可低，血比容高。誠實詢問用藥史很重要。</p>'},
+ {t:'男性女乳症：雌激素與雄性素失衡',k:'dz',on:['fat','tes'],g:[5,5],lv:[-1,0,2],
+  flows:[['tes2fat','t',2],['fat2hyp','e',1.4]],
+  chips:[['fat','乳腺組織增生','up'],['tes','檢查睪丸有無腫塊','info']],
+  d:'<p>乳腺組織增生（不是單純脂肪），在乳頭下摸到圓盤狀、可能壓痛的組織。原因是雌激素作用相對大於雄性素：</p><ul><li><b>生理性</b>：新生兒、青春期（多在 1–2 年內消退）、老年</li><li><b>藥物</b>：spironolactone、抗雄性素、5α 還原酶抑制劑、合成類固醇、ketoconazole、cimetidine、部分精神科藥物</li><li>性腺低下（包括 Klinefelter）、肝硬化、甲狀腺亢進、慢性腎病、肥胖</li><li><b>腫瘤</b>：睪丸 Leydig 細胞瘤、分泌 hCG 的生殖細胞瘤、腎上腺腫瘤</li></ul><p>檢查：睪丸觸診，驗睪固酮、LH、FSH、雌二醇、<b>hCG</b>、TSH、肝腎功能。單側、硬、固定、偏離乳頭或乳頭出血要排除<b>男性乳癌</b>。</p><p>治療：去除原因；新發且疼痛者可短期用 tamoxifen；超過一兩年已纖維化要手術。</p>'},
+ {t:'男性不孕：從精液分析開始',k:'dx',on:['tes','pit'],g:[8,22],lv:[0,-2,0],lab:['睪固酮','精子生成','抑制素 B'],
+  flows:[['pit2tes','l',1.8]],
+  chips:[['tes','精子生成不足','down'],['pit','FSH 高＝睪丸製造問題','up']],
+  d:'<p>夫妻不孕中約一半有男性因素。第一步是<b>精液分析</b>（禁慾 2–7 天，異常要重驗）。</p><ul><li><b>無精症</b>：FSH 高、睪丸小 → 非阻塞性（製造問題）；FSH 正常、睪丸大小正常 → 可能是阻塞性（輸精管路）</li><li>基因檢查：染色體（Klinefelter）、<b>Y 染色體微缺失</b>、先天輸精管缺如要驗 <b>CFTR</b></li><li>精索靜脈曲張、感染、高溫、抽菸、肥胖、藥物</li></ul><p><b>次發性性腺低下</b>的不孕最好治：用 hCG（必要時加 FSH）補上游，多數能產生精子。睪固酮治療會讓精子消失，想生育時要停用。</p><p><a class="xref" href="'+PI+'#t3s6">→ 想生育：從上游補起</a></p>'}
+]},
+{id:'female',n:'C 女性與青春期',s:'無月經、PCOS、更年期',lab:LF,steps:[
+ {t:'無月經：第一步先驗懷孕',k:'dx',on:['hyp','pit','ova','ute'],g:[5,5],lv:[-1,-1,0],
+  flows:[['pit2ova','l',1],['ova2ute','e',.8]],
+  chips:[['hub','hCG → TSH、泌乳素 → FSH、雌二醇','info']],
+  d:'<ul><li><b>原發性無月經</b>：15 歲還沒有初經，或乳房開始發育 3 年仍沒有初經；13 歲乳房還沒開始發育也要評估</li><li><b>續發性無月經</b>：原本規則的月經停止 3 個月，或原本不規則者停止 6 個月</li></ul><p>評估順序：</p><ol><li><b>驗懷孕（hCG）</b>：永遠第一步</li><li><b>TSH、泌乳素</b></li><li><b>FSH、雌二醇</b>：FSH 高 → 卵巢（早發性卵巢功能不全）；FSH 低或正常、雌二醇低 → 下視丘或腦下垂體</li><li>有多毛、痤瘡 → 驗睪固酮、DHEA-S、17-羥孕酮</li><li>原發性還要看第二性徵與子宮、陰道的構造，必要時驗染色體</li></ol>'},
+ {t:'多囊性卵巢症候群（PCOS）',k:'dz',on:['hyp','pit','ova','fat'],g:[12,5],lv:[0,-1,2],ov:'pcos',
+  flows:[['hyp2pit','g',2.4],['pit2ova','l',2.2],['fat2hyp','e',.8]],
+  chips:[['pit','GnRH 脈衝快 → LH 偏高','up'],['ova','莢膜細胞雄性素多、濾泡卡住','up'],['fat','胰島素阻抗加重雄性素','up']],
+  d:'<p>最常見的女性內分泌疾病。<b>Rotterdam 標準</b>：以下三項符合兩項，並排除其他原因：</p><ul><li>排卵稀少或無排卵（月經稀少、不規則）</li><li>雄性素過多：多毛、痤瘡、雄性禿，或血中雄性素高</li><li>超音波多囊卵巢型態，或 <b>AMH</b> 偏高（2023 國際指引；初經後 8 年內不用超音波與 AMH 診斷）</li></ul><p>機轉：GnRH 脈衝偏快 → LH 偏高 → 莢膜細胞做出過多雄性素；<b>胰島素阻抗</b>帶來的高胰島素也刺激雄性素、降低 SHBG；濾泡長不大、不排卵。</p><p>要排除：甲狀腺、泌乳素、<b>非典型先天性腎上腺增生</b>（17-羥孕酮）、庫欣；雄性素非常高或快速男性化（聲音變粗、陰蒂變大）要找卵巢或腎上腺腫瘤。</p><p>長期風險：第 2 型糖尿病、血脂異常、睡眠呼吸中止、<b>子宮內膜增生與癌</b>（長期無排卵、沒有黃體素保護）、憂鬱焦慮、不孕。</p>'},
+ {t:'下視丘性無月經：能量不夠，身體先關生殖',k:'dz',on:['hyp','pit','ova'],g:[1.5,3],lv:[-2,-2,0],ov:'none',
+  flows:[['hyp2pit','g',.4],['pit2ova','l',.5]],
+  chips:[['hyp','GnRH 脈衝變慢、變少','down'],['ova','雌二醇低 → 骨質流失','down']],
+  d:'<p><b>功能性下視丘性無月經</b>：能量攝取不足以應付消耗時，GnRH 脈衝變慢，LH、FSH 低到正常，雌二醇低。常見於：</p><ul><li>飲食限制、飲食疾患、體重快速下降</li><li>大量運動（舞者、長跑、體操等），運動員的「相對能量不足」</li><li>心理壓力</li></ul><p>後果：<b>骨質流失</b>、壓力性骨折，不孕。</p><p>這是排除性診斷，要先排除其他原因。治療重點是增加熱量、調整運動量、處理壓力（認知行為治療有效）；短期內無法恢復時，可用<b>經皮雌二醇加週期性黃體素</b>保護骨質。口服避孕藥會造成「假月經」，掩蓋問題，對骨質保護也較差。</p>'},
+ {t:'高泌乳素：踩住 GnRH 的煞車',k:'dz',on:['pit','hyp','ova'],g:[2,3],lv:[-2,-1,0],ov:'none',
+  flows:[['hyp2pit','g',.5]],
+  chips:[['pit','泌乳素高','up'],['hyp','抑制 GnRH 脈衝','down']],
+  d:'<p>泌乳素升高會抑制 GnRH 脈衝：女性月經不規則、無月經、溢乳、不孕；男性性慾降低、勃起功能障礙、性腺低下。</p><ul><li>先排除：懷孕、藥物（抗精神病藥、metoclopramide 等）、甲狀腺低下、腎衰竭、巨泌乳素</li><li>泌乳素瘤用多巴胺促效劑治療，多數月經會恢復</li></ul><p>詳細的鑑別、檢驗陷阱與治療在另一頁：</p><p><a class="xref" href="'+PD+'#t1s0">→ 腦下垂體疾病：泌乳素瘤</a>　<a class="xref" href="'+PI+'#t5s2">→ 高泌乳素 → 性腺軸被關掉</a></p>'},
+ {t:'早發性卵巢功能不全（POI）',k:'dz',on:['ova','pit'],g:[40,75],lv:[-2,-2,0],ov:'none',
+  flows:[['pit2ova','l',2.6]],
+  chips:[['ova','濾泡提早耗盡','down'],['pit','FSH > 25','up']],
+  d:'<p>40 歲以前卵巢功能衰退：月經稀少或停止至少 4 個月，加上 <b>FSH &gt; 25 IU/L</b>（2024 ESHRE 指引：一次即可診斷，不確定時間隔 4–6 週重驗），雌二醇低。</p><ul><li><b>Turner 症候群</b>（45,X 或嵌合）：要驗染色體</li><li><b>FMR1 前突變</b>（X 染色體脆折症基因）</li><li><b>自體免疫</b>：常合併甲狀腺疾病、Addison 病（驗 21-羥化酶抗體）</li><li>化療、放射線、卵巢手術；多數找不到原因</li></ul><p>治療：<b>荷爾蒙補充至一般停經年齡</b>（約 50 歲），保護骨骼、心血管與生活品質；這時的荷爾蒙是「補回該有的」，風險不同於更年期後的荷爾蒙治療。少數人仍可能自然排卵懷孕；想生育多需捐卵。</p>'},
+ {t:'更年期：濾泡用完，FSH 上升',k:'dz',on:['ova','pit','hyp'],g:[35,80],lv:[-2,-2,0],ov:'none',
+  flows:[['pit2ova','l',2.4],['ova2fb','e',.3]],
+  chips:[['ova','雌二醇、抑制素下降','down'],['hyp','KNDy 神經元過度活躍 → 熱潮紅','up']],
+  d:'<p>濾泡逐漸耗盡，抑制素與雌二醇下降，FSH 上升。停經年齡平均約 50 歲。45 歲以上、連續 12 個月沒有月經，就可以臨床診斷，通常不需要抽血。</p><ul><li><b>血管舒縮症狀</b>（熱潮紅、夜間盜汗）：雌激素下降後，下視丘 KNDy 神經元的 <b>neurokinin B</b> 訊號過度活躍，擾亂體溫調節中樞</li><li><b>生殖泌尿道症候群</b>：陰道乾澀、性交疼痛、反覆泌尿道感染</li><li>睡眠、情緒、關節痛</li><li><b>骨質流失</b>加速（停經後頭幾年最明顯）、LDL 上升、心血管風險增加</li></ul><p>治療見 D 分頁：荷爾蒙治療與非荷爾蒙藥物。</p><p><a class="xref" href="calcium-in-motion.html">→ 鈣磷，動起來：骨質疏鬆</a></p>'},
+ {t:'性早熟：太早開始',k:'dz',on:['hyp','pit','ova','tes','adr'],g:[6,5],lv:[2,1,1],lab:LP,
+  flows:[['hyp2pit','g',2.2],['pit2ova','l',1.6],['pit2tes','l',1.6]],
+  chips:[['hyp','中樞性：GnRH 提早','up'],['adr','周邊性：CAH、腫瘤','info']],
+  d:'<p>女孩 <b>8 歲前</b>乳房發育、男孩 <b>9 歲前</b>睪丸變大。</p><ul><li><b>中樞性</b>（GnRH 依賴）：HPG 軸提早啟動，LH 升高（基礎或刺激後）；女孩多數找不到原因，男孩較常有腦部病灶，要做 MRI；部分與 <b>MKRN3</b> 等基因有關</li><li><b>周邊性</b>（不依賴 GnRH）：LH 被壓低；先天性腎上腺增生、McCune–Albright 症候群、卵巢或睪丸腫瘤、分泌 hCG 的腫瘤、接觸外來性荷爾蒙（如塗抹睪固酮凝膠的家人）</li><li>單純乳房早發育、單純腎上腺功能初現：進展慢，多數只需追蹤</li></ul><p>評估：生長速度、骨齡、LH、性類固醇。中樞性且進展快、影響最終身高或心理時，用 <b>GnRH 促效劑</b>暫停青春期。</p><p><a class="xref" href="adrenal-in-motion.html#t2s0">→ 先天性腎上腺增生</a></p>'},
+ {t:'青春期延遲：太晚還沒開始',k:'dz',on:['hyp','pit','tes','ova'],g:[.5,1],lv:[-1,-1,-1],lab:LP,
+  flows:[['hyp2pit','g',.4]],
+  chips:[['hyp','體質性延遲最常見','info'],['pit','或 Kallmann 等先天缺陷','down']],
+  d:'<p>女孩 <b>13 歲</b>還沒有乳房發育、男孩 <b>14 歲</b>睪丸還沒變大。</p><ul><li><b>體質性生長與青春期延遲</b>：最常見（尤其男孩），常有家族史，骨齡落後，最後會自然開始</li><li><b>功能性</b>：慢性病、營養不良、過度運動、甲狀腺低下、高泌乳素</li><li><b>低促性腺激素性</b>：Kallmann 症候群與先天性 GnRH 缺乏、腦下垂體疾病；和體質性延遲很難區分，持續到 18 歲沒有自發青春期則傾向此診斷</li><li><b>高促性腺激素性</b>（FSH、LH 高）：Turner 症候群、Klinefelter 症候群、性腺受損</li></ul><p>處理：找原因；可短期給低劑量性類固醇啟動發育，並觀察停藥後是否自行進展。</p>'}
+]},
+{id:'drg',n:'D 藥物',s:'作用在哪一站',lab:LP,steps:[
+ {t:'睪固酮補充：只給確診的人',k:'drg',on:['tes','tis','pit'],rx:['tis'],g:[.5,.5],lv:[-2,-2,2],lab:LM,ts:1,
+  flows:[['tes2tis','x',2],['tes2fb','x',1.4]],
+  chips:[['tis','✚ 補回睪固酮','drug'],['pit','LH、FSH 被壓低 → 精子減少','down']],
+  d:'<p>適用於症狀加上<b>確認</b>的睪固酮偏低。不建議用在單純年紀大、只有疲倦、或睪固酮只在正常下限附近的人。</p><ul><li>劑型：凝膠、短效或長效注射、貼片、口服</li><li>目標：睪固酮回到正常範圍的中間值</li><li>效果：性慾、勃起、骨密度、肌肉量、貧血改善；對疲倦與情緒效果有限</li></ul><div class="warn">想在近期生育的人<b>不要用</b>：外來睪固酮會壓低 LH、FSH，精子生成停止。凝膠要避免皮膚接觸傳給伴侶與小孩。</div><p><a class="xref" href="'+PI+'#t3s5">→ 外源性睪固酮的代價</a></p>'},
+ {t:'睪固酮的監測與禁忌',k:'drg',on:['tis','tes'],rx:['tis'],g:[.5,.5],lv:[1,-2,1],lab:['睪固酮','血比容','PSA'],
+  flows:[['tes2tis','x',1.6]],
+  chips:[['tis','追蹤血比容、攝護腺','info']],
+  d:'<p><b>開始前不要用</b>：乳癌或攝護腺癌、攝護腺結節或 PSA 偏高尚未評估、血比容已經偏高（&gt; 50%）、未治療的嚴重睡眠呼吸中止、嚴重下泌尿道症狀、控制不佳的心衰竭、近 6 個月內心肌梗塞或中風、近期想生育。</p><p><b>追蹤</b>：</p><ul><li>開始後 3–6 個月驗睪固酮、血比容，之後每年</li><li><b>血比容 &gt; 54%</b>：停藥或減量，必要時放血</li><li>攝護腺：依年齡與風險，和病人討論後追蹤 PSA 與肛門指診</li><li>原本骨質疏鬆者追蹤骨密度</li></ul><p>TRAVERSE 試驗（2023）：中老年性腺低下且心血管風險高的男性，睪固酮治療的重大心血管事件不比安慰劑多，但心房顫動、急性腎損傷與肺栓塞較多。</p>'},
+ {t:'想生育的男性：補上游，不補睪固酮',k:'drg',on:['pit','tes'],rx:['tes','pit'],g:[8,8],lv:[1,1,0],lab:LM,
+  flows:[['pit2tes','x',2],['tes2tis','t',1.4]],
+  chips:[['tes','✚ hCG（像 LH）＋ FSH','drug'],['pit','✚ clomiphene、芳香酶抑制劑','drug']],
+  d:'<ul><li><b>次發性性腺低下</b>（如 Kallmann、腦下垂體疾病）：注射 <b>hCG</b> 代替 LH，讓 Leydig 細胞做睪固酮、提高睪丸內睪固酮；精子不足時再加 <b>FSH</b>。Kallmann 也可用 GnRH 脈衝幫浦</li><li><b>功能性</b>且想生育：clomiphene（擋下視丘的雌激素受體）或芳香酶抑制劑（anastrozole、letrozole）解除回饋，讓自己的 LH、FSH 上升（屬仿單外使用）</li><li>原發性（睪丸本身壞掉）：上游補再多也沒用，需取精配合人工生殖</li></ul><p>精子生成一輪約 2–3 個月，常需要半年以上才看到效果。</p><p><a class="xref" href="'+PI+'#t3s7">→ 解除雌激素回饋：clomiphene、letrozole</a></p>'},
+ {t:'GnRH 促效劑：先衝高，再關掉',k:'drg',on:['hyp','pit','tes','ova'],rx:['pit'],g:[.5,1],lv:[2,-2,-2],
+  flows:[['hyp2pit','x',2.4]],
+  chips:[['pit','✚ 持續刺激 → 受體關閉','drug'],['tes','性類固醇降到去勢範圍','down']],
+  d:'<p>Leuprolide、triptorelin、goserelin 等長效製劑持續刺激 GnRH 受體：開始 1–2 週 LH、FSH <b>先衝高</b>（flare），之後受體被關閉，性類固醇降到去勢範圍。</p><ul><li>用途：攝護腺癌、乳癌（停經前）、子宮內膜異位症、子宮肌瘤、<b>中樞性性早熟</b>、試管嬰兒療程；部分用於性別不一致的青少年</li><li>攝護腺癌骨轉移者，開始時的 flare 可能讓症狀惡化，要先合併抗雄性素</li><li>副作用：熱潮紅、性慾降低、<b>骨質流失</b>、代謝變差；長期使用可加回少量荷爾蒙（add-back）</li></ul><p><a class="xref" href="'+PI+'#t3s3">→ 腦下垂體，動起來：GnRH 致效劑</a></p>'},
+ {t:'GnRH 拮抗劑：直接關，不衝高',k:'drg',on:['pit','tes','ova'],rx:['pit'],g:[.8,1.5],lv:[-1,-2,-2],
+  flows:[['hyp2pit','x',1.6]],
+  chips:[['pit','✚ 擋住 GnRH 受體','drug']],
+  d:'<p>直接佔住 GnRH 受體，數小時到數天內就降低 LH、FSH，<b>沒有 flare</b>：</p><ul><li><b>Degarelix</b>（注射）、<b>relugolix</b>（口服）：攝護腺癌</li><li><b>Relugolix 合併雌二醇與 norethindrone</b>（add-back 複方）、<b>elagolix</b>：子宮肌瘤出血、子宮內膜異位症疼痛</li><li><b>Cetrorelix、ganirelix</b>：試管嬰兒療程中防止提早出現 LH 高峰</li></ul><p>副作用與促效劑相似：熱潮紅、骨質流失；口服製劑停藥後很快恢復。</p><p><a class="xref" href="'+PI+'#t3s4">→ 腦下垂體，動起來：GnRH 拮抗劑</a></p>'},
+ {t:'口服避孕藥：用負回饋擋住排卵',k:'drg',on:['hyp','pit','ova','ute'],rx:['hyp','pit'],g:[2,2],lv:[0,0,-1],lab:LF,
+  flows:[['ova2fb','x',2]],
+  chips:[['pit','✚ 沒有 LH 高峰 → 不排卵','drug'],['ova','SHBG 上升 → 游離雄性素下降','down']],
+  d:'<p>複合型口服避孕藥（雌激素＋黃體素）持續提供負回饋：濾泡不會長成優勢濾泡、沒有 LH 高峰，所以不排卵；黃體素也讓子宮頸黏液變稠、內膜變薄。</p><ul><li>其他用途：調整月經、減少經痛與經血量、<b>PCOS 的多毛與痤瘡</b>（雌激素讓肝臟製造更多 SHBG，游離雄性素下降）、保護子宮內膜</li><li>主要風險：<b>靜脈血栓</b>（含 drospirenone、desogestrel 等較新黃體素者風險高於 levonorgestrel）</li><li>不適合含雌激素的情況：35 歲以上且抽菸、有預兆的偏頭痛、控制不佳的高血壓、曾經血栓、乳癌、產後早期、嚴重肝病</li></ul>'},
+ {t:'PCOS 的治療：依目標選藥',k:'drg',on:['ova','fat','ute'],rx:['ova','fat'],g:[7,5],lv:[0,1,-1],lab:LF,ov:'pcos',
+  flows:[['pit2ova','l',1.4]],
+  chips:[['fat','✚ 減重、metformin','drug'],['ova','✚ COC、spironolactone','drug']],
+  d:'<ul><li><b>生活型態與減重</b>：體重下降 5–10% 就可能恢復排卵、改善代謝；GLP-1 類藥物可幫助減重（懷孕前要停）</li><li><b>月經與子宮內膜</b>：口服避孕藥，或週期性黃體素，避免長期無排卵造成內膜增生</li><li><b>多毛、痤瘡</b>：口服避孕藥為主；效果不夠再加 <b>spironolactone</b> 等抗雄性素（必須同時避孕，懷孕時可能影響男胎）；雷射除毛</li><li><b>代謝</b>：<b>metformin</b> 改善胰島素阻抗，對月經也有部分幫助</li><li><b>想懷孕</b>：<b>letrozole</b> 是誘導排卵首選，活產率高於 clomiphene</li></ul><p>定期篩檢血糖、血脂、血壓、睡眠呼吸中止與情緒。</p>'},
+ {t:'誘導排卵：letrozole、clomiphene、促性腺激素',k:'drg',on:['hyp','pit','ova'],rx:['hyp','ova'],g:[7,10],lv:[0,1,0],lab:LF,ov:'dom',
+  flows:[['hyp2pit','g',2],['pit2ova','x',2]],
+  chips:[['hyp','✚ 解除雌激素回饋 → FSH 上升','drug'],['ova','✚ 直接給 FSH','drug']],
+  d:'<ul><li><b>Letrozole</b>（芳香酶抑制劑）：短期降低雌二醇，下視丘以為雌激素不夠，增加 FSH；PCOS 誘導排卵首選（屬仿單外使用）</li><li><b>Clomiphene</b>（選擇性雌激素受體調節劑）：擋住下視丘的雌激素受體，同樣讓 FSH 上升；可能讓內膜變薄</li><li><b>促性腺激素</b>（FSH、hMG）：直接刺激卵巢，用於前兩者無效或下視丘、腦下垂體功能不足者；之後用 hCG 或 GnRH 促效劑觸發排卵</li></ul><div class="warn">風險：<b>多胞胎</b>與<b>卵巢過度刺激症候群</b>（腹脹、腹水、血栓），需要超音波監測濾泡數目。</div><p><a class="xref" href="'+PI+'#t3s7">→ 腦下垂體，動起來：clomiphene、letrozole</a></p>'},
+ {t:'更年期荷爾蒙治療',k:'drg',on:['ova','ute','hyp'],rx:['ova','ute'],g:[20,40],lv:[1,1,0],lab:LF,ov:'none',
+  flows:[['ova2fb','x',1.6],['ova2ute','x',1.4]],
+  chips:[['hyp','✚ 雌激素：最有效治熱潮紅','drug'],['ute','✚ 有子宮要加黃體素','drug']],
+  d:'<p>治療中重度熱潮紅最有效的方法，也能預防骨質流失、改善生殖泌尿道症狀。</p><ul><li><b>有子宮</b>：雌激素一定要合併黃體素，保護子宮內膜；沒有子宮只用雌激素</li><li><b>經皮</b>雌激素的血栓與中風風險低於口服</li><li><b>時機</b>：60 歲以前或停經 10 年內開始，好處大於風險；之後開始的風險較高</li><li>風險：靜脈血栓、中風；雌激素合併黃體素長期使用，乳癌風險小幅增加</li><li>不適合：乳癌或雌激素依賴的腫瘤、不明原因陰道出血、活動性血栓、冠心病或中風、嚴重肝病</li><li>只有陰道症狀：低劑量<b>陰道雌激素</b>，全身吸收很少</li></ul><p>使用期間每年重新評估，不一定要在固定年齡停藥。</p>'},
+ {t:'非荷爾蒙治熱潮紅：擋住 neurokinin',k:'drg',on:['hyp'],rx:['hyp'],g:[35,80],lv:[0,0,0],lab:LF,ov:'none',
+  flows:[['hyp2pit','g',1]],
+  chips:[['hyp','✚ NK3（及 NK1）受體拮抗劑','drug']],
+  d:'<p>不能或不想用荷爾蒙的人（例如乳癌病史）：</p><ul><li><b>Fezolinetant</b>：NK3 受體拮抗劑，阻斷 KNDy 神經元過度活躍的訊號；美國 FDA 2023 年核准。可能造成肝損傷（美國 FDA 加框警語），開始前與使用初期要追蹤肝功能</li><li><b>Elinzanetant</b>：NK1 與 NK3 雙重拮抗劑，美國 FDA 2025 年 10 月核准；也可能改善睡眠；常見頭痛、疲倦、嗜睡，要追蹤肝功能；<b>懷孕禁用</b></li><li>低劑量 paroxetine 等 SSRI、SNRI（venlafaxine）、gabapentin、oxybutynin</li></ul><p>效果多數不如雌激素，但風險不同，可依病人狀況選擇。</p>'},
+ {t:'抗雄性素與 5α 還原酶抑制劑',k:'drg',on:['tis','ova','adr'],rx:['tis'],g:[5,5],lv:[0,0,-1],lab:['睪固酮','DHT','雄性素作用'],
+  flows:[['tes2tis','x',1.6],['adr2ova','a',1]],
+  chips:[['tis','✚ 擋雄性素受體或 DHT','drug']],
+  d:'<ul><li><b>Spironolactone</b>：擋雄性素受體（也是 MRA）；用於女性多毛、痤瘡；高血鉀、月經不規則</li><li><b>Cyproterone acetate</b>：抗雄性素兼黃體素，部分國家與雌激素做成複方用於痤瘡、多毛；肝毒性、長期高劑量與腦膜瘤有關</li><li><b>Bicalutamide、enzalutamide、apalutamide</b> 等：攝護腺癌</li><li><b>Finasteride、dutasteride</b>（5α 還原酶抑制劑）：減少 DHT，用於攝護腺肥大與雄性禿；<b>PSA 會降低約一半</b>，判讀要調整；可能性慾降低</li></ul><div class="warn">抗雄性素與 5α 還原酶抑制劑可能影響男胎外生殖器發育：女性使用時要確實避孕，懷孕或可能懷孕的女性不要接觸碎裂的錠劑。</div>'}
+]},
+{id:'ga',n:'E 性別肯定治療',s:'女性化、男性化荷爾蒙',lab:['睪固酮','雌二醇','LH／FSH'],steps:[
+ {t:'性別肯定荷爾蒙治療：原則與開始前',k:'phy',on:['hyp','pit','tes','ova'],g:[5,5],lv:[0,0,0],
+  flows:[['hyp2pit','g',1.2],['pit2tes','l',1],['pit2ova','l',1]],
+  chips:[['hub','開始前：知情同意、生育保存','info']],
+  d:'<p>對性別不一致（自我認同的性別與出生指定性別不同）且希望身體改變的人，用荷爾蒙讓第二性徵往認同的性別發展。主要依據 Endocrine Society 2017 指引與 WPATH 第 8 版照護標準（2022）。</p><ul><li>由熟悉的醫療團隊評估，確認持續的性別不一致、能做知情同意，並處理可能影響治療的身心狀況</li><li><b>開始前討論生育保存</b>：荷爾蒙會讓精子或排卵減少，可能無法完全恢復；可先凍精、凍卵</li><li>先評估血栓、心血管、肝病、荷爾蒙敏感腫瘤等風險</li></ul><p>青少年在青春期剛開始時可用 <b>GnRH 促效劑</b>暫停青春期；各國對未成年人的規範差異大，近年持續變動，需依當地法規與指引。</p>'},
+ {t:'女性化：雌二醇加抗雄性素',k:'drg',on:['tes','pit','fat'],rx:['tes','fat'],g:[.5,1],lv:[-2,1,-2],ts:1,
+  flows:[['fat2hyp','x',1.6],['tes2tis','t',.3]],
+  chips:[['fat','✚ 17β-雌二醇','drug'],['tes','✚ 抗雄性素壓低睪固酮','drug']],
+  d:'<ul><li><b>雌激素</b>：使用 <b>17β-雌二醇</b>（口服、經皮貼片或凝膠、注射）；<b>避免 ethinyl estradiol</b>（避孕藥成分），血栓風險較高，抽血也驗不到。40 歲以上、抽菸或血栓風險高者偏好經皮</li><li><b>抗雄性素</b>：單靠雌激素通常壓不到目標，需合併 spironolactone、cyproterone acetate 或 GnRH 促效劑</li><li><b>目標</b>：睪固酮 <b>&lt; 50 ng/dL</b>、雌二醇 <b>100–200 pg/mL</b></li></ul><p><b>變化時程</b>：性慾與晨間勃起減少、皮膚變軟在數月內出現；乳房發育 3–6 個月開始、約 2–3 年達最大；脂肪重新分布。體毛變細需要較久，<b>聲音與骨架不會改變</b>。</p><div class="warn">風險：<b>靜脈血栓</b>（口服、年紀大、抽菸較高）；spironolactone 的<b>高血鉀</b>；cyproterone 與<b>腦膜瘤</b>、泌乳素升高有關（2020 年歐洲藥品管理局警訊後建議最低有效劑量）。黃體素的效益證據不足，不常規使用。</div>'},
+ {t:'男性化：睪固酮',k:'drg',on:['ova','ute','tis','pit'],rx:['tis'],g:[1,2],lv:[2,-1,-2],ov:'none',
+  flows:[['tes2tis','x',1.8],['ova2ute','e',.3]],
+  chips:[['tis','✚ 睪固酮到男性生理範圍','drug'],['ute','月經通常數個月內停止','down']],
+  d:'<p>以睪固酮（注射或凝膠）讓濃度達到<b>男性生理範圍</b>，LH、FSH 被壓低，卵巢的雌二醇下降。</p><p><b>變化時程</b>：皮膚變油與痤瘡、月經在 2–6 個月內停止、陰蒂變大、性慾增加在數月內出現；<b>聲音變低沉</b>約 3–12 個月開始、是不可逆的；臉部與體毛、肌肉量需 1–5 年；可能出現雄性禿。</p><div class="warn">風險：<b>紅血球增多</b>（追蹤血比容）、痤瘡、HDL 下降、體重增加。<b>睪固酮不是避孕方法</b>：仍可能懷孕，而睪固酮會影響胎兒，需要時使用非荷爾蒙避孕或含黃體素的方法。</div><p>持續有出血時，可加黃體素或 GnRH 類藥物；並排除其他婦科原因。</p>'},
+ {t:'長期追蹤：數值、器官與篩檢',k:'dx',on:['tis','fat','ute','tes'],g:[.5,1],lv:[0,0,-2],
+  flows:[],
+  chips:[['hub','第一年每 3 個月追蹤','info'],['tis','依現有器官安排癌症篩檢','info']],
+  d:'<ul><li><b>頻率</b>：第一年每 3 個月，之後每年 1–2 次</li><li><b>女性化</b>：睪固酮、雌二醇；用 spironolactone 驗<b>血鉀</b>與腎功能；用 cyproterone 驗肝功能與泌乳素</li><li><b>男性化</b>：睪固酮、<b>血比容</b>、血脂</li><li><b>骨密度</b>：切除性腺後荷爾蒙不足、停藥或有其他危險因子時追蹤</li><li><b>癌症篩檢依現有的器官</b>：保留子宮頸者照常做子宮頸抹片；有乳房組織者依風險做乳房篩檢；保留攝護腺者依年齡評估</li><li>心血管危險因子（血壓、血脂、血糖、抽菸）一併管理</li></ul><p>荷爾蒙不足時（例如切除性腺後未補充），可能出現骨質流失與更年期樣症狀，需要持續補充。</p>'}
+]}
+];
+
+var DRUGS=[
+ ['睪固酮（凝膠、注射、貼片、口服）','全身（雄性素受體）','補回睪固酮','確診的男性性腺低下','壓抑精子生成；血比容、攝護腺追蹤；凝膠接觸傳遞'],
+ ['hCG、FSH','睪丸、卵巢','代替 LH、FSH','次發性性腺低下想生育、人工生殖','卵巢過度刺激、多胞胎'],
+ ['Clomiphene','下視丘（雌激素受體）','擋負回饋，LH、FSH 上升','誘導排卵；男性功能性低下（仿單外）','視覺症狀、內膜變薄、多胞胎'],
+ ['Letrozole、anastrozole','芳香酶','降低雌二醇，FSH 上升','PCOS 誘導排卵（仿單外）、乳癌','骨質流失（長期）'],
+ ['GnRH 促效劑（leuprolide 等）','腦下垂體','持續刺激 → 受體關閉','攝護腺癌、內膜異位、肌瘤、中樞性性早熟','初期 flare、熱潮紅、骨質流失'],
+ ['GnRH 拮抗劑（degarelix、relugolix、elagolix）','腦下垂體','直接擋受體，無 flare','攝護腺癌、肌瘤、內膜異位、人工生殖','熱潮紅、骨質流失'],
+ ['複合型口服避孕藥','下視丘、腦下垂體','負回饋擋排卵；提高 SHBG','避孕、月經調整、PCOS','靜脈血栓；抽菸 ≥35 歲、偏頭痛有預兆者避免'],
+ ['Metformin','肝、肌肉','改善胰島素阻抗','PCOS 合併代謝異常','腸胃不適'],
+ ['Spironolactone','雄性素受體','抗雄性素','女性多毛、痤瘡','高血鉀；需避孕'],
+ ['更年期荷爾蒙治療（雌激素 ± 黃體素）','下視丘、骨、生殖泌尿道','補回雌激素','中重度熱潮紅、預防骨鬆、POI','有子宮要加黃體素；血栓、中風、乳癌風險'],
+ ['Fezolinetant','下視丘（NK3）','阻斷 neurokinin B 訊號','熱潮紅（非荷爾蒙）','肝損傷，追蹤肝功能'],
+ ['Elinzanetant','下視丘（NK1、NK3）','雙重 neurokinin 受體拮抗','熱潮紅（非荷爾蒙）','頭痛、嗜睡；追蹤肝功能'],
+ ['Finasteride、dutasteride','5α 還原酶','減少 DHT','攝護腺肥大、雄性禿','PSA 降一半；孕婦勿接觸'],
+ ['Bicalutamide、enzalutamide','雄性素受體','抗雄性素','攝護腺癌','男性女乳、疲倦'],
+ ['Tamoxifen','乳腺（雌激素受體）','選擇性雌激素受體調節','男性女乳症疼痛期、乳癌','血栓、內膜病變（女性）'],
+ ['17β-雌二醇（性別肯定治療）','全身（雌激素受體）','女性化','跨性別女性的性別肯定治療','避免 ethinyl estradiol；血栓；目標雌二醇 100–200 pg/mL'],
+ ['Cyproterone acetate','雄性素受體、腦下垂體','抗雄性素兼抑制 LH','女性化治療、部分國家用於多毛','腦膜瘤、泌乳素升高、肝功能；最低有效劑量']
+];
+var GOMAP=[[[1,1],[1,2],[1,3],[1,4],[2,1],[2,2],[2,3],[2,4]],[[3,0],[3,2],[3,2],[3,7],[3,3],[3,4],[3,5],[3,6],[3,6],[3,8],[3,9],[3,9],[3,10],[3,10],[1,5],[4,1],[4,1]]];
+
+/* ================= 畫面 ================= */
+var axi=0,steps=AX[0].steps,idx=0,cur=[5,5],tgt=[5,5];
+var ttl=$('#ttl'),txt=$('#txt'),cnt=$('#cnt'),where=$('#where'),dots=$('#dots'),chipsG=$('#chips'),partsG=$('#parts');
+var prevB=$('#prev'),nextB=$('#next'),playB=$('#play'),tabs=$('#tabs'),vlh=$('#vlh'),vfsh=$('#vfsh');
+var RM=matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+AX.forEach(function(a,k){var b=document.createElement('button');b.type='button';b.setAttribute('role','tab');b.innerHTML=a.n+'<small>'+a.s+'</small>';b.onclick=function(){stopAuto();setAx(k,0,true)};tabs.appendChild(b)});
+DRUGS.forEach(function(r){var tr=document.createElement('tr');tr.innerHTML='<td><b>'+r[0]+'</b></td><td>'+r[1]+'</td><td>'+r[2]+'</td><td>'+r[3]+'</td><td>'+r[4]+'</td>';$('#tbody').appendChild(tr)});
+
+var mrows=$('#mrows'),MB=[];
+for(var r=0;r<3;r++){
+  var y=556+r*17,g=document.createElementNS(SVGNS,'g');
+  g.innerHTML='<text x="222" y="'+(y+4)+'"></text><rect class="trk" x="276" y="'+(y-4)+'" width="72" height="8" rx="4"/><rect class="bar" x="312" y="'+(y-4)+'" width="0" height="8" rx="4"/><line class="mid" x1="312" x2="312" y1="'+(y-7)+'" y2="'+(y+7)+'"/><text class="v" x="354" y="'+(y+4)+'"></text>';
+  mrows.appendChild(g);MB.push({lab:g.children[0],bar:g.children[2],v:g.children[4]});
+}
+function setMeter(lab,lv){
+  var sym={'-2':'↓↓','-1':'↓','0':'—','1':'↑','2':'↑↑'};
+  for(var r=0;r<3;r++){var v=lv?lv[r]:0,w=Math.abs(v)*18;
+    MB[r].lab.textContent=lab[r];MB[r].bar.setAttribute('x',v<0?312-w:312);MB[r].bar.setAttribute('width',w);
+    MB[r].bar.setAttribute('fill',v>0?'var(--up)':'var(--down)');MB[r].v.textContent=sym[String(v)];
+    MB[r].v.setAttribute('fill',v>0?'var(--up)':v<0?'var(--down)':'var(--mute)')}
+}
+function chip(at,text,cls){
+  var p=AT[at],g=document.createElementNS(SVGNS,'g');g.setAttribute('class','chip '+cls);
+  var t=document.createElementNS(SVGNS,'text');t.textContent=text;t.setAttribute('text-anchor','middle');g.appendChild(t);chipsG.appendChild(g);
+  var w=t.getComputedTextLength()+18,h=22,x=Math.max(4+w/2,Math.min(596-w/2,p[0]));
+  var rr=document.createElementNS(SVGNS,'rect');rr.setAttribute('x',x-w/2);rr.setAttribute('y',p[1]-h/2);rr.setAttribute('width',w);rr.setAttribute('height',h);
+  g.insertBefore(rr,t);t.setAttribute('x',x);t.setAttribute('y',p[1]+4.5);return g;
+}
+function layoutChips(list){chipsG.textContent='';var used={};
+  list.forEach(function(c,k){var n=used[c[0]]||0;used[c[0]]=n+1;var g=chip(c[0],c[1],c[2]);
+    if(n)g.setAttribute('transform','translate(0,'+((STACK[c[0]]||1)*n*26)+')');g.style.animationDelay=(k*80)+'ms'})}
+
+function setAx(k,i,sync){axi=k;steps=AX[k].steps;[].forEach.call(tabs.children,function(b,j){b.setAttribute('aria-selected',j===k)});go(i||0,sync)}
+function go(i,sync){
+  idx=Math.max(0,Math.min(steps.length-1,i));
+  var a=AX[axi],s=steps[idx];
+  var kt={phy:'生理',dx:'診斷',dz:'疾病',drg:'治療'}[s.k];
+  ttl.innerHTML='<span class="kind '+s.k+'">'+kt+'</span>'+s.t;txt.innerHTML=s.d;
+  cnt.textContent=(idx+1)+' / '+steps.length;where.innerHTML='<b>'+a.n+'</b> · '+a.s;
+  ORG.forEach(function(o){var e=$('#o-'+o);e.classList.toggle('on',s.on.indexOf(o)>=0);e.classList.toggle('dim',axi>0&&s.on.indexOf(o)<0);$('#r-'+o).classList.toggle('on',(s.rx||[]).indexOf(o)>=0)});
+  var ov=$('#o-ova');['pcos','none'].forEach(function(c){ov.classList.toggle(c,s.ov===c)});
+  var dm=$('#dom');dm.setAttribute('r',(s.ov==='dom'||s.ov==='cl')?12:0);dm.setAttribute('class',s.ov==='cl'?'cl':'');
+  $('#o-tes').classList.toggle('small',!!s.ts);$('#o-ute').classList.toggle('thick',!!s.ut);
+  layoutChips(s.chips||[]);setFlows(s.flows||[]);setMeter(s.lab||a.lab,s.lv);tgt=s.g.slice();
+  prevB.disabled=idx===0&&axi===0;
+  nextB.textContent=idx<steps.length-1?'下一步 →':(axi<AX.length-1?'下一個分頁 →':'回到開頭 ↺');
+  dots.textContent='';
+  steps.forEach(function(st,k){var b=document.createElement('button');b.type='button';b.setAttribute('aria-label','第 '+(k+1)+' 步');if(k===idx)b.setAttribute('aria-current','true');b.onclick=function(){stopAuto();go(k,true)};dots.appendChild(b)});
+  afterStep(s,sync);
+}
+function next(sync){if(idx<steps.length-1)return go(idx+1,sync);setAx(axi<AX.length-1?axi+1:0,0,sync)}
+function prev(sync){if(idx>0)return go(idx-1,sync);if(axi>0)setAx(axi-1,AX[axi-1].steps.length-1,sync)}
+prevB.onclick=function(){stopAuto();prev(true)};
+nextB.onclick=function(){stopAuto();next(true)};
+document.addEventListener('keydown',function(e){if(e.target.closest&&e.target.closest('input,textarea'))return;
+  if(e.key==='ArrowRight'){stopAuto();next(true)}else if(e.key==='ArrowLeft'){stopAuto();prev(true)}});
+var sx=null,sy=null,map=$('#map');
+map.addEventListener('touchstart',function(e){sx=e.touches[0].clientX;sy=e.touches[0].clientY},{passive:true});
+map.addEventListener('touchend',function(e){if(sx==null)return;var dx=e.changedTouches[0].clientX-sx,dy=e.changedTouches[0].clientY-sy;if(Math.abs(dx)>40&&Math.abs(dx)>Math.abs(dy)){stopAuto();dx<0?next(true):prev(true)}sx=null},{passive:true});
+
+/* 粒子＋數字 */
+var P={},flows=[],parts=[],last=0;
+[].forEach.call(document.querySelectorAll('#paths path'),function(p){P[p.id.slice(2)]={el:p,len:p.getTotalLength()}});
+function setFlows(f){flows=f.map(function(x){return {p:P[x[0]],c:COL[x[1]],r:x[2],acc:Math.random()}}).filter(function(x){return x.p})}
+function spawn(f){var c=document.createElementNS(SVGNS,'circle');c.setAttribute('r',(f.c===COL.c||f.c===COL.p)?4.2:3.4);c.setAttribute('fill',f.c);partsG.appendChild(c);parts.push({el:c,p:f.p,t:0,d:1700+Math.random()*500})}
+function col(v,lo,hi){return v>hi?'var(--up)':v<lo?'var(--down)':'var(--ink)'}
+function tick(ts){
+  var dt=last?Math.min(100,ts-last):16;last=ts;
+  if(!RM){flows.forEach(function(f){f.acc+=f.r*dt/1000;while(f.acc>=1){f.acc-=1;spawn(f)}});
+    for(var k=parts.length-1;k>=0;k--){var q=parts[k];q.t+=dt;var u=q.t/q.d;if(u>=1){q.el.remove();parts.splice(k,1);continue}
+      var pt=q.p.el.getPointAtLength(u*q.p.len);q.el.setAttribute('cx',pt.x);q.el.setAttribute('cy',pt.y);q.el.setAttribute('opacity',u<.1?u*10:u>.85?(1-u)/.15:1)}}
+  for(var j=0;j<2;j++){if(Math.abs(cur[j]-tgt[j])>.01)cur[j]+=(tgt[j]-cur[j])*Math.min(1,dt/350);else cur[j]=tgt[j]}
+  function fm(v){return v<10?v.toFixed(1):Math.round(v)}
+  vlh.textContent=fm(cur[0]);vfsh.textContent=fm(cur[1]);
+  vlh.setAttribute('fill',col(cur[0],1.5,12));vfsh.setAttribute('fill',col(cur[1],1.5,12));
+  requestAnimationFrame(tick);
+}
+requestAnimationFrame(tick);
+
+/* 自動播放＋語音朗讀（Web Speech API，用裝置內建語音） */
+var autoOn=false,autoT=0,narr=false,sid=0,voice=null;
+var KEEP=[];
+var SS=window.speechSynthesis,sayB=$('#say');
+function pickVoice(){
+  if(!SS)return;var vs=SS.getVoices();if(!vs.length)return;
+  var pref=['zh-TW','zh_TW','zh-Hant','zh-HK','zh-CN','zh'];
+  for(var k=0;k<pref.length&&!voice;k++){voice=vs.filter(function(v){return v.lang.replace('_','-').indexOf(pref[k].replace('_','-'))===0})[0]||null}
+}
+if(SS){pickVoice();if('onvoiceschanged' in SS)SS.onvoiceschanged=pickVoice}else{sayB.hidden=true}
+function plain(s){
+  var t=s.t+'。'+s.d.replace(/<\/(li|p|div)>/g,'。').replace(/<[^>]+>/g,'');
+  var el=document.createElement('textarea');el.innerHTML=t;t=el.value;
+  [[/ng\/dL/g,'奈克每公合'],[/pg\/mL/g,'皮克每毫升'],[/IU\/L/g,'國際單位每公升'],[/17β-雌二醇/g,'17 貝他雌二醇'],[/5α/g,'5 阿法'],[/DHEA-S/g,'D H E A S'],[/47,XXY/g,'47 XXY'],[/45,X/g,'45 X'],[/≥/g,'大於等於'],[/≤/g,'小於等於'],[/−/g,'負'],[/°C/g,'度'],
+   [/α/g,'阿法'],[/β/g,'貝他'],[/✚/g,''],[/✕/g,'被阻斷'],[/↑↑/g,'大幅增加'],[/↓↓/g,'大幅減少'],[/↑/g,'增加'],[/↓/g,'減少'],[/→/g,'，接著'],[/＋/g,'和'],[/(\d)\s*–\s*(\d)/g,'$1到$2'],[/–/g,'到'],[/</g,'小於'],[/>/g,'大於'],[/[／\/]/g,'、'],[/\s+/g,' '],[/[。，]\s*[。，]+/g,'。']]
+   .forEach(function(r){t=t.replace(r[0],r[1])});
+  return t;
+}
+function chunks(t){
+  var out=[];(t.match(/[^。！？；]+[。！？；]?/g)||[]).forEach(function(x){x=x.trim();if(!x||x==='。')return;
+    while(x.length>110){var cut=x.lastIndexOf('，',110);cut=cut>20?cut+1:110;out.push(x.slice(0,cut));x=x.slice(cut)}
+    if(x)out.push(x)});
+  return out;
+}
+function stopNarr(){sid++;if(SS&&(SS.speaking||SS.pending))SS.cancel()}
+function speak(text,done,sync){
+  var busy=SS.speaking||SS.pending;
+  stopNarr();var my=sid,cs=chunks(text),i=0;
+  function nx(){
+    if(my!==sid)return;
+    if(i>=cs.length){done&&done();return}
+    var u=new SpeechSynthesisUtterance(cs[i++]);u.lang=voice?voice.lang:'zh-TW';if(voice)u.voice=voice;u.rate=1;
+    u.onend=function(){if(my===sid)nx()};
+    u.onerror=function(e){if(my===sid&&e.error!=='interrupted'&&e.error!=='canceled')nx()};
+    // iOS WebKit 會把沒被引用的 utterance 回收掉而不出聲，留住最近幾個
+    KEEP.push(u);if(KEEP.length>6)KEEP.shift();
+    SS.speak(u);
+  }
+  // iOS／Safari 只允許在使用者點擊的同一個呼叫堆疊裡開始朗讀，所以點按鈕時要同步呼叫；
+  // 若剛 cancel 正在唸的句子，WebKit 立刻 speak 可能被吞掉，此時（已解鎖）改延遲
+  if(sync&&!busy)nx();else setTimeout(nx,80);
+}
+function schedule(ms){clearTimeout(autoT);autoT=setTimeout(function(){if(autoOn)next()},ms)}
+function afterStep(s,sync){
+  clearTimeout(autoT);
+  if(narr&&SS){speak(plain(s),function(){if(autoOn)schedule(700)},sync)}
+  else{stopNarr();if(autoOn)schedule(7000)}
+}
+function stopAuto(){autoOn=false;clearTimeout(autoT);playB.textContent='▶ 自動'}
+playB.onclick=function(){if(autoOn)return stopAuto();autoOn=true;playB.textContent='❚❚ 暫停';if(!narr)schedule(7000);else if(!SS.speaking)afterStep(steps[idx],true)};
+sayB.onclick=function(){narr=!narr;sayB.setAttribute('aria-pressed',narr);sayB.textContent=narr?'🔇 停止朗讀':'🔊 朗讀';afterStep(steps[idx],true)};
+document.addEventListener('visibilitychange',function(){if(document.hidden&&narr){stopNarr();stopAuto()}});
+
+var root=document.documentElement;
+try{var th=localStorage.getItem('cim-theme');if(th)root.setAttribute('data-theme',th)}catch(e){}
+$('#theme').onclick=function(){var dark=root.getAttribute('data-theme')?root.getAttribute('data-theme')==='dark':matchMedia('(prefers-color-scheme: dark)').matches;
+  var n=dark?'light':'dark';root.setAttribute('data-theme',n);try{localStorage.setItem('cim-theme',n)}catch(e){}};
+
+setAx(0,0);
+
+/* 表格列 → 跳到對應的動畫步驟（網址 #t分頁s步驟 可直接連結） */
+function stageTop(){var st=document.querySelector('.stage');if(st)st.scrollIntoView({behavior:RM?'auto':'smooth',block:'start'})}
+function setHash(h){try{history.replaceState(null,'',h)}catch(e){}}
+function bindRows(fn){
+  [].forEach.call(document.querySelectorAll('.cmp tbody'),function(tb,ti){
+    [].forEach.call(tb.rows,function(tr,ri){
+      var g=GOMAP[ti]&&GOMAP[ti][ri];if(!g)return;
+      tr.dataset.go=g.join(',');tr.tabIndex=0;tr.setAttribute('role','link');tr.title='看這一段的動畫';
+      tr.cells[0].insertAdjacentHTML('beforeend','<span class="goto">▶ 看動畫</span>');
+      tr.onclick=function(){fn(g[0],g[1])};
+      tr.onkeydown=function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();e.stopPropagation();fn(g[0],g[1])}};
+    });
+  });
+  [].forEach.call(document.querySelectorAll('.cmp .tblw'),function(w){if(w.querySelector('tr[data-go]'))w.insertAdjacentHTML('beforebegin','<p class="gohint">▶ 點表格任一列，直接跳到那一段動畫</p>')});
+}
+function jumpTo(t,s){stopAuto();setAx(t,s,true);stageTop();setHash('#t'+t+'s'+s)}
+bindRows(jumpTo);
+(function(){var m=location.hash.match(/^#t(\d+)s(\d+)$/);if(m&&AX[+m[1]])setAx(+m[1],Math.min(+m[2],AX[+m[1]].steps.length-1),false)})();
+})();
+</script>
+</body>
+</html>
