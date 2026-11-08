@@ -1,0 +1,636 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>高血壓，動起來</title>
+<meta name="description" content="一步一步看血壓怎麼被調節、原發性與續發性高血壓的機轉、靶器官傷害與急症，以及每一類降壓藥作用在哪裡。">
+<style>
+:root{
+  --bg:#f5f3ee;--paper:#fffdf8;--ink:#1f2328;--mute:#5d6470;--line:#d9d4c7;
+  --accent:#1f6f8b;--accent-soft:#d6e9f0;
+  --blood:#c62f3b;--sym:#d9741a;--nerve:#1f9d8f;--na:#2f72c4;--ang:#3d9a3a;--ald:#8a4fc4;--fat:#b8920f;--dmg:#7a2730;--drug:#c0262d;--up:#d1452b;--down:#2f72c4;
+  --organ:#ffffff;--organ-line:#b9b2a3;--organ-on:#fff1e6;--organ-on-line:#d9741a;
+  --shadow:0 1px 2px rgba(0,0,0,.06),0 6px 20px rgba(0,0,0,.06);
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#14171b;--paper:#1c2026;--ink:#e8e6e1;--mute:#a3a9b3;--line:#323844;
+  --accent:#5fb6d6;--accent-soft:#1c3440;
+  --blood:#ff6b74;--sym:#f5a04a;--nerve:#4cd0c0;--na:#6aa8f5;--ang:#6fd16a;--ald:#b48cf0;--fat:#e6c34a;--dmg:#e08a94;--drug:#ff6b6b;--up:#ff7a5c;--down:#6aa8f5;
+  --organ:#232831;--organ-line:#4a5260;--organ-on:#3a2c20;--organ-on-line:#f5a04a;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 6px 20px rgba(0,0,0,.35);
+}}
+:root[data-theme="dark"]{
+  --bg:#14171b;--paper:#1c2026;--ink:#e8e6e1;--mute:#a3a9b3;--line:#323844;
+  --accent:#5fb6d6;--accent-soft:#1c3440;
+  --blood:#ff6b74;--sym:#f5a04a;--nerve:#4cd0c0;--na:#6aa8f5;--ang:#6fd16a;--ald:#b48cf0;--fat:#e6c34a;--dmg:#e08a94;--drug:#ff6b6b;--up:#ff7a5c;--down:#6aa8f5;
+  --organ:#232831;--organ-line:#4a5260;--organ-on:#3a2c20;--organ-on-line:#f5a04a;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 6px 20px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink)}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang TC","Noto Sans TC","Microsoft JhengHei",sans-serif;line-height:1.65;-webkit-text-size-adjust:100%}
+a{color:var(--accent)}
+.wrap{max-width:1180px;margin:0 auto;padding:0 16px}
+header.hero{padding:40px 0 18px}
+.kick{font-size:13px;letter-spacing:.12em;color:var(--accent);font-weight:700}
+h1{font-size:clamp(30px,6vw,52px);line-height:1.15;margin:.2em 0 .25em;letter-spacing:.02em}
+h1 span{color:var(--blood)}
+.lead{color:var(--mute);max-width:740px;margin:0}
+.legend{display:flex;flex-wrap:wrap;gap:8px 16px;margin:16px 0 0;padding:0;list-style:none;font-size:14px;color:var(--mute)}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:50%;margin-right:6px;vertical-align:-1px}
+.tabs{display:flex;gap:8px;margin:22px 0 14px;flex-wrap:wrap}
+.tabs button{appearance:none;border:1px solid var(--line);background:var(--paper);color:var(--ink);padding:9px 14px;border-radius:999px;font:inherit;font-weight:700;cursor:pointer;line-height:1.3}
+.tabs button small{display:block;font-weight:400;font-size:11.5px;opacity:.8}
+.tabs button[aria-selected="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+.player{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:18px;align-items:start}
+.stage{position:sticky;top:10px;background:var(--paper);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);padding:8px}
+.stage svg{display:block;width:100%;height:auto;max-height:calc(100vh - 40px);touch-action:pan-y}
+.panel{background:var(--paper);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);padding:18px 20px;min-height:440px;display:flex;flex-direction:column}
+.where{font-size:13px;color:var(--mute);display:flex;justify-content:space-between;gap:8px}
+.where b{color:var(--accent)}
+.kind{display:inline-block;font-size:12px;font-weight:700;border-radius:999px;padding:1px 9px;margin-right:6px;vertical-align:2px}
+.kind.phy{background:var(--accent-soft);color:var(--accent)}
+.kind.dz{background:color-mix(in srgb,var(--blood) 15%,transparent);color:var(--blood)}
+.kind.dx{background:color-mix(in srgb,var(--nerve) 15%,transparent);color:var(--nerve)}
+.kind.drg{background:color-mix(in srgb,var(--drug) 14%,transparent);color:var(--drug)}
+.panel h2{font-size:23px;line-height:1.3;margin:6px 0 8px}
+.panel .txt{flex:1}
+.panel .txt p{margin:.35em 0}
+.panel .txt ul,.panel .txt ol{margin:.35em 0;padding-left:1.2em}
+.panel .txt li{margin:.2em 0}
+.warn{border-left:3px solid var(--drug);padding:4px 10px;margin:.6em 0;background:color-mix(in srgb,var(--drug) 8%,transparent);border-radius:0 8px 8px 0}
+.ctl{display:flex;align-items:center;gap:8px;margin-top:14px;flex-wrap:wrap}
+.ctl button{appearance:none;border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:10px;padding:9px 14px;font:inherit;font-weight:700;cursor:pointer;min-width:44px}
+.ctl button:disabled{opacity:.35;cursor:default}
+.ctl #say[aria-pressed="true"]{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.ctl .next{background:var(--accent);border-color:var(--accent);color:#fff;margin-left:auto}
+.dots{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}
+.dots button{width:10px;height:10px;border-radius:50%;border:0;padding:0;background:var(--line);cursor:pointer}
+.dots button[aria-current="true"]{background:var(--accent);transform:scale(1.25)}
+.hint{font-size:12px;color:var(--mute);margin-top:8px}
+
+.org path.shape,.org ellipse,.org rect.shape{fill:var(--organ);stroke:var(--organ-line);stroke-width:2;transition:fill .35s,stroke .35s}
+.org text{fill:var(--ink);font-size:17px;font-weight:700;text-anchor:middle}
+.org text.sub{font-size:11.5px;font-weight:400;fill:var(--mute)}
+.org.on path.shape,.org.on ellipse,.org.on rect.shape{fill:var(--organ-on);stroke:var(--organ-on-line);stroke-width:3}
+.org{transition:opacity .35s}
+.org.dim{opacity:.35}
+#o-heart path.shape{transform-box:view-box;transform-origin:300px 168px;transition:fill .35s,stroke .35s,transform .5s}
+#o-heart.lvh path.shape{transform:scale(1.16);stroke-width:5}
+#lum{fill:color-mix(in srgb,var(--blood) 22%,var(--paper));stroke:var(--blood);stroke-width:1.5;transition:y .5s,height .5s}
+#o-art.tight #lum{y:92px;height:6px}
+#o-art.dil #lum{y:82px;height:26px}
+#o-aorta rect.shape{transition:stroke .35s,stroke-width .35s}
+#o-aorta.stiff rect.shape{stroke:var(--dmg);stroke-width:5;stroke-dasharray:none}
+#o-kid.dmg path.shape{stroke:var(--dmg);stroke-dasharray:5 3}
+#xrdn{opacity:0;transition:opacity .3s}#xrdn.on{opacity:1}
+.vessel{fill:none;stroke:var(--line);stroke-width:2;stroke-dasharray:3 5}
+.ring{fill:none;stroke:var(--drug);stroke-width:3;stroke-dasharray:6 5;opacity:0;transition:opacity .3s}
+.ring.on{opacity:1;animation:spin 6s linear infinite}
+@keyframes spin{to{stroke-dashoffset:-110}}
+.hub circle{fill:color-mix(in srgb,var(--blood) 8%,var(--paper));stroke:var(--blood);stroke-width:2.5}
+.hub text{text-anchor:middle;fill:var(--ink)}
+.hub .lbl{font-size:12px;font-weight:700;fill:var(--mute)}
+.hub .val{font-size:26px;font-weight:800}
+.chip rect{rx:9;ry:9;stroke-width:1.5}
+.chip text{font-size:12.5px;font-weight:700}
+.chip.up rect{fill:color-mix(in srgb,var(--up) 13%,var(--paper));stroke:var(--up)}
+.chip.up text{fill:var(--up)}
+.chip.down rect{fill:color-mix(in srgb,var(--down) 13%,var(--paper));stroke:var(--down)}
+.chip.down text{fill:var(--down)}
+.chip.info rect{fill:var(--paper);stroke:var(--organ-line)}
+.chip.info text{fill:var(--ink)}
+.chip.drug rect{fill:var(--drug);stroke:var(--drug)}
+.chip.drug text{fill:#fff}
+.chips g.chip{animation:pop .35s ease-out both}
+@keyframes pop{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.meter rect.box{fill:var(--paper);stroke:var(--line)}
+.meter text{font-size:12px;fill:var(--ink)}
+.meter text.ttl{font-size:11px;fill:var(--mute)}
+.meter .trk{fill:var(--line)}
+.meter .mid{stroke:var(--mute);stroke-width:1.5}
+.meter .bar{transition:width .5s ease,x .5s ease,fill .3s}
+.meter text.v{font-weight:700}
+.pt{pointer-events:none}
+.xref{display:inline-block;margin:.3em 0;font-weight:700}
+section.cmp{margin:34px 0 10px}
+section.cmp h2{font-size:24px;margin:0 0 6px}
+.tblw{overflow-x:auto;border:1px solid var(--line);border-radius:14px;background:var(--paper);margin-bottom:18px}
+table{border-collapse:collapse;width:100%;min-width:820px;font-size:14px}
+th,td{padding:9px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{background:var(--accent-soft);white-space:nowrap}
+td.c{text-align:center;white-space:nowrap}
+tr:last-child td{border-bottom:0}
+footer{color:var(--mute);font-size:13px;padding:22px 0 40px;border-top:1px solid var(--line);margin-top:28px}
+.theme{position:absolute;top:14px;right:16px;appearance:none;border:1px solid var(--line);background:var(--paper);color:var(--ink);border-radius:999px;padding:6px 12px;font:inherit;font-size:13px;cursor:pointer}
+@media (max-width:860px){
+  .player{grid-template-columns:1fr}
+  .stage{position:sticky;top:0;z-index:2;border-radius:0 0 16px 16px;margin:0 -16px;border-left:0;border-right:0;padding:4px}
+  .stage svg{max-height:52vh}
+  .panel{min-height:0}
+  .chip text{font-size:14px}
+  header.hero{padding-top:52px}
+}
+@media (prefers-reduced-motion:reduce){.chips g.chip,.ring.on{animation:none}}
+tr[data-go]{cursor:pointer;transition:background .15s}
+tr[data-go]:hover,tr[data-go]:focus-visible{background:color-mix(in srgb,var(--accent) 12%,transparent);outline:none}
+tr[data-go]:focus-visible td:first-child{box-shadow:inset 3px 0 0 var(--accent)}
+.goto{display:inline-block;margin-left:6px;font-size:11.5px;font-weight:700;color:var(--accent);white-space:nowrap}
+.gohint{font-size:13.5px;color:var(--accent);margin:-4px 0 10px;font-weight:600}
+</style>
+</head>
+<body>
+<button class="theme" id="theme" type="button" aria-label="切換深淺色">◐ 深淺色</button>
+<div class="wrap">
+<header class="hero">
+  <div class="kick"><a href="endo-interactive.html" style="color:inherit;text-decoration:none">← 內分泌新陳代謝科 醫學互動教學</a></div>
+  <h1>高血壓，<span>動起來</span></h1>
+  <p class="lead">血壓＝心輸出量 × 周邊阻力。從心臟、大動脈、小動脈、壓力感受器、交感神經到腎臟，看身體怎麼把血壓穩住；再看原發性高血壓是哪裡出了錯、哪些續發性原因要找、高血壓怎麼傷害器官，以及每一類降壓藥作用在哪一站。</p>
+  <p class="lead" style="margin-top:6px"><a href="raas-in-motion.html">→ 內分泌高血壓（原發性醛固酮症、RAAS 藥物）：RAAS，動起來</a></p>
+  <ul class="legend">
+    <li><i style="background:var(--blood)"></i>血流、血壓</li>
+    <li><i style="background:var(--sym)"></i>交感神經</li>
+    <li><i style="background:var(--nerve)"></i>壓力感受訊號</li>
+    <li><i style="background:var(--na)"></i>鈉與水</li>
+    <li><i style="background:var(--ang)"></i>血管張力素 II</li>
+    <li><i style="background:var(--ald)"></i>醛固酮</li>
+    <li><i style="background:var(--fat)"></i>脂肪與代謝訊號</li>
+    <li><i style="background:var(--dmg)"></i>器官傷害</li>
+    <li><i style="background:var(--drug)"></i>藥物作用點</li>
+  </ul>
+</header>
+
+<div class="tabs" role="tablist" id="tabs"></div>
+
+<div class="player">
+  <div class="stage">
+<svg id="map" viewBox="0 0 600 610" role="img" aria-label="腦、壓力感受器、心臟、大動脈、小動脈、腎臟、腎上腺、上呼吸道、內臟脂肪、眼睛與血壓示意圖">
+  <g id="paths">
+    <path class="vessel" id="p-baro2brain" d="M150 170 Q200 60 236 40"/>
+    <path class="vessel" id="p-brain2heart" d="M300 74 L300 128"/>
+    <path class="vessel" id="p-brain2art" d="M364 36 Q420 30 452 60"/>
+    <path class="vessel" id="p-brain2kid" d="M364 62 C410 110 420 190 470 226"/>
+    <path class="vessel" id="p-heart2aorta" d="M300 202 L300 248"/>
+    <path class="vessel" id="p-aorta2hub" d="M300 294 L300 348"/>
+    <path class="vessel" id="p-aorta2art" d="M360 262 Q420 210 456 134"/>
+    <path class="vessel" id="p-kid2hub" d="M476 268 Q410 300 352 380"/>
+    <path class="vessel" id="p-hub2kid" d="M362 402 Q440 362 488 292"/>
+    <path class="vessel" id="p-adr2kid" d="M492 338 L492 292"/>
+    <path class="vessel" id="p-kid2adr" d="M520 290 L520 338"/>
+    <path class="vessel" id="p-kid2art" d="M550 222 Q586 180 550 136"/>
+    <path class="vessel" id="p-kid2urine" d="M556 256 Q580 258 590 278"/>
+    <path class="vessel" id="p-salt2hub" d="M592 560 Q480 470 362 428"/>
+    <path class="vessel" id="p-airway2brain" d="M150 300 C215 250 205 110 248 74"/>
+    <path class="vessel" id="p-fat2brain" d="M146 444 C240 400 214 120 258 74"/>
+    <path class="vessel" id="p-fat2kid" d="M146 470 C260 520 400 330 476 280"/>
+    <path class="vessel" id="p-hub2brain" d="M262 360 C210 250 230 150 270 74"/>
+    <path class="vessel" id="p-hub2heart" d="M318 350 L318 204"/>
+    <path class="vessel" id="p-hub2eye" d="M240 392 C170 330 180 120 150 76"/>
+  </g>
+
+  <g class="org" id="o-eye"><ellipse cx="95" cy="62" rx="56" ry="30"/><text x="95" y="60">眼睛</text><text class="sub" x="95" y="78">視網膜血管</text></g>
+  <g class="org" id="o-baro"><ellipse cx="95" cy="182" rx="64" ry="32"/><text x="95" y="180">壓力感受器</text><text class="sub" x="95" y="198">頸動脈竇、主動脈弓</text></g>
+  <g class="org" id="o-air"><rect class="shape" x="40" y="280" width="110" height="58" rx="16"/><text x="95" y="306">上呼吸道</text><text class="sub" x="95" y="325">睡眠呼吸中止</text></g>
+  <g class="org" id="o-fat"><path class="shape" d="M40 436 Q95 408 150 436 Q166 462 150 488 Q95 512 40 488 Q24 462 40 436z"/><text x="95" y="458">內臟脂肪</text><text class="sub" x="95" y="477">肥胖、胰島素阻抗</text></g>
+  <g class="org" id="o-brain"><rect class="shape" x="236" y="16" width="128" height="58" rx="18"/><text x="300" y="42">腦</text><text class="sub" x="300" y="62">交感中樞</text></g>
+  <g class="org" id="o-heart"><path class="shape" d="M300 202 C265 180 243 160 251 142 C259 126 285 128 300 146 C315 128 341 126 349 142 C357 160 335 180 300 202z"/><text x="300" y="162">心臟</text><text class="sub" x="300" y="179">心輸出量</text></g>
+  <g class="org" id="o-aorta"><rect class="shape" x="240" y="248" width="120" height="46" rx="22"/><text x="300" y="269">大動脈</text><text class="sub" x="300" y="286">彈性緩衝</text></g>
+  <g class="org" id="o-art"><rect class="shape" x="450" y="52" width="110" height="84" rx="16"/><text x="505" y="74">小動脈</text><rect id="lum" x="470" y="88" width="70" height="14" rx="6"/><text class="sub" x="505" y="124">周邊阻力</text></g>
+  <g class="org" id="o-kid"><path class="shape" d="M505 206 C538 204 558 226 556 252 C554 278 534 292 506 292 C482 292 470 280 478 266 C486 254 486 244 478 232 C470 218 482 207 505 206z"/><text x="518" y="248">腎臟</text><text class="sub" x="518" y="266">排鈉、腎素</text></g>
+  <g class="org" id="o-adr"><rect class="shape" x="460" y="338" width="90" height="48" rx="14"/><text x="505" y="358">腎上腺</text><text class="sub" x="505" y="376">醛固酮</text></g>
+  <text x="596" y="296" font-size="12" fill="var(--mute)" text-anchor="end">尿（排鈉）</text>
+  <text x="594" y="580" font-size="12" fill="var(--mute)" text-anchor="end">飲食鹽分</text>
+
+  <g class="hub" id="hub"><circle cx="300" cy="410" r="62"/>
+    <text class="lbl" x="300" y="375">血壓（mmHg）</text>
+    <text class="val" id="vbp" x="300" y="402">118/76</text>
+    <text class="lbl" x="300" y="424">脈壓</text>
+    <text class="val" id="vpp" x="300" y="451">42</text>
+  </g>
+
+  <g id="rings">
+    <ellipse class="ring" id="r-eye" cx="95" cy="62" rx="70" ry="42"/>
+    <ellipse class="ring" id="r-baro" cx="95" cy="182" rx="78" ry="44"/>
+    <rect class="ring" id="r-air" x="30" y="270" width="130" height="78" rx="22"/>
+    <ellipse class="ring" id="r-fat" cx="95" cy="462" rx="74" ry="50"/>
+    <rect class="ring" id="r-brain" x="226" y="6" width="148" height="78" rx="24"/>
+    <ellipse class="ring" id="r-heart" cx="300" cy="166" rx="66" ry="50"/>
+    <rect class="ring" id="r-aorta" x="230" y="240" width="140" height="62" rx="28"/>
+    <rect class="ring" id="r-art" x="440" y="42" width="130" height="104" rx="22"/>
+    <ellipse class="ring" id="r-kid" cx="514" cy="250" rx="58" ry="56"/>
+    <rect class="ring" id="r-adr" x="450" y="328" width="110" height="68" rx="20"/>
+  </g>
+
+  <g class="meter" id="meter">
+    <rect class="box" x="212" y="520" width="176" height="86" rx="10"/>
+    <text class="ttl" x="222" y="537">相對量（中線＝正常）</text>
+    <g id="mrows"></g>
+  </g>
+
+  <g id="parts" class="pt"></g>
+  <g id="chips" class="chips"></g>
+</svg>
+  </div>
+
+  <div class="panel" aria-live="polite">
+    <div class="where"><span id="where"></span><span id="cnt"></span></div>
+    <h2 id="ttl"></h2>
+    <div class="txt" id="txt"></div>
+    <div class="ctl">
+      <button id="prev" type="button" aria-label="上一步">←</button>
+      <button id="play" type="button" aria-label="自動播放">▶ 自動</button>
+      <button id="say" type="button" aria-pressed="false" aria-label="語音朗讀">🔊 朗讀</button>
+      <button class="next" id="next" type="button">下一步 →</button>
+    </div>
+    <div class="dots" id="dots"></div>
+    <div class="hint">鍵盤 ← → 切換，手機可在圖上左右滑動。開「🔊 朗讀」再按「▶ 自動」，會唸完一步自動換下一步。</div>
+  </div>
+</div>
+
+<section class="cmp">
+  <h2>血壓分類（2025 AHA/ACC）</h2>
+  <p class="lead" style="margin-bottom:10px">以多次、正確量測的平均值分類；收縮壓與舒張壓落在不同級別時，取較高的那一級。</p>
+  <div class="tblw"><table style="min-width:640px">
+    <thead><tr><th>分類</th><th>診間血壓（mmHg）</th><th>意義與處置</th></tr></thead>
+    <tbody>
+      <tr><td><b>正常</b></td><td class="c">&lt;120 且 &lt;80</td><td>維持健康生活型態，定期量</td></tr>
+      <tr><td><b>血壓偏高</b></td><td class="c">120–129 且 &lt;80</td><td>生活型態調整；容易進展成高血壓</td></tr>
+      <tr><td><b>第 1 期高血壓</b></td><td class="c">130–139 或 80–89</td><td>生活型態調整；已有心血管病、糖尿病、慢性腎病，或 PREVENT 10 年風險 ≥ 7.5% 就加藥；其餘調整 3–6 個月仍 ≥ 130/80 也加藥</td></tr>
+      <tr><td><b>第 2 期高血壓</b></td><td class="c">≥140 或 ≥90</td><td>生活型態＋藥物；多數直接用兩種不同類的藥，最好是單一複方錠</td></tr>
+      <tr><td><b>嚴重血壓升高</b></td><td class="c">&gt;180 或 &gt;120</td><td>有急性器官傷害＝高血壓急症，住院靜脈給藥；沒有就用口服藥調整，不要急著降</td></tr>
+      <tr><td><b>診間以外的對照</b></td><td>診間 130/80 ≈ 居家 130/80 ≈ 24 小時平均 125/75（白天 130/80、夜間 110/65）</td><td>居家與 24 小時血壓用來確認診斷，抓出白袍高血壓與隱匿性高血壓</td></tr>
+    </tbody>
+  </table></div>
+  <h2>續發性高血壓：線索與第一步</h2>
+  <div class="tblw"><table>
+    <thead><tr><th>原因</th><th>線索</th><th>第一步檢查</th></tr></thead>
+    <tbody>
+      <tr><td><b>原發性醛固酮症</b></td><td>頑固型高血壓、低血鉀、睡眠呼吸中止、腎上腺偶發瘤、年輕發病或家族早發中風</td><td>同一管血驗醛固酮與腎素</td></tr>
+      <tr><td><b>腎實質病</b></td><td>肌酸酐升高、蛋白尿、血尿、多囊腎家族史</td><td>eGFR、尿白蛋白／肌酸酐比值（UACR）、尿液檢查、腎臟超音波</td></tr>
+      <tr><td><b>腎血管性</b></td><td>血壓突然惡化、反覆突發肺水腫、用 ACEI／ARB 後腎功能明顯變差、腹部血管雜音、年輕女性（纖維肌肉發育不良）</td><td>腎動脈都卜勒超音波、電腦斷層或磁振血管攝影</td></tr>
+      <tr><td><b>阻塞型睡眠呼吸中止</b></td><td>打鼾、目擊呼吸暫停、白天嗜睡、夜間血壓不降</td><td>睡眠檢查</td></tr>
+      <tr><td><b>嗜鉻細胞瘤、副神經節瘤</b></td><td>陣發性頭痛、心悸、冒汗，血壓大起大落，腎上腺偶發瘤</td><td>血漿游離或尿液 metanephrines</td></tr>
+      <tr><td><b>庫欣症候群</b></td><td>中心性肥胖、寬紫紋、易瘀青、近端肌無力、新發糖尿病</td><td>過夜 dexamethasone 抑制試驗等篩檢</td></tr>
+      <tr><td><b>甲狀腺、副甲狀腺</b></td><td>亢進：收縮壓高、心跳快；低下：舒張壓偏高；高血鈣</td><td>TSH；血鈣</td></tr>
+      <tr><td><b>藥物與物質</b></td><td>NSAID、類固醇、含雌激素避孕藥、甘草、含偽麻黃鹼的感冒藥、免疫抑制劑、紅血球生成素、VEGF 抑制劑、酒精、興奮劑</td><td>詳細問用藥與保健食品</td></tr>
+      <tr><td><b>主動脈窄縮</b></td><td>年輕、上肢血壓明顯高於下肢、股動脈脈搏弱或延遲</td><td>四肢血壓、心臟超音波</td></tr>
+    </tbody>
+  </table></div>
+  <h2>降壓藥一覽</h2>
+  <div class="tblw"><table>
+    <thead><tr><th>藥物</th><th>作用部位</th><th>機轉</th><th>特別適合</th><th>注意</th></tr></thead>
+    <tbody id="tbody"></tbody>
+  </table></div>
+</section>
+
+<footer>
+  教學示意圖，器官位置與比例經過簡化；血壓數字為示意的典型值；不含藥物劑量，非個別病人的診斷或用藥建議，實際判斷請依仿單與最新指引（2025 AHA/ACC 高血壓指引、2025 Endocrine Society 原發性醛固酮症指引、台灣高血壓學會指引）。頁中藥物核准狀態僅指美國 FDA、歐盟等，不涉及健保給付或國內是否上市。<br>
+  相關：<a href="raas-in-motion.html">RAAS，動起來</a>、<a href="adrenal-in-motion.html">腎上腺，動起來</a>、<a href="thyroid-in-motion.html">甲狀腺，動起來</a>、<a href="metabolic-in-motion.html">代謝，動起來</a><br>
+  工具版本：2026-11-08
+</footer>
+</div>
+
+<script>
+(function(){
+'use strict';
+var $=function(s){return document.querySelector(s)};
+var SVGNS='http://www.w3.org/2000/svg';
+var COL={b:'var(--blood)',s:'var(--sym)',n:'var(--nerve)',na:'var(--na)',g:'var(--ang)',al:'var(--ald)',f:'var(--fat)',d:'var(--dmg)',x:'var(--drug)'};
+var AT={eye:[95,114],baro:[95,236],air:[95,362],fat:[95,530],brain:[300,92],heart:[300,226],aorta:[300,322],art:[505,158],kid:[505,316],adr:[505,410],hub:[300,494]};
+var STACK={};
+var ORG=['eye','baro','air','fat','brain','heart','aorta','art','kid','adr'];
+var FX={lvh:'heart',stiff:'aorta',tight:'art',dil:'art',dmg:'kid'};
+var LAB1=['心輸出量','周邊阻力','鈉與血量'],LAB2=['腎素','醛固酮','兒茶酚胺'];
+var RA='raas-in-motion.html';
+
+/* 每一步：t 標題、k 類型（phy/dx/dz/drg）、on 亮起器官、rx 藥物圈、g [收縮壓, 舒張壓]、lv 三格量表(-2~2)、lab 量表標籤（覆寫）、flows、chips、fx 器官狀態、d 說明 */
+var AX=[
+{id:'phy',n:'A 生理',s:'血壓怎麼被穩住',lab:LAB1,steps:[
+ {t:'血壓＝心輸出量 × 周邊阻力',k:'phy',on:['heart','art'],g:[118,76],lv:[0,0,0],
+  flows:[['heart2aorta','b',2.4],['aorta2hub','b',2],['aorta2art','b',1.6]],
+  chips:[['heart','心輸出量＝心跳 × 每跳量','info'],['art','阻力主要在小動脈','info']],
+  d:'<p>動脈裡的平均壓力，由兩件事決定：</p><ul><li><b>心輸出量</b>：每分鐘打出多少血，等於心跳速率乘以每跳打出的量；每跳量又受血量（靜脈回流）與心肌收縮力影響</li><li><b>周邊阻力</b>：血流通過全身小動脈時遇到的阻力；管徑稍微變細，阻力就大幅上升（與半徑的四次方成反比）</li></ul><p>所以任何會讓<b>血量變多、心臟打得更用力、小動脈收縮或變硬</b>的因素，都會讓血壓上升；降壓藥也就是從這幾個地方下手。</p><p>平均動脈壓約等於舒張壓加上三分之一的脈壓（收縮壓減舒張壓）。</p>'},
+ {t:'大動脈：把一跳一跳的血變成連續的流',k:'phy',on:['heart','aorta'],g:[118,76],lv:[0,0,0],
+  flows:[['heart2aorta','b',2.6],['aorta2hub','b',2]],
+  chips:[['aorta','收縮時撐開、舒張時回彈','info'],['hub','脈壓＝收縮壓 − 舒張壓','info']],
+  d:'<p>心臟收縮時把血打進主動脈，有彈性的大動脈先被撐開、暫存一部分血；心臟舒張時，大動脈回彈，把血繼續往前推。</p><ul><li><b>收縮壓</b>：心臟收縮時的最高壓力，受每跳量與大動脈彈性影響</li><li><b>舒張壓</b>：舒張時靠大動脈回彈維持的壓力，主要反映周邊阻力</li><li><b>脈壓</b>：兩者的差距；年輕人約 40 mmHg</li></ul><p>大動脈越硬，收縮時撐不開、舒張時沒力回彈：收縮壓上升、舒張壓下降、脈壓變大，這是老年人單純收縮期高血壓的原因（B 分頁）。</p>'},
+ {t:'小動脈與內皮：調整阻力的閥門',k:'phy',on:['art'],g:[118,76],lv:[0,0,0],fx:['dil'],
+  flows:[['aorta2art','b',2]],
+  chips:[['art','NO 放鬆、endothelin 收縮','info']],
+  d:'<p>小動脈管壁有平滑肌，收縮或放鬆就能大幅改變阻力。血管內皮會分泌兩類物質：</p><ul><li><b>放鬆</b>：一氧化氮（NO）、前列環素</li><li><b>收縮</b>：內皮素（endothelin-1）</li></ul><p>此外，平滑肌的收縮受到外來訊號控制：交感神經（α1 受體）、血管張力素 II（AT1 受體），而收縮本身需要鈣離子經過 L 型鈣離子通道進入細胞。</p><p>這幾個點都是藥物的作用位置：鈣離子通道阻斷劑、ARB、α1 阻斷劑、內皮素受體拮抗劑。</p>'},
+ {t:'壓力感受器反射：秒到分鐘的快速調整',k:'phy',on:['baro','brain','heart','art'],g:[118,76],lv:[0,0,0],
+  flows:[['baro2brain','n',2.2],['brain2heart','s',1.2],['brain2art','s',1.2]],
+  chips:[['baro','血壓高 → 牽張增加','info'],['brain','降低交感、增加迷走','down']],
+  d:'<p>頸動脈竇與主動脈弓的<b>壓力感受器</b>感受血管壁被撐開的程度，經舌咽神經與迷走神經傳到腦幹：</p><ul><li>血壓升高 → 訊號增加 → 腦幹降低交感、增加迷走 → 心跳變慢、小動脈放鬆 → 血壓回落</li><li>血壓下降（例如突然站起來）→ 反過來，交感增加把血壓撐住</li></ul><p>這個反射反應很快，但會在幾天內<b>重新設定</b>：長期高血壓時，感受器把高血壓當成「正常」，所以它管的是短期波動，不是長期血壓的高低。</p><p>年紀大或糖尿病神經病變時反射變弱，容易姿勢性低血壓，降壓時要注意。</p>'},
+ {t:'交感神經：心臟、血管、腎臟三路一起踩',k:'phy',on:['brain','heart','art','kid'],g:[124,80],lv:[1,1,0],fx:['tight'],
+  flows:[['brain2heart','s',2],['brain2art','s',2],['brain2kid','s',2]],
+  chips:[['heart','β1：心跳、收縮力','up'],['art','α1：小動脈收縮','up'],['kid','腎素、留鈉','up']],
+  d:'<p>交感神經同時作用在三個地方，讓血壓快速上升：</p><ul><li><b>心臟（β1）</b>：心跳加快、收縮力增加 → 心輸出量上升</li><li><b>小動脈（α1）</b>：血管收縮 → 周邊阻力上升</li><li><b>腎臟</b>：刺激腎素分泌（β1）、增加腎小管再吸收鈉、收縮腎血管</li></ul><p>壓力、疼痛、睡眠不足、肥胖、睡眠呼吸中止、慢性腎病都會讓交感神經長期偏高。β 阻斷劑、α1 阻斷劑、中樞 α2 促效劑與腎神經阻斷術，作用的就是這條路。</p>'},
+ {t:'腎臟：長期血壓的設定點',k:'phy',on:['kid'],g:[118,76],lv:[0,0,0],
+  flows:[['salt2hub','na',1.4],['hub2kid','b',1.4],['kid2urine','na',2.2]],
+  chips:[['kid','壓力利鈉：血壓高就多排鈉','info'],['hub','鹽吃多 → 腎臟要把多的排掉','info']],
+  d:'<p>長期來看，血壓的高低主要由腎臟決定。血壓上升時，腎臟會排出更多的鈉與水（<b>壓力利鈉</b>），血量減少，血壓回到原點；血壓下降時則反過來留住鈉與水。</p><ul><li>只要腎臟排鈉的能力正常，鹽吃多一點，血壓只需要稍微上升就能把鈉排掉</li><li>如果腎臟排鈉變差（腎病、腎素–血管張力素–醛固酮系統或交感神經太活躍），就要<b>更高的血壓</b>才能排出同樣多的鈉 → 血壓被「設定」在更高的位置</li></ul><p>這就是為什麼幾乎所有長期高血壓，背後都有腎臟排鈉的問題，也是利尿劑有效的原因。</p>'},
+ {t:'RAAS 與醛固酮：腎臟的加壓系統',k:'phy',on:['kid','adr','art'],g:[122,80],lv:[0,1,1],
+  flows:[['kid2art','g',2],['kid2adr','g',1.6],['adr2kid','al',2]],
+  chips:[['art','血管張力素 II：收縮血管','up'],['adr','醛固酮：留鈉、排鉀','up']],
+  d:'<p>腎臟覺得血不夠（灌流壓下降、鈉減少、交感刺激）時分泌<b>腎素</b>，啟動一連串反應：</p><ul><li>血管張力素 II 讓小動脈收縮、刺激口渴與交感神經</li><li>刺激腎上腺分泌<b>醛固酮</b>，讓集尿管留鈉、排鉀 → 血量增加</li></ul><p>ACE 抑制劑、ARB、MRA 等藥都卡在這條路上。這部分的細節（腎素怎麼被放出來、醛固酮怎麼作用、原發性醛固酮症）在另一頁：</p><p><a class="xref" href="'+RA+'#t1s0">→ RAAS，動起來：A 生理</a></p>'},
+ {t:'血壓怎麼量才準',k:'dx',on:['heart','aorta'],g:[118,76],lv:[0,0,0],
+  flows:[['aorta2hub','b',1.6]],
+  chips:[['hub','診間、居家、24 小時','info']],
+  d:'<p><b>量法</b>：先安靜坐 5 分鐘、背有靠、雙腳著地不交叉，手臂放在與心臟同高的桌上，壓脈帶大小要合適、直接綁在皮膚上；量的時候不說話。前 30 分鐘避免咖啡、抽菸、運動，先排空膀胱。量兩次以上、間隔 1 分鐘取平均。</p><ul><li><b>居家血壓</b>：台灣高血壓學會的「722」：連續 7 天、早晚各量一次、每次量 2 遍</li><li><b>24 小時血壓</b>：可以看到夜間血壓；正常人夜間會下降 10% 以上，不降（non-dipping）代表風險較高</li></ul><p>用診間以外的血壓確認，可以找出兩種狀況：</p><ul><li><b>白袍高血壓</b>：診間高、在家正常</li><li><b>隱匿性高血壓</b>：診間正常、在家高，風險和持續性高血壓相近</li></ul><p>分類標準見頁面下方的表格。</p>'}
+]},
+{id:'ess',n:'B 原發性高血壓',s:'哪裡出了錯',lab:LAB1,steps:[
+ {t:'原發性高血壓：很多小問題加在一起',k:'dz',on:['kid','brain','art','fat'],g:[146,92],lv:[1,1,1],fx:['tight'],
+  flows:[['salt2hub','na',1.6],['brain2kid','s',1.4],['brain2art','s',1.4]],
+  chips:[['kid','排鈉變差','up'],['art','阻力上升','up'],['brain','交感偏高','up']],
+  d:'<p>約九成的高血壓找不到單一原因，稱為<b>原發性（本態性）高血壓</b>。它是基因與環境一起造成的：</p><ul><li>遺傳佔一部分，但由上百個各自影響很小的基因組成</li><li>環境：鹽吃太多、鉀吃太少、肥胖、缺乏運動、喝酒、睡眠不足與睡眠呼吸中止、壓力</li><li>年紀：血管隨年齡變硬</li></ul><p>這些因素最後都匯集到 A 分頁講的幾個開關：腎臟排鈉變差、交感神經偏高、RAAS 不適當地活躍、小動脈收縮與重塑、大動脈變硬。接下來逐一看。</p>'},
+ {t:'鹽敏感：腎臟要更高的血壓才排得掉鈉',k:'dz',on:['kid'],g:[144,90],lv:[0,0,2],
+  flows:[['salt2hub','na',2.6],['kid2hub','na',1.6],['kid2urine','na',.8]],
+  chips:[['kid','排鈉曲線往右移','up'],['hub','吃鹹 → 血壓上升','up']],
+  d:'<p>有些人吃鹹血壓就明顯上升，稱為<b>鹽敏感</b>。原因是腎臟排鈉能力變差，壓力利鈉的曲線往右移：要更高的血壓才能把同樣多的鈉排出去。</p><ul><li>常見於年紀大、肥胖、糖尿病、慢性腎病，以及腎元數目先天較少（例如出生體重過低）的人</li><li>鉀吃太少會讓鹽敏感更明顯；多吃蔬果補鉀能抵銷一部分</li></ul><p>減鹽是最有效的生活調整之一。用含鉀的代鹽取代一般鹽，在大型研究中降低了中風與死亡；但腎功能不好或正在用會升高血鉀的藥物時，要先問醫師。</p>'},
+ {t:'交感神經過度活化',k:'dz',on:['brain','heart','art','kid'],g:[142,90],lv:[1,1,1],fx:['tight'],
+  flows:[['brain2heart','s',2.4],['brain2art','s',2.4],['brain2kid','s',2.4]],
+  chips:[['heart','心跳偏快','up'],['art','血管收縮','up'],['kid','腎素、留鈉','up']],
+  d:'<p>許多高血壓病人的交感神經活性偏高，在年輕人特別明顯：心跳偏快、心輸出量偏高。</p><ul><li>促成因素：長期壓力、睡眠不足、肥胖、睡眠呼吸中止、慢性腎病</li><li>腎臟的交感神經同時增加腎素與留鈉，把短期的血壓上升變成長期的</li><li>腦也會收到腎臟傳回的感覺神經訊號，形成惡性循環</li></ul><p>這是腎神經阻斷術的理論基礎（D 分頁）：同時切斷往返腎臟的交感神經與感覺神經。</p>'},
+ {t:'肥胖：脂肪會分泌加壓訊號',k:'dz',on:['fat','brain','kid','adr'],g:[144,92],lv:[1,1,1],
+  flows:[['fat2brain','f',2],['fat2kid','f',2],['brain2kid','s',1.6],['adr2kid','al',1.4]],
+  chips:[['fat','瘦素、胰島素、血管張力素原','up'],['kid','留鈉','up'],['adr','醛固酮偏高','up']],
+  d:'<p>肥胖，尤其是內臟脂肪，是高血壓最重要的可改變危險因子之一：</p><ul><li><b>瘦素</b>作用在下視丘，增加交感神經活性</li><li><b>高胰島素</b>（胰島素阻抗）增加腎小管再吸收鈉</li><li>脂肪組織會製造血管張力素原，並分泌促進醛固酮分泌的物質</li><li>腎臟周圍的脂肪直接壓迫腎臟</li><li>常合併睡眠呼吸中止（下一步）</li></ul><p>減重大約每減 1 公斤、收縮壓降約 1 mmHg。減重藥物（GLP-1 類藥物）與減重手術也能降低血壓。</p>'},
+ {t:'睡眠呼吸中止：夜裡一直被叫醒的交感神經',k:'dz',on:['air','brain','adr'],g:[146,94],lv:[1,1,1],
+  flows:[['air2brain','s',2.6],['brain2art','s',1.8],['brain2heart','s',1.6]],
+  chips:[['air','反覆缺氧、憋氣後驚醒','up'],['brain','夜間交感暴衝','up']],
+  d:'<p>阻塞型睡眠呼吸中止在頑固型高血壓病人中很常見。睡眠時上呼吸道反覆塌陷：</p><ul><li>反覆<b>缺氧</b>刺激化學感受器，每次憋氣結束都伴隨交感神經暴衝、血壓飆高</li><li>夜間血壓不降甚至上升，24 小時血壓可以看到</li><li>常合併肥胖與醛固酮偏高，因此也是原發性醛固酮症的篩檢對象</li></ul><p>線索：打鼾、被目擊呼吸暫停、白天嗜睡、晨間頭痛。陽壓呼吸器（CPAP）可以改善睡眠與白天症狀，對血壓的幫助平均只有幾 mmHg，所以降壓藥通常仍需要。</p>'},
+ {t:'大動脈變硬：老年人的單純收縮期高血壓',k:'dz',on:['aorta','heart'],g:[164,72],lv:[0,1,0],fx:['stiff'],
+  flows:[['heart2aorta','b',2.6],['aorta2hub','b',2.6]],
+  chips:[['aorta','彈性纖維斷裂、膠原與鈣化增加','up'],['hub','收縮壓高、舒張壓低、脈壓大','up']],
+  d:'<p>隨著年紀，大動脈的彈性纖維斷裂、膠原與鈣化增加，血管變硬：</p><ul><li>心臟收縮時大動脈撐不開 → <b>收縮壓上升</b></li><li>脈波傳得更快，從周邊反射回來的波提早在收縮期回到心臟，把收縮壓再往上推</li><li>舒張時沒有回彈力 → <b>舒張壓下降</b>，脈壓變大</li></ul><p>結果就是 60 歲以上常見的<b>單純收縮期高血壓</b>（例如 164/72）。它的心血管風險並不低；治療同樣有效，但要注意姿勢性低血壓，降壓步調可以稍慢。</p><p>糖尿病、慢性腎病、抽菸都會加速動脈硬化。</p>'},
+ {t:'小動脈重塑與內皮功能異常',k:'dz',on:['art','kid'],g:[148,96],lv:[0,2,0],fx:['tight','dmg'],
+  flows:[['aorta2art','b',1.6],['kid2art','g',1.4]],
+  chips:[['art','NO 減少、管壁變厚、管腔變窄','up'],['kid','腎內小動脈也受影響','up']],
+  d:'<p>長期高血壓讓小動脈管壁增厚、管腔變窄（<b>重塑</b>），內皮產生的一氧化氮減少、內皮素與氧化壓力增加：</p><ul><li>血管不只是「收縮」，而是結構上就變窄 → 阻力固定在較高的位置</li><li>腎臟內的小動脈同樣受損 → 排鈉更差 → 血壓更高，形成惡性循環</li></ul><p>這也是為什麼高血壓越早控制越好：結構變化越久越難恢復。</p>'}
+]},
+{id:'sec',n:'C 續發性、器官傷害、急症',s:'找原因、看傷害',lab:LAB2,steps:[
+ {t:'什麼時候要找續發性原因',k:'dx',on:['kid','adr','air'],g:[168,104],lv:[0,0,0],lab:LAB1,
+  flows:[['kid2hub','na',1.2]],
+  chips:[['hub','年輕、頑固、突然惡化','info']],
+  d:'<p>約 5–10% 的高血壓有特定原因，有些可以根治。出現以下線索要積極找：</p><ul><li>30 歲以前發病</li><li><b>頑固型高血壓</b>：三種藥（含利尿劑）仍控制不好，或需要四種以上才控制</li><li>原本控制好的血壓突然惡化</li><li>嚴重高血壓，或靶器官傷害與病程不成比例</li><li>不明原因或利尿劑引起的明顯<b>低血鉀</b></li><li>腎上腺偶發瘤、睡眠呼吸中止、陣發性症狀</li><li>上肢血壓明顯高於下肢、股動脈脈搏弱或延遲 → 想到<b>主動脈窄縮</b>（年輕人）</li></ul><p>最常見的是原發性醛固酮症、腎實質病、睡眠呼吸中止；各原因的線索與第一步檢查整理在頁面下方表格。</p>'},
+ {t:'腎實質病：既是原因，也是結果',k:'dz',on:['kid'],g:[150,92],lv:[1,0,0],lab:LAB1,fx:['dmg'],
+  flows:[['kid2hub','na',2],['hub2kid','d',1.6]],
+  chips:[['kid','排鈉差、RAAS 與交感偏高','up'],['hub','驗 UACR','info']],
+  d:'<p>慢性腎病是最常見的續發性原因之一，而高血壓又會傷腎：</p><ul><li>腎元減少 → 排鈉差、血量增加</li><li>RAAS 與交感神經不適當地活化</li><li>高血壓與高腎絲球內壓進一步加速腎功能惡化</li></ul><p>所有高血壓病人都應檢查 eGFR 與<b>尿白蛋白／肌酸酐比值（UACR）</b>。有白蛋白尿時，首選 ACE 抑制劑或 ARB，治療目標通常更嚴格。糖尿病腎病另有 SGLT2 抑制劑與 finerenone 保護腎臟（不是主要的降壓藥）。</p>'},
+ {t:'腎血管性高血壓：腎臟以為血不夠',k:'dz',on:['kid','adr','art'],g:[172,100],lv:[2,2,0],
+  flows:[['kid2art','g',2.6],['kid2adr','g',2],['adr2kid','al',2]],
+  chips:[['kid','腎動脈狹窄 → 腎素大增','up'],['art','血管張力素 II','up']],
+  d:'<p>腎動脈狹窄讓腎臟灌流不足，腎臟「以為」全身血壓太低，大量分泌腎素：</p><ul><li><b>動脈粥狀硬化</b>：最常見，年紀大、抽菸、有其他血管病</li><li><b>纖維肌肉發育不良</b>：年輕女性為主，血管攝影呈串珠狀</li></ul><p>線索：血壓突然惡化、反覆突發肺水腫、用 ACE 抑制劑或 ARB 後腎功能明顯變差（兩側狹窄或獨腎）。</p><p>治療：動脈粥狀硬化型以藥物與控制危險因子為主，常規放支架沒有比較好；纖維肌肉發育不良則以氣球擴張效果好。</p><p><a class="xref" href="'+RA+'#t3s0">→ RAAS，動起來：腎血管性高血壓</a></p>'},
+ {t:'原發性醛固酮症：最常被漏掉的原因',k:'dz',on:['adr','kid'],g:[162,100],lv:[-2,2,0],
+  flows:[['adr2kid','al',3],['kid2hub','na',2],['kid2urine','na',.6]],
+  chips:[['adr','腎上腺自己一直分泌','up'],['kid','留鈉、排鉀 → 腎素被壓低','down']],
+  d:'<p>腎上腺不受控制地分泌醛固酮：留鈉、血量增加、腎素被壓到很低；可能低血鉀，但<b>多數人血鉀正常</b>。</p><ul><li>在高血壓病人中約 5–10%，頑固型高血壓中更多</li><li>心房顫動、中風、心衰竭與腎臟傷害的風險，比同樣血壓的原發性高血壓更高</li><li>2025 AHA/ACC 高血壓指引：<b>所有頑固型高血壓都要篩檢</b>，不論血鉀；低血鉀、睡眠呼吸中止、腎上腺偶發瘤也要篩；大多數降壓藥不必先停</li><li>2025 Endocrine Society 指引：建議所有高血壓病人都考慮篩檢</li></ul><p>篩檢、確認、分側（含腎上腺靜脈取樣）與治療，請看：</p><p><a class="xref" href="'+RA+'#t2s0">→ 原發性醛固酮症總論</a>　<a class="xref" href="'+RA+'#t2s2">→ 篩檢</a>　<a class="xref" href="'+RA+'#t2s5">→ 腎上腺靜脈取樣</a></p>'},
+ {t:'其他內分泌原因',k:'dz',on:['adr','brain','heart'],g:[178,108],lv:[0,0,2],
+  flows:[['adr2kid','al',1],['brain2heart','s',2],['brain2art','s',2]],
+  chips:[['adr','嗜鉻細胞瘤：兒茶酚胺','up'],['heart','陣發心悸、冒汗、頭痛','up']],
+  d:'<ul><li><b>嗜鉻細胞瘤、副神經節瘤</b>：陣發性頭痛、心悸、冒汗，血壓大起大落；驗血漿游離或尿液 metanephrines。手術前要先用 α 阻斷劑，<b>β 阻斷劑一定要在 α 阻斷之後</b>才加，否則可能使血壓更高</li><li><b>庫欣症候群</b>：中心性肥胖、寬紫紋、易瘀青、近端肌無力；先做過夜 dexamethasone 抑制試驗等篩檢</li><li><b>甲狀腺</b>：亢進時收縮壓高、心跳快；低下時舒張壓偏高</li><li><b>原發性副甲狀腺亢進</b>、肢端肥大症也會合併高血壓</li><li>腎素與醛固酮都低時，要想到 Liddle 症候群、甘草、外源性礦物皮質素</li></ul><p><a class="xref" href="'+RA+'#t3s2">→ 嗜鉻細胞瘤</a>　<a class="xref" href="adrenal-in-motion.html#t1s1">→ 庫欣症候群的篩檢</a>　<a class="xref" href="'+RA+'#t3s5">→ 依腎素、醛固酮鑑別</a></p>'},
+ {t:'藥物與物質造成的高血壓',k:'dz',on:['kid','art','brain'],g:[150,94],lv:[0,1,1],lab:LAB1,
+  flows:[['kid2hub','na',1.6],['brain2art','s',1.4]],
+  chips:[['kid','NSAID、類固醇、甘草：留鈉','up'],['art','VEGF 抑制劑、免疫抑制劑','up']],
+  d:'<p>血壓變難控制時，先問用藥與保健食品：</p><ul><li><b>NSAID</b>（止痛消炎藥）：留鈉，並抵消利尿劑、ACE 抑制劑、ARB 的效果</li><li><b>類固醇</b>、含雌激素的口服避孕藥、<b>甘草</b>（抑制 11β-HSD2，讓皮質醇刺激醛固酮受體）</li><li>含偽麻黃鹼的感冒藥與減充血劑、興奮劑（安非他命類、古柯鹼）、部分抗憂鬱藥（如 venlafaxine）</li><li>免疫抑制劑 cyclosporine、tacrolimus；紅血球生成素</li><li>抗癌的 <b>VEGF 抑制劑</b>（例如 bevacizumab、多種酪胺酸激酶抑制劑）</li><li>酒精：每天喝越多，血壓越高</li></ul>'},
+ {t:'靶器官傷害：高血壓傷到哪裡',k:'dz',on:['heart','brain','kid','eye','aorta'],g:[166,98],lv:[0,0,0],lab:LAB1,fx:['lvh','dmg','stiff'],
+  flows:[['hub2heart','d',1.6],['hub2brain','d',1.6],['hub2kid','d',1.6],['hub2eye','d',1.4]],
+  chips:[['heart','左心室肥厚、心衰竭','up'],['brain','中風、失智','up'],['kid','白蛋白尿、腎衰竭','up'],['eye','視網膜病變','up']],
+  d:'<p>高血壓本身多半沒有症狀，但長期會傷害：</p><ul><li><b>心臟</b>：左心室肥厚 → 舒張功能變差、心衰竭（尤其射出分率保留型）、冠心病、心房顫動</li><li><b>腦</b>：腦梗塞、腦出血、小血管病變與血管性失智</li><li><b>腎</b>：白蛋白尿、腎功能下降</li><li><b>眼</b>：視網膜動脈變細、出血、滲出，嚴重時視乳頭水腫</li><li><b>大血管</b>：主動脈瘤、主動脈剝離、周邊動脈疾病</li></ul><p>在 40–69 歲的族群中，血壓從 115/75 起每升高 20/10 mmHg，心血管死亡風險約增加一倍；反過來，收縮壓每降低 10 mmHg，重大心血管事件約減少兩成。</p>'},
+ {t:'高血壓急症：看器官，不只看數字',k:'dz',on:['brain','heart','kid','eye','aorta'],g:[214,126],lv:[0,2,0],lab:LAB1,fx:['tight','lvh','dmg'],
+  flows:[['hub2brain','d',2.6],['hub2heart','d',2.6],['hub2kid','d',2.2],['hub2eye','d',2]],
+  chips:[['hub','>180/120 ＋急性器官傷害','up'],['brain','腦病變、中風','up'],['aorta','主動脈剝離','up']],
+  d:'<p>血壓高於 180/120 時，關鍵是<b>有沒有急性靶器官傷害</b>：</p><ul><li><b>高血壓急症</b>：合併高血壓腦病變、中風、急性冠心症、急性肺水腫、主動脈剝離、急性腎傷害、子癲前症等 → 住加護病房，用可調整的靜脈藥物（如 nicardipine、clevidipine、labetalol、esmolol、nitroglycerin）</li><li>降壓步調：第一小時收縮壓下降<b>不超過 25%</b>，接下來 2–6 小時降到約 160/100，之後 1–2 天再慢慢降到正常</li><li>例外：<b>主動脈剝離</b>要在第一小時內把收縮壓降到 120 以下（先用 β 阻斷劑控制心跳）；急性缺血性中風、嚴重子癲前症另有目標</li><li><b>沒有器官傷害的嚴重高血壓</b>：不需住院急降，調整口服藥、幾天內追蹤；不要舌下含 nifedipine，降得太快可能造成中風或心肌梗塞</li></ul><p>嗜鉻細胞瘤危象可用 phentolamine。</p>'}
+]},
+{id:'drg',n:'D 藥物與治療',s:'作用在哪一站',lab:LAB1,steps:[
+ {t:'生活型態：每一項都是一顆藥',k:'drg',on:['kid','fat','heart'],rx:['kid','fat'],g:[132,84],lv:[0,0,-1],
+  flows:[['salt2hub','na',.6],['kid2urine','na',1.6]],
+  chips:[['kid','✚ 減鹽、多鉀','drug'],['fat','✚ 減重、運動','drug']],
+  d:'<p>生活調整對每個人都有用，效果可以加總：</p><ul><li><b>減鈉</b>：理想是每天鈉 1500 毫克以下（約 3.8 克鹽），至少比現在少 1000 毫克；外食、加工食品、湯汁是主要來源</li><li><b>多鉀</b>：多吃蔬菜水果；腎功能差或用會升高血鉀的藥時先問醫師</li><li><b>得舒飲食（DASH）</b>：蔬果、全穀、低脂乳品、堅果，少紅肉與甜食</li><li><b>減重</b>：每減 1 公斤，收縮壓約降 1 mmHg</li><li><b>運動</b>：每週至少 150 分鐘中等強度有氧，加上阻力運動</li><li><b>少喝酒</b>，最好不喝；戒菸</li></ul><p>單項大約可降 4–11 mmHg，幾項一起做的效果接近一種降壓藥。</p>'},
+ {t:'治療策略：目標與組合',k:'drg',on:['kid','art','heart'],rx:['kid','art'],g:[126,78],lv:[0,-1,-1],
+  flows:[['kid2urine','na',1.6],['aorta2art','b',1.6]],fx:['dil'],
+  chips:[['art','✚ A：ACEI／ARB　C：CCB','drug'],['kid','✚ D：利尿劑','drug']],
+  d:'<p>2025 AHA/ACC 指引的重點：</p><ul><li><b>目標</b>：多數成人 &lt; 130/80 mmHg，能耐受就鼓勵收縮壓往 120 以下</li><li><b>第一線</b>四類：ACE 抑制劑、ARB（兩者擇一，合稱 A）、鈣離子通道阻斷劑（C）、thiazide 類利尿劑（D）；β 阻斷劑留給有特定適應症的人</li><li><b>第 2 期</b>（≥ 140/90）：一開始就用兩種不同類的藥，最好是<b>單一複方錠</b>，例如 A＋C 或 A＋D</li><li>控制不好：先確認服藥與量法，再加到 A＋C＋D 三種，第四種首選 spironolactone</li><li>開始或調藥後約每個月追蹤，直到達標</li></ul><p>不要同時用 ACE 抑制劑與 ARB（或再加 aliskiren）：腎功能惡化與高血鉀增加，沒有好處。</p>'},
+ {t:'ACE 抑制劑、ARB：擋住血管張力素 II',k:'drg',on:['kid','art','adr'],rx:['kid','adr'],g:[128,80],lv:[0,-1,-1],lab:LAB2,fx:['dil'],
+  flows:[['kid2art','x',1.2],['kid2adr','x',1.2]],
+  chips:[['art','血管放鬆','down'],['adr','醛固酮減少','down'],['kid','✚ 減少白蛋白尿','drug']],
+  d:'<p>ACE 抑制劑（-pril）阻止血管張力素 II 生成；ARB（-sartan）擋住 AT1 受體。結果是小動脈放鬆、醛固酮減少、腎絲球內壓下降。</p><ul><li>特別適合：糖尿病或慢性腎病合併白蛋白尿、心衰竭、心肌梗塞後</li><li>開始後 eGFR 下降 30% 以內通常可以接受（腎絲球內壓下降的結果），超過要找原因，例如腎動脈狹窄</li><li>副作用：高血鉀；ACE 抑制劑約一成乾咳（緩激肽累積），少見但危險的血管性水腫</li><li><b>懷孕禁用</b>，準備懷孕的女性要先換藥</li></ul><p><a class="xref" href="'+RA+'#t4s0">→ ACE 抑制劑</a>　<a class="xref" href="'+RA+'#t4s1">→ ARB</a></p>'},
+ {t:'鈣離子通道阻斷劑：讓小動脈放鬆',k:'drg',on:['art','heart'],rx:['art'],g:[126,78],lv:[0,-2,0],fx:['dil'],
+  flows:[['aorta2art','b',2.2]],
+  chips:[['art','✚ 擋 L 型鈣通道','drug'],['heart','非二氫吡啶類也減慢心跳','info']],
+  d:'<p>阻斷血管平滑肌的 L 型鈣離子通道，平滑肌無法收縮 → 小動脈放鬆、阻力下降。</p><ul><li><b>二氫吡啶類</b>（amlodipine、nifedipine 長效劑型、felodipine 等）：主要作用在血管，降壓效果穩定，老年人與單純收縮期高血壓也好用；副作用是腳踝水腫（與劑量相關，合併 ACE 抑制劑或 ARB 可減輕）、臉潮紅、頭痛、牙齦增生</li><li><b>非二氫吡啶類</b>（verapamil、diltiazem）：同時減慢心跳與房室傳導，可用於控制心房顫動心跳；射出分率降低的心衰竭避免使用，與 β 阻斷劑併用要小心心跳過慢；verapamil 常造成便秘</li></ul>'},
+ {t:'Thiazide 類利尿劑：從腎臟排鈉',k:'drg',on:['kid'],rx:['kid'],g:[126,78],lv:[0,-1,-2],
+  flows:[['kid2urine','na',3],['salt2hub','na',.8]],
+  chips:[['kid','✚ 擋遠曲小管 NCC','drug'],['hub','先減血量，長期降阻力','down']],
+  d:'<p>阻斷遠曲小管的鈉氯共同轉運體（NCC），增加排鈉。一開始靠血量減少降壓，長期則是周邊阻力下降。</p><ul><li><b>類 thiazide</b>：chlorthalidone、indapamide 作用較長，證據較多；hydrochlorothiazide 較短效</li><li>chlorthalidone 在 eGFR 15–30 的晚期腎病仍有效</li><li>副作用：低血鉀、低血鈉（老年女性特別注意）、尿酸升高與痛風、血糖略升</li><li>減少尿鈣，對骨質疏鬆與含鈣結石有幫助；但會讓高血鈣更明顯</li></ul><p>低血鉀可合併 ACE 抑制劑／ARB 或保鉀利尿劑改善。用了 thiazide 出現明顯低血鉀，要想到原發性醛固酮症。</p>'},
+ {t:'環利尿劑：給水分過多或腎功能差的人',k:'drg',on:['kid'],rx:['kid'],g:[130,80],lv:[0,0,-2],
+  flows:[['kid2urine','na',3.4]],
+  chips:[['kid','✚ 擋亨利氏環 NKCC2','drug']],
+  d:'<p>Furosemide、bumetanide、torsemide 阻斷亨利氏環粗上升枝的鈉鉀氯共同轉運體（NKCC2），利尿作用最強。</p><ul><li>用在：心衰竭或腎病合併水腫、晚期慢性腎病（thiazide 效果變差時）</li><li>一般高血壓不是首選；furosemide 作用時間短，降壓時常需一天兩次，torsemide 作用較長</li><li>副作用：脫水、低血鉀、低血鎂、腎前性腎功能惡化；高劑量有耳毒性</li></ul><p>與 thiazide 不同，環利尿劑會增加尿鈣。</p>'},
+ {t:'MRA：頑固型高血壓的第四顆藥',k:'drg',on:['adr','kid'],rx:['kid'],g:[128,80],lv:[1,0,-2],lab:LAB2,
+  flows:[['adr2kid','x',1.6],['kid2urine','na',2.2]],
+  chips:[['kid','✚ 擋醛固酮受體','drug'],['adr','醛固酮照樣分泌，作用被擋','info']],
+  d:'<p>礦物皮質素受體拮抗劑（MRA）在集尿管擋住醛固酮：排鈉、留鉀。</p><ul><li><b>Spironolactone</b>：頑固型高血壓加上第四種藥時效果最好；副作用有男性女乳症、月經異常</li><li><b>Eplerenone</b>：選擇性較高，性荷爾蒙副作用少，效力較弱</li><li><b>Finerenone</b>：非類固醇 MRA，用於第 2 型糖尿病合併慢性腎病，保護腎臟與心臟，降壓作用不大</li><li>共同注意：<b>高血鉀</b>，尤其腎功能差、合併 ACE 抑制劑或 ARB；要追蹤血鉀與腎功能</li></ul><p>不適合 MRA 時可改用 amiloride（擋 ENaC）。也是兩側原發性醛固酮症的主要治療。</p><p><a class="xref" href="'+RA+'#t4s4">→ RAAS，動起來：MRA</a></p>'},
+ {t:'β 阻斷劑：有特定理由才當第一線',k:'drg',on:['heart','kid'],rx:['heart'],g:[130,82],lv:[-1,0,0],
+  flows:[['brain2heart','x',1.4],['brain2kid','x',1]],
+  chips:[['heart','✚ 擋 β1：心跳、收縮力下降','drug'],['kid','腎素減少','down']],
+  d:'<p>阻斷 β1 受體：心跳變慢、收縮力下降、腎素分泌減少。</p><ul><li>單純高血壓不是首選：預防中風的效果比其他第一線藥差（尤其是 atenolol）</li><li><b>有適應症時優先</b>：心肌梗塞後、射出分率降低的心衰竭（bisoprolol、carvedilol、metoprolol 緩釋劑）、心絞痛、心房顫動控制心跳、懷孕（labetalol）</li><li>兼具血管擴張作用：carvedilol、labetalol（同時擋 α1）、nebivolol</li><li>不可突然停藥（反彈性心搏過速、心絞痛）；非選擇性者氣喘禁用；可能掩蓋低血糖症狀</li></ul><div class="warn">嗜鉻細胞瘤：一定要先用 α 阻斷劑，之後才加 β 阻斷劑。</div>'},
+ {t:'α1 阻斷劑、中樞 α2 促效劑、直接血管擴張劑',k:'drg',on:['art','brain'],rx:['art','brain'],g:[130,82],lv:[0,-1,0],fx:['dil'],
+  flows:[['brain2art','x',1.6]],
+  chips:[['art','✚ α1 阻斷、直接擴張','drug'],['brain','✚ 中樞 α2：降交感','drug']],
+  d:'<p>這幾類多半是第三、四線以後才用，或有特殊情況：</p><ul><li><b>α1 阻斷劑</b>（doxazosin、terazosin、prazosin）：放鬆小動脈；合併攝護腺肥大時有雙重好處；第一劑可能姿勢性低血壓；嗜鉻細胞瘤術前準備</li><li><b>中樞 α2 促效劑</b>：clonidine 降低腦部交感輸出，<b>突然停藥會反彈性高血壓</b>；methyldopa 是懷孕時的傳統用藥</li><li><b>直接血管擴張劑</b>：hydralazine（懷孕、心衰竭合併 nitrate）、minoxidil（極頑固的高血壓）；兩者都會反射性心跳加快與水分滯留，要合併 β 阻斷劑與利尿劑；minoxidil 會多毛、心包膜積液</li></ul>'},
+ {t:'ARNI 與新藥',k:'drg',on:['adr','art','kid'],rx:['adr','art'],g:[126,78],lv:[0,-1,-1],lab:LAB2,
+  flows:[['kid2adr','x',1],['kid2art','x',1]],
+  chips:[['adr','✚ 醛固酮合成酶抑制劑','drug'],['art','✚ 內皮素受體拮抗劑','drug']],
+  d:'<ul><li><b>ARNI</b>（sacubitril/valsartan）：ARB 加上腦啡肽酶抑制劑，保留利鈉胜肽；主要用於心衰竭，部分國家也核准用於高血壓</li><li><b>醛固酮合成酶抑制劑</b>：從腎上腺工廠擋住醛固酮。<b>Baxdrostat</b> 於 2026 年 5 月獲美國 FDA 核准，加用於已用其他降壓藥仍控制不佳的成人；lorundrostat 仍在 FDA 審查中。注意高血鉀</li><li><b>Aprocitentan</b>：雙重內皮素受體拮抗劑，美國與歐盟核准用於頑固型高血壓（合併其他藥物）；副作用有水腫、貧血，<b>懷孕禁用</b></li><li><b>Zilebesiran</b>：抑制肝臟製造血管張力素原的小干擾 RNA，每半年皮下注射一次，仍在臨床試驗</li></ul><p><a class="xref" href="'+RA+'#t4s3">→ ARNI</a>　<a class="xref" href="'+RA+'#t4s6">→ 醛固酮合成酶抑制劑</a></p>'},
+ {t:'腎神經阻斷術',k:'drg',on:['kid','brain'],rx:['kid'],g:[134,84],lv:[0,-1,-1],
+  flows:[['brain2kid','x',1.2]],
+  chips:[['kid','✚ 導管燒灼腎動脈旁的神經','drug'],['brain','交感往返訊號減少','down']],
+  d:'<p>經由股動脈放導管到腎動脈，用射頻或超音波破壞腎動脈外膜的交感神經（同時減少腎臟傳回腦部的感覺訊號）。</p><ul><li>美國 FDA 於 2023 年核准兩種系統</li><li>在有假手術對照的試驗中，24 小時收縮壓比對照組再多降約 5 mmHg，效果可維持數年</li><li>適合：用藥仍控制不佳、或無法耐受藥物，經共同決策後的病人；需要合適的腎動脈構造，腎功能不能太差</li><li>不能取代藥物，多數人術後仍需服藥</li></ul>'},
+ {t:'頑固型高血壓：一步一步拆',k:'drg',on:['kid','adr','air','heart'],rx:['adr','kid'],g:[156,94],lv:[0,1,1],
+  flows:[['adr2kid','al',1.6],['air2brain','s',1.4],['salt2hub','na',1.6]],
+  chips:[['adr','篩原發性醛固酮症','info'],['air','找睡眠呼吸中止','info'],['kid','✚ 第四顆：spironolactone','drug']],
+  d:'<p><b>定義</b>：用了三種不同類、劑量足夠的藥（通常是 A＋C＋類 thiazide 利尿劑）仍未達標，或需要四種以上才控制。</p><ol><li><b>先排除假性頑固</b>：量法錯誤、白袍效應（用居家或 24 小時血壓確認）、沒有按時吃藥、劑量不足</li><li><b>找加重因素</b>：鹽吃太多、喝酒、肥胖、NSAID 等藥物</li><li><b>找續發性原因</b>：原發性醛固酮症（頑固型中最常見之一，2025 指引建議全部篩檢）、睡眠呼吸中止、慢性腎病</li><li><b>調藥</b>：利尿劑換成 chlorthalidone 或 indapamide；第四顆加 spironolactone，不適合時用 eplerenone、amiloride；再來是 β 阻斷劑、α1 阻斷劑、直接血管擴張劑</li><li>仍不行：轉介高血壓專科，考慮新藥或腎神經阻斷術</li></ol>'}
+]}
+];
+
+var DRUGS=[
+ ['ACE 抑制劑（-pril）','血管、腎上腺、腎','阻止血管張力素 II 生成','白蛋白尿、心衰竭、心肌梗塞後','乾咳、血管性水腫、高血鉀；懷孕禁用'],
+ ['ARB（-sartan）','AT1 受體','擋住血管張力素 II','同上；ACE 抑制劑咳嗽時替代','高血鉀；懷孕禁用；不與 ACE 抑制劑併用'],
+ ['二氫吡啶類鈣離子通道阻斷劑（amlodipine 等）','小動脈','擋 L 型鈣通道，血管放鬆','老年人、單純收縮期高血壓','腳踝水腫、臉潮紅、牙齦增生'],
+ ['非二氫吡啶類（verapamil、diltiazem）','心臟、小動脈','減慢心跳與傳導','合併心房顫動需控制心跳','射出分率降低的心衰竭避免；便秘；併用 β 阻斷劑小心心跳過慢'],
+ ['Thiazide 類（chlorthalidone、indapamide、HCTZ）','腎（遠曲小管 NCC）','排鈉，長期降阻力','多數人的第一線；骨質疏鬆','低血鉀、低血鈉、尿酸升高、血糖略升'],
+ ['環利尿劑（furosemide 等）','腎（亨利氏環 NKCC2）','強力排鈉排水','水腫、心衰竭、晚期腎病','脫水、低血鉀、腎前性腎功能惡化'],
+ ['MRA（spironolactone、eplerenone）','腎（醛固酮受體）','擋醛固酮，排鈉留鉀','頑固型高血壓、原發性醛固酮症、心衰竭','高血鉀；spironolactone 會男性女乳症'],
+ ['β 阻斷劑','心臟（β1）、腎素','心跳與收縮力下降、腎素減少','心肌梗塞後、心衰竭、心房顫動、心絞痛','不可驟停；嗜鉻細胞瘤要在 α 阻斷之後'],
+ ['α1 阻斷劑（doxazosin 等）','小動脈（α1）','擋交感的血管收縮','合併攝護腺肥大；嗜鉻細胞瘤術前','第一劑姿勢性低血壓'],
+ ['中樞 α2 促效劑（clonidine、methyldopa）','腦','降低交感輸出','懷孕（methyldopa）、其他藥無效時','clonidine 驟停反彈；嗜睡、口乾'],
+ ['直接血管擴張劑（hydralazine、minoxidil）','小動脈','直接放鬆血管平滑肌','極頑固的高血壓；懷孕（hydralazine）','反射性心跳加快、水分滯留；需併用 β 阻斷劑與利尿劑'],
+ ['ARNI（sacubitril/valsartan）','AT1 受體＋腦啡肽酶','擋血管張力素 II、保留利鈉胜肽','心衰竭合併高血壓','血管性水腫；不可與 ACE 抑制劑併用'],
+ ['醛固酮合成酶抑制劑（baxdrostat）','腎上腺','抑制醛固酮生成','已用其他藥仍控制不佳（美國 FDA 2026 核准）','高血鉀'],
+ ['Aprocitentan','血管（內皮素受體）','擋內皮素的血管收縮','頑固型高血壓','水腫、貧血；懷孕禁用'],
+ ['腎神經阻斷術','腎動脈旁交感神經','降低腎臟交感活性','用藥仍控制不佳或無法耐受藥物','侵入性；需合適的腎動脈構造']
+];
+var GOMAP=[[[0,7],[0,7],[3,1],[3,1],[2,7],[0,7]],[[2,3],[2,1],[2,2],[1,4],[2,4],[2,4],[2,4],[2,5],[2,0]],[[3,2],[3,2],[3,3],[3,3],[3,4],[3,5],[3,6],[3,7],[3,8],[3,8],[3,8],[3,9],[3,9],[3,9],[3,10]]];
+
+/* ================= 畫面 ================= */
+var axi=0,steps=AX[0].steps,idx=0,cur=[118,76],tgt=[118,76];
+var ttl=$('#ttl'),txt=$('#txt'),cnt=$('#cnt'),where=$('#where'),dots=$('#dots'),chipsG=$('#chips'),partsG=$('#parts');
+var prevB=$('#prev'),nextB=$('#next'),playB=$('#play'),tabs=$('#tabs'),vbp=$('#vbp'),vpp=$('#vpp');
+var RM=matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+AX.forEach(function(a,k){var b=document.createElement('button');b.type='button';b.setAttribute('role','tab');b.innerHTML=a.n+'<small>'+a.s+'</small>';b.onclick=function(){stopAuto();setAx(k,0,true)};tabs.appendChild(b)});
+DRUGS.forEach(function(r){var tr=document.createElement('tr');tr.innerHTML='<td><b>'+r[0]+'</b></td><td>'+r[1]+'</td><td>'+r[2]+'</td><td>'+r[3]+'</td><td>'+r[4]+'</td>';$('#tbody').appendChild(tr)});
+
+var mrows=$('#mrows'),MB=[];
+for(var r=0;r<3;r++){
+  var y=556+r*17,g=document.createElementNS(SVGNS,'g');
+  g.innerHTML='<text x="222" y="'+(y+4)+'"></text><rect class="trk" x="276" y="'+(y-4)+'" width="72" height="8" rx="4"/><rect class="bar" x="312" y="'+(y-4)+'" width="0" height="8" rx="4"/><line class="mid" x1="312" x2="312" y1="'+(y-7)+'" y2="'+(y+7)+'"/><text class="v" x="354" y="'+(y+4)+'"></text>';
+  mrows.appendChild(g);MB.push({lab:g.children[0],bar:g.children[2],v:g.children[4]});
+}
+function setMeter(lab,lv){
+  var sym={'-2':'↓↓','-1':'↓','0':'—','1':'↑','2':'↑↑'};
+  for(var r=0;r<3;r++){var v=lv?lv[r]:0,w=Math.abs(v)*18;
+    MB[r].lab.textContent=lab[r];MB[r].bar.setAttribute('x',v<0?312-w:312);MB[r].bar.setAttribute('width',w);
+    MB[r].bar.setAttribute('fill',v>0?'var(--up)':'var(--down)');MB[r].v.textContent=sym[String(v)];
+    MB[r].v.setAttribute('fill',v>0?'var(--up)':v<0?'var(--down)':'var(--mute)')}
+}
+function chip(at,text,cls){
+  var p=AT[at],g=document.createElementNS(SVGNS,'g');g.setAttribute('class','chip '+cls);
+  var t=document.createElementNS(SVGNS,'text');t.textContent=text;t.setAttribute('text-anchor','middle');g.appendChild(t);chipsG.appendChild(g);
+  var w=t.getComputedTextLength()+18,h=22,x=Math.max(4+w/2,Math.min(596-w/2,p[0]));
+  var rr=document.createElementNS(SVGNS,'rect');rr.setAttribute('x',x-w/2);rr.setAttribute('y',p[1]-h/2);rr.setAttribute('width',w);rr.setAttribute('height',h);
+  g.insertBefore(rr,t);t.setAttribute('x',x);t.setAttribute('y',p[1]+4.5);return g;
+}
+function layoutChips(list){chipsG.textContent='';var used={};
+  list.forEach(function(c,k){var n=used[c[0]]||0;used[c[0]]=n+1;var g=chip(c[0],c[1],c[2]);
+    if(n)g.setAttribute('transform','translate(0,'+((STACK[c[0]]||1)*n*26)+')');g.style.animationDelay=(k*80)+'ms'})}
+
+function setAx(k,i,sync){axi=k;steps=AX[k].steps;[].forEach.call(tabs.children,function(b,j){b.setAttribute('aria-selected',j===k)});go(i||0,sync)}
+function go(i,sync){
+  idx=Math.max(0,Math.min(steps.length-1,i));
+  var a=AX[axi],s=steps[idx];
+  var kt={phy:'生理',dx:'診斷',dz:'疾病',drg:'治療'}[s.k];
+  ttl.innerHTML='<span class="kind '+s.k+'">'+kt+'</span>'+s.t;txt.innerHTML=s.d;
+  cnt.textContent=(idx+1)+' / '+steps.length;where.innerHTML='<b>'+a.n+'</b> · '+a.s;
+  ORG.forEach(function(o){var e=$('#o-'+o);e.classList.toggle('on',s.on.indexOf(o)>=0);e.classList.toggle('dim',axi>0&&s.on.indexOf(o)<0);$('#r-'+o).classList.toggle('on',(s.rx||[]).indexOf(o)>=0)});
+  ['lvh','stiff','tight','dil','dmg'].forEach(function(f){$('#o-'+FX[f]).classList.toggle(f,(s.fx||[]).indexOf(f)>=0)});
+  layoutChips(s.chips||[]);setFlows(s.flows||[]);setMeter(s.lab||a.lab,s.lv);tgt=s.g.slice();
+  prevB.disabled=idx===0&&axi===0;
+  nextB.textContent=idx<steps.length-1?'下一步 →':(axi<AX.length-1?'下一個分頁 →':'回到開頭 ↺');
+  dots.textContent='';
+  steps.forEach(function(st,k){var b=document.createElement('button');b.type='button';b.setAttribute('aria-label','第 '+(k+1)+' 步');if(k===idx)b.setAttribute('aria-current','true');b.onclick=function(){stopAuto();go(k,true)};dots.appendChild(b)});
+  afterStep(s,sync);
+}
+function next(sync){if(idx<steps.length-1)return go(idx+1,sync);setAx(axi<AX.length-1?axi+1:0,0,sync)}
+function prev(sync){if(idx>0)return go(idx-1,sync);if(axi>0)setAx(axi-1,AX[axi-1].steps.length-1,sync)}
+prevB.onclick=function(){stopAuto();prev(true)};
+nextB.onclick=function(){stopAuto();next(true)};
+document.addEventListener('keydown',function(e){if(e.target.closest&&e.target.closest('input,textarea'))return;
+  if(e.key==='ArrowRight'){stopAuto();next(true)}else if(e.key==='ArrowLeft'){stopAuto();prev(true)}});
+var sx=null,sy=null,map=$('#map');
+map.addEventListener('touchstart',function(e){sx=e.touches[0].clientX;sy=e.touches[0].clientY},{passive:true});
+map.addEventListener('touchend',function(e){if(sx==null)return;var dx=e.changedTouches[0].clientX-sx,dy=e.changedTouches[0].clientY-sy;if(Math.abs(dx)>40&&Math.abs(dx)>Math.abs(dy)){stopAuto();dx<0?next(true):prev(true)}sx=null},{passive:true});
+
+/* 粒子＋數字 */
+var P={},flows=[],parts=[],last=0;
+[].forEach.call(document.querySelectorAll('#paths path'),function(p){P[p.id.slice(2)]={el:p,len:p.getTotalLength()}});
+function setFlows(f){flows=f.map(function(x){return {p:P[x[0]],c:COL[x[1]],r:x[2],acc:Math.random()}}).filter(function(x){return x.p})}
+function spawn(f){var c=document.createElementNS(SVGNS,'circle');c.setAttribute('r',(f.c===COL.c||f.c===COL.p)?4.2:3.4);c.setAttribute('fill',f.c);partsG.appendChild(c);parts.push({el:c,p:f.p,t:0,d:1700+Math.random()*500})}
+function col(v,lo,hi){return v>hi?'var(--up)':v<lo?'var(--down)':'var(--ink)'}
+function tick(ts){
+  var dt=last?Math.min(100,ts-last):16;last=ts;
+  if(!RM){flows.forEach(function(f){f.acc+=f.r*dt/1000;while(f.acc>=1){f.acc-=1;spawn(f)}});
+    for(var k=parts.length-1;k>=0;k--){var q=parts[k];q.t+=dt;var u=q.t/q.d;if(u>=1){q.el.remove();parts.splice(k,1);continue}
+      var pt=q.p.el.getPointAtLength(u*q.p.len);q.el.setAttribute('cx',pt.x);q.el.setAttribute('cy',pt.y);q.el.setAttribute('opacity',u<.1?u*10:u>.85?(1-u)/.15:1)}}
+  for(var j=0;j<2;j++){if(Math.abs(cur[j]-tgt[j])>.3)cur[j]+=(tgt[j]-cur[j])*Math.min(1,dt/350);else cur[j]=tgt[j]}
+  var sb=Math.round(cur[0]),db=Math.round(cur[1]);vbp.textContent=sb+'/'+db;vpp.textContent=sb-db;
+  vbp.setAttribute('fill',(sb>=130||db>=80)?'var(--up)':sb<100?'var(--down)':'var(--ink)');vpp.setAttribute('fill',(sb-db)>=60?'var(--up)':'var(--ink)');
+  requestAnimationFrame(tick);
+}
+requestAnimationFrame(tick);
+
+/* 自動播放＋語音朗讀（Web Speech API，用裝置內建語音） */
+var autoOn=false,autoT=0,narr=false,sid=0,voice=null;
+var KEEP=[];
+var SS=window.speechSynthesis,sayB=$('#say');
+function pickVoice(){
+  if(!SS)return;var vs=SS.getVoices();if(!vs.length)return;
+  var pref=['zh-TW','zh_TW','zh-Hant','zh-HK','zh-CN','zh'];
+  for(var k=0;k<pref.length&&!voice;k++){voice=vs.filter(function(v){return v.lang.replace('_','-').indexOf(pref[k].replace('_','-'))===0})[0]||null}
+}
+if(SS){pickVoice();if('onvoiceschanged' in SS)SS.onvoiceschanged=pickVoice}else{sayB.hidden=true}
+function plain(s){
+  var t=s.t+'。'+s.d.replace(/<\/(li|p|div)>/g,'。').replace(/<[^>]+>/g,'');
+  var el=document.createElement('textarea');el.innerHTML=t;t=el.value;
+  [[/mmHg/g,'毫米汞柱'],[/(\d+)\/(\d+)/g,'$1，$2'],[/sacubitril\/valsartan/g,'sacubitril valsartan'],[/eGFR/g,'e G F R'],[/UACR/g,'U A C R'],[/AHA\/ACC/g,'A H A A C C'],[/AT1/g,'A T 1'],[/NKCC2/g,'N K C C 2'],[/NCC/g,'N C C'],[/ENaC/g,'E Na C'],[/11β-HSD2/g,'11 貝他 H S D 2'],[/≥/g,'大於等於'],[/≤/g,'小於等於'],[/−/g,'負'],[/×/g,'乘以'],
+   [/α/g,'阿法'],[/β/g,'貝他'],[/✚/g,''],[/✕/g,'被阻斷'],[/↑↑/g,'大幅增加'],[/↓↓/g,'大幅減少'],[/↑/g,'增加'],[/↓/g,'減少'],[/→/g,'，接著'],[/＋/g,'和'],[/(\d)\s*–\s*(\d)/g,'$1到$2'],[/–/g,'到'],[/</g,'小於'],[/>/g,'大於'],[/[／\/]/g,'、'],[/\s+/g,' '],[/[。，]\s*[。，]+/g,'。']]
+   .forEach(function(r){t=t.replace(r[0],r[1])});
+  return t;
+}
+function chunks(t){
+  var out=[];(t.match(/[^。！？；]+[。！？；]?/g)||[]).forEach(function(x){x=x.trim();if(!x||x==='。')return;
+    while(x.length>110){var cut=x.lastIndexOf('，',110);cut=cut>20?cut+1:110;out.push(x.slice(0,cut));x=x.slice(cut)}
+    if(x)out.push(x)});
+  return out;
+}
+function stopNarr(){sid++;if(SS&&(SS.speaking||SS.pending))SS.cancel()}
+function speak(text,done,sync){
+  var busy=SS.speaking||SS.pending;
+  stopNarr();var my=sid,cs=chunks(text),i=0;
+  function nx(){
+    if(my!==sid)return;
+    if(i>=cs.length){done&&done();return}
+    var u=new SpeechSynthesisUtterance(cs[i++]);u.lang=voice?voice.lang:'zh-TW';if(voice)u.voice=voice;u.rate=1;
+    u.onend=function(){if(my===sid)nx()};
+    u.onerror=function(e){if(my===sid&&e.error!=='interrupted'&&e.error!=='canceled')nx()};
+    // iOS WebKit 會把沒被引用的 utterance 回收掉而不出聲，留住最近幾個
+    KEEP.push(u);if(KEEP.length>6)KEEP.shift();
+    SS.speak(u);
+  }
+  // iOS／Safari 只允許在使用者點擊的同一個呼叫堆疊裡開始朗讀，所以點按鈕時要同步呼叫；
+  // 若剛 cancel 正在唸的句子，WebKit 立刻 speak 可能被吞掉，此時（已解鎖）改延遲
+  if(sync&&!busy)nx();else setTimeout(nx,80);
+}
+function schedule(ms){clearTimeout(autoT);autoT=setTimeout(function(){if(autoOn)next()},ms)}
+function afterStep(s,sync){
+  clearTimeout(autoT);
+  if(narr&&SS){speak(plain(s),function(){if(autoOn)schedule(700)},sync)}
+  else{stopNarr();if(autoOn)schedule(7000)}
+}
+function stopAuto(){autoOn=false;clearTimeout(autoT);playB.textContent='▶ 自動'}
+playB.onclick=function(){if(autoOn)return stopAuto();autoOn=true;playB.textContent='❚❚ 暫停';if(!narr)schedule(7000);else if(!SS.speaking)afterStep(steps[idx],true)};
+sayB.onclick=function(){narr=!narr;sayB.setAttribute('aria-pressed',narr);sayB.textContent=narr?'🔇 停止朗讀':'🔊 朗讀';afterStep(steps[idx],true)};
+document.addEventListener('visibilitychange',function(){if(document.hidden&&narr){stopNarr();stopAuto()}});
+
+var root=document.documentElement;
+try{var th=localStorage.getItem('cim-theme');if(th)root.setAttribute('data-theme',th)}catch(e){}
+$('#theme').onclick=function(){var dark=root.getAttribute('data-theme')?root.getAttribute('data-theme')==='dark':matchMedia('(prefers-color-scheme: dark)').matches;
+  var n=dark?'light':'dark';root.setAttribute('data-theme',n);try{localStorage.setItem('cim-theme',n)}catch(e){}};
+
+setAx(0,0);
+
+/* 表格列 → 跳到對應的動畫步驟（網址 #t分頁s步驟 可直接連結） */
+function stageTop(){var st=document.querySelector('.stage');if(st)st.scrollIntoView({behavior:RM?'auto':'smooth',block:'start'})}
+function setHash(h){try{history.replaceState(null,'',h)}catch(e){}}
+function bindRows(fn){
+  [].forEach.call(document.querySelectorAll('.cmp tbody'),function(tb,ti){
+    [].forEach.call(tb.rows,function(tr,ri){
+      var g=GOMAP[ti]&&GOMAP[ti][ri];if(!g)return;
+      tr.dataset.go=g.join(',');tr.tabIndex=0;tr.setAttribute('role','link');tr.title='看這一段的動畫';
+      tr.cells[0].insertAdjacentHTML('beforeend','<span class="goto">▶ 看動畫</span>');
+      tr.onclick=function(){fn(g[0],g[1])};
+      tr.onkeydown=function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();e.stopPropagation();fn(g[0],g[1])}};
+    });
+  });
+  [].forEach.call(document.querySelectorAll('.cmp .tblw'),function(w){if(w.querySelector('tr[data-go]'))w.insertAdjacentHTML('beforebegin','<p class="gohint">▶ 點表格任一列，直接跳到那一段動畫</p>')});
+}
+function jumpTo(t,s){stopAuto();setAx(t,s,true);stageTop();setHash('#t'+t+'s'+s)}
+bindRows(jumpTo);
+(function(){var m=location.hash.match(/^#t(\d+)s(\d+)$/);if(m&&AX[+m[1]])setAx(+m[1],Math.min(+m[2],AX[+m[1]].steps.length-1),false)})();
+})();
+</script>
+</body>
+</html>
