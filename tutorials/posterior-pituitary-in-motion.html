@@ -110,6 +110,8 @@ h1 span{color:var(--avp)}
 
 section.cmp{margin:34px 0 10px}
 section.cmp h2{font-size:24px;margin:0 0 6px}
+[data-go]{cursor:pointer}tr[data-go]:hover td,th[data-go]:hover{background:var(--accent-soft)}[data-go]:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+.gol{display:inline-block;margin-left:6px;padding:1px 7px;border-radius:999px;font-size:11px;font-weight:600;color:var(--accent);background:var(--accent-soft);white-space:nowrap;vertical-align:1px}
 .tblw{overflow-x:auto;border:1px solid var(--line);border-radius:14px;background:var(--paper);margin-bottom:18px}
 table{border-collapse:collapse;width:100%;min-width:820px;font-size:14px}
 th,td{padding:9px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
@@ -220,17 +222,18 @@ footer{color:var(--mute);font-size:13px;padding:22px 0 40px;border-top:1px solid
   <h2>多尿怎麼分：三種可能</h2>
   <p class="lead" style="margin-bottom:10px">先確定是低滲透壓多尿（尿多、尿滲透壓低），再用下表的方向鑑別。數值出處見 B 分頁最後一步。</p>
   <div class="tblw"><table style="min-width:640px">
-    <thead><tr><th></th><th>AVP 缺乏（中樞性）</th><th>AVP 抗性（腎因性）</th><th>原發性多飲</th></tr></thead>
+    <thead><tr><th></th><th data-go="2,1">AVP 缺乏（中樞性）<span class="gol">▶ 看動畫</span></th><th data-go="2,3">AVP 抗性（腎因性）<span class="gol">▶ 看動畫</span></th><th data-go="2,4">原發性多飲<span class="gol">▶ 看動畫</span></th></tr></thead>
     <tbody>
       <tr><td><b>問題在哪</b></td><td>AVP 做不出來</td><td>腎臟對 AVP 沒反應</td><td>喝太多，AVP 被正常壓低</td></tr>
       <tr><td><b>血鈉</b></td><td>正常偏高</td><td>正常偏高</td><td>正常偏低</td></tr>
-      <tr><td><b>基礎 copeptin</b></td><td>低</td><td>高（&gt; 21.4 pmol/L）</td><td>低</td></tr>
-      <tr><td><b>禁水後尿液</b></td><td>不能濃縮</td><td>不能濃縮</td><td>多能濃縮</td></tr>
-      <tr><td><b>給 desmopressin 後</b></td><td>明顯濃縮</td><td>幾乎不變</td><td>變化小</td></tr>
-      <tr><td><b>高張食鹽水刺激 copeptin</b></td><td>≤ 4.9 pmol/L</td><td>高</td><td>&gt; 4.9 pmol/L</td></tr>
+      <tr data-go="2,5"><td><b>基礎 copeptin</b><span class="gol">▶ 看動畫</span></td><td>低</td><td>高（&gt; 21.4 pmol/L）</td><td>低</td></tr>
+      <tr data-go="2,5"><td><b>禁水後尿液</b><span class="gol">▶ 看動畫</span></td><td>不能濃縮</td><td>不能濃縮</td><td>多能濃縮</td></tr>
+      <tr data-go="4,0"><td><b>給 desmopressin 後</b><span class="gol">▶ 看動畫</span></td><td>明顯濃縮</td><td>幾乎不變</td><td>變化小</td></tr>
+      <tr data-go="2,5"><td><b>高張食鹽水刺激 copeptin</b><span class="gol">▶ 看動畫</span></td><td>≤ 4.9 pmol/L</td><td>高</td><td>&gt; 4.9 pmol/L</td></tr>
     </tbody>
   </table></div>
   <h2>藥物一覽</h2>
+  <p class="lead" style="margin-bottom:10px">點任一列（或上表的欄位標題）會跳到對應的動畫步驟。</p>
   <div class="tblw"><table>
     <thead><tr><th>藥物</th><th>作用部位</th><th>機轉</th><th>主要用途</th><th>注意</th></tr></thead>
     <tbody id="tbody"></tbody>
@@ -414,7 +417,8 @@ var prevB=$('#prev'),nextB=$('#next'),playB=$('#play'),tabs=$('#tabs'),VV=[$('#v
 var RM=matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 AX.forEach(function(a,k){var b=document.createElement('button');b.type='button';b.setAttribute('role','tab');b.innerHTML=a.n+'<small>'+a.s+'</small>';b.onclick=function(){stopAuto();setAx(k,0,true)};tabs.appendChild(b)});
-DRUGS.forEach(function(r){var tr=document.createElement('tr');tr.innerHTML='<td><b>'+r[0]+'</b></td><td>'+r[1]+'</td><td>'+r[2]+'</td><td>'+r[3]+'</td><td>'+r[4]+'</td>';$('#tbody').appendChild(tr)});
+var GO={"desmopressin":"4,0","thiazide":"4,2","amiloride":"4,2","尿素（口服）":"4,3","tolvaptan":"4,4","3% 高張食鹽水":"4,5","vasopressin":"5,0","terlipressin":"5,1","oxytocin":"5,3","carbetocin":"5,3","atosiban":"5,4"};
+DRUGS.forEach(function(r){var tr=document.createElement('tr');if(GO[r[0]])tr.setAttribute('data-go',GO[r[0]]);tr.innerHTML='<td><b>'+r[0]+'</b>'+(GO[r[0]]?'<span class="gol">▶ 看動畫</span>':'')+'</td><td>'+r[1]+'</td><td>'+r[2]+'</td><td>'+r[3]+'</td><td>'+r[4]+'</td>';$('#tbody').appendChild(tr)});
 
 var mrows=$('#mrows'),MB=[];
 for(var r=0;r<3;r++){
@@ -541,7 +545,15 @@ try{var th=localStorage.getItem('ppim-theme');if(th)root.setAttribute('data-them
 $('#theme').onclick=function(){var dark=root.getAttribute('data-theme')?root.getAttribute('data-theme')==='dark':matchMedia('(prefers-color-scheme: dark)').matches;
   var n=dark?'light':'dark';root.setAttribute('data-theme',n);try{localStorage.setItem('ppim-theme',n)}catch(e){}};
 
-setAx(0,0);
+function jump(v,scroll){var p=String(v).split(',').map(Number),k=p[0],i=p[1];if(!(k>=0&&k<AX.length))return false;
+  stopAuto();setAx(k,Math.max(0,Math.min(AX[k].steps.length-1,i||0)),true);
+  try{history.replaceState(null,'','#t'+k+'s'+idx)}catch(e){}
+  if(scroll){var st=document.querySelector('.stage');if(st)st.scrollIntoView({behavior:RM?'auto':'smooth',block:'start'})}return true}
+document.addEventListener('click',function(e){var el=e.target.closest&&e.target.closest('[data-go]');if(el)jump(el.getAttribute('data-go'),true)});
+document.addEventListener('keydown',function(e){if(e.key!=='Enter'&&e.key!==' ')return;var el=e.target.closest&&e.target.closest('[data-go]');if(el){e.preventDefault();jump(el.getAttribute('data-go'),true)}});
+[].forEach.call(document.querySelectorAll('[data-go]'),function(el){el.tabIndex=0;el.setAttribute('role','link');el.setAttribute('aria-label',el.textContent.replace('▶ 看動畫','').trim()+'：跳到對應動畫')});
+var hm=/^#t(\d+)s(\d+)$/.exec(location.hash);
+if(!(hm&&jump(hm[1]+','+hm[2],true)))setAx(0,0);
 })();
 </script>
 </body>
