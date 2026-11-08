@@ -1,0 +1,615 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>糖尿病併發症，動起來</title>
+<meta name="description" content="一步一步看 DKA、HHS、低血糖，以及視網膜、腎臟、神經與大血管併發症怎麼發生、怎麼篩檢與治療。">
+<style>
+:root{
+  --bg:#f5f3ee;--paper:#fffdf8;--ink:#1f2328;--mute:#5d6470;--line:#d9d4c7;
+  --accent:#8a5a14;--accent-soft:#f2e6d2;
+  --blood:#c62f3b;--nerve:#1f9d8f;--glu:#d98a12;--ins:#2e9d57;--ctr:#d1452b;--ffa:#b8920f;--ket:#8a4fc4;--h2o:#2f72c4;--dmg:#7a2730;--drug:#c0262d;--up:#d1452b;--down:#2f72c4;
+  --organ:#ffffff;--organ-line:#b9b2a3;--organ-on:#fff1e6;--organ-on-line:#d9741a;
+  --shadow:0 1px 2px rgba(0,0,0,.06),0 6px 20px rgba(0,0,0,.06);
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#14171b;--paper:#1c2026;--ink:#e8e6e1;--mute:#a3a9b3;--line:#323844;
+  --accent:#e0b060;--accent-soft:#3a3020;
+  --blood:#ff6b74;--nerve:#4cd0c0;--glu:#f2b441;--ins:#5fd08a;--ctr:#ff7a5c;--ffa:#e6c34a;--ket:#b48cf0;--h2o:#6aa8f5;--dmg:#e08a94;--drug:#ff6b6b;--up:#ff7a5c;--down:#6aa8f5;
+  --organ:#232831;--organ-line:#4a5260;--organ-on:#3a2c20;--organ-on-line:#f5a04a;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 6px 20px rgba(0,0,0,.35);
+}}
+:root[data-theme="dark"]{
+  --bg:#14171b;--paper:#1c2026;--ink:#e8e6e1;--mute:#a3a9b3;--line:#323844;
+  --accent:#e0b060;--accent-soft:#3a3020;
+  --blood:#ff6b74;--nerve:#4cd0c0;--glu:#f2b441;--ins:#5fd08a;--ctr:#ff7a5c;--ffa:#e6c34a;--ket:#b48cf0;--h2o:#6aa8f5;--dmg:#e08a94;--drug:#ff6b6b;--up:#ff7a5c;--down:#6aa8f5;
+  --organ:#232831;--organ-line:#4a5260;--organ-on:#3a2c20;--organ-on-line:#f5a04a;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 6px 20px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink)}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang TC","Noto Sans TC","Microsoft JhengHei",sans-serif;line-height:1.65;-webkit-text-size-adjust:100%}
+a{color:var(--accent)}
+.wrap{max-width:1180px;margin:0 auto;padding:0 16px}
+header.hero{padding:40px 0 18px}
+.kick{font-size:13px;letter-spacing:.12em;color:var(--accent);font-weight:700}
+h1{font-size:clamp(30px,6vw,52px);line-height:1.15;margin:.2em 0 .25em;letter-spacing:.02em}
+h1 span{color:var(--blood)}
+.lead{color:var(--mute);max-width:740px;margin:0}
+.legend{display:flex;flex-wrap:wrap;gap:8px 16px;margin:16px 0 0;padding:0;list-style:none;font-size:14px;color:var(--mute)}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:50%;margin-right:6px;vertical-align:-1px}
+.tabs{display:flex;gap:8px;margin:22px 0 14px;flex-wrap:wrap}
+.tabs button{appearance:none;border:1px solid var(--line);background:var(--paper);color:var(--ink);padding:9px 14px;border-radius:999px;font:inherit;font-weight:700;cursor:pointer;line-height:1.3}
+.tabs button small{display:block;font-weight:400;font-size:11.5px;opacity:.8}
+.tabs button[aria-selected="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+.player{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:18px;align-items:start}
+.stage{position:sticky;top:10px;background:var(--paper);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);padding:8px}
+.stage svg{display:block;width:100%;height:auto;max-height:calc(100vh - 40px);touch-action:pan-y}
+.panel{background:var(--paper);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);padding:18px 20px;min-height:440px;display:flex;flex-direction:column}
+.where{font-size:13px;color:var(--mute);display:flex;justify-content:space-between;gap:8px}
+.where b{color:var(--accent)}
+.kind{display:inline-block;font-size:12px;font-weight:700;border-radius:999px;padding:1px 9px;margin-right:6px;vertical-align:2px}
+.kind.phy{background:var(--accent-soft);color:var(--accent)}
+.kind.dz{background:color-mix(in srgb,var(--blood) 15%,transparent);color:var(--blood)}
+.kind.dx{background:color-mix(in srgb,var(--nerve) 15%,transparent);color:var(--nerve)}
+.kind.drg{background:color-mix(in srgb,var(--drug) 14%,transparent);color:var(--drug)}
+.panel h2{font-size:23px;line-height:1.3;margin:6px 0 8px}
+.panel .txt{flex:1}
+.panel .txt p{margin:.35em 0}
+.panel .txt ul,.panel .txt ol{margin:.35em 0;padding-left:1.2em}
+.panel .txt li{margin:.2em 0}
+.warn{border-left:3px solid var(--drug);padding:4px 10px;margin:.6em 0;background:color-mix(in srgb,var(--drug) 8%,transparent);border-radius:0 8px 8px 0}
+.ctl{display:flex;align-items:center;gap:8px;margin-top:14px;flex-wrap:wrap}
+.ctl button{appearance:none;border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:10px;padding:9px 14px;font:inherit;font-weight:700;cursor:pointer;min-width:44px}
+.ctl button:disabled{opacity:.35;cursor:default}
+.ctl #say[aria-pressed="true"]{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.ctl .next{background:var(--accent);border-color:var(--accent);color:#fff;margin-left:auto}
+.dots{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}
+.dots button{width:10px;height:10px;border-radius:50%;border:0;padding:0;background:var(--line);cursor:pointer}
+.dots button[aria-current="true"]{background:var(--accent);transform:scale(1.25)}
+.hint{font-size:12px;color:var(--mute);margin-top:8px}
+
+.org path.shape,.org ellipse,.org rect.shape{fill:var(--organ);stroke:var(--organ-line);stroke-width:2;transition:fill .35s,stroke .35s}
+.org text{fill:var(--ink);font-size:17px;font-weight:700;text-anchor:middle}
+.org text.sub{font-size:11.5px;font-weight:400;fill:var(--mute)}
+.org.on path.shape,.org.on ellipse,.org.on rect.shape{fill:var(--organ-on);stroke:var(--organ-on-line);stroke-width:3}
+.org{transition:opacity .35s}
+.org.dim{opacity:.35}
+#o-kid.dmg path.shape,#o-eye.dmg ellipse,#o-foot.dmg path.shape,#o-nerve.dmg rect.shape,#o-ves.dmg rect.shape,#o-heart.dmg path.shape{stroke:var(--dmg);stroke-dasharray:5 3;stroke-width:3}
+.vessel{fill:none;stroke:var(--line);stroke-width:2;stroke-dasharray:3 5}
+.ring{fill:none;stroke:var(--drug);stroke-width:3;stroke-dasharray:6 5;opacity:0;transition:opacity .3s}
+.ring.on{opacity:1;animation:spin 6s linear infinite}
+@keyframes spin{to{stroke-dashoffset:-110}}
+.hub circle{fill:color-mix(in srgb,var(--glu) 10%,var(--paper));stroke:var(--glu);stroke-width:2.5}
+.hub text{text-anchor:middle;fill:var(--ink)}
+.hub .lbl{font-size:12px;font-weight:700;fill:var(--mute)}
+.hub .val{font-size:26px;font-weight:800}
+.chip rect{rx:9;ry:9;stroke-width:1.5}
+.chip text{font-size:12.5px;font-weight:700}
+.chip.up rect{fill:color-mix(in srgb,var(--up) 13%,var(--paper));stroke:var(--up)}
+.chip.up text{fill:var(--up)}
+.chip.down rect{fill:color-mix(in srgb,var(--down) 13%,var(--paper));stroke:var(--down)}
+.chip.down text{fill:var(--down)}
+.chip.info rect{fill:var(--paper);stroke:var(--organ-line)}
+.chip.info text{fill:var(--ink)}
+.chip.drug rect{fill:var(--drug);stroke:var(--drug)}
+.chip.drug text{fill:#fff}
+.chips g.chip{animation:pop .35s ease-out both}
+@keyframes pop{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.meter rect.box{fill:var(--paper);stroke:var(--line)}
+.meter text{font-size:12px;fill:var(--ink)}
+.meter text.ttl{font-size:11px;fill:var(--mute)}
+.meter .trk{fill:var(--line)}
+.meter .mid{stroke:var(--mute);stroke-width:1.5}
+.meter .bar{transition:width .5s ease,x .5s ease,fill .3s}
+.meter text.v{font-weight:700}
+.pt{pointer-events:none}
+.xref{display:inline-block;margin:.3em 0;font-weight:700}
+section.cmp{margin:34px 0 10px}
+section.cmp h2{font-size:24px;margin:0 0 6px}
+.tblw{overflow-x:auto;border:1px solid var(--line);border-radius:14px;background:var(--paper);margin-bottom:18px}
+table{border-collapse:collapse;width:100%;min-width:820px;font-size:14px}
+th,td{padding:9px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{background:var(--accent-soft);white-space:nowrap}
+td.c{text-align:center;white-space:nowrap}
+tr:last-child td{border-bottom:0}
+footer{color:var(--mute);font-size:13px;padding:22px 0 40px;border-top:1px solid var(--line);margin-top:28px}
+.theme{position:absolute;top:14px;right:16px;appearance:none;border:1px solid var(--line);background:var(--paper);color:var(--ink);border-radius:999px;padding:6px 12px;font:inherit;font-size:13px;cursor:pointer}
+@media (max-width:860px){
+  .player{grid-template-columns:1fr}
+  .stage{position:sticky;top:0;z-index:2;border-radius:0 0 16px 16px;margin:0 -16px;border-left:0;border-right:0;padding:4px}
+  .stage svg{max-height:52vh}
+  .panel{min-height:0}
+  .chip text{font-size:14px}
+  header.hero{padding-top:52px}
+}
+@media (prefers-reduced-motion:reduce){.chips g.chip,.ring.on{animation:none}}
+tr[data-go]{cursor:pointer;transition:background .15s}
+tr[data-go]:hover,tr[data-go]:focus-visible{background:color-mix(in srgb,var(--accent) 12%,transparent);outline:none}
+tr[data-go]:focus-visible td:first-child{box-shadow:inset 3px 0 0 var(--accent)}
+.goto{display:inline-block;margin-left:6px;font-size:11.5px;font-weight:700;color:var(--accent);white-space:nowrap}
+.gohint{font-size:13.5px;color:var(--accent);margin:-4px 0 10px;font-weight:600}
+</style>
+</head>
+<body>
+<button class="theme" id="theme" type="button" aria-label="切換深淺色">◐ 深淺色</button>
+<div class="wrap">
+<header class="hero">
+  <div class="kick"><a href="endo-interactive.html" style="color:inherit;text-decoration:none">← 內分泌新陳代謝科 醫學互動教學</a></div>
+  <h1>糖尿病併發症，<span>動起來</span></h1>
+  <p class="lead">從急性的糖尿病酮酸中毒（DKA）、高血糖高滲透壓狀態（HHS）與低血糖，到慢性的視網膜、腎臟、神經與大血管併發症：一步一步看它們怎麼發生、怎麼診斷與篩檢，以及治療作用在哪一站。</p>
+  <ul class="legend">
+    <li><i style="background:var(--glu)"></i>葡萄糖</li>
+    <li><i style="background:var(--ins)"></i>胰島素</li>
+    <li><i style="background:var(--ctr)"></i>升糖素與反調節荷爾蒙</li>
+    <li><i style="background:var(--ffa)"></i>脂肪酸</li>
+    <li><i style="background:var(--ket)"></i>酮體</li>
+    <li><i style="background:var(--h2o)"></i>水分與電解質</li>
+    <li><i style="background:var(--dmg)"></i>器官傷害</li>
+    <li><i style="background:var(--drug)"></i>治療作用點</li>
+  </ul>
+</header>
+
+<div class="tabs" role="tablist" id="tabs"></div>
+
+<div class="player">
+  <div class="stage">
+<svg id="map" viewBox="0 0 600 610" role="img" aria-label="胰臟、肝臟、脂肪、肌肉、腎臟、神經、腦、眼睛、心臟、大血管、足部與血糖示意圖">
+  <g id="paths">
+    <path class="vessel" id="p-panc2liver" d="M364 34 Q420 30 452 46"/>
+    <path class="vessel" id="p-panc2fat" d="M364 56 Q420 110 450 160"/>
+    <path class="vessel" id="p-panc2mus" d="M364 68 C400 160 410 230 450 254"/>
+    <path class="vessel" id="p-fat2liver" d="M505 140 L505 98"/>
+    <path class="vessel" id="p-liver2hub" d="M462 82 C400 140 380 230 356 300"/>
+    <path class="vessel" id="p-hub2mus" d="M362 320 Q410 300 450 270"/>
+    <path class="vessel" id="p-hub2kid" d="M360 350 Q420 380 476 384"/>
+    <path class="vessel" id="p-kid2urine" d="M556 396 Q586 420 592 486"/>
+    <path class="vessel" id="p-hub2brain" d="M250 300 C200 220 190 80 150 46"/>
+    <path class="vessel" id="p-hub2eye" d="M244 316 C200 250 190 160 152 144"/>
+    <path class="vessel" id="p-hub2heart" d="M240 340 Q190 300 146 262"/>
+    <path class="vessel" id="p-hub2vessel" d="M244 350 Q200 370 152 366"/>
+    <path class="vessel" id="p-hub2foot" d="M256 376 C200 430 180 470 146 478"/>
+    <path class="vessel" id="p-hub2nerve" d="M300 268 L300 200"/>
+    <path class="vessel" id="p-nerve2foot" d="M236 186 C170 260 170 400 120 446"/>
+    <path class="vessel" id="p-nerve2heart" d="M236 172 Q180 200 140 228"/>
+    <path class="vessel" id="p-nerve2liver" d="M364 160 Q420 100 456 80"/>
+  </g>
+
+  <g class="org" id="o-brain"><rect class="shape" x="40" y="16" width="110" height="56" rx="18"/><text x="95" y="40">腦</text><text class="sub" x="95" y="60">意識、中風</text></g>
+  <g class="org" id="o-eye"><ellipse cx="95" cy="142" rx="56" ry="30"/><text x="95" y="140">眼睛</text><text class="sub" x="95" y="158">視網膜</text></g>
+  <g class="org" id="o-heart"><path class="shape" d="M95 290 C60 268 38 248 46 230 C54 214 80 216 95 234 C110 216 136 214 144 230 C152 248 130 268 95 290z"/><text x="95" y="252">心臟</text><text class="sub" x="95" y="268">冠心病、心衰</text></g>
+  <g class="org" id="o-ves"><rect class="shape" x="40" y="340" width="110" height="52" rx="16"/><text x="95" y="362">大血管</text><text class="sub" x="95" y="381">動脈粥狀硬化</text></g>
+  <g class="org" id="o-foot"><path class="shape" d="M58 444 L122 444 Q128 468 142 482 Q154 502 130 510 L62 510 Q46 500 52 478 Z"/><text x="95" y="472">足部</text><text class="sub" x="95" y="492">傷口、截肢</text></g>
+  <g class="org" id="o-panc"><rect class="shape" x="236" y="16" width="128" height="58" rx="18"/><text x="300" y="42">胰臟</text><text class="sub" x="300" y="62">胰島素、升糖素</text></g>
+  <g class="org" id="o-nerve"><rect class="shape" x="236" y="140" width="128" height="58" rx="18"/><text x="300" y="164">神經</text><text class="sub" x="300" y="184">周邊、自主神經</text></g>
+  <g class="org" id="o-liver"><path class="shape" d="M452 44 Q500 18 556 36 Q566 64 540 84 Q500 98 462 86 Q444 66 452 44z"/><text x="505" y="58">肝臟</text><text class="sub" x="505" y="76">造糖、產酮</text></g>
+  <g class="org" id="o-fat"><rect class="shape" x="450" y="140" width="110" height="52" rx="16"/><text x="505" y="162">脂肪</text><text class="sub" x="505" y="181">脂肪分解</text></g>
+  <g class="org" id="o-mus"><rect class="shape" x="450" y="236" width="110" height="52" rx="16"/><text x="505" y="258">肌肉</text><text class="sub" x="505" y="277">利用葡萄糖</text></g>
+  <g class="org" id="o-kid"><path class="shape" d="M505 336 C538 334 558 356 556 382 C554 408 534 422 506 422 C482 422 470 410 478 396 C486 384 486 374 478 362 C470 348 482 337 505 336z"/><text x="518" y="378">腎臟</text><text class="sub" x="518" y="396">尿糖、腎病</text></g>
+  <text x="596" y="502" font-size="12" fill="var(--mute)" text-anchor="end">尿液</text>
+
+  <g class="hub" id="hub"><circle cx="300" cy="330" r="62"/>
+    <text class="lbl" x="300" y="295">血糖（mg/dL）</text>
+    <text class="val" id="vg" x="300" y="322">110</text>
+    <text class="lbl" id="l2" x="300" y="344">pH</text>
+    <text class="val" id="v2" x="300" y="371">7.40</text>
+  </g>
+
+  <g id="rings">
+    <rect class="ring" id="r-brain" x="30" y="6" width="130" height="76" rx="24"/>
+    <ellipse class="ring" id="r-eye" cx="95" cy="142" rx="70" ry="42"/>
+    <ellipse class="ring" id="r-heart" cx="95" cy="254" rx="66" ry="50"/>
+    <rect class="ring" id="r-ves" x="30" y="330" width="130" height="72" rx="22"/>
+    <ellipse class="ring" id="r-foot" cx="97" cy="477" rx="66" ry="46"/>
+    <rect class="ring" id="r-panc" x="226" y="6" width="148" height="78" rx="24"/>
+    <rect class="ring" id="r-nerve" x="226" y="130" width="148" height="78" rx="24"/>
+    <ellipse class="ring" id="r-liver" cx="505" cy="60" rx="70" ry="46"/>
+    <rect class="ring" id="r-fat" x="440" y="130" width="130" height="72" rx="22"/>
+    <rect class="ring" id="r-mus" x="440" y="226" width="130" height="72" rx="22"/>
+    <ellipse class="ring" id="r-kid" cx="514" cy="380" rx="58" ry="56"/>
+  </g>
+
+  <g class="meter" id="meter">
+    <rect class="box" x="212" y="520" width="176" height="86" rx="10"/>
+    <text class="ttl" x="222" y="537">相對量（中線＝正常）</text>
+    <g id="mrows"></g>
+  </g>
+
+  <g id="parts" class="pt"></g>
+  <g id="chips" class="chips"></g>
+</svg>
+  </div>
+
+  <div class="panel" aria-live="polite">
+    <div class="where"><span id="where"></span><span id="cnt"></span></div>
+    <h2 id="ttl"></h2>
+    <div class="txt" id="txt"></div>
+    <div class="ctl">
+      <button id="prev" type="button" aria-label="上一步">←</button>
+      <button id="play" type="button" aria-label="自動播放">▶ 自動</button>
+      <button id="say" type="button" aria-pressed="false" aria-label="語音朗讀">🔊 朗讀</button>
+      <button class="next" id="next" type="button">下一步 →</button>
+    </div>
+    <div class="dots" id="dots"></div>
+    <div class="hint">鍵盤 ← → 切換，手機可在圖上左右滑動。開「🔊 朗讀」再按「▶ 自動」，會唸完一步自動換下一步。</div>
+  </div>
+</div>
+
+<section class="cmp">
+  <h2>DKA 與 HHS 怎麼分（2024 共識）</h2>
+  <p class="lead" style="margin-bottom:10px">兩者可以同時存在（混合型）；診斷看檢驗，不靠意識狀態。</p>
+  <div class="tblw"><table style="min-width:640px">
+    <thead><tr><th>項目</th><th>DKA</th><th>HHS</th></tr></thead>
+    <tbody>
+      <tr><td><b>常見族群</b></td><td>第 1 型糖尿病為主，第 2 型也會發生</td><td>第 2 型、年紀較大</td></tr>
+      <tr><td><b>發生速度</b></td><td>數小時到一兩天</td><td>數天到數週</td></tr>
+      <tr><td><b>血糖</b></td><td>≥ 200 mg/dL，或已知糖尿病（可能接近正常）</td><td>≥ 600 mg/dL</td></tr>
+      <tr><td><b>酮體</b></td><td>β-羥丁酸 ≥ 3.0 mmol/L（或尿酮 ≥ 2+）</td><td>沒有明顯酮體（β-羥丁酸 &lt; 3.0）</td></tr>
+      <tr><td><b>酸鹼</b></td><td>pH &lt; 7.3 及／或重碳酸 &lt; 18 mmol/L</td><td>pH ≥ 7.3 且重碳酸 ≥ 15 mmol/L</td></tr>
+      <tr><td><b>滲透壓</b></td><td>不一定升高</td><td>有效滲透壓 &gt; 300 或總滲透壓 &gt; 320 mOsm/kg</td></tr>
+      <tr><td><b>意識</b></td><td>多半清醒，嚴重時嗜睡</td><td>常有意識改變，與滲透壓高低相關</td></tr>
+      <tr><td><b>治療重點</b></td><td>輸液、胰島素到酮體消失、補鉀、找誘因</td><td>大量但不過快地補水、慢慢降滲透壓、預防血栓</td></tr>
+    </tbody>
+  </table></div>
+  <h2>慢性併發症怎麼篩檢</h2>
+  <div class="tblw"><table>
+    <thead><tr><th>項目</th><th>何時開始</th><th>多久一次</th><th>怎麼篩</th></tr></thead>
+    <tbody>
+      <tr><td><b>視網膜病變</b></td><td>第 2 型：診斷時；第 1 型：診斷後 5 年內</td><td>無病變每 1–2 年；有病變依眼科安排；懷孕前與懷孕初期</td><td>散瞳眼底檢查或視網膜攝影</td></tr>
+      <tr><td><b>腎病變</b></td><td>第 2 型：診斷時；第 1 型：病程 5 年起</td><td>至少每年</td><td>尿白蛋白／肌酸酐比值（UACR）＋ eGFR</td></tr>
+      <tr><td><b>周邊神經病變</b></td><td>第 2 型：診斷時；第 1 型：病程 5 年起</td><td>每年</td><td>10 克單絲＋震動、針刺、溫度或踝反射</td></tr>
+      <tr><td><b>糖尿病足</b></td><td>診斷時</td><td>每年完整評估；高風險者每次回診看腳</td><td>皮膚、指甲、變形、感覺、足背脈搏</td></tr>
+      <tr><td><b>自主神經病變</b></td><td>同周邊神經病變</td><td>每年問症狀</td><td>休息心跳、姿勢性血壓、腸胃與排尿症狀、低血糖無感</td></tr>
+      <tr><td><b>周邊動脈疾病</b></td><td>有症狀、年紀大或病程長</td><td>依風險</td><td>足背脈搏、踝肱指數（ABI）；血管鈣化時改測趾肱指數</td></tr>
+      <tr><td><b>心衰竭</b></td><td>依風險</td><td>依風險</td><td>症狀、BNP 或 NT-proBNP</td></tr>
+      <tr><td><b>血壓與血脂</b></td><td>診斷時</td><td>血壓每次回診；血脂至少每年</td><td>血壓、LDL、三酸甘油酯</td></tr>
+    </tbody>
+  </table></div>
+  <h2>治療一覽</h2>
+  <div class="tblw"><table>
+    <thead><tr><th>治療</th><th>作用部位</th><th>機轉</th><th>用在</th><th>注意</th></tr></thead>
+    <tbody id="tbody"></tbody>
+  </table></div>
+</section>
+
+<footer>
+  教學示意圖，器官位置與比例經過簡化；血糖與檢驗數字為示意的典型值；不含藥物劑量與輸液速率，非個別病人的診斷或用藥建議，實際判斷請依仿單、院內流程與最新指引（ADA Standards of Care 2026、2024 成人高血糖危象共識、IWGDF）。頁中藥物核准與研究狀態不涉及健保給付或國內是否上市。<br>
+  相關：<a href="glucose-in-motion.html">血糖，動起來</a>、<a href="diabetes-types-in-motion.html">糖尿病分型，動起來</a>、<a href="glucose-monitoring-in-motion.html">血糖監測與 AID，動起來</a>、<a href="hypertension-in-motion.html">高血壓，動起來</a><br>
+  工具版本：2026-11-08
+</footer>
+</div>
+
+<script>
+(function(){
+'use strict';
+var $=function(s){return document.querySelector(s)};
+var SVGNS='http://www.w3.org/2000/svg';
+var COL={u:'var(--glu)',i:'var(--ins)',c:'var(--ctr)',f:'var(--ffa)',k:'var(--ket)',w:'var(--h2o)',d:'var(--dmg)',x:'var(--drug)'};
+var AT={brain:[95,94],eye:[95,194],heart:[95,316],ves:[95,416],foot:[95,534],panc:[300,96],nerve:[300,224],liver:[505,112],fat:[505,214],mus:[505,310],kid:[505,446],hub:[300,416]};
+var STACK={};
+var ORG=['brain','eye','heart','ves','foot','panc','nerve','liver','fat','mus','kid'];
+var LABA=['胰島素','升糖激素','酮體'],LABB=['胰島素','升糖素','腎上腺素'],LABC=['高血糖','血壓','白蛋白尿'],LABD=['LDL','血壓','發炎'];
+var PH={l:'pH',d:2,lo:7.35,hi:7.45},OSM={l:'有效滲透壓',d:0,lo:275,hi:295},LV={l:'低血糖分級',d:0,lo:-1,hi:0.5,z:1},A1C={l:'HbA1c（%）',d:1,lo:4,hi:7};
+var GM='glucose-monitoring-in-motion.html';
+
+/* 每一步：t 標題、k 類型（phy/dx/dz/drg）、on 亮起器官、rx 治療圈、g [血糖, 第二數值]、h2 第二數值設定（覆寫分頁）、lv 三格量表(-2~2)、lab 量表標籤（覆寫）、flows、chips、dmg 受傷器官、d 說明 */
+var AX=[
+{id:'acute',n:'A 高血糖急症',s:'DKA、HHS',lab:LABA,h2:PH,steps:[
+ {t:'正常：胰島素管住肝臟與脂肪',k:'phy',on:['panc','liver','fat','mus'],g:[110,7.40],lv:[0,0,0],
+  flows:[['panc2liver','i',1.6],['panc2fat','i',1.4],['panc2mus','i',1.4],['hub2mus','u',1.6],['liver2hub','u',.6]],
+  chips:[['liver','少造糖、不產酮','info'],['fat','脂肪分解被抑制','info']],
+  d:'<p>胰島素同時做三件事：</p><ul><li><b>肌肉、脂肪</b>：把葡萄糖收進細胞</li><li><b>肝臟</b>：減少造糖（肝醣分解、糖質新生）</li><li><b>脂肪</b>：抑制脂肪分解，脂肪酸不會大量跑到肝臟，肝臟也就不產酮體</li></ul><p>抑制脂肪分解只需要很少量的胰島素，所以只要還有一點胰島素，就不容易產生大量酮體。這是 DKA 與 HHS 差別的關鍵。</p>'},
+ {t:'DKA 的起點：胰島素不夠，反調節荷爾蒙上升',k:'dz',on:['panc','liver'],g:[320,7.28],lv:[-2,2,1],
+  flows:[['nerve2liver','c',2],['liver2hub','u',2.6],['panc2liver','c',1.6]],
+  chips:[['panc','胰島素嚴重不足','down'],['liver','升糖素 → 大量造糖','up']],
+  d:'<p>DKA 發生在胰島素<b>明顯不足</b>，同時升糖素、腎上腺素、皮質醇、生長激素這些反調節荷爾蒙上升的時候：肝臟大量造糖，肌肉與脂肪又用不到。</p><p>常見誘因：</p><ul><li><b>感染</b>（最常見）、自行停用或漏打胰島素、胰島素幫浦管路阻塞</li><li>新診斷的第 1 型糖尿病</li><li>心肌梗塞、中風、胰臟炎、懷孕、酒精</li><li>藥物：<b>SGLT2 抑制劑</b>（可能血糖不高）、類固醇、免疫檢查點抑制劑引起的第 1 型糖尿病</li></ul>'},
+ {t:'酮體：脂肪燒過頭，血液變酸',k:'dz',on:['fat','liver'],g:[420,7.12],lv:[-2,2,2],
+  flows:[['fat2liver','f',2.8],['liver2hub','k',2.6],['liver2hub','u',1.6]],
+  chips:[['fat','脂肪大量分解','up'],['liver','脂肪酸 → 酮體','up'],['hub','陰離子間隙代謝性酸中毒','up']],
+  d:'<p>沒有胰島素擋著，脂肪大量分解，脂肪酸湧進肝臟；升糖素讓肝臟把脂肪酸轉成<b>酮體</b>（β-羥丁酸、乙醯乙酸）。酮體是酸，累積起來就造成<b>陰離子間隙增加的代謝性酸中毒</b>。</p><ul><li>呼吸又深又快（Kussmaul 呼吸），用呼吸把二氧化碳吹掉來代償</li><li>呼氣有水果味（丙酮）</li><li>噁心、嘔吐、<b>腹痛</b>，有時像急腹症</li></ul>'},
+ {t:'滲透性利尿：水、鈉、鉀一起流失',k:'dz',on:['kid'],g:[480,7.10],lv:[-2,2,2],
+  flows:[['hub2kid','u',2.6],['kid2urine','w',3],['kid2urine','u',1.6]],
+  chips:[['kid','尿糖帶走水與電解質','up'],['hub','血鉀可能正常甚至偏高','info']],
+  d:'<p>血糖超過腎臟回收的能力，葡萄糖從尿液排出，把水分一起拉走（<b>滲透性利尿</b>）：多尿、口渴、脫水，加上嘔吐，常造成急性腎損傷。</p><ul><li>鈉、鉀、鎂、磷都大量流失</li><li><b>身體的總鉀量是不足的</b>，但因為酸中毒與缺胰島素讓鉀從細胞跑到血中，抽血時血鉀可能正常甚至偏高</li><li>一旦開始給胰島素，鉀會快速回到細胞內，血鉀可能驟降，這是治療時最需要注意的危險之一</li></ul>'},
+ {t:'診斷：血糖、酮體、酸鹼三件事',k:'dx',on:['liver','kid'],g:[480,7.10],lv:[-2,2,2],
+  flows:[['liver2hub','k',2]],
+  chips:[['hub','血糖、β-羥丁酸、pH','info']],
+  d:'<p>2024 年美國、歐洲、英國等糖尿病學會的共識，<b>DKA</b> 要同時符合：</p><ul><li><b>D 糖尿病</b>：血糖 ≥ 200 mg/dL，或已知有糖尿病</li><li><b>K 酮體</b>：血中 β-羥丁酸 ≥ 3.0 mmol/L（優先驗血酮；沒有才用尿酮 ≥ 2+）</li><li><b>A 酸中毒</b>：pH &lt; 7.3 及／或重碳酸 &lt; 18 mmol/L</li></ul><p>pH &lt; 7.0 或重碳酸 &lt; 10 屬於嚴重。</p><div class="warn"><b>血糖正常的 DKA</b>：使用 SGLT2 抑制劑、懷孕、長期進食很少或生酮飲食、喝酒的人，血糖可能低於 250 甚至接近正常，但酮酸中毒一樣嚴重。所以 DKA 的診斷是看酮體與酸鹼，不能只看血糖。</div><p>同時找誘因：感染檢查、心電圖、脂肪酶、懷孕檢測。</p>'},
+ {t:'HHS：還有一點胰島素，但脫水到極點',k:'dz',on:['kid','brain'],g:[820,335],h2:OSM,lv:[-1,2,0],
+  flows:[['hub2kid','u',2.6],['kid2urine','w',3],['hub2brain','w',1.6]],
+  chips:[['kid','數天到數週的大量排尿','up'],['brain','嗜睡、意識混亂','up'],['hub','有效滲透壓 > 300','up']],
+  d:'<p>高血糖高滲透壓狀態多見於<b>年紀大的第 2 型糖尿病</b>人，常因為感染、中風或藥物（類固醇、利尿劑）誘發，加上喝水不夠（失智、臥床、口渴感變差）：</p><ul><li>還有少量胰島素，足以抑制脂肪分解，所以<b>酮體不多、沒有明顯酸中毒</b></li><li>高血糖持續數天到數週，滲透性利尿讓身體嚴重缺水；血糖常超過 600，甚至上千</li><li>血液高滲透壓把腦細胞的水分拉出來 → 嗜睡、混亂、局部神經症狀、抽搐、昏迷</li><li>血液濃縮，容易<b>血栓</b>；死亡率比 DKA 高</li></ul><p>2024 共識：血糖 ≥ 600 mg/dL、有效滲透壓 &gt; 300（或總滲透壓 &gt; 320）mOsm/kg、沒有明顯酮體與酸中毒。DKA 與 HHS 可以同時存在。</p>'},
+ {t:'治療一：先補水',k:'drg',on:['kid','brain'],rx:['kid'],g:[380,7.18],lv:[-2,1,2],
+  flows:[['hub2kid','x',1.6],['kid2urine','u',2]],
+  chips:[['kid','✚ 等張晶體輸液','drug'],['hub','光補水血糖就會下降','down']],
+  d:'<p>第一步永遠是<b>恢復循環血量</b>：用等張晶體輸液（生理食鹽水或平衡型溶液，例如乳酸林格氏液），之後依血壓、尿量、鈉與滲透壓調整。</p><ul><li>補水本身就能讓血糖下降：血液稀釋，腎臟灌流恢復後也能排出更多葡萄糖</li><li>血糖下降時，血鈉會「回升」，要看校正後的鈉</li><li><b>HHS</b>：缺水量更多，但滲透壓要<b>慢慢</b>降，降太快可能腦水腫；老年人與心衰竭病人要小心體液過多</li></ul><p>不寫輸液速率，請依院內流程與病人狀況。</p>'},
+ {t:'治療二：胰島素與鉀，順序很重要',k:'drg',on:['panc','fat','liver','mus'],rx:['liver','fat'],g:[230,7.25],lv:[1,1,1],
+  flows:[['panc2fat','x',1.6],['panc2liver','x',1.6],['hub2mus','u',2]],
+  chips:[['fat','✚ 胰島素：停止產酮','drug'],['mus','鉀跟著進細胞 → 血鉀下降','down']],
+  d:'<ol><li><b>先看血鉀</b>：血鉀偏低（&lt; 3.5 mmol/L）時，先補鉀、暫緩胰島素，否則胰島素把鉀推進細胞，可能致命的低血鉀與心律不整</li><li><b>胰島素</b>：多數用持續靜脈滴注；輕到中度、沒有併發症的 DKA，可考慮皮下速效胰島素</li><li>血鉀不高時，就在輸液中加鉀，維持在正常範圍</li><li>血糖降到約 250 mg/dL 時，<b>加入葡萄糖、繼續胰島素</b>：目標是把酮體清掉，不只是把血糖降下來</li><li>重碳酸氫鈉只在 pH &lt; 7.0 時考慮；磷很低時才補</li></ol><p>每 1–2 小時驗血糖，定期追蹤電解質、β-羥丁酸、靜脈 pH。</p>'},
+ {t:'緩解、銜接皮下胰島素與預防',k:'drg',on:['panc','liver'],rx:['panc'],g:[160,7.36],lv:[0,0,0],
+  flows:[['panc2liver','i',1.6],['panc2fat','i',1.4]],
+  chips:[['panc','✚ 停點滴前先打皮下長效','drug'],['hub','找誘因、教病假守則','info']],
+  d:'<p><b>DKA 緩解</b>（2024 共識）：β-羥丁酸 &lt; 0.6 mmol/L，且靜脈 pH ≥ 7.3 或重碳酸 ≥ 18 mmol/L。<b>HHS 緩解</b>：有效滲透壓降到 300 以下、脫水矯正（尿量足夠）、意識改善，且血糖降到 250 mg/dL 以下。</p><ul><li>停靜脈胰島素<b>之前</b>要先給皮下基礎胰島素並重疊一段時間，否則很快又復發；也可以更早就開始給</li><li>常見的治療併發症：低血糖、低血鉀、高氯性酸中毒、兒童與年輕人的腦水腫、血栓</li></ul><p><b>預防</b>：生病時不能停基礎胰島素、多喝水、驗血糖與酮體、及早就醫（病假守則）；手術前 SGLT2 抑制劑要提前停藥（多數 3 天，ertugliflozin 4 天）；用幫浦的人要會處理管路問題。</p>'}
+]},
+{id:'hypo',n:'B 低血糖',s:'反調節、無感、處理',lab:LABB,h2:LV,steps:[
+ {t:'身體怎麼防止低血糖',k:'phy',on:['panc','liver','nerve','brain'],g:[78,0],lv:[-1,1,1],
+  flows:[['panc2liver','c',2],['nerve2liver','c',1.6],['liver2hub','u',2]],
+  chips:[['panc','先減胰島素，再放升糖素','info'],['liver','肝醣分解、造糖','up']],
+  d:'<p>腦幾乎只用葡萄糖，又無法儲存，所以身體有層層防線（數值為大約的觸發點）：</p><ol><li>血糖降到約 80 mg/dL：<b>胰島素分泌減少</b></li><li>約 65–70：<b>升糖素</b>與<b>腎上腺素</b>上升，肝臟分解肝醣、造糖；之後皮質醇、生長激素也上升</li><li>約 50–55：出現症狀，促使人去吃東西</li><li>低於約 50：認知功能開始受影響</li></ol><p>打胰島素或吃促進胰島素分泌藥物的人，第一道防線（減少胰島素）失效；第 1 型糖尿病幾年後，升糖素反應也會消失，只剩腎上腺素。</p>'},
+ {t:'低血糖分級',k:'dx',on:['brain'],g:[62,1],lv:[0,1,1],
+  flows:[['hub2brain','u',1]],
+  chips:[['hub','< 70 第 1 級；< 54 第 2 級','info']],
+  d:'<p>美國糖尿病學會（ADA）的分級：</p><ul><li><b>第 1 級</b>：血糖 &lt; 70 mg/dL 且 ≥ 54，警戒值</li><li><b>第 2 級</b>：血糖 &lt; 54 mg/dL，有臨床意義、需要立即處理</li><li><b>第 3 級（嚴重）</b>：不論血糖值，意識或身體狀態改變、需要他人協助處理</li></ul><p>用連續血糖監測時，建議 &lt; 70 的時間少於 4%、&lt; 54 的時間少於 1%（年長或高風險者更嚴格）。</p><p>嚴重低血糖與跌倒、心律不整、心血管事件、失智風險增加有關。</p>'},
+ {t:'症狀：交感神經警報與腦缺糖',k:'dz',on:['brain','heart','nerve'],g:[48,2],lv:[-1,1,2],
+  flows:[['hub2brain','u',.5],['nerve2heart','c',2]],
+  chips:[['heart','心悸、手抖、冒汗、飢餓','up'],['brain','混亂、行為改變、抽搐','down']],
+  d:'<ul><li><b>自主神經症狀</b>（警報）：心悸、手抖、焦慮（腎上腺素）；冒汗、飢餓、手腳發麻（乙醯膽鹼）</li><li><b>腦缺糖症狀</b>：注意力不集中、講話不清、行為異常、視力模糊、抽搐、昏迷</li></ul><p>年長者常表現為頭暈、無力、跌倒、看起來像中風。夜間低血糖可能只有作惡夢、睡衣濕透、早上頭痛。</p><p>有症狀先處理，能驗就驗血糖確認。</p>'},
+ {t:'低血糖無感：警報失靈',k:'dz',on:['brain','nerve','panc'],g:[45,2],lv:[-1,-1,-1],
+  flows:[['hub2brain','u',.4]],
+  chips:[['nerve','警報門檻往下移','down'],['brain','直接進入混亂、昏迷','down']],
+  d:'<p>反覆低血糖會讓腦「習慣」低血糖：觸發腎上腺素與症狀的門檻往下移，最後沒有警告症狀就直接意識混亂（<b>低血糖無感</b>）。這個惡性循環稱為低血糖相關自主神經衰竭。</p><ul><li>危險因子：第 1 型糖尿病病程長、曾經嚴重低血糖、嚴格控制、年紀大、自主神經病變</li><li>β 阻斷劑會遮蓋心悸、手抖等症狀（但不擋冒汗）</li></ul><p>好消息：<b>嚴格避免低血糖 2–3 週</b>，警報通常能部分恢復。連續血糖監測的警示、自動胰島素輸注系統特別適合這群人。</p>'},
+ {t:'原因：藥、吃、動、喝、器官',k:'dz',on:['panc','liver','kid','mus'],g:[52,2],lv:[2,-1,1],
+  flows:[['hub2mus','u',2.4],['panc2liver','i',1.6]],
+  chips:[['panc','胰島素、磺醯尿素','up'],['liver','喝酒抑制造糖','down'],['kid','腎病：藥物清不掉','up']],
+  d:'<ul><li><b>藥物</b>：胰島素（劑量、時間、注射部位、拿錯筆）、<b>磺醯尿素類</b>（glyburide、glimepiride 等，作用長）、meglitinide 類</li><li><b>少吃</b>：延後或跳過一餐、碳水化合物算少</li><li><b>運動</b>：運動中與之後數小時（甚至夜間）</li><li><b>喝酒</b>：抑制肝臟造糖，可能延遲數小時才發生</li><li><b>器官</b>：慢性腎病（胰島素與藥物清除變慢）、肝衰竭、敗血症、腎上腺或腦下垂體功能不足、減重後</li></ul><p><b>沒有糖尿病</b>的人發生低血糖，要符合 Whipple 三要素：有低血糖症狀、當下血糖確實低、補糖後症狀消失。要在發作時抽血驗胰島素、C 胜肽、前胰島素、β-羥丁酸與磺醯尿素篩檢，鑑別胰島素瘤、減重手術後低血糖或誤用藥物。</p>'},
+ {t:'處理：15-15 原則與升糖素',k:'drg',on:['liver','brain'],rx:['liver'],g:[96,0],lv:[0,1,0],
+  flows:[['liver2hub','x',2],['nerve2liver','x',1.4]],
+  chips:[['liver','✚ 升糖素：肝醣分解','drug'],['hub','✚ 15–20 克葡萄糖','drug']],
+  d:'<p><b>清醒能吞</b>：吃 15–20 克葡萄糖（葡萄糖錠、果汁、含糖飲料），15 分鐘後再驗；仍低就再吃一次。血糖回升後，如果離下一餐還久，吃一點含澱粉與蛋白質的點心。</p><ul><li>巧克力、堅果等含油的食物吸收較慢，不適合當急救</li><li>服用 acarbose 的人要用葡萄糖，蔗糖（砂糖）吸收會被延遲</li></ul><p><b>意識不清、無法吞嚥</b>：不要餵食，由家人給<b>升糖素</b>（鼻噴劑或注射），或送醫靜脈注射葡萄糖。用胰島素且有低血糖風險的人都應該備有升糖素，並教家人怎麼用。</p><div class="warn">磺醯尿素類引起的低血糖可能持續或反覆一兩天，嚴重時要住院觀察。</div>'},
+ {t:'預防：調整目標、換藥、靠科技',k:'drg',on:['panc','brain'],rx:['panc'],g:[120,0],lv:[0,0,0],
+  flows:[['panc2liver','i',1.2]],
+  chips:[['panc','✚ 少用磺醯尿素、調整胰島素','drug'],['hub','CGM 警示、AID','info']],
+  d:'<ul><li>依年齡、共病與低血糖風險<b>放寬目標</b>；年長、反覆低血糖者不追求很低的 HbA1c</li><li>選擇低血糖風險低的藥（metformin、SGLT2 抑制劑、GLP-1 類藥物、DPP-4 抑制劑）；能減就減磺醯尿素與過多的胰島素</li><li>速效與長效胰島素類似物的低血糖比傳統胰島素少</li><li><b>連續血糖監測</b>的低值與預測警示、<b>自動胰島素輸注（AID）</b>能明顯減少低血糖</li><li>衛教：隨身帶糖、運動與喝酒前的調整、開車前驗血糖</li></ul><p><a class="xref" href="'+GM+'">→ 血糖監測與 AID，動起來</a></p>'}
+]},
+{id:'micro',n:'C 微血管與神經',s:'眼、腎、神經、足',lab:LABC,h2:A1C,steps:[
+ {t:'長期高血糖怎麼傷害小血管與神經',k:'dz',on:['eye','kid','nerve'],g:[210,9.0],lv:[2,1,1],dmg:['eye','kid','nerve'],
+  flows:[['hub2eye','d',1.4],['hub2kid','d',1.4],['hub2nerve','d',1.4]],
+  chips:[['nerve','多元醇、糖化終產物、氧化壓力','up'],['hub','病程越長、血糖越高越容易','up']],
+  d:'<p>視網膜、腎絲球、神經的細胞不需要胰島素就能吸收葡萄糖，血糖高時細胞內葡萄糖也跟著高，啟動多條傷害路徑：</p><ul><li>多元醇（山梨醇）路徑、<b>糖化終產物（AGEs）</b>、蛋白質激酶 C、己糖胺路徑</li><li>共同結果：<b>氧化壓力</b>、發炎、小血管基底膜增厚、通透性增加、血流減少</li></ul><p>大型研究（第 1 型的 DCCT／EDIC、第 2 型的 UKPDS）顯示：早期把血糖控制好，可以減少微血管併發症，而且好處在多年後仍持續（<b>代謝記憶</b>）。血壓、血脂、抽菸、病程與遺傳也有影響。</p>'},
+ {t:'視網膜病變',k:'dz',on:['eye'],g:[200,8.8],lv:[2,1,0],dmg:['eye'],
+  flows:[['hub2eye','d',2.4]],
+  chips:[['eye','微血管瘤、出血 → 新生血管','up'],['eye','黃斑部水腫影響視力','up']],
+  d:'<ul><li><b>非增殖期</b>：微血管瘤、點狀出血、硬性滲出、棉絮斑；早期通常沒有症狀</li><li><b>增殖期</b>：視網膜缺血，分泌 VEGF 長出脆弱的<b>新生血管</b> → 玻璃體出血、牽引性視網膜剝離</li><li><b>黃斑部水腫</b>：任何階段都可能發生，是視力下降最常見的原因</li></ul><p><b>篩檢</b>：第 2 型診斷時、第 1 型診斷後 5 年內開始，之後每 1–2 年；懷孕前與懷孕初期也要檢查。</p><p><b>治療</b>：控制血糖、血壓、血脂；眼內注射<b>抗 VEGF</b> 藥物（黃斑部水腫首選）、雷射、玻璃體切除。Fenofibrate 可能延緩惡化。</p><div class="warn">血糖在短時間內大幅下降（例如剛開始胰島素或 semaglutide），原本已有的視網膜病變可能暫時惡化，要先確認眼底狀況並追蹤。</div>'},
+ {t:'腎病變：從白蛋白尿開始',k:'dz',on:['kid'],g:[190,8.5],lv:[2,1,2],dmg:['kid'],
+  flows:[['hub2kid','d',2.4],['kid2urine','w',1.6]],
+  chips:[['kid','腎絲球過濾過度 → 白蛋白漏出','up'],['hub','每年驗 UACR 與 eGFR','info']],
+  d:'<p>高血糖與高血壓讓腎絲球內壓上升、一開始<b>過濾過度</b>，之後基底膜增厚、繫膜擴張、腎絲球硬化：</p><ul><li>尿中白蛋白增加：<b>UACR ≥ 30 mg/g</b>（3–6 個月內三次有兩次）</li><li>腎功能（eGFR）逐漸下降，最後可能需要透析</li><li>白蛋白尿也代表心血管風險上升</li></ul><p><b>篩檢</b>：第 2 型診斷時、第 1 型病程 5 年起，至少每年驗 UACR 與 eGFR。</p><p>出現血尿、腎功能快速惡化、第 1 型卻沒有視網膜病變等情況，要想到其他腎臟病。</p>'},
+ {t:'腎病變的四大支柱',k:'drg',on:['kid'],rx:['kid'],g:[150,7.3],lv:[0,-1,-1],dmg:['kid'],
+  flows:[['hub2kid','x',1.6],['kid2urine','u',1.6]],
+  chips:[['kid','✚ ACEI／ARB、SGLT2 抑制劑','drug'],['kid','✚ finerenone、GLP-1 類藥物','drug']],
+  d:'<p>除了控制血糖、血壓（&lt; 130/80）、戒菸，現在有幾類藥能直接保護腎臟：</p><ul><li><b>ACE 抑制劑或 ARB</b>：有白蛋白尿或高血壓時使用，降低腎絲球內壓</li><li><b>SGLT2 抑制劑</b>：eGFR ≥ 20 即可開始，減緩腎功能惡化、減少心衰竭；開始後 eGFR 可能小幅下降，是預期的</li><li><b>Finerenone</b>：非類固醇 MRA，用於第 2 型糖尿病合併白蛋白尿；注意高血鉀</li><li><b>GLP-1 受體促效劑</b>：semaglutide 在 FLOW 試驗中減少腎臟惡化與死亡</li></ul><p>避免 NSAID 止痛藥；metformin 依 eGFR 調整，eGFR &lt; 30 停用。不要同時用 ACE 抑制劑與 ARB。</p>'},
+ {t:'周邊神經病變：從腳趾往上爬',k:'dz',on:['nerve','foot'],g:[200,8.6],lv:[2,0,0],dmg:['nerve','foot'],
+  flows:[['hub2nerve','d',2],['nerve2foot','d',2]],
+  chips:[['nerve','最長的神經最先受損','up'],['foot','襪套式麻、痛、失去保護感覺','up']],
+  d:'<p>最常見的是<b>遠端對稱性多發神經病變</b>：最長的神經先壞，所以從腳趾開始，呈襪套、手套分布往上延伸。約一半的糖尿病人會發生。</p><ul><li><b>小纖維</b>：灼熱、刺痛、電擊感，夜間更明顯；痛覺、溫度覺變差</li><li><b>大纖維</b>：震動覺、位置覺、踝反射消失，走路不穩、容易跌倒</li><li>最危險的是<b>失去保護感覺</b>：受傷了也不痛</li></ul><p><b>篩檢</b>：第 2 型診斷時、第 1 型病程 5 年起，每年用 10 克單絲，加上震動、針刺、溫度覺或踝反射其中一項。</p><p>要排除其他原因：維生素 B12 缺乏（長期 metformin）、甲狀腺低下、酒精、腎病、化療。也可能出現單一神經病變，例如瞳孔不受影響的動眼神經麻痺、腕隧道症候群。</p>'},
+ {t:'神經痛的治療',k:'drg',on:['nerve','foot'],rx:['nerve'],g:[150,7.4],lv:[1,0,0],dmg:['nerve'],
+  flows:[['nerve2foot','x',1.6]],
+  chips:[['nerve','✚ pregabalin、gabapentin','drug'],['nerve','✚ duloxetine','drug']],
+  d:'<p>控制血糖可以延緩神經病變進展（第 1 型證據最明確），但已經出現的疼痛需要另外治療：</p><ul><li><b>第一線</b>：pregabalin 或 gabapentin（鈣離子通道 α2δ 次單位）、duloxetine（血清素與正腎上腺素回收抑制劑）；三環抗憂鬱劑也有效，但年長或心臟病人要小心副作用</li><li><b>局部</b>：高濃度辣椒素貼片</li><li><b>鴉片類</b>：不建議作為常規治療，有成癮與副作用風險</li><li>藥物無效的嚴重疼痛：可轉介考慮脊髓刺激器</li></ul><p>常見副作用：pregabalin、gabapentin 頭暈嗜睡、水腫，腎功能差要減量；duloxetine 噁心。</p>'},
+ {t:'糖尿病足：小傷口變成截肢',k:'dz',on:['foot','nerve','ves'],g:[220,9.2],lv:[2,0,0],dmg:['foot'],
+  flows:[['nerve2foot','d',1.8],['hub2foot','d',1.8]],
+  chips:[['foot','神經病變＋血流差＋外傷','up'],['ves','周邊動脈疾病','up']],
+  d:'<p>糖尿病足潰瘍通常是好幾個問題加在一起：</p><ul><li><b>神經病變</b>：沒有保護感覺、足部變形、皮膚乾裂</li><li><b>周邊動脈疾病</b>：血流差，傷口難癒合</li><li><b>外傷</b>：鞋子不合、赤腳、剪指甲、燙傷</li></ul><p>潰瘍一旦感染，可能進展到骨髓炎、截肢。<b>Charcot 足</b>：腳突然紅、熱、腫但不太痛，骨頭與關節塌陷變形，要立刻減壓並轉診。</p><p><b>照顧</b>：每天看腳（看不到用鏡子或請家人）、穿合適的鞋襪、不赤腳、不自己處理雞眼。</p><p><b>潰瘍治療</b>：減壓（全接觸石膏等）、清創、控制感染、評估血流並必要時血管重建，由多專科團隊處理。</p>'},
+ {t:'自主神經病變：看不見的併發症',k:'dz',on:['nerve','heart','brain'],g:[180,8.4],lv:[1,0,0],dmg:['nerve'],
+  flows:[['nerve2heart','d',2],['hub2nerve','d',1.2]],
+  chips:[['heart','休息心跳快、姿勢性低血壓','up'],['nerve','腸胃、膀胱、性功能','up']],
+  d:'<ul><li><b>心血管</b>：休息心跳偏快、運動耐受差、<b>姿勢性低血壓</b>、無痛性心肌缺血；與死亡風險增加有關</li><li><b>腸胃</b>：<b>胃輕癱</b>（脹、噁心、早飽、血糖忽高忽低，飯前胰島素容易造成餐後低血糖）、便秘或腹瀉</li><li><b>泌尿生殖</b>：神經性膀胱、勃起功能障礙、逆行性射精</li><li><b>汗腺</b>：下肢無汗、皮膚乾裂</li><li><b>低血糖無感</b></li></ul><p>評估：休息心跳、躺站血壓、詢問症狀；必要時做心律變異度、胃排空檢查。</p><p>治療以症狀為主：胃輕癱少量多餐、低脂低纖；勃起功能障礙可用 PDE5 抑制劑；姿勢性低血壓先補水分、慢慢起身、彈性襪。</p>'}
+]},
+{id:'macro',n:'D 大血管',s:'心、腦、腳的動脈',lab:LABD,h2:A1C,steps:[
+ {t:'糖尿病加速動脈粥狀硬化',k:'dz',on:['ves','heart','brain'],g:[180,8.4],lv:[1,1,1],dmg:['ves'],
+  flows:[['hub2vessel','d',2],['hub2heart','d',1.4],['hub2brain','d',1.2]],
+  chips:[['ves','血脂異常、內皮受損、發炎','up'],['heart','心血管病是第一死因','up']],
+  d:'<p>心血管疾病是糖尿病人最主要的死因，風險約為沒有糖尿病者的兩倍。胰島素阻抗與高血糖讓動脈硬化加速：</p><ul><li><b>血脂異常</b>：三酸甘油酯高、HDL 低、小而密的 LDL 增加</li><li>內皮功能受損、一氧化氮減少</li><li>慢性發炎、糖化終產物、血小板較易凝集、纖溶能力下降</li><li>常合併高血壓、肥胖、慢性腎病</li></ul><p>與微血管併發症不同，大血管併發症在血糖輕微升高（前期糖尿病）時就已經開始，所以要同時處理血壓、血脂、抽菸，不能只看血糖。</p>'},
+ {t:'冠心病：常常不痛',k:'dz',on:['heart','nerve'],g:[170,8.2],lv:[1,1,1],dmg:['heart'],
+  flows:[['hub2heart','d',2.2],['nerve2heart','d',1]],
+  chips:[['heart','無痛性心肌缺血','up'],['nerve','自主神經病變讓胸痛消失','info']],
+  d:'<p>糖尿病人的冠狀動脈病變常是多條血管、瀰漫性，而且症狀不典型：</p><ul><li>因為自主神經病變，心肌缺血可能<b>不痛</b>，只表現為喘、疲倦、運動耐受變差、血糖突然變難控制</li><li>心肌梗塞後預後較差</li></ul><p>沒有症狀的人不建議常規做心臟負荷檢查；但有不典型症狀、心電圖異常、周邊或頸動脈疾病時，要積極評估。</p>'},
+ {t:'中風與周邊動脈疾病',k:'dz',on:['brain','ves','foot'],g:[175,8.3],lv:[1,1,1],dmg:['ves','foot'],
+  flows:[['hub2brain','d',1.8],['hub2vessel','d',1.8],['hub2foot','d',1.6]],
+  chips:[['brain','缺血性中風、小血管病變','up'],['foot','間歇性跛行、傷口不癒','up']],
+  d:'<ul><li><b>腦</b>：缺血性中風（包括小洞性梗塞）風險增加，也與血管性失智有關</li><li><b>周邊動脈疾病</b>：走路小腿痛、休息就好（間歇性跛行），嚴重時休息也痛、傷口不癒、壞疽。因為神經病變，很多人<b>沒有跛行症狀</b></li></ul><p><b>檢查</b>：摸足背與脛後動脈脈搏、量<b>踝肱指數（ABI）</b>，&lt; 0.9 表示狹窄。糖尿病人動脈常鈣化，ABI 可能假性偏高（&gt; 1.3），此時改測趾肱指數。年紀大、病程長或有症狀的人建議檢查。</p><p>治療：戒菸、statin、抗血小板藥、運動訓練；嚴重缺血要血管重建。</p>'},
+ {t:'心衰竭：常被忽略的併發症',k:'dz',on:['heart','kid'],g:[165,8.0],lv:[0,1,1],dmg:['heart'],
+  flows:[['hub2heart','d',2],['hub2kid','w',1.2]],
+  chips:[['heart','射出分率保留型最常見','up'],['hub','可驗 BNP、NT-proBNP','info']],
+  d:'<p>糖尿病讓心衰竭風險增加數倍，原因包括冠心病、高血壓、腎病，以及心肌本身的代謝與纖維化變化（糖尿病心肌病變）。</p><ul><li>喘、下肢水腫、夜間端坐呼吸、體重短期增加</li><li>可考慮用 <b>BNP 或 NT-proBNP</b> 及早發現</li><li><b>SGLT2 抑制劑</b>：不論射出分率高低，都能減少心衰竭住院</li><li>心衰竭病人避免 pioglitazone（水分滯留）與 saxagliptin</li></ul>'},
+ {t:'全面控制：不只是血糖',k:'drg',on:['ves','heart','brain'],rx:['ves'],g:[140,7.0],lv:[-1,-1,-1],
+  flows:[['hub2vessel','x',1.6]],
+  chips:[['ves','✚ statin、降血壓、戒菸','drug'],['heart','已有心血管病：抗血小板','info']],
+  d:'<p>Steno-2 研究：同時嚴格控制血糖、血壓、血脂並使用 ACE 抑制劑／ARB、阿斯匹靈，心血管事件減少約一半，壽命延長。</p><ul><li><b>血壓</b>：多數 &lt; 130/80 mmHg</li><li><b>LDL</b>：40–75 歲多數要用 statin；已有動脈粥狀硬化心血管病時目標 &lt; 55 mg/dL，可加 ezetimibe 或 PCSK9 抑制劑</li><li><b>抗血小板</b>：已有心血管病時使用阿斯匹靈；沒有心血管病時要權衡出血風險，不常規使用</li><li><b>戒菸</b>、減重、規律運動</li></ul><p><a class="xref" href="hypertension-in-motion.html">→ 高血壓，動起來</a>　<a class="xref" href="metabolic-in-motion.html">→ 代謝，動起來</a></p>'},
+ {t:'SGLT2 抑制劑：從腎臟保護心腎',k:'drg',on:['kid','heart'],rx:['kid'],g:[150,7.3],lv:[0,-1,-1],
+  flows:[['kid2urine','u',2.6],['kid2urine','w',1.4]],
+  chips:[['kid','✚ 尿中排糖、排鈉','drug'],['heart','減少心衰竭住院','down']],
+  d:'<p>擋住近曲小管回收葡萄糖的 SGLT2，讓葡萄糖與鈉從尿液排出：血糖、血壓、體重都下降。同時讓更多鈉到達緻密斑，收縮入球小動脈、降低腎絲球內壓，保護腎臟。</p><ul><li>減少心衰竭住院、延緩慢性腎病惡化；部分藥物減少心血管死亡</li><li>開始後 eGFR 小幅下降是預期的</li><li>副作用：<b>生殖器黴菌感染</b>、脫水、罕見的會陰部壞死性筋膜炎</li><li><b>血糖正常的 DKA</b>：生病吃不下、手術前、極低醣飲食時風險上升，要暫停（手術前多數提前 3 天）</li></ul>'},
+ {t:'GLP-1 受體促效劑與 tirzepatide',k:'drg',on:['panc','brain','ves','kid'],rx:['panc','ves'],g:[140,7.0],lv:[-1,-1,-1],
+  flows:[['panc2liver','i',1.6],['hub2vessel','x',1.4]],
+  chips:[['panc','✚ 依血糖促進胰島素','drug'],['ves','✚ 減少心血管事件','drug']],
+  d:'<p>GLP-1 受體促效劑依血糖高低促進胰島素、抑制升糖素、延緩胃排空、降低食慾：</p><ul><li>多個試驗（liraglutide、semaglutide、dulaglutide）證實減少心肌梗塞、中風、心血管死亡，適合已有動脈粥狀硬化心血管病或高風險的人</li><li>semaglutide 也減少腎臟惡化（FLOW 試驗）</li><li><b>Tirzepatide</b>（GIP／GLP-1 雙重促效劑）：降血糖與體重效果更強；心血管結果試驗與 dulaglutide 相比為不劣性</li><li>副作用：噁心、嘔吐、腹瀉、膽結石；有甲狀腺髓質癌或第 2 型多發性內分泌腫瘤家族史者禁用；血糖快速下降時注意視網膜病變</li></ul>'},
+ {t:'血糖目標：個人化，越早越好',k:'drg',on:['panc','eye','kid','nerve','heart'],rx:['panc'],g:[140,7.0],lv:[0,0,0],
+  flows:[['panc2liver','i',1.4],['panc2mus','i',1.4]],
+  chips:[['hub','多數 HbA1c < 7%、TIR > 70%','info'],['panc','年長或低血糖風險高可放寬','info']],
+  d:'<ul><li>多數成人 <b>HbA1c &lt; 7%</b>，連續血糖監測<b>目標範圍內時間（TIR）&gt; 70%</b>、低於 70 的時間 &lt; 4%</li><li>年輕、病程短、低血糖風險低：能安全做到可以更低</li><li>年長、多重共病、預期壽命有限、反覆低血糖：放寬到 &lt; 8% 左右</li></ul><p>早期積極控制，微血管併發症減少，心血管的好處要多年後才顯現（代謝記憶）。ACCORD 試驗提醒：對已有心血管病的高風險第 2 型病人，追求太低的 HbA1c（&lt; 6%）反而增加死亡。</p><p>選藥時，有心血管病、心衰竭或慢性腎病的人，不論 HbA1c 多少，都優先考慮有器官保護證據的 SGLT2 抑制劑或 GLP-1 類藥物。</p>'}
+]}
+];
+
+var DRUGS=[
+ ['靜脈胰島素','脂肪、肝臟、肌肉','停止脂肪分解與產酮、降血糖','DKA、HHS','先確認血鉀；血糖降到約 250 加葡萄糖、繼續到酮體清除'],
+ ['等張晶體輸液','血管內','恢復血量與腎灌流','DKA、HHS','HHS 滲透壓要慢慢降；心衰竭、腎衰竭小心過量'],
+ ['鉀補充','細胞內外','補回總鉀不足','DKA、HHS 治療中','血鉀 &lt; 3.5 先補鉀再給胰島素'],
+ ['葡萄糖（口服、靜脈）','血液','直接提高血糖','低血糖','清醒能吞才口服；acarbose 使用者要用葡萄糖'],
+ ['升糖素（鼻噴、注射）','肝臟','肝醣分解','嚴重低血糖、無法進食','家人可施打；肝醣耗盡（長時間禁食、酒精）時效果差'],
+ ['抗 VEGF 眼內注射','視網膜','抑制新生血管與滲漏','黃斑部水腫、增殖性視網膜病變','需多次注射'],
+ ['Fenofibrate','血脂、視網膜','降三酸甘油酯，可能延緩視網膜病變','高三酸甘油酯、視網膜病變','腎功能差要調整'],
+ ['ACE 抑制劑、ARB','腎絲球、血管','降低腎絲球內壓與血壓','白蛋白尿、高血壓','高血鉀、肌酸酐上升；懷孕禁用'],
+ ['Finerenone','腎臟、心臟（MR）','非類固醇 MRA，抗發炎與纖維化','第 2 型糖尿病合併白蛋白尿','高血鉀'],
+ ['Pregabalin、gabapentin','神經','作用在鈣離子通道 α2δ 次單位','疼痛性神經病變','頭暈、嗜睡、水腫；腎功能差要減量'],
+ ['Duloxetine','中樞痛覺路徑','血清素、正腎上腺素回收抑制','疼痛性神經病變','噁心；肝病避免'],
+ ['辣椒素貼片','皮膚神經末梢','使痛覺纖維失去敏感度','局部神經痛','貼時灼熱感'],
+ ['PDE5 抑制劑','陰莖血管','增加 cGMP、放鬆平滑肌','勃起功能障礙','不可與硝酸鹽併用'],
+ ['Statin','肝臟（LDL）','降低 LDL、穩定斑塊','多數 40–75 歲糖尿病、已有心血管病','肌肉痠痛、肝指數'],
+ ['阿斯匹靈','血小板','抗血小板','已有心血管病（次級預防）','出血；初級預防需權衡'],
+ ['SGLT2 抑制劑','腎臟近曲小管','尿中排糖排鈉、降低腎絲球內壓','心衰竭、慢性腎病、心血管病','生殖器感染、脫水、血糖正常的 DKA'],
+ ['GLP-1 受體促效劑、tirzepatide','胰臟、腦、胃','依血糖促胰島素、抑制食慾','動脈粥狀硬化心血管病、肥胖、腎病','腸胃副作用；甲狀腺髓質癌家族史禁用']
+];
+var GOMAP=[[[0,1],[0,5],[0,4],[0,4],[0,4],[0,5],[0,5],[0,6]],[[2,1],[2,2],[2,4],[2,6],[2,7],[3,2],[3,3],[3,4]],[[0,7],[0,6],[0,7],[1,5],[1,5],[2,1],[2,1],[2,3],[2,3],[2,5],[2,5],[2,5],[2,7],[3,4],[3,4],[3,5],[3,6]]];
+
+/* ================= 畫面 ================= */
+var axi=0,steps=AX[0].steps,idx=0,cur=[110,7.40],tgt=[110,7.40],h2=PH;
+var ttl=$('#ttl'),txt=$('#txt'),cnt=$('#cnt'),where=$('#where'),dots=$('#dots'),chipsG=$('#chips'),partsG=$('#parts');
+var prevB=$('#prev'),nextB=$('#next'),playB=$('#play'),tabs=$('#tabs'),vg=$('#vg'),v2=$('#v2'),l2=$('#l2');
+var RM=matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+AX.forEach(function(a,k){var b=document.createElement('button');b.type='button';b.setAttribute('role','tab');b.innerHTML=a.n+'<small>'+a.s+'</small>';b.onclick=function(){stopAuto();setAx(k,0,true)};tabs.appendChild(b)});
+DRUGS.forEach(function(r){var tr=document.createElement('tr');tr.innerHTML='<td><b>'+r[0]+'</b></td><td>'+r[1]+'</td><td>'+r[2]+'</td><td>'+r[3]+'</td><td>'+r[4]+'</td>';$('#tbody').appendChild(tr)});
+
+var mrows=$('#mrows'),MB=[];
+for(var r=0;r<3;r++){
+  var y=556+r*17,g=document.createElementNS(SVGNS,'g');
+  g.innerHTML='<text x="222" y="'+(y+4)+'"></text><rect class="trk" x="276" y="'+(y-4)+'" width="72" height="8" rx="4"/><rect class="bar" x="312" y="'+(y-4)+'" width="0" height="8" rx="4"/><line class="mid" x1="312" x2="312" y1="'+(y-7)+'" y2="'+(y+7)+'"/><text class="v" x="354" y="'+(y+4)+'"></text>';
+  mrows.appendChild(g);MB.push({lab:g.children[0],bar:g.children[2],v:g.children[4]});
+}
+function setMeter(lab,lv){
+  var sym={'-2':'↓↓','-1':'↓','0':'—','1':'↑','2':'↑↑'};
+  for(var r=0;r<3;r++){var v=lv?lv[r]:0,w=Math.abs(v)*18;
+    MB[r].lab.textContent=lab[r];MB[r].bar.setAttribute('x',v<0?312-w:312);MB[r].bar.setAttribute('width',w);
+    MB[r].bar.setAttribute('fill',v>0?'var(--up)':'var(--down)');MB[r].v.textContent=sym[String(v)];
+    MB[r].v.setAttribute('fill',v>0?'var(--up)':v<0?'var(--down)':'var(--mute)')}
+}
+function chip(at,text,cls){
+  var p=AT[at],g=document.createElementNS(SVGNS,'g');g.setAttribute('class','chip '+cls);
+  var t=document.createElementNS(SVGNS,'text');t.textContent=text;t.setAttribute('text-anchor','middle');g.appendChild(t);chipsG.appendChild(g);
+  var w=t.getComputedTextLength()+18,h=22,x=Math.max(4+w/2,Math.min(596-w/2,p[0]));
+  var rr=document.createElementNS(SVGNS,'rect');rr.setAttribute('x',x-w/2);rr.setAttribute('y',p[1]-h/2);rr.setAttribute('width',w);rr.setAttribute('height',h);
+  g.insertBefore(rr,t);t.setAttribute('x',x);t.setAttribute('y',p[1]+4.5);return g;
+}
+function layoutChips(list){chipsG.textContent='';var used={};
+  list.forEach(function(c,k){var n=used[c[0]]||0;used[c[0]]=n+1;var g=chip(c[0],c[1],c[2]);
+    if(n)g.setAttribute('transform','translate(0,'+((STACK[c[0]]||1)*n*26)+')');g.style.animationDelay=(k*80)+'ms'})}
+
+function setAx(k,i,sync){axi=k;steps=AX[k].steps;[].forEach.call(tabs.children,function(b,j){b.setAttribute('aria-selected',j===k)});go(i||0,sync)}
+function go(i,sync){
+  idx=Math.max(0,Math.min(steps.length-1,i));
+  var a=AX[axi],s=steps[idx];
+  var kt={phy:'生理',dx:'診斷',dz:'疾病',drg:'治療'}[s.k];
+  ttl.innerHTML='<span class="kind '+s.k+'">'+kt+'</span>'+s.t;txt.innerHTML=s.d;
+  cnt.textContent=(idx+1)+' / '+steps.length;where.innerHTML='<b>'+a.n+'</b> · '+a.s;
+  ORG.forEach(function(o){var e=$('#o-'+o);e.classList.toggle('on',s.on.indexOf(o)>=0);e.classList.toggle('dim',axi>0&&s.on.indexOf(o)<0);$('#r-'+o).classList.toggle('on',(s.rx||[]).indexOf(o)>=0);e.classList.toggle('dmg',(s.dmg||[]).indexOf(o)>=0)});
+  layoutChips(s.chips||[]);setFlows(s.flows||[]);setMeter(s.lab||a.lab,s.lv);var nh=s.h2||a.h2;tgt=s.g.slice();if(nh!==h2){h2=nh;l2.textContent=h2.l;cur[1]=tgt[1]}
+  prevB.disabled=idx===0&&axi===0;
+  nextB.textContent=idx<steps.length-1?'下一步 →':(axi<AX.length-1?'下一個分頁 →':'回到開頭 ↺');
+  dots.textContent='';
+  steps.forEach(function(st,k){var b=document.createElement('button');b.type='button';b.setAttribute('aria-label','第 '+(k+1)+' 步');if(k===idx)b.setAttribute('aria-current','true');b.onclick=function(){stopAuto();go(k,true)};dots.appendChild(b)});
+  afterStep(s,sync);
+}
+function next(sync){if(idx<steps.length-1)return go(idx+1,sync);setAx(axi<AX.length-1?axi+1:0,0,sync)}
+function prev(sync){if(idx>0)return go(idx-1,sync);if(axi>0)setAx(axi-1,AX[axi-1].steps.length-1,sync)}
+prevB.onclick=function(){stopAuto();prev(true)};
+nextB.onclick=function(){stopAuto();next(true)};
+document.addEventListener('keydown',function(e){if(e.target.closest&&e.target.closest('input,textarea'))return;
+  if(e.key==='ArrowRight'){stopAuto();next(true)}else if(e.key==='ArrowLeft'){stopAuto();prev(true)}});
+var sx=null,sy=null,map=$('#map');
+map.addEventListener('touchstart',function(e){sx=e.touches[0].clientX;sy=e.touches[0].clientY},{passive:true});
+map.addEventListener('touchend',function(e){if(sx==null)return;var dx=e.changedTouches[0].clientX-sx,dy=e.changedTouches[0].clientY-sy;if(Math.abs(dx)>40&&Math.abs(dx)>Math.abs(dy)){stopAuto();dx<0?next(true):prev(true)}sx=null},{passive:true});
+
+/* 粒子＋數字 */
+var P={},flows=[],parts=[],last=0;
+[].forEach.call(document.querySelectorAll('#paths path'),function(p){P[p.id.slice(2)]={el:p,len:p.getTotalLength()}});
+function setFlows(f){flows=f.map(function(x){return {p:P[x[0]],c:COL[x[1]],r:x[2],acc:Math.random()}}).filter(function(x){return x.p})}
+function spawn(f){var c=document.createElementNS(SVGNS,'circle');c.setAttribute('r',(f.c===COL.c||f.c===COL.p)?4.2:3.4);c.setAttribute('fill',f.c);partsG.appendChild(c);parts.push({el:c,p:f.p,t:0,d:1700+Math.random()*500})}
+function col(v,lo,hi){return v>hi?'var(--up)':v<lo?'var(--down)':'var(--ink)'}
+function tick(ts){
+  var dt=last?Math.min(100,ts-last):16;last=ts;
+  if(!RM){flows.forEach(function(f){f.acc+=f.r*dt/1000;while(f.acc>=1){f.acc-=1;spawn(f)}});
+    for(var k=parts.length-1;k>=0;k--){var q=parts[k];q.t+=dt;var u=q.t/q.d;if(u>=1){q.el.remove();parts.splice(k,1);continue}
+      var pt=q.p.el.getPointAtLength(u*q.p.len);q.el.setAttribute('cx',pt.x);q.el.setAttribute('cy',pt.y);q.el.setAttribute('opacity',u<.1?u*10:u>.85?(1-u)/.15:1)}}
+  for(var j=0;j<2;j++){if(Math.abs(cur[j]-tgt[j])>.004)cur[j]+=(tgt[j]-cur[j])*Math.min(1,dt/350);else cur[j]=tgt[j]}
+  vg.textContent=Math.round(cur[0]);vg.setAttribute('fill',col(cur[0],70,180));
+  if(h2.z){var lv=Math.round(cur[1]);v2.textContent=lv?('第 '+lv+' 級'):'—';v2.setAttribute('fill',lv?'var(--down)':'var(--ink)')}
+  else{v2.textContent=cur[1].toFixed(h2.d);v2.setAttribute('fill',(cur[1]<h2.lo||cur[1]>h2.hi)?'var(--up)':'var(--ink)')}
+  requestAnimationFrame(tick);
+}
+requestAnimationFrame(tick);
+
+/* 自動播放＋語音朗讀（Web Speech API，用裝置內建語音） */
+var autoOn=false,autoT=0,narr=false,sid=0,voice=null;
+var KEEP=[];
+var SS=window.speechSynthesis,sayB=$('#say');
+function pickVoice(){
+  if(!SS)return;var vs=SS.getVoices();if(!vs.length)return;
+  var pref=['zh-TW','zh_TW','zh-Hant','zh-HK','zh-CN','zh'];
+  for(var k=0;k<pref.length&&!voice;k++){voice=vs.filter(function(v){return v.lang.replace('_','-').indexOf(pref[k].replace('_','-'))===0})[0]||null}
+}
+if(SS){pickVoice();if('onvoiceschanged' in SS)SS.onvoiceschanged=pickVoice}else{sayB.hidden=true}
+function plain(s){
+  var t=s.t+'。'+s.d.replace(/<\/(li|p|div)>/g,'。').replace(/<[^>]+>/g,'');
+  var el=document.createElement('textarea');el.innerHTML=t;t=el.value;
+  [[/mg\/dL/g,'毫克每公合'],[/mmol\/L/g,'毫莫耳每公升'],[/mOsm\/kg/g,'毫滲透莫耳每公斤'],[/mg\/g/g,'毫克每克'],[/mmHg/g,'毫米汞柱'],[/(\d+)\/(\d+)/g,'$1，$2'],[/HbA1c/g,'糖化血色素'],[/eGFR/g,'e G F R'],[/UACR/g,'U A C R'],[/SGLT2/g,'S G L T 2'],[/GLP-1/g,'G L P 1'],[/α2δ/g,'阿法 2 delta'],[/≥/g,'大於等於'],[/≤/g,'小於等於'],[/−/g,'負'],
+   [/α/g,'阿法'],[/β/g,'貝他'],[/✚/g,''],[/✕/g,'被阻斷'],[/↑↑/g,'大幅增加'],[/↓↓/g,'大幅減少'],[/↑/g,'增加'],[/↓/g,'減少'],[/→/g,'，接著'],[/＋/g,'和'],[/(\d)\s*–\s*(\d)/g,'$1到$2'],[/–/g,'到'],[/</g,'小於'],[/>/g,'大於'],[/[／\/]/g,'、'],[/\s+/g,' '],[/[。，]\s*[。，]+/g,'。']]
+   .forEach(function(r){t=t.replace(r[0],r[1])});
+  return t;
+}
+function chunks(t){
+  var out=[];(t.match(/[^。！？；]+[。！？；]?/g)||[]).forEach(function(x){x=x.trim();if(!x||x==='。')return;
+    while(x.length>110){var cut=x.lastIndexOf('，',110);cut=cut>20?cut+1:110;out.push(x.slice(0,cut));x=x.slice(cut)}
+    if(x)out.push(x)});
+  return out;
+}
+function stopNarr(){sid++;if(SS&&(SS.speaking||SS.pending))SS.cancel()}
+function speak(text,done,sync){
+  var busy=SS.speaking||SS.pending;
+  stopNarr();var my=sid,cs=chunks(text),i=0;
+  function nx(){
+    if(my!==sid)return;
+    if(i>=cs.length){done&&done();return}
+    var u=new SpeechSynthesisUtterance(cs[i++]);u.lang=voice?voice.lang:'zh-TW';if(voice)u.voice=voice;u.rate=1;
+    u.onend=function(){if(my===sid)nx()};
+    u.onerror=function(e){if(my===sid&&e.error!=='interrupted'&&e.error!=='canceled')nx()};
+    // iOS WebKit 會把沒被引用的 utterance 回收掉而不出聲，留住最近幾個
+    KEEP.push(u);if(KEEP.length>6)KEEP.shift();
+    SS.speak(u);
+  }
+  // iOS／Safari 只允許在使用者點擊的同一個呼叫堆疊裡開始朗讀，所以點按鈕時要同步呼叫；
+  // 若剛 cancel 正在唸的句子，WebKit 立刻 speak 可能被吞掉，此時（已解鎖）改延遲
+  if(sync&&!busy)nx();else setTimeout(nx,80);
+}
+function schedule(ms){clearTimeout(autoT);autoT=setTimeout(function(){if(autoOn)next()},ms)}
+function afterStep(s,sync){
+  clearTimeout(autoT);
+  if(narr&&SS){speak(plain(s),function(){if(autoOn)schedule(700)},sync)}
+  else{stopNarr();if(autoOn)schedule(7000)}
+}
+function stopAuto(){autoOn=false;clearTimeout(autoT);playB.textContent='▶ 自動'}
+playB.onclick=function(){if(autoOn)return stopAuto();autoOn=true;playB.textContent='❚❚ 暫停';if(!narr)schedule(7000);else if(!SS.speaking)afterStep(steps[idx],true)};
+sayB.onclick=function(){narr=!narr;sayB.setAttribute('aria-pressed',narr);sayB.textContent=narr?'🔇 停止朗讀':'🔊 朗讀';afterStep(steps[idx],true)};
+document.addEventListener('visibilitychange',function(){if(document.hidden&&narr){stopNarr();stopAuto()}});
+
+var root=document.documentElement;
+try{var th=localStorage.getItem('cim-theme');if(th)root.setAttribute('data-theme',th)}catch(e){}
+$('#theme').onclick=function(){var dark=root.getAttribute('data-theme')?root.getAttribute('data-theme')==='dark':matchMedia('(prefers-color-scheme: dark)').matches;
+  var n=dark?'light':'dark';root.setAttribute('data-theme',n);try{localStorage.setItem('cim-theme',n)}catch(e){}};
+
+setAx(0,0);
+
+/* 表格列 → 跳到對應的動畫步驟（網址 #t分頁s步驟 可直接連結） */
+function stageTop(){var st=document.querySelector('.stage');if(st)st.scrollIntoView({behavior:RM?'auto':'smooth',block:'start'})}
+function setHash(h){try{history.replaceState(null,'',h)}catch(e){}}
+function bindRows(fn){
+  [].forEach.call(document.querySelectorAll('.cmp tbody'),function(tb,ti){
+    [].forEach.call(tb.rows,function(tr,ri){
+      var g=GOMAP[ti]&&GOMAP[ti][ri];if(!g)return;
+      tr.dataset.go=g.join(',');tr.tabIndex=0;tr.setAttribute('role','link');tr.title='看這一段的動畫';
+      tr.cells[0].insertAdjacentHTML('beforeend','<span class="goto">▶ 看動畫</span>');
+      tr.onclick=function(){fn(g[0],g[1])};
+      tr.onkeydown=function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();e.stopPropagation();fn(g[0],g[1])}};
+    });
+  });
+  [].forEach.call(document.querySelectorAll('.cmp .tblw'),function(w){if(w.querySelector('tr[data-go]'))w.insertAdjacentHTML('beforebegin','<p class="gohint">▶ 點表格任一列，直接跳到那一段動畫</p>')});
+}
+function jumpTo(t,s){stopAuto();setAx(t,s,true);stageTop();setHash('#t'+t+'s'+s)}
+bindRows(jumpTo);
+(function(){var m=location.hash.match(/^#t(\d+)s(\d+)$/);if(m&&AX[+m[1]])setAx(+m[1],Math.min(+m[2],AX[+m[1]].steps.length-1),false)})();
+})();
+</script>
+</body>
+</html>
