@@ -79,6 +79,7 @@ ul#listPay{list-style:none;margin:6px 0 0;padding:0 16px 16px}#listPay li{backgr
 .stfav button.x{padding:6px 12px 6px 8px;color:var(--mute);font-weight:400}.stfav.on{border-color:var(--brand);box-shadow:0 0 0 1px var(--brand)}
 #listTransit li .star{flex:none;border:0;background:transparent;font-size:22px;line-height:1;padding:2px 4px;color:#d97706}
 .bk{display:inline-block;font-size:12px;font-weight:700;padding:1px 6px;border-radius:6px;border:1px solid var(--line);margin-left:6px;vertical-align:2px}
+.fire-sum{font-size:15px;color:var(--ink);margin:0 0 8px}.fire-done{opacity:.6}
 .me-icon{position:relative}
 .me-dot{position:absolute;left:5px;top:5px;width:18px;height:18px;border-radius:50%;background:#2563eb;border:3px solid #fff;box-shadow:0 0 0 2px #2563eb,0 2px 6px #0008}
 .me-pulse{position:absolute;left:-6px;top:-6px;width:40px;height:40px;border-radius:50%;background:#2563eb55;animation:mepulse 1.8s ease-out infinite}
@@ -210,7 +211,7 @@ ul#listPay{list-style:none;margin:6px 0 0;padding:0 16px 16px}#listPay li{backgr
   停車費率為各機關提供的文字說明，僅供參考，以現場公告為準。<br>
   地圖：© <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors。<br>
   資料處理邏輯參考 opview（© 2026 Rick Lan，<a href="https://github.com/herizon1054/opview/blob/01f0f20/LICENSE" target="_blank" rel="noopener">非商業授權</a>）。<br>
-  工具版本：2026-11-05
+  工具版本：2026-11-10
 </footer>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js" integrity="sha512-puJW3E/qXDqYp9IfhAI54BJEaWIfloJ7JWs7OeD5i6ruC9JZL1gERT1wjtwXFlh7CjE7ZJ+/vcRZRkIYIb6p4g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
@@ -1105,24 +1106,51 @@ function fireParse(html){
   if (rows.some(tr => tr.querySelector('td')) && !out.length) throw new ApiError('119 資料格式異常');
   return out;
 }
-// 60 秒內不重抓（保護消防局主機）
-async function fireLoad(city){
-  const f = FIRE[city];
-  if (!f) return null;
-  const c = fireCache[city];
-  if (c && Date.now() - c.at < 60000) return c.rows;
+// 完整版（老闆 TG34354，沿用 119 出勤通知 App 的「完整版」）：同站 caselist/xml，含火災／其他／返隊中／已返隊、案號、人車數；
+// xml 會殘留舊案，只收受理 24 小時內。時間是台灣時間、不帶時區，一律明確加 +08:00 解析（B 審）
+const FIRE_WINDOW_MS = 24 * 3600000;
+function fireXmlParse(text){
+  const d = new DOMParser().parseFromString(text, 'application/xml');
+  if (d.getElementsByTagName('parsererror').length || d.documentElement.nodeName !== 'Data') throw new ApiError('119 資料格式異常');
+  const cases = [...d.documentElement.getElementsByTagName('case')], now = Date.now(), out = [];
+  for (const e of cases.slice(0, 500)) {
+    const v = n => (e.getElementsByTagName(n)[0]?.textContent || '').replace(/\s+/g, ' ').trim().slice(0, 60);
+    const m = /^(\d{4})\/(\d{2})\/(\d{2}) (\d{2}):(\d{2}):(\d{2})$/.exec(v('IN_TIME'));
+    if (!m || !/^\d{8,20}$/.test(v('CS_NO'))) continue;
+    const at = Date.parse(`${m[1]}-${m[2]}-${m[3]}T${m[4]}:${m[5]}:${m[6]}+08:00`);
+    if (!(now - at <= FIRE_WINDOW_MS)) continue;
+    const num = n => { const x = /(\d+)/.exec(v(n)); return x ? +x[1] : null; };
+    const addr = v('ADDR'), town = v('TOWN_NAME');
+    out.push({no: v('CS_NO'), at, type: v('KIND'), sub: v('CS_CODE'), place: town && !addr.includes(town) ? v('COUNTRY_NAME') + town : addr || v('COUNTRY_NAME') + town,
+              unit: v('DEPT_NAME'), state: v('STATUS'), people: num('PERSION_COUNT'), cars: num('CAR_COUNT')});
+  }
+  // 有 case 卻一筆都沒有案號＝上游改格式，不要顯示成「沒有案件」
+  if (cases.length && !out.length && cases.every(e => !e.getElementsByTagName('CS_NO').length)) throw new ApiError('119 資料格式異常');
+  return out;
+}
+async function fireFetch(path, maxBytes){
   let r;
-  try { r = await fetch(PROXY + '/fire/' + f.code, {cache: 'no-store'}); } catch { throw new ApiError('連不上 119 即時案件', 'network'); }
+  try { r = await fetch(PROXY + path, {cache: 'no-store'}); } catch { throw new ApiError('連不上 119 即時案件', 'network'); }
   if (r.status !== 200) {
     const up = r.headers.get('X-Upstream') || '';
     // relay-down＝mini 轉送站沒回應；upstream＝轉送站有通、消防局網站自己回錯誤（例如 502）
     throw new ApiError(up === 'relay-down' ? '119 即時案件：家用轉送站暫時連不上，請稍後再試' : up === 'upstream' ? '119 即時案件：消防局網站暫時沒回應，請稍後再試' : `119 即時案件暫時無法使用（${r.status}）`);
   }
   const text = await r.text();
-  if (text.length > 512 * 1024) throw new ApiError('119 資料格式異常');
-  const rows = fireParse(text);
-  fireCache[city] = {at: Date.now(), rows};
-  return rows;
+  if (text.length > maxBytes) throw new ApiError('119 資料格式異常');
+  return text;
+}
+// 60 秒內不重抓（保護消防局主機）；先抓完整版，失敗才退回官方簡易清單（只有處理中），並在畫面標「簡易清單」
+async function fireLoad(city){
+  const f = FIRE[city];
+  if (!f) return null;
+  const c = fireCache[city];
+  if (c && Date.now() - c.at < 60000) return c.data;
+  let data;
+  try { data = {full: true, rows: fireXmlParse(await fireFetch('/fire/' + f.code + '_XML', 1024 * 1024))}; }
+  catch { data = {full: false, rows: fireParse(await fireFetch('/fire/' + f.code, 512 * 1024))}; }
+  fireCache[city] = {at: Date.now(), data};
+  return data;
 }
 // 用停車快取裡最近一筆有地址的停車場推「你在哪一區」，不另外送座標出去
 function guessDistrict(city, lat, lon){
@@ -1138,24 +1166,41 @@ function guessDistrict(city, lat, lon){
   return best || '';
 }
 const FIRE_TONE = t => /火/.test(t) ? 'full' : /救護/.test(t) ? 'ok' : 'unk';
+const FIRE_DONE = x => x.state === '已返隊';
+// 手機時區可能不是台灣：顯示一律用 Asia/Taipei；不是今天的加日期
+const fireTime = at => {
+  const o = {timeZone: 'Asia/Taipei', hour: '2-digit', minute: '2-digit', hour12: false};
+  const day = t => new Date(t).toLocaleDateString('zh-TW', {timeZone: 'Asia/Taipei'});
+  return (day(at) !== day(Date.now()) ? new Date(at).toLocaleDateString('zh-TW', {timeZone: 'Asia/Taipei', month: 'numeric', day: 'numeric'}) + ' ' : '')
+    + new Date(at).toLocaleTimeString('zh-TW', o);
+};
+function fireCard(x, inD){
+  const kind = [x.type, x.sub].filter(Boolean).join('・');
+  const crew = x.people != null ? ` · ${x.people} 人 ${x.cars ?? '?'} 車` : '';
+  return `<div class="news${FIRE_DONE(x) ? ' fire-done' : ''}"><div class="news-head"><span class="news-tag t-${FIRE_TONE(x.type)}">${esc(kind || '案件')}</span><b>${esc(x.place)}</b>${inD(x) ? '<span class="bk">同區</span>' : ''}</div>`
+    + `<div class="meta">${esc(fireTime(x.at))} 受理 · ${esc(x.unit)} · <b>${esc(x.state)}</b>${esc(crew)}${x.no ? ` · 案號 ${esc(x.no)}` : ''}</div></div>`;
+}
 function renderFire(){
   if (!lastTraffic || !lastTraffic.fire) return '';
-  const {rows, city, district} = lastTraffic.fire, f = FIRE[city];
-  const inD = x => district && x.place.includes(district);
-  const list = [...rows].sort((a, b) => (inD(b) - inD(a)) || b.at - a.at).slice(0, 15);
-  const shown = fireMore ? list : list.slice(0, 5);
-  const nD = district ? rows.filter(inD).length : 0;
-  return `<h3>🚒 119 即時案件（${esc(CITIES[city])}${district ? `，${esc(district)} ${nD} 件` : ''}）</h3>` + (list.length ? shown.map(x => {
-    const kind = [x.type, x.sub].filter(Boolean).join('・');
-    return `<div class="news"><div class="news-head"><span class="news-tag t-${FIRE_TONE(x.type)}">${esc(kind || '案件')}</span><b>${esc(x.place)}</b>${inD(x) ? '<span class="bk">同區</span>' : ''}</div>`
-      + `<div class="meta">${new Date(x.at).toLocaleTimeString('zh-TW', {hour: '2-digit', minute: '2-digit', hour12: false})} 受理 · ${esc(x.unit)} · ${esc(x.state)}</div></div>`;
-  }).join('') + (list.length > 5 && !fireMore ? `<button class="more" id="fireMoreBtn">更多…（還有 ${list.length - 5} 件）</button>` : '')
-    : '<div class="meta">目前沒有案件</div>') + `<div class="meta">資料來源：${esc(f.name)}；救護案件地點只到行政區</div>`;
+  const {rows, full, city, district} = lastTraffic.fire, f = FIRE[city];
+  const inD = x => !!district && x.place.includes(district);
+  const sort = l => [...l].sort((a, b) => (inD(b) - inD(a)) || b.at - a.at);
+  const act = sort(rows.filter(x => !FIRE_DONE(x))), done = sort(rows.filter(FIRE_DONE));
+  const nD = district ? act.filter(inD).length : 0;
+  const cnt = re => act.filter(x => re.test(x.type)).length;
+  const nFire = cnt(/火/), nEms = cnt(/救護/);
+  const head = `<h3>🚒 119 即時案件（${esc(CITIES[city])}${full ? '，完整版 24 小時' : '，簡易清單'}）</h3>`
+    + (full ? `<div class="fire-sum">處理中 <b>${act.length}</b> 件（火災 ${nFire}、救護 ${nEms}、其他 ${act.length - nFire - nEms}）· 已返隊 ${done.length} 件${district ? ` · ${esc(district)}處理中 ${nD} 件` : ''}</div>`
+      : `<div class="fire-sum">完整資料暫時抓不到，先顯示消防局官方清單（只有處理中的案件，沒有人車數）${district ? `；${esc(district)} ${nD} 件` : ''}</div>`);
+  const body = act.length ? act.map(x => fireCard(x, inD)).join('') : '<div class="meta">目前沒有處理中的案件</div>';
+  const tail = full && done.length ? (fireMore ? done.map(x => fireCard(x, inD)).join('') + '<button class="more" id="fireMoreBtn">收起已返隊</button>'
+    : `<button class="more" id="fireMoreBtn">顯示已返隊（${done.length}）</button>`) : '';
+  return head + body + tail + `<div class="meta">資料來源：${esc(f.name)}${full ? '；人車數為出動數' : '；簡易清單的救護案件地點只到行政區'}</div>`;
 }
 function fireStart(h, notes){
   if (!FIRE[h.city]) return null;
-  return fireLoad(h.city).then(rows => {
-    if (lastTraffic && lastTraffic.seq === h.seq) { lastTraffic.fire = {rows, city: h.city, district: guessDistrict(h.city, h.lat, h.lon)}; renderTraffic(); }
+  return fireLoad(h.city).then(d => {
+    if (lastTraffic && lastTraffic.seq === h.seq) { lastTraffic.fire = {rows: d.rows, full: d.full, city: h.city, district: guessDistrict(h.city, h.lat, h.lon)}; renderTraffic(); }
   }).catch(e => { notes.push(e.message); twarn(notes); });
 }
 const PBS_TONE = t => /事故|車禍/.test(t) ? 'full' : /施工|壅塞|阻塞|管制|故障|障礙/.test(t) ? 'low' : 'unk';
@@ -1263,7 +1308,7 @@ function renderTraffic(){
   }).join('') + (news.length > 5 && !newsMore ? `<button class="more" id="newsMoreBtn">更多…（還有 ${news.length - 5} 則）</button>` : '') : '<div class="meta">目前沒有事件</div>');
   if ($('newsMoreBtn')) $('newsMoreBtn').onclick = () => { newsMore = true; renderTraffic(); };
   if ($('pbsMoreBtn')) $('pbsMoreBtn').onclick = () => { pbsMore = true; renderTraffic(); };
-  if ($('fireMoreBtn')) $('fireMoreBtn').onclick = () => { fireMore = true; renderTraffic(); };
+  if ($('fireMoreBtn')) $('fireMoreBtn').onclick = () => { fireMore = !fireMore; renderTraffic(); };
 }
 async function queryTraffic(manual){
   if (trafficBusy) return;
