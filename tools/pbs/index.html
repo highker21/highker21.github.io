@@ -1,0 +1,310 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>警廣即時路況</title>
+<meta name="description" content="警察廣播電臺即時路況通報：地圖、定位、搜尋地點，看附近的事故、壅塞與施工">
+<meta name="theme-color" content="#1d4f91">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="警廣路況">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" integrity="sha512-h9FcoyWjHcOcmEVkxOfTLnmZFWIH0iZhZT1H2TbOq55xssQGEJHEaIm+PgoUaZbRvQTNTluNOEfb1ZRy6D3BOw==" crossorigin="anonymous" referrerpolicy="no-referrer">
+<style>
+:root{--bg:#f5f7fa;--card:#fff;--ink:#1b2330;--mute:#5f6b7a;--line:#dbe1e8;--brand:#1d4f91;
+  --red:#d64545;--orange:#e07b00;--yellow:#c9a000;--purple:#7c4dcc;--gray:#7a8794;--warn-bg:#fdecec;--warn-ink:#a12b2b}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#10141a;--card:#19202a;--ink:#e5ebf2;--mute:#9aa7b6;--line:#2a3442;--brand:#6fa3e8;--warn-bg:#3a1c1c;--warn-ink:#f2a3a3}}
+:root[data-theme="dark"]{--bg:#10141a;--card:#19202a;--ink:#e5ebf2;--mute:#9aa7b6;--line:#2a3442;--brand:#6fa3e8;--warn-bg:#3a1c1c;--warn-ink:#f2a3a3}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 -apple-system,"PingFang TC","Noto Sans TC",sans-serif}
+header{display:flex;align-items:center;gap:8px;padding:10px 16px;padding-top:max(10px,env(safe-area-inset-top))}
+header h1{font-size:18px;margin:0;flex:1}
+button,select,input{font:inherit;color:var(--ink)}
+button{border:1px solid var(--line);background:var(--card);border-radius:10px;padding:8px 12px;cursor:pointer}
+button.primary{background:var(--brand);border-color:var(--brand);color:#fff;font-weight:600}
+button:disabled{opacity:.6}
+#search{display:flex;gap:6px;margin:0 16px 8px}
+#search input{flex:1;min-width:0;font-size:16px;padding:9px 10px;border:1px solid var(--line);border-radius:10px;background:var(--card)}
+#search button{flex:none}
+#hits{list-style:none;margin:-2px 16px 8px;padding:0}
+#hits button{width:100%;text-align:left;margin-bottom:4px;font-size:15px}
+.ctl{display:flex;flex-wrap:wrap;gap:6px;margin:0 16px 8px;align-items:center}
+.ctl select{padding:7px 8px;border:1px solid var(--line);border-radius:10px;background:var(--card)}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:0 16px 8px}
+.chip{display:inline-flex;align-items:center;gap:4px;font-size:14px;padding:4px 10px;border:1px solid var(--line);border-radius:999px;background:var(--card);cursor:pointer;user-select:none}
+.chip input{margin:0}
+.dot{display:inline-block;width:10px;height:10px;border-radius:50%;flex:none}
+#map{height:46vh;min-height:260px;margin:0 16px 8px;border-radius:12px;border:1px solid var(--line);z-index:0}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .leaflet-tile-pane{filter:brightness(.7) invert(1) contrast(.9) hue-rotate(200deg) saturate(.3) brightness(.9)}}
+:root[data-theme="dark"] .leaflet-tile-pane{filter:brightness(.7) invert(1) contrast(.9) hue-rotate(200deg) saturate(.3) brightness(.9)}
+.leaflet-popup-content{font-size:15px;line-height:1.5;margin:10px 12px}
+#status{margin:0 16px 6px;font-size:14px;color:var(--mute)}
+#warn{margin:0 16px 8px;padding:8px 12px;border-radius:10px;background:var(--warn-bg);color:var(--warn-ink);font-size:15px}
+#list{padding:0 16px 8px}
+.ev{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:8px 12px;margin-bottom:8px;cursor:pointer}
+.ev-head{display:flex;gap:8px;align-items:center;font-size:17px}
+.tag{font-size:13px;font-weight:800;padding:1px 8px;border-radius:6px;flex:none;color:#fff}
+.ev-body{font-size:16px;margin:4px 0}
+.meta{font-size:14px;color:var(--mute)}
+.more{width:100%;font-weight:700;padding:10px;margin:4px 0 8px}
+h3{font-size:16px;margin:4px 0 8px}
+footer{padding:8px 16px 24px;padding-bottom:max(24px,env(safe-area-inset-bottom));font-size:13px;color:var(--mute)}
+footer a{color:var(--brand)}
+</style>
+</head>
+<body>
+<header><h1>📻 警廣即時路況</h1><button id="btnLoc" class="primary">📍 我的位置</button><button id="btnRefresh" aria-label="重新整理">🔄</button></header>
+<form id="search" role="search"><input id="q" type="search" maxlength="60" placeholder="🔎 搜尋地點，看那裡附近的路況" autocomplete="off" enterkeyhint="search"><button type="submit" id="btnQ">搜尋</button></form>
+<ul id="hits" hidden></ul>
+<div class="ctl">
+  <select id="range" aria-label="範圍"><option value="2">2 公里內</option><option value="5">5 公里內</option><option value="10">10 公里內</option><option value="30">30 公里內</option><option value="0">全台</option></select>
+  <select id="win" aria-label="時間"><option value="3">3 小時內有更新</option><option value="6">6 小時內有更新</option><option value="24">24 小時內有更新</option><option value="today">今天有更新</option><option value="all">全部</option></select>
+</div>
+<div id="chips" class="chips"></div>
+<div id="map" role="region" aria-label="地圖"></div>
+<div id="warn" hidden></div>
+<div id="status">載入中…</div>
+<div id="list"></div>
+<footer>
+  資料：<a href="https://www.pbs.gov.tw/" target="_blank" rel="noopener">警察廣播電臺</a> 即時路況開放資料（<a href="https://data.gov.tw/dataset/15221" target="_blank" rel="noopener">政府資料開放平臺</a>），依<a href="https://data.gov.tw/license" target="_blank" rel="noopener">政府資料開放授權條款第 1 版</a>使用；本頁不代表機關立場。通報內容與位置以警廣為準，可能有延遲或誤差。<br>
+  定位只在你的手機上計算距離，不會送出；搜尋地點時，輸入的文字會送到 OpenStreetMap。地圖：© <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors。<br>
+  工具版本：2026-11-10
+</footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js" integrity="sha512-puJW3E/qXDqYp9IfhAI54BJEaWIfloJ7JWs7OeD5i6ruC9JZL1gERT1wjtwXFlh7CjE7ZJ+/vcRZRkIYIb6p4g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+'use strict';
+// 警廣即時路況獨立 App（老闆 TG34370）：資料經停車 App 同一個 Worker → 台灣境內轉送站（60 秒快取），不需金鑰
+const PROXY = location.hostname === 'highker21.github.io' ? 'https://tdx-parking-proxy.highker.workers.dev' : 'http://127.0.0.1:8787';
+const POLL_MS = 120000, H = 3600000;
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const mem = {};
+const store = {
+  get(k, d){ try{ const v = localStorage.getItem(k); return v === null ? (k in mem ? mem[k] : d) : JSON.parse(v); }catch{ return k in mem ? mem[k] : d; } },
+  set(k, v){ mem[k] = v; try{ localStorage.setItem(k, JSON.stringify(v)); }catch{} },
+};
+function dist(a1, o1, a2, o2){
+  const r = Math.PI/180, a = Math.sin((a2-a1)*r/2)**2 + Math.cos(a1*r)*Math.cos(a2*r)*Math.sin((o2-o1)*r/2)**2;
+  return 6371000 * 2 * Math.asin(Math.sqrt(Math.min(1, Math.max(0, a))));
+}
+const inTw = (lat, lon) => isFinite(lat) && isFinite(lon) && lat >= 21 && lat <= 27 && lon >= 118 && lon <= 123;
+// 類別 → 顏色（事故／災變紅、阻塞／障礙橘、施工黃、管制／號誌紫、其他灰）
+const TYPES = [['事故', 'red'], ['災變', 'red'], ['阻塞', 'orange'], ['交通障礙', 'orange'], ['道路施工', 'yellow'], ['交通管制', 'purple'], ['號誌故障', 'purple'], ['其他', 'gray']];
+const TYPE_COLOR = Object.fromEntries(TYPES);
+const typeOf = t => TYPE_COLOR[t] ? t : '其他';
+const ROADLIKE = /高速公路|國道|快速|公路|台\s*[0-9０-９]/;
+const cssColor = c => getComputedStyle(document.documentElement).getPropertyValue('--' + c).trim() || '#888';
+// 時間是台灣時間、不帶時區：一律明確加 +08:00（手機時區可能不是台灣）
+function twTime(s){
+  const m = /^(\d{4})-(\d{2})-(\d{2})[ T](\d{2}):(\d{2})(?::(\d{2}))?/.exec(String(s || ''));
+  return m ? Date.parse(`${m[1]}-${m[2]}-${m[3]}T${m[4]}:${m[5]}:${m[6] || '00'}+08:00`) : NaN;
+}
+const twDay = t => new Date(t).toLocaleDateString('zh-TW', {timeZone: 'Asia/Taipei'});
+const fmt = t => isNaN(t) ? '' : (twDay(t) !== twDay(Date.now()) ? new Date(t).toLocaleDateString('zh-TW', {timeZone: 'Asia/Taipei', month: 'numeric', day: 'numeric'}) + ' ' : '')
+  + new Date(t).toLocaleTimeString('zh-TW', {timeZone: 'Asia/Taipei', hour: '2-digit', minute: '2-digit', hour12: false});
+const fmtD = d => d >= 1000 ? (d / 1000).toFixed(1) + ' 公里' : Math.round(d) + ' 公尺';
+
+// ---- 資料 ----
+let data = null;   // {at, rows, noxy, total}
+let loading = false;
+function parse(j){
+  const arr = Array.isArray(j) ? j : j && typeof j === 'object' ? (Array.isArray(j.result) ? j.result : Object.values(j).find(Array.isArray)) : null;
+  if (!arr) throw new Error('format');
+  const rows = [], noxy = [];
+  for (const x of arr.slice(0, 5000)) {
+    if (!x || typeof x !== 'object') continue;
+    const s = k => String(x[k] ?? '').replace(/\s+/g, ' ').trim().slice(0, 300);
+    const lat = parseFloat(x.y1), lon = parseFloat(x.x1);
+    const e = {id: s('UID'), type: typeOf(s('roadtype')), raw: s('roadtype'), area: s('areaNm'), road: s('road'), dir: s('direction'), text: s('comment'),
+               src: s('srcdetail'), happen: twTime(`${s('happendate')} ${s('happentime')}`), mod: twTime(s('modDttm'))};
+    if (isNaN(e.mod)) e.mod = e.happen;
+    if (inTw(lat, lon)) rows.push({...e, lat, lon}); else noxy.push(e);
+  }
+  // 警廣很多通報的座標是「代表點」而不是現場（2026-11-10 實測 1000 則：國道／省道約 230 則放在路線起點，
+  // 例如國道 1 號全線放在基隆端、台 9 線花蓮的施工放在台北車站附近；行政區類放在區中心）。
+  // 同一座標有 ≥3 則不同內容＝代表點：路線類不上地圖、不算距離，另列；行政區／市中心類照畫但標「概略位置」
+  const byXY = new Map();
+  for (const e of rows) { const k = e.lat + ',' + e.lon; if (!byXY.has(k)) byXY.set(k, new Set()); byXY.get(k).add(e.text); }
+  const exact = [], lineOnly = [];
+  for (const e of rows) {
+    e.approx = byXY.get(e.lat + ',' + e.lon).size >= 3;
+    if (e.approx && ROADLIKE.test(e.area)) lineOnly.push(e); else exact.push(e);
+  }
+  return {rows: exact, lineOnly, noxy, total: arr.length, count: Number(j && j.count) || arr.length};
+}
+async function load(){
+  if (loading) return;
+  loading = true; $('btnRefresh').disabled = true;
+  try {
+    let r;
+    try { r = await fetch(PROXY + '/pbs/roadData', {cache: 'no-store'}); } catch { throw new Error('連不上資料來源，請檢查網路'); }
+    if (r.status !== 200) {
+      const up = r.headers.get('X-Upstream') || '';
+      throw new Error(up === 'relay-down' ? '台灣境內轉送站暫時連不上' : up === 'upstream' ? '警廣網站暫時沒回應' : `暫時無法取得資料（${r.status}）`);
+    }
+    const text = await r.text();
+    if (text.length > 4 * 1024 * 1024) throw new Error('資料格式異常');
+    let j; try { j = JSON.parse(text); } catch { throw new Error('資料格式異常'); }
+    data = {...parse(j), at: Date.now()};
+    $('warn').hidden = true;
+  } catch (e) {
+    $('warn').hidden = false;
+    $('warn').textContent = `⚠️ ${e.message || '資料格式異常'}${data ? `；先顯示 ${fmt(data.at)} 抓到的資料` : '，請稍後按 🔄 再試'}`;
+  } finally {
+    loading = false; $('btnRefresh').disabled = false; render();
+  }
+}
+
+// ---- 篩選狀態（記住）----
+const ctr = {lat: null, lon: null, label: '', kind: ''};
+$('range').value = String(store.get('pbs-range', 5));
+$('win').value = store.get('pbs-win', '24');
+if (!$('win').value) $('win').value = '24';
+let off = new Set(store.get('pbs-off', []));
+$('range').onchange = () => { store.set('pbs-range', +$('range').value); render(true); };
+$('win').onchange = () => { store.set('pbs-win', $('win').value); render(); };
+function drawChips(){
+  $('chips').replaceChildren(...[...new Set(TYPES.map(t => t[0]))].map(t => {
+    const l = document.createElement('label'); l.className = 'chip';
+    const c = document.createElement('input'); c.type = 'checkbox'; c.checked = !off.has(t);
+    c.onchange = () => { c.checked ? off.delete(t) : off.add(t); store.set('pbs-off', [...off]); render(); };
+    const d = document.createElement('span'); d.className = 'dot'; d.style.background = cssColor(TYPE_COLOR[t]);
+    l.append(c, d, document.createTextNode(t)); return l;
+  }));
+}
+function inWindow(e){
+  const w = $('win').value, now = Date.now();
+  if (w === 'all') return true;
+  if (isNaN(e.mod)) return false;
+  return w === 'today' ? twDay(e.mod) === twDay(now) : now - e.mod <= (+w || 24) * H;
+}
+
+// ---- 地圖：canvas＋circleMarker（800 個點用 DOM marker 手機會卡）----
+const map = L.map('map', {preferCanvas: true, zoomControl: true}).setView([23.7, 121], 7);
+L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {maxZoom: 19, attribution: '© OpenStreetMap'}).addTo(map);
+const layer = L.layerGroup().addTo(map);
+let ctrMark = null, ctrCircle = null;
+const markers = new Map();
+function popupHtml(e){
+  return `<b>${esc(e.raw || e.type)}</b>｜${esc([e.area, e.road, e.dir].filter(Boolean).join(' ') || '警廣通報')}<br>${esc(e.text)}`
+    + `<div class="meta">${e.approx ? '概略位置（警廣只給到行政區）· ' : ''}${esc(fmt(e.mod))} 更新${e.src ? ' · ' + esc(e.src) : ''}</div>`;
+}
+
+let limit = 30, noxyOpen = false, lineOpen = false;
+function render(fit){
+  if (!data) { $('status').textContent = loading ? '載入中…' : '還沒有資料'; return; }
+  const all = data.rows.filter(e => !off.has(e.type) && inWindow(e));
+  const R = +$('range').value * 1000, has = ctr.lat != null;
+  let list = all.map(e => ({e, d: has ? dist(ctr.lat, ctr.lon, e.lat, e.lon) : null}));
+  if (has && R) list = list.filter(x => x.d <= R);
+  list.sort((a, b) => has ? a.d - b.d : b.e.mod - a.e.mod);
+  // 地圖：畫全部符合類別／時間的點（不只範圍內），範圍內的畫大一點
+  layer.clearLayers(); markers.clear();
+  const near = new Set(list.map(x => x.e));
+  for (const e of all) {
+    const c = cssColor(TYPE_COLOR[e.type]);
+    const m = (e.approx ? L.circleMarker([e.lat, e.lon], {radius: near.has(e) && has ? 8 : 6, color: c, weight: 3, fillColor: c, fillOpacity: .15})
+      : L.circleMarker([e.lat, e.lon], {radius: near.has(e) && has ? 8 : 6, color: '#fff', weight: 1.5, fillColor: c, fillOpacity: .9})).bindPopup(popupHtml(e));
+    m.addTo(layer); markers.set(e, m);
+  }
+  if (ctrCircle) { ctrCircle.remove(); ctrCircle = null; }
+  if (has && R) ctrCircle = L.circle([ctr.lat, ctr.lon], {radius: R, color: cssColor('brand'), weight: 1, fill: false, interactive: false}).addTo(map);
+  if (fit && has) { if (R) map.fitBounds(ctrCircle.getBounds(), {padding: [10, 10]}); else map.setView([ctr.lat, ctr.lon], 12); }
+  // 狀態列
+  const nType = re => list.filter(x => re.test(x.e.type)).length;
+  $('status').textContent = `${has ? `${ctr.label}${R ? ` ${R / 1000} 公里內` : ''}` : '全台（按 📍 或搜尋看附近）'}：${list.length} 則`
+    + `（事故 ${nType(/事故|災變/)}、壅塞障礙 ${nType(/阻塞|障礙/)}、施工 ${nType(/施工/)}）｜資料 ${fmt(data.at)} 取得`
+    + (data.count >= 1000 ? '｜警廣一次只給最新 1000 則，更早的看不到' : '');
+  // 清單
+  const shown = list.slice(0, limit);
+  let html = shown.length ? shown.map((x, i) => {
+    const e = x.e, c = cssColor(TYPE_COLOR[e.type]);
+    return `<div class="ev" data-i="${i}"><div class="ev-head"><span class="tag" style="background:${esc(c)}">${esc(e.raw || e.type)}</span><b>${esc([e.area, e.road, e.dir].filter(Boolean).join(' ') || '警廣通報')}</b></div>`
+      + (e.text ? `<div class="ev-body">${esc(e.text)}</div>` : '')
+      + `<div class="meta">${x.d != null ? (e.approx ? '約 ' : '') + fmtD(x.d) + (e.approx ? '（概略位置）' : '') + ' · ' : e.approx ? '概略位置 · ' : ''}${esc(fmt(e.mod))} 更新${!isNaN(e.happen) && e.happen !== e.mod ? ` · ${esc(fmt(e.happen))} 發生` : ''}${e.src ? ' · ' + esc(e.src) : ''}</div></div>`;
+  }).join('') : `<div class="meta">${has ? '這個範圍內目前沒有符合的通報，可以把範圍調大' : '目前沒有符合的通報'}</div>`;
+  if (list.length > limit) html += `<button class="more" id="btnMore">更多…（還有 ${list.length - limit} 則）</button>`;
+  const lo = data.lineOnly.filter(e => !off.has(e.type) && inWindow(e)).sort((a, b) => b.mod - a.mod);
+  if (lo.length) html += `<h3>只標到路線的通報（${lo.length}）</h3><div class="meta" style="margin:-4px 0 8px">國道、省道的通報很多只給路線、沒有現場位置，所以不放地圖、不算距離</div>`
+    + (lineOpen ? lo.map(e => `<div class="ev"><div class="ev-head"><span class="tag" style="background:${esc(cssColor(TYPE_COLOR[e.type]))}">${esc(e.raw || e.type)}</span><b>${esc([e.area, e.road, e.dir].filter(Boolean).join(' ') || '警廣通報')}</b></div>${e.text ? `<div class="ev-body">${esc(e.text)}</div>` : ''}<div class="meta">${esc(fmt(e.mod))} 更新${e.src ? ' · ' + esc(e.src) : ''}</div></div>`).join('')
+      : '<button class="more" id="btnLine">展開</button>');
+  const nx = data.noxy.filter(e => !off.has(e.type) && inWindow(e));
+  if (nx.length) html += `<h3>沒有座標的通報（${nx.length}）</h3>` + (noxyOpen ? nx.map(e => `<div class="ev"><div class="ev-head"><span class="tag" style="background:${esc(cssColor(TYPE_COLOR[e.type]))}">${esc(e.raw || e.type)}</span><b>${esc([e.area, e.road, e.dir].filter(Boolean).join(' ') || '警廣通報')}</b></div>${e.text ? `<div class="ev-body">${esc(e.text)}</div>` : ''}<div class="meta">${esc(fmt(e.mod))} 更新</div></div>`).join('')
+    : '<button class="more" id="btnNoxy">展開</button>');
+  $('list').innerHTML = html;
+  $('list').querySelectorAll('.ev[data-i]').forEach(el => el.onclick = () => {
+    const e = shown[+el.dataset.i].e, m = markers.get(e);
+    map.setView([e.lat, e.lon], Math.max(map.getZoom(), 14)); if (m) m.openPopup();
+    $('map').scrollIntoView({behavior: 'smooth', block: 'center'});
+  });
+  if ($('btnMore')) $('btnMore').onclick = () => { limit += 30; render(); };
+  if ($('btnNoxy')) $('btnNoxy').onclick = () => { noxyOpen = true; render(); };
+  if ($('btnLine')) $('btnLine').onclick = () => { lineOpen = true; render(); };
+}
+function setCenter(lat, lon, label, kind){
+  Object.assign(ctr, {lat, lon, label, kind}); limit = 30;
+  if (ctrMark) ctrMark.remove();
+  ctrMark = L.circleMarker([lat, lon], {radius: 9, color: cssColor('brand'), weight: 3, fillColor: '#fff', fillOpacity: 1}).bindTooltip(label).addTo(map);
+  render(true);
+}
+
+// ---- 定位 ----
+function locate(){
+  if (!navigator.geolocation) { $('status').textContent = '這個瀏覽器不支援定位，可以改用搜尋'; return; }
+  $('btnLoc').disabled = true; $('status').textContent = '定位中…';
+  navigator.geolocation.getCurrentPosition(p => {
+    $('btnLoc').disabled = false; store.set('pbs-autoloc', true);
+    setCenter(p.coords.latitude, p.coords.longitude, '我的位置', 'me');
+  }, err => {
+    $('btnLoc').disabled = false;
+    $('status').textContent = err.code === 1 ? '沒有定位權限：可到設定允許定位，或改用上方搜尋' : '定位失敗，請再試一次或改用搜尋';
+  }, {enableHighAccuracy: true, timeout: 15000, maximumAge: 60000});
+}
+$('btnLoc').onclick = locate;
+$('btnRefresh').onclick = () => load();
+
+// ---- 搜尋地點：OpenStreetMap Nominatim，只在按下搜尋時送、限台灣、至少隔 1 秒（使用政策）----
+let lastQ = 0;
+$('search').onsubmit = async ev => {
+  ev.preventDefault();
+  const q = $('q').value.trim(), ul = $('hits');
+  if (!q || Date.now() - lastQ < 1000) return;
+  lastQ = Date.now(); $('btnQ').disabled = true; ul.hidden = false; ul.innerHTML = '<li class="meta">搜尋中…</li>';
+  try {
+    const r = await fetch('https://nominatim.openstreetmap.org/search?' + new URLSearchParams({format: 'jsonv2', q, countrycodes: 'tw', limit: '5', 'accept-language': 'zh-TW'}));
+    if (!r.ok) throw new Error();
+    const j = await r.json();
+    const hits = (Array.isArray(j) ? j : []).map(h => ({name: String(h.name || '').slice(0, 20), full: String(h.display_name || h.name || '').slice(0, 120), lat: +h.lat, lon: +h.lon})).filter(h => h.full && inTw(h.lat, h.lon));
+    ul.replaceChildren();
+    if (!hits.length) { ul.innerHTML = '<li class="meta">找不到，換個說法試試</li>'; return; }
+    for (const h of hits) {
+      const li = document.createElement('li'), b = document.createElement('button');
+      b.type = 'button'; b.textContent = h.full;
+      b.onclick = () => { ul.hidden = true; ul.replaceChildren(); $('q').blur(); setCenter(h.lat, h.lon, h.name || q, 'search'); };
+      li.append(b); ul.append(li);
+    }
+  } catch { ul.innerHTML = '<li class="meta">搜尋失敗，請稍後再試</li>'; }
+  finally { setTimeout(() => { $('btnQ').disabled = false; }, 1000); }
+};
+
+// ---- 自動更新：只在頁面看得到時每 2 分鐘（背景分頁不打轉送站）----
+let timer = null;
+function schedule(){
+  clearInterval(timer); timer = null;
+  if (document.visibilityState !== 'visible') return;
+  if (data && Date.now() - data.at >= POLL_MS) load();
+  timer = setInterval(() => { if (document.visibilityState === 'visible') load(); }, POLL_MS);
+}
+document.addEventListener('visibilitychange', schedule);
+matchMedia('(prefers-color-scheme: dark)').addEventListener?.('change', () => { drawChips(); render(); });
+
+drawChips();
+load().then(schedule);
+// 之前允許過定位的，開啟時自動定位（不會跳權限詢問）
+if (store.get('pbs-autoloc', false) && navigator.permissions) navigator.permissions.query({name: 'geolocation'}).then(p => { if (p.state === 'granted') locate(); }).catch(() => {});
+if ('serviceWorker' in navigator && location.protocol === 'https:') navigator.serviceWorker.register('sw.js').catch(() => {});
+</script>
+</body>
+</html>
