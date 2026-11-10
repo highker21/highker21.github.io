@@ -48,6 +48,7 @@ button:disabled{opacity:.6}
 .tag{font-size:13px;font-weight:800;padding:1px 8px;border-radius:6px;flex:none;color:#fff}
 .ev-body{font-size:16px;margin:4px 0}
 .meta{font-size:14px;color:var(--mute)}
+.gmap{display:inline-block;font-size:15px;color:var(--brand);padding:4px 0}
 .more{width:100%;font-weight:700;padding:10px;margin:4px 0 8px}
 h3{font-size:16px;margin:4px 0 8px}
 #nhint{margin:-2px 16px 8px;font-size:14px;color:var(--mute)}
@@ -193,9 +194,15 @@ L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {maxZoom: 19, attr
 const layer = L.layerGroup().addTo(map);
 let ctrMark = null, ctrCircle = null;
 const markers = new Map();
+// 概略位置（警廣只給到行政區中心）：另給 Google 地圖以路名搜尋（OSM Nominatim 對台灣路名／路口常找錯，2026-11-10 實測）
+// 警廣的 road 欄位多半是空的，路名在 comment 第一段（例「天祥一路118號前 近鼎中路 事故」「中華路和同盟路口 往北方向…」）
+const placeOf = e => { const t = e.road || e.text.split(' ')[0] || ''; return /路|街|道|橋|號|巷|交流|隧/.test(t) ? t.slice(0, 30) : ''; };
+const gmapUrl = (e, p) => 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(e.area.replace(/-/g, '') + p);
+const gmapLink = e => { const p = e.approx ? placeOf(e) : ''; return p ? `<a class="gmap" href="${esc(gmapUrl(e, p))}" target="_blank" rel="noopener">🗺️ 在 Google 地圖看「${esc(p)}」</a>` : ''; };
 function popupHtml(e){
   return `<b>${esc(e.raw || e.type)}</b>｜${esc([e.area, e.road, e.dir].filter(Boolean).join(' ') || '警廣通報')}<br>${esc(e.text)}`
-    + `<div class="meta">${e.approx ? '概略位置（警廣只給到行政區）· ' : ''}${esc(fmt(e.mod))} 更新${e.src ? ' · ' + esc(e.src) : ''}</div>`;
+    + (e.approx ? `<div class="meta">⚠️ 地圖上是行政區中心，不是事發地點（警廣只給到行政區）</div>${gmapLink(e)}` : '')
+    + `<div class="meta">${esc(fmt(e.mod))} 更新${e.src ? ' · ' + esc(e.src) : ''}</div>`;
 }
 
 let limit = 30, noxyOpen = false, lineOpen = false;
@@ -228,7 +235,7 @@ function render(fit){
   let html = shown.length ? shown.map((x, i) => {
     const e = x.e, c = cssColor(TYPE_COLOR[e.type]);
     return `<div class="ev" data-i="${i}"><div class="ev-head"><span class="tag" style="background:${esc(c)}">${esc(e.raw || e.type)}</span><b>${esc([e.area, e.road, e.dir].filter(Boolean).join(' ') || '警廣通報')}</b></div>`
-      + (e.text ? `<div class="ev-body">${esc(e.text)}</div>` : '')
+      + (e.text ? `<div class="ev-body">${esc(e.text)}</div>` : '') + gmapLink(e)
       + `<div class="meta">${x.d != null ? (e.approx ? '約 ' : '') + fmtD(x.d) + (e.approx ? '（概略位置）' : '') + ' · ' : e.approx ? '概略位置 · ' : ''}${esc(fmt(e.mod))} 更新${!isNaN(e.happen) && e.happen !== e.mod ? ` · ${esc(fmt(e.happen))} 發生` : ''}${e.src ? ' · ' + esc(e.src) : ''}</div></div>`;
   }).join('') : `<div class="meta">${has ? '這個範圍內目前沒有符合的通報，可以把範圍調大' : '目前沒有符合的通報'}</div>`;
   if (list.length > limit) html += `<button class="more" id="btnMore">更多…（還有 ${list.length - limit} 則）</button>`;
@@ -240,9 +247,11 @@ function render(fit){
   if (nx.length) html += `<h3>沒有座標的通報（${nx.length}）</h3>` + (noxyOpen ? nx.map(e => `<div class="ev"><div class="ev-head"><span class="tag" style="background:${esc(cssColor(TYPE_COLOR[e.type]))}">${esc(e.raw || e.type)}</span><b>${esc([e.area, e.road, e.dir].filter(Boolean).join(' ') || '警廣通報')}</b></div>${e.text ? `<div class="ev-body">${esc(e.text)}</div>` : ''}<div class="meta">${esc(fmt(e.mod))} 更新</div></div>`).join('')
     : '<button class="more" id="btnNoxy">展開</button>');
   $('list').innerHTML = html;
-  $('list').querySelectorAll('.ev[data-i]').forEach(el => el.onclick = () => {
+  $('list').querySelectorAll('.ev[data-i]').forEach(el => el.onclick = ev => {
+    if (ev.target.closest('a')) return;   // 點 Google 地圖連結：只開連結，不動地圖
     const e = shown[+el.dataset.i].e, m = markers.get(e);
-    map.setView([e.lat, e.lon], Math.max(map.getZoom(), 14)); if (m) m.openPopup();
+    // 概略位置只看到行政區範圍（13），不放大到街道（14）假裝是現場
+    map.setView([e.lat, e.lon], e.approx ? 13 : Math.max(map.getZoom(), 14)); if (m) m.openPopup();
     $('map').scrollIntoView({behavior: 'smooth', block: 'center'});
   });
   if ($('btnMore')) $('btnMore').onclick = () => { limit += 30; render(); };
