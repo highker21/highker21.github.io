@@ -135,7 +135,7 @@ ul#listPay{list-style:none;margin:6px 0 0;padding:0 16px 16px}#listPay li{backgr
 <ul id="list"></ul>
 <div id="warnsBike" hidden></div>
 <ul id="listBike" hidden></ul>
-<div id="trafficSubs" class="subtabs" role="tablist" aria-label="路況類別" hidden><button class="subtab" data-sub="road" role="tab">🛣️ 國道／省道</button><button class="subtab" data-sub="pbs" role="tab">📻 警廣</button><button class="subtab" data-sub="fire" role="tab">🚒 119</button></div>
+<div id="trafficSubs" class="subtabs" role="tablist" aria-label="路況類別" hidden><button class="subtab" data-sub="road" role="tab">🛣️ 國道／省道</button><button class="subtab" data-sub="pbs" role="tab">📻 警廣</button><button class="subtab" data-sub="fire" role="tab" hidden>🚒 119</button></div>
 <div id="warnsTraffic" hidden></div>
 <ul id="listTraffic" hidden></ul>
 <div id="newsTraffic" hidden></div>
@@ -211,7 +211,7 @@ ul#listPay{list-style:none;margin:6px 0 0;padding:0 16px 16px}#listPay li{backgr
   停車費率為各機關提供的文字說明，僅供參考，以現場公告為準。<br>
   地圖：© <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors。<br>
   資料處理邏輯參考 opview（© 2026 Rick Lan，<a href="https://github.com/herizon1054/opview/blob/01f0f20/LICENSE" target="_blank" rel="noopener">非商業授權</a>）。<br>
-  工具版本：2026-11-10
+  工具版本：2026-11-11
 </footer>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js" integrity="sha512-puJW3E/qXDqYp9IfhAI54BJEaWIfloJ7JWs7OeD5i6ruC9JZL1gERT1wjtwXFlh7CjE7ZJ+/vcRZRkIYIb6p4g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
@@ -1255,9 +1255,17 @@ function renderEvents(){
 }
 // 路況次分頁（老闆 TG2897）：一次查詢照舊全抓，只切換顯示；選擇記在這支手機
 let trafficSub = ['road', 'pbs', 'fire'].includes(store.get('pk_rsub')) ? store.get('pk_rsub') : 'road';
+// 老闆 TG34594：119 分頁預設隱藏，只有這次定位在有公開 119 的縣市（高雄、臺南、新竹市）才出現；
+// 選擇照樣記著，回到這三市時會回到 119 分頁；在其他縣市暫時顯示國道／省道
+const fireOk = () => !!(lastTraffic && FIRE[lastTraffic.city]);
+const curSub = () => trafficSub === 'fire' && !fireOk() ? 'road' : trafficSub;
 function applyTrafficSub(){
-  for (const b of document.querySelectorAll('#trafficSubs .subtab')) { const on = b.dataset.sub === trafficSub; b.classList.toggle('on', on); b.setAttribute('aria-selected', on); }
-  $('listTraffic').hidden = mode !== 'traffic' || trafficSub !== 'road';
+  const sub = curSub();
+  for (const b of document.querySelectorAll('#trafficSubs .subtab')) {
+    const on = b.dataset.sub === sub; b.classList.toggle('on', on); b.setAttribute('aria-selected', on);
+    if (b.dataset.sub === 'fire') b.hidden = !fireOk();
+  }
+  $('listTraffic').hidden = mode !== 'traffic' || sub !== 'road';
 }
 document.querySelectorAll('#trafficSubs .subtab').forEach(b => b.onclick = () => { trafficSub = b.dataset.sub; store.set('pk_rsub', trafficSub); applyTrafficSub(); renderTraffic(); });
 function renderTraffic(){
@@ -1294,9 +1302,8 @@ function renderTraffic(){
   // 不放 NewsURL（都只導到高公局首頁）。所有文字一律轉義
   $('newsTraffic').innerHTML = '';
   applyTrafficSub();
-  if (trafficSub === 'pbs') $('newsTraffic').innerHTML = lastTraffic.pbs ? renderPbs() : `<div class="meta">${trafficBusy ? '警廣路況更新中…' : '這次沒有抓到警廣路況，請看上方提示或重新查詢'}</div>`;
-  else if (trafficSub === 'fire') $('newsTraffic').innerHTML = !FIRE[lastTraffic.city] ? `<div class="meta">${esc(CITIES[lastTraffic.city] || '這個縣市')}的消防局沒有公開 119 即時案件（目前只有高雄市、臺南市、新竹市）</div>`
-    : lastTraffic.fire ? renderFire() : `<div class="meta">${trafficBusy ? '119 即時案件更新中…' : '這次沒有抓到 119 即時案件，請看上方提示或重新查詢'}</div>`;
+  if (curSub() === 'pbs') $('newsTraffic').innerHTML = lastTraffic.pbs ? renderPbs() : `<div class="meta">${trafficBusy ? '警廣路況更新中…' : '這次沒有抓到警廣路況，請看上方提示或重新查詢'}</div>`;
+  else if (curSub() === 'fire') $('newsTraffic').innerHTML = lastTraffic.fire ? renderFire() : `<div class="meta">${trafficBusy ? '119 即時案件更新中…' : '這次沒有抓到 119 即時案件，請看上方提示或重新查詢'}</div>`;
   else if (lastTraffic.events) $('newsTraffic').innerHTML = renderEvents();
   else if (news) $('newsTraffic').innerHTML = '<h3>國道最新事件</h3>' + (news.length ? news.filter((_, i) => newsMore || i < 5).map(n => {
     const [tone, kind] = NEWS_CAT[n.NewsCategory] || ['unk', '其他'], when = Date.parse(n.PublishTime || '');
