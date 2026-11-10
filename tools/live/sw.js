@@ -1,6 +1,6 @@
 // 只快取靜態檔（頁面、icon、Leaflet）。警廣、119 資料、地圖圖磚、搜尋一律走網路、不進快取。
 // 同一網域（highker21.github.io）的 App 共用 Cache Storage：只刪自己前綴 live-static- 的舊版，不碰別的 App
-const CACHE = 'live-static-2026-11-11a';
+const CACHE = 'live-static-2026-11-11b';
 const STATIC = ['./', 'index.html', 'manifest.webmanifest', 'icon.svg', 'icon-180.png', 'icon-192.png', 'icon-512.png',
   'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css',
   'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js'];

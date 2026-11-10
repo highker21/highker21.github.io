@@ -260,12 +260,13 @@ async function f119Load(){
 // ================= 狀態 =================
 let P = null, F = null, pbsErr = '', f119Err = '', loading = false;   // P＝警廣 {rows,lineOnly,noxy,count,at}；F＝119 {rows,bad,simple,at}
 const ctr = {lat: null, lon: null, label: '', kind: ''};
-$('range').value = String(store.get('live-range', 5));
+// 老闆 TG34603：每次打開都從 2 公里開始（開頁後手動改的範圍只在這次有效，不記住）
+$('range').value = '2';
 $('win').value = store.get('live-win', '3');
 if (!$('win').value) $('win').value = '3';
 let SRC = ['all', 'f119', 'pbs'].includes(store.get('live-src', 'all')) ? store.get('live-src', 'all') : 'all';
 const off = new Set(store.get('live-off', ['f:已返隊']));   // 預設隱藏 119 已返隊
-$('range').onchange = () => { store.set('live-range', +$('range').value); render(true); };
+$('range').onchange = () => render(true);
 $('win').onchange = () => { store.set('live-win', $('win').value); render(); };
 function drawTabs(){
   document.querySelectorAll('.tabs button').forEach(b => b.setAttribute('aria-selected', String(b.dataset.src === SRC)));
@@ -345,7 +346,9 @@ function pbsPopup(e){
 }
 
 let limit = 30, noxyOpen = false, lineOpen = false;
+let pendingFit = false;   // 打開時定位可能比資料先到：先記著，資料到了再把地圖縮放到範圍
 function render(fit){
+  if (fit) pendingFit = true;
   const has = ctr.lat != null, R = +$('range').value * 1000;
   $('warn119').hidden = !(f119Err || (F && (F.bad.length || F.simple.length))) || !want('f119');
   $('warn119').textContent = f119Err ? `⚠️ 119：${f119Err}${F ? `；先顯示 ${fmt(F.at)} 抓到的資料` : ''}`
@@ -382,7 +385,7 @@ function render(fit){
   }
   if (ctrCircle) { ctrCircle.remove(); ctrCircle = null; }
   if (has && R) ctrCircle = L.circle([ctr.lat, ctr.lon], {radius: R, color: cssVar('brand'), weight: 1, fill: false, interactive: false}).addTo(map);
-  if (fit && has) { if (R) map.fitBounds(ctrCircle.getBounds(), {padding: [10, 10]}); else map.setView([ctr.lat, ctr.lon], 12); }
+  if (pendingFit && has) { pendingFit = false; if (R) map.fitBounds(ctrCircle.getBounds(), {padding: [10, 10]}); else map.setView([ctr.lat, ctr.lon], 12); }
 
   // ---- 狀態列 ----
   const nF = list.filter(x => x.e.src === 'f119'), nP = list.length - nF.length;
@@ -440,7 +443,7 @@ function locate(){
   if (!navigator.geolocation) { $('status').textContent = '這個瀏覽器不支援定位，可以改用搜尋'; return; }
   $('btnLoc').disabled = true; $('status').textContent = '定位中…';
   navigator.geolocation.getCurrentPosition(p => {
-    $('btnLoc').disabled = false; store.set('live-autoloc', true);
+    $('btnLoc').disabled = false;
     setCenter(p.coords.latitude, p.coords.longitude, '我的位置', 'me');
   }, err => {
     $('btnLoc').disabled = false;
@@ -554,7 +557,8 @@ matchMedia('(prefers-color-scheme: dark)').addEventListener?.('change', () => { 
 
 drawTabs(); drawChips();
 load().then(schedule);
-if (store.get('live-autoloc', false) && navigator.permissions) navigator.permissions.query({name: 'geolocation'}).then(p => { if (p.state === 'granted') locate(); }).catch(() => {});
+// 老闆 TG34603：打開就自動定位（第一次會跳定位權限詢問；拒絕的話照舊可用搜尋）
+locate();
 if ('serviceWorker' in navigator && location.protocol === 'https:') navigator.serviceWorker.register('sw.js').catch(() => {});
 </script>
 </body>
