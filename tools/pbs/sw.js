@@ -1,6 +1,6 @@
 // 只快取靜態檔（頁面、icon、Leaflet）。警廣資料、地圖圖磚、搜尋一律走網路、不進快取。
 // 同一網域（highker21.github.io）的 App 共用 Cache Storage：只刪自己前綴 pbs-static- 的舊版，不碰別的 App
-const CACHE = 'pbs-static-2026-11-10a';
+const CACHE = 'pbs-static-2026-11-10b';
 const STATIC = ['./', 'index.html', 'manifest.webmanifest', 'icon.svg', 'icon-180.png', 'icon-192.png', 'icon-512.png',
   'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css',
   'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js'];
@@ -17,4 +17,12 @@ self.addEventListener('fetch', e => {
     if (r.ok) { const copy = r.clone(); caches.open(CACHE).then(c => c.put(e.request, copy)); }
     return r;
   }).catch(() => caches.match(e.request)));
+});
+// 點通知 → 回到已開的 App，沒開就開新的
+self.addEventListener('notificationclick', e => {
+  e.notification.close();
+  e.waitUntil(self.clients.matchAll({type: 'window', includeUncontrolled: true}).then(cs => {
+    const c = cs.find(c => c.url.startsWith(self.registration.scope));
+    return c ? c.focus() : self.clients.openWindow(self.registration.scope);
+  }));
 });

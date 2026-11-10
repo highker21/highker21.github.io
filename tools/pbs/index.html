@@ -50,6 +50,8 @@ button:disabled{opacity:.6}
 .meta{font-size:14px;color:var(--mute)}
 .more{width:100%;font-weight:700;padding:10px;margin:4px 0 8px}
 h3{font-size:16px;margin:4px 0 8px}
+#nhint{margin:-2px 16px 8px;font-size:14px;color:var(--mute)}
+button[aria-pressed="true"]{background:var(--brand);border-color:var(--brand);color:#fff}
 footer{padding:8px 16px 24px;padding-bottom:max(24px,env(safe-area-inset-bottom));font-size:13px;color:var(--mute)}
 footer a{color:var(--brand)}
 </style>
@@ -61,7 +63,10 @@ footer a{color:var(--brand)}
 <div class="ctl">
   <select id="range" aria-label="範圍"><option value="2">2 公里內</option><option value="5">5 公里內</option><option value="10">10 公里內</option><option value="30">30 公里內</option><option value="0">全台</option></select>
   <select id="win" aria-label="時間"><option value="3">3 小時內有更新</option><option value="6">6 小時內有更新</option><option value="24">24 小時內有更新</option><option value="today">今天有更新</option><option value="all">全部</option></select>
+  <select id="every" aria-label="自動更新"><option value="0">不自動更新</option><option value="1">每 1 分鐘更新</option><option value="2">每 2 分鐘更新</option><option value="5">每 5 分鐘更新</option><option value="10">每 10 分鐘更新</option><option value="15">每 15 分鐘更新</option><option value="30">每 30 分鐘更新</option><option value="60">每 60 分鐘更新</option></select>
+  <button id="btnNotify" type="button" aria-pressed="false">🔕 通知：關</button>
 </div>
+<div id="nhint" hidden></div>
 <div id="chips" class="chips"></div>
 <div id="map" role="region" aria-label="地圖"></div>
 <div id="warn" hidden></div>
@@ -69,7 +74,7 @@ footer a{color:var(--brand)}
 <div id="list"></div>
 <footer>
   資料：<a href="https://www.pbs.gov.tw/" target="_blank" rel="noopener">警察廣播電臺</a> 即時路況開放資料（<a href="https://data.gov.tw/dataset/15221" target="_blank" rel="noopener">政府資料開放平臺</a>），依<a href="https://data.gov.tw/license" target="_blank" rel="noopener">政府資料開放授權條款第 1 版</a>使用；本頁不代表機關立場。通報內容與位置以警廣為準，可能有延遲或誤差。<br>
-  定位只在你的手機上計算距離，不會送出；搜尋地點時，輸入的文字會送到 OpenStreetMap。地圖：© <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors。<br>
+  定位只在你的手機上計算距離，不會送出；通知也是手機自己比對後跳出，不會把位置送到任何伺服器；搜尋地點時，輸入的文字會送到 OpenStreetMap。地圖：© <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors。<br>
   工具版本：2026-11-10
 </footer>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js" integrity="sha512-puJW3E/qXDqYp9IfhAI54BJEaWIfloJ7JWs7OeD5i6ruC9JZL1gERT1wjtwXFlh7CjE7ZJ+/vcRZRkIYIb6p4g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
@@ -77,7 +82,7 @@ footer a{color:var(--brand)}
 'use strict';
 // 警廣即時路況獨立 App（老闆 TG34370）：資料經停車 App 同一個 Worker → 台灣境內轉送站（60 秒快取），不需金鑰
 const PROXY = location.hostname === 'highker21.github.io' ? 'https://tdx-parking-proxy.highker.workers.dev' : 'http://127.0.0.1:8787';
-const POLL_MS = 120000, H = 3600000;
+const H = 3600000, NEW_WIN = H;   // 通知只算 1 小時內更新的新通報（避免舊案被擠出 1000 則又回來時誤報）
 const $ = id => document.getElementById(id);
 const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const mem = {};
@@ -149,6 +154,7 @@ async function load(){
     let j; try { j = JSON.parse(text); } catch { throw new Error('資料格式異常'); }
     data = {...parse(j), at: Date.now()};
     $('warn').hidden = true;
+    checkNew();
   } catch (e) {
     $('warn').hidden = false;
     $('warn').textContent = `⚠️ ${e.message || '資料格式異常'}${data ? `；先顯示 ${fmt(data.at)} 抓到的資料` : '，請稍後按 🔄 再試'}`;
@@ -242,12 +248,13 @@ function render(fit){
   if ($('btnMore')) $('btnMore').onclick = () => { limit += 30; render(); };
   if ($('btnNoxy')) $('btnNoxy').onclick = () => { noxyOpen = true; render(); };
   if ($('btnLine')) $('btnLine').onclick = () => { lineOpen = true; render(); };
+  drawNotify();
 }
-function setCenter(lat, lon, label, kind){
-  Object.assign(ctr, {lat, lon, label, kind}); limit = 30;
+function setCenter(lat, lon, label, kind, fit = true){
+  Object.assign(ctr, {lat, lon, label, kind}); if (fit) limit = 30;
   if (ctrMark) ctrMark.remove();
   ctrMark = L.circleMarker([lat, lon], {radius: 9, color: cssColor('brand'), weight: 3, fillColor: '#fff', fillOpacity: 1}).bindTooltip(label).addTo(map);
-  render(true);
+  render(fit);
 }
 
 // ---- 定位 ----
@@ -289,14 +296,72 @@ $('search').onsubmit = async ev => {
   finally { setTimeout(() => { $('btnQ').disabled = false; }, 1000); }
 };
 
-// ---- 自動更新：只在頁面看得到時每 2 分鐘（背景分頁不打轉送站）----
-let timer = null;
+// ---- 自動更新（老闆 TG34431）：每 N 分鐘（預設 5，可關），用「我的位置」時先重新定位再抓資料 ----
+// 通知關：只在頁面看得到時更新（背景不打轉送站）；通知開：背景也照間隔更新，但手機切到背景一陣子就會暫停計時器（iOS 幾秒、Android 幾分鐘），實際上要開在畫面上
+const EVERY = [0, 1, 2, 5, 10, 15, 30, 60];
+$('every').value = String(EVERY.includes(+store.get('pbs-every', 5)) ? +store.get('pbs-every', 5) : 5);
+$('every').onchange = () => { store.set('pbs-every', +$('every').value); schedule(); drawNotify(); };
+const pollMs = () => (+$('every').value || 0) * 60000;
+let timer = null, ticking = false;
+function relocate(){
+  return new Promise(res => {
+    if (!navigator.geolocation) return res();
+    navigator.geolocation.getCurrentPosition(p => { setCenter(p.coords.latitude, p.coords.longitude, '我的位置', 'me', false); res(); },
+      () => res(), {enableHighAccuracy: true, timeout: 15000, maximumAge: 30000});
+  });
+}
+async function tick(){
+  if (ticking) return; ticking = true;
+  try { if (ctr.kind === 'me') await relocate(); await load(); } finally { ticking = false; }
+}
 function schedule(){
   clearInterval(timer); timer = null;
-  if (document.visibilityState !== 'visible') return;
-  if (data && Date.now() - data.at >= POLL_MS) load();
-  timer = setInterval(() => { if (document.visibilityState === 'visible') load(); }, POLL_MS);
+  const ms = pollMs();
+  if (!ms || (document.visibilityState !== 'visible' && !notifyOn())) return;
+  if (data && Date.now() - data.at >= ms) tick();
+  timer = setInterval(() => { if (document.visibilityState === 'visible' || notifyOn()) tick(); }, ms);
 }
+
+// ---- 系統通知：範圍內 1 小時內新出現的通報（施工不通知；只標到路線、沒座標的不通知）----
+const keyOf = e => e.id || `${e.raw}|${e.area}|${e.road}|${e.text}`.slice(0, 200);
+const notifyOn = () => !!store.get('pbs-notify', false) && 'Notification' in window && Notification.permission === 'granted';
+function checkNew(){
+  const all = [...data.rows, ...data.lineOnly, ...data.noxy], seen = new Set(store.get('pbs-seen', []));
+  const first = seen.size === 0;   // 第一次載入只記下來、不通知（不然一次跳幾百則）
+  store.set('pbs-seen', all.map(keyOf).slice(0, 5000));
+  if (first || !notifyOn() || ctr.lat == null || !pollMs()) return;
+  const R = +$('range').value * 1000, now = Date.now();
+  const fresh = data.rows.filter(e => !seen.has(keyOf(e)) && e.type !== '道路施工' && !off.has(e.type) && now - e.mod <= NEW_WIN)
+    .map(e => ({e, d: dist(ctr.lat, ctr.lon, e.lat, e.lon)})).filter(x => !R || x.d <= R).sort((a, b) => a.d - b.d);
+  if (!fresh.length) return;
+  const line = x => `${x.e.raw || x.e.type}｜${[x.e.area, x.e.road, x.e.dir].filter(Boolean).join(' ') || '警廣通報'}`;
+  const near = x => `${x.e.approx ? '約 ' : ''}${fmtD(x.d)}${x.e.approx ? '（概略位置）' : ''}`;
+  if (fresh.length <= 3) for (const x of fresh) showNote(line(x), `${near(x)}・${x.e.text}`.slice(0, 160), 'pbs-' + keyOf(x.e).slice(0, 60));
+  else showNote(`${ctr.label}附近新增 ${fresh.length} 則路況`, fresh.slice(0, 3).map(x => `${line(x)}（${near(x)}）`).join('\n').slice(0, 200), 'pbs-batch');
+}
+async function showNote(title, body, tag){
+  const opt = {body, tag, icon: 'icon-192.png', badge: 'icon-192.png'};
+  try { const reg = navigator.serviceWorker && await navigator.serviceWorker.getRegistration(); if (reg) return await reg.showNotification(title, opt); } catch {}
+  try { new Notification(title, opt); } catch {}   // Android Chrome 只能走 service worker，這行只給桌機／本機測試
+}
+function drawNotify(){
+  const on = notifyOn(), b = $('btnNotify'), h = $('nhint');
+  b.textContent = on ? '🔔 通知：開' : '🔕 通知：關'; b.setAttribute('aria-pressed', String(on));
+  const msg = !on ? '' : ctr.lat == null ? '⚠️ 要先按 📍 定位或搜尋地點，才知道要通知哪一帶'
+    : !pollMs() ? '⚠️ 自動更新關閉時不會通知，請選更新間隔'
+    : `${ctr.label}${+$('range').value ? ` ${$('range').value} 公里內` : '（全台）'}有新的事故、阻塞等通報會通知（施工不通知）${+$('range').value ? '' : '；全台範圍通知會很頻繁'}。App 要開在畫面上才會更新與通知；切到背景一陣子或關掉後，手機會暫停它`;
+  if (msg || h.dataset.err !== '1') { h.textContent = msg; h.hidden = !msg; h.dataset.err = ''; }
+}
+function hintErr(t){ const h = $('nhint'); h.textContent = t; h.hidden = false; h.dataset.err = '1'; }
+$('btnNotify').onclick = async () => {
+  if (notifyOn()) { store.set('pbs-notify', false); drawNotify(); schedule(); return; }
+  if (!('Notification' in window)) return hintErr('⚠️ 這個瀏覽器不能通知。iPhone 請用 Safari 的「分享 → 加入主畫面」，再從主畫面的圖示打開');
+  let p = Notification.permission;
+  if (p === 'default') { try { p = await Notification.requestPermission(); } catch { p = 'denied'; } }
+  if (p !== 'granted') { store.set('pbs-notify', false); drawNotify(); return hintErr('⚠️ 通知權限沒有開：請到手機的設定，允許這個 App 通知'); }
+  store.set('pbs-notify', true); drawNotify(); schedule();
+};
+
 document.addEventListener('visibilitychange', schedule);
 matchMedia('(prefers-color-scheme: dark)').addEventListener?.('change', () => { drawChips(); render(); });
 
