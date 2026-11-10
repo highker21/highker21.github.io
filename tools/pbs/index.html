@@ -76,7 +76,7 @@ footer a{color:var(--brand)}
 <footer>
   資料：<a href="https://www.pbs.gov.tw/" target="_blank" rel="noopener">警察廣播電臺</a> 即時路況開放資料（<a href="https://data.gov.tw/dataset/15221" target="_blank" rel="noopener">政府資料開放平臺</a>），依<a href="https://data.gov.tw/license" target="_blank" rel="noopener">政府資料開放授權條款第 1 版</a>使用；本頁不代表機關立場。通報內容與位置以警廣為準，可能有延遲或誤差。<br>
   定位只在你的手機上計算距離，不會送出；通知也是手機自己比對後跳出，不會把位置送到任何伺服器；搜尋地點時，輸入的文字會送到 OpenStreetMap。地圖：© <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors。<br>
-  工具版本：2026-11-10
+  工具版本：2026-11-11
 </footer>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js" integrity="sha512-puJW3E/qXDqYp9IfhAI54BJEaWIfloJ7JWs7OeD5i6ruC9JZL1gERT1wjtwXFlh7CjE7ZJ+/vcRZRkIYIb6p4g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script>
@@ -166,11 +166,12 @@ async function load(){
 
 // ---- 篩選狀態（記住）----
 const ctr = {lat: null, lon: null, label: '', kind: ''};
-$('range').value = String(store.get('pbs-range', 5));
+// 老闆 TG34635：每次打開都從 2 公里開始（開頁後手動改的範圍只在這次有效，不記住）
+$('range').value = '2';
 $('win').value = store.get('pbs-win', '24');
 if (!$('win').value) $('win').value = '24';
 let off = new Set(store.get('pbs-off', []));
-$('range').onchange = () => { store.set('pbs-range', +$('range').value); render(true); };
+$('range').onchange = () => render(true);
 $('win').onchange = () => { store.set('pbs-win', $('win').value); render(); };
 function drawChips(){
   $('chips').replaceChildren(...[...new Set(TYPES.map(t => t[0]))].map(t => {
@@ -206,7 +207,9 @@ function popupHtml(e){
 }
 
 let limit = 30, noxyOpen = false, lineOpen = false;
+let pendingFit = false;   // 打開時定位可能比資料先到：先記著，資料到了再把地圖縮放到範圍
 function render(fit){
+  if (fit) pendingFit = true;
   if (!data) { $('status').textContent = loading ? '載入中…' : '還沒有資料'; return; }
   const all = data.rows.filter(e => !off.has(e.type) && inWindow(e));
   const R = +$('range').value * 1000, has = ctr.lat != null;
@@ -224,7 +227,7 @@ function render(fit){
   }
   if (ctrCircle) { ctrCircle.remove(); ctrCircle = null; }
   if (has && R) ctrCircle = L.circle([ctr.lat, ctr.lon], {radius: R, color: cssColor('brand'), weight: 1, fill: false, interactive: false}).addTo(map);
-  if (fit && has) { if (R) map.fitBounds(ctrCircle.getBounds(), {padding: [10, 10]}); else map.setView([ctr.lat, ctr.lon], 12); }
+  if (pendingFit && has) { pendingFit = false; if (R) map.fitBounds(ctrCircle.getBounds(), {padding: [10, 10]}); else map.setView([ctr.lat, ctr.lon], 12); }
   // 狀態列
   const nType = re => list.filter(x => re.test(x.e.type)).length;
   $('status').textContent = `${has ? `${ctr.label}${R ? ` ${R / 1000} 公里內` : ''}` : '全台（按 📍 或搜尋看附近）'}：${list.length} 則`
@@ -271,7 +274,7 @@ function locate(){
   if (!navigator.geolocation) { $('status').textContent = '這個瀏覽器不支援定位，可以改用搜尋'; return; }
   $('btnLoc').disabled = true; $('status').textContent = '定位中…';
   navigator.geolocation.getCurrentPosition(p => {
-    $('btnLoc').disabled = false; store.set('pbs-autoloc', true);
+    $('btnLoc').disabled = false;
     setCenter(p.coords.latitude, p.coords.longitude, '我的位置', 'me');
   }, err => {
     $('btnLoc').disabled = false;
@@ -377,7 +380,8 @@ matchMedia('(prefers-color-scheme: dark)').addEventListener?.('change', () => { 
 drawChips();
 load().then(schedule);
 // 之前允許過定位的，開啟時自動定位（不會跳權限詢問）
-if (store.get('pbs-autoloc', false) && navigator.permissions) navigator.permissions.query({name: 'geolocation'}).then(p => { if (p.state === 'granted') locate(); }).catch(() => {});
+// 老闆 TG34635：打開就自動定位（第一次會跳定位權限詢問；拒絕的話照舊可用搜尋）
+locate();
 if ('serviceWorker' in navigator && location.protocol === 'https:') navigator.serviceWorker.register('sw.js').catch(() => {});
 </script>
 </body>
