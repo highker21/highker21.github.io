@@ -1486,6 +1486,10 @@ document.querySelectorAll('#transitSubs .subtab').forEach(b => b.onclick = () =>
 // 台鐵／高鐵／捷運直接用存下的站碼查；公車用存下的 StopUID 到站位清單找回整站（找不到才用存下的 StopUID）
 const ST_FAV_MAX = 30, ST_MODE = {bus: '🚌', tra: '🚆 台鐵', thsr: '🚄 高鐵', metro: '🚇'};
 const stKey = f => [f.m, f.sys || f.city || '', f.id].join('|');
+// 老闆 TG34645／34651：「⭐ 全部」一次查目前這一類所有最愛（按分類查）
+const ST_KIND = {bus: '公車', tra: '台鐵', thsr: '高鐵', metro: '捷運'};
+const allFav = m => ({all: true, m, id: '*', name: '全部'});
+const favLabel = f => f.all ? `全部${ST_KIND[f.m]}最愛（${stFavs().filter(x => x.m === f.m).length} 站）` : stLabel(f);
 const stLabel = f => f.m === 'metro' ? `${METRO_NAME[f.sys]} ${stn(f.name)}` : f.m === 'bus' ? f.name : stn(f.name);
 function stFavs(){
   const a = getJSON('pk_stfavs'), seen = new Set();
@@ -1510,6 +1514,13 @@ function renderStFavs(){
   const bar = $('stFavBar'), a = stFavs().filter(f => f.m === transitSub), cur = favWait ? stKey(favWait) : lastTransit && lastTransit.fav ? stKey(lastTransit.fav) : '';
   bar.replaceChildren();
   if (!a.length) { const m = document.createElement('div'); m.className = 'meta'; m.textContent = '⭐ 點車站右邊的 ☆，就能把常用車站加到這裡，之後一點就查'; bar.append(m); return; }
+  if (a.length >= 2) {
+    const all = allFav(transitSub), chip = document.createElement('span'), go = document.createElement('button');
+    chip.className = 'stfav' + (stKey(all) === cur ? ' on' : '');
+    go.type = 'button'; go.textContent = `⭐ 全部（${a.length}）`; go.title = `一次查這一類所有最愛車站`;
+    go.onclick = () => favQuery(all);
+    chip.append(go); bar.append(chip);
+  }
   for (const f of a) {
     const chip = document.createElement('span'), go = document.createElement('button'), x = document.createElement('button');
     chip.className = 'stfav' + (stKey(f) === cur ? ' on' : '');
@@ -1522,9 +1533,9 @@ function renderStFavs(){
 }
 function favQuery(f){
   clearTimeout(favTimer); favTimer = null; favWait = f; renderStFavs();
-  if (transitBusy) { transitGen++; rstatus(`⭐ ${stLabel(f)}：停下目前的查詢，馬上改查這一站…`); return; }
+  if (transitBusy) { transitGen++; rstatus(`⭐ ${favLabel(f)}：停下目前的查詢，馬上改查${f.all ? '' : '這一站'}…`); return; }
   const cd = gate.cooldown();
-  if (cd > 0) { rstatus(`⭐ ${stLabel(f)}：${Math.ceil(cd/1000)} 秒後自動查（避免超過資料來源限制）`); favTimer = setTimeout(() => favQuery(f), cd + 100); return; }
+  if (cd > 0) { rstatus(`⭐ ${favLabel(f)}：${Math.ceil(cd/1000)} 秒後自動查（避免超過資料來源限制）`); favTimer = setTimeout(() => favQuery(f), cd + 100); return; }
   queryTransit(true, f);
 }
 renderSubs(); renderStFavs();
@@ -1543,11 +1554,11 @@ function renderTransit(){
   };
   const empty = s => { const li = document.createElement('li'); li.innerHTML = `<div class="grow meta">${s}</div>`; ul.appendChild(li); };
   // 查的是某個最愛車站：其他類別沒有查，請使用者按查詢回到附近
-  if (T.fav && transitSub !== T.fav.m) { empty(`目前顯示最愛車站「${esc(stLabel(T.fav))}」；按「查詢」回到附近車站`); return; }
+  if (T.fav && transitSub !== T.fav.m) { empty(`目前顯示最愛車站「${esc(favLabel(T.fav))}」；按「查詢」回到附近車站`); return; }
   // 公車
   if (transitSub === 'bus' && T.bus) {
-    if (!T.bus.near.length) empty(T.fav ? '找不到這個最愛站的站位資料（可能已更新），請刪掉後在附近重新加入' : `附近 ${BUS_R} 公尺沒有公車站`);
-    for (const [i, {s, d}] of T.bus.near.entries()) {
+    if (!T.bus.near.length) empty(T.fav ? `找不到${T.fav.all ? '這些' : '這個'}最愛站的站位資料（可能已更新），請刪掉後在附近重新加入` : `附近 ${BUS_R} 公尺沒有公車站`);
+    for (const [i, {s, d, fav: nf}] of T.bus.near.entries()) {
       const rows = [];
       if (T.bus.eta) {
         const best = new Map();
@@ -1563,17 +1574,19 @@ function renderTransit(){
         : rows.slice(0, more ? 6 : 99).map(r => `<div class="row"><span class="grow"><b>${esc(r.route)}</b></span><b class="t-${r.tone} sm">${esc(r.text)}</b></div>`).join('')
           + (more ? `<button class="more" data-more="b${i}">更多…（還有 ${rows.length - 6} 條路線）</button>` : '')
           + `<div class="meta">資料時間 ${hm(T.bus.at)}</div>`;
-      card('🚌', s[0], d, body, [s[1], s[2]], T.fav || {m: 'bus', city: T.city, id: s[3][0], name: s[0], lat: s[1], lon: s[2], uids: s[3].slice(0, 60)});
+      card('🚌', s[0], d, body, [s[1], s[2]], nf || T.fav || {m: 'bus', city: T.city, id: s[3][0], name: s[0], lat: s[1], lon: s[2], uids: s[3].slice(0, 60)});
     }
   }
   // 台鐵／高鐵
   for (const [k, icon, label] of [['tra', '🚆', '台鐵'], ['thsr', '🚄', '高鐵']]) {
-    const R = T[k]; if (k !== transitSub || !R) continue;
+    if (k !== transitSub || !T[k]) continue;
+    for (const R of T[k]) {   // 附近查詢＝最近 1 站；「⭐ 全部」＝每個最愛站一張
     if (!R.st) { empty(`附近 ${RAIL_R / 1000} 公里沒有${label}站`); continue; }
     const list = (R.trains || []).filter(t => t.time !== null && t.time + (t.delay || 0) * 60000 >= now - 60000).sort((a, b) => a.time - b.time).slice(0, 4);
     const note = k === 'thsr' ? '<div class="meta">依時刻表（高鐵沒有即時到站資料）</div>' : R.live ? '<div class="meta">即時看板（含誤點）</div>' : R.trains ? '<div class="meta">依今日時刻表</div>' : '';
     const body = !R.trains ? `<div class="meta">${R.err ? esc(R.err) : '班次更新中…'}</div>` : (list.length ? list.map(railRow).join('') : '<div class="meta">接下來沒有班次</div>') + note;
     card(icon, `${label} ${stn(R.st[1])}`, R.d, body, [R.st[2], R.st[3]], {m: k, id: R.st[0], name: R.st[1], lat: R.st[2], lon: R.st[3]});
+    }
   }
   // 捷運
   if (transitSub === 'metro' && T.metro) {
@@ -1610,8 +1623,10 @@ async function queryTransit(manual, fav = null){
       $('listTransit').innerHTML = NOKEY_HTML('公車／軌道到站');
       rstatus('尚未設定 TDX 金鑰'); return;
     }
-    const F = fav, h = F ? null : manual || !here || Date.now() - here.at > 120000 ? await locate(rstatus) : here;
-    const {lat, lon, city} = F || h, auth = await token();
+    const F = fav, favList = !F ? [] : F.all ? stFavs().filter(f => f.m === F.m) : [F];
+    if (F && !favList.length) { rstatus(`這一類還沒有最愛車站`); return; }
+    const h = F ? null : manual || !here || Date.now() - here.at > 120000 ? await locate(rstatus) : here;
+    const {lat, lon, city} = F ? favList[0] : h, auth = await token();
     if (stop()) return;
     transitMore = {};
     if (F) { transitSub = F.m; store.set('pk_tsub', F.m); renderSubs(); }
@@ -1622,27 +1637,35 @@ async function queryTransit(manual, fav = null){
     // 1. 公車：最近的站位依距離累加，StopUID 到 40 個為止（1–4 站）
     if (!F || F.m === 'bus') try {
       sent = true;
-      const st = await busStations(city, auth);
-      const near = [], uids = [];
-      if (F) {
-        const s = st.find(s => s[3].includes(F.id)) || st.find(s => s[0] === F.name && dist(F.lat, F.lon, s[1], s[2]) < 80) || (F.uids.length ? [F.name, F.lat, F.lon, F.uids] : null);
-        if (s) { near.push({s, d: null}); uids.push(...s[3]); }
-      } else for (const x of nearest(st, lat, lon, BUS_R, BUS_MAX_ST)) {
-        if (near.length && uids.length + x.s[3].length > BUS_MAX_UID) break;
-        near.push(x); uids.push(...x.s[3]);
+      const near = [], byCity = new Map();   // 縣市 → StopUID（同縣市的最愛站合併成一次查詢，省節流額度）
+      const addUids = (c, u) => byCity.set(c, [...(byCity.get(c) || []), ...u]);
+      if (F) for (const f of favList) {
+        const st = await busStations(f.city, auth);
+        const s = st.find(s => s[3].includes(f.id)) || st.find(s => s[0] === f.name && dist(f.lat, f.lon, s[1], s[2]) < 80) || (f.uids.length ? [f.name, f.lat, f.lon, f.uids] : null);
+        if (s) { near.push({s, d: null, fav: f}); addUids(f.city, s[3]); }
+        else if (F.all) notes.push(`公車：找不到「${f.name}」的站位資料，請刪掉後在附近重新加入`);
+      } else {
+        const st = await busStations(city, auth), uids = [];
+        for (const x of nearest(st, lat, lon, BUS_R, BUS_MAX_ST)) {
+          if (near.length && uids.length + x.s[3].length > BUS_MAX_UID) break;
+          near.push(x); uids.push(...x.s[3]);
+        }
+        addUids(city, uids);
       }
       T.bus = {near, eta: null, at: null}; alive() && renderTransit();
       if (near.length) {
-        const eta = new Map(), uniq = [...new Set(uids)];
+        const eta = new Map();
+        for (const [c, uids] of byCity) { const uniq = [...new Set(uids)];
         for (let i = 0; i < uniq.length; i += BUS_MAX_UID) {
           rstatus('查詢公車到站…');
-          const rows = arr(await tget(`/v2/Bus/EstimatedTimeOfArrival/City/${city}`, {'$filter': uniq.slice(i, i + BUS_MAX_UID).map(u => `StopUID eq '${u.replace(/'/g, "''")}'`).join(' or '), '$select': 'StopUID,StopName,RouteName,Direction,EstimateTime,StopStatus,SrcUpdateTime,UpdateTime'}, auth));
+          const rows = arr(await tget(`/v2/Bus/EstimatedTimeOfArrival/City/${c}`, {'$filter': uniq.slice(i, i + BUS_MAX_UID).map(u => `StopUID eq '${u.replace(/'/g, "''")}'`).join(' or '), '$select': 'StopUID,StopName,RouteName,Direction,EstimateTime,StopStatus,SrcUpdateTime,UpdateTime'}, auth));
           const at = Date.now();
           for (const r of rows) {
             if (typeof r.StopUID !== 'string') continue;
             const e = {route: zh(r.RouteName) || '?', dir: int(r.Direction), sec: int(r.EstimateTime), status: int(r.StopStatus) ?? 0, at};
             (eta.get(r.StopUID) || eta.set(r.StopUID, []).get(r.StopUID)).push(e);
           }
+        }
         }
         T.bus.eta = eta; T.bus.at = Date.now();
       }
@@ -1652,43 +1675,49 @@ async function queryTransit(manual, fav = null){
     // 2. 台鐵：即時看板（約前後 30 分、含誤點）；看板沒車再查今日時刻表
     if (!F || F.m === 'tra') try {
       sent = true;
-      const [n] = F ? [{s: [F.id, F.name, F.lat, F.lon], d: null}] : nearest(await railStations('tra_st', '/v3/Rail/TRA/Station', 'StationID,StationName,StationPosition', 'Stations', auth, '台鐵'), lat, lon, RAIL_R, 1, 2);
-      T.tra = n ? {st: n.s, d: n.d, trains: null, live: false} : {st: null};
+      const ns = F ? favList.map(f => ({s: [f.id, f.name, f.lat, f.lon], d: null})) : nearest(await railStations('tra_st', '/v3/Rail/TRA/Station', 'StationID,StationName,StationPosition', 'Stations', auth, '台鐵'), lat, lon, RAIL_R, 1, 2);
+      T.tra = ns.length ? ns.map(n => ({st: n.s, d: n.d, trains: null, live: false})) : [{st: null}];
       alive() && renderTransit();
-      if (n) {
-        rstatus('查詢台鐵即時看板…');
-        const lb = arr(await tget(`/v3/Rail/TRA/StationLiveBoard/Station/${n.s[0]}`, {}, auth), 'StationLiveBoards');
+      for (const R of T.tra) { if (!R.st) continue; if (stop()) return;
+      try {
+        rstatus(`查詢台鐵${T.tra.length > 1 ? ' ' + stn(R.st[1]) : ''}即時看板…`);
+        const lb = arr(await tget(`/v3/Rail/TRA/StationLiveBoard/Station/${R.st[0]}`, {}, auth), 'StationLiveBoards');
         let trains = lb.map(r => ({time: twClock(r.ScheduleDepartureTime || r.ScheduleArrivalTime), delay: int(r.DelayTime) || 0, run: int(r.RunningStatus), live: true,
           type: zh(r.TrainTypeName).replace(/\(.*\)/, ''), no: String(r.TrainNo ?? ''), dest: zh(r.EndingStationName)}));
-        T.tra.live = trains.length > 0;
+        R.live = trains.length > 0;
         if (!trains.length) {
-          rstatus('查詢台鐵今日時刻…');
-          const tt = arr(await tget(`/v3/Rail/TRA/DailyStationTimetable/Today/Station/${n.s[0]}`, {}, auth), 'StationTimetables');
+          rstatus(`查詢台鐵${T.tra.length > 1 ? ' ' + stn(R.st[1]) : ''}今日時刻…`);
+          const tt = arr(await tget(`/v3/Rail/TRA/DailyStationTimetable/Today/Station/${R.st[0]}`, {}, auth), 'StationTimetables');
           trains = tt.flatMap(x => Array.isArray(x.TimeTables) ? x.TimeTables : []).filter(r => int(r.SuspendedFlag) !== 1)
             .map(r => ({time: twClock(r.DepartureTime || r.ArrivalTime), delay: 0, live: false, type: zh(r.TrainTypeName).replace(/\(.*\)/, ''), no: String(r.TrainNo ?? ''), dest: zh(r.DestinationStationName)}));
         }
-        T.tra.trains = trains;
+        R.trains = trains;
+      } catch (e) { notes.push(`台鐵${T.tra.length > 1 ? ' ' + stn(R.st[1]) : ''}：` + (e.message || '查詢失敗')); R.err = e.message; }
+      alive() && renderTransit();
       }
-    } catch (e) { notes.push('台鐵：' + (e.message || '查詢失敗')); if (T.tra && T.tra.st) T.tra.err = e.message; }
+    } catch (e) { notes.push('台鐵：' + (e.message || '查詢失敗')); }
     alive() && renderTransit();
     if (stop()) return;
     // 3. 高鐵：只有時刻表（日期用台灣日期）
     if (!F || F.m === 'thsr') try {
       sent = true;
-      const [n] = F ? [{s: [F.id, F.name, F.lat, F.lon], d: null}] : nearest(await railStations('thsr_st', '/v2/Rail/THSR/Station', 'StationID,StationName,StationPosition', null, auth, '高鐵'), lat, lon, RAIL_R, 1, 2);
-      T.thsr = n ? {st: n.s, d: n.d, trains: null} : {st: null};
+      const ns = F ? favList.map(f => ({s: [f.id, f.name, f.lat, f.lon], d: null})) : nearest(await railStations('thsr_st', '/v2/Rail/THSR/Station', 'StationID,StationName,StationPosition', null, auth, '高鐵'), lat, lon, RAIL_R, 1, 2);
+      T.thsr = ns.length ? ns.map(n => ({st: n.s, d: n.d, trains: null})) : [{st: null}];
       alive() && renderTransit();
-      if (n) {
-        rstatus('查詢高鐵時刻…');
-        T.thsr.trains = arr(await tget(`/v2/Rail/THSR/DailyTimetable/Station/${n.s[0]}/${twDate()}`, {}, auth), null)
+      for (const R of T.thsr) { if (!R.st) continue; if (stop()) return;
+      try {
+        rstatus(`查詢高鐵${T.thsr.length > 1 ? ' ' + stn(R.st[1]) : ''}時刻…`);
+        R.trains = arr(await tget(`/v2/Rail/THSR/DailyTimetable/Station/${R.st[0]}/${twDate()}`, {}, auth), null)
           .map(r => ({time: twClock(r.DepartureTime || r.ArrivalTime), delay: 0, live: false, type: int(r.Direction) === 1 ? '北上' : '南下', no: String(r.TrainNo ?? ''), dest: zh(r.EndingStationName)}));
+      } catch (e) { notes.push(`高鐵${T.thsr.length > 1 ? ' ' + stn(R.st[1]) : ''}：` + (e.message || '查詢失敗')); R.err = e.message; }
+      alive() && renderTransit();
       }
-    } catch (e) { notes.push('高鐵：' + (e.message || '查詢失敗')); if (T.thsr && T.thsr.st) T.thsr.err = e.message; }
+    } catch (e) { notes.push('高鐵：' + (e.message || '查詢失敗')); }
     alive() && renderTransit();
     if (stop()) return;
     // 4. 捷運／輕軌：這個縣市有的系統，各取最近一站；看板一次抓整個系統，前端挑站
     T.metro = [];
-    if (F) { if (F.m === 'metro') { sent = true; T.metro.push({sys: F.sys, st: [F.id, F.name, F.lat, F.lon], d: null, live: null}); } }
+    if (F) { if (F.m === 'metro') { sent = true; for (const f of favList) T.metro.push({sys: f.sys, st: [f.id, f.name, f.lat, f.lon], d: null, live: null}); } }
     else for (const sys of METRO_BY_CITY[city] || []) {
       try {
         const st = await railStations('metro_' + sys, `/v2/Rail/Metro/Station/${sys}`, 'StationID,StationName,StationPosition', null, auth, METRO_NAME[sys], /^[A-Za-z0-9-]{1,12}$/);
@@ -1698,20 +1727,22 @@ async function queryTransit(manual, fav = null){
     }
     if (!F) { T.metro.sort((a, b) => a.d - b.d); T.metro = T.metro.slice(0, 2); }
     alive() && renderTransit();
+    const boards = new Map();   // 看板一次抓整個系統：同系統多個最愛站共用一次查詢
     for (const M of T.metro) {
       if (stop()) return;
       if (!METRO_LIVE.has(M.sys)) continue;
       try {
-        rstatus(`查詢${METRO_NAME[M.sys]}即時進站…`);
-        const at = Date.now();
+        let b = boards.get(M.sys);
+        if (!b) { rstatus(`查詢${METRO_NAME[M.sys]}即時進站…`); const at = Date.now(); b = {at, rows: arr(await tget(`/v2/Rail/Metro/LiveBoard/${M.sys}`, {}, auth), null)}; boards.set(M.sys, b); }
+        const at = b.at;
         // 同一站可能有不同 StationID 的轉乘月台：用站名比對
-        M.live = arr(await tget(`/v2/Rail/Metro/LiveBoard/${M.sys}`, {}, auth), null).filter(r => String(r.StationID) === M.st[0] || zh(r.StationName) === M.st[1])
+        M.live = b.rows.filter(r => String(r.StationID) === M.st[0] || zh(r.StationName) === M.st[1])
           .map(r => ({line: zh(r.LineName) || String(r.LineID ?? ''), dest: zh(r.DestinationStationName) || zh(r.TripHeadSign), min: int(r.EstimateTime), status: int(r.ServiceStatus) ?? 0, at}));
         M.at = at;
       } catch (e) { M.err = e.message; notes.push(METRO_NAME[M.sys] + '：' + (e.message || '查詢失敗')); }
       alive() && renderTransit();
     }
-    rstatus(F ? `⭐ ${stLabel(F)} · ${hm(Date.now())} 更新` : `公車 500 公尺、軌道 3 公里內 · ${hm(Date.now())} 更新`);
+    rstatus(F ? `⭐ ${favLabel(F)} · ${hm(Date.now())} 更新` : `公車 500 公尺、軌道 3 公里內 · ${hm(Date.now())} 更新`);
   } catch (e) {
     rstatus(e instanceof ApiError ? e.message : '公車／軌道查詢失敗，請稍後再試');
   } finally {
