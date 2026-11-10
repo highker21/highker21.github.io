@@ -1,0 +1,561 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>路況與 119</title>
+<meta name="description" content="警廣即時路況＋消防局 119 即時案件，同一張地圖：定位或搜尋地點，看附近的事故、壅塞、施工與救災救護">
+<meta name="theme-color" content="#7a2e2a">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="路況119">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" integrity="sha512-h9FcoyWjHcOcmEVkxOfTLnmZFWIH0iZhZT1H2TbOq55xssQGEJHEaIm+PgoUaZbRvQTNTluNOEfb1ZRy6D3BOw==" crossorigin="anonymous" referrerpolicy="no-referrer">
+<style>
+:root{--bg:#f6f6f7;--card:#fff;--ink:#1d2129;--mute:#5f6670;--line:#dcdfe4;--brand:#7a2e2a;
+  --f119:#c62828;--pbs:#e07b00;--warn-bg:#fdecec;--warn-ink:#a12b2b}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#121316;--card:#1c1e23;--ink:#e6e8eb;--mute:#9aa1ab;--line:#2c3038;--brand:#e3807a;--f119:#ef5350;--pbs:#ff9d2e;--warn-bg:#3a1c1c;--warn-ink:#f2a3a3}}
+:root[data-theme="dark"]{--bg:#121316;--card:#1c1e23;--ink:#e6e8eb;--mute:#9aa1ab;--line:#2c3038;--brand:#e3807a;--f119:#ef5350;--pbs:#ff9d2e;--warn-bg:#3a1c1c;--warn-ink:#f2a3a3}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 -apple-system,"PingFang TC","Noto Sans TC",sans-serif}
+header{display:flex;align-items:center;gap:8px;padding:10px 16px;padding-top:max(10px,env(safe-area-inset-top))}
+header h1{font-size:18px;margin:0;flex:1;min-width:0}
+button,select,input{font:inherit;color:var(--ink)}
+button{border:1px solid var(--line);background:var(--card);border-radius:10px;padding:8px 12px;cursor:pointer}
+button.primary{background:var(--brand);border-color:var(--brand);color:#fff;font-weight:600}
+button:disabled{opacity:.6}
+#search{display:flex;gap:6px;margin:0 16px 8px}
+#search input{flex:1;min-width:0;font-size:16px;padding:9px 10px;border:1px solid var(--line);border-radius:10px;background:var(--card)}
+#search button{flex:none}
+#hits{list-style:none;margin:-2px 16px 8px;padding:0}
+#hits button{width:100%;text-align:left;margin-bottom:4px;font-size:15px}
+.ctl{display:flex;flex-wrap:wrap;gap:6px;margin:0 16px 8px;align-items:center}
+.ctl select{padding:7px 8px;border:1px solid var(--line);border-radius:10px;background:var(--card);max-width:100%}
+.tabs{display:flex;gap:0;margin:0 16px 8px;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.tabs button{flex:1;border:0;border-radius:0;padding:8px 4px;background:var(--card)}
+.tabs button+button{border-left:1px solid var(--line)}
+.tabs button[aria-selected="true"]{background:var(--brand);color:#fff;font-weight:700}
+#filt{margin:0 16px 8px}
+#filt summary{cursor:pointer;font-size:14px;color:var(--mute);padding:2px 0}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0 0;align-items:center}
+.chips .lbl{font-size:13px;color:var(--mute);margin-right:2px}
+.chip{display:inline-flex;align-items:center;gap:4px;font-size:14px;padding:4px 10px;border:1px solid var(--line);border-radius:999px;background:var(--card);cursor:pointer;user-select:none}
+.chip input{margin:0}
+.dot{display:inline-block;width:10px;height:10px;border-radius:50%;flex:none}
+#map{height:46vh;min-height:260px;margin:0 16px 8px;border-radius:12px;border:1px solid var(--line);z-index:0}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .leaflet-tile-pane{filter:brightness(.7) invert(1) contrast(.9) hue-rotate(200deg) saturate(.3) brightness(.9)}}
+:root[data-theme="dark"] .leaflet-tile-pane{filter:brightness(.7) invert(1) contrast(.9) hue-rotate(200deg) saturate(.3) brightness(.9)}
+.leaflet-popup-content{font-size:15px;line-height:1.5;margin:10px 12px;max-height:50vh;overflow:auto}
+.f119-badge{background:var(--f119);color:#fff;border:2px solid #fff;border-radius:999px;font:700 13px/1 -apple-system,"PingFang TC",sans-serif;padding:4px 7px;white-space:nowrap;box-shadow:0 1px 4px rgba(0,0,0,.35);text-align:center}
+.f119-badge.fire{outline:2px solid #ffd54f}
+.legend{display:flex;flex-wrap:wrap;gap:12px;margin:-2px 16px 8px;font-size:13px;color:var(--mute)}
+#status{margin:0 16px 6px;font-size:14px;color:var(--mute)}
+.warn{margin:0 16px 8px;padding:8px 12px;border-radius:10px;background:var(--warn-bg);color:var(--warn-ink);font-size:15px}
+#list{padding:0 16px 8px}
+.ev{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:8px 12px;margin-bottom:8px;cursor:pointer}
+.ev.done{opacity:.55}
+.ev-head{display:flex;gap:8px;align-items:center;font-size:17px}
+.ev-head b{min-width:0;overflow-wrap:anywhere}
+.src{font-size:12px;font-weight:800;padding:1px 6px;border-radius:6px;flex:none;color:#fff}
+.src.f119{background:var(--f119)}.src.pbs{background:var(--pbs)}
+.tag{font-size:13px;font-weight:700;padding:0 6px;border-radius:6px;flex:none;border:1px solid var(--line)}
+.ev-body{font-size:16px;margin:4px 0}
+.meta{font-size:14px;color:var(--mute)}
+.gmap{display:inline-block;font-size:15px;color:var(--brand);padding:4px 0}
+.more{width:100%;font-weight:700;padding:10px;margin:4px 0 8px}
+h3{font-size:16px;margin:4px 0 8px}
+#nhint{margin:-2px 16px 8px;font-size:14px;color:var(--mute)}
+button[aria-pressed="true"]{background:var(--brand);border-color:var(--brand);color:#fff}
+.pl{margin:2px 0;padding:4px 0;border-top:1px solid var(--line)}
+footer{padding:8px 16px 24px;padding-bottom:max(24px,env(safe-area-inset-bottom));font-size:13px;color:var(--mute)}
+footer a{color:var(--brand)}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<header><h1>🚨 路況與 119</h1><button id="btnLoc" class="primary">📍 我的位置</button><button id="btnRefresh" aria-label="重新整理">🔄</button></header>
+<form id="search" role="search"><input id="q" type="search" maxlength="60" placeholder="🔎 搜尋地點，看那裡附近的路況與 119" autocomplete="off" enterkeyhint="search"><button type="submit" id="btnQ">搜尋</button></form>
+<ul id="hits" hidden></ul>
+<div class="ctl">
+  <select id="range" aria-label="範圍"><option value="2">2 公里內</option><option value="5">5 公里內</option><option value="10">10 公里內</option><option value="30">30 公里內</option><option value="0">全台</option></select>
+  <select id="win" aria-label="時間"><option value="1">1 小時內</option><option value="3">3 小時內</option><option value="6">6 小時內</option><option value="24">24 小時內</option><option value="today">今天</option><option value="all">全部</option></select>
+  <select id="every" aria-label="自動更新"><option value="0">不自動更新</option><option value="1">每 1 分鐘更新</option><option value="2">每 2 分鐘更新</option><option value="5">每 5 分鐘更新</option><option value="10">每 10 分鐘更新</option><option value="15">每 15 分鐘更新</option><option value="30">每 30 分鐘更新</option><option value="60">每 60 分鐘更新</option></select>
+  <button id="btnNotify" type="button" aria-pressed="false">🔕 通知：關</button>
+</div>
+<div id="nhint" hidden></div>
+<div class="tabs" role="tablist" aria-label="資料來源"><button type="button" role="tab" data-src="all">全部</button><button type="button" role="tab" data-src="f119">🚒 119</button><button type="button" role="tab" data-src="pbs">📻 警廣</button></div>
+<details id="filt"><summary id="filtSum">篩選類別</summary>
+<div id="chips119" class="chips"></div>
+<div id="chipsPbs" class="chips"></div>
+</details>
+<div id="map" role="region" aria-label="地圖"></div>
+<div class="legend"><span><span class="dot" style="background:var(--f119)"></span> 119（數字＝該區案件數，位置是行政區中心）</span><span><span class="dot" style="background:var(--pbs)"></span> 警廣路況</span></div>
+<div id="warn119" class="warn" hidden></div>
+<div id="warnPbs" class="warn" hidden></div>
+<div id="status">載入中…</div>
+<div id="list"></div>
+<footer>
+  資料：<a href="https://www.pbs.gov.tw/" target="_blank" rel="noopener">警察廣播電臺</a> 即時路況開放資料（<a href="https://data.gov.tw/dataset/15221" target="_blank" rel="noopener">政府資料開放平臺</a>）；119 即時案件取自高雄市、臺南市、新竹市消防局公開網頁（其他縣市沒有公開）。依<a href="https://data.gov.tw/license" target="_blank" rel="noopener">政府資料開放授權條款第 1 版</a>使用；本頁不代表機關立場。內容與位置以各機關為準，可能有延遲或誤差。<br>
+  <b>119 案件沒有座標</b>：地圖上的位置是行政區中心，距離也是到區中心的概略距離；實際地點看卡片上的地址。<b>緊急狀況請直接撥 119。</b><br>
+  定位只在你的手機上計算距離，不會送出；通知也是手機自己比對後跳出；搜尋地點時，輸入的文字會送到 OpenStreetMap。地圖：© <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors。原本的 <a href="../pbs/">警廣路況</a>、<a href="../fire119/">119 出勤通知</a> 照常可用。<br>
+  工具版本：2026-11-11
+</footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js" integrity="sha512-puJW3E/qXDqYp9IfhAI54BJEaWIfloJ7JWs7OeD5i6ruC9JZL1gERT1wjtwXFlh7CjE7ZJ+/vcRZRkIYIb6p4g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+'use strict';
+// 警廣＋119 合併頁（老闆 TG34493／34549，計畫 21:50 OK）：兩邊都經停車 App 的 Worker → 台灣境內轉送站（60 秒快取），不需金鑰
+// 原本 tools/pbs、tools/fire119 不動；這頁的設定與通知紀錄另存（live- 前綴），不影響舊 App
+const PROXY = location.hostname === 'highker21.github.io' ? 'https://tdx-parking-proxy.highker.workers.dev' : 'http://127.0.0.1:8787';
+const H = 3600000, NEW_WIN = H;   // 通知只算 1 小時內的新事件
+const STALE_MAX = 20 * 60000;     // 某市 119 抓不到時，舊資料最多沿用 20 分鐘
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const mem = {};
+const store = {
+  get(k, d){ try{ const v = localStorage.getItem(k); return v === null ? (k in mem ? mem[k] : d) : JSON.parse(v); }catch{ return k in mem ? mem[k] : d; } },
+  set(k, v){ mem[k] = v; try{ localStorage.setItem(k, JSON.stringify(v)); }catch{} },
+};
+function dist(a1, o1, a2, o2){
+  const r = Math.PI/180, a = Math.sin((a2-a1)*r/2)**2 + Math.cos(a1*r)*Math.cos(a2*r)*Math.sin((o2-o1)*r/2)**2;
+  return 6371000 * 2 * Math.asin(Math.sqrt(Math.min(1, Math.max(0, a))));
+}
+const inTw = (lat, lon) => isFinite(lat) && isFinite(lon) && lat >= 21 && lat <= 27 && lon >= 118 && lon <= 123;
+const cssVar = n => getComputedStyle(document.documentElement).getPropertyValue('--' + n).trim() || '#888';
+function twTime(s){
+  const m = /^(\d{4})[-/](\d{2})[-/](\d{2})[ T](\d{2}):(\d{2})(?::(\d{2}))?/.exec(String(s || ''));
+  return m ? Date.parse(`${m[1]}-${m[2]}-${m[3]}T${m[4]}:${m[5]}:${m[6] || '00'}+08:00`) : NaN;
+}
+const twDay = t => new Date(t).toLocaleDateString('zh-TW', {timeZone: 'Asia/Taipei'});
+const fmt = t => isNaN(t) ? '' : (twDay(t) !== twDay(Date.now()) ? new Date(t).toLocaleDateString('zh-TW', {timeZone: 'Asia/Taipei', month: 'numeric', day: 'numeric'}) + ' ' : '')
+  + new Date(t).toLocaleTimeString('zh-TW', {timeZone: 'Asia/Taipei', hour: '2-digit', minute: '2-digit', hour12: false});
+const fmtD = d => d >= 1000 ? (d / 1000).toFixed(1) + ' 公里' : Math.round(d) + ' 公尺';
+class SrcError extends Error {}
+
+// ================= 警廣（同 tools/pbs 的解析：代表點判斷、概略位置）=================
+const PBS_TYPES = ['事故', '災變', '阻塞', '交通障礙', '道路施工', '交通管制', '號誌故障', '其他'];
+const pbsType = t => PBS_TYPES.includes(t) ? t : '其他';
+const ROADLIKE = /高速公路|國道|快速|公路|台\s*[0-9０-９]/;
+function pbsParse(j){
+  const arr = Array.isArray(j) ? j : j && typeof j === 'object' ? (Array.isArray(j.result) ? j.result : Object.values(j).find(Array.isArray)) : null;
+  if (!arr) throw new SrcError('format');
+  const rows = [], noxy = [];
+  for (const x of arr.slice(0, 5000)) {
+    if (!x || typeof x !== 'object') continue;
+    const s = k => String(x[k] ?? '').replace(/\s+/g, ' ').trim().slice(0, 300);
+    const lat = parseFloat(x.y1), lon = parseFloat(x.x1);
+    const e = {src: 'pbs', id: s('UID'), type: pbsType(s('roadtype')), raw: s('roadtype'), area: s('areaNm'), road: s('road'), dir: s('direction'), text: s('comment'),
+               from: s('srcdetail'), happen: twTime(`${s('happendate')} ${s('happentime')}`), t: twTime(s('modDttm'))};
+    if (isNaN(e.t)) e.t = e.happen;
+    if (inTw(lat, lon)) rows.push({...e, lat, lon}); else noxy.push(e);
+  }
+  // 同一座標有 ≥3 則不同內容＝代表點：路線類不上地圖另列；行政區類照畫但標概略位置（tools/pbs 2026-11-10 實測）
+  const byXY = new Map();
+  for (const e of rows) { const k = e.lat + ',' + e.lon; if (!byXY.has(k)) byXY.set(k, new Set()); byXY.get(k).add(e.text); }
+  const exact = [], lineOnly = [];
+  for (const e of rows) { e.approx = byXY.get(e.lat + ',' + e.lon).size >= 3; (e.approx && ROADLIKE.test(e.area) ? lineOnly : exact).push(e); }
+  return {rows: exact, lineOnly, noxy, count: Number(j && j.count) || arr.length};
+}
+async function pbsLoad(){
+  let r;
+  try { r = await fetch(PROXY + '/pbs/roadData', {cache: 'no-store'}); } catch { throw new SrcError('連不上警廣資料，請檢查網路'); }
+  if (r.status !== 200) {
+    const up = r.headers.get('X-Upstream') || '';
+    throw new SrcError(up === 'relay-down' ? '警廣：台灣境內轉送站暫時連不上' : up === 'upstream' ? '警廣網站暫時沒回應' : `警廣暫時無法取得（${r.status}）`);
+  }
+  const text = await r.text();
+  if (text.length > 4 * 1024 * 1024) throw new SrcError('警廣資料格式異常');
+  let j; try { j = JSON.parse(text); } catch { throw new SrcError('警廣資料格式異常'); }
+  return pbsParse(j);
+}
+const placeOfPbs = e => { const t = e.road || e.text.split(' ')[0] || ''; return /路|街|道|橋|號|巷|交流|隧/.test(t) ? t.slice(0, 30) : ''; };
+const gmapLink = e => {
+  const p = e.src === 'pbs' ? (e.approx ? placeOfPbs(e) : '') : e.addr;
+  if (!p) return '';
+  const q = e.src === 'pbs' ? e.area.replace(/-/g, '') + p : p;
+  return `<a class="gmap" href="${esc('https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(q))}" target="_blank" rel="noopener">🗺️ 在 Google 地圖看「${esc(p)}」</a>`;
+};
+
+// ================= 119（同 tools/parking 的解析：完整版 xml 優先、失敗退官方清單）=================
+// 行政區中心：高雄沿用 tools/fire119（OSM admin_level 7 bbox 中心）；臺南、新竹市同法 2026-11-11 Overpass 查
+const CITY119 = {
+  KHH: {name: '高雄市', D: {'三民': [22.6558, 120.316], '仁武': [22.7055, 120.3591], '內門': [22.9562, 120.4725], '六龜': [23.0022, 120.6689], '前金': [22.627, 120.294], '前鎮': [22.5887, 120.3086], '大寮': [22.5921, 120.4078], '大樹': [22.7103, 120.4229], '大社': [22.7378, 120.373], '小港': [22.5473, 120.346], '岡山': [22.8039, 120.3017], '左營': [22.6821, 120.289], '彌陀': [22.7742, 120.2379], '新興': [22.6284, 120.3075], '旗山': [22.8759, 120.4723], '旗津': [22.5905, 120.2845], '杉林': [22.9868, 120.5629], '林園': [22.5062, 120.3938], '桃源': [23.2234, 120.8574], '梓官': [22.7445, 120.2596], '楠梓': [22.7255, 120.2976], '橋頭': [22.7531, 120.3007], '永安': [22.8251, 120.2299], '湖內': [22.8947, 120.2243], '燕巢': [22.7893, 120.3727], '田寮': [22.8656, 120.3955], '甲仙': [23.1224, 120.6164], '美濃': [22.9058, 120.5618], '苓雅': [22.6235, 120.317], '茂林': [22.9188, 120.7594], '茄萣': [22.8842, 120.198], '路竹': [22.8593, 120.2601], '那瑪夏': [23.27, 120.7309], '阿蓮': [22.8697, 120.3178], '鳥松': [22.6672, 120.3668], '鳳山': [22.616, 120.3541], '鹽埕': [22.6248, 120.2836], '鼓山': [22.6426, 120.2795]}},
+  TNN: {name: '臺南市', D: {'七股': [23.1219, 120.1064], '下營': [23.2328, 120.2599], '中西': [22.9944, 120.1859], '仁德': [22.9453, 120.2336], '佳里': [23.1649, 120.1803], '六甲': [23.2281, 120.3804], '北': [23.0101, 120.2031], '北門': [23.2828, 120.1354], '南化': [23.1211, 120.5437], '南': [22.9503, 120.1862], '善化': [23.1407, 120.3013], '大內': [23.1507, 120.3981], '學甲': [23.254, 120.183], '安南': [23.0444, 120.1561], '安定': [23.1008, 120.2283], '安平': [22.9856, 120.1632], '官田': [23.1898, 120.3587], '將軍': [23.2099, 120.1237], '山上': [23.1044, 120.3751], '左鎮': [23.0231, 120.4098], '後壁': [23.3594, 120.3453], '新化': [23.0361, 120.3353], '新市': [23.0822, 120.2926], '新營': [23.2996, 120.3009], '東': [22.9805, 120.2303], '東山': [23.2809, 120.4318], '柳營': [23.2684, 120.3526], '歸仁': [22.9555, 120.2943], '鹽水': [23.3009, 120.2452], '永康': [23.0292, 120.2509], '玉井': [23.1263, 120.4668], '白河': [23.3505, 120.4601], '楠西': [23.1773, 120.5185], '西港': [23.1206, 120.2065], '關廟': [22.9507, 120.3343], '麻豆': [23.1813, 120.2416], '龍崎': [22.957, 120.3912]}},
+  HCC: {name: '新竹市', D: {'東': [24.7876, 120.9949], '北': [24.8189, 120.9511], '香山': [24.7699, 120.9216]}},
+};
+const KIND119 = t => /火/.test(t) ? '火災' : /救護/.test(t) ? '救護' : '其他';
+const DONE119 = e => e.state === '已返隊';
+const townOf = s => { const m = /(?:市|縣)\s*([^\s市縣區]{1,3}?)區/.exec(s || ''); return m ? m[1] : ''; };
+const normTown = t => String(t || '').replace(/區$/, '');
+function fire119Html(html, code){
+  const t = new DOMParser().parseFromString(html, 'text/html').getElementById('dataTable');
+  if (!t) throw new SrcError('format');
+  const rows = [...t.querySelectorAll('tr')];
+  const head = [...(rows.shift()?.querySelectorAll('th') || [])].map(th => th.textContent.replace(/\s+/g, ''));
+  const col = n => head.indexOf(n);
+  const at = col('受理時間'), type = col('案類'), place = col('發生地點'), unit = col('派遣分隊'), state = col('執行狀況'), sub = col('案別');
+  if ([at, type, place, unit, state].some(i => i < 0)) throw new SrcError('format');
+  const out = [];
+  for (const tr of rows.slice(0, 200)) {
+    const td = [...tr.querySelectorAll('td')].map(x => x.textContent.replace(/\s+/g, ' ').trim().slice(0, 60));
+    if (td.length < head.length) continue;
+    const ts = twTime(td[at]); if (isNaN(ts)) continue;
+    out.push({city: code, at: ts, type: td[type], sub: sub >= 0 ? td[sub] : '', addr: td[place], town: townOf(td[place]), unit: td[unit], state: td[state]});
+  }
+  if (rows.some(tr => tr.querySelector('td')) && !out.length) throw new SrcError('format');
+  return out;
+}
+function fire119Xml(text, code){
+  const d = new DOMParser().parseFromString(text, 'application/xml');
+  if (d.getElementsByTagName('parsererror').length || d.documentElement.nodeName !== 'Data') throw new SrcError('format');
+  const cases = [...d.documentElement.getElementsByTagName('case')], now = Date.now(), out = [];
+  for (const e of cases.slice(0, 500)) {
+    const v = n => (e.getElementsByTagName(n)[0]?.textContent || '').replace(/\s+/g, ' ').trim().slice(0, 60);
+    const ts = twTime(v('IN_TIME'));
+    if (isNaN(ts) || !/^\d{8,20}$/.test(v('CS_NO'))) continue;
+    if (!(now - ts <= 24 * H)) continue;   // xml 會殘留舊案，只收受理 24 小時內
+    const num = n => { const x = /(\d+)/.exec(v(n)); return x ? +x[1] : null; };
+    const addr = v('ADDR'), town = v('TOWN_NAME');
+    // ADDR 偶爾被截斷（例「高雄市路」），不含區名就改用「市＋區」
+    out.push({city: code, no: v('CS_NO'), at: ts, type: v('KIND'), sub: v('CS_CODE'), addr: town && !addr.includes(town) ? v('COUNTRY_NAME') + town : addr || v('COUNTRY_NAME') + town,
+              town: normTown(town) || townOf(addr), unit: v('DEPT_NAME'), state: v('STATUS'), people: num('PERSION_COUNT'), cars: num('CAR_COUNT')});
+  }
+  if (cases.length && !out.length && cases.every(e => !e.getElementsByTagName('CS_NO').length)) throw new SrcError('format');
+  return out;
+}
+async function fireFetch(path, max){
+  let r;
+  try { r = await fetch(PROXY + path, {cache: 'no-store'}); } catch { throw new SrcError('network'); }
+  if (r.status !== 200) { const up = r.headers.get('X-Upstream') || ''; throw new SrcError(up === 'relay-down' ? '轉送站暫時連不上' : up === 'upstream' ? '消防局網站暫時沒回應' : `HTTP ${r.status}`); }
+  const text = await r.text();
+  if (text.length > max) throw new SrcError('format');
+  return text;
+}
+async function f119LoadCity(code){
+  let rows, full = true;
+  try { rows = fire119Xml(await fireFetch('/fire/' + code + '_XML', 1024 * 1024), code); }
+  catch { full = false; rows = fire119Html(await fireFetch('/fire/' + code, 512 * 1024), code); }
+  const D = CITY119[code].D;
+  for (const e of rows) {
+    e.src = 'f119'; e.t = e.at; e.kind = KIND119(e.type);
+    // 去重鍵只用 xml 與官方清單都有、而且值相同的欄位（受理時間到秒＋區＋案類；2026-11-11 對過同一批案件）：
+    // 不用案號，否則某市 xml 掛掉退回官方清單（或恢復）時，整批案件會被當成新的再通知一次（B 審）
+    e.id = `${code}|${e.at}|${e.town || e.addr}|${e.kind}`;
+    const c = D[e.town]; if (c) { e.lat = c[0]; e.lon = c[1]; }
+  }
+  return {rows, full};
+}
+async function f119Load(){
+  const res = await Promise.allSettled(Object.keys(CITY119).map(f119LoadCity));
+  const rows = [], bad = [], simple = [];
+  Object.keys(CITY119).forEach((code, i) => {
+    const r = res[i];
+    if (r.status === 'fulfilled') { rows.push(...r.value.rows); if (!r.value.full) simple.push(CITY119[code].name); }
+    else bad.push(CITY119[code].name);
+  });
+  if (bad.length === 3) throw new SrcError('119 即時案件三個縣市都暫時抓不到（轉送站或消防局網站沒回應）');
+  return {rows, bad, simple};
+}
+
+// ================= 狀態 =================
+let P = null, F = null, pbsErr = '', f119Err = '', loading = false;   // P＝警廣 {rows,lineOnly,noxy,count,at}；F＝119 {rows,bad,simple,at}
+const ctr = {lat: null, lon: null, label: '', kind: ''};
+$('range').value = String(store.get('live-range', 5));
+$('win').value = store.get('live-win', '3');
+if (!$('win').value) $('win').value = '3';
+let SRC = ['all', 'f119', 'pbs'].includes(store.get('live-src', 'all')) ? store.get('live-src', 'all') : 'all';
+const off = new Set(store.get('live-off', ['f:已返隊']));   // 預設隱藏 119 已返隊
+$('range').onchange = () => { store.set('live-range', +$('range').value); render(true); };
+$('win').onchange = () => { store.set('live-win', $('win').value); render(); };
+function drawTabs(){
+  document.querySelectorAll('.tabs button').forEach(b => b.setAttribute('aria-selected', String(b.dataset.src === SRC)));
+  $('chips119').hidden = SRC === 'pbs'; $('chipsPbs').hidden = SRC === 'f119';
+  if ($('filtSum').textContent !== '篩選類別') drawFiltSum();
+}
+document.querySelectorAll('.tabs button').forEach(b => b.onclick = () => { SRC = b.dataset.src; store.set('live-src', SRC); limit = 30; drawTabs(); render(); });
+function chipRow(el, label, keys, color){
+  const lbl = document.createElement('span'); lbl.className = 'lbl'; lbl.textContent = label;
+  el.replaceChildren(lbl, ...keys.map(([k, txt]) => {
+    const l = document.createElement('label'); l.className = 'chip';
+    const c = document.createElement('input'); c.type = 'checkbox'; c.checked = !off.has(k);
+    c.onchange = () => { c.checked ? off.delete(k) : off.add(k); store.set('live-off', [...off]); drawFiltSum(); render(); };
+    const d = document.createElement('span'); d.className = 'dot'; d.style.background = color;
+    l.append(c, d, document.createTextNode(txt)); return l;
+  }));
+}
+function drawChips(){
+  chipRow($('chips119'), '119', [['f:火災', '火災'], ['f:救護', '救護'], ['f:其他', '其他'], ['f:已返隊', '已返隊']], cssVar('f119'));
+  chipRow($('chipsPbs'), '警廣', [...new Set(PBS_TYPES)].map(t => ['p:' + t, t]), cssVar('pbs'));
+  drawFiltSum();
+}
+// 收合時也看得到目前隱藏了哪些類別
+function drawFiltSum(){
+  const hid = [...off].filter(k => (k.startsWith('f:') && SRC !== 'pbs') || (k.startsWith('p:') && SRC !== 'f119')).map(k => (k[0] === 'f' ? '119' : '警廣') + k.slice(2));
+  $('filtSum').textContent = `篩選類別${hid.length ? `（未顯示：${hid.join('、')}）` : '（全部顯示）'}`;
+}
+const passType = e => e.src === 'f119' ? !off.has('f:' + e.kind) && (!DONE119(e) || !off.has('f:已返隊')) : !off.has('p:' + e.type);
+function inWindow(e){
+  const w = $('win').value, now = Date.now();
+  if (w === 'all') return true;
+  if (isNaN(e.t)) return false;
+  return w === 'today' ? twDay(e.t) === twDay(now) : now - e.t <= (+w || 3) * H;
+}
+const want = s => SRC === 'all' || SRC === s;
+
+// ================= 載入 =================
+async function load(){
+  if (loading) return;
+  loading = true; $('btnRefresh').disabled = true; render();
+  // 兩邊各自成敗：一邊掛掉只提示那一邊，另一邊照常顯示
+  const [rp, rf] = await Promise.allSettled([pbsLoad(), f119Load()]);
+  const now = Date.now();
+  if (rp.status === 'fulfilled') { P = {...rp.value, at: now}; pbsErr = ''; }
+  else pbsErr = (rp.reason && rp.reason.message !== 'format' && rp.reason.message) || '警廣資料格式異常';
+  if (rf.status === 'fulfilled') {
+    // 某個縣市這次抓不到：沿用該市「最後一次抓成功」的案件，最多 20 分鐘；超過就不顯示（狀態會停在舊的，不能一直帶著走，B 審）
+    const v = rf.value, cityAt = {};
+    for (const c of Object.keys(CITY119)) {
+      if (!v.bad.includes(CITY119[c].name)) cityAt[c] = now;
+      else if (F && F.cityAt[c] && now - F.cityAt[c] <= STALE_MAX) { cityAt[c] = F.cityAt[c]; v.rows.push(...F.rows.filter(e => e.city === c)); }
+    }
+    F = {...v, cityAt, at: now}; f119Err = '';
+  }
+  else f119Err = (rf.reason && rf.reason.message) || '119 資料格式異常';
+  loading = false; $('btnRefresh').disabled = false;
+  checkNew(rp.status === 'fulfilled', rf.status === 'fulfilled');
+  render();
+}
+
+// ================= 地圖 =================
+const map = L.map('map', {preferCanvas: true, zoomControl: true}).setView([23.4, 120.6], 8);
+L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {maxZoom: 19, attribution: '© OpenStreetMap'}).addTo(map);
+const layer = L.layerGroup().addTo(map);
+let ctrMark = null, ctrCircle = null;
+const markers = new Map();   // 警廣：事件 → marker；119：「市|區」→ marker
+const titleOf = e => e.src === 'f119' ? e.addr || (CITY119[e.city].name + e.town + '區') : [e.area, e.road, e.dir].filter(Boolean).join(' ') || '警廣通報';
+const kindTxt = e => e.src === 'f119' ? [e.type, e.sub].filter(Boolean).join('・') || '案件' : e.raw || e.type;
+function f119Line(e){
+  const crew = e.people != null ? ` · ${e.people} 人 ${e.cars ?? '?'} 車` : '';
+  return `<div class="pl"><b>${esc(kindTxt(e))}</b>｜${esc(titleOf(e))}<div class="meta">${esc(fmt(e.at))} 受理 · ${esc(e.unit)} · <b>${esc(e.state)}</b>${esc(crew)}</div></div>`;
+}
+function pbsPopup(e){
+  return `<b>${esc(kindTxt(e))}</b>｜${esc(titleOf(e))}<br>${esc(e.text)}`
+    + (e.approx ? `<div class="meta">⚠️ 地圖上是行政區中心，不是事發地點（警廣只給到行政區）</div>${gmapLink(e)}` : '')
+    + `<div class="meta">${esc(fmt(e.t))} 更新${e.from ? ' · ' + esc(e.from) : ''}</div>`;
+}
+
+let limit = 30, noxyOpen = false, lineOpen = false;
+function render(fit){
+  const has = ctr.lat != null, R = +$('range').value * 1000;
+  $('warn119').hidden = !(f119Err || (F && (F.bad.length || F.simple.length))) || !want('f119');
+  $('warn119').textContent = f119Err ? `⚠️ 119：${f119Err}${F ? `；先顯示 ${fmt(F.at)} 抓到的資料` : ''}`
+    : F ? [F.bad.length ? '⚠️ 119：' + Object.keys(CITY119).filter(c => F.bad.includes(CITY119[c].name)).map(c => CITY119[c].name + (F.cityAt[c] ? `這次抓不到，先顯示 ${fmt(F.cityAt[c])} 的資料` : '暫時抓不到')).join('；') : '', F.simple.length ? `${F.simple.join('、')}的完整資料抓不到，先用官方清單（只有處理中的案件）` : ''].filter(Boolean).join('；') : '';
+  $('warnPbs').hidden = !pbsErr || !want('pbs');
+  $('warnPbs').textContent = pbsErr ? `⚠️ ${pbsErr}${P ? `；先顯示 ${fmt(P.at)} 抓到的資料` : '，請稍後按 🔄 再試'}` : '';
+  if (!P && !F) { $('status').textContent = loading ? '載入中…' : '還沒有資料，請按 🔄 再試'; $('list').innerHTML = ''; drawNotify(); return; }
+
+  // 範圍內＝有座標且在半徑內；119 沒有對應到行政區的另列
+  const pool = [...(want('pbs') && P ? P.rows : []), ...(want('f119') && F ? F.rows : [])].filter(e => passType(e) && inWindow(e));
+  const located = pool.filter(e => e.lat != null), unknown119 = pool.filter(e => e.src === 'f119' && e.lat == null);
+  let list = located.map(e => ({e, d: has ? dist(ctr.lat, ctr.lon, e.lat, e.lon) : null}));
+  if (has && R) list = list.filter(x => x.d <= R);
+  list.sort((a, b) => has ? a.d - b.d || b.e.t - a.e.t : b.e.t - a.e.t);
+
+  // ---- 地圖：全部符合條件的點（不只範圍內）；119 依「市＋區」合成一個紅色數字標記 ----
+  layer.clearLayers(); markers.clear();
+  const near = new Set(list.map(x => x.e)), pc = cssVar('pbs');
+  for (const e of located.filter(e => e.src === 'pbs')) {
+    const big = near.has(e) && has;
+    const m = (e.approx ? L.circleMarker([e.lat, e.lon], {radius: big ? 8 : 6, color: pc, weight: 3, fillColor: pc, fillOpacity: .15})
+      : L.circleMarker([e.lat, e.lon], {radius: big ? 8 : 6, color: '#fff', weight: 1.5, fillColor: pc, fillOpacity: .9})).bindPopup(pbsPopup(e));
+    m.addTo(layer); markers.set(e, m);
+  }
+  const groups = new Map();
+  for (const e of located.filter(e => e.src === 'f119')) { const k = e.city + '|' + e.town; if (!groups.has(k)) groups.set(k, []); groups.get(k).push(e); }
+  for (const [k, es] of groups) {
+    es.sort((a, b) => b.at - a.at);
+    const fire = es.some(e => e.kind === '火災' && !DONE119(e)), e0 = es[0];
+    const icon = L.divIcon({className: '', html: `<div class="f119-badge${fire ? ' fire' : ''}">${fire ? '🔥' : '119'}·${es.length}</div>`, iconSize: null, iconAnchor: [22, 12]});
+    const m = L.marker([e0.lat, e0.lon], {icon, zIndexOffset: fire ? 1000 : 500, keyboard: true, title: `${CITY119[e0.city].name}${e0.town}區 119 案件 ${es.length} 件`})
+      .bindPopup(`<b>🚒 ${esc(CITY119[e0.city].name + e0.town)}區 ${es.length} 件</b><div class="meta">⚠️ 位置是行政區中心；實際地點看地址</div>` + es.slice(0, 15).map(f119Line).join('') + (es.length > 15 ? `<div class="meta">…還有 ${es.length - 15} 件，看下方清單</div>` : ''));
+    m.addTo(layer); markers.set(k, m);
+  }
+  if (ctrCircle) { ctrCircle.remove(); ctrCircle = null; }
+  if (has && R) ctrCircle = L.circle([ctr.lat, ctr.lon], {radius: R, color: cssVar('brand'), weight: 1, fill: false, interactive: false}).addTo(map);
+  if (fit && has) { if (R) map.fitBounds(ctrCircle.getBounds(), {padding: [10, 10]}); else map.setView([ctr.lat, ctr.lon], 12); }
+
+  // ---- 狀態列 ----
+  const nF = list.filter(x => x.e.src === 'f119'), nP = list.length - nF.length;
+  const act = nF.filter(x => !DONE119(x.e)).length;
+  const parts = [];
+  if (want('f119') && F) parts.push(`119 ${nF.length} 件${has && R ? '（以區中心算）' : ''}（處理中 ${act}；火災 ${nF.filter(x => x.e.kind === '火災').length}、救護 ${nF.filter(x => x.e.kind === '救護').length}）`);
+  if (want('pbs') && P) parts.push(`警廣 ${nP} 則`);
+  $('status').textContent = `${has ? `${ctr.label}${R ? ` ${R / 1000} 公里內` : ''}` : '全部（按 📍 或搜尋看附近）'}：${parts.join('、') || '—'}`
+    + `｜${[F && `119 ${fmt(F.at)}`, P && `警廣 ${fmt(P.at)}`].filter(Boolean).join('、')} 取得${loading ? '｜更新中…' : ''}`
+    + (has && want('f119') ? '｜119 只有高雄、臺南、新竹市' : '');
+
+  // ---- 清單 ----
+  const shown = list.slice(0, limit);
+  const card = (x, i) => {
+    const e = x.e, f = e.src === 'f119';
+    const d = x.d != null ? (f || e.approx ? '約 ' : '') + fmtD(x.d) + (f ? '（到區中心）' : e.approx ? '（概略位置）' : '') + ' · ' : f || e.approx ? '概略位置 · ' : '';
+    const crew = f && e.people != null ? ` · ${e.people} 人 ${e.cars ?? '?'} 車` : '';
+    const meta = f ? `${d}${esc(fmt(e.at))} 受理 · ${esc(e.unit)} · <b>${esc(e.state)}</b>${esc(crew)}${e.no ? ` · 案號 ${esc(e.no)}` : ''}`
+      : `${d}${esc(fmt(e.t))} 更新${!isNaN(e.happen) && e.happen !== e.t ? ` · ${esc(fmt(e.happen))} 發生` : ''}${e.from ? ' · ' + esc(e.from) : ''}`;
+    return `<div class="ev${f && DONE119(e) ? ' done' : ''}"${i != null ? ` data-i="${i}"` : ''}><div class="ev-head"><span class="src ${e.src}">${f ? '119' : '警廣'}</span><span class="tag">${esc(kindTxt(e))}</span><b>${esc(titleOf(e))}</b></div>`
+      + (!f && e.text ? `<div class="ev-body">${esc(e.text)}</div>` : '') + gmapLink(e) + `<div class="meta">${meta}</div></div>`;
+  };
+  let html = shown.length ? shown.map(card).join('') : `<div class="meta">${has ? '這個範圍內目前沒有符合的事件，可以把範圍或時間調大' : '目前沒有符合的事件'}</div>`;
+  if (list.length > limit) html += `<button class="more" id="btnMore">更多…（還有 ${list.length - limit} 則）</button>`;
+  if (unknown119.length) html += `<h3>119：對不到行政區的案件（${unknown119.length}）</h3><div class="meta" style="margin:-4px 0 8px">地址裡找不到區名，沒辦法放上地圖、算距離</div>` + unknown119.sort((a, b) => b.at - a.at).map(e => card({e, d: null})).join('');
+  if (want('pbs') && P) {
+    const lo = P.lineOnly.filter(e => passType(e) && inWindow(e)).sort((a, b) => b.t - a.t);
+    if (lo.length) html += `<h3>警廣：只標到路線的通報（${lo.length}）</h3><div class="meta" style="margin:-4px 0 8px">國道、省道的通報很多只給路線、沒有現場位置，所以不放地圖、不算距離</div>`
+      + (lineOpen ? lo.map(e => card({e, d: null})).join('') : '<button class="more" id="btnLine">展開</button>');
+    const nx = P.noxy.filter(e => passType(e) && inWindow(e));
+    if (nx.length) html += `<h3>警廣：沒有座標的通報（${nx.length}）</h3>` + (noxyOpen ? nx.map(e => card({e, d: null})).join('') : '<button class="more" id="btnNoxy">展開</button>');
+  }
+  $('list').innerHTML = html;
+  $('list').querySelectorAll('.ev[data-i]').forEach(el => el.onclick = ev => {
+    if (ev.target.closest('a')) return;
+    const e = shown[+el.dataset.i].e, m = markers.get(e.src === 'f119' ? e.city + '|' + e.town : e);
+    // 概略位置（119 區中心、警廣行政區類）只看到行政區範圍（13），不放大到街道假裝是現場
+    map.setView([e.lat, e.lon], e.src === 'f119' || e.approx ? 13 : Math.max(map.getZoom(), 14)); if (m) m.openPopup();
+    $('map').scrollIntoView({behavior: 'smooth', block: 'center'});
+  });
+  if ($('btnMore')) $('btnMore').onclick = () => { limit += 30; render(); };
+  if ($('btnNoxy')) $('btnNoxy').onclick = () => { noxyOpen = true; render(); };
+  if ($('btnLine')) $('btnLine').onclick = () => { lineOpen = true; render(); };
+  drawNotify();
+}
+function setCenter(lat, lon, label, kind, fit = true){
+  Object.assign(ctr, {lat, lon, label, kind}); if (fit) limit = 30;
+  if (ctrMark) ctrMark.remove();
+  ctrMark = L.circleMarker([lat, lon], {radius: 9, color: cssVar('brand'), weight: 3, fillColor: '#fff', fillOpacity: 1}).bindTooltip(label).addTo(map);
+  render(fit);
+}
+
+// ================= 定位、搜尋 =================
+function locate(){
+  if (!navigator.geolocation) { $('status').textContent = '這個瀏覽器不支援定位，可以改用搜尋'; return; }
+  $('btnLoc').disabled = true; $('status').textContent = '定位中…';
+  navigator.geolocation.getCurrentPosition(p => {
+    $('btnLoc').disabled = false; store.set('live-autoloc', true);
+    setCenter(p.coords.latitude, p.coords.longitude, '我的位置', 'me');
+  }, err => {
+    $('btnLoc').disabled = false;
+    $('status').textContent = err.code === 1 ? '沒有定位權限：可到設定允許定位，或改用上方搜尋' : '定位失敗，請再試一次或改用搜尋';
+  }, {enableHighAccuracy: true, timeout: 15000, maximumAge: 60000});
+}
+$('btnLoc').onclick = locate;
+$('btnRefresh').onclick = () => load();
+// OpenStreetMap Nominatim：只在按下搜尋時送、限台灣、至少隔 1 秒（使用政策）
+let lastQ = 0;
+$('search').onsubmit = async ev => {
+  ev.preventDefault();
+  const q = $('q').value.trim(), ul = $('hits');
+  if (!q || Date.now() - lastQ < 1000) return;
+  lastQ = Date.now(); $('btnQ').disabled = true; ul.hidden = false; ul.innerHTML = '<li class="meta">搜尋中…</li>';
+  try {
+    const r = await fetch('https://nominatim.openstreetmap.org/search?' + new URLSearchParams({format: 'jsonv2', q, countrycodes: 'tw', limit: '5', 'accept-language': 'zh-TW'}));
+    if (!r.ok) throw new Error();
+    const j = await r.json();
+    const hits = (Array.isArray(j) ? j : []).map(h => ({name: String(h.name || '').slice(0, 20), full: String(h.display_name || h.name || '').slice(0, 120), lat: +h.lat, lon: +h.lon})).filter(h => h.full && inTw(h.lat, h.lon));
+    ul.replaceChildren();
+    if (!hits.length) { ul.innerHTML = '<li class="meta">找不到，換個說法試試</li>'; return; }
+    for (const h of hits) {
+      const li = document.createElement('li'), b = document.createElement('button');
+      b.type = 'button'; b.textContent = h.full;
+      b.onclick = () => { ul.hidden = true; ul.replaceChildren(); $('q').blur(); setCenter(h.lat, h.lon, h.name || q, 'search'); };
+      li.append(b); ul.append(li);
+    }
+  } catch { ul.innerHTML = '<li class="meta">搜尋失敗，請稍後再試</li>'; }
+  finally { setTimeout(() => { $('btnQ').disabled = false; }, 1000); }
+};
+
+// ================= 自動更新（預設 5 分鐘；用「我的位置」時先重新定位）=================
+const EVERY = [0, 1, 2, 5, 10, 15, 30, 60];
+$('every').value = String(EVERY.includes(+store.get('live-every', 5)) ? +store.get('live-every', 5) : 5);
+$('every').onchange = () => { store.set('live-every', +$('every').value); schedule(); drawNotify(); };
+const pollMs = () => (+$('every').value || 0) * 60000;
+let timer = null, ticking = false, lastTick = 0;
+function relocate(){
+  return new Promise(res => {
+    if (!navigator.geolocation) return res();
+    navigator.geolocation.getCurrentPosition(p => { setCenter(p.coords.latitude, p.coords.longitude, '我的位置', 'me', false); res(); },
+      () => res(), {enableHighAccuracy: true, timeout: 15000, maximumAge: 30000});
+  });
+}
+async function tick(){
+  if (ticking) return; ticking = true; lastTick = Date.now();
+  try { if (ctr.kind === 'me') await relocate(); await load(); } finally { ticking = false; }
+}
+function schedule(){
+  clearInterval(timer); timer = null;
+  const ms = pollMs();
+  if (!ms || (document.visibilityState !== 'visible' && !notifyOn())) return;
+  const at = Math.max(P ? P.at : 0, F ? F.at : 0, lastTick);
+  if (at && Date.now() - at >= ms) tick();
+  timer = setInterval(() => { if (document.visibilityState === 'visible' || notifyOn()) tick(); }, ms);
+}
+
+// ================= 系統通知：範圍內 1 小時內新出現的 119 案件與警廣通報（施工不通知；119 已返隊不通知）=================
+const keyOf = e => e.src === 'f119' ? '119|' + e.id : 'p|' + (e.id || `${e.raw}|${e.area}|${e.road}|${e.text}`.slice(0, 200));
+const notifyOn = () => !!store.get('live-notify', false) && 'Notification' in window && Notification.permission === 'granted';
+function checkNew(okP, okF){
+  const now = Date.now(), fresh = [];
+  // 兩邊各自記「看過」，第一次載入只記下來、不通知（不然一次跳幾百則）
+  for (const [ok, name, all, cand] of [
+    [okP, 'p', P ? [...P.rows, ...P.lineOnly, ...P.noxy] : [], P ? P.rows.filter(e => e.type !== '道路施工') : []],
+    [okF, 'f', F ? F.rows : [], F ? F.rows.filter(e => e.lat != null && !DONE119(e)) : []]]) {
+    if (!ok) continue;
+    // 「從沒存過」才算第一次（null）；上次剛好 0 筆（[]）不算，否則下一輪的第一件新案件會被當基準吞掉（B 審）
+    const k = 'live-seen-' + name, prev = store.get(k, null), seen = new Set(prev || []);
+    // 取聯集、不覆蓋：某市暫時抓不到（被清掉）的那幾輪不能把它的 key 從 seen 洗掉，否則恢復時整批重複通知（B 審）；新的放前面，滿了先丟最舊的
+    store.set(k, [...new Set([...all.map(keyOf), ...(prev || [])])].slice(0, 5000));
+    if (prev === null) continue;
+    fresh.push(...cand.filter(e => !seen.has(keyOf(e)) && passType(e) && now - e.t <= NEW_WIN));
+  }
+  if (!fresh.length || !notifyOn() || ctr.lat == null || !pollMs()) return;
+  const R = +$('range').value * 1000;
+  const xs = fresh.map(e => ({e, d: dist(ctr.lat, ctr.lon, e.lat, e.lon)})).filter(x => !R || x.d <= R)
+    .sort((a, b) => (b.e.src === 'f119' && b.e.kind === '火災') - (a.e.src === 'f119' && a.e.kind === '火災') || a.d - b.d);
+  if (!xs.length) return;
+  const line = x => `${x.e.src === 'f119' ? '🚒 ' : '📻 '}${kindTxt(x.e)}｜${titleOf(x.e)}`;
+  const near = x => `${x.e.src === 'f119' || x.e.approx ? '約 ' : ''}${fmtD(x.d)}${x.e.src === 'f119' ? '（到區中心）' : x.e.approx ? '（概略位置）' : ''}`;
+  if (xs.length <= 3) for (const x of xs) showNote(line(x), `${near(x)}・${x.e.src === 'f119' ? `${fmt(x.e.at)} 受理・${x.e.state}` : x.e.text}`.slice(0, 160), 'live-' + keyOf(x.e).slice(0, 60));
+  else showNote(`${ctr.label}附近新增 ${xs.length} 則（119 ${xs.filter(x => x.e.src === 'f119').length}、警廣 ${xs.filter(x => x.e.src === 'pbs').length}）`, xs.slice(0, 3).map(x => `${line(x)}（${near(x)}）`).join('\n').slice(0, 200), 'live-batch');
+}
+async function showNote(title, body, tag){
+  const opt = {body, tag, icon: 'icon-192.png', badge: 'icon-192.png'};
+  try { const reg = navigator.serviceWorker && await navigator.serviceWorker.getRegistration(); if (reg) return await reg.showNotification(title, opt); } catch {}
+  try { new Notification(title, opt); } catch {}   // Android Chrome 只能走 service worker，這行只給桌機／本機測試
+}
+function drawNotify(){
+  const on = notifyOn(), b = $('btnNotify'), h = $('nhint');
+  b.textContent = on ? '🔔 通知：開' : '🔕 通知：關'; b.setAttribute('aria-pressed', String(on));
+  const msg = !on ? '' : ctr.lat == null ? '⚠️ 要先按 📍 定位或搜尋地點，才知道要通知哪一帶'
+    : !pollMs() ? '⚠️ 自動更新關閉時不會通知，請選更新間隔'
+    : `${ctr.label}${+$('range').value ? ` ${$('range').value} 公里內` : '（全台）'}有新的 119 案件、警廣事故／阻塞等通報會通知（施工、已返隊不通知；只通知上方勾選的類別）。App 要開在畫面上才會更新與通知；切到背景一陣子或關掉後，手機會暫停它`;
+  if (msg || h.dataset.err !== '1') { h.textContent = msg; h.hidden = !msg; h.dataset.err = ''; }
+}
+function hintErr(t){ const h = $('nhint'); h.textContent = t; h.hidden = false; h.dataset.err = '1'; }
+$('btnNotify').onclick = async () => {
+  if (notifyOn()) { store.set('live-notify', false); drawNotify(); schedule(); return; }
+  if (!('Notification' in window)) return hintErr('⚠️ 這個瀏覽器不能通知。iPhone 請用 Safari 的「分享 → 加入主畫面」，再從主畫面的圖示打開');
+  let p = Notification.permission;
+  if (p === 'default') { try { p = await Notification.requestPermission(); } catch { p = 'denied'; } }
+  if (p !== 'granted') { store.set('live-notify', false); drawNotify(); return hintErr('⚠️ 通知權限沒有開：請到手機的設定，允許這個 App 通知'); }
+  store.set('live-notify', true); drawNotify(); schedule();
+};
+
+document.addEventListener('visibilitychange', schedule);
+matchMedia('(prefers-color-scheme: dark)').addEventListener?.('change', () => { drawChips(); render(); });
+
+drawTabs(); drawChips();
+load().then(schedule);
+if (store.get('live-autoloc', false) && navigator.permissions) navigator.permissions.query({name: 'geolocation'}).then(p => { if (p.state === 'granted') locate(); }).catch(() => {});
+if ('serviceWorker' in navigator && location.protocol === 'https:') navigator.serviceWorker.register('sw.js').catch(() => {});
+</script>
+</body>
+</html>
