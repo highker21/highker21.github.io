@@ -13,17 +13,17 @@
 <meta name="apple-mobile-web-app-title" content="路況119">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" integrity="sha512-h9FcoyWjHcOcmEVkxOfTLnmZFWIH0iZhZT1H2TbOq55xssQGEJHEaIm+PgoUaZbRvQTNTluNOEfb1ZRy6D3BOw==" crossorigin="anonymous" referrerpolicy="no-referrer">
 <style>
-:root{--bg:#f6f6f7;--card:#fff;--ink:#1d2129;--mute:#5f6670;--line:#dcdfe4;--brand:#7a2e2a;
+:root{--on-brand:#fff;--bg:#f6f6f7;--card:#fff;--ink:#1d2129;--mute:#5f6670;--line:#dcdfe4;--brand:#7a2e2a;
   --f119:#c62828;--pbs:#e07b00;--warn-bg:#fdecec;--warn-ink:#a12b2b}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#121316;--card:#1c1e23;--ink:#e6e8eb;--mute:#9aa1ab;--line:#2c3038;--brand:#e3807a;--f119:#ef5350;--pbs:#ff9d2e;--warn-bg:#3a1c1c;--warn-ink:#f2a3a3}}
-:root[data-theme="dark"]{--bg:#121316;--card:#1c1e23;--ink:#e6e8eb;--mute:#9aa1ab;--line:#2c3038;--brand:#e3807a;--f119:#ef5350;--pbs:#ff9d2e;--warn-bg:#3a1c1c;--warn-ink:#f2a3a3}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--on-brand:#1a1a1a;--bg:#121316;--card:#1c1e23;--ink:#e6e8eb;--mute:#9aa1ab;--line:#2c3038;--brand:#e3807a;--f119:#ef5350;--pbs:#ff9d2e;--warn-bg:#3a1c1c;--warn-ink:#f2a3a3}}
+:root[data-theme="dark"]{--on-brand:#1a1a1a;--bg:#121316;--card:#1c1e23;--ink:#e6e8eb;--mute:#9aa1ab;--line:#2c3038;--brand:#e3807a;--f119:#ef5350;--pbs:#ff9d2e;--warn-bg:#3a1c1c;--warn-ink:#f2a3a3}
 *{box-sizing:border-box}
 html,body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 -apple-system,"PingFang TC","Noto Sans TC",sans-serif}
 header{display:flex;align-items:center;gap:8px;padding:10px 16px;padding-top:max(10px,env(safe-area-inset-top))}
 header h1{font-size:18px;margin:0;flex:1;min-width:0}
 button,select,input{font:inherit;color:var(--ink)}
 button{border:1px solid var(--line);background:var(--card);border-radius:10px;padding:8px 12px;cursor:pointer}
-button.primary{background:var(--brand);border-color:var(--brand);color:#fff;font-weight:600}
+button.primary{background:var(--brand);border-color:var(--brand);color:var(--on-brand);font-weight:600}
 button:disabled{opacity:.6}
 #search{display:flex;gap:6px;margin:0 16px 8px}
 #search input{flex:1;min-width:0;font-size:16px;padding:9px 10px;border:1px solid var(--line);border-radius:10px;background:var(--card)}
@@ -35,7 +35,7 @@ button:disabled{opacity:.6}
 .tabs{display:flex;gap:0;margin:0 16px 8px;border:1px solid var(--line);border-radius:10px;overflow:hidden}
 .tabs button{flex:1;border:0;border-radius:0;padding:8px 4px;background:var(--card)}
 .tabs button+button{border-left:1px solid var(--line)}
-.tabs button[aria-selected="true"]{background:var(--brand);color:#fff;font-weight:700}
+.tabs button[aria-selected="true"]{background:var(--brand);color:var(--on-brand);font-weight:700}
 #filt{margin:0 16px 8px}
 #filt summary{cursor:pointer;font-size:14px;color:var(--mute);padding:2px 0}
 .chips{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0 0;align-items:center}
@@ -47,9 +47,12 @@ button:disabled{opacity:.6}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .leaflet-tile-pane{filter:brightness(.7) invert(1) contrast(.9) hue-rotate(200deg) saturate(.3) brightness(.9)}}
 :root[data-theme="dark"] .leaflet-tile-pane{filter:brightness(.7) invert(1) contrast(.9) hue-rotate(200deg) saturate(.3) brightness(.9)}
 .leaflet-popup-content{font-size:15px;line-height:1.5;margin:10px 12px;max-height:50vh;overflow:auto}
-.f119-badge{background:var(--f119);color:#fff;border:2px solid #fff;border-radius:999px;font:700 13px/1 -apple-system,"PingFang TC",sans-serif;padding:4px 7px;white-space:nowrap;box-shadow:0 1px 4px rgba(0,0,0,.35);text-align:center}
+.f119-badge{display:inline-flex;transform:translate(-50%,-50%);color:#fff;border:2px solid #fff;border-radius:999px;overflow:hidden;font:700 13px/1 -apple-system,"PingFang TC",sans-serif;white-space:nowrap;box-shadow:0 1px 4px rgba(0,0,0,.35)}
+.f119-badge span{padding:4px 6px}
 .f119-badge.fire{outline:2px solid #ffd54f}
-.legend{display:flex;flex-wrap:wrap;gap:12px;margin:-2px 16px 8px;font-size:13px;color:var(--mute)}
+.legend{margin:-2px 16px 8px;font-size:13px;color:var(--mute)}
+.legend .lg{display:flex;flex-wrap:wrap;gap:4px 10px;align-items:center;margin-bottom:2px}
+.legend .lg span{display:inline-flex;align-items:center;gap:3px}
 #status{margin:0 16px 6px;font-size:14px;color:var(--mute)}
 .warn{margin:0 16px 8px;padding:8px 12px;border-radius:10px;background:var(--warn-bg);color:var(--warn-ink);font-size:15px}
 #list{padding:0 16px 8px}
@@ -58,15 +61,15 @@ button:disabled{opacity:.6}
 .ev-head{display:flex;gap:8px;align-items:center;font-size:17px}
 .ev-head b{min-width:0;overflow-wrap:anywhere}
 .src{font-size:12px;font-weight:800;padding:1px 6px;border-radius:6px;flex:none;color:#fff}
-.src.f119{background:var(--f119)}.src.pbs{background:var(--pbs)}
-.tag{font-size:13px;font-weight:700;padding:0 6px;border-radius:6px;flex:none;border:1px solid var(--line)}
+.src.f119{background:#c62828}.src.pbs{background:#9a4a00}   /* 固定深色底：白字對比 5.62／6.26，不跟主題變（B 審：dark 下警廣原本只有 2.08） */
+.tag{font-size:13px;font-weight:700;padding:1px 6px;border-radius:6px;flex:none;color:#fff}
 .ev-body{font-size:16px;margin:4px 0}
 .meta{font-size:14px;color:var(--mute)}
 .gmap{display:inline-block;font-size:15px;color:var(--brand);padding:4px 0}
 .more{width:100%;font-weight:700;padding:10px;margin:4px 0 8px}
 h3{font-size:16px;margin:4px 0 8px}
 #nhint{margin:-2px 16px 8px;font-size:14px;color:var(--mute)}
-button[aria-pressed="true"]{background:var(--brand);border-color:var(--brand);color:#fff}
+button[aria-pressed="true"]{background:var(--brand);border-color:var(--brand);color:var(--on-brand)}
 .pl{margin:2px 0;padding:4px 0;border-top:1px solid var(--line)}
 footer{padding:8px 16px 24px;padding-bottom:max(24px,env(safe-area-inset-bottom));font-size:13px;color:var(--mute)}
 footer a{color:var(--brand)}
@@ -90,7 +93,7 @@ footer a{color:var(--brand)}
 <div id="chipsPbs" class="chips"></div>
 </details>
 <div id="map" role="region" aria-label="地圖"></div>
-<div class="legend"><span><span class="dot" style="background:var(--f119)"></span> 119（數字＝該區案件數，位置是行政區中心）</span><span><span class="dot" style="background:var(--pbs)"></span> 警廣路況</span></div>
+<div id="legend" class="legend"></div>
 <div id="warn119" class="warn" hidden></div>
 <div id="warnPbs" class="warn" hidden></div>
 <div id="status">載入中…</div>
@@ -185,6 +188,14 @@ const CITY119 = {
 };
 const KIND119 = t => /火/.test(t) ? '火災' : /救護/.test(t) ? '救護' : '其他';
 const DONE119 = e => e.state === '已返隊';
+// 不同類別不同顏色（老闆 TG34698）：119 用標記內的色塊、警廣用圓點顏色
+// 白字底色（119 色塊、清單標籤）一律用對白字對比 ≥4.5 的深色（13px 粗體不算大字，B 審 WCAG 實算）；
+// 警廣地圖圓點不放字，用亮色版比較好分
+const COL119 = {火災: '#c62828', 救護: '#1565c0', 其他: '#00695c', 已返隊: '#616161'};
+const COLPBS = {事故: '#d81b60', 災變: '#8e24aa', 阻塞: '#ef6c00', 交通障礙: '#c79100', 道路施工: '#689f38', 交通管制: '#3949ab', 號誌故障: '#0097a7', 其他: '#78909c'};
+const COLPBS_TXT = {事故: '#ad1457', 災變: '#6a1b9a', 阻塞: '#bf360c', 交通障礙: '#8d6e00', 道路施工: '#33691e', 交通管制: '#283593', 號誌故障: '#00838f', 其他: '#546e7a'};
+const cat119 = e => DONE119(e) ? '已返隊' : e.kind;
+const colOf = (e, txt) => e.src === 'f119' ? COL119[cat119(e)] || COL119.其他 : (txt ? COLPBS_TXT : COLPBS)[e.type] || (txt ? COLPBS_TXT : COLPBS).其他;
 const townOf = s => { const m = /(?:市|縣)\s*([^\s市縣區]{1,3}?)區/.exec(s || ''); return m ? m[1] : ''; };
 const normTown = t => String(t || '').replace(/區$/, '');
 function fire119Html(html, code){
@@ -272,22 +283,28 @@ function drawTabs(){
   document.querySelectorAll('.tabs button').forEach(b => b.setAttribute('aria-selected', String(b.dataset.src === SRC)));
   $('chips119').hidden = SRC === 'pbs'; $('chipsPbs').hidden = SRC === 'f119';
   if ($('filtSum').textContent !== '篩選類別') drawFiltSum();
+  if ($('legend').firstChild) drawLegend();
 }
 document.querySelectorAll('.tabs button').forEach(b => b.onclick = () => { SRC = b.dataset.src; store.set('live-src', SRC); limit = 30; drawTabs(); render(); });
-function chipRow(el, label, keys, color){
+function chipRow(el, label, keys, colors){
   const lbl = document.createElement('span'); lbl.className = 'lbl'; lbl.textContent = label;
   el.replaceChildren(lbl, ...keys.map(([k, txt]) => {
     const l = document.createElement('label'); l.className = 'chip';
     const c = document.createElement('input'); c.type = 'checkbox'; c.checked = !off.has(k);
     c.onchange = () => { c.checked ? off.delete(k) : off.add(k); store.set('live-off', [...off]); drawFiltSum(); render(); };
-    const d = document.createElement('span'); d.className = 'dot'; d.style.background = color;
+    const d = document.createElement('span'); d.className = 'dot'; d.style.background = colors[txt] || '#888';
     l.append(c, d, document.createTextNode(txt)); return l;
   }));
 }
 function drawChips(){
-  chipRow($('chips119'), '119', [['f:火災', '火災'], ['f:救護', '救護'], ['f:其他', '其他'], ['f:已返隊', '已返隊']], cssVar('f119'));
-  chipRow($('chipsPbs'), '警廣', [...new Set(PBS_TYPES)].map(t => ['p:' + t, t]), cssVar('pbs'));
-  drawFiltSum();
+  chipRow($('chips119'), '119', [['f:火災', '火災'], ['f:救護', '救護'], ['f:其他', '其他'], ['f:已返隊', '已返隊']], COL119);
+  chipRow($('chipsPbs'), '警廣', [...new Set(PBS_TYPES)].map(t => ['p:' + t, t]), COLPBS);
+  drawFiltSum(); drawLegend();
+}
+// 圖例：顏色對照（只列目前分頁有的來源）
+function drawLegend(){
+  const row = (ttl, cols) => `<div class="lg"><b>${ttl}</b>${Object.entries(cols).map(([k, c]) => `<span><span class="dot" style="background:${c}"></span>${esc(k)}</span>`).join('')}</div>`;
+  $('legend').innerHTML = (SRC !== 'pbs' ? row('119 標記（行政區中心，數字＝件數）', COL119) : '') + (SRC !== 'f119' ? row('警廣圓點', COLPBS) : '');
 }
 // 收合時也看得到目前隱藏了哪些類別
 function drawFiltSum(){
@@ -337,10 +354,10 @@ const titleOf = e => e.src === 'f119' ? e.addr || (CITY119[e.city].name + e.town
 const kindTxt = e => e.src === 'f119' ? [e.type, e.sub].filter(Boolean).join('・') || '案件' : e.raw || e.type;
 function f119Line(e){
   const crew = e.people != null ? ` · ${e.people} 人 ${e.cars ?? '?'} 車` : '';
-  return `<div class="pl"><b>${esc(kindTxt(e))}</b>｜${esc(titleOf(e))}<div class="meta">${esc(fmt(e.at))} 受理 · ${esc(e.unit)} · <b>${esc(e.state)}</b>${esc(crew)}</div></div>`;
+  return `<div class="pl"><span class="dot" style="background:${colOf(e)}"></span> <b>${esc(kindTxt(e))}</b>｜${esc(titleOf(e))}<div class="meta">${esc(fmt(e.at))} 受理 · ${esc(e.unit)} · <b>${esc(e.state)}</b>${esc(crew)}</div></div>`;
 }
 function pbsPopup(e){
-  return `<b>${esc(kindTxt(e))}</b>｜${esc(titleOf(e))}<br>${esc(e.text)}`
+  return `<span class="dot" style="background:${colOf(e)}"></span> <b>${esc(kindTxt(e))}</b>｜${esc(titleOf(e))}<br>${esc(e.text)}`
     + (e.approx ? `<div class="meta">⚠️ 地圖上是行政區中心，不是事發地點（警廣只給到行政區）</div>${gmapLink(e)}` : '')
     + `<div class="meta">${esc(fmt(e.t))} 更新${e.from ? ' · ' + esc(e.from) : ''}</div>`;
 }
@@ -366,9 +383,9 @@ function render(fit){
 
   // ---- 地圖：全部符合條件的點（不只範圍內）；119 依「市＋區」合成一個紅色數字標記 ----
   layer.clearLayers(); markers.clear();
-  const near = new Set(list.map(x => x.e)), pc = cssVar('pbs');
+  const near = new Set(list.map(x => x.e));
   for (const e of located.filter(e => e.src === 'pbs')) {
-    const big = near.has(e) && has;
+    const big = near.has(e) && has, pc = colOf(e);
     const m = (e.approx ? L.circleMarker([e.lat, e.lon], {radius: big ? 8 : 6, color: pc, weight: 3, fillColor: pc, fillOpacity: .15})
       : L.circleMarker([e.lat, e.lon], {radius: big ? 8 : 6, color: '#fff', weight: 1.5, fillColor: pc, fillOpacity: .9})).bindPopup(pbsPopup(e));
     m.addTo(layer); markers.set(e, m);
@@ -378,7 +395,11 @@ function render(fit){
   for (const [k, es] of groups) {
     es.sort((a, b) => b.at - a.at);
     const fire = es.some(e => e.kind === '火災' && !DONE119(e)), e0 = es[0];
-    const icon = L.divIcon({className: '', html: `<div class="f119-badge${fire ? ' fire' : ''}">${fire ? '🔥' : '119'}·${es.length}</div>`, iconSize: null, iconAnchor: [22, 12]});
+    // 一個區一個標記，裡面依類別分色塊：火 2｜救 3｜他 1｜返 4（只列有的類別）
+    const cnt = {}; for (const e of es) cnt[cat119(e)] = (cnt[cat119(e)] || 0) + 1;
+    const segs = [['火災', '🔥'], ['救護', '救'], ['其他', '他'], ['已返隊', '返']].filter(([c]) => cnt[c])
+      .map(([c, s]) => `<span style="background:${COL119[c]}">${s}${cnt[c]}</span>`).join('');
+    const icon = L.divIcon({className: '', html: `<div class="f119-badge${fire ? ' fire' : ''}">${segs}</div>`, iconSize: [0, 0], iconAnchor: [0, 0]});
     const m = L.marker([e0.lat, e0.lon], {icon, zIndexOffset: fire ? 1000 : 500, keyboard: true, title: `${CITY119[e0.city].name}${e0.town}區 119 案件 ${es.length} 件`})
       .bindPopup(`<b>🚒 ${esc(CITY119[e0.city].name + e0.town)}區 ${es.length} 件</b><div class="meta">⚠️ 位置是行政區中心；實際地點看地址</div>` + es.slice(0, 15).map(f119Line).join('') + (es.length > 15 ? `<div class="meta">…還有 ${es.length - 15} 件，看下方清單</div>` : ''));
     m.addTo(layer); markers.set(k, m);
@@ -405,7 +426,7 @@ function render(fit){
     const crew = f && e.people != null ? ` · ${e.people} 人 ${e.cars ?? '?'} 車` : '';
     const meta = f ? `${d}${esc(fmt(e.at))} 受理 · ${esc(e.unit)} · <b>${esc(e.state)}</b>${esc(crew)}${e.no ? ` · 案號 ${esc(e.no)}` : ''}`
       : `${d}${esc(fmt(e.t))} 更新${!isNaN(e.happen) && e.happen !== e.t ? ` · ${esc(fmt(e.happen))} 發生` : ''}${e.from ? ' · ' + esc(e.from) : ''}`;
-    return `<div class="ev${f && DONE119(e) ? ' done' : ''}"${i != null ? ` data-i="${i}"` : ''}><div class="ev-head"><span class="src ${e.src}">${f ? '119' : '警廣'}</span><span class="tag">${esc(kindTxt(e))}</span><b>${esc(titleOf(e))}</b></div>`
+    return `<div class="ev${f && DONE119(e) ? ' done' : ''}"${i != null ? ` data-i="${i}"` : ''}><div class="ev-head"><span class="src ${e.src}">${f ? '119' : '警廣'}</span><span class="tag" style="background:${colOf(e, true)}">${esc(kindTxt(e))}</span><b>${esc(titleOf(e))}</b></div>`
       + (!f && e.text ? `<div class="ev-body">${esc(e.text)}</div>` : '') + gmapLink(e) + `<div class="meta">${meta}</div></div>`;
   };
   let html = shown.length ? shown.map(card).join('') : `<div class="meta">${has ? '這個範圍內目前沒有符合的事件，可以把範圍或時間調大' : '目前沒有符合的事件'}</div>`;
