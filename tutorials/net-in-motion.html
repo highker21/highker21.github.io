@@ -1,0 +1,611 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NET，動起來</title>
+<meta name="description" content="一步一步看神經內分泌腫瘤：分化與分級、胃腸胰與肺各部位的特點、類癌症候群與類癌心臟病、5-HIAA 與體抑素受體 PET，以及手術、體抑素類似物、PRRT、標靶藥與化療。">
+<style>
+:root{
+  --bg:#f5f3ee;--paper:#fffdf8;--ink:#1f2328;--mute:#5d6470;--line:#d9d4c7;
+  --accent:#1f6f5c;--accent-soft:#dff0ea;--on-accent:#fff;
+  --ser:#16867a;--gas:#b86e00;--pep:#7a4fc4;--acth:#b0407a;--tum:#8a2a35;
+  --drug:#c0262d;--up:#d1452b;--down:#2f72c4;
+  --organ:#ffffff;--organ-line:#b9b2a3;--organ-on:#fff1e6;--organ-on-line:#d9741a;
+  --shadow:0 1px 2px rgba(0,0,0,.06),0 6px 20px rgba(0,0,0,.06);
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#14171b;--paper:#1c2026;--ink:#e8e6e1;--mute:#a3a9b3;--line:#323844;
+  --accent:#6fd1b5;--accent-soft:#17312b;--on-accent:#14171b;
+  --ser:#4cd0c0;--gas:#f2b441;--pep:#a98cf0;--acth:#e07ab0;--tum:#f08a96;
+  --drug:#ff6b6b;--up:#ff7a5c;--down:#6aa8f5;
+  --organ:#232831;--organ-line:#4a5260;--organ-on:#3a2c20;--organ-on-line:#f5a04a;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 6px 20px rgba(0,0,0,.35);
+}}
+:root[data-theme="dark"]{
+  --bg:#14171b;--paper:#1c2026;--ink:#e8e6e1;--mute:#a3a9b3;--line:#323844;
+  --accent:#6fd1b5;--accent-soft:#17312b;--on-accent:#14171b;
+  --ser:#4cd0c0;--gas:#f2b441;--pep:#a98cf0;--acth:#e07ab0;--tum:#f08a96;
+  --drug:#ff6b6b;--up:#ff7a5c;--down:#6aa8f5;
+  --organ:#232831;--organ-line:#4a5260;--organ-on:#3a2c20;--organ-on-line:#f5a04a;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 6px 20px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink)}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang TC","Noto Sans TC","Microsoft JhengHei",sans-serif;line-height:1.65;-webkit-text-size-adjust:100%}
+a{color:var(--accent)}
+.wrap{max-width:1180px;margin:0 auto;padding:0 16px}
+header.hero{padding:40px 0 18px}
+.kick{font-size:13px;letter-spacing:.12em;color:var(--accent);font-weight:700}
+h1{font-size:clamp(30px,6vw,52px);line-height:1.15;margin:.2em 0 .25em;letter-spacing:.02em}
+h1 span{color:var(--tum)}
+.lead{color:var(--mute);max-width:740px;margin:0}
+.legend{display:flex;flex-wrap:wrap;gap:8px 16px;margin:16px 0 0;padding:0;list-style:none;font-size:14px;color:var(--mute)}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:50%;margin-right:6px;vertical-align:-1px}
+.tabs{display:flex;gap:8px;margin:22px 0 14px;flex-wrap:wrap}
+.tabs button{appearance:none;border:1px solid var(--line);background:var(--paper);color:var(--ink);padding:9px 14px;border-radius:999px;font:inherit;font-weight:700;cursor:pointer;line-height:1.3}
+.tabs button small{display:block;font-weight:400;font-size:11.5px;opacity:.8}
+.tabs button[aria-selected="true"]{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.player{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:18px;align-items:start}
+.stage{position:sticky;top:10px;background:var(--paper);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);padding:8px}
+.stage svg{display:block;width:100%;height:auto;max-height:calc(100vh - 40px);touch-action:pan-y}
+.panel{background:var(--paper);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);padding:18px 20px;min-height:440px;display:flex;flex-direction:column}
+.where{font-size:13px;color:var(--mute);display:flex;justify-content:space-between;gap:8px}
+.where b{color:var(--accent)}
+.kind{display:inline-block;font-size:12px;font-weight:700;border-radius:999px;padding:1px 9px;margin-right:6px;vertical-align:2px}
+.kind.phy{background:var(--accent-soft);color:var(--accent)}
+.kind.dz{background:color-mix(in srgb,var(--tum) 15%,transparent);color:var(--tum)}
+.kind.dx{background:color-mix(in srgb,var(--ser) 15%,transparent);color:var(--ser)}
+.kind.drg{background:color-mix(in srgb,var(--drug) 14%,transparent);color:var(--drug)}
+.panel h2{font-size:23px;line-height:1.3;margin:6px 0 8px}
+.panel .txt{flex:1}
+.panel .txt p{margin:.35em 0}
+.panel .txt ul,.panel .txt ol{margin:.35em 0;padding-left:1.2em}
+.panel .txt li{margin:.2em 0}
+.warn{border-left:3px solid var(--drug);padding:4px 10px;margin:.6em 0;background:color-mix(in srgb,var(--drug) 8%,transparent);border-radius:0 8px 8px 0}
+.ctl{display:flex;align-items:center;gap:8px;margin-top:14px;flex-wrap:wrap}
+.ctl button{appearance:none;border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:10px;padding:9px 14px;font:inherit;font-weight:700;cursor:pointer;min-width:44px}
+.ctl button:disabled{opacity:.35;cursor:default}
+.ctl #say[aria-pressed="true"]{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.ctl .next{background:var(--accent);border-color:var(--accent);color:var(--on-accent);margin-left:auto}
+.dots{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}
+.dots button{width:10px;height:10px;border-radius:50%;border:0;padding:0;background:var(--line);cursor:pointer}
+.dots button[aria-current="true"]{background:var(--accent);transform:scale(1.25)}
+.hint{font-size:12px;color:var(--mute);margin-top:8px}
+
+.org path.shape,.org ellipse,.org rect.shape{fill:var(--organ);stroke:var(--organ-line);stroke-width:2;transition:fill .35s,stroke .35s}
+.org text{fill:var(--ink);font-size:17px;font-weight:700;text-anchor:middle}
+.org text.sub{font-size:11.5px;font-weight:400;fill:var(--mute)}
+.org.on path.shape,.org.on ellipse,.org.on rect.shape{fill:var(--organ-on);stroke:var(--organ-on-line);stroke-width:3}
+.org{transition:opacity .35s}
+.org.dim{opacity:.35}
+.org .tu circle{fill:var(--tum);stroke:var(--paper);stroke-width:1.5;opacity:0;transition:opacity .35s}
+.org.tum .tu circle{opacity:.9;animation:pulse 2.4s ease-in-out infinite}
+@keyframes pulse{50%{opacity:.45}}
+.vessel{fill:none;stroke:var(--line);stroke-width:2;stroke-dasharray:3 5}
+.ring{fill:none;stroke:var(--drug);stroke-width:3;stroke-dasharray:6 5;opacity:0;transition:opacity .3s}
+.ring.on{opacity:1;animation:spin 6s linear infinite}
+@keyframes spin{to{stroke-dashoffset:-110}}
+.hub circle{fill:color-mix(in srgb,var(--accent) 8%,var(--paper));stroke:var(--accent);stroke-width:2.5}
+.hub text{text-anchor:middle;fill:var(--ink)}
+.hub .lbl{font-size:12px;font-weight:700;fill:var(--mute)}
+.hub .val{font-size:26px;font-weight:800}
+.chip rect{rx:9;ry:9;stroke-width:1.5}
+.chip text{font-size:12.5px;font-weight:700}
+.chip.up rect{fill:color-mix(in srgb,var(--up) 13%,var(--paper));stroke:var(--up)}
+.chip.up text{fill:var(--up)}
+.chip.down rect{fill:color-mix(in srgb,var(--down) 13%,var(--paper));stroke:var(--down)}
+.chip.down text{fill:var(--down)}
+.chip.info rect{fill:var(--paper);stroke:var(--organ-line)}
+.chip.info text{fill:var(--ink)}
+.chip.drug rect{fill:var(--drug);stroke:var(--drug)}
+.chip.drug text{fill:#fff}
+.chips g.chip{animation:pop .35s ease-out both}
+@keyframes pop{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.meter rect.box{fill:var(--paper);stroke:var(--line)}
+.meter text{font-size:12px;fill:var(--ink)}
+.meter text.ttl{font-size:11px;fill:var(--mute)}
+.meter .trk{fill:var(--line)}
+.meter .mid{stroke:var(--mute);stroke-width:1.5}
+.meter .bar{transition:width .5s ease,x .5s ease,fill .3s}
+.meter text.v{font-weight:700}
+.pt{pointer-events:none}
+.xref{display:inline-block;margin:.3em 0;font-weight:700}
+section.cmp{margin:34px 0 10px}
+section.cmp h2{font-size:24px;margin:0 0 6px}
+.tblw{overflow-x:auto;border:1px solid var(--line);border-radius:14px;background:var(--paper);margin-bottom:18px}
+table{border-collapse:collapse;width:100%;min-width:820px;font-size:14px}
+th,td{padding:9px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{background:var(--accent-soft);white-space:nowrap}
+tr:last-child td{border-bottom:0}
+footer{color:var(--mute);font-size:13px;padding:22px 0 40px;border-top:1px solid var(--line);margin-top:28px}
+.theme{position:absolute;top:14px;right:16px;appearance:none;border:1px solid var(--line);background:var(--paper);color:var(--ink);border-radius:999px;padding:6px 12px;font:inherit;font-size:13px;cursor:pointer}
+@media (max-width:860px){
+  .player{grid-template-columns:1fr}
+  .stage{position:sticky;top:0;z-index:2;border-radius:0 0 16px 16px;margin:0 -16px;border-left:0;border-right:0;padding:4px}
+  .stage svg{max-height:52vh}
+  .panel{min-height:0}
+  .chip text{font-size:14px}
+  header.hero{padding-top:52px}
+}
+@media (prefers-reduced-motion:reduce){.chips g.chip,.ring.on,.org.tum .tu circle{animation:none}}
+tr[data-go]{cursor:pointer;transition:background .15s}
+tr[data-go]:hover,tr[data-go]:focus-visible{background:color-mix(in srgb,var(--accent) 12%,transparent);outline:none}
+tr[data-go]:focus-visible td:first-child{box-shadow:inset 3px 0 0 var(--accent)}
+.goto{display:inline-block;margin-left:6px;font-size:11.5px;font-weight:700;color:var(--accent);white-space:nowrap}
+.gohint{font-size:13.5px;color:var(--accent);margin:-4px 0 10px;font-weight:600}
+</style>
+</head>
+<body>
+<button class="theme" id="theme" type="button" aria-label="切換深淺色">◐ 深淺色</button>
+<div class="wrap">
+<header class="hero">
+  <div class="kick"><a href="endo-interactive.html" style="color:inherit;text-decoration:none">← 內分泌新陳代謝科 醫學互動教學</a></div>
+  <h1>NET，<span>動起來</span></h1>
+  <p class="lead">神經內分泌細胞散布在消化道、胰臟和肺，長出來的腫瘤從很慢到很兇都有。先分清楚「分化」與「分級」，再看胃、十二指腸、胰臟、小腸、闌尾、直腸、肺各自的特點；接著看血清素為什麼要等到肝轉移才造成類癌症候群、怎麼傷到右心的瓣膜；最後是 5-HIAA、體抑素受體 PET 的判讀，以及手術、體抑素類似物、PRRT、標靶藥與化療怎麼排。</p>
+  <p class="lead" style="margin-top:6px"><a href="men-in-motion.html">→ MEN，動起來：遺傳性的胰臟十二指腸 NET（MEN1）</a></p>
+  <ul class="legend">
+    <li><i style="background:var(--ser)"></i>血清素</li>
+    <li><i style="background:var(--gas)"></i>胃泌素</li>
+    <li><i style="background:var(--pep)"></i>胰島素等胜肽</li>
+    <li><i style="background:var(--acth)"></i>ACTH</li>
+    <li><i style="background:var(--tum)"></i>腫瘤、轉移</li>
+    <li><i style="background:var(--drug)"></i>治療作用點</li>
+  </ul>
+</header>
+
+<div class="tabs" role="tablist" id="tabs"></div>
+
+<div class="player">
+  <div class="stage">
+<svg id="map" viewBox="0 0 600 610" role="img" aria-label="肺與胸腺、心臟、皮膚、胃、肝臟、胰臟、小腸、十二指腸、闌尾與直腸，以及血中兩項檢驗值的示意圖">
+  <g id="paths">
+    <path class="vessel" id="p-si2liv" d="M478 262 Q462 214 428 182"/>
+    <path class="vessel" id="p-liv2heart" d="M372 120 Q356 94 340 70"/>
+    <path class="vessel" id="p-heart2lung" d="M236 42 L158 42"/>
+    <path class="vessel" id="p-liv2skin" d="M434 122 Q466 96 470 70"/>
+    <path class="vessel" id="p-duo2sto" d="M156 418 Q204 300 198 184"/>
+    <path class="vessel" id="p-pan2sto" d="M128 262 Q140 212 162 180"/>
+    <path class="vessel" id="p-pan2hub" d="M176 300 L237 300"/>
+    <path class="vessel" id="p-si2hub" d="M424 300 L363 300"/>
+  </g>
+
+  <g class="org" id="o-lung"><rect class="shape" x="30" y="14" width="128" height="56" rx="16"/><text x="94" y="40">肺、胸腺</text><text class="sub" x="94" y="59">類癌、異位 ACTH</text>
+    <g class="tu"><circle cx="146" cy="26" r="6"/></g></g>
+  <g class="org" id="o-heart"><rect class="shape" x="236" y="14" width="128" height="56" rx="18"/><text x="300" y="40">心臟</text><text class="sub" x="300" y="59">右側瓣膜</text></g>
+  <g class="org" id="o-skin"><rect class="shape" x="442" y="14" width="128" height="56" rx="16"/><text x="506" y="40">皮膚</text><text class="sub" x="506" y="59">潮紅、血管擴張</text></g>
+  <g class="org" id="o-sto"><ellipse cx="200" cy="150" rx="70" ry="34"/><text x="200" y="148">胃</text><text class="sub" x="200" y="166">ECL 細胞</text>
+    <g class="tu"><circle cx="150" cy="140" r="4"/><circle cx="250" cy="140" r="4"/><circle cx="158" cy="162" r="3.5"/><circle cx="242" cy="162" r="3.5"/><circle cx="200" cy="124" r="3.5"/></g></g>
+  <g class="org" id="o-liv"><ellipse cx="400" cy="150" rx="70" ry="34"/><text x="400" y="148">肝臟</text><text class="sub" x="400" y="166">轉移、分解血清素</text>
+    <g class="tu"><circle cx="346" cy="140" r="6"/><circle cx="454" cy="140" r="6"/><circle cx="342" cy="158" r="5"/><circle cx="458" cy="158" r="5"/><circle cx="400" cy="124" r="5"/></g></g>
+  <g class="org" id="o-pan"><ellipse cx="110" cy="300" rx="66" ry="38"/><text x="110" y="296">胰臟</text><text class="sub" x="110" y="316">功能性、無功能</text>
+    <g class="tu"><circle cx="60" cy="312" r="5.5"/><circle cx="160" cy="312" r="5"/><circle cx="110" cy="330" r="4.5"/></g></g>
+  <g class="org" id="o-si"><ellipse cx="490" cy="300" rx="66" ry="38"/><text x="490" y="296">小腸（迴腸）</text><text class="sub" x="490" y="316">血清素</text>
+    <g class="tu"><circle cx="440" cy="316" r="5.5"/><circle cx="540" cy="313" r="4.5"/><circle cx="470" cy="330" r="4"/></g></g>
+  <g class="org" id="o-duo"><ellipse cx="110" cy="443" rx="66" ry="34"/><text x="110" y="440">十二指腸</text><text class="sub" x="110" y="459">胃泌素瘤、體抑素瘤</text>
+    <g class="tu"><circle cx="56" cy="436" r="5"/><circle cx="164" cy="436" r="5"/></g></g>
+  <g class="org" id="o-app"><rect class="shape" x="424" y="414" width="132" height="58" rx="16"/><text x="490" y="440">闌尾、直腸</text><text class="sub" x="490" y="459">多半小、可切乾淨</text>
+    <g class="tu"><circle cx="544" cy="426" r="5"/><circle cx="436" cy="426" r="4"/></g></g>
+
+  <g class="hub" id="hub"><circle cx="300" cy="300" r="62"/>
+    <text class="lbl" id="hl1" x="300" y="268"></text>
+    <text class="val" id="v1" x="300" y="293">0</text>
+    <text class="lbl" id="hl2" x="300" y="317"></text>
+    <text class="val" id="v2" x="300" y="342">0</text>
+  </g>
+
+  <g id="rings">
+    <rect class="ring" id="r-lung" x="20" y="4" width="148" height="76" rx="22"/>
+    <rect class="ring" id="r-heart" x="226" y="4" width="148" height="76" rx="24"/>
+    <rect class="ring" id="r-skin" x="432" y="4" width="148" height="76" rx="22"/>
+    <ellipse class="ring" id="r-sto" cx="200" cy="150" rx="84" ry="46"/>
+    <ellipse class="ring" id="r-liv" cx="400" cy="150" rx="84" ry="46"/>
+    <ellipse class="ring" id="r-pan" cx="110" cy="300" rx="80" ry="50"/>
+    <ellipse class="ring" id="r-si" cx="490" cy="300" rx="80" ry="50"/>
+    <ellipse class="ring" id="r-duo" cx="110" cy="443" rx="80" ry="46"/>
+    <rect class="ring" id="r-app" x="414" y="404" width="152" height="78" rx="22"/>
+  </g>
+
+  <g class="meter" id="meter">
+    <rect class="box" x="212" y="520" width="176" height="86" rx="10"/>
+    <text class="ttl" x="222" y="537">相對量（中線＝正常）</text>
+    <g id="mrows"></g>
+  </g>
+
+  <g id="parts" class="pt"></g>
+  <g id="chips" class="chips"></g>
+</svg>
+  </div>
+
+  <div class="panel" aria-live="polite">
+    <div class="where"><span id="where"></span><span id="cnt"></span></div>
+    <h2 id="ttl"></h2>
+    <div class="txt" id="txt"></div>
+    <div class="ctl">
+      <button id="prev" type="button" aria-label="上一步">←</button>
+      <button id="play" type="button" aria-label="自動播放">▶ 自動</button>
+      <button id="say" type="button" aria-pressed="false" aria-label="語音朗讀">🔊 朗讀</button>
+      <button class="next" id="next" type="button">下一步 →</button>
+    </div>
+    <div class="dots" id="dots"></div>
+    <div class="hint">鍵盤 ← → 切換，手機可在圖上左右滑動。開「🔊 朗讀」再按「▶ 自動」，會唸完一步自動換下一步。</div>
+  </div>
+</div>
+
+<section class="cmp">
+  <h2>分化與分級（WHO 2022，胃腸胰）</h2>
+  <div class="tblw"><table style="min-width:680px">
+    <thead><tr><th>類別</th><th>分化</th><th>Ki-67</th><th>核分裂（／2 mm²）</th><th>治療方向</th></tr></thead>
+    <tbody>
+      <tr><td><b>NET G1</b></td><td>良好</td><td>&lt; 3%</td><td>&lt; 2</td><td>手術；轉移時體抑素類似物為主</td></tr>
+      <tr><td><b>NET G2</b></td><td>良好</td><td>3–20%</td><td>2–20</td><td>同上；Ki-67 偏高可考慮 PRRT 等</td></tr>
+      <tr><td><b>NET G3</b></td><td>良好</td><td>&gt; 20%</td><td>&gt; 20</td><td>仍走 NET 路線（PRRT、CAPTEM 等），不是 NEC</td></tr>
+      <tr><td><b>NEC</b></td><td>不良（小細胞、大細胞）</td><td>通常很高</td><td>很多</td><td>鉑類＋etoposide，類似小細胞肺癌</td></tr>
+      <tr><td><b>MiNEN</b></td><td>混合</td><td>不定</td><td>不定</td><td>神經內分泌與非神經內分泌成分各 ≥ 30%，依較兇的成分處理</td></tr>
+    </tbody>
+  </table></div>
+
+  <h2>依部位一覽</h2>
+  <div class="tblw"><table style="min-width:720px">
+    <thead><tr><th>部位</th><th>特點</th><th>處理要點</th></tr></thead>
+    <tbody>
+      <tr><td><b>胃 第 1 型</b></td><td>萎縮性胃炎、胃泌素高、胃不酸；多發、小、G1</td><td>內視鏡追蹤或切除</td></tr>
+      <tr><td><b>胃 第 2 型</b></td><td>胃泌素瘤（多半 MEN1）、胃很酸</td><td>處理胃泌素瘤</td></tr>
+      <tr><td><b>胃 第 3 型</b></td><td>胃泌素正常；單顆、較大、較兇</td><td>多半手術，接近胃癌處理</td></tr>
+      <tr><td><b>十二指腸</b></td><td>多半小、無功能；胃泌素瘤；壺腹附近體抑素瘤（NF1）</td><td>依大小與位置內視鏡或手術；壺腹周圍要積極</td></tr>
+      <tr><td><b>胰臟（功能性）</b></td><td>胰島素瘤（約九成良性）、胃泌素瘤、升糖素瘤、VIP 瘤、體抑素瘤</td><td>手術；先控制荷爾蒙症狀</td></tr>
+      <tr><td><b>胰臟（無功能）</b></td><td>最常見；常是影像意外發現</td><td>&lt; 2 cm、G1、無症狀可追蹤；≥ 2 cm 手術</td></tr>
+      <tr><td><b>小腸（迴腸）</b></td><td>原發小、常多發；腸繫膜纖維化；常已肝轉移</td><td>切原發與腸繫膜淋巴結；類癌症候群</td></tr>
+      <tr><td><b>闌尾</b></td><td>多在闌尾切除後的病理發現</td><td>&gt; 2 cm 或切不乾淨才補右側結腸切除（ENETS 2023）</td></tr>
+      <tr><td><b>直腸</b></td><td>大腸鏡的黃色小結節；很少有症狀</td><td>&lt; 1 cm 內視鏡切除；&gt; 2 cm 手術；1–2 cm 個別決定</td></tr>
+      <tr><td><b>肺</b></td><td>典型（核分裂 &lt; 2、無壞死）、非典型（2–10 或點狀壞死）</td><td>手術；可分泌 ACTH</td></tr>
+    </tbody>
+  </table></div>
+
+  <h2>治療與藥物一覽</h2>
+  <div class="tblw"><table>
+    <thead><tr><th>藥物</th><th>作用部位</th><th>機轉</th><th>用在</th><th>注意</th></tr></thead>
+    <tbody id="tbody"></tbody>
+  </table></div>
+</section>
+
+<footer>
+  教學示意圖，器官位置與比例經過簡化；兩項檢驗值為示意的典型值，各實驗室參考範圍不同；不含藥物劑量，非個別病人的診斷或用藥建議，實際判斷請依仿單與最新指引（WHO 2022 神經內分泌腫瘤分類；ENETS 2022–2023 指引；NETTER-1、NETTER-2、CABINET 等試驗；Williams Textbook of Endocrinology 第 15 版）。頁中藥物核准狀態僅指美國 FDA，不涉及健保給付或國內是否上市。<br>
+  相關：<a href="men-in-motion.html">MEN，動起來</a>、<a href="glucose-in-motion.html">血糖，動起來</a>、<a href="adrenal-in-motion.html">腎上腺，動起來</a>、<a href="thyroid-in-motion.html">甲狀腺，動起來</a><br>
+  工具版本：2026-11-11
+</footer>
+</div>
+
+<script>
+(function(){
+'use strict';
+var $=function(s){return document.querySelector(s)};
+var SVGNS='http://www.w3.org/2000/svg';
+var COL={s:'var(--ser)',g:'var(--gas)',i:'var(--pep)',a:'var(--acth)',x:'var(--drug)'};
+var AT={lung:[94,90],heart:[300,90],skin:[506,90],sto:[200,204],liv:[400,204],pan:[110,350],si:[490,356],duo:[110,494],app:[490,494],hub:[300,388]};
+var STACK={};
+var ORG=['lung','heart','skin','sto','liv','pan','si','duo','app'];
+var ALL=['lung','sto','liv','pan','si','duo','app'];
+var MEN='men-in-motion.html';
+
+/* 每一步：t 標題、k 類型（phy/dx/dz/drg）、on 亮起器官、tu 長腫瘤的器官、rx 治療圈、
+   h 中央兩項數值、hl／hr 覆寫數值標籤與正常範圍、lv 三格量表(-2~2)、lab 量表標籤、flows、chips、d 說明 */
+var AX=[
+{id:'base',n:'A 基礎',s:'分化、分級、受體',hl:['Ki-67 %','核分裂 /2mm²'],hr:[[0,3],[0,2]],lab:['分化','增殖','荷爾蒙'],steps:[
+ {t:'神經內分泌細胞遍布全身',k:'phy',on:ALL,h:[1.5,1],lv:[0,0,0],
+  flows:[],
+  chips:[['hub','有這種細胞的地方就可能長','info']],
+  d:'<p><b>神經內分泌細胞</b>散布在消化道黏膜、胰島、呼吸道等處：像神經一樣有分泌顆粒，又像內分泌細胞一樣把荷爾蒙放進血液。</p><ul><li>從這些細胞長出的腫瘤統稱<b>神經內分泌腫瘤</b></li><li>以<b>消化道與胰臟</b>和<b>肺</b>最多</li><li>多數長得慢，常是做胃鏡、大腸鏡、影像或手術時意外發現</li><li>以前叫「類癌（carcinoid）」，現在除了肺之外，多改稱 NET</li></ul><p>甲狀腺髓質癌與嗜鉻細胞瘤也是神經內分泌來源，但有各自的分類與處理。</p><p><a class="xref" href="'+MEN+'#t2s0">→ MEN，動起來：甲狀腺髓質癌</a></p>'},
+ {t:'分化良好 NET 與分化不良 NEC：兩種病',k:'phy',on:['pan','lung'],tu:['pan','lung'],h:[70,40],lv:[-2,2,0],
+  flows:[],
+  chips:[['pan','NET：像正常細胞、多半慢','info'],['lung','NEC：小細胞或大細胞癌、很快','up']],
+  d:'<ul><li><b>分化良好的神經內分泌腫瘤（NET）</b>：細胞看起來還像正常的神經內分泌細胞，多半長得慢，可能存活很多年</li><li><b>分化不良的神經內分泌癌（NEC）</b>：小細胞癌或大細胞神經內分泌癌，長得很快、很早轉移，處理接近小細胞肺癌</li><li>基因變化也不同：胰臟 NET 常見 MEN1、DAXX、ATRX；NEC 常見 TP53、RB1 失去功能</li><li>神經內分泌與非神經內分泌（例如腺癌）成分各佔 30% 以上：<b>MiNEN</b></li></ul><p>先分「分化」，再看「分級」：同樣 Ki-67 很高，是 NET G3 還是 NEC，治療完全不同。</p>'},
+ {t:'分級：Ki-67 與核分裂數',k:'dx',on:['pan','si'],tu:['pan'],h:[12,5],lv:[0,1,0],
+  flows:[],
+  chips:[['hub','G1 < 3%｜G2 3–20%｜G3 > 20%','info']],
+  d:'<p>消化道與胰臟的 NET 依 <b>Ki-67 指數</b>與<b>核分裂數</b>分級（WHO 2022），兩者取較高的一級：</p><ul><li><b>G1</b>：Ki-67 小於 3%，核分裂小於 2 個／2 mm²</li><li><b>G2</b>：Ki-67 3–20%，核分裂 2–20 個</li><li><b>G3</b>：Ki-67 大於 20%，但仍是分化良好的 NET</li><li><b>NEC</b>：分化不良，定義上就是高級別</li></ul><p>分級可能隨時間上升，轉移處切片的 Ki-67 可能比原發處高。肺的類癌另有標準（B 分頁）。</p>'},
+ {t:'功能性與無功能',k:'phy',on:['pan','si','duo'],tu:['pan','si'],h:[2,1],lv:[0,0,2],
+  flows:[['pan2hub','i',2],['si2hub','s',1.4]],
+  chips:[['pan','功能性：荷爾蒙造成症狀','up'],['si','無功能：靠大小或轉移被發現','info']],
+  d:'<ul><li><b>功能性</b>：分泌的荷爾蒙多到造成症狀，就以荷爾蒙命名：胰島素瘤、胃泌素瘤、升糖素瘤、VIP 瘤、體抑素瘤；小腸 NET 轉移到肝之後的<b>類癌症候群</b>也屬於這一類</li><li><b>無功能</b>：大多數 NET；不是完全不分泌，而是量不夠引起症狀</li><li>功能性的常在很小時就因症狀被發現；無功能的常到很大或轉移了才被發現</li></ul><p>症狀來自荷爾蒙，不是腫瘤大小：一顆 1 公分的胰島素瘤，就能讓人反覆低血糖昏倒。</p>'},
+ {t:'體抑素受體：同一個標靶，先看再打',k:'phy',on:['pan','si','liv'],tu:['pan','si','liv'],h:[2,1],lv:[1,0,0],
+  flows:[],
+  chips:[['liv','體抑素受體 PET 找得到','info'],['hub','SSA、PRRT 都靠它','info']],
+  d:'<ul><li>大多數分化良好的 NET，細胞表面有大量<b>體抑素受體</b>（主要是第 2 型）</li><li><b>看</b>：把放射性同位素接上體抑素類似物（<sup>68</sup>Ga-DOTATATE 等）做 PET，可以找到全身的病灶</li><li><b>打</b>：<b>體抑素類似物</b>（octreotide、lanreotide）抑制荷爾蒙、延緩生長；同一類分子接上治療用的 <sup>177</sup>Lu，就是 <b>PRRT</b></li></ul><p>這種「同一個標靶先看再治療」的做法叫 <b>theranostics</b>。分化越差，受體通常越少，這時 FDG PET 反而比較亮（D 分頁）。</p>'}
+]},
+{id:'site',n:'B 部位',s:'胃、胰、腸、肺',hl:['腫瘤 cm','Ki-67 %'],hr:[[0,1],[0,3]],lab:['腫瘤大小','轉移風險','荷爾蒙'],steps:[
+ {t:'胃 第 1 型：萎縮性胃炎推出來的',k:'dz',on:['sto'],tu:['sto'],h:[0.6,1.5],lv:[-1,-2,0],
+  flows:[],
+  chips:[['sto','胃不酸 → 胃泌素高 → ECL 增生','up']],
+  d:'<ul><li>胃 NET 最常見的一型，約七到八成</li><li>自體免疫的<b>萎縮性胃炎</b>（常合併惡性貧血）讓胃不再產酸 → 胃竇的 G 細胞拚命分泌<b>胃泌素</b> → 長期刺激胃體的 <b>ECL 細胞</b>增生 → 長出<b>多發、小</b>的 NET</li><li>幾乎都是 G1，很少轉移</li><li>小的可以內視鏡追蹤或切除；常會再長</li></ul><p>同時檢查維生素 B12 與甲狀腺：自體免疫疾病常一起出現。</p>'},
+ {t:'胃 第 2 型與第 3 型',k:'dz',on:['sto','duo'],tu:['sto','duo'],h:[2.5,8],lv:[1,2,0],
+  flows:[['duo2sto','g',2.6]],
+  chips:[['duo','胃泌素瘤 → 第 2 型','up'],['sto','第 3 型：單顆、胃泌素正常、較兇','up']],
+  d:'<ul><li><b>第 2 型</b>（約 5–10%）：<b>胃泌素瘤</b>（多半是 MEN1）分泌的胃泌素刺激 ECL 細胞；和第 1 型相反，<b>胃很酸</b></li><li><b>第 3 型</b>（約 10–15%）：沒有高胃泌素的背景，<b>單顆、較大</b>，轉移機會高，處理接近胃癌，多半需要手術</li></ul><p>看到胃 NET 先驗<b>胃泌素</b>與<b>胃液酸度</b>：胃泌素高、胃不酸＝第 1 型；胃泌素高、胃很酸＝第 2 型；胃泌素正常＝第 3 型。</p><p><a class="xref" href="'+MEN+'#t1s2">→ MEN，動起來：胃泌素瘤</a></p>'},
+ {t:'十二指腸：小，但位置很重要',k:'dz',on:['duo'],tu:['duo'],h:[0.8,2],lv:[0,1,1],
+  flows:[],
+  chips:[['duo','胃泌素瘤、壺腹附近體抑素瘤','up']],
+  d:'<ul><li>多數是小的無功能 NET，在胃鏡時發現</li><li><b>胃泌素瘤</b>：常在十二指腸，小而多發（尤其是 MEN1）</li><li><b>體抑素瘤</b>：好發於十二指腸壺腹附近，和<b>第一型神經纖維瘤症</b>有關，可能造成膽道阻塞</li><li>壺腹周圍的腫瘤即使不大，也比較容易轉移，處理要更積極</li></ul>'},
+ {t:'胰臟功能性腫瘤：各有各的荷爾蒙',k:'dz',on:['pan'],tu:['pan'],hl:['血糖 mg/dL','胰島素 µU/mL'],hr:[[70,180],[0,3]],h:[42,12],lv:[-1,0,2],
+  flows:[['pan2hub','i',2.4]],
+  chips:[['pan','胰島素瘤最常見，約九成良性','up']],
+  d:'<ul><li><b>胰島素瘤</b>：最常見的功能性胰臟 NET；多半單一、小於 2 公分、約九成是良性；空腹低血糖，吃東西就改善</li><li><b>胃泌素瘤</b>：反覆潰瘍與腹瀉；轉移比例比胰島素瘤高</li><li><b>升糖素瘤</b>：遊走性壞死性紅斑、糖尿病、體重減輕、血栓</li><li><b>VIP 瘤</b>：每天好幾公升的水瀉、低血鉀、胃酸少</li><li><b>體抑素瘤</b>：糖尿病、膽結石、脂肪便</li></ul><p>除了胰島素瘤，其他功能性腫瘤的惡性比例都偏高。</p>'},
+ {t:'胰臟無功能腫瘤：最常見',k:'dz',on:['pan','liv'],tu:['pan'],h:[1.6,4],lv:[0,1,0],
+  flows:[],
+  chips:[['pan','< 2 cm、G1、無症狀：可追蹤','info'],['liv','較大、G2 以上：較易轉移','up']],
+  d:'<ul><li>胰臟 NET 大多數是無功能的，越來越多是影像檢查時意外發現</li><li><b>小於 2 公分</b>、G1、沒有症狀、影像沒有可疑特徵：可以考慮積極追蹤</li><li><b>2 公分以上</b>、G2 以上、持續長大、胰管擴張或有淋巴結：手術（部分胰臟切除加淋巴結廓清）</li><li>年輕、多發或有家族史：想到 MEN1、VHL 等遺傳症候群</li></ul>'},
+ {t:'小腸（迴腸）：原發很小，卻常先轉移',k:'dz',on:['si','liv'],tu:['si','liv'],h:[1.2,2],lv:[0,2,1],
+  flows:[['si2liv','s',2]],
+  chips:[['si','腸繫膜纖維化、淋巴結團塊','up'],['liv','診斷時常已肝轉移','up']],
+  d:'<ul><li>多在<b>迴腸末端</b>，常多發；原發腫瘤常只有 1–2 公分</li><li>但很早轉移到<b>腸繫膜淋巴結</b>，引起周圍<b>纖維化</b>：腸子被拉扯扭結，造成腸阻塞或腸缺血</li><li>診斷時常已經<b>肝轉移</b></li><li>分泌<b>血清素</b>；有肝轉移後才出現類癌症候群（C 分頁）</li></ul><p>即使已經轉移，切除原發腫瘤與腸繫膜淋巴結仍常被考慮，以避免日後腸阻塞。</p>'},
+ {t:'闌尾與直腸：多半小、可以切乾淨',k:'dz',on:['app'],tu:['app'],h:[0.7,1],lv:[-1,-1,0],
+  flows:[],
+  chips:[['app','闌尾 > 2 cm：補右側結腸切除','info'],['app','直腸 < 1 cm：內視鏡切除','info']],
+  d:'<ul><li><b>闌尾</b>：多在闌尾切除後的病理才發現；小於 2 公分而且切除完整，單純闌尾切除通常就夠；<b>大於 2 公分</b>或切不乾淨，才補做右側結腸切除（ENETS 2023）</li><li><b>直腸</b>：大腸鏡發現的黃色小結節；<b>小於 1 公分</b>多可內視鏡切除；大於 2 公分、侵犯肌層或有淋巴結轉移要手術；1–2 公分依內視鏡超音波個別決定</li></ul><p>直腸 NET 幾乎不會造成類癌症候群。</p>'},
+ {t:'肺：典型與非典型類癌',k:'dz',on:['lung'],tu:['lung'],hl:['腫瘤 cm','核分裂 /2mm²'],hr:[[0,1],[0,2]],h:[2.2,4],lv:[0,1,1],
+  flows:[],
+  chips:[['lung','典型：核分裂 < 2、無壞死','info'],['lung','非典型：2–10 或點狀壞死','up']],
+  d:'<ul><li><b>典型類癌</b>：核分裂小於 2 個／2 mm²、沒有壞死；預後很好</li><li><b>非典型類癌</b>：核分裂 2–10 個，或有點狀壞死；淋巴結轉移較多</li><li>核分裂超過 10 個（常合併大片壞死）：屬於大細胞或小細胞神經內分泌癌</li><li>肺類癌<b>不用 Ki-67</b> 區分典型與非典型</li><li>長在中央氣道：咳嗽、咳血、同一處反覆肺炎；也可能分泌 ACTH 造成庫欣症候群</li></ul><p>年輕、多發的肺或胸腺 NET，要想到 MEN1。</p>'}
+]},
+{id:'syn',n:'C 症候群',s:'類癌症候群與其他',hl:['5-HIAA mg/天','NT-proBNP pg/mL'],hr:[[0,10],[0,125]],lab:['血清素','症狀','心臟'],steps:[
+ {t:'血清素為什麼平常沒事：肝臟把關',k:'phy',on:['si','liv'],tu:['si'],h:[6,80],lv:[1,0,0],
+  flows:[['si2liv','s',2.4]],
+  chips:[['liv','肝臟把血清素分解掉','info']],
+  d:'<ul><li>小腸 NET 分泌的血清素，先經門靜脈到<b>肝臟</b>，被分解成 <b>5-HIAA</b>，進不了全身循環</li><li>所以只有腸道的腫瘤，通常<b>沒有症狀</b></li><li>一旦<b>肝轉移</b>，轉移腫瘤分泌的血清素直接從肝靜脈進入全身 → 出現類癌症候群</li><li>例外：原發在肺、卵巢等不經門靜脈的地方，沒有肝轉移也可能有症狀</li></ul>'},
+ {t:'類癌症候群：潮紅、腹瀉、喘',k:'dz',on:['si','liv','skin','heart','lung'],tu:['si','liv'],h:[120,90],lv:[2,2,0],
+  flows:[['si2liv','s',1.4],['liv2skin','s',2.8],['liv2heart','s',2.2]],
+  chips:[['skin','乾性潮紅：臉、上胸','up'],['si','水瀉、腹絞痛','up'],['liv','肝轉移是出口','up']],
+  d:'<ul><li><b>潮紅</b>：突然的臉部、上胸部發紅發熱，通常不流汗，數十秒到數分鐘；酒精、壓力、某些食物會誘發</li><li><b>腹瀉</b>：水瀉、腹絞痛</li><li><b>支氣管痙攣</b>：喘、喘鳴</li><li>長期：皮膚微血管擴張、<b>菸鹼酸缺乏</b>（色胺酸被拿去做血清素：皮膚炎、腹瀉、失智）</li></ul><p>確認：尿液 5-HIAA 明顯升高（D 分頁）。</p>'},
+ {t:'類癌心臟病：右邊的瓣膜壞掉',k:'dz',on:['heart','liv','lung'],tu:['liv'],h:[150,1800],lv:[2,0,2],
+  flows:[['liv2heart','s',2.6],['heart2lung','s',1.4]],
+  chips:[['heart','三尖瓣逆流、肺動脈瓣狹窄','up'],['lung','肺分解血清素，左心少受影響','info']],
+  d:'<ul><li>長期高血清素讓<b>右側瓣膜</b>長出纖維斑塊：<b>三尖瓣逆流</b>、肺動脈瓣狹窄或逆流 → 右心衰竭（腳腫、腹水、疲倦）</li><li>血液經過<b>肺臟</b>時血清素被分解，所以左側瓣膜通常沒事；有卵圓孔未閉合、或原發在肺時例外</li><li>是類癌症候群預後變差的主因之一</li><li>篩檢：<b>NT-proBNP</b> 加上<b>心臟超音波</b>；嚴重時要做瓣膜置換</li></ul>'},
+ {t:'類癌危象：麻醉與手術的風險',k:'dz',on:['liv','heart','skin'],tu:['liv'],rx:['liv'],h:[200,900],lv:[2,2,1],
+  flows:[['liv2skin','s',3.2],['liv2heart','s',3]],
+  chips:[['liv','麻醉、手術、栓塞、切片誘發','up'],['hub','預防：手術期間給 octreotide','drug']],
+  d:'<ul><li>腫瘤一次釋放大量荷爾蒙：嚴重潮紅、<b>血壓驟降</b>（或飆高）、心律不整、支氣管痙攣</li><li>誘發：麻醉、手術碰觸腫瘤、肝臟局部治療、切片，偶爾是 PRRT</li><li>有類癌症候群的人，手術與治療前後要給<b>體抑素類似物</b>預防（常用 octreotide 靜脈連續滴注）</li><li>發生時：加大 octreotide、補充水分；傳統上避免兒茶酚胺類升壓藥（可能刺激更多荷爾蒙釋放）</li></ul>'},
+ {t:'其他荷爾蒙症候群',k:'dz',on:['lung','pan','duo'],tu:['lung','pan'],h:[6,80],lv:[0,1,0],
+  flows:[['pan2hub','i',1.6]],
+  chips:[['lung','支氣管類癌 → ACTH → 庫欣','up'],['pan','胰臟 NET → 各種荷爾蒙','up']],
+  d:'<ul><li><b>異位 ACTH</b>：支氣管類癌、胸腺 NET、胰臟 NET 都可能分泌 ACTH → 庫欣症候群，常進展快、低血鉀明顯</li><li><b>低血糖</b>：胰島素瘤</li><li><b>大量水瀉</b>：VIP 瘤</li><li><b>肢端肥大</b>：少數 NET 分泌 GHRH</li><li><b>高血鈣</b>：少數分泌 PTHrP</li></ul><p>同一個病人的腫瘤，可能在病程中改變分泌的荷爾蒙。</p>'}
+]},
+{id:'dx',n:'D 診斷',s:'生化、影像、病理',hl:['5-HIAA mg/天','CgA ×上限'],hr:[[0,10],[0,1]],lab:['5-HIAA','CgA','體抑素受體'],steps:[
+ {t:'5-HIAA：類癌症候群的指標',k:'dx',on:['si','liv'],tu:['si','liv'],h:[85,4],lv:[2,1,0],
+  flows:[['si2liv','s',1.6]],
+  chips:[['hub','檢查前 3 天避開特定食物','info']],
+  d:'<ul><li>血清素的代謝物；收集 <b>24 小時尿液</b>（也有血漿檢驗）</li><li>有類癌症候群時通常<b>明顯升高</b>；也用來追蹤治療</li><li>檢查前約 3 天避開富含血清素的食物：香蕉、鳳梨、奇異果、酪梨、核桃、番茄、茄子等；部分藥物也會干擾</li><li>胃、十二指腸、肺的 NET 多半不會升高</li></ul>'},
+ {t:'嗜鉻顆粒蛋白 A：最常見的陷阱',k:'dx',on:['sto','pan'],h:[8,6],lv:[0,2,0],
+  flows:[],
+  chips:[['sto','PPI、萎縮性胃炎 → 假性升高','up'],['hub','不能單靠它診斷','info']],
+  d:'<ul><li>大多數 NET 會分泌<b>嗜鉻顆粒蛋白 A（CgA）</b>，但它<b>不專一</b></li><li>假性升高：<b>使用 PPI</b>（最常見）、萎縮性胃炎、腎功能不全、心衰竭、肝硬化、發炎性腸病</li><li>不適合篩檢或單獨診斷；一開始就升高的病人，可以拿來追蹤</li><li>若能安全停 PPI，結果較可靠（胃泌素瘤病人不要自行停藥）</li></ul><p>2025 MEN1 指引也已不再建議例行驗 CgA。</p>'},
+ {t:'影像：找原發、找轉移',k:'dx',on:['pan','si','liv','lung'],tu:['pan','si','liv'],h:[85,4],lv:[0,0,2],
+  flows:[],
+  chips:[['liv','肝轉移：MRI 最清楚','info'],['hub','體抑素受體 PET 分期','info']],
+  d:'<ul><li><b>CT、MRI</b>：基本分期；肝轉移以<b>肝臟 MRI</b>最敏感</li><li><b>體抑素受體 PET</b>（<sup>68</sup>Ga-DOTATATE 等）：對分化良好的 NET 最敏感，用來找原發、找轉移，也決定能不能做 PRRT</li><li><b>內視鏡超音波</b>：胰臟小腫瘤，以及十二指腸、胃與直腸 NET 的深度</li><li>小腸原發常很小，影像找不到，有時要靠膠囊內視鏡或手術探查</li></ul>'},
+ {t:'雙示蹤 PET：FDG 亮代表比較兇',k:'dx',on:['pan','liv'],tu:['pan','liv'],hl:['Ki-67 %','CgA ×上限'],hr:[[0,3],[0,1]],h:[25,3],lv:[0,0,-1],
+  flows:[],
+  chips:[['liv','受體暗、FDG 亮：分化差','up']],
+  d:'<ul><li>分化良好、長得慢 → 體抑素受體多 → 體抑素受體 PET 亮、<b>FDG PET 暗</b></li><li>長得快、分化差 → 受體少、葡萄糖代謝高 → <b>FDG PET 亮</b></li><li>G2 偏高、G3，或進展很快的病人，兩種 PET 一起看：FDG 亮而體抑素受體暗的病灶預後較差，也比較不適合 PRRT</li></ul>'},
+ {t:'病理與多專科',k:'dx',on:ALL,h:[8,2],lv:[0,0,0],
+  flows:[],
+  chips:[['hub','切片：分化、Ki-67、核分裂','info']],
+  d:'<ul><li>一定要有<b>組織</b>：確認是神經內分泌腫瘤（chromogranin、synaptophysin、INSM1 等染色）、分化程度、Ki-67 與核分裂數</li><li>依部位做分期，記錄有無肝轉移、佔肝臟多少</li><li>胃泌素瘤、多發胰臟 NET、年輕的胰臟 NET、胸腺 NET：考慮遺傳性症候群的基因檢測</li><li>由內分泌、腸胃、外科、腫瘤、核醫、放射、病理組成的<b>多專科團隊</b>一起決定治療</li></ul><p><a class="xref" href="'+MEN+'#t3s3">→ MEN，動起來：什麼時候要送基因檢測</a></p>'}
+]},
+{id:'tx',n:'E 治療',s:'手術、SSA、PRRT、標靶',hl:['Ki-67 %','5-HIAA mg/天'],hr:[[0,3],[0,10]],lab:['腫瘤負擔','症狀','副作用'],steps:[
+ {t:'能切就切',k:'drg',on:['pan','si','app','sto','duo'],tu:['pan','si'],rx:['pan','si'],h:[2,8],lv:[-2,-1,0],
+  flows:[],
+  chips:[['pan','局部：手術是唯一根治','drug'],['si','切原發＋腸繫膜淋巴結','drug']],
+  d:'<ul><li>局部的 NET：<b>手術切除</b>是唯一可能根治的方法</li><li>小的胃、十二指腸、直腸 NET：內視鏡切除</li><li>小腸 NET：切除原發與腸繫膜淋巴結，同時檢查整段小腸（常多發）</li><li>肝轉移若能切除大部分，經多專科評估可考慮手術減積</li><li>術後依分級與分期定期追蹤，復發可能在很多年後</li></ul>'},
+ {t:'體抑素類似物：症狀與生長一起控制',k:'drg',on:['si','liv','pan'],tu:['si','liv','pan'],rx:['si','liv','pan'],h:[2,40],lv:[-1,-2,1],
+  flows:[['liv2skin','s',.6]],
+  chips:[['liv','Octreotide LAR、lanreotide','drug']],
+  d:'<ul><li><b>Octreotide LAR、lanreotide</b>：每月一次長效注射</li><li>控制<b>類癌症候群</b>的潮紅與腹瀉</li><li>延緩腫瘤生長：PROMID（中腸）、CLARINET（胃腸胰）試驗證實；適合體抑素受體陽性、分化良好、長得較慢的 NET 作為第一線</li><li>副作用：脂肪便、腹脹、<b>膽結石</b>、血糖變化</li></ul><p>症狀突然加重時，可以加打短效 octreotide。</p>'},
+ {t:'PRRT：放射性藥物送到受體上',k:'drg',on:['si','liv'],tu:['liv'],rx:['si','liv'],h:[12,30],lv:[-1,-1,1],
+  flows:[],
+  chips:[['liv','177Lu-DOTATATE','drug'],['hub','保護腎臟、追蹤骨髓','info']],
+  d:'<ul><li><b><sup>177</sup>Lu-DOTATATE</b>：體抑素類似物接上放射性鎦，被腫瘤吸收後從內部照射</li><li>前提：<b>體抑素受體 PET 陽性</b>，而且主要病灶都要亮</li><li><b>NETTER-1</b>：中腸 NET 在體抑素類似物治療下惡化後使用，明顯延長無惡化存活</li><li><b>NETTER-2</b>：Ki-67 10–55% 的 G2／G3 胃腸胰 NET <b>第一線</b>使用，無惡化存活中位數 22.8 個月，對照組 8.5 個月</li><li>副作用：噁心、骨髓抑制、腎功能（同時輸注胺基酸保護）；少數日後發生骨髓分化不良或白血病</li></ul>'},
+ {t:'標靶藥：everolimus、sunitinib、cabozantinib',k:'drg',on:['pan','si','lung'],tu:['pan','si','lung'],rx:['pan','si','lung'],h:[8,20],lv:[-1,0,1],
+  flows:[],
+  chips:[['pan','sunitinib 只用在胰臟','drug'],['si','everolimus：胰、腸、肺','drug']],
+  d:'<ul><li><b>Everolimus</b>（mTOR 抑制劑）：胰臟 NET（RADIANT-3），以及無功能的胃腸道與肺 NET（RADIANT-4）</li><li><b>Sunitinib</b>（多重激酶抑制劑）：<b>只</b>用在胰臟 NET</li><li><b>Cabozantinib</b>：CABINET 試驗；2025 年美國 FDA 核准用於曾接受治療的胰臟與胰臟外 NET</li><li>常見副作用：口腔炎、高血糖、肺炎（everolimus）；高血壓、手足症候群、腹瀉（sunitinib、cabozantinib）</li></ul>'},
+ {t:'化療與肝臟局部治療',k:'drg',on:['pan','liv'],tu:['pan','liv'],rx:['pan','liv'],h:[15,30],lv:[-1,0,1],
+  flows:[],
+  chips:[['pan','CAPTEM：胰臟 NET','drug'],['liv','栓塞、射頻燒灼、Y-90','drug']],
+  d:'<ul><li><b>CAPTEM</b>（capecitabine＋temozolomide）：胰臟 NET 反應較好，適合長得較快、或需要腫瘤縮小的人</li><li>小腸 NET 對傳統化療反應差</li><li><b>肝臟局部治療</b>：以肝轉移為主時，可用經動脈栓塞（TAE、TACE）、射頻燒灼、放射性栓塞（Y-90），控制腫瘤與症狀</li><li>做之前要預防類癌危象</li></ul>'},
+ {t:'類癌症候群與心臟的處理',k:'drg',on:['si','liv','skin','heart'],tu:['liv'],rx:['si','heart'],h:[2,60],lv:[-1,-1,0],
+  flows:[['liv2heart','s',.8]],
+  chips:[['si','腹瀉控制不了：telotristat','drug'],['heart','嚴重瓣膜病：換瓣膜','drug']],
+  d:'<ul><li>第一線：<b>體抑素類似物</b></li><li>腹瀉仍控制不好：加 <b>telotristat</b>（抑制色胺酸羥化酶，減少血清素製造）</li><li>避開誘發因子（酒精、大餐、某些食物）；補充<b>菸鹼酸</b></li><li>減少腫瘤量也能改善症狀：PRRT、肝臟局部治療、手術減積</li><li>類癌心臟病：控制血清素、利尿劑；嚴重時<b>瓣膜置換</b>，手術前後同樣要預防類癌危象</li></ul>'},
+ {t:'NEC：走化療，不是 NET 的路線',k:'drg',on:['lung','pan','liv'],tu:['lung','pan','liv'],rx:['lung','pan'],h:[70,8],lv:[2,0,1],
+  flows:[],
+  chips:[['lung','鉑類＋etoposide','drug']],
+  d:'<ul><li>分化不良的神經內分泌癌長得很快，大多診斷時已經轉移</li><li>第一線：<b>鉑類（cisplatin 或 carboplatin）＋ etoposide</b>，和小細胞肺癌類似</li><li>體抑素類似物、PRRT 通常不適用（受體少）</li><li><b>NET G3</b> 的 Ki-67 雖然也大於 20%，但分化良好，治療較接近 NET（例如 PRRT、CAPTEM），不要和 NEC 混為一談</li></ul><p>先確認「分化」，才能選對治療。</p>'}
+]}
+];
+
+var DRUGS=[
+ ['Octreotide LAR、lanreotide','體抑素受體','抑制荷爾蒙、延緩腫瘤生長','體抑素受體陽性、分化良好的 NET；類癌症候群','膽結石、脂肪便、血糖變化'],
+ ['Telotristat','色胺酸羥化酶','減少血清素製造','體抑素類似物控制不了的類癌症候群腹瀉','噁心、腹痛、便祕'],
+ ['<sup>177</sup>Lu-DOTATATE（PRRT）','體抑素受體陽性腫瘤','放射性胜肽受體治療','受體陽性、進展的胃腸胰 NET；G2／G3 第一線（NETTER-2）','骨髓抑制、腎功能、少數骨髓分化不良'],
+ ['Everolimus','mTOR','抑制腫瘤生長訊號','胰臟 NET；無功能的胃腸道、肺 NET','口腔炎、高血糖、肺炎'],
+ ['Sunitinib','多重激酶（VEGFR 等）','抑制血管新生','胰臟 NET','高血壓、手足症候群、腹瀉'],
+ ['Cabozantinib','多重激酶（VEGFR、MET 等）','抑制血管新生與腫瘤生長','曾治療過的胰臟與胰臟外 NET（美國 FDA 2025）','高血壓、腹瀉、疲倦、手足症候群'],
+ ['Capecitabine＋temozolomide（CAPTEM）','DNA','口服化療','胰臟 NET','骨髓抑制、噁心'],
+ ['Cisplatin 或 carboplatin＋etoposide','DNA','化療','神經內分泌癌（NEC）','骨髓抑制、腎毒性（cisplatin）'],
+ ['Diazoxide','胰臟 β 細胞','抑制胰島素分泌','胰島素瘤','水腫、多毛'],
+ ['高劑量 PPI','胃壁細胞','抑制胃酸','胃泌素瘤','不可自行驟停']
+];
+/* 表格列 → [分頁, 步驟]；順序同 .cmp 內的 tbody */
+var GOMAP=[
+ [[0,2],[0,2],[0,2],[0,1],[0,1]],
+ [[1,0],[1,1],[1,1],[1,2],[1,3],[1,4],[1,5],[1,6],[1,6],[1,7]],
+ [[4,1],[4,5],[4,2],[4,3],[4,3],[4,3],[4,4],[4,6],[1,3],[1,1]]
+];
+
+/* ================= 畫面 ================= */
+var axi=0,steps=AX[0].steps,idx=0,cur=[0,0],tgt=[0,0],hubKey='',hr=AX[0].hr;
+var ttl=$('#ttl'),txt=$('#txt'),cnt=$('#cnt'),where=$('#where'),dots=$('#dots'),chipsG=$('#chips'),partsG=$('#parts');
+var prevB=$('#prev'),nextB=$('#next'),playB=$('#play'),tabs=$('#tabs'),v1=$('#v1'),v2=$('#v2'),hl1=$('#hl1'),hl2=$('#hl2');
+var RM=matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+AX.forEach(function(a,k){var b=document.createElement('button');b.type='button';b.setAttribute('role','tab');b.innerHTML=a.n+'<small>'+a.s+'</small>';b.onclick=function(){stopAuto();setAx(k,0,true)};tabs.appendChild(b)});
+DRUGS.forEach(function(r){var tr=document.createElement('tr');tr.innerHTML='<td><b>'+r[0]+'</b></td><td>'+r[1]+'</td><td>'+r[2]+'</td><td>'+r[3]+'</td><td>'+r[4]+'</td>';$('#tbody').appendChild(tr)});
+
+var mrows=$('#mrows'),MB=[];
+for(var r=0;r<3;r++){
+  var y=556+r*17,g=document.createElementNS(SVGNS,'g');
+  g.innerHTML='<text x="222" y="'+(y+4)+'"></text><rect class="trk" x="276" y="'+(y-4)+'" width="72" height="8" rx="4"/><rect class="bar" x="312" y="'+(y-4)+'" width="0" height="8" rx="4"/><line class="mid" x1="312" x2="312" y1="'+(y-7)+'" y2="'+(y+7)+'"/><text class="v" x="354" y="'+(y+4)+'"></text>';
+  mrows.appendChild(g);MB.push({lab:g.children[0],bar:g.children[2],v:g.children[4]});
+}
+function setMeter(lab,lv){
+  var sym={'-2':'↓↓','-1':'↓','0':'—','1':'↑','2':'↑↑'};
+  for(var r=0;r<3;r++){var v=lv?lv[r]:0,w=Math.abs(v)*18;
+    MB[r].lab.textContent=lab[r];MB[r].bar.setAttribute('x',v<0?312-w:312);MB[r].bar.setAttribute('width',w);
+    MB[r].bar.setAttribute('fill',v>0?'var(--up)':'var(--down)');MB[r].v.textContent=sym[String(v)];
+    MB[r].v.setAttribute('fill',v>0?'var(--up)':v<0?'var(--down)':'var(--mute)')}
+}
+function chip(at,text,cls){
+  var p=AT[at],g=document.createElementNS(SVGNS,'g');g.setAttribute('class','chip '+cls);
+  var t=document.createElementNS(SVGNS,'text');t.textContent=text;t.setAttribute('text-anchor','middle');g.appendChild(t);chipsG.appendChild(g);
+  var w=t.getComputedTextLength()+18,h=22,x=Math.max(4+w/2,Math.min(596-w/2,p[0]));
+  var rr=document.createElementNS(SVGNS,'rect');rr.setAttribute('x',x-w/2);rr.setAttribute('y',p[1]-h/2);rr.setAttribute('width',w);rr.setAttribute('height',h);
+  g.insertBefore(rr,t);t.setAttribute('x',x);t.setAttribute('y',p[1]+4.5);return g;
+}
+function layoutChips(list){chipsG.textContent='';var used={};
+  list.forEach(function(c,k){var n=used[c[0]]||0;used[c[0]]=n+1;var g=chip(c[0],c[1],c[2]);
+    if(n)g.setAttribute('transform','translate(0,'+((STACK[c[0]]||1)*n*26)+')');g.style.animationDelay=(k*80)+'ms'})}
+
+function setAx(k,i,sync){axi=k;steps=AX[k].steps;[].forEach.call(tabs.children,function(b,j){b.setAttribute('aria-selected',j===k)});go(i||0,sync)}
+function go(i,sync){
+  idx=Math.max(0,Math.min(steps.length-1,i));
+  var a=AX[axi],s=steps[idx];
+  var kt={phy:'機轉',dx:'診斷',dz:'疾病',drg:'治療'}[s.k];
+  ttl.innerHTML='<span class="kind '+s.k+'">'+kt+'</span>'+s.t;txt.innerHTML=s.d;
+  cnt.textContent=(idx+1)+' / '+steps.length;where.innerHTML='<b>'+a.n+'</b> · '+a.s;
+  var tu=s.tu||[];
+  ORG.forEach(function(o){var e=$('#o-'+o);e.classList.toggle('on',s.on.indexOf(o)>=0);e.classList.toggle('dim',s.on.indexOf(o)<0);
+    e.classList.toggle('tum',tu.indexOf(o)>=0);$('#r-'+o).classList.toggle('on',(s.rx||[]).indexOf(o)>=0)});
+  var hl=s.hl||a.hl;hr=s.hr||a.hr;
+  if(hl.join()!==hubKey){hubKey=hl.join();hl1.textContent=hl[0];hl2.textContent=hl[1];cur=s.h.slice();DEC=hl.map(function(x){return x.indexOf('血鈣')===0})}
+  layoutChips(s.chips||[]);setFlows(s.flows||[]);setMeter(s.lab||a.lab,s.lv);tgt=s.h.slice();
+  prevB.disabled=idx===0&&axi===0;
+  nextB.textContent=idx<steps.length-1?'下一步 →':(axi<AX.length-1?'下一個分頁 →':'回到開頭 ↺');
+  dots.textContent='';
+  steps.forEach(function(st,k){var b=document.createElement('button');b.type='button';b.setAttribute('aria-label','第 '+(k+1)+' 步');if(k===idx)b.setAttribute('aria-current','true');b.onclick=function(){stopAuto();go(k,true)};dots.appendChild(b)});
+  afterStep(s,sync);
+}
+function next(sync){if(idx<steps.length-1)return go(idx+1,sync);setAx(axi<AX.length-1?axi+1:0,0,sync)}
+function prev(sync){if(idx>0)return go(idx-1,sync);if(axi>0)setAx(axi-1,AX[axi-1].steps.length-1,sync)}
+prevB.onclick=function(){stopAuto();prev(true)};
+nextB.onclick=function(){stopAuto();next(true)};
+document.addEventListener('keydown',function(e){if(e.target.closest&&e.target.closest('input,textarea'))return;
+  if(e.key==='ArrowRight'){stopAuto();next(true)}else if(e.key==='ArrowLeft'){stopAuto();prev(true)}});
+var sx=null,sy=null,map=$('#map');
+map.addEventListener('touchstart',function(e){sx=e.touches[0].clientX;sy=e.touches[0].clientY},{passive:true});
+map.addEventListener('touchend',function(e){if(sx==null)return;var dx=e.changedTouches[0].clientX-sx,dy=e.changedTouches[0].clientY-sy;if(Math.abs(dx)>40&&Math.abs(dx)>Math.abs(dy)){stopAuto();dx<0?next(true):prev(true)}sx=null},{passive:true});
+
+/* 粒子＋數字 */
+var P={},flows=[],parts=[],last=0;
+[].forEach.call(document.querySelectorAll('#paths path'),function(p){P[p.id.slice(2)]={el:p,len:p.getTotalLength()}});
+function setFlows(f){flows=f.map(function(x){return {p:P[x[0]],c:COL[x[1]],r:x[2],acc:Math.random()}}).filter(function(x){return x.p})}
+function spawn(f){var c=document.createElementNS(SVGNS,'circle');c.setAttribute('r',f.c===COL.c?4.2:3.4);c.setAttribute('fill',f.c);partsG.appendChild(c);parts.push({el:c,p:f.p,t:0,d:1700+Math.random()*500})}
+function col(v,lo,hi){return v>hi?'var(--up)':v<lo?'var(--down)':'var(--ink)'}
+var DEC=[false,false];   /* 血鈣永遠顯示一位小數（10.8 與 11.2 意義不同） */
+function fm(v,j){return v<10||DEC[j]?v.toFixed(1):Math.round(v)}
+function tick(ts){
+  var dt=last?Math.min(100,ts-last):16;last=ts;
+  if(!RM){flows.forEach(function(f){f.acc+=f.r*dt/1000;while(f.acc>=1){f.acc-=1;spawn(f)}});
+    for(var k=parts.length-1;k>=0;k--){var q=parts[k];q.t+=dt;var u=q.t/q.d;if(u>=1){q.el.remove();parts.splice(k,1);continue}
+      var pt=q.p.el.getPointAtLength(u*q.p.len);q.el.setAttribute('cx',pt.x);q.el.setAttribute('cy',pt.y);q.el.setAttribute('opacity',u<.1?u*10:u>.85?(1-u)/.15:1)}}
+  for(var j=0;j<2;j++){if(Math.abs(cur[j]-tgt[j])>Math.max(.01,Math.abs(tgt[j])*.002))cur[j]+=(tgt[j]-cur[j])*Math.min(1,dt/350);else cur[j]=tgt[j]}
+  v1.textContent=fm(cur[0],0);v2.textContent=fm(cur[1],1);
+  v1.setAttribute('fill',col(cur[0],hr[0][0],hr[0][1]));v2.setAttribute('fill',col(cur[1],hr[1][0],hr[1][1]));
+  requestAnimationFrame(tick);
+}
+requestAnimationFrame(tick);
+
+/* 自動播放＋語音朗讀（Web Speech API，用裝置內建語音） */
+var autoOn=false,autoT=0,narr=false,sid=0,voice=null;
+var KEEP=[];
+var SS=window.speechSynthesis,sayB=$('#say');
+function pickVoice(){
+  if(!SS)return;var vs=SS.getVoices();if(!vs.length)return;
+  var pref=['zh-TW','zh_TW','zh-Hant','zh-HK','zh-CN','zh'];
+  for(var k=0;k<pref.length&&!voice;k++){voice=vs.filter(function(v){return v.lang.replace('_','-').indexOf(pref[k].replace('_','-'))===0})[0]||null}
+}
+if(SS){pickVoice();if('onvoiceschanged' in SS)SS.onvoiceschanged=pickVoice}else{sayB.hidden=true}
+function plain(s){
+  var t=s.t+'。'+s.d.replace(/<\/(li|p|div)>/g,'。').replace(/<[^>]+>/g,'');
+  var el=document.createElement('textarea');el.innerHTML=t;t=el.value;
+  [[/177Lu-DOTATATE/g,'鎦 177 DOTATATE'],[/68Ga-DOTATATE/g,'鎵 68 DOTATATE'],[/mg\/dL/g,'毫克每公合'],[/pg\/mL/g,'皮克每毫升'],[/µU\/mL/g,'微單位每毫升'],[/mg\/天/g,'毫克每天'],[/\/2mm²/g,'每 2 平方毫米'],[/2 mm²/g,'2 平方毫米'],
+   [/5-HIAA/g,'5 H I A A'],[/NT-proBNP/g,'N T pro B N P'],[/Ki-67/g,'K i 67'],[/NETTER-(\d)/g,'NETTER $1'],[/RADIANT-(\d)/g,'RADIANT $1'],[/MEN1/g,'MEN 1'],[/Y-90/g,'釔 90'],[/G(\d)/g,'G $1'],
+   [/\bNET\b/g,'N E T'],[/\bNEC\b/g,'N E C'],[/\bNEN\b/g,'N E N'],[/MiNEN/g,'M i N E N'],[/\bCgA\b/g,'C g A'],[/\bPPI\b/g,'P P I'],[/\bSSA\b/g,'S S A'],[/\bPRRT\b/g,'P R R T'],[/\bPET\b/g,'P E T'],[/\bFDG\b/g,'F D G'],[/\bMRI\b/g,'M R I'],[/\bCT\b/g,'C T'],[/\bECL\b/g,'E C L'],[/\bACTH\b/g,'A C T H'],[/\bGHRH\b/g,'G H R H'],[/PTHrP/g,'P T H r P'],[/\bVIP\b/g,'V I P'],[/\bVHL\b/g,'V H L'],[/\bTACE\b/g,'T A C E'],[/\bTAE\b/g,'T A E'],[/CAPTEM/g,'CAP TEM'],[/\bENETS\b/g,'E N E T S'],[/\bWHO\b/g,'W H O'],[/\bFDA\b/g,'F D A'],[/\bmTOR\b/g,'m TOR'],[/\bINSM1\b/g,'INSM 1'],[/\bB12\b/g,'B 12'],
+   [/≥/g,'大於等於'],[/≤/g,'小於等於'],[/×/g,'乘'],
+   [/α/g,'阿法'],[/β/g,'貝他'],[/↑↑/g,'大幅增加'],[/↓↓/g,'大幅減少'],[/↑/g,'增加'],[/↓/g,'減少'],[/→/g,'，接著'],[/＋/g,'和'],[/±/g,'加或不加'],[/(\d)\s*–\s*(\d)/g,'$1到$2'],[/–/g,'到'],[/</g,'小於'],[/>/g,'大於'],[/[／\/]/g,'、'],[/\s+/g,' '],[/[。，]\s*[。，]+/g,'。']]
+   .forEach(function(r){t=t.replace(r[0],r[1])});
+  return t;
+}
+function chunks(t){
+  var out=[];(t.match(/[^。！？；]+[。！？；]?/g)||[]).forEach(function(x){x=x.trim();if(!x||x==='。')return;
+    while(x.length>110){var cut=x.lastIndexOf('，',110);cut=cut>20?cut+1:110;out.push(x.slice(0,cut));x=x.slice(cut)}
+    if(x)out.push(x)});
+  return out;
+}
+function stopNarr(){sid++;if(SS&&(SS.speaking||SS.pending))SS.cancel()}
+function speak(text,done,sync){
+  var busy=SS.speaking||SS.pending;
+  stopNarr();var my=sid,cs=chunks(text),i=0;
+  function nx(){
+    if(my!==sid)return;
+    if(i>=cs.length){done&&done();return}
+    var u=new SpeechSynthesisUtterance(cs[i++]);u.lang=voice?voice.lang:'zh-TW';if(voice)u.voice=voice;u.rate=1;
+    u.onend=function(){if(my===sid)nx()};
+    u.onerror=function(e){if(my===sid&&e.error!=='interrupted'&&e.error!=='canceled')nx()};
+    // iOS WebKit 會把沒被引用的 utterance 回收掉而不出聲，留住最近幾個
+    KEEP.push(u);if(KEEP.length>6)KEEP.shift();
+    SS.speak(u);
+  }
+  // iOS／Safari 只允許在使用者點擊的同一個呼叫堆疊裡開始朗讀，所以點按鈕時要同步呼叫；
+  // 若剛 cancel 正在唸的句子，WebKit 立刻 speak 可能被吞掉，此時（已解鎖）改延遲
+  if(sync&&!busy)nx();else setTimeout(nx,80);
+}
+function schedule(ms){clearTimeout(autoT);autoT=setTimeout(function(){if(autoOn)next()},ms)}
+function afterStep(s,sync){
+  clearTimeout(autoT);
+  if(narr&&SS){speak(plain(s),function(){if(autoOn)schedule(700)},sync)}
+  else{stopNarr();if(autoOn)schedule(7000)}
+}
+function stopAuto(){autoOn=false;clearTimeout(autoT);playB.textContent='▶ 自動'}
+playB.onclick=function(){if(autoOn)return stopAuto();autoOn=true;playB.textContent='❚❚ 暫停';if(!narr)schedule(7000);else if(!SS.speaking)afterStep(steps[idx],true)};
+sayB.onclick=function(){narr=!narr;sayB.setAttribute('aria-pressed',narr);sayB.textContent=narr?'🔇 停止朗讀':'🔊 朗讀';afterStep(steps[idx],true)};
+document.addEventListener('visibilitychange',function(){if(document.hidden&&narr){stopNarr();stopAuto()}});
+
+var root=document.documentElement;
+try{var th=localStorage.getItem('cim-theme');if(th)root.setAttribute('data-theme',th)}catch(e){}
+$('#theme').onclick=function(){var dark=root.getAttribute('data-theme')?root.getAttribute('data-theme')==='dark':matchMedia('(prefers-color-scheme: dark)').matches;
+  var n=dark?'light':'dark';root.setAttribute('data-theme',n);try{localStorage.setItem('cim-theme',n)}catch(e){}};
+
+setAx(0,0);
+
+/* 表格列 → 跳到對應的動畫步驟（網址 #t分頁s步驟 可直接連結） */
+function stageTop(){var st=document.querySelector('.stage');if(st)st.scrollIntoView({behavior:RM?'auto':'smooth',block:'start'})}
+function setHash(h){try{history.replaceState(null,'',h)}catch(e){}}
+function bindRows(fn){
+  [].forEach.call(document.querySelectorAll('.cmp tbody'),function(tb,ti){
+    [].forEach.call(tb.rows,function(tr,ri){
+      var g=GOMAP[ti]&&GOMAP[ti][ri];if(!g)return;
+      tr.dataset.go=g.join(',');tr.tabIndex=0;tr.setAttribute('role','link');tr.title='看這一段的動畫';
+      tr.cells[0].insertAdjacentHTML('beforeend','<span class="goto">▶ 看動畫</span>');
+      tr.onclick=function(){fn(g[0],g[1])};
+      tr.onkeydown=function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();e.stopPropagation();fn(g[0],g[1])}};
+    });
+  });
+  [].forEach.call(document.querySelectorAll('.cmp .tblw'),function(w){if(w.querySelector('tr[data-go]'))w.insertAdjacentHTML('beforebegin','<p class="gohint">▶ 點表格任一列，直接跳到那一段動畫</p>')});
+}
+function jumpTo(t,s){stopAuto();setAx(t,s,true);stageTop();setHash('#t'+t+'s'+s)}
+bindRows(jumpTo);
+(function(){var m=location.hash.match(/^#t(\d+)s(\d+)$/);if(m&&AX[+m[1]])setAx(+m[1],Math.min(+m[2],AX[+m[1]].steps.length-1),false)})();
+})();
+</script>
+</body>
+</html>
