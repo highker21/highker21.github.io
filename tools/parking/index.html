@@ -67,7 +67,7 @@ footer a{color:var(--mute)}
 .news-body{font-size:16px;line-height:1.5;color:var(--ink);margin:4px 0}
 .news-body summary{cursor:pointer;list-style:none}
 .fare{font-size:17px;font-weight:600;color:var(--fare);margin:3px 0}.fare details{display:inline}.fare summary{display:inline;cursor:pointer;list-style:none}
-.payform{padding:0 16px 8px;display:grid;gap:8px;font-size:16px}.payform input#plate{font:inherit;font-size:20px;letter-spacing:1px;width:100%;padding:8px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink);text-transform:uppercase;box-sizing:border-box}.payrow{display:flex;gap:8px}.payrow select{font:inherit;flex:1;padding:7px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink)}.payrem{font-size:14px;color:var(--mute)}
+.payform{padding:0 16px 8px;display:grid;gap:8px;font-size:16px}.payform input#plate{font:inherit;font-size:20px;letter-spacing:1px;width:100%;padding:8px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink);text-transform:uppercase;box-sizing:border-box}.payrow{display:flex;gap:8px}.payrow select{font:inherit;flex:1;padding:7px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink)}.payrem{font-size:14px;color:var(--mute)}.autoq{display:flex;align-items:center;gap:8px;margin-top:10px;font-size:16px}.autoq input{width:22px;height:22px;margin:0}
 ul#listPay{list-style:none;margin:6px 0 0;padding:0 16px 16px}#listPay li{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin-bottom:8px}.bill{font-size:15px;margin:4px 0;padding-top:4px;border-top:1px dashed var(--line)}
 .more{width:100%;font-weight:700;padding:10px;margin:4px 0 8px}
 .row{display:flex;gap:8px;align-items:center;font-size:16px;margin:5px 0;color:var(--ink)}.tm{font-weight:800;font-variant-numeric:tabular-nums}.sm{font-size:15px;padding:1px 8px;border-radius:6px;flex:none}
@@ -165,6 +165,7 @@ ul#listPay{list-style:none;margin:6px 0 0;padding:0 16px 16px}#listPay li{backgr
   <p class="meta">金鑰只存在這台裝置的這個瀏覽器，不會上傳到我們的伺服器；只會直接送到 TDX 換取通行證。iPhone「加到主畫面」後是另一個獨立空間，要再輸入一次。新北、新竹不填金鑰也能查。</p>
   <label for="cityPick">縣市</label>
   <select id="cityPick"></select>
+  <label class="autoq"><input type="checkbox" id="autoQ"> 打開網頁就自動查詢附近停車</label>
   <div class="row">
     <button id="btnClear">清除金鑰與快取</button>
     <button id="btnClose">取消</button>
@@ -2032,7 +2033,8 @@ $('btnSettings').onclick = () => {
   $('cid').value = store.get('pk_cid') || ''; $('csec').value = store.get('pk_csec') || '';
   $('cityPick').value = store.get('pk_city_pick') || '';
   const saved = store.get('pk_cid') && store.get('pk_csec');
-  $('keyState').textContent = saved ? `已儲存金鑰（Client ID 末 4 碼：${store.get('pk_cid').slice(-4)}）；打開網頁會自動查詢` : '尚未儲存金鑰';
+  $('autoQ').checked = store.get('pk_autoq') === '1';
+  $('keyState').textContent = saved ? `已儲存金鑰（Client ID 末 4 碼：${store.get('pk_cid').slice(-4)}）` : '尚未儲存金鑰';
   dlg.showModal();
 };
 $('btnClose').onclick = () => dlg.close();
@@ -2045,13 +2047,14 @@ $('btnSave').onclick = () => {
   }
   if (id && sec) { store.set('pk_cid', id); store.set('pk_csec', sec); } else { store.del('pk_cid'); store.del('pk_csec'); }
   const city = $('cityPick').value; city ? store.set('pk_city_pick', city) : store.del('pk_city_pick');
+  $('autoQ').checked ? store.set('pk_autoq', '1') : store.del('pk_autoq');
   dlg.close(); status('設定已儲存');
 };
 $('btnClear').onclick = () => {
   for (const k of store.keys()) if (k.startsWith('pk_')) store.del(k);
   for (const k of Object.keys(mem)) delete mem[k];
   idb.clear();
-  $('cid').value = ''; $('csec').value = ''; $('cityPick').value = '';
+  $('cid').value = ''; $('csec').value = ''; $('cityPick').value = ''; $('autoQ').checked = false;
   dlg.close(); status('金鑰與快取已清除');
 };
 $('btnQuery').onclick = () => mode === 'park' ? query() : mode === 'bike' ? queryBike(true) : mode === 'traffic' ? queryTraffic(true) : mode === 'pay' ? (payBusy ? payCancel() : queryPay()) : queryTransit(true);
@@ -2070,8 +2073,10 @@ tick();
 $('sort').onchange = () => { render(); renderBike(); };
 $('btnIntroOk').onclick = () => { store.set('pk_intro', '1'); $('dlgIntro').close(); };
 if (!store.get('pk_intro')) $('dlgIntro').showModal();
-// 已儲存金鑰（或已選過縣市）的使用者：打開就自動查詢
-else if ((store.get('pk_cid') && store.get('pk_csec')) || store.get('pk_city_auto') || store.get('pk_city_pick')) query();
+// 開頁自動查詢預設關閉（老闆 2026-11-11 新群 msg19/21）：設定裡勾「打開網頁就自動查詢」才查
+else if (store.get('pk_autoq') === '1') query();
+// 沒自動查：提示是設定、不是壞掉（B 審建議：原本有金鑰就自動查的人更新後會以為壞了）
+else status('按「查詢附近停車」開始；想打開就自動查，到「設定」勾選');
 setInterval(() => { render(); renderBike(); renderTraffic(); renderTransit(); }, 30000); // 每 30 秒重算「資料過期」
 
 if ('serviceWorker' in navigator && location.protocol === 'https:') navigator.serviceWorker.register('sw.js').catch(() => {});
