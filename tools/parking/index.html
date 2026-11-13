@@ -179,7 +179,7 @@ ul#listPay{list-style:none;margin:6px 0 0;padding:0 16px 16px}#listPay li{backgr
   <p>2. 點停車場可一鍵用 Google 或 Apple 地圖導航。</p>
   <p>3. 停車：新北、新竹不用金鑰；其他縣市、YouBike、路況要 TDX 金鑰——<a href="https://tdx.transportdata.tw/" target="_blank" rel="noopener">到 TDX 官網免費申請</a>，再填到「設定」。</p>
   <p>4. iPhone 可用 Safari「分享 → 加入主畫面」當 App 用；加到主畫面後金鑰要重新輸入一次。</p>
-  <p class="meta">定位只在你的手機上計算距離，不會送到我們的轉送伺服器；地圖圖資與縣市判斷由 OpenStreetMap 提供，會看到你所在的大致範圍。到站分頁查公車時會送出附近站牌的編號（等於透露你大約在哪幾個站牌附近），台鐵／高鐵送出最近一站的代碼。停車分頁按路邊路段的「看每一格」時，會送出那一段的編號（透露你大約在哪條路附近）。選了「我的最愛」地點時不會定位，改用該地點的座標；用地圖上方的搜尋列或地址搜尋新增最愛時，輸入的文字會送到 OpenStreetMap。</p>
+  <p class="meta">定位只在你的手機上計算距離，不會送到我們的轉送伺服器；地圖圖資與縣市判斷由 OpenStreetMap 提供，會看到你所在的大致範圍。到站分頁查公車時會送出附近站牌的編號（等於透露你大約在哪幾個站牌附近），台鐵／高鐵送出最近一站的代碼；高鐵自由座預估是整包下載全國資料，不送任何位置。停車分頁按路邊路段的「看每一格」時，會送出那一段的編號（透露你大約在哪條路附近）。選了「我的最愛」地點時不會定位，改用該地點的座標；用地圖上方的搜尋列或地址搜尋新增最愛時，輸入的文字會送到 OpenStreetMap。</p>
   <div class="row"><button id="btnIntroOk" class="primary">知道了</button></div>
 </dialog>
 
@@ -1426,6 +1426,51 @@ function twClock(s, base = Date.now()){
   return t;
 }
 const stn = n => /站$/.test(n) ? n : n + '站';
+// ---- 高鐵當日自由座等候預估（官網 thsrc.com.tw/t/nrwaittime 的資料檔；老闆 TG187）----
+// 經 Worker → mini 轉送站（官網沒開 CORS）；整包全國資料、不帶任何參數，不透露位置；5 分鐘內不重抓
+// 格式（2026-11-13 實測）：{UpdateTime:"2026/11/13 23:10", Data:[{StationCode, RunDirect:1 南下／0 北上, Hour, BoundStatus:0–5}]}
+const NR_CODE = {南港: 'NanGang', 台北: 'TaiPei', 板橋: 'BanQiao', 桃園: 'TaoYuan', 新竹: 'XinZhu', 苗栗: 'MiaoLi', 台中: 'TaiZhong', 彰化: 'ZhangHua', 雲林: 'YunLin', 嘉義: 'JiaYi', 台南: 'TaiNan', 左營: 'ZuoYing'};
+const NR_LV = {1: ['20 分內', 'ok'], 2: ['20–40 分', 'low'], 3: ['40–60 分', 'full'], 4: ['60–80 分', 'full'], 5: ['80 分以上', 'full']};
+const NR_URL = 'https://www.thsrc.com.tw/t/nrwaittime', NR_HOURS = 4;
+let nrCache = null;
+async function nrLoad(){
+  if (nrCache && Date.now() - nrCache.at < 300000) return nrCache;
+  let r;
+  try { r = await fetch(PROXY + '/thsr/nr', {cache: 'no-store'}); } catch { throw new ApiError('連不上高鐵自由座資料', 'network'); }
+  if (r.status !== 200) throw new ApiError(`高鐵自由座資料暫時無法取得（${r.status}）`);
+  let j; try { j = JSON.parse(await r.text()); } catch { throw new ApiError('高鐵自由座資料格式異常'); }
+  if (!j || typeof j !== 'object' || !Array.isArray(j.Data)) throw new ApiError('高鐵自由座資料格式異常');
+  const m = /^(\d{4})\/(\d{1,2})\/(\d{1,2}) (\d{1,2}):(\d{2})$/.exec(String(j.UpdateTime ?? '').trim());
+  const upd = m ? Date.parse(`${m[1]}-${m[2].padStart(2, '0')}-${m[3].padStart(2, '0')}T${m[4].padStart(2, '0')}:${m[5]}:00+08:00`) : NaN;
+  const rows = new Map();   // `${code}|${dir}|${hour}` → 等級
+  for (const x of j.Data) {
+    if (!x || typeof x !== 'object') continue;
+    const code = String(x.StationCode ?? ''), dir = String(x.RunDirect ?? ''), h = Number(x.Hour), lv = Number(x.BoundStatus);
+    if ((dir === '0' || dir === '1') && Number.isInteger(h) && h >= 0 && h <= 23 && Number.isInteger(lv) && lv >= 0 && lv <= 5) rows.set(`${code}|${dir}|${h}`, lv);
+  }
+  nrCache = {at: Date.now(), upd, rows};
+  return nrCache;
+}
+function nrBlock(name, nr, err, now){
+  const code = NR_CODE[String(name).replace(/臺/g, '台').replace(/站$/, '')];
+  if (!code) return '';
+  const head = '<div class="meta"><b>🎫 自由座等候預估</b>（<a href="' + NR_URL + '" target="_blank" rel="noopener">高鐵官網</a>）</div>';
+  if (err) return head + `<div class="meta">${esc(err)}</div>`;
+  if (!nr) return head + '<div class="meta">更新中…</div>';
+  const hour = new Date(now + 8 * 3600e3).getUTCHours();
+  if (hour < 5) return head + '<div class="meta">高鐵每天 05:10 後才發布當天預估</div>';
+  if (!isFinite(nr.upd) || twDate(nr.upd) !== twDate(now)) return head + '<div class="meta">今天的預估還沒發布，請稍後再查</div>';
+  const dirs = [['1', '南下'], ['0', '北上']].filter(([d]) => [...nr.rows.keys()].some(k => k.startsWith(`${code}|${d}|`)));
+  if (!dirs.length) return head + '<div class="meta">這一站目前沒有預估資料</div>';
+  const chip = lv => { const v = NR_LV[lv]; return v ? `<b class="t-${v[1]} sm">${v[0]}</b>` : '<b class="t-unk sm">無資料</b>'; };
+  let out = '';
+  for (let h = hour, n = 0; h <= 23 && n < NR_HOURS; h++) {
+    if (!dirs.some(([d]) => nr.rows.has(`${code}|${d}|${h}`))) continue;   // 沒有資料的小時（例如 05 時）跳過；B 第 1 輪 Minor 1
+    n++;
+    out +=`<div class="row"><span class="grow">${String(h).padStart(2, '0')} 時</span>${dirs.map(([d, label]) => `<span class="sm">${label}</span> ${chip(nr.rows.get(`${code}|${d}|${h}`))}`).join(' ')}</div>`;
+  }
+  return head + (out || '<div class="meta">今天的營運時段已過</div>') + `<div class="meta">預估排隊時間；高鐵 ${hm(nr.upd)} 更新，以現場為準</div>`;
+}
 const hm = t => new Date(t).toLocaleTimeString('zh-TW', {hour: '2-digit', minute: '2-digit', hour12: false, timeZone: 'Asia/Taipei'});
 async function tget(path, query, auth){
   const text = await proxyGet('/tdx/api/basic' + path + '?' + new URLSearchParams({...query, '$format': 'JSON'}).toString(), {auth, wait: true, progress: rstatus});
@@ -1585,7 +1630,8 @@ function renderTransit(){
     if (!R.st) { empty(`附近 ${RAIL_R / 1000} 公里沒有${label}站`); continue; }
     const list = (R.trains || []).filter(t => t.time !== null && t.time + (t.delay || 0) * 60000 >= now - 60000).sort((a, b) => a.time - b.time).slice(0, 4);
     const note = k === 'thsr' ? '<div class="meta">依時刻表（高鐵沒有即時到站資料）</div>' : R.live ? '<div class="meta">即時看板（含誤點）</div>' : R.trains ? '<div class="meta">依今日時刻表</div>' : '';
-    const body = !R.trains ? `<div class="meta">${R.err ? esc(R.err) : '班次更新中…'}</div>` : (list.length ? list.map(railRow).join('') : '<div class="meta">接下來沒有班次</div>') + note;
+    const body = (!R.trains ? `<div class="meta">${R.err ? esc(R.err) : '班次更新中…'}</div>` : (list.length ? list.map(railRow).join('') : '<div class="meta">接下來沒有班次</div>') + note)
+      + (k === 'thsr' ? nrBlock(R.st[1], T.nr, T.nrErr, now) : '');
     card(icon, `${label} ${stn(R.st[1])}`, R.d, body, [R.st[2], R.st[3]], {m: k, id: R.st[0], name: R.st[1], lat: R.st[2], lon: R.st[3]});
     }
   }
@@ -1704,6 +1750,9 @@ async function queryTransit(manual, fav = null){
       sent = true;
       const ns = F ? favList.map(f => ({s: [f.id, f.name, f.lat, f.lon], d: null})) : nearest(await railStations('thsr_st', '/v2/Rail/THSR/Station', 'StationID,StationName,StationPosition', null, auth, '高鐵'), lat, lon, RAIL_R, 1, 2);
       T.thsr = ns.length ? ns.map(n => ({st: n.s, d: n.d, trains: null})) : [{st: null}];
+      // 自由座預估：不吃 TDX 額度，與時刻表並行；失敗只影響這一塊
+      T.nr = T.nrErr = null;
+      if (ns.length) nrLoad().then(v => { T.nr = v; }, e => { T.nrErr = e.message || '高鐵自由座資料暫時無法取得'; }).then(() => { alive() && renderTransit(); });
       alive() && renderTransit();
       for (const R of T.thsr) { if (!R.st) continue; if (stop()) return;
       try {
