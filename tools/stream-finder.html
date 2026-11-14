@@ -124,7 +124,7 @@ const PLATS = [
   {k:'prime', n:'Prime Video', tmdb:[119], s:q=>`https://www.primevideo.com/search?phrase=${E(q)}`, c:'#1a98ff'},
   {k:'apple', n:'Apple TV', tmdb:[350,2], s:q=>`https://tv.apple.com/tw/search?term=${E(q)}`, c:'#222', copy:1},
   {k:'catchplay', n:'CATCHPLAY+', tmdb:[159], s:q=>`https://www.catchplay.com/tw/search?keyword=${E(q)}`, c:'#f26a21'},
-  {k:'iqiyi', n:'愛奇藝', tmdb:[581], s:q=>`https://www.iq.com/search?query=${E(q)}`, c:'#00be06'},
+  {k:'iqiyi', n:'愛奇藝', sparse:1, tmdb:[581], s:q=>`https://www.iq.com/search?query=${E(q)}`, c:'#00be06'},
   {k:'wetv', n:'WeTV', tmdb:[623], s:q=>`https://wetv.vip/zh-tw/search/${E(q)}`, c:'#ff6022'},
   {k:'linetv', n:'LINE TV', tmdb:[625], s:q=>`https://www.linetv.tw/search?q=${E(q)}`, c:'#06c755'},
   {k:'youtube', n:'YouTube', tmdb:[188], s:q=>`https://www.youtube.com/results?search_query=${E(q)}`, c:'#ff0000'},
@@ -298,7 +298,7 @@ function renderChips() {
   $('chips').innerHTML = `<select id="fY" aria-label="年份">${yOpts.map(([v, n]) => `<option value="${v}"${v === fY ? ' selected' : ''}>${n}</option>`).join('')}</select>`
     + `<select id="fC" aria-label="地區">${cOpts.map(([v, n]) => `<option value="${v}"${v === fC ? ' selected' : ''}>${n}</option>`).join('')}</select>`
     + `<button type="button" class="mode ${pMode === 'or' ? 'on' : ''}" data-m="or">聯集（任一）</button><button type="button" class="mode ${pMode === 'and' ? 'on' : ''}" data-m="and">交集（都有）</button>`
-    + PLATS.filter(p => p.tmdb.length).map(p => `<button type="button" data-p="${p.tmdb[0]}" class="${pickP.includes(String(p.tmdb[0])) ? 'on' : ''}">${esc(p.n)}</button>`).join('');
+    + PLATS.filter(p => p.tmdb.length).map(p => `<button type="button" data-p="${p.tmdb[0]}" class="${pickP.includes(String(p.tmdb[0])) ? 'on' : ''}">${esc(p.n)}${p.sparse ? '（資料極少）' : ''}</button>`).join('');
 }
 $('chips').addEventListener('change', e => {
   if (e.target.id === 'fY') fY = e.target.value;
@@ -339,10 +339,11 @@ async function browse() {
     if (sortBy === 'rating') rs.sort((a, b) => ((b.votes || 0) >= 20) - ((a.votes || 0) >= 20) || (b.vote || 0) - (a.vote || 0));
     else rs.sort((a, b) => (b.pop || 0) - (a.pop || 0));
     const pn = pickP.map(id => BYID[id]?.n).filter(Boolean).join(pMode === 'and' ? ' ＋ ' : '、');
-    const label = view === 'new' ? `近 30 天（${d.from} 起）首映、台灣串流可看`
+    const perTxt = d.per ? `（每個平台各取前 ${+d.per} 部再合併）` : '';
+    const label = view === 'new' ? `近 30 天（${d.from} 起）首映、台灣串流可看${perTxt}`
       : view === 'trending' ? (mtype === 'variety' ? `近兩週（${d.airing_since || ''} 起）有播出、台灣串流可看的熱門` : '本週全球熱門裡，台灣看得到的')
-      : `${pMode === 'and' ? '交集：同時在' : '聯集：在'} ${pn} ${pMode === 'and' ? '都能看' : '任一平台能看'}，${d.from ? (d.to ? `${d.from.slice(0, 4)}${d.from.slice(0, 4) !== d.to.slice(0, 4) ? '–' + d.to.slice(0, 4) : ''} 年` : `${d.from} 之後`) : '不限年份'}${fC ? '、' + ({TW:'台灣',KR:'韓國',JP:'日本',CN:'中國',HK:'香港',TH:'泰國',US:'美國',GB:'英國',FR:'法國',ES:'西班牙',IN:'印度'}[fC] || '') + '製作' : ''}的${sortBy === 'rating' ? '高分' : '熱門'}（共 ${+d.total} 部${d.total > 20 ? '，列前 20' : ''}）`;
-    $('st').innerHTML = `${esc(label)}${CATN[mtype] || ''}：${rs.length} 部${only ? '（只列有我訂閱平台的）' : ''}${d.failed ? `<br><small>⚠️ 有 ${+d.failed} 部片源查詢失敗，清單可能不完整，稍後重新整理再試。</small>` : ''}${sortBy === 'rating' ? `<br><small>評分是 TMDB 使用者評分（滿分 10）${view === 'popular' ? `，只列 ${fC ? 30 : 200} 票以上的作品` : '，在這份清單裡重新排序；20 票以下排在後面'}。</small>` : ''}${view === 'popular' ? '<br><small>註：熱門度是 TMDB 全球熱門度，不是各平台自己的排行榜。交集通常很少，因為多數影集是單一平台獨家。</small>' : ''}${mtype === 'variety' ? '<br><small>註：綜藝用 TMDB 的「實境」「談話」分類，會混到歐美節目（例如摔角）；台灣和韓國綜藝在片源資料裡比較少。</small>' : ''}${view === 'new' ? '<br><small>註：資料沒有「平台上架日」，這裡用首映日期近似；舊片新上架不會出現在這裡。</small>' : ''}`;
+      : `${pMode === 'and' ? '交集：同時在' : '聯集：在'} ${pn} ${pMode === 'and' ? '都能看' : '任一平台能看'}，${d.from ? (d.to ? `${d.from.slice(0, 4)}${d.from.slice(0, 4) !== d.to.slice(0, 4) ? '–' + d.to.slice(0, 4) : ''} 年` : `${d.from} 之後`) : '不限年份'}${fC ? '、' + ({TW:'台灣',KR:'韓國',JP:'日本',CN:'中國',HK:'香港',TH:'泰國',US:'美國',GB:'英國',FR:'法國',ES:'西班牙',IN:'印度'}[fC] || '') + '製作' : ''}的${sortBy === 'rating' ? '高分' : '熱門'}${d.per ? perTxt : `（共 ${+d.total} 部${d.total > 20 ? '，列前 20' : ''}）`}`;
+    $('st').innerHTML = `${esc(label)}${CATN[mtype] || ''}：${rs.length} 部${only ? '（只列有我訂閱平台的）' : ''}${d.failed ? `<br><small>⚠️ 有 ${+d.failed} 部片源查詢失敗，清單可能不完整，稍後重新整理再試。</small>` : ''}${sortBy === 'rating' ? `<br><small>評分是 TMDB 使用者評分（滿分 10）${view === 'popular' ? `，只列 ${fC ? 30 : 200} 票以上的作品` : '，在這份清單裡重新排序；20 票以下排在後面'}。</small>` : ''}${view === 'popular' ? '<br><small>註：熱門度是 TMDB 全球熱門度，不是各平台自己的排行榜。交集通常很少，因為多數影集是單一平台獨家。</small>' : ''}${(view === 'popular' || view === 'new') && (view === 'new' || pickP.includes('581')) ? '<br><small>註：愛奇藝在片源資料裡幾乎沒有收錄（台灣只有 11 部影集、0 部電影，最新是 2021 年），熱門榜和篩選列不出來，請用搜尋頁的「去愛奇藝搜尋」。</small>' : ''}${mtype === 'variety' ? '<br><small>註：綜藝用 TMDB 的「實境」「談話」分類，會混到歐美節目（例如摔角）；台灣和韓國綜藝在片源資料裡比較少。</small>' : ''}${view === 'new' ? '<br><small>註：資料沒有「平台上架日」，這裡用首映日期近似；舊片新上架不會出現在這裡。</small>' : ''}`;
     if (!rs.length) { $('list').innerHTML = `<div class="empty">${view === 'popular' && pMode === 'and' ? '這幾個平台沒有共同的熱門作品，試試少選幾個平台，或改用聯集。' : '目前沒有符合的作品。'}</div>`; return; }
     const tile = (x, i) => `
       <button class="tile" data-i="${i}">
