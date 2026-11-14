@@ -67,8 +67,9 @@ footer a{color:var(--mut)}
 </details>
 
 <footer>
+  <a href="https://www.themoviedb.org/" target="_blank" rel="noopener"><img src="stream-finder-tmdb.svg" alt="TMDB" style="height:12px;vertical-align:middle;margin-right:6px"></a>
   片源資料：<a href="https://www.justwatch.com/tw" target="_blank" rel="noopener">JustWatch</a>（經 TMDB 提供）。
-  <br>This product uses the TMDB API but is not endorsed or certified by <a href="https://www.themoviedb.org/" target="_blank" rel="noopener">TMDB</a>.
+  <br>This website uses TMDB and the TMDB APIs but is not endorsed, certified, or otherwise approved by <a href="https://www.themoviedb.org/" target="_blank" rel="noopener">TMDB</a>.
   <br>片源資料可能有延遲，請以各平台實際頁面為準。myVideo、Hami Video、friDay影音、Ofiii 沒有片源資料，只提供站內搜尋連結。
   <br>工具版本：2026-11-15
 </footer>
@@ -79,13 +80,14 @@ const API = 'https://stream-finder.highker.workers.dev';
 const IMG = 'https://image.tmdb.org/t/p/';
 const E = encodeURIComponent;
 
-// tmdb：TMDB 片源編號；search：站內搜尋網址（2026-11-15 逐家實測）
+// tmdb：TMDB 片源編號；s：站內搜尋網址（2026-11-15 逐家實測）
+// copy：網址帶不進關鍵字（Disney+ 未登入時 /search 回 404；Apple TV 不套用 term）→ 連到站上，點擊時把片名複製到剪貼簿
 const PLATS = [
   {k:'netflix', n:'Netflix', tmdb:[8], s:q=>`https://www.netflix.com/search?q=${E(q)}`, c:'#e50914'},
-  {k:'disney', n:'Disney+', tmdb:[337], s:q=>`https://www.disneyplus.com/search?q=${E(q)}`, c:'#113ccf', login:1},
+  {k:'disney', n:'Disney+', tmdb:[337], s:q=>`https://www.disneyplus.com/`, c:'#113ccf', login:1, copy:1},
   {k:'hbomax', n:'HBO Max', tmdb:[1899], s:q=>`https://play.hbomax.com/search?q=${E(q)}`, c:'#2d1a8c', login:1},
   {k:'prime', n:'Prime Video', tmdb:[119], s:q=>`https://www.primevideo.com/search?phrase=${E(q)}`, c:'#1a98ff'},
-  {k:'apple', n:'Apple TV', tmdb:[350,2], s:q=>`https://tv.apple.com/tw/search?term=${E(q)}`, c:'#222'},
+  {k:'apple', n:'Apple TV', tmdb:[350,2], s:q=>`https://tv.apple.com/tw/search?term=${E(q)}`, c:'#222', copy:1},
   {k:'catchplay', n:'CATCHPLAY+', tmdb:[159], s:q=>`https://www.catchplay.com/tw/search?keyword=${E(q)}`, c:'#f26a21'},
   {k:'iqiyi', n:'愛奇藝', tmdb:[581], s:q=>`https://www.iq.com/search?query=${E(q)}`, c:'#00be06'},
   {k:'wetv', n:'WeTV', tmdb:[623], s:q=>`https://wetv.vip/zh-tw/search/${E(q)}`, c:'#ff6022'},
@@ -141,8 +143,8 @@ $('f').addEventListener('submit', async e => {
     $('st').textContent = rs.length === 1 ? '' : `找到 ${d.results.length} 筆，點選要看的那一部：`;
     $('list').innerHTML = rs.map((x, i) => `
       <button class="item" data-i="${i}">
-        ${x.poster ? `<img src="${IMG}w92${x.poster}" alt="" loading="lazy">` : '<div class="ph"></div>'}
-        <span><b>${esc(x.title)}</b><small>${x.type === 'tv' ? '影集' : '電影'}${x.year ? '・' + x.year : ''}${x.original && x.original !== x.title ? '・' + esc(x.original) : ''}</small></span>
+        ${x.poster ? `<img src="${IMG}w92${esc(x.poster)}" alt="" loading="lazy">` : '<div class="ph"></div>'}
+        <span><b>${esc(x.title)}</b><small>${x.type === 'tv' ? '影集' : '電影'}${x.year ? '・' + esc(x.year) : ''}${x.original && x.original !== x.title ? '・' + esc(x.original) : ''}</small></span>
       </button>`).join('');
     $('list').onclick = ev => { const b = ev.target.closest('.item'); if (b) pick(rs[+b.dataset.i]); };
     if (rs.length === 1) pick(rs[0]);
@@ -167,7 +169,7 @@ async function pick(x) {
 }
 
 function logo(p, tmdbLogo) {
-  return tmdbLogo ? `<img src="${IMG}w92${tmdbLogo}" alt="">` : `<span class="mono" style="background:${p.c}">${esc(p.n.slice(0, 2))}</span>`;
+  return tmdbLogo ? `<img src="${IMG}w92${esc(tmdbLogo)}" alt="">` : `<span class="mono" style="background:${p.c}">${esc(p.n.slice(0, 2))}</span>`;
 }
 
 function card(p, q, kinds, tmdbLogo) {
@@ -176,8 +178,9 @@ function card(p, q, kinds, tmdbLogo) {
     ...kinds.map(k => `<span class="tag ok">${KIND[k]}</span>`),
     isSub ? '<span class="tag sub">已訂閱</span>' : '',
     p.login ? '<span class="tag">需先登入</span>' : '',
+    p.copy ? '<span class="tag">點了會複製片名，到站內貼上</span>' : '',
   ].join('');
-  return `<a class="plat" href="${p.s(q)}" target="_blank" rel="noopener">
+  return `<a class="plat" href="${p.s(q)}" target="_blank" rel="noopener"${p.copy ? ` data-copy="${esc(q)}"` : ''}>
     ${logo(p, tmdbLogo)}
     <span><span class="nm">${esc(p.n)}</span><span class="tags">${tags}</span></span>
     <span class="go">去搜尋 ›</span></a>`;
@@ -199,15 +202,15 @@ function renderDetail(d) {
 
   $('detail').innerHTML = `<div class="detail">
     <div class="head">
-      ${d.poster ? `<img src="${IMG}w185${d.poster}" alt="">` : ''}
+      ${d.poster ? `<img src="${IMG}w185${esc(d.poster)}" alt="">` : ''}
       <div><h2>${esc(d.title)}</h2>
-      <div class="sub">${d.type === 'tv' ? '影集' : '電影'}${d.year ? '・' + d.year : ''}${d.original && d.original !== d.title ? '・' + esc(d.original) : ''}</div>
+      <div class="sub">${d.type === 'tv' ? '影集' : '電影'}${d.year ? '・' + esc(d.year) : ''}${d.original && d.original !== d.title ? '・' + esc(d.original) : ''}</div>
       ${d.link ? `<div class="note"><a href="${esc(d.link)}" target="_blank" rel="noopener">在 TMDB 看完整片源 ›</a></div>` : ''}</div>
     </div>
 
     <h3>✅ 台灣可以看（${have.length + otherList.length}）</h3>
     ${have.length || otherList.length ? `<div class="plats">${have.map(p => card(p, q, [...found[p.k]], logos[p.k])).join('')}${
-      otherList.map(([n, o]) => `<div class="plat"><img src="${IMG}w92${o.logo}" alt=""><span><span class="nm">${esc(n)}</span><span class="tags">${[...o.kinds].map(k => `<span class="tag ok">${KIND[k]}</span>`).join('')}</span></span></div>`).join('')
+      otherList.map(([n, o]) => `<div class="plat"><img src="${IMG}w92${esc(o.logo)}" alt=""><span><span class="nm">${esc(n)}</span><span class="tags">${[...o.kinds].map(k => `<span class="tag ok">${KIND[k]}</span>`).join('')}</span></span></div>`).join('')
     }</div>` : '<div class="empty">片源資料裡沒有台灣的平台。可能還沒上架，也可能是資料還沒更新，可以用下面的連結直接到各平台搜尋。</div>'}
 
     <h3>🔎 在地平台（沒有片源資料，點了直接到站內搜尋）</h3>
@@ -219,6 +222,11 @@ function renderDetail(d) {
     <div class="note">站內搜尋用的關鍵字：「${esc(q)}」。如果平台上用的是別的譯名，請在該平台再換個名字搜。</div>
   </div>`;
 }
+
+document.addEventListener('click', e => {
+  const a = e.target.closest('a[data-copy]');
+  if (a && navigator.clipboard) navigator.clipboard.writeText(a.dataset.copy).catch(() => {});
+});
 
 renderSubs();
 const pre = new URLSearchParams(location.search).get('q');
