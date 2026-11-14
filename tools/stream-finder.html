@@ -92,6 +92,7 @@ footer a{color:var(--mut)}
   <label><input type="checkbox" id="onlySub"> 只看我訂閱的</label>
 </div>
 <div class="chips" id="chips"></div>
+<div class="chips" id="sfil"></div>
 <div class="status" id="st"></div>
 <div class="list" id="list"></div>
 <div id="detail"></div>
@@ -167,33 +168,101 @@ async function api(path) {
 
 let current = null, seq = 0, lastView = () => $('f').requestSubmit();
 
+// ── 搜尋結果的篩選與排序（2026-11-15 老闆 msg 258）──
+let sData = null, sF = { cat: '', y: '', c: '', p: '' };
+const CAT_OF = x => (x.genres || []).includes(16) ? 'anime' : (x.type === 'tv' && (x.genres || []).some(g => g === 10764 || g === 10767)) ? 'variety' : x.type;
+// 地區：影集用 origin_country；電影沒有這個欄位時用原始語言近似（中文無法分台灣、中國、香港）
+const LANG_OF = { TW: ['zh', 'cn'], CN: ['zh', 'cn'], HK: ['zh', 'cn'], KR: ['ko'], JP: ['ja'], TH: ['th'], US: ['en'], GB: ['en'], FR: ['fr'], ES: ['es'], IN: ['hi', 'ta', 'te'] };
+const regionOk = (x, c) => !c || ((x.country || []).length ? x.country.includes(c) : (LANG_OF[c] || []).includes(x.lang));
+function yearOk(x, y) {
+  if (!y) return true;
+  const n = +x.year; if (!n) return false;
+  const Y = new Date().getFullYear();
+  return y === 'this' ? n === Y : y === 'last' ? n === Y - 1 : y === '5' ? n >= Y - 4 : y === '2010s' ? n >= 2010 && n <= 2019 : y === '2000s' ? n >= 2000 && n <= 2009 : y === 'old' ? n < 2000 : true;
+}
+function platOk(x, p) {
+  if (!p) return true;
+  const ids = (x.providers || []).map(v => v.id);
+  if (p === 'any') return ids.length > 0;
+  if (p === 'sub') return ids.some(id => BYID[id] && subs.includes(BYID[id].k));
+  return ids.some(id => BYID[id] && BYID[id].k === p);
+}
+function renderSfil() {
+  const sel = (id, opts, v) => `<select id="${id}">${opts.map(([k, n]) => `<option value="${k}"${k === v ? ' selected' : ''}>${n}</option>`).join('')}</select>`;
+  $('sfil').innerHTML =
+    sel('sCat', [['', '全部類別'], ['movie', '電影'], ['tv', '影集'], ['anime', '動畫'], ['variety', '綜藝']], sF.cat) +
+    sel('sY', [['', '全部年份'], ['this', '今年'], ['last', '去年'], ['5', '近五年'], ['2010s', '2010 年代'], ['2000s', '2000 年代'], ['old', '2000 年以前']], sF.y) +
+    sel('sC', [['', '全部地區'], ['TW', '台灣'], ['KR', '韓國'], ['JP', '日本'], ['CN', '中國'], ['HK', '香港'], ['TH', '泰國'], ['US', '美國'], ['GB', '英國'], ['FR', '法國'], ['ES', '西班牙'], ['IN', '印度']], sF.c) +
+    sel('sP', [['', '全部平台'], ['any', '台灣有串流的'], ['sub', '我訂閱的平台'], ...PLATS.filter(p => p.tmdb.length).map(p => [p.k, p.n])], sF.p);
+}
+$('sfil').addEventListener('change', e => {
+  const m = { sCat: 'cat', sY: 'y', sC: 'c', sP: 'p' }[e.target.id];
+  if (m) { sF[m] = e.target.value; renderSearch(); }
+});
+
 $('f').addEventListener('submit', async e => {
   e.preventDefault();
   const q = $('q').value.trim();
   if (!q) return;
   const my = ++seq;
-  lastView = () => $('f').requestSubmit(); setTab(null);
+  setTab(null); $('sfil').classList.remove('show');
   $('st').textContent = '搜尋中…'; $('list').innerHTML = ''; $('detail').innerHTML = ''; current = null;
   try {
     const d = await api('/search?q=' + E(q));
     if (my !== seq) return;
-    const rs = d.results.slice(0, 12);
-    if (!rs.length) { $('st').textContent = '找不到這個片名。可以試試原文片名，或換個關鍵字。'; return; }
-    $('st').textContent = rs.length === 1 ? '' : `找到 ${d.results.length} 筆，點選要看的那一部：`;
-    $('list').innerHTML = rs.map((x, i) => `
-      <button class="item" data-i="${i}">
-        ${x.poster ? `<img src="${IMG}w92${esc(x.poster)}" alt="" loading="lazy">` : '<div class="ph"></div>'}
-        <span><b>${esc(x.title)}</b><small>${x.type === 'tv' ? '影集' : '電影'}${x.year ? '・' + esc(x.year) : ''}${x.original && x.original !== x.title ? '・' + esc(x.original) : ''}</small></span>
-      </button>`).join('');
-    $('list').onclick = ev => { const b = ev.target.closest('.item'); if (b) pick(rs[+b.dataset.i]); };
-    if (rs.length === 1) pick(rs[0]);
+    sData = d; sF = { cat: '', y: '', c: '', p: '' };
+    if (!d.results.length) { $('st').textContent = '找不到這個片名。可以試試原文片名，或換個關鍵字。'; return; }
+    if (d.results.length === 1) { pick(d.results[0]); return; }
+    renderSfil(); renderSearch();
   } catch (err) {
     if (my === seq) $('st').textContent = '查詢失敗（' + err.message + '），請稍後再試。';
   }
 });
 
+function renderSearch() {
+  if (!sData) return;
+  lastView = () => { setTab(null); renderSearch(); };
+  $('detail').innerHTML = ''; current = null;
+  $('sfil').classList.add('show');
+  const sortBy = $('sortBy').value;
+  const all = sData.results;
+  const rs = all.filter(x => (!sF.cat || CAT_OF(x) === sF.cat) && yearOk(x, sF.y) && regionOk(x, sF.c) && platOk(x, sF.p));
+  if (sortBy === 'rating') rs.sort((a, b) => ((b.votes || 0) >= 20) - ((a.votes || 0) >= 20) || (b.vote || 0) - (a.vote || 0));
+  else rs.sort((a, b) => (b.pop || 0) - (a.pop || 0));
+  $('st').innerHTML = `找到 ${all.length} 筆${rs.length !== all.length ? `，篩選後 ${rs.length} 筆` : ''}，點選要看的那一部：${sData.failed ? `<br><small>⚠️ 有 ${+sData.failed} 部片源查詢失敗，平台圖示可能不完整。</small>` : ''}${sF.c && sF.c !== '' ? '<br><small>註：電影沒有製作國家資料時，用原始語言判斷地區（中文片分不出台灣、中國、香港）。</small>' : ''}`;
+  if (!rs.length) { $('list').innerHTML = '<div class="empty">沒有符合篩選條件的結果，放寬一點試試。</div>'; return; }
+  const CN = { movie: '電影', tv: '影集', anime: '動畫', variety: '綜藝' };
+  const item = (x, i) => {
+    const seen = new Set(), pv = (x.providers || []).filter(v => !seen.has(v.id) && seen.add(v.id));
+    return `<button class="item" data-i="${i}">
+        ${x.poster ? `<img src="${IMG}w92${esc(x.poster)}" alt="" loading="lazy">` : '<div class="ph"></div>'}
+        <span><b>${esc(x.title)}</b><small>${CN[CAT_OF(x)] || ''}${x.year ? '・' + esc(x.year) : ''}${x.vote ? '・⭐ ' + esc(x.vote) : ''}${x.original && x.original !== x.title ? '・' + esc(x.original) : ''}</small>
+        <span class="pv" style="display:flex;gap:3px;margin-top:3px;flex-wrap:wrap">${pv.length ? pv.slice(0, 8).map(v => `<img src="${IMG}w92${esc(v.logo)}" alt="${esc(v.name)}" title="${esc(v.name)}" style="width:20px;height:20px;border-radius:4px${BYID[v.id] && subs.includes(BYID[v.id].k) ? ';outline:2px solid var(--warn);outline-offset:1px' : ''}">`).join('') : '<small>台灣沒有片源資料</small>'}</span></span>
+      </button>`;
+  };
+  if (sortBy === 'plat') {
+    const groups = new Map();
+    rs.forEach((x, i) => {
+      const pv = x.providers || [];
+      if (!pv.length) { if (!groups.has('none')) groups.set('none', { name: '台灣沒有片源資料', items: [] }); groups.get('none').items.push(i); return; }
+      const seen = new Set();
+      pv.forEach(v => { if (seen.has(v.id)) return; seen.add(v.id);
+        const P = BYID[v.id], gk = P ? P.k : 'x:' + v.name;
+        if (!groups.has(gk)) groups.set(gk, { P, name: P ? P.n : v.name, logo: v.logo, items: [] });
+        groups.get(gk).items.push(i); });
+    });
+    const rank = (k, g) => k === 'none' ? 9999 : g.P ? (subs.includes(g.P.k) ? 0 : 100) + PLATS.indexOf(g.P) : 1000;
+    const gs = [...groups.entries()].sort((a, b) => rank(...a) - rank(...b));
+    $('list').innerHTML = gs.map(([, g]) => `<div class="gh">${g.logo ? `<img src="${IMG}w92${esc(g.logo)}" alt="">` : ''}${esc(g.name)}（${g.items.length}）</div><div class="list">${g.items.map(i => item(rs[i], i)).join('')}</div>`).join('');
+  } else {
+    $('list').innerHTML = rs.map((x, i) => item(x, i)).join('');
+  }
+  $('list').onclick = ev => { const b = ev.target.closest('.item'); if (b) pick(rs[+b.dataset.i]); };
+}
+
 async function pick(x) {
   const my = ++seq;
+  $('sfil').classList.remove('show');
   $('list').innerHTML = ''; $('st').textContent = '查詢片源中…';
   try {
     const d = await api(`/providers?type=${x.type}&id=${x.id}`);
@@ -289,7 +358,7 @@ $('tabs').addEventListener('click', e => {
   browse();
 });
 try { const v = localStorage.getItem('sf_sort'); if (['pop', 'rating', 'plat'].includes(v)) $('sortBy').value = v; } catch (e) {}
-$('sortBy').addEventListener('change', () => { try { localStorage.setItem('sf_sort', $('sortBy').value) } catch (e) {} if (view) browse(); });
+$('sortBy').addEventListener('change', () => { try { localStorage.setItem('sf_sort', $('sortBy').value) } catch (e) {} if (view) browse(); else if (sData && !current) renderSearch(); });
 $('onlySub').addEventListener('change', () => { try { localStorage.setItem('sf_onlysub', $('onlySub').checked ? '1' : '0') } catch (e) {} if (view) browse(); });
 let browseCache = {};
 // 平台熱門：預設＝我訂閱且有片源資料的平台；Apple TV 只送 350（2 是租／買商店）
@@ -321,6 +390,7 @@ $('chips').addEventListener('click', e => {
 });
 async function browse() {
   setTab(view);
+  $('sfil').classList.remove('show');
   const my = ++seq; current = null;
   lastView = browse;
   $('detail').innerHTML = ''; $('list').innerHTML = '';
