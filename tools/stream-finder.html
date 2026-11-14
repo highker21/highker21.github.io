@@ -105,7 +105,7 @@ footer a{color:var(--mut)}
   <a href="https://www.themoviedb.org/" target="_blank" rel="noopener"><img src="stream-finder-tmdb.svg" alt="TMDB" style="height:12px;vertical-align:middle;margin-right:6px"></a>
   片源資料：<a href="https://www.justwatch.com/tw" target="_blank" rel="noopener">JustWatch</a>（經 TMDB 提供）。
   <br>This website uses TMDB and the TMDB APIs but is not endorsed, certified, or otherwise approved by <a href="https://www.themoviedb.org/" target="_blank" rel="noopener">TMDB</a>.
-  <br>片源資料可能有延遲，請以各平台實際頁面為準。myVideo、Hami Video、friDay影音、Ofiii、巴哈姆特動畫瘋沒有片源資料，只提供站內搜尋連結。
+  <br>片源資料可能有延遲，請以各平台實際頁面為準。myVideo、Hami Video、friDay影音、Ofiii、巴哈姆特動畫瘋沒有片源資料，只提供站內搜尋連結。動畫作品另列 Anime1（非正版授權）。
   <br>工具版本：2026-11-15
 </footer>
 </main>
@@ -133,6 +133,8 @@ const PLATS = [
   {k:'friday', n:'friDay影音', tmdb:[], s:q=>`https://video.friday.tw/search?key=${E(q)}`, c:'#ff5a00'},
   {k:'ofiii', n:'Ofiii 歐飛', tmdb:[], s:q=>`https://www.ofiii.com/search/${E(q)}`, c:'#7a2cff'},
   {k:'gamer', n:'巴哈姆特動畫瘋', tmdb:[], s:q=>`https://ani.gamer.com.tw/search.php?keyword=${E(q)}`, c:'#00a4b4'},
+  // 老闆 2026-11-15 msg 252 指定加入；查證屬未經授權的動畫站 → 標「非正版」，只在動畫作品（TMDB 類型 16）的詳細頁出現，與正版平台分開
+  {k:'anime1', n:'Anime1', tmdb:[], s:q=>`https://anime1.me/?s=${E(q)}`, c:'#555', unlicensed:1},
 ];
 const BYID = {}; PLATS.forEach(p => p.tmdb.forEach(id => BYID[id] = p));
 // 預設訂閱：老闆 TMDB 帳號 2026-11-15 截圖（11 個 TMDB 片源 → 對應下列平台）
@@ -148,7 +150,7 @@ const $ = id => document.getElementById(id);
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
 function renderSubs() {
-  $('subs').innerHTML = PLATS.map(p => `<label><input type="checkbox" value="${p.k}" ${subs.includes(p.k)?'checked':''}> ${esc(p.n)}</label>`).join('');
+  $('subs').innerHTML = PLATS.filter(p => !p.unlicensed).map(p => `<label><input type="checkbox" value="${p.k}" ${subs.includes(p.k)?'checked':''}> ${esc(p.n)}</label>`).join('');
 }
 $('subs').addEventListener('change', e => {
   const k = e.target.value;
@@ -233,7 +235,9 @@ function renderDetail(d) {
   }
   const order = (a, b) => (subs.includes(b.k) - subs.includes(a.k)) || (PLATS.indexOf(a) - PLATS.indexOf(b));
   const have = PLATS.filter(p => found[p.k]).sort(order);
-  const local = PLATS.filter(p => !p.tmdb.length).sort(order);
+  const local = PLATS.filter(p => !p.tmdb.length && !p.unlicensed).sort(order);
+  const isAnime = (d.genres || []).includes(16);
+  const unl = isAnime ? PLATS.filter(p => p.unlicensed) : [];
   const none = PLATS.filter(p => p.tmdb.length && !found[p.k]).sort(order);
   const otherList = Object.entries(others);
 
@@ -252,6 +256,8 @@ function renderDetail(d) {
 
     <h3>🔎 在地平台（沒有片源資料，點了直接到站內搜尋）</h3>
     <div class="plats">${local.map(p => card(p, q, [], null)).join('')}</div>
+
+    ${unl.length ? `<h3>⚠️ 非正版來源（未經授權，僅供參考）</h3><div class="plats">${unl.map(p => card(p, q, [], null)).join('')}</div>` : ''}
 
     <details><summary>其他平台：片源資料顯示沒有（${none.length}），一樣可以點進去搜</summary>
       <div class="plats" style="margin-top:8px">${none.map(p => card(p, q, [], null)).join('')}</div>
