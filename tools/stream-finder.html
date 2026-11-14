@@ -52,10 +52,14 @@ summary{cursor:pointer;color:var(--mut);font-size:14px}
 .tabs label{font-size:14px;color:var(--mut);display:flex;gap:4px;align-items:center;margin-left:auto}
 .chips{display:none;flex-wrap:wrap;gap:6px;margin:6px 0}
 .chips.show{display:flex}
+.chips select{font-size:14px;padding:5px 8px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--fg)}
 .chips button{background:var(--chip);color:var(--fg);padding:5px 10px;font-size:14px;border:1px solid transparent}
 .chips button.on{background:var(--okbg);color:var(--ok);border-color:var(--ok)}
 .chips .mode{background:transparent;border:1px solid var(--line);color:var(--fg)}
 .chips .mode.on{background:var(--acc);color:var(--btnfg);border-color:var(--acc)}
+.tabs select{font-size:14px;padding:6px 8px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--fg)}
+.gh{font-size:15px;margin:16px 0 8px;display:flex;align-items:center;gap:8px}
+.gh img,.gh .mono{width:24px;height:24px;border-radius:6px;font-size:10px}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
 .tile{background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden;cursor:pointer;padding:0;text-align:left;color:var(--fg);display:flex;flex-direction:column}
 .tile img.pos{width:100%;aspect-ratio:2/3;object-fit:cover;background:var(--chip);display:block}
@@ -79,11 +83,12 @@ footer a{color:var(--mut)}
 <div class="tabs" id="tabs">
   <button type="button" data-v="new">🆕 新上線</button>
   <button type="button" data-v="trending">🔥 本週熱門</button>
-  <button type="button" data-v="popular">📊 平台熱門</button>
+  <button type="button" data-v="popular">🎛️ 篩選</button>
   <button type="button" data-t="movie" class="on">電影</button>
   <button type="button" data-t="tv">影集</button>
   <button type="button" data-t="anime">動畫</button>
   <button type="button" data-t="variety">綜藝</button>
+  <select id="sortBy" aria-label="排序"><option value="pop">排序：熱門</option><option value="rating">排序：評分</option><option value="plat">排序：平台</option></select>
   <label><input type="checkbox" id="onlySub"> 只看我訂閱的</label>
 </div>
 <div class="chips" id="chips"></div>
@@ -100,7 +105,7 @@ footer a{color:var(--mut)}
   <a href="https://www.themoviedb.org/" target="_blank" rel="noopener"><img src="stream-finder-tmdb.svg" alt="TMDB" style="height:12px;vertical-align:middle;margin-right:6px"></a>
   片源資料：<a href="https://www.justwatch.com/tw" target="_blank" rel="noopener">JustWatch</a>（經 TMDB 提供）。
   <br>This website uses TMDB and the TMDB APIs but is not endorsed, certified, or otherwise approved by <a href="https://www.themoviedb.org/" target="_blank" rel="noopener">TMDB</a>.
-  <br>片源資料可能有延遲，請以各平台實際頁面為準。myVideo、Hami Video、friDay影音、Ofiii 沒有片源資料，只提供站內搜尋連結。
+  <br>片源資料可能有延遲，請以各平台實際頁面為準。myVideo、Hami Video、friDay影音、Ofiii、巴哈姆特動畫瘋沒有片源資料，只提供站內搜尋連結。
   <br>工具版本：2026-11-15
 </footer>
 </main>
@@ -127,6 +132,7 @@ const PLATS = [
   {k:'hami', n:'Hami Video', tmdb:[], s:q=>`https://hamivideo.hinet.net/search.do?keyword=${E(q)}`, c:'#0067b1'},
   {k:'friday', n:'friDay影音', tmdb:[], s:q=>`https://video.friday.tw/search?key=${E(q)}`, c:'#ff5a00'},
   {k:'ofiii', n:'Ofiii 歐飛', tmdb:[], s:q=>`https://www.ofiii.com/search/${E(q)}`, c:'#7a2cff'},
+  {k:'gamer', n:'巴哈姆特動畫瘋', tmdb:[], s:q=>`https://ani.gamer.com.tw/search.php?keyword=${E(q)}`, c:'#00a4b4'},
 ];
 const BYID = {}; PLATS.forEach(p => p.tmdb.forEach(id => BYID[id] = p));
 // 預設訂閱：老闆 TMDB 帳號 2026-11-15 截圖（11 個 TMDB 片源 → 對應下列平台）
@@ -276,16 +282,30 @@ $('tabs').addEventListener('click', e => {
   if (b.dataset.v) view = b.dataset.v;
   browse();
 });
+try { const v = localStorage.getItem('sf_sort'); if (['pop', 'rating', 'plat'].includes(v)) $('sortBy').value = v; } catch (e) {}
+$('sortBy').addEventListener('change', () => { try { localStorage.setItem('sf_sort', $('sortBy').value) } catch (e) {} if (view) browse(); });
 $('onlySub').addEventListener('change', () => { try { localStorage.setItem('sf_onlysub', $('onlySub').checked ? '1' : '0') } catch (e) {} if (view) browse(); });
 let browseCache = {};
 // 平台熱門：預設＝我訂閱且有片源資料的平台；Apple TV 只送 350（2 是租／買商店）
-let pMode = 'or';
+let pMode = 'or', fY = 'recent2', fC = '';
+try { fY = localStorage.getItem('sf_fy') || 'recent2'; fC = localStorage.getItem('sf_fc') || ''; } catch (e) {}
 let pickP = PLATS.filter(p => p.tmdb.length && subs.includes(p.k)).map(p => String(p.tmdb[0]));
 try { const v = JSON.parse(localStorage.getItem('sf_pick')); if (Array.isArray(v)) pickP = v.map(String); pMode = localStorage.getItem('sf_pmode') === 'and' ? 'and' : 'or'; } catch (e) {}
 function renderChips() {
-  $('chips').innerHTML = `<button type="button" class="mode ${pMode === 'or' ? 'on' : ''}" data-m="or">聯集（任一）</button><button type="button" class="mode ${pMode === 'and' ? 'on' : ''}" data-m="and">交集（都有）</button>`
+  const Y = new Date().getFullYear();
+  const yOpts = [['recent2', '近兩年'], [String(Y), `今年（${Y}）`], [String(Y - 1), `去年（${Y - 1}）`], [`${Y - 4}-${Y}`, '近五年'], ['2010-2019', '2010 年代'], ['2000-2009', '2000 年代'], ['all', '不限年份']];
+  const cOpts = [['', '不限地區'], ['TW', '台灣'], ['KR', '韓國'], ['JP', '日本'], ['CN', '中國'], ['HK', '香港'], ['TH', '泰國'], ['US', '美國'], ['GB', '英國'], ['FR', '法國'], ['ES', '西班牙'], ['IN', '印度']];
+  $('chips').innerHTML = `<select id="fY" aria-label="年份">${yOpts.map(([v, n]) => `<option value="${v}"${v === fY ? ' selected' : ''}>${n}</option>`).join('')}</select>`
+    + `<select id="fC" aria-label="地區">${cOpts.map(([v, n]) => `<option value="${v}"${v === fC ? ' selected' : ''}>${n}</option>`).join('')}</select>`
+    + `<button type="button" class="mode ${pMode === 'or' ? 'on' : ''}" data-m="or">聯集（任一）</button><button type="button" class="mode ${pMode === 'and' ? 'on' : ''}" data-m="and">交集（都有）</button>`
     + PLATS.filter(p => p.tmdb.length).map(p => `<button type="button" data-p="${p.tmdb[0]}" class="${pickP.includes(String(p.tmdb[0])) ? 'on' : ''}">${esc(p.n)}</button>`).join('');
 }
+$('chips').addEventListener('change', e => {
+  if (e.target.id === 'fY') fY = e.target.value;
+  if (e.target.id === 'fC') fC = e.target.value;
+  try { localStorage.setItem('sf_fy', fY); localStorage.setItem('sf_fc', fC); } catch (err) {}
+  browse();
+});
 $('chips').addEventListener('click', e => {
   const b = e.target.closest('button'); if (!b) return;
   if (b.dataset.m) pMode = b.dataset.m;
@@ -300,7 +320,8 @@ async function browse() {
   $('detail').innerHTML = ''; $('list').innerHTML = '';
   $('chips').classList.toggle('show', view === 'popular');
   if (view === 'popular') renderChips();
-  const pq = view === 'popular' ? `&p=${pickP.join(',')}&mode=${pMode}` : '';
+  const sortBy = $('sortBy').value;
+  const pq = view === 'popular' ? `&p=${pickP.join(',')}&mode=${pMode}&sort=${sortBy === 'rating' ? 'rating' : 'pop'}&y=${E(fY)}&c=${E(fC)}` : '';
   if (view === 'popular' && !pickP.length) { $('st').textContent = '請至少選一個平台。'; return; }
   const key = view + '/' + mtype + pq;
   $('st').textContent = '載入中…（第一次比較慢，約 3–5 秒）';
@@ -314,19 +335,37 @@ async function browse() {
       for (const p of x.providers) { if (seen.has(p.id)) continue; seen.add(p.id); const P = BYID[p.id]; pv.push({ ...p, sub: !!(P && subs.includes(P.k)) }); }
       return { ...x, pv };
     }).filter(x => !only || x.pv.some(p => p.sub));
+    // 排序：評分時 20 票以下排後面（票數太少分數不準）；平台排序＝依平台分組，組內依熱門
+    if (sortBy === 'rating') rs.sort((a, b) => ((b.votes || 0) >= 20) - ((a.votes || 0) >= 20) || (b.vote || 0) - (a.vote || 0));
+    else rs.sort((a, b) => (b.pop || 0) - (a.pop || 0));
     const pn = pickP.map(id => BYID[id]?.n).filter(Boolean).join(pMode === 'and' ? ' ＋ ' : '、');
     const label = view === 'new' ? `近 30 天（${d.from} 起）首映、台灣串流可看`
       : view === 'trending' ? (mtype === 'variety' ? `近兩週（${d.airing_since || ''} 起）有播出、台灣串流可看的熱門` : '本週全球熱門裡，台灣看得到的')
-      : `${pMode === 'and' ? '交集：同時在' : '聯集：在'} ${pn} ${pMode === 'and' ? '都能看' : '任一平台能看'}的熱門（近兩年作品，共 ${+d.total} 部${d.total > 20 ? '，列前 20' : ''}）`;
-    $('st').innerHTML = `${esc(label)}${CATN[mtype] || ''}：${rs.length} 部${only ? '（只列有我訂閱平台的）' : ''}${d.failed ? `<br><small>⚠️ 有 ${+d.failed} 部片源查詢失敗，清單可能不完整，稍後重新整理再試。</small>` : ''}${view === 'popular' ? '<br><small>註：熱門度是 TMDB 全球熱門度，不是各平台自己的排行榜。交集通常很少，因為多數影集是單一平台獨家。</small>' : ''}${mtype === 'variety' ? '<br><small>註：綜藝用 TMDB 的「實境」「談話」分類，會混到歐美節目（例如摔角）；台灣和韓國綜藝在片源資料裡比較少。</small>' : ''}${view === 'new' ? '<br><small>註：資料沒有「平台上架日」，這裡用首映日期近似；舊片新上架不會出現在這裡。</small>' : ''}`;
+      : `${pMode === 'and' ? '交集：同時在' : '聯集：在'} ${pn} ${pMode === 'and' ? '都能看' : '任一平台能看'}，${d.from ? (d.to ? `${d.from.slice(0, 4)}${d.from.slice(0, 4) !== d.to.slice(0, 4) ? '–' + d.to.slice(0, 4) : ''} 年` : `${d.from} 之後`) : '不限年份'}${fC ? '、' + ({TW:'台灣',KR:'韓國',JP:'日本',CN:'中國',HK:'香港',TH:'泰國',US:'美國',GB:'英國',FR:'法國',ES:'西班牙',IN:'印度'}[fC] || '') + '製作' : ''}的${sortBy === 'rating' ? '高分' : '熱門'}（共 ${+d.total} 部${d.total > 20 ? '，列前 20' : ''}）`;
+    $('st').innerHTML = `${esc(label)}${CATN[mtype] || ''}：${rs.length} 部${only ? '（只列有我訂閱平台的）' : ''}${d.failed ? `<br><small>⚠️ 有 ${+d.failed} 部片源查詢失敗，清單可能不完整，稍後重新整理再試。</small>` : ''}${sortBy === 'rating' ? `<br><small>評分是 TMDB 使用者評分（滿分 10）${view === 'popular' ? `，只列 ${fC ? 30 : 200} 票以上的作品` : '，在這份清單裡重新排序；20 票以下排在後面'}。</small>` : ''}${view === 'popular' ? '<br><small>註：熱門度是 TMDB 全球熱門度，不是各平台自己的排行榜。交集通常很少，因為多數影集是單一平台獨家。</small>' : ''}${mtype === 'variety' ? '<br><small>註：綜藝用 TMDB 的「實境」「談話」分類，會混到歐美節目（例如摔角）；台灣和韓國綜藝在片源資料裡比較少。</small>' : ''}${view === 'new' ? '<br><small>註：資料沒有「平台上架日」，這裡用首映日期近似；舊片新上架不會出現在這裡。</small>' : ''}`;
     if (!rs.length) { $('list').innerHTML = `<div class="empty">${view === 'popular' && pMode === 'and' ? '這幾個平台沒有共同的熱門作品，試試少選幾個平台，或改用聯集。' : '目前沒有符合的作品。'}</div>`; return; }
-    $('list').innerHTML = `<div class="grid">${rs.map((x, i) => `
+    const tile = (x, i) => `
       <button class="tile" data-i="${i}">
         ${x.poster ? `<img class="pos" src="${IMG}w342${esc(x.poster)}" alt="" loading="lazy">` : '<div class="ph2"></div>'}
         <div class="tt">${esc(x.title)}</div>
-        <div class="dd">${esc(x.date)}</div>
+        <div class="dd">${esc(x.date)}${x.vote ? `・⭐ ${esc(x.vote)}` : ''}</div>
         <div class="pv">${x.pv.slice(0, 8).map(p => `<img src="${IMG}w92${esc(p.logo)}" alt="${esc(p.name)}" title="${esc(p.name)}"${p.sub ? ' class="s"' : ''}>`).join('')}</div>
-      </button>`).join('')}</div>`;
+      </button>`;
+    if (sortBy === 'plat') {
+      // 一部片在幾個平台就出現在幾組；組的順序＝我訂閱的在前，其次照平台清單順序，清單外的平台放最後
+      const groups = new Map();
+      rs.forEach((x, i) => x.pv.forEach(p => {
+        const P = BYID[p.id], gk = P ? P.k : 'x:' + p.name;
+        if (!groups.has(gk)) groups.set(gk, { P, name: P ? P.n : p.name, logo: p.logo, items: [] });
+        groups.get(gk).items.push(i);
+      }));
+      const rank = g => g.P ? (subs.includes(g.P.k) ? 0 : 100) + PLATS.indexOf(g.P) : 1000;
+      const gs = [...groups.values()].sort((a, b) => rank(a) - rank(b) || b.items.length - a.items.length);
+      $('list').innerHTML = gs.map(g => `<div class="gh">${g.logo ? `<img src="${IMG}w92${esc(g.logo)}" alt="">` : ''}${esc(g.name)}（${g.items.length}）${g.P && subs.includes(g.P.k) ? '<span class="tag sub">已訂閱</span>' : ''}</div>
+        <div class="grid">${g.items.map(i => tile(rs[i], i)).join('')}</div>`).join('');
+    } else {
+      $('list').innerHTML = `<div class="grid">${rs.map((x, i) => tile(x, i)).join('')}</div>`;
+    }
     $('list').onclick = ev => { const t = ev.target.closest('.tile'); if (t) pick(rs[+t.dataset.i]); };
   } catch (err) {
     if (my === seq) $('st').textContent = '載入失敗（' + err.message + '），請稍後再試。';
