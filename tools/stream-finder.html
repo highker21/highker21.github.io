@@ -46,6 +46,19 @@ summary{cursor:pointer;color:var(--mut);font-size:14px}
 .empty{padding:10px;border-radius:10px;background:var(--warnbg);color:var(--warn);font-size:14px}
 .subs{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:6px;margin-top:8px}
 .subs label{display:flex;gap:6px;align-items:center;font-size:14px}
+.tabs{display:flex;gap:6px;margin:12px 0 4px;flex-wrap:wrap;align-items:center}
+.tabs button{background:var(--chip);color:var(--fg);padding:7px 12px;font-size:15px}
+.tabs button.on{background:var(--acc);color:var(--btnfg)}
+.tabs label{font-size:14px;color:var(--mut);display:flex;gap:4px;align-items:center;margin-left:auto}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.tile{background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden;cursor:pointer;padding:0;text-align:left;color:var(--fg);display:flex;flex-direction:column}
+.tile img.pos{width:100%;aspect-ratio:2/3;object-fit:cover;background:var(--chip);display:block}
+.tile .ph2{width:100%;aspect-ratio:2/3;background:var(--chip)}
+.tile .tt{padding:6px 8px 2px;font-weight:600;font-size:14px;line-height:1.3}
+.tile .dd{padding:0 8px;font-size:12px;color:var(--mut)}
+.tile .pv{display:flex;flex-wrap:wrap;gap:3px;padding:6px 8px 8px}
+.tile .pv img{width:22px;height:22px;border-radius:5px}
+.tile .pv img.s{outline:2px solid var(--warn);outline-offset:1px}
 footer{margin-top:28px;font-size:12px;color:var(--mut);line-height:1.6}
 footer a{color:var(--mut)}
 </style>
@@ -57,6 +70,13 @@ footer a{color:var(--mut)}
   <input id="q" type="search" placeholder="輸入片名（中文或原文）" enterkeyhint="search" required>
   <button>搜尋</button>
 </form>
+<div class="tabs" id="tabs">
+  <button type="button" data-v="new">🆕 新上線</button>
+  <button type="button" data-v="trending">🔥 本週熱門</button>
+  <button type="button" data-t="movie" class="on">電影</button>
+  <button type="button" data-t="tv">影集</button>
+  <label><input type="checkbox" id="onlySub"> 只看我訂閱的</label>
+</div>
 <div class="status" id="st"></div>
 <div class="list" id="list"></div>
 <div id="detail"></div>
@@ -127,13 +147,14 @@ async function api(path) {
   return r.json();
 }
 
-let current = null, seq = 0;
+let current = null, seq = 0, lastView = () => $('f').requestSubmit();
 
 $('f').addEventListener('submit', async e => {
   e.preventDefault();
   const q = $('q').value.trim();
   if (!q) return;
   const my = ++seq;
+  lastView = () => $('f').requestSubmit(); setTab(null);
   $('st').textContent = '搜尋中…'; $('list').innerHTML = ''; $('detail').innerHTML = ''; current = null;
   try {
     const d = await api('/search?q=' + E(q));
@@ -160,7 +181,7 @@ async function pick(x) {
     const d = await api(`/providers?type=${x.type}&id=${x.id}`);
     if (my !== seq) return;
     $('st').innerHTML = '<a href="#" id="back">← 回到搜尋結果</a>';
-    $('back').onclick = ev => { ev.preventDefault(); $('f').requestSubmit(); };
+    $('back').onclick = ev => { ev.preventDefault(); lastView(); };
     current = d; renderDetail(d);
     window.scrollTo({top: 0, behavior: 'smooth'});
   } catch (err) {
@@ -228,9 +249,57 @@ document.addEventListener('click', e => {
   if (a && navigator.clipboard) navigator.clipboard.writeText(a.dataset.copy).catch(() => {});
 });
 
+// ── 新上線／本週熱門 ──
+let view = null, mtype = 'movie';
+try { $('onlySub').checked = localStorage.getItem('sf_onlysub') === '1' } catch (e) {}
+function setTab(v) {
+  view = v;
+  document.querySelectorAll('#tabs [data-v]').forEach(b => b.classList.toggle('on', b.dataset.v === v));
+  document.querySelectorAll('#tabs [data-t]').forEach(b => b.classList.toggle('on', b.dataset.t === mtype));
+}
+$('tabs').addEventListener('click', e => {
+  const b = e.target.closest('button'); if (!b) return;
+  if (b.dataset.t) { mtype = b.dataset.t; if (!view) view = 'new'; }
+  if (b.dataset.v) view = b.dataset.v;
+  browse();
+});
+$('onlySub').addEventListener('change', () => { try { localStorage.setItem('sf_onlysub', $('onlySub').checked ? '1' : '0') } catch (e) {} if (view) browse(); });
+let browseCache = {};
+async function browse() {
+  setTab(view);
+  const my = ++seq; current = null;
+  lastView = browse;
+  $('detail').innerHTML = ''; $('list').innerHTML = '';
+  const key = view + '/' + mtype;
+  $('st').textContent = '載入中…（第一次比較慢，約 3–5 秒）';
+  try {
+    const d = browseCache[key] || (browseCache[key] = await api(`/${view}?type=${mtype}`));
+    if (my !== seq) return;
+    const only = $('onlySub').checked;
+    const rs = d.results.map(x => {
+      const seen = new Set(), pv = [];
+      for (const p of x.providers) { if (seen.has(p.id)) continue; seen.add(p.id); const P = BYID[p.id]; pv.push({ ...p, sub: !!(P && subs.includes(P.k)) }); }
+      return { ...x, pv };
+    }).filter(x => !only || x.pv.some(p => p.sub));
+    const label = view === 'new' ? `近 30 天（${d.from} 起）首映、台灣串流可看` : '本週全球熱門裡，台灣看得到的';
+    $('st').innerHTML = `${esc(label)}${mtype === 'tv' ? '影集' : '電影'}：${rs.length} 部${only ? '（只列有我訂閱平台的）' : ''}${view === 'new' ? '<br><small>註：資料沒有「平台上架日」，這裡用首映日期近似；舊片新上架不會出現在這裡。</small>' : ''}`;
+    $('list').innerHTML = `<div class="grid">${rs.map((x, i) => `
+      <button class="tile" data-i="${i}">
+        ${x.poster ? `<img class="pos" src="${IMG}w342${esc(x.poster)}" alt="" loading="lazy">` : '<div class="ph2"></div>'}
+        <div class="tt">${esc(x.title)}</div>
+        <div class="dd">${esc(x.date)}</div>
+        <div class="pv">${x.pv.slice(0, 8).map(p => `<img src="${IMG}w92${esc(p.logo)}" alt="${esc(p.name)}" title="${esc(p.name)}"${p.sub ? ' class="s"' : ''}>`).join('')}</div>
+      </button>`).join('')}</div>`;
+    $('list').onclick = ev => { const t = ev.target.closest('.tile'); if (t) pick(rs[+t.dataset.i]); };
+  } catch (err) {
+    if (my === seq) $('st').textContent = '載入失敗（' + err.message + '），請稍後再試。';
+  }
+}
+
 renderSubs();
 const pre = new URLSearchParams(location.search).get('q');
 if (pre) { $('q').value = pre; $('f').requestSubmit(); }
+else { view = new URLSearchParams(location.search).get('v') === 'trending' ? 'trending' : 'new'; browse(); }
 </script>
 </body>
 </html>
