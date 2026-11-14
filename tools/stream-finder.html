@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>片源搜尋</title>
+<style>
+:root{--btnfg:#fff;--bg:#f6f5f2;--card:#fff;--fg:#1d1d1f;--mut:#6b6b70;--line:#e3e1dc;--acc:#0b6bcb;--ok:#127a3d;--okbg:#e5f4ea;--warn:#8a5a00;--warnbg:#fff3d6;--chip:#eef1f6}
+@media (prefers-color-scheme:dark){:root{--btnfg:#0b1a2a;--bg:#141416;--card:#1e1e22;--fg:#ececef;--mut:#a1a1a8;--line:#323238;--acc:#6cb2ff;--ok:#6fd497;--okbg:#17321f;--warn:#f0c060;--warnbg:#3a2f12;--chip:#2a2d34}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.5 -apple-system,BlinkMacSystemFont,"PingFang TC","Noto Sans TC",sans-serif}
+main{max-width:860px;margin:0 auto;padding:16px 16px 40px}
+h1{font-size:22px;margin:4px 0 12px}
+form{display:flex;gap:8px}
+input[type=search]{flex:1;min-width:0;font-size:17px;padding:11px 12px;border:1px solid var(--line);border-radius:10px;background:var(--card);color:var(--fg)}
+button{font-size:16px;padding:10px 14px;border-radius:10px;border:0;background:var(--acc);color:var(--btnfg);cursor:pointer}
+a{color:var(--acc)}
+button.ghost{background:transparent;color:var(--acc);border:1px solid var(--line)}
+.status{color:var(--mut);font-size:14px;margin:10px 2px;min-height:1.2em}
+.list{display:grid;gap:8px}
+.item{display:flex;gap:10px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:8px;cursor:pointer;text-align:left;color:var(--fg);width:100%}
+.item img,.ph{width:46px;height:69px;border-radius:6px;object-fit:cover;background:var(--chip);flex:none}
+.item b{display:block}
+.item small{color:var(--mut)}
+.detail{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin-top:6px}
+.head{display:flex;gap:12px}
+.head img{width:84px;border-radius:8px;flex:none}
+.head h2{margin:0 0 4px;font-size:20px}
+.head .sub{color:var(--mut);font-size:14px}
+h3{font-size:15px;margin:18px 0 8px;color:var(--mut);font-weight:600}
+.plats{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:8px}
+.plat{display:flex;align-items:center;gap:10px;border:1px solid var(--line);border-radius:10px;padding:8px 10px;text-decoration:none;color:var(--fg);background:var(--card)}
+.plat:hover{border-color:var(--acc)}
+.plat img{width:34px;height:34px;border-radius:8px;flex:none;background:var(--chip)}
+.plat .nm{font-weight:600}
+.plat .tags{display:flex;flex-wrap:wrap;gap:4px;margin-top:2px}
+.tag{font-size:12px;padding:1px 7px;border-radius:99px;background:var(--chip);color:var(--fg)}
+.tag.ok{background:var(--okbg);color:var(--ok)}
+.tag.sub{background:var(--warnbg);color:var(--warn)}
+.plat .go{margin-left:auto;color:var(--acc);font-size:13px;white-space:nowrap}
+.mono{width:34px;height:34px;border-radius:8px;display:grid;place-items:center;font-weight:700;font-size:13px;color:#fff;flex:none}
+details{margin-top:14px}
+summary{cursor:pointer;color:var(--mut);font-size:14px}
+.note{font-size:13px;color:var(--mut);margin-top:6px}
+.empty{padding:10px;border-radius:10px;background:var(--warnbg);color:var(--warn);font-size:14px}
+.subs{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:6px;margin-top:8px}
+.subs label{display:flex;gap:6px;align-items:center;font-size:14px}
+footer{margin-top:28px;font-size:12px;color:var(--mut);line-height:1.6}
+footer a{color:var(--mut)}
+</style>
+</head>
+<body>
+<main>
+<h1>🎬 片源搜尋</h1>
+<form id="f" autocomplete="off">
+  <input id="q" type="search" placeholder="輸入片名（中文或原文）" enterkeyhint="search" required>
+  <button>搜尋</button>
+</form>
+<div class="status" id="st"></div>
+<div class="list" id="list"></div>
+<div id="detail"></div>
+
+<details id="subsBox">
+  <summary>⭐ 我訂閱的平台（會排在最前面）</summary>
+  <div class="subs" id="subs"></div>
+</details>
+
+<footer>
+  片源資料：<a href="https://www.justwatch.com/tw" target="_blank" rel="noopener">JustWatch</a>（經 TMDB 提供）。
+  <br>This product uses the TMDB API but is not endorsed or certified by <a href="https://www.themoviedb.org/" target="_blank" rel="noopener">TMDB</a>.
+  <br>片源資料可能有延遲，請以各平台實際頁面為準。myVideo、Hami Video、friDay影音、Ofiii 沒有片源資料，只提供站內搜尋連結。
+  <br>工具版本：2026-11-15
+</footer>
+</main>
+
+<script>
+const API = 'https://stream-finder.highker.workers.dev';
+const IMG = 'https://image.tmdb.org/t/p/';
+const E = encodeURIComponent;
+
+// tmdb：TMDB 片源編號；search：站內搜尋網址（2026-11-15 逐家實測）
+const PLATS = [
+  {k:'netflix', n:'Netflix', tmdb:[8], s:q=>`https://www.netflix.com/search?q=${E(q)}`, c:'#e50914'},
+  {k:'disney', n:'Disney+', tmdb:[337], s:q=>`https://www.disneyplus.com/search?q=${E(q)}`, c:'#113ccf', login:1},
+  {k:'hbomax', n:'HBO Max', tmdb:[1899], s:q=>`https://play.hbomax.com/search?q=${E(q)}`, c:'#2d1a8c', login:1},
+  {k:'prime', n:'Prime Video', tmdb:[119], s:q=>`https://www.primevideo.com/search?phrase=${E(q)}`, c:'#1a98ff'},
+  {k:'apple', n:'Apple TV', tmdb:[350,2], s:q=>`https://tv.apple.com/tw/search?term=${E(q)}`, c:'#222'},
+  {k:'catchplay', n:'CATCHPLAY+', tmdb:[159], s:q=>`https://www.catchplay.com/tw/search?keyword=${E(q)}`, c:'#f26a21'},
+  {k:'iqiyi', n:'愛奇藝', tmdb:[581], s:q=>`https://www.iq.com/search?query=${E(q)}`, c:'#00be06'},
+  {k:'wetv', n:'WeTV', tmdb:[623], s:q=>`https://wetv.vip/zh-tw/search/${E(q)}`, c:'#ff6022'},
+  {k:'linetv', n:'LINE TV', tmdb:[625], s:q=>`https://www.linetv.tw/search?q=${E(q)}`, c:'#06c755'},
+  {k:'youtube', n:'YouTube', tmdb:[188], s:q=>`https://www.youtube.com/results?search_query=${E(q)}`, c:'#ff0000'},
+  {k:'myvideo', n:'MyVideo', tmdb:[], s:q=>`https://www.myvideo.net.tw/search/${E(q)}/all/`, c:'#e4007f'},
+  {k:'hami', n:'Hami Video', tmdb:[], s:q=>`https://hamivideo.hinet.net/search.do?keyword=${E(q)}`, c:'#0067b1'},
+  {k:'friday', n:'friDay影音', tmdb:[], s:q=>`https://video.friday.tw/search?key=${E(q)}`, c:'#ff5a00'},
+  {k:'ofiii', n:'Ofiii 歐飛', tmdb:[], s:q=>`https://www.ofiii.com/search/${E(q)}`, c:'#7a2cff'},
+];
+const BYID = {}; PLATS.forEach(p => p.tmdb.forEach(id => BYID[id] = p));
+// 預設訂閱：老闆 TMDB 帳號 2026-11-15 截圖（11 個 TMDB 片源 → 對應下列平台）
+const DEFAULT_SUBS = ['netflix','disney','hbomax','prime','apple','catchplay','iqiyi','wetv','linetv','youtube'];
+const KIND = {flatrate:'訂閱', free:'免費', ads:'免費含廣告', rent:'租', buy:'買'};
+
+let subs;
+try { subs = JSON.parse(localStorage.getItem('sf_subs')) } catch (e) {}
+if (!Array.isArray(subs)) subs = DEFAULT_SUBS.slice();
+const saveSubs = () => { try { localStorage.setItem('sf_subs', JSON.stringify(subs)) } catch (e) {} };
+
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+function renderSubs() {
+  $('subs').innerHTML = PLATS.map(p => `<label><input type="checkbox" value="${p.k}" ${subs.includes(p.k)?'checked':''}> ${esc(p.n)}</label>`).join('');
+}
+$('subs').addEventListener('change', e => {
+  const k = e.target.value;
+  subs = e.target.checked ? [...new Set([...subs, k])] : subs.filter(x => x !== k);
+  saveSubs();
+  if (current) renderDetail(current);
+});
+
+async function api(path) {
+  const r = await fetch(API + path);
+  if (!r.ok) throw new Error('HTTP ' + r.status);
+  return r.json();
+}
+
+let current = null, seq = 0;
+
+$('f').addEventListener('submit', async e => {
+  e.preventDefault();
+  const q = $('q').value.trim();
+  if (!q) return;
+  const my = ++seq;
+  $('st').textContent = '搜尋中…'; $('list').innerHTML = ''; $('detail').innerHTML = ''; current = null;
+  try {
+    const d = await api('/search?q=' + E(q));
+    if (my !== seq) return;
+    const rs = d.results.slice(0, 12);
+    if (!rs.length) { $('st').textContent = '找不到這個片名。可以試試原文片名，或換個關鍵字。'; return; }
+    $('st').textContent = rs.length === 1 ? '' : `找到 ${d.results.length} 筆，點選要看的那一部：`;
+    $('list').innerHTML = rs.map((x, i) => `
+      <button class="item" data-i="${i}">
+        ${x.poster ? `<img src="${IMG}w92${x.poster}" alt="" loading="lazy">` : '<div class="ph"></div>'}
+        <span><b>${esc(x.title)}</b><small>${x.type === 'tv' ? '影集' : '電影'}${x.year ? '・' + x.year : ''}${x.original && x.original !== x.title ? '・' + esc(x.original) : ''}</small></span>
+      </button>`).join('');
+    $('list').onclick = ev => { const b = ev.target.closest('.item'); if (b) pick(rs[+b.dataset.i]); };
+    if (rs.length === 1) pick(rs[0]);
+  } catch (err) {
+    if (my === seq) $('st').textContent = '查詢失敗（' + err.message + '），請稍後再試。';
+  }
+});
+
+async function pick(x) {
+  const my = ++seq;
+  $('list').innerHTML = ''; $('st').textContent = '查詢片源中…';
+  try {
+    const d = await api(`/providers?type=${x.type}&id=${x.id}`);
+    if (my !== seq) return;
+    $('st').innerHTML = '<a href="#" id="back">← 回到搜尋結果</a>';
+    $('back').onclick = ev => { ev.preventDefault(); $('f').requestSubmit(); };
+    current = d; renderDetail(d);
+    window.scrollTo({top: 0, behavior: 'smooth'});
+  } catch (err) {
+    if (my === seq) $('st').textContent = '查詢失敗（' + err.message + '），請稍後再試。';
+  }
+}
+
+function logo(p, tmdbLogo) {
+  return tmdbLogo ? `<img src="${IMG}w92${tmdbLogo}" alt="">` : `<span class="mono" style="background:${p.c}">${esc(p.n.slice(0, 2))}</span>`;
+}
+
+function card(p, q, kinds, tmdbLogo) {
+  const isSub = subs.includes(p.k);
+  const tags = [
+    ...kinds.map(k => `<span class="tag ok">${KIND[k]}</span>`),
+    isSub ? '<span class="tag sub">已訂閱</span>' : '',
+    p.login ? '<span class="tag">需先登入</span>' : '',
+  ].join('');
+  return `<a class="plat" href="${p.s(q)}" target="_blank" rel="noopener">
+    ${logo(p, tmdbLogo)}
+    <span><span class="nm">${esc(p.n)}</span><span class="tags">${tags}</span></span>
+    <span class="go">去搜尋 ›</span></a>`;
+}
+
+function renderDetail(d) {
+  const q = d.title || d.original;
+  const found = {}, logos = {}, others = {};
+  for (const k of Object.keys(KIND)) for (const x of d[k] || []) {
+    const p = BYID[x.id];
+    if (p) { (found[p.k] ||= new Set()).add(k); logos[p.k] ||= x.logo; }
+    else { (others[x.name] ||= {logo: x.logo, kinds: new Set()}).kinds.add(k); }
+  }
+  const order = (a, b) => (subs.includes(b.k) - subs.includes(a.k)) || (PLATS.indexOf(a) - PLATS.indexOf(b));
+  const have = PLATS.filter(p => found[p.k]).sort(order);
+  const local = PLATS.filter(p => !p.tmdb.length).sort(order);
+  const none = PLATS.filter(p => p.tmdb.length && !found[p.k]).sort(order);
+  const otherList = Object.entries(others);
+
+  $('detail').innerHTML = `<div class="detail">
+    <div class="head">
+      ${d.poster ? `<img src="${IMG}w185${d.poster}" alt="">` : ''}
+      <div><h2>${esc(d.title)}</h2>
+      <div class="sub">${d.type === 'tv' ? '影集' : '電影'}${d.year ? '・' + d.year : ''}${d.original && d.original !== d.title ? '・' + esc(d.original) : ''}</div>
+      ${d.link ? `<div class="note"><a href="${esc(d.link)}" target="_blank" rel="noopener">在 TMDB 看完整片源 ›</a></div>` : ''}</div>
+    </div>
+
+    <h3>✅ 台灣可以看（${have.length + otherList.length}）</h3>
+    ${have.length || otherList.length ? `<div class="plats">${have.map(p => card(p, q, [...found[p.k]], logos[p.k])).join('')}${
+      otherList.map(([n, o]) => `<div class="plat"><img src="${IMG}w92${o.logo}" alt=""><span><span class="nm">${esc(n)}</span><span class="tags">${[...o.kinds].map(k => `<span class="tag ok">${KIND[k]}</span>`).join('')}</span></span></div>`).join('')
+    }</div>` : '<div class="empty">片源資料裡沒有台灣的平台。可能還沒上架，也可能是資料還沒更新，可以用下面的連結直接到各平台搜尋。</div>'}
+
+    <h3>🔎 在地平台（沒有片源資料，點了直接到站內搜尋）</h3>
+    <div class="plats">${local.map(p => card(p, q, [], null)).join('')}</div>
+
+    <details><summary>其他平台：片源資料顯示沒有（${none.length}），一樣可以點進去搜</summary>
+      <div class="plats" style="margin-top:8px">${none.map(p => card(p, q, [], null)).join('')}</div>
+    </details>
+    <div class="note">站內搜尋用的關鍵字：「${esc(q)}」。如果平台上用的是別的譯名，請在該平台再換個名字搜。</div>
+  </div>`;
+}
+
+renderSubs();
+const pre = new URLSearchParams(location.search).get('q');
+if (pre) { $('q').value = pre; $('f').requestSubmit(); }
+</script>
+</body>
+</html>
