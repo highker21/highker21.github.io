@@ -82,6 +82,8 @@ footer a{color:var(--mut)}
   <button type="button" data-v="popular">📊 平台熱門</button>
   <button type="button" data-t="movie" class="on">電影</button>
   <button type="button" data-t="tv">影集</button>
+  <button type="button" data-t="anime">動畫</button>
+  <button type="button" data-t="variety">綜藝</button>
   <label><input type="checkbox" id="onlySub"> 只看我訂閱的</label>
 </div>
 <div class="chips" id="chips"></div>
@@ -259,6 +261,8 @@ document.addEventListener('click', e => {
 
 // ── 新上線／本週熱門 ──
 let view = null, mtype = 'movie';
+// 類別（Worker 端定義）：電影、影集已排除動畫與綜藝；動畫＝電影＋影集合併；綜藝＝TMDB 實境＋談話類
+const CATN = { movie: '電影', tv: '影集', anime: '動畫', variety: '綜藝' };
 try { $('onlySub').checked = localStorage.getItem('sf_onlysub') === '1' } catch (e) {}
 function setTab(v) {
   view = v;
@@ -312,9 +316,9 @@ async function browse() {
     }).filter(x => !only || x.pv.some(p => p.sub));
     const pn = pickP.map(id => BYID[id]?.n).filter(Boolean).join(pMode === 'and' ? ' ＋ ' : '、');
     const label = view === 'new' ? `近 30 天（${d.from} 起）首映、台灣串流可看`
-      : view === 'trending' ? '本週全球熱門裡，台灣看得到的'
+      : view === 'trending' ? (mtype === 'variety' ? `近兩週（${d.airing_since || ''} 起）有播出、台灣串流可看的熱門` : '本週全球熱門裡，台灣看得到的')
       : `${pMode === 'and' ? '交集：同時在' : '聯集：在'} ${pn} ${pMode === 'and' ? '都能看' : '任一平台能看'}的熱門（近兩年作品，共 ${+d.total} 部${d.total > 20 ? '，列前 20' : ''}）`;
-    $('st').innerHTML = `${esc(label)}${mtype === 'tv' ? '影集' : '電影'}：${rs.length} 部${only ? '（只列有我訂閱平台的）' : ''}${d.failed ? `<br><small>⚠️ 有 ${+d.failed} 部片源查詢失敗，清單可能不完整，稍後重新整理再試。</small>` : ''}${view === 'popular' ? '<br><small>註：熱門度是 TMDB 全球熱門度，不是各平台自己的排行榜。交集通常很少，因為多數影集是單一平台獨家。</small>' : ''}${view === 'new' ? '<br><small>註：資料沒有「平台上架日」，這裡用首映日期近似；舊片新上架不會出現在這裡。</small>' : ''}`;
+    $('st').innerHTML = `${esc(label)}${CATN[mtype] || ''}：${rs.length} 部${only ? '（只列有我訂閱平台的）' : ''}${d.failed ? `<br><small>⚠️ 有 ${+d.failed} 部片源查詢失敗，清單可能不完整，稍後重新整理再試。</small>` : ''}${view === 'popular' ? '<br><small>註：熱門度是 TMDB 全球熱門度，不是各平台自己的排行榜。交集通常很少，因為多數影集是單一平台獨家。</small>' : ''}${mtype === 'variety' ? '<br><small>註：綜藝用 TMDB 的「實境」「談話」分類，會混到歐美節目（例如摔角）；台灣和韓國綜藝在片源資料裡比較少。</small>' : ''}${view === 'new' ? '<br><small>註：資料沒有「平台上架日」，這裡用首映日期近似；舊片新上架不會出現在這裡。</small>' : ''}`;
     if (!rs.length) { $('list').innerHTML = `<div class="empty">${view === 'popular' && pMode === 'and' ? '這幾個平台沒有共同的熱門作品，試試少選幾個平台，或改用聯集。' : '目前沒有符合的作品。'}</div>`; return; }
     $('list').innerHTML = `<div class="grid">${rs.map((x, i) => `
       <button class="tile" data-i="${i}">
