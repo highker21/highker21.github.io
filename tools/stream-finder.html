@@ -50,6 +50,12 @@ summary{cursor:pointer;color:var(--mut);font-size:14px}
 .tabs button{background:var(--chip);color:var(--fg);padding:7px 12px;font-size:15px}
 .tabs button.on{background:var(--acc);color:var(--btnfg)}
 .tabs label{font-size:14px;color:var(--mut);display:flex;gap:4px;align-items:center;margin-left:auto}
+.chips{display:none;flex-wrap:wrap;gap:6px;margin:6px 0}
+.chips.show{display:flex}
+.chips button{background:var(--chip);color:var(--fg);padding:5px 10px;font-size:14px;border:1px solid transparent}
+.chips button.on{background:var(--okbg);color:var(--ok);border-color:var(--ok)}
+.chips .mode{background:transparent;border:1px solid var(--line);color:var(--fg)}
+.chips .mode.on{background:var(--acc);color:var(--btnfg);border-color:var(--acc)}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
 .tile{background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden;cursor:pointer;padding:0;text-align:left;color:var(--fg);display:flex;flex-direction:column}
 .tile img.pos{width:100%;aspect-ratio:2/3;object-fit:cover;background:var(--chip);display:block}
@@ -73,10 +79,12 @@ footer a{color:var(--mut)}
 <div class="tabs" id="tabs">
   <button type="button" data-v="new">🆕 新上線</button>
   <button type="button" data-v="trending">🔥 本週熱門</button>
+  <button type="button" data-v="popular">📊 平台熱門</button>
   <button type="button" data-t="movie" class="on">電影</button>
   <button type="button" data-t="tv">影集</button>
   <label><input type="checkbox" id="onlySub"> 只看我訂閱的</label>
 </div>
+<div class="chips" id="chips"></div>
 <div class="status" id="st"></div>
 <div class="list" id="list"></div>
 <div id="detail"></div>
@@ -254,6 +262,7 @@ let view = null, mtype = 'movie';
 try { $('onlySub').checked = localStorage.getItem('sf_onlysub') === '1' } catch (e) {}
 function setTab(v) {
   view = v;
+  $('chips').classList.toggle('show', v === 'popular');
   document.querySelectorAll('#tabs [data-v]').forEach(b => b.classList.toggle('on', b.dataset.v === v));
   document.querySelectorAll('#tabs [data-t]').forEach(b => b.classList.toggle('on', b.dataset.t === mtype));
 }
@@ -265,15 +274,35 @@ $('tabs').addEventListener('click', e => {
 });
 $('onlySub').addEventListener('change', () => { try { localStorage.setItem('sf_onlysub', $('onlySub').checked ? '1' : '0') } catch (e) {} if (view) browse(); });
 let browseCache = {};
+// 平台熱門：預設＝我訂閱且有片源資料的平台；Apple TV 只送 350（2 是租／買商店）
+let pMode = 'or';
+let pickP = PLATS.filter(p => p.tmdb.length && subs.includes(p.k)).map(p => String(p.tmdb[0]));
+try { const v = JSON.parse(localStorage.getItem('sf_pick')); if (Array.isArray(v)) pickP = v.map(String); pMode = localStorage.getItem('sf_pmode') === 'and' ? 'and' : 'or'; } catch (e) {}
+function renderChips() {
+  $('chips').innerHTML = `<button type="button" class="mode ${pMode === 'or' ? 'on' : ''}" data-m="or">聯集（任一）</button><button type="button" class="mode ${pMode === 'and' ? 'on' : ''}" data-m="and">交集（都有）</button>`
+    + PLATS.filter(p => p.tmdb.length).map(p => `<button type="button" data-p="${p.tmdb[0]}" class="${pickP.includes(String(p.tmdb[0])) ? 'on' : ''}">${esc(p.n)}</button>`).join('');
+}
+$('chips').addEventListener('click', e => {
+  const b = e.target.closest('button'); if (!b) return;
+  if (b.dataset.m) pMode = b.dataset.m;
+  if (b.dataset.p) pickP = pickP.includes(b.dataset.p) ? pickP.filter(x => x !== b.dataset.p) : [...pickP, b.dataset.p];
+  try { localStorage.setItem('sf_pick', JSON.stringify(pickP)); localStorage.setItem('sf_pmode', pMode); } catch (e) {}
+  browse();
+});
 async function browse() {
   setTab(view);
   const my = ++seq; current = null;
   lastView = browse;
   $('detail').innerHTML = ''; $('list').innerHTML = '';
-  const key = view + '/' + mtype;
+  $('chips').classList.toggle('show', view === 'popular');
+  if (view === 'popular') renderChips();
+  const pq = view === 'popular' ? `&p=${pickP.join(',')}&mode=${pMode}` : '';
+  if (view === 'popular' && !pickP.length) { $('st').textContent = '請至少選一個平台。'; return; }
+  const key = view + '/' + mtype + pq;
   $('st').textContent = '載入中…（第一次比較慢，約 3–5 秒）';
   try {
-    const d = browseCache[key] || (browseCache[key] = await api(`/${view}?type=${mtype}`));
+    const d = browseCache[key] || await api(`/${view}?type=${mtype}${pq}`);
+    if (!d.failed) browseCache[key] = d;
     if (my !== seq) return;
     const only = $('onlySub').checked;
     const rs = d.results.map(x => {
@@ -281,8 +310,12 @@ async function browse() {
       for (const p of x.providers) { if (seen.has(p.id)) continue; seen.add(p.id); const P = BYID[p.id]; pv.push({ ...p, sub: !!(P && subs.includes(P.k)) }); }
       return { ...x, pv };
     }).filter(x => !only || x.pv.some(p => p.sub));
-    const label = view === 'new' ? `近 30 天（${d.from} 起）首映、台灣串流可看` : '本週全球熱門裡，台灣看得到的';
-    $('st').innerHTML = `${esc(label)}${mtype === 'tv' ? '影集' : '電影'}：${rs.length} 部${only ? '（只列有我訂閱平台的）' : ''}${view === 'new' ? '<br><small>註：資料沒有「平台上架日」，這裡用首映日期近似；舊片新上架不會出現在這裡。</small>' : ''}`;
+    const pn = pickP.map(id => BYID[id]?.n).filter(Boolean).join(pMode === 'and' ? ' ＋ ' : '、');
+    const label = view === 'new' ? `近 30 天（${d.from} 起）首映、台灣串流可看`
+      : view === 'trending' ? '本週全球熱門裡，台灣看得到的'
+      : `${pMode === 'and' ? '交集：同時在' : '聯集：在'} ${pn} ${pMode === 'and' ? '都能看' : '任一平台能看'}的熱門（近兩年作品，共 ${+d.total} 部${d.total > 20 ? '，列前 20' : ''}）`;
+    $('st').innerHTML = `${esc(label)}${mtype === 'tv' ? '影集' : '電影'}：${rs.length} 部${only ? '（只列有我訂閱平台的）' : ''}${d.failed ? `<br><small>⚠️ 有 ${+d.failed} 部片源查詢失敗，清單可能不完整，稍後重新整理再試。</small>` : ''}${view === 'popular' ? '<br><small>註：熱門度是 TMDB 全球熱門度，不是各平台自己的排行榜。交集通常很少，因為多數影集是單一平台獨家。</small>' : ''}${view === 'new' ? '<br><small>註：資料沒有「平台上架日」，這裡用首映日期近似；舊片新上架不會出現在這裡。</small>' : ''}`;
+    if (!rs.length) { $('list').innerHTML = `<div class="empty">${view === 'popular' && pMode === 'and' ? '這幾個平台沒有共同的熱門作品，試試少選幾個平台，或改用聯集。' : '目前沒有符合的作品。'}</div>`; return; }
     $('list').innerHTML = `<div class="grid">${rs.map((x, i) => `
       <button class="tile" data-i="${i}">
         ${x.poster ? `<img class="pos" src="${IMG}w342${esc(x.poster)}" alt="" loading="lazy">` : '<div class="ph2"></div>'}
@@ -299,7 +332,7 @@ async function browse() {
 renderSubs();
 const pre = new URLSearchParams(location.search).get('q');
 if (pre) { $('q').value = pre; $('f').requestSubmit(); }
-else { view = new URLSearchParams(location.search).get('v') === 'trending' ? 'trending' : 'new'; browse(); }
+else { view = ['trending', 'popular'].includes(new URLSearchParams(location.search).get('v')) ? new URLSearchParams(location.search).get('v') : 'new'; browse(); }
 </script>
 </body>
 </html>
