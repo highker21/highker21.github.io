@@ -70,6 +70,8 @@ summary{cursor:pointer;color:var(--mut);font-size:14px}
 .tile .pv small{font-size:11px;color:var(--mut)}
 .tile .pv img{width:22px;height:22px;border-radius:5px}
 .tile .pv img.s{outline:2px solid var(--warn);outline-offset:1px}
+.tile .pv .pz{font-size:11px;line-height:22px;height:22px;padding:0 5px;border-radius:5px;background:#00be06;color:#fff}
+.tile .pv .pz.s{outline:2px solid var(--warn);outline-offset:1px}
 footer{margin-top:28px;font-size:12px;color:var(--mut);line-height:1.6}
 footer a{color:var(--mut)}
 </style>
@@ -271,7 +273,7 @@ async function pick(x) {
     if (my !== seq) return;
     $('st').innerHTML = '<a href="#" id="back">← 回到搜尋結果</a>';
     $('back').onclick = ev => { ev.preventDefault(); lastView(); };
-    current = d; renderDetail(d, !!(x.nets && x.nets.length));
+    current = d; renderDetail(d, x.nets && x.nets.length ? x.nets : null);
     window.scrollTo({top: 0, behavior: 'smooth'});
   } catch (err) {
     if (my === seq) $('st').textContent = '查詢失敗（' + err.message + '），請稍後再試。';
@@ -282,9 +284,10 @@ function logo(p, tmdbLogo) {
   return tmdbLogo ? `<img src="${IMG}w92${esc(tmdbLogo)}" alt="">` : `<span class="mono" style="background:${p.c}">${esc(p.n.slice(0, 2))}</span>`;
 }
 
-function card(p, q, kinds, tmdbLogo) {
+function card(p, q, kinds, tmdbLogo, note) {
   const isSub = subs.includes(p.k);
   const tags = [
+    note ? `<span class="tag ok">${esc(note)}</span>` : '',
     ...kinds.map(k => `<span class="tag ok">${KIND[k]}</span>`),
     isSub ? '<span class="tag sub">已訂閱</span>' : '',
     p.login ? '<span class="tag">需先登入</span>' : '',
@@ -327,7 +330,7 @@ function renderDetail(d, cn) {
       otherList.map(([n, o]) => `<div class="plat"><img src="${IMG}w92${esc(o.logo)}" alt=""><span><span class="nm">${esc(n)}</span><span class="tags">${[...o.kinds].map(k => `<span class="tag ok">${KIND[k]}</span>`).join('')}</span></span></div>`).join('')
     }</div>` : '<div class="empty">片源資料裡沒有台灣的平台。可能還沒上架，也可能是資料還沒更新，可以用下面的連結直接到各平台搜尋。</div>'}
 
-    ${cnFirst.length ? `<h3>🏮 陸劇在台灣常見的平台（資料沒收錄，點了直接到站內搜尋）</h3><div class="plats">${cnFirst.map(p => card(p, q, [], null)).join('')}</div>` : ''}
+    ${cnFirst.length ? `<h3>🏮 陸劇在台灣常見的平台（資料沒收錄，點了直接到站內搜尋）</h3><div class="plats">${cnFirst.map(p => card(p, q, [], null, p.k === 'iqiyi' && cn.includes(1330) ? '愛奇藝首播，台灣站也有' : '')).join('')}</div>` : ''}
 
     <h3>🔎 在地平台（沒有片源資料，點了直接到站內搜尋）</h3>
     <div class="plats">${local.map(p => card(p, q, [], null)).join('')}</div>
@@ -432,6 +435,8 @@ async function browse() {
     const rs = d.results.map(x => {
       const seen = new Set(), pv = [];
       for (const p of x.providers) { if (seen.has(p.id)) continue; seen.add(p.id); const P = BYID[p.id]; pv.push({ ...p, sub: !!(P && subs.includes(P.k)) }); }
+      // 老闆 msg 278：愛奇藝首播的，台灣站（iq.com）也有 → 片源資料沒收錄時補一個「愛奇藝（推定）」
+      if (isCn && (x.nets || []).includes(1330) && !seen.has(581)) pv.push({ id: 581, name: '愛奇藝（推定：愛奇藝首播，台灣站也有）', logo: null, presumed: 1, sub: subs.includes('iqiyi') });
       return { ...x, pv };
     }).filter(x => !only || x.pv.some(p => p.sub)).filter(x => !isCn || (x.nets || []).some(n => cnPick.includes(String(n))));
     // 排序：評分時 20 票以下排後面（票數太少分數不準）；平台排序＝依平台分組，組內依熱門
@@ -443,14 +448,14 @@ async function browse() {
       : view === 'new' ? `近 30 天（${d.from} 起）首映、台灣串流可看${perTxt}`
       : view === 'trending' ? (mtype === 'variety' ? `近兩週（${d.airing_since || ''} 起）有播出、台灣串流可看的熱門` : '本週全球熱門裡，台灣看得到的')
       : `${pMode === 'and' ? '交集：同時在' : '聯集：在'} ${pn} ${pMode === 'and' ? '都能看' : '任一平台能看'}，${d.from ? (d.to ? `${d.from.slice(0, 4)}${d.from.slice(0, 4) !== d.to.slice(0, 4) ? '–' + d.to.slice(0, 4) : ''} 年` : `${d.from} 之後`) : '不限年份'}${fC ? '、' + ({TW:'台灣',KR:'韓國',JP:'日本',CN:'中國',HK:'香港',TH:'泰國',US:'美國',GB:'英國',FR:'法國',ES:'西班牙',IN:'印度'}[fC] || '') + '製作' : ''}的${sortBy === 'rating' ? '高分' : '熱門'}${d.per ? perTxt : `（共 ${+d.total} 部${d.total > 20 ? '，列前 20' : ''}）`}`;
-    $('st').innerHTML = `${esc(label)}${CATN[mtype] || ''}：${rs.length} 部${only ? '（只列有我訂閱平台的）' : ''}${d.failed ? `<br><small>⚠️ 有 ${+d.failed} 部片源查詢失敗，清單可能不完整，稍後重新整理再試。</small>` : ''}${sortBy === 'rating' ? `<br><small>評分是 TMDB 使用者評分（滿分 10）${view === 'popular' ? `，只列 ${fC ? 30 : 200} 票以上的作品` : '，在這份清單裡重新排序；20 票以下排在後面'}。</small>` : ''}${view === 'popular' ? '<br><small>註：熱門度是 TMDB 全球熱門度，不是各平台自己的排行榜。交集通常很少，因為多數影集是單一平台獨家。</small>' : ''}${(view === 'popular' || view === 'new') && (view === 'new' || pickP.includes('581')) ? '<br><small>註：愛奇藝在片源資料裡幾乎沒有收錄（台灣只有 11 部影集、0 部電影，最新是 2021 年），熱門榜和篩選列不出來，請用搜尋頁的「去愛奇藝搜尋」。</small>' : ''}${mtype === 'variety' ? '<br><small>註：綜藝用 TMDB 的「實境」「談話」分類，會混到歐美節目（例如摔角）；台灣和韓國綜藝在片源資料裡比較少。</small>' : ''}${view === 'new' ? '<br><small>註：資料沒有「平台上架日」，這裡用首映日期近似；舊片新上架不會出現在這裡。</small>' : ''}${isCn ? `<br><small>註：片源資料沒有中國區，這裡依「首播平台」排，熱門度、評分是 TMDB 全球數字，不是各平台自己的排行榜；陸劇在 TMDB 票數少，評分參考就好（評分排序只列 10 票以上）。台灣圖示＝台灣能在哪看；沒圖示的多半在愛奇藝台灣站或 WeTV 但資料沒收錄，點進去用「去愛奇藝／WeTV 搜尋」。</small>` : ''}`;
+    $('st').innerHTML = `${esc(label)}${CATN[mtype] || ''}：${rs.length} 部${only ? '（只列有我訂閱平台的）' : ''}${d.failed ? `<br><small>⚠️ 有 ${+d.failed} 部片源查詢失敗，清單可能不完整，稍後重新整理再試。</small>` : ''}${sortBy === 'rating' ? `<br><small>評分是 TMDB 使用者評分（滿分 10）${view === 'popular' ? `，只列 ${fC ? 30 : 200} 票以上的作品` : '，在這份清單裡重新排序；20 票以下排在後面'}。</small>` : ''}${view === 'popular' ? '<br><small>註：熱門度是 TMDB 全球熱門度，不是各平台自己的排行榜。交集通常很少，因為多數影集是單一平台獨家。</small>' : ''}${(view === 'popular' || view === 'new') && (view === 'new' || pickP.includes('581')) ? '<br><small>註：愛奇藝在片源資料裡幾乎沒有收錄（台灣只有 11 部影集、0 部電影，最新是 2021 年），熱門榜和篩選列不出來，請用搜尋頁的「去愛奇藝搜尋」。</small>' : ''}${mtype === 'variety' ? '<br><small>註：綜藝用 TMDB 的「實境」「談話」分類，會混到歐美節目（例如摔角）；台灣和韓國綜藝在片源資料裡比較少。</small>' : ''}${view === 'new' ? '<br><small>註：資料沒有「平台上架日」，這裡用首映日期近似；舊片新上架不會出現在這裡。</small>' : ''}${isCn ? `<br><small>註：片源資料沒有中國區，這裡依「首播平台」排，熱門度、評分是 TMDB 全球數字，不是各平台自己的排行榜；陸劇在 TMDB 票數少，評分參考就好（評分排序只列 10 票以上）。台灣圖示＝台灣能在哪看；綠色「愛奇藝」字樣＝愛奇藝首播、台灣站也有（推定，資料沒收錄）；寫「台灣沒有片源資料」的也可能在 WeTV 等平台但資料沒收錄，點進去用「去愛奇藝／WeTV 搜尋」。</small>` : ''}`;
     if (!rs.length) { $('list').innerHTML = `<div class="empty">${view === 'popular' && pMode === 'and' ? '這幾個平台沒有共同的熱門作品，試試少選幾個平台，或改用聯集。' : '目前沒有符合的作品。'}</div>`; return; }
     const tile = (x, i) => `
       <button class="tile" data-i="${i}">
         ${x.poster ? `<img class="pos" src="${IMG}w342${esc(x.poster)}" alt="" loading="lazy">` : '<div class="ph2"></div>'}
         <div class="tt">${esc(x.title)}</div>
         <div class="dd">${esc(x.date)}${x.vote ? `・⭐ ${esc(x.vote)}` : ''}</div>
-        <div class="pv">${x.pv.length ? x.pv.slice(0, 8).map(p => `<img src="${IMG}w92${esc(p.logo)}" alt="${esc(p.name)}" title="${esc(p.name)}"${p.sub ? ' class="s"' : ''}>`).join('') : '<small>台灣沒有片源資料</small>'}</div>
+        <div class="pv">${x.pv.length ? x.pv.slice(0, 8).map(p => p.presumed ? `<span class="pz${p.sub ? ' s' : ''}" title="${esc(p.name)}">愛奇藝</span>` : `<img src="${IMG}w92${esc(p.logo)}" alt="${esc(p.name)}" title="${esc(p.name)}"${p.sub ? ' class="s"' : ''}>`).join('') : '<small>台灣沒有片源資料</small>'}</div>
       </button>`;
     if (sortBy === 'plat') {
       // 一部片在幾個平台就出現在幾組；組的順序＝我訂閱的在前，其次照平台清單順序，清單外的平台放最後
