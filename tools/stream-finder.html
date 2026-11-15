@@ -67,6 +67,7 @@ summary{cursor:pointer;color:var(--mut);font-size:14px}
 .tile .tt{padding:6px 8px 2px;font-weight:600;font-size:14px;line-height:1.3}
 .tile .dd{padding:0 8px;font-size:12px;color:var(--mut)}
 .tile .pv{display:flex;flex-wrap:wrap;gap:3px;padding:6px 8px 8px}
+.tile .pv small{font-size:11px;color:var(--mut)}
 .tile .pv img{width:22px;height:22px;border-radius:5px}
 .tile .pv img.s{outline:2px solid var(--warn);outline-offset:1px}
 footer{margin-top:28px;font-size:12px;color:var(--mut);line-height:1.6}
@@ -84,6 +85,7 @@ footer a{color:var(--mut)}
   <button type="button" data-v="new">🆕 新上線</button>
   <button type="button" data-v="trending">🔥 本週熱門</button>
   <button type="button" data-v="popular">🎛️ 篩選</button>
+  <button type="button" data-v="cn">🏮 中國平台熱門</button>
   <button type="button" data-t="movie" class="on">電影</button>
   <button type="button" data-t="tv">影集</button>
   <button type="button" data-t="anime">動畫</button>
@@ -106,7 +108,7 @@ footer a{color:var(--mut)}
   <a href="https://www.themoviedb.org/" target="_blank" rel="noopener"><img src="stream-finder-tmdb.svg" alt="TMDB" style="height:12px;vertical-align:middle;margin-right:6px"></a>
   片源資料：<a href="https://www.justwatch.com/tw" target="_blank" rel="noopener">JustWatch</a>（經 TMDB 提供）。
   <br>This website uses TMDB and the TMDB APIs but is not endorsed, certified, or otherwise approved by <a href="https://www.themoviedb.org/" target="_blank" rel="noopener">TMDB</a>.
-  <br>片源資料可能有延遲，請以各平台實際頁面為準。myVideo、Hami Video、friDay影音、Ofiii、巴哈姆特動畫瘋沒有片源資料，只提供站內搜尋連結。動畫作品另列 Anime1（非正版授權）。
+  <br>片源資料可能有延遲，請以各平台實際頁面為準。myVideo、Hami Video、friDay影音、Ofiii、巴哈姆特動畫瘋沒有片源資料，只提供站內搜尋連結。動畫作品另列 Anime1（非正版授權）。「中國平台熱門」依 TMDB 的首播平台資料排列。
   <br>工具版本：2026-11-15
 </footer>
 </main>
@@ -269,7 +271,7 @@ async function pick(x) {
     if (my !== seq) return;
     $('st').innerHTML = '<a href="#" id="back">← 回到搜尋結果</a>';
     $('back').onclick = ev => { ev.preventDefault(); lastView(); };
-    current = d; renderDetail(d);
+    current = d; renderDetail(d, !!(x.nets && x.nets.length));
     window.scrollTo({top: 0, behavior: 'smooth'});
   } catch (err) {
     if (my === seq) $('st').textContent = '查詢失敗（' + err.message + '），請稍後再試。';
@@ -294,7 +296,7 @@ function card(p, q, kinds, tmdbLogo) {
     <span class="go">去搜尋 ›</span></a>`;
 }
 
-function renderDetail(d) {
+function renderDetail(d, cn) {
   const q = d.title || d.original;
   const found = {}, logos = {}, others = {};
   for (const k of Object.keys(KIND)) for (const x of d[k] || []) {
@@ -307,7 +309,9 @@ function renderDetail(d) {
   const local = PLATS.filter(p => !p.tmdb.length && !p.unlicensed).sort(order);
   const isAnime = (d.genres || []).includes(16);
   const unl = isAnime ? PLATS.filter(p => p.unlicensed) : [];
-  const none = PLATS.filter(p => p.tmdb.length && !found[p.k]).sort(order);
+  // 從「中國平台熱門」點進來、台灣片源資料沒收錄愛奇藝／WeTV 時，把這兩家提到前面（陸劇在台灣多半在這兩家）
+  const cnFirst = cn ? PLATS.filter(p => ['iqiyi', 'wetv'].includes(p.k) && !found[p.k]) : [];
+  const none = PLATS.filter(p => p.tmdb.length && !found[p.k] && !cnFirst.includes(p)).sort(order);
   const otherList = Object.entries(others);
 
   $('detail').innerHTML = `<div class="detail">
@@ -322,6 +326,8 @@ function renderDetail(d) {
     ${have.length || otherList.length ? `<div class="plats">${have.map(p => card(p, q, [...found[p.k]], logos[p.k])).join('')}${
       otherList.map(([n, o]) => `<div class="plat"><img src="${IMG}w92${esc(o.logo)}" alt=""><span><span class="nm">${esc(n)}</span><span class="tags">${[...o.kinds].map(k => `<span class="tag ok">${KIND[k]}</span>`).join('')}</span></span></div>`).join('')
     }</div>` : '<div class="empty">片源資料裡沒有台灣的平台。可能還沒上架，也可能是資料還沒更新，可以用下面的連結直接到各平台搜尋。</div>'}
+
+    ${cnFirst.length ? `<h3>🏮 陸劇在台灣常見的平台（資料沒收錄，點了直接到站內搜尋）</h3><div class="plats">${cnFirst.map(p => card(p, q, [], null)).join('')}</div>` : ''}
 
     <h3>🔎 在地平台（沒有片源資料，點了直接到站內搜尋）</h3>
     <div class="plats">${local.map(p => card(p, q, [], null)).join('')}</div>
@@ -347,14 +353,14 @@ const CATN = { movie: '電影', tv: '影集', anime: '動畫', variety: '綜藝'
 try { $('onlySub').checked = localStorage.getItem('sf_onlysub') === '1' } catch (e) {}
 function setTab(v) {
   view = v;
-  $('chips').classList.toggle('show', v === 'popular');
+  $('chips').classList.toggle('show', v === 'popular' || v === 'cn');
   document.querySelectorAll('#tabs [data-v]').forEach(b => b.classList.toggle('on', b.dataset.v === v));
   document.querySelectorAll('#tabs [data-t]').forEach(b => b.classList.toggle('on', b.dataset.t === mtype));
 }
 $('tabs').addEventListener('click', e => {
   const b = e.target.closest('button'); if (!b) return;
   if (b.dataset.t) { mtype = b.dataset.t; if (!view) view = 'new'; }
-  if (b.dataset.v) view = b.dataset.v;
+  if (b.dataset.v) { view = b.dataset.v; if (view === 'cn' && mtype === 'movie') mtype = 'tv'; }
   browse();
 });
 try { const v = localStorage.getItem('sf_sort'); if (['pop', 'rating', 'plat'].includes(v)) $('sortBy').value = v; } catch (e) {}
@@ -366,7 +372,18 @@ let pMode = 'or', fY = 'recent2', fC = '';
 try { fY = localStorage.getItem('sf_fy') || 'recent2'; fC = localStorage.getItem('sf_fc') || ''; } catch (e) {}
 let pickP = PLATS.filter(p => p.tmdb.length && subs.includes(p.k)).map(p => String(p.tmdb[0]));
 try { const v = JSON.parse(localStorage.getItem('sf_pick')); if (Array.isArray(v)) pickP = v.map(String); pMode = localStorage.getItem('sf_pmode') === 'and' ? 'and' : 'or'; } catch (e) {}
+// 中國平台熱門（2026-11-15 老闆 msg 273／275）：TMDB 沒有中國區片源，改用「首播平台」；每平台各取前 8
+const CN_NETS = [['1330', '愛奇藝'], ['2007', '騰訊視頻'], ['1419', '優酷'], ['1631', '芒果TV'], ['1605', '嗶哩嗶哩']];
+let cnY = 'recent1', cnPick = CN_NETS.map(n => n[0]);
+try { cnY = localStorage.getItem('sf_cny') || 'recent1'; const v = JSON.parse(localStorage.getItem('sf_cnpick')); if (Array.isArray(v)) cnPick = v.map(String); } catch (e) {}
+function renderCnChips() {
+  const Y = new Date().getFullYear();
+  const yOpts = [['recent1', '近一年'], [String(Y), `今年（${Y}）`], [String(Y - 1), `去年（${Y - 1}）`], [`${Y - 4}-${Y}`, '近五年'], ['all', '不限年份']];
+  $('chips').innerHTML = `<select id="cY" aria-label="年份">${yOpts.map(([v, n]) => `<option value="${v}"${v === cnY ? ' selected' : ''}>${n}</option>`).join('')}</select>`
+    + CN_NETS.map(([id, n]) => `<button type="button" data-n="${id}" class="${cnPick.includes(id) ? 'on' : ''}">${esc(n)}</button>`).join('');
+}
 function renderChips() {
+  if (view === 'cn') return renderCnChips();
   const Y = new Date().getFullYear();
   const yOpts = [['recent2', '近兩年'], [String(Y), `今年（${Y}）`], [String(Y - 1), `去年（${Y - 1}）`], [`${Y - 4}-${Y}`, '近五年'], ['2010-2019', '2010 年代'], ['2000-2009', '2000 年代'], ['all', '不限年份']];
   const cOpts = [['', '不限地區'], ['TW', '台灣'], ['KR', '韓國'], ['JP', '日本'], ['CN', '中國'], ['HK', '香港'], ['TH', '泰國'], ['US', '美國'], ['GB', '英國'], ['FR', '法國'], ['ES', '西班牙'], ['IN', '印度']];
@@ -378,14 +395,16 @@ function renderChips() {
 $('chips').addEventListener('change', e => {
   if (e.target.id === 'fY') fY = e.target.value;
   if (e.target.id === 'fC') fC = e.target.value;
-  try { localStorage.setItem('sf_fy', fY); localStorage.setItem('sf_fc', fC); } catch (err) {}
+  if (e.target.id === 'cY') cnY = e.target.value;
+  try { localStorage.setItem('sf_fy', fY); localStorage.setItem('sf_fc', fC); localStorage.setItem('sf_cny', cnY); } catch (err) {}
   browse();
 });
 $('chips').addEventListener('click', e => {
   const b = e.target.closest('button'); if (!b) return;
   if (b.dataset.m) pMode = b.dataset.m;
   if (b.dataset.p) pickP = pickP.includes(b.dataset.p) ? pickP.filter(x => x !== b.dataset.p) : [...pickP, b.dataset.p];
-  try { localStorage.setItem('sf_pick', JSON.stringify(pickP)); localStorage.setItem('sf_pmode', pMode); } catch (e) {}
+  if (b.dataset.n) cnPick = cnPick.includes(b.dataset.n) ? cnPick.filter(x => x !== b.dataset.n) : [...cnPick, b.dataset.n];
+  try { localStorage.setItem('sf_pick', JSON.stringify(pickP)); localStorage.setItem('sf_pmode', pMode); localStorage.setItem('sf_cnpick', JSON.stringify(cnPick)); } catch (e) {}
   browse();
 });
 async function browse() {
@@ -394,11 +413,15 @@ async function browse() {
   const my = ++seq; current = null;
   lastView = browse;
   $('detail').innerHTML = ''; $('list').innerHTML = '';
-  $('chips').classList.toggle('show', view === 'popular');
-  if (view === 'popular') renderChips();
+  const isCn = view === 'cn';
+  $('chips').classList.toggle('show', view === 'popular' || isCn);
+  if (view === 'popular' || isCn) renderChips();
   const sortBy = $('sortBy').value;
-  const pq = view === 'popular' ? `&p=${pickP.join(',')}&mode=${pMode}&sort=${sortBy === 'rating' ? 'rating' : 'pop'}&y=${E(fY)}&c=${E(fC)}` : '';
+  const pq = view === 'popular' ? `&p=${pickP.join(',')}&mode=${pMode}&sort=${sortBy === 'rating' ? 'rating' : 'pop'}&y=${E(fY)}&c=${E(fC)}`
+    : isCn ? `&sort=${sortBy === 'rating' ? 'rating' : 'pop'}&y=${E(cnY)}` : '';
   if (view === 'popular' && !pickP.length) { $('st').textContent = '請至少選一個平台。'; return; }
+  if (isCn && mtype === 'movie') { $('st').textContent = '中國平台熱門只有影集、動畫、綜藝（資料裡「首播平台」只記在影集上），請點上面的「影集」「動畫」或「綜藝」。'; return; }
+  if (isCn && !cnPick.length) { $('st').textContent = '請至少選一個平台。'; return; }
   const key = view + '/' + mtype + pq;
   $('st').textContent = '載入中…（第一次比較慢，約 3–5 秒）';
   try {
@@ -410,23 +433,24 @@ async function browse() {
       const seen = new Set(), pv = [];
       for (const p of x.providers) { if (seen.has(p.id)) continue; seen.add(p.id); const P = BYID[p.id]; pv.push({ ...p, sub: !!(P && subs.includes(P.k)) }); }
       return { ...x, pv };
-    }).filter(x => !only || x.pv.some(p => p.sub));
+    }).filter(x => !only || x.pv.some(p => p.sub)).filter(x => !isCn || (x.nets || []).some(n => cnPick.includes(String(n))));
     // 排序：評分時 20 票以下排後面（票數太少分數不準）；平台排序＝依平台分組，組內依熱門
     if (sortBy === 'rating') rs.sort((a, b) => ((b.votes || 0) >= 20) - ((a.votes || 0) >= 20) || (b.vote || 0) - (a.vote || 0));
     else rs.sort((a, b) => (b.pop || 0) - (a.pop || 0));
     const pn = pickP.map(id => BYID[id]?.n).filter(Boolean).join(pMode === 'and' ? ' ＋ ' : '、');
     const perTxt = d.per ? `（每個平台各取前 ${+d.per} 部再合併）` : '';
-    const label = view === 'new' ? `近 30 天（${d.from} 起）首映、台灣串流可看${perTxt}`
+    const label = isCn ? `中國平台首播、${d.from ? (d.to ? `${d.from.slice(0, 4)}${d.from.slice(0, 4) !== d.to.slice(0, 4) ? '–' + d.to.slice(0, 4) : ''} 年` : `${d.from} 之後`) : '不限年份'}的${sortBy === 'rating' ? '高分' : '熱門'}（每個平台各取前 ${+d.per} 部）`
+      : view === 'new' ? `近 30 天（${d.from} 起）首映、台灣串流可看${perTxt}`
       : view === 'trending' ? (mtype === 'variety' ? `近兩週（${d.airing_since || ''} 起）有播出、台灣串流可看的熱門` : '本週全球熱門裡，台灣看得到的')
       : `${pMode === 'and' ? '交集：同時在' : '聯集：在'} ${pn} ${pMode === 'and' ? '都能看' : '任一平台能看'}，${d.from ? (d.to ? `${d.from.slice(0, 4)}${d.from.slice(0, 4) !== d.to.slice(0, 4) ? '–' + d.to.slice(0, 4) : ''} 年` : `${d.from} 之後`) : '不限年份'}${fC ? '、' + ({TW:'台灣',KR:'韓國',JP:'日本',CN:'中國',HK:'香港',TH:'泰國',US:'美國',GB:'英國',FR:'法國',ES:'西班牙',IN:'印度'}[fC] || '') + '製作' : ''}的${sortBy === 'rating' ? '高分' : '熱門'}${d.per ? perTxt : `（共 ${+d.total} 部${d.total > 20 ? '，列前 20' : ''}）`}`;
-    $('st').innerHTML = `${esc(label)}${CATN[mtype] || ''}：${rs.length} 部${only ? '（只列有我訂閱平台的）' : ''}${d.failed ? `<br><small>⚠️ 有 ${+d.failed} 部片源查詢失敗，清單可能不完整，稍後重新整理再試。</small>` : ''}${sortBy === 'rating' ? `<br><small>評分是 TMDB 使用者評分（滿分 10）${view === 'popular' ? `，只列 ${fC ? 30 : 200} 票以上的作品` : '，在這份清單裡重新排序；20 票以下排在後面'}。</small>` : ''}${view === 'popular' ? '<br><small>註：熱門度是 TMDB 全球熱門度，不是各平台自己的排行榜。交集通常很少，因為多數影集是單一平台獨家。</small>' : ''}${(view === 'popular' || view === 'new') && (view === 'new' || pickP.includes('581')) ? '<br><small>註：愛奇藝在片源資料裡幾乎沒有收錄（台灣只有 11 部影集、0 部電影，最新是 2021 年），熱門榜和篩選列不出來，請用搜尋頁的「去愛奇藝搜尋」。</small>' : ''}${mtype === 'variety' ? '<br><small>註：綜藝用 TMDB 的「實境」「談話」分類，會混到歐美節目（例如摔角）；台灣和韓國綜藝在片源資料裡比較少。</small>' : ''}${view === 'new' ? '<br><small>註：資料沒有「平台上架日」，這裡用首映日期近似；舊片新上架不會出現在這裡。</small>' : ''}`;
+    $('st').innerHTML = `${esc(label)}${CATN[mtype] || ''}：${rs.length} 部${only ? '（只列有我訂閱平台的）' : ''}${d.failed ? `<br><small>⚠️ 有 ${+d.failed} 部片源查詢失敗，清單可能不完整，稍後重新整理再試。</small>` : ''}${sortBy === 'rating' ? `<br><small>評分是 TMDB 使用者評分（滿分 10）${view === 'popular' ? `，只列 ${fC ? 30 : 200} 票以上的作品` : '，在這份清單裡重新排序；20 票以下排在後面'}。</small>` : ''}${view === 'popular' ? '<br><small>註：熱門度是 TMDB 全球熱門度，不是各平台自己的排行榜。交集通常很少，因為多數影集是單一平台獨家。</small>' : ''}${(view === 'popular' || view === 'new') && (view === 'new' || pickP.includes('581')) ? '<br><small>註：愛奇藝在片源資料裡幾乎沒有收錄（台灣只有 11 部影集、0 部電影，最新是 2021 年），熱門榜和篩選列不出來，請用搜尋頁的「去愛奇藝搜尋」。</small>' : ''}${mtype === 'variety' ? '<br><small>註：綜藝用 TMDB 的「實境」「談話」分類，會混到歐美節目（例如摔角）；台灣和韓國綜藝在片源資料裡比較少。</small>' : ''}${view === 'new' ? '<br><small>註：資料沒有「平台上架日」，這裡用首映日期近似；舊片新上架不會出現在這裡。</small>' : ''}${isCn ? `<br><small>註：片源資料沒有中國區，這裡依「首播平台」排，熱門度、評分是 TMDB 全球數字，不是各平台自己的排行榜；陸劇在 TMDB 票數少，評分參考就好（評分排序只列 10 票以上）。台灣圖示＝台灣能在哪看；沒圖示的多半在愛奇藝台灣站或 WeTV 但資料沒收錄，點進去用「去愛奇藝／WeTV 搜尋」。</small>` : ''}`;
     if (!rs.length) { $('list').innerHTML = `<div class="empty">${view === 'popular' && pMode === 'and' ? '這幾個平台沒有共同的熱門作品，試試少選幾個平台，或改用聯集。' : '目前沒有符合的作品。'}</div>`; return; }
     const tile = (x, i) => `
       <button class="tile" data-i="${i}">
         ${x.poster ? `<img class="pos" src="${IMG}w342${esc(x.poster)}" alt="" loading="lazy">` : '<div class="ph2"></div>'}
         <div class="tt">${esc(x.title)}</div>
         <div class="dd">${esc(x.date)}${x.vote ? `・⭐ ${esc(x.vote)}` : ''}</div>
-        <div class="pv">${x.pv.slice(0, 8).map(p => `<img src="${IMG}w92${esc(p.logo)}" alt="${esc(p.name)}" title="${esc(p.name)}"${p.sub ? ' class="s"' : ''}>`).join('')}</div>
+        <div class="pv">${x.pv.length ? x.pv.slice(0, 8).map(p => `<img src="${IMG}w92${esc(p.logo)}" alt="${esc(p.name)}" title="${esc(p.name)}"${p.sub ? ' class="s"' : ''}>`).join('') : '<small>台灣沒有片源資料</small>'}</div>
       </button>`;
     if (sortBy === 'plat') {
       // 一部片在幾個平台就出現在幾組；組的順序＝我訂閱的在前，其次照平台清單順序，清單外的平台放最後
@@ -436,10 +460,21 @@ async function browse() {
         if (!groups.has(gk)) groups.set(gk, { P, name: P ? P.n : p.name, logo: p.logo, items: [] });
         groups.get(gk).items.push(i);
       }));
-      const rank = g => g.P ? (subs.includes(g.P.k) ? 0 : 100) + PLATS.indexOf(g.P) : 1000;
+      const rank = g => g.none ? 2000 : g.P ? (subs.includes(g.P.k) ? 0 : 100) + PLATS.indexOf(g.P) : 1000;
+      // 台灣沒有片源資料的（中國平台熱門才會有）放最後一組
+      const none = rs.map((x, i) => x.pv.length ? -1 : i).filter(i => i >= 0);
+      if (none.length) groups.set('none', { none: 1, name: '台灣沒有片源資料', logo: null, items: none });
       const gs = [...groups.values()].sort((a, b) => rank(a) - rank(b) || b.items.length - a.items.length);
       $('list').innerHTML = gs.map(g => `<div class="gh">${g.logo ? `<img src="${IMG}w92${esc(g.logo)}" alt="">` : ''}${esc(g.name)}（${g.items.length}）${g.P && subs.includes(g.P.k) ? '<span class="tag sub">已訂閱</span>' : ''}</div>
         <div class="grid">${g.items.map(i => tile(rs[i], i)).join('')}</div>`).join('');
+    } else if (isCn) {
+      // 依中國平台分段；同一部在兩個平台首播就兩段都列
+      $('list').innerHTML = CN_NETS.filter(([id]) => cnPick.includes(id)).map(([id, n]) => {
+        const items = rs.map((x, i) => (x.nets || []).map(String).includes(id) ? i : -1).filter(i => i >= 0);
+        const tot = d.nets && d.nets[id] ? +d.nets[id].total : 0;
+        return `<div class="gh">${esc(n)}（前 ${items.length} 部／共 ${tot} 部）</div>`
+          + (items.length ? `<div class="grid">${items.map(i => tile(rs[i], i)).join('')}</div>` : '<div class="empty">這個條件下沒有作品。</div>');
+      }).join('');
     } else {
       $('list').innerHTML = `<div class="grid">${rs.map((x, i) => tile(x, i)).join('')}</div>`;
     }
@@ -452,7 +487,7 @@ async function browse() {
 renderSubs();
 const pre = new URLSearchParams(location.search).get('q');
 if (pre) { $('q').value = pre; $('f').requestSubmit(); }
-else { view = ['trending', 'popular'].includes(new URLSearchParams(location.search).get('v')) ? new URLSearchParams(location.search).get('v') : 'new'; browse(); }
+else { view = ['trending', 'popular', 'cn'].includes(new URLSearchParams(location.search).get('v')) ? new URLSearchParams(location.search).get('v') : 'new'; if (view === 'cn') mtype = 'tv'; browse(); }
 </script>
 </body>
 </html>
