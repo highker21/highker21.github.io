@@ -229,6 +229,16 @@ footer{margin-top:14px;text-align:center;color:var(--muted);font-size:12px}
   <button class="wide gray" data-close>關閉</button>
 </div></div>
 
+<!-- PDF -->
+<div class="sheet" id="pdfSheet"><div class="panel">
+  <h3>量測報告 PDF</h3>
+  <div class="note" id="pdfMsg" style="margin-top:0">產生中…</div>
+  <button class="wide" id="pdfShare" style="display:none">分享／儲存 PDF</button>
+  <a class="wide gray" id="pdfDl" style="display:none;text-align:center;line-height:46px;text-decoration:none">下載 PDF</a>
+  <button class="wide gray" id="pdfPrint">改用列印（電腦版）</button>
+  <button class="wide gray" data-close>關閉</button>
+</div></div>
+
 <!-- 說明 -->
 <div class="sheet" id="infoSheet"><div class="panel">
   <h3>常見音量參考</h3>
@@ -854,14 +864,16 @@ footer{margin-top:14px;text-align:center;color:var(--muted);font-size:12px}
   // ---------- 報告 / CSV ----------
   const pad2 = n => String(n).padStart(2, '0');
   const tstr = d => d ? `${d.getFullYear()}/${pad2(d.getMonth()+1)}/${pad2(d.getDate())} ${pad2(d.getHours())}:${pad2(d.getMinutes())}:${pad2(d.getSeconds())}` : '--';
-  function historyImage() {
+  const historyImage = () => historyCanvas().toDataURL('image/png');
+  const rtaImage = () => rtaCanvas().toDataURL('image/png');
+  function historyCanvas() {
     const c = document.createElement('canvas'); c.width = 1400; c.height = 420; const g = c.getContext('2d');
     g.fillStyle = '#fff'; g.fillRect(0, 0, c.width, c.height);
     const padL = 60, padR = 20, padT = 20, padB = 50, lo = 20, hi = 120;
     const Y = v => padT + (1 - (Math.max(lo, Math.min(hi, v)) - lo)/(hi - lo))*(c.height - padT - padB);
     g.font = '20px sans-serif'; g.fillStyle = '#555'; g.strokeStyle = '#ddd';
     for (let v = 30; v <= 110; v += 10) { g.beginPath(); g.moveTo(padL, Y(v)); g.lineTo(c.width - padR, Y(v)); g.stroke(); g.fillText(v, 10, Y(v) + 6); }
-    const n = secHist.length; if (n < 2) return c.toDataURL();
+    const n = secHist.length; if (n < 2) return c;
     const X = i => padL + i/(n - 1)*(c.width - padL - padR);
     if (alarmTh > 0) { g.strokeStyle = '#e08a00'; g.setLineDash([8, 6]); g.beginPath(); g.moveTo(padL, Y(alarmTh)); g.lineTo(c.width - padR, Y(alarmTh)); g.stroke(); g.setLineDash([]); }
     [['C', '#e88a9a'], ['A', '#2f6fde']].forEach(([k, col]) => { g.strokeStyle = col; g.lineWidth = 2; g.beginPath();
@@ -869,12 +881,12 @@ footer{margin-top:14px;text-align:center;color:var(--muted);font-size:12px}
     g.fillStyle = '#555'; const d0 = new Date(secHist[0].t), d1 = new Date(secHist[n-1].t);
     g.fillText(tstr(d0).slice(11), padL, c.height - 15); g.textAlign = 'right'; g.fillText(tstr(d1).slice(11), c.width - padR, c.height - 15);
     g.textAlign = 'left'; g.fillStyle = '#2f6fde'; g.fillText('— LA（1 秒 Leq）', padL + 300, c.height - 15); g.fillStyle = '#e88a9a'; g.fillText('— LC', padL + 520, c.height - 15);
-    return c.toDataURL('image/png');
+    return c;
   }
-  function rtaImage() {
+  function rtaCanvas() {
     const c = document.createElement('canvas'); c.width = 1400; c.height = 360; const g = c.getContext('2d');
     g.fillStyle = '#fff'; g.fillRect(0, 0, c.width, c.height);
-    if (!rtaPeak) return c.toDataURL();
+    if (!rtaPeak) return c;
     const padL = 60, padB = 40, lo = 20, hi = 110, bw = (c.width - padL - 20)/BANDS.length;
     const Y = v => 10 + (1 - (Math.max(lo, Math.min(hi, v)) - lo)/(hi - lo))*(c.height - 10 - padB);
     g.font = '18px sans-serif'; g.fillStyle = '#555'; g.strokeStyle = '#ddd';
@@ -882,8 +894,89 @@ footer{margin-top:14px;text-align:center;color:var(--muted);font-size:12px}
     g.textAlign = 'center';
     BANDS.forEach((fc, i) => { const v = rtaPeak[i]; g.fillStyle = '#2f6fde'; if (isFinite(v)) g.fillRect(padL + bw*i + 3, Y(v), bw - 6, c.height - padB - Y(v));
       const lab = BAND_LABEL(fc); if ([31.5,63,125,250,500,1000,2000,4000,8000,16000].includes(lab)) { g.fillStyle = '#555'; g.fillText(lab >= 1000 ? (lab/1000) + 'k' : lab, padL + bw*(i + .5), c.height - 12); } });
-    return c.toDataURL('image/png');
+    return c;
   }
+
+  // ---------- 報告畫成 A4 圖頁（中文用系統字型，不必內嵌字型）→ jsPDF ----------
+  function reportPages() {
+    const PW = 1240, PH = 1754, M = 80, pages = []; let c, g, y;
+    const font = (sz, b) => `${b ? 'bold ' : ''}${sz}px -apple-system,"PingFang TC","Noto Sans TC","Microsoft JhengHei",sans-serif`;
+    const newPage = () => { c = document.createElement('canvas'); c.width = PW; c.height = PH; g = c.getContext('2d');
+      g.fillStyle = '#fff'; g.fillRect(0, 0, PW, PH); g.textBaseline = 'top'; y = M; pages.push(c); };
+    const ensure = h => { if (y + h > PH - M) newPage(); };
+    const wrap = (t, w) => { const out = []; let line = '';
+      for (const ch of String(t)) { if (g.measureText(line + ch).width > w && line) { out.push(line); line = ch; } else line += ch; }
+      if (line) out.push(line); return out; };
+    const text = (t, sz = 24, b = false, color = '#222') => { g.font = font(sz, b); g.fillStyle = color;
+      wrap(t, PW - 2*M).forEach(l => { ensure(sz*1.55); g.font = font(sz, b); g.fillStyle = color; g.fillText(l, M, y); y += sz*1.55; }); };
+    const gap = h => { y += h; };
+    const table = (rows, wts) => {
+      const cols = rows[0].length, ws = wts || Array(cols).fill(1), tw_ = ws.reduce((a, b) => a + b), rh = 50;
+      const xs = []; let acc = M; ws.forEach(w => { xs.push(acc); acc += w/tw_*(PW - 2*M); });
+      rows.forEach((r, ri) => { ensure(rh);
+        r.forEach((cell, ci) => { const x = xs[ci], cw = ws[ci]/tw_*(PW - 2*M);
+          g.fillStyle = ri === 0 ? '#f1f3f6' : '#fff'; g.fillRect(x, y, cw, rh);
+          g.strokeStyle = '#999'; g.lineWidth = 1.5; g.strokeRect(x, y, cw, rh);
+          g.font = font(22, ri === 0); g.fillStyle = '#111'; let t = String(cell);
+          while (g.measureText(t).width > cw - 16 && t.length > 1) t = t.slice(0, -1);
+          g.fillText(t, x + 8, y + 13); });
+        y += rh; });
+      gap(14); };
+    const image = cv => { const w = PW - 2*M, h = cv.height*w/cv.width; ensure(h + 10);
+      g.drawImage(cv, M, y, w, h); g.strokeStyle = '#ccc'; g.lineWidth = 2; g.strokeRect(M, y, w, h); y += h + 20; };
+    newPage();
+    const LA = leqOf('A'), LC = leqOf('C'), s = st[weighting];
+    text('噪音量測報告', 44, true, '#000'); gap(6);
+    text(`量測期間：${tstr(sessionStart)} ～ ${tstr(sessionEnd || new Date())}（${mmss(elapsed())}）`);
+    text(`設定：${weighting} 加權、${response === 'fast' ? '快' : '慢'}反應、校正偏移 ${cal.toFixed(1)} dB${alarmTh > 0 ? '、超標門檻 ' + alarmTh + ' dB' : ''}`);
+    text(`麥克風：${micLabel || '預設麥克風'}；校正檔：${prof ? prof.name + (prof.serial ? '（序號 ' + prof.serial + '）' : '') + (isFinite(prof.sens) ? '，Sens Factor ' + prof.sens + ' dB' : '') : '無（手機內建麥克風估計值）'}`);
+    gap(10);
+    table([['LAeq', 'LCeq', 'C − A', 'L10', 'L50'],
+           [fmt(LA), fmt(LC), fmt(LC - LA), fmt(percentile(s.hist, 10)), fmt(percentile(s.hist, 50))],
+           ['L90', '最大', '最小', '瞬間峰值', '噪音劑量'],
+           [fmt(percentile(s.hist, 90)), fmt(s.max), fmt(s.min), fmt(s.peak), st.dose.toFixed(2) + '%']]);
+    text(`L10／L50／L90、最大、最小、峰值為 ${weighting} 加權；單位 dB。C − A ${fmt(LC - LA)} dB：` +
+      ((LC - LA) >= 20 ? '低頻成分明顯（重低音、冷氣壓縮機、馬達類）。' : (LC - LA) >= 10 ? '有一些低頻成分。' : '以中高頻為主。'), 20, false, '#555');
+    gap(10); text('音量隨時間變化', 30, true); image(historyCanvas());
+    text('1/3 倍頻程頻譜（期間峰值，Z 加權）', 30, true); image(rtaCanvas());
+    text('超標紀錄' + (alarmTh > 0 ? `（門檻 ${alarmTh} dB，持續 0.5 秒以上）` : ''), 30, true);
+    if (!(alarmTh > 0)) text('未啟用超標警示。');
+    else if (!events.length) text('期間內無超標。');
+    else table([['#', '開始', '結束', '持續', '最大 dB']].concat(events.map((e, i) => [i + 1, tstr(new Date(e.start)), tstr(new Date(e.end)).slice(11), ((e.end - e.start)/1000).toFixed(0) + ' 秒', e.max.toFixed(1)])), [0.5, 2.4, 1.4, 1, 1.1]);
+    if (rtResults.length) { gap(6); text('殘響時間 RT60', 30, true);
+      table([['#', '全頻', '500 Hz', '1 kHz', '2 kHz', 'EDT']].concat(rtResults.map((r, i) => [i + 1, f2(r.bb), f2(r.b500), f2(r.b1k), f2(r.b2k), f2(r.edt)]))); }
+    const chk = Object.keys(chVals);
+    if (chk.length) { gap(6); text('喇叭聲道音量（dB(C)）', 30, true);
+      for (let i = 0; i < chk.length; i += 5) table([chk.slice(i, i + 5).map(k => CH_NAME[k]), chk.slice(i, i + 5).map(k => chVals[k].toFixed(1))]); }
+    gap(10);
+    text(`${prof && isFinite(prof.sens) ? '以 USB 量測麥克風搭配原廠校正檔量測，' : '以手機麥克風量測，未經聲學儀器校正，誤差約 ±3–5 dB，'}僅供參考。產生時間：${tstr(new Date())}。分貝計（highker21.github.io/tools/db-meter.html），工具版本：2026-11-16。`, 18, false, '#666');
+    pages.forEach((pc, i) => { const gg = pc.getContext('2d'); gg.font = font(18); gg.fillStyle = '#999'; gg.textAlign = 'right';
+      gg.fillText(`第 ${i + 1} / ${pages.length} 頁`, PW - M, PH - 50); });
+    return pages;
+  }
+  const JSPDF_URL = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
+  const loadJsPDF = () => window.jspdf ? Promise.resolve() : new Promise((res, rej) => {
+    const sc = document.createElement('script'); sc.src = JSPDF_URL; sc.onload = res;
+    sc.onerror = () => rej(new Error('無法載入 PDF 元件（需要網路連線）')); document.head.appendChild(sc); });
+  let pdfFile = null, pdfUrl = null;
+  async function makePdf() {
+    $('pdfMsg').textContent = '產生中…'; $('pdfShare').style.display = 'none'; $('pdfDl').style.display = 'none';
+    try {
+      await loadJsPDF();
+      const pages = reportPages();
+      const pdf = new window.jspdf.jsPDF({ unit: 'mm', format: 'a4', compress: true });
+      pages.forEach((pc, i) => { if (i) pdf.addPage(); pdf.addImage(pc.toDataURL('image/jpeg', 0.9), 'JPEG', 0, 0, 210, 297); });
+      const blob = pdf.output('blob');
+      const name = '噪音量測報告_' + tstr(sessionStart || new Date()).replace(/[\/:]/g, '').replace(' ', '_') + '.pdf';
+      pdfFile = new File([blob], name, { type: 'application/pdf' });
+      if (pdfUrl) URL.revokeObjectURL(pdfUrl); pdfUrl = URL.createObjectURL(blob);
+      $('pdfDl').href = pdfUrl; $('pdfDl').download = name; $('pdfDl').style.display = 'block';
+      if (navigator.canShare && navigator.canShare({ files: [pdfFile] })) $('pdfShare').style.display = 'block';
+      $('pdfMsg').textContent = `✅ 已產生 ${pages.length} 頁（${(blob.size/1024).toFixed(0)} KB）：${name}。iPhone 請按「分享／儲存」→ 儲存到檔案或傳 LINE。`;
+    } catch (e) { $('pdfMsg').textContent = '❌ 產生失敗：' + e.message; }
+  }
+  $('pdfShare').onclick = async () => { try { await navigator.share({ files: [pdfFile], title: pdfFile.name }); } catch (e) { if (e.name !== 'AbortError') $('pdfMsg').textContent = '分享失敗：' + e.message + '，請改按「下載 PDF」。'; } };
+  $('pdfPrint').onclick = () => { buildReport(); $('pdfSheet').classList.remove('show'); window.print(); };
   function buildReport() {
     const LA = leqOf('A'), LC = leqOf('C'), s = st[weighting];
     const evRows = events.map((e, i) => `<tr><td>${i+1}</td><td>${tstr(new Date(e.start))}</td><td>${tstr(new Date(e.end)).slice(11)}</td><td>${((e.end - e.start)/1000).toFixed(0)} 秒</td><td>${e.max.toFixed(1)}</td></tr>`).join('');
@@ -909,7 +1002,7 @@ footer{margin-top:14px;text-align:center;color:var(--muted);font-size:12px}
   $('openRep').onclick = () => {
     $('toolSheet').classList.remove('show');
     if (!st.time) { $('err').textContent = '還沒有量測資料，請先量測再產生報告。'; $('err').style.display = 'block'; return; }
-    buildReport(); setTimeout(() => window.print(), 300);
+    $('pdfSheet').classList.add('show'); makePdf();
   };
   $('openCsv').onclick = () => {
     if (!secHist.length) { $('toolSheet').classList.remove('show'); $('err').textContent = '還沒有量測資料可匯出。'; $('err').style.display = 'block'; return; }
@@ -995,7 +1088,7 @@ footer{margin-top:14px;text-align:center;color:var(--muted);font-size:12px}
   }
 
   buildGauge(); applyT(response); applyW(weighting); applyA(alarmTh); setCal(cal); calInfo(); sgInit(); drawSpec(); drawRta(); updateStatsPane();
-  window.__dbm = { aW, cW, rt60Of, biquadBP, percentile, get st() { return st; }, get rtaMs() { return rtaMs; }, BANDS, dominant: () => fD2 ? dominant() : null, parseCal, get prof() { return prof; }, base,
+  window.__dbm = { reportPages, get pdfFile() { return pdfFile; }, aW, cW, rt60Of, biquadBP, percentile, get st() { return st; }, get rtaMs() { return rtaMs; }, BANDS, dominant: () => fD2 ? dominant() : null, parseCal, get prof() { return prof; }, base,
     get rtResults() { return rtResults; }, get chVals() { return chVals; }, get events() { return events; }, get secHist() { return secHist; } };
 })();
 </script>
