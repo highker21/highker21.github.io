@@ -23,24 +23,39 @@ html,body{margin:0;background:var(--bg);color:var(--text);
   font-family:-apple-system,BlinkMacSystemFont,"PingFang TC","Noto Sans TC",sans-serif}
 body{padding:calc(env(safe-area-inset-top) + 10px) 16px calc(env(safe-area-inset-bottom) + 14px);
   max-width:520px;margin:0 auto;user-select:none;-webkit-user-select:none}
+body.alarm{animation:flash .6s ease-in-out infinite alternate}
+@keyframes flash{to{background:rgba(214,58,58,.18)}}
 .top{display:flex;gap:10px}
 .pill{background:var(--card);border:1px solid var(--line);border-radius:12px;height:52px;
   display:flex;align-items:center;justify-content:center;font-size:18px;color:var(--text)}
-.pill.status{flex:1}
-.pill.btn{width:96px;border:1px solid var(--line);font:inherit;font-size:18px;cursor:pointer}
+.pill.status{flex:1;transition:all .2s}
+.pill.status.alarm{background:var(--hot);color:#fff;border-color:var(--hot);font-weight:700}
+.pill.btn{width:96px;font:inherit;font-size:18px;cursor:pointer}
 .pill.btn small{font-size:12px;color:var(--muted);margin-left:3px}
-.gauge{display:block;width:100%;margin-top:14px}
+.gauge{display:block;width:100%;margin-top:10px}
 .readout{display:grid;grid-template-columns:1fr 1.6fr 1fr;align-items:end;margin-top:-6px}
 .side{text-align:center}
 .side span{display:block;font-size:14px;color:var(--muted);letter-spacing:.5px}
 .side b{font-size:26px;font-weight:400;font-variant-numeric:tabular-nums}
 .big{text-align:center;font-size:76px;font-weight:300;line-height:1;font-variant-numeric:tabular-nums;letter-spacing:-1px}
 .desc{text-align:center;font-size:14px;margin-top:8px;min-height:18px;font-weight:600}
-.timer{font-size:17px;color:var(--muted);margin:14px 0 4px;font-variant-numeric:tabular-nums}
-canvas{display:block;width:100%;height:170px}
-.legend{display:flex;gap:14px;font-size:11px;color:var(--muted);margin-top:2px}
+.trow{display:flex;justify-content:space-between;align-items:baseline;margin:12px 0 6px}
+.timer{font-size:17px;color:var(--muted);font-variant-numeric:tabular-nums}
+.dom{font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
+.dom b{color:var(--text);font-weight:600}
+.tabs{display:flex;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:3px;margin-bottom:6px}
+.tabs button{flex:1;border:0;background:transparent;color:var(--muted);font-size:14px;padding:7px 0;border-radius:7px}
+.tabs button.on{background:var(--blue);color:#fff;font-weight:600}
+.pane{display:none}.pane.on{display:block}
+canvas.plot{display:block;width:100%;height:180px}
+.legend{display:flex;gap:14px;font-size:11px;color:var(--muted);margin-top:2px;flex-wrap:wrap}
 .legend i{display:inline-block;width:12px;height:3px;border-radius:2px;vertical-align:middle;margin-right:4px}
-.controls{display:flex;align-items:center;justify-content:space-between;margin-top:14px;padding:0 4px}
+.sgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.sgrid div{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:7px 4px;text-align:center}
+.sgrid b{display:block;font-size:19px;font-weight:500;font-variant-numeric:tabular-nums}
+.sgrid span{font-size:11px;color:var(--muted)}
+.note{font-size:13px;color:var(--muted);margin-top:6px;line-height:1.5}
+.controls{display:flex;align-items:center;justify-content:space-between;margin-top:12px;padding:0 4px}
 .cbtn{width:54px;height:54px;border-radius:50%;border:1.5px solid var(--tick);background:transparent;
   color:var(--text);display:flex;align-items:center;justify-content:center;flex-direction:column;cursor:pointer;padding:0}
 .cbtn svg{width:22px;height:22px}
@@ -53,19 +68,41 @@ canvas{display:block;width:100%;height:170px}
 .sheet{position:fixed;inset:0;background:rgba(0,0,0,.35);display:none;align-items:flex-end;z-index:9}
 .sheet.show{display:flex}
 .sheet .panel{background:var(--card);width:100%;max-width:520px;margin:0 auto;border-radius:18px 18px 0 0;
-  padding:18px 18px calc(env(safe-area-inset-bottom) + 18px);max-height:80vh;overflow:auto;font-size:15px;line-height:1.6}
+  padding:18px 18px calc(env(safe-area-inset-bottom) + 18px);max-height:85vh;overflow:auto;font-size:15px;line-height:1.6}
 .panel h3{margin:0 0 8px;font-size:17px}
-.panel table{width:100%;border-collapse:collapse}
-.panel td{padding:4px 0;border-bottom:1px solid var(--line)}
-.panel td:first-child{width:66px;color:var(--muted);font-variant-numeric:tabular-nums}
-.panel .close{width:100%;margin-top:14px;height:46px;border:0;border-radius:12px;background:var(--blue);color:#fff;font-size:16px;font-weight:600}
+.panel table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+.panel td,.panel th{padding:5px 2px;border-bottom:1px solid var(--line);text-align:left}
+.panel .ref td:first-child{width:66px;color:var(--muted)}
+.wide{width:100%;margin-top:10px;height:46px;border:0;border-radius:12px;background:var(--blue);color:#fff;font-size:16px;font-weight:600}
+.wide.gray{background:var(--bg);color:var(--text);border:1px solid var(--line)}
 .calrow{display:flex;align-items:center;gap:12px;margin:10px 0}
 .calrow button{width:56px;height:46px;border-radius:12px;border:1px solid var(--line);background:var(--bg);color:var(--text);font-size:22px}
 .calrow b{flex:1;text-align:center;font-size:30px;font-weight:400;font-variant-numeric:tabular-nums}
-.seg{display:flex;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:3px;margin:6px 0 12px}
-.seg button{flex:1;border:0;background:transparent;color:var(--muted);font-size:15px;padding:9px 0;border-radius:7px}
+.seg{display:flex;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:3px;margin:6px 0 12px;flex-wrap:wrap}
+.seg button{flex:1;border:0;background:transparent;color:var(--muted);font-size:14px;padding:9px 0;border-radius:7px;min-width:44px}
 .seg button.on{background:var(--blue);color:#fff;font-weight:600}
+.sel{width:100%;height:44px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--text);font-size:15px;padding:0 10px;margin:6px 0}
+.toolgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.toolgrid button{border:1px solid var(--line);background:var(--bg);color:var(--text);border-radius:12px;padding:14px 8px;font-size:15px;text-align:left}
+.toolgrid button small{display:block;color:var(--muted);font-size:12px;margin-top:2px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0}
+.chips button{min-width:64px;padding:8px 10px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--text);font-size:14px}
+.chips button b{display:block;font-size:16px;font-variant-numeric:tabular-nums}
+.chips button.busy{background:var(--warn);color:#fff}
+.chips button.done{border-color:var(--blue)}
+.big2{font-size:40px;font-weight:300;text-align:center;font-variant-numeric:tabular-nums;margin:6px 0}
+.pos{color:var(--hot)}.neg{color:var(--blue)}
 footer{margin-top:14px;text-align:center;color:var(--muted);font-size:12px}
+#report{display:none}
+@media print{
+  body{background:#fff;color:#000;padding:0;max-width:none}
+  body>*:not(#report){display:none!important}
+  #report{display:block;font-size:12px;line-height:1.5}
+  #report h1{font-size:20px;margin:0 0 4px}
+  #report table{border-collapse:collapse;width:100%;margin:6px 0}
+  #report td,#report th{border:1px solid #999;padding:3px 6px;text-align:left}
+  #report img{width:100%;border:1px solid #ccc}
+}
 </style>
 </head>
 <body>
@@ -84,20 +121,47 @@ footer{margin-top:14px;text-align:center;color:var(--muted);font-size:12px}
 </div>
 <div class="desc" id="desc"></div>
 
-<div class="timer" id="timer">00:00</div>
-<canvas id="spec"></canvas>
-<div class="legend"><span><i style="background:var(--blue)"></i>即時頻譜</span><span><i style="background:var(--peak)"></i>峰值保持</span><span>縱軸 dBFS</span></div>
+<div class="trow"><span class="timer" id="timer">00:00</span><span class="dom" id="dom">主頻 --</span></div>
+<div class="tabs" id="tabs">
+  <button data-p="spec" class="on">頻譜</button><button data-p="rta">RTA</button><button data-p="sg">瀑布</button><button data-p="st">統計</button>
+</div>
+<div class="pane on" id="p-spec">
+  <canvas class="plot" id="spec"></canvas>
+  <div class="legend"><span><i style="background:var(--blue)"></i>即時頻譜</span><span><i style="background:var(--peak)"></i>峰值保持</span><span>縱軸 dBFS</span></div>
+</div>
+<div class="pane" id="p-rta">
+  <canvas class="plot" id="rta"></canvas>
+  <div class="legend"><span><i style="background:var(--blue)"></i>1/3 倍頻程（Z，dB）</span><span><i style="background:var(--peak)"></i>峰值保持</span><span id="rtaMax"></span></div>
+</div>
+<div class="pane" id="p-sg">
+  <canvas class="plot" id="sg" width="720" height="360"></canvas>
+  <div class="legend"><span>橫軸：時間（右＝現在，約 30 秒）</span><span>縱軸：頻率</span><span>顏色：亮＝大聲</span></div>
+</div>
+<div class="pane" id="p-st">
+  <div class="sgrid">
+    <div><b id="tLAeq">--</b><span>LAeq</span></div>
+    <div><b id="tLCeq">--</b><span>LCeq</span></div>
+    <div><b id="tCA">--</b><span>C − A 差值</span></div>
+    <div><b id="tL10">--</b><span>L10（吵的時段）</span></div>
+    <div><b id="tL50">--</b><span>L50（中位數）</span></div>
+    <div><b id="tL90">--</b><span>L90（背景音）</span></div>
+    <div><b id="tMin">--</b><span>最小</span></div>
+    <div><b id="tPeak">--</b><span>瞬間峰值</span></div>
+    <div><b id="tDose">--</b><span>噪音劑量</span></div>
+  </div>
+  <div class="note" id="caNote">C − A 差值：量一陣子後才有意義。</div>
+</div>
 
 <div class="controls">
-  <button class="cbtn" id="calBtn" aria-label="校正與設定">
+  <button class="cbtn" id="calBtn" aria-label="設定">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg><em>設定</em>
   </button>
   <button class="cbtn" id="resetBtn" aria-label="重設">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 12a8 8 0 1 0 2.4-5.7M4 4v4h4"/></svg><em>重設</em>
   </button>
   <button class="rec" id="recBtn" aria-label="開始或停止"><i></i></button>
-  <button class="cbtn" id="csvBtn" aria-label="匯出 CSV">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg><em>匯出</em>
+  <button class="cbtn" id="toolBtn" aria-label="工具">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="4" y="4" width="6.5" height="6.5" rx="1.5"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="1.5"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="1.5"/><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1.5"/></svg><em>工具</em>
   </button>
   <button class="cbtn" id="infoBtn" aria-label="說明">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5"/></svg><em>說明</em>
@@ -106,20 +170,69 @@ footer{margin-top:14px;text-align:center;color:var(--muted);font-size:12px}
 <div class="err" id="err"></div>
 <footer>工具版本：2026-11-16</footer>
 
+<!-- 設定 -->
 <div class="sheet" id="calSheet"><div class="panel">
   <h3>設定</h3>
   <div>頻率加權</div>
-  <div class="seg" id="segW"><button data-v="A" class="on">A（環境噪音）</button><button data-v="C">C（喇叭校正）</button><button data-v="Z">Z（不加權）</button></div>
+  <div class="seg" id="segW"><button data-v="A" class="on">A（環境噪音）</button><button data-v="C">C（喇叭）</button><button data-v="Z">Z（不加權）</button></div>
   <div>時間反應</div>
   <div class="seg" id="segT"><button data-v="fast" class="on">快 F（0.125 秒）</button><button data-v="slow">慢 S（1 秒）</button></div>
-  <div>校正偏移（跟標準分貝計同時量同一個聲音後對齊，會自動記住）</div>
+  <div>超標警示（持續 0.5 秒超過門檻就閃紅＋震動並記錄）</div>
+  <div class="seg" id="segA"><button data-v="0" class="on">關</button><button data-v="70">70</button><button data-v="75">75</button><button data-v="80">80</button><button data-v="85">85</button><button data-v="90">90</button></div>
+  <div>麥克風</div>
+  <select id="micSel" class="sel"><option value="">預設麥克風</option></select>
+  <div class="note" id="micNote" style="margin-top:0">開始量測後會列出所有可用的麥克風（含 USB 量測麥克風）。</div>
+  <div style="margin-top:12px">麥克風校正檔（UMIK-1／UMIK-2 等 .txt）</div>
+  <button id="calLoad" class="wide gray" style="margin-top:4px">載入校正檔</button>
+  <input type="file" id="calFile" accept=".txt,.cal,.frd,.csv,text/plain" hidden>
+  <div class="note" id="calInfo">未載入（使用手機內建麥克風的估計值）</div>
+  <button id="calRemove" class="wide gray" style="display:none">移除校正檔</button>
+  <div style="margin-top:12px">校正偏移（跟標準分貝計同時量同一個聲音後對齊，會自動記住）</div>
   <div class="calrow"><button id="calDown">−</button><b id="calVal">0.0 dB</b><button id="calUp">＋</button></div>
-  <button class="close" data-close>完成</button>
+  <button class="wide" data-close>完成</button>
 </div></div>
 
+<!-- 工具 -->
+<div class="sheet" id="toolSheet"><div class="panel">
+  <h3>工具</h3>
+  <div class="toolgrid">
+    <button id="openRt">殘響時間 RT60<small>拍手一聲估算房間殘響</small></button>
+    <button id="openCh">喇叭聲道對齊<small>逐聲道量測音量差</small></button>
+    <button id="openRep">產生報告 PDF<small>統計＋曲線＋超標紀錄</small></button>
+    <button id="openCsv">匯出 CSV<small>每秒 LA／LC 紀錄</small></button>
+  </div>
+  <button class="wide gray" data-close>關閉</button>
+</div></div>
+
+<!-- RT60 -->
+<div class="sheet" id="rtSheet"><div class="panel">
+  <h3>殘響時間 RT60</h3>
+  <div class="note" style="margin-top:0">站在房間中央、周圍保持安靜，按「開始偵測」後用力拍手一下（或拍破氣球），等 2 秒。建議拍 3～5 次取平均。</div>
+  <div class="big2" id="rtBig">--</div>
+  <div class="note" id="rtMsg" style="text-align:center">尚未量測</div>
+  <table id="rtTable"><thead><tr><th>#</th><th>全頻</th><th>500</th><th>1k</th><th>2k</th><th>EDT</th></tr></thead><tbody></tbody></table>
+  <div class="note">參考：家庭劇院／聽音室 0.3–0.5 秒較理想；一般客廳 0.4–0.7 秒；空曠磁磚房間常 &gt;0.8 秒。數字為 T20 推算（必要時 T10），單位秒。</div>
+  <button class="wide" id="rtGo">開始偵測</button>
+  <button class="wide gray" id="rtClear">清除紀錄</button>
+  <button class="wide gray" data-close>關閉</button>
+</div></div>
+
+<!-- 聲道對齊 -->
+<div class="sheet" id="chSheet"><div class="panel">
+  <h3>喇叭聲道對齊</h3>
+  <div class="note" style="margin-top:0">手機放在主聆聽位置、麥克風朝前方。在擴大機的喇叭音量（測試音）畫面讓某一聲道發出測試音，再按下面對應的按鈕量 4 秒（自動用 C 加權）。全部量完看差值調整。</div>
+  <div class="seg" id="segPreset"><button data-v="422" class="on">4.2.2</button><button data-v="51">5.1</button><button data-v="71">7.1</button><button data-v="514">5.1.4</button></div>
+  <div class="chips" id="chips"></div>
+  <table id="chTable"><thead><tr><th>聲道</th><th>dB(C)</th><th>與平均差</th><th>建議</th></tr></thead><tbody></tbody></table>
+  <div class="note">「平均」只算主喇叭（不含重低音）。重低音手機麥克風 50 Hz 以下會偏低，僅供參考。建議差值調到 ±1 dB 內。</div>
+  <button class="wide gray" id="chClear">清除</button>
+  <button class="wide gray" data-close>關閉</button>
+</div></div>
+
+<!-- 說明 -->
 <div class="sheet" id="infoSheet"><div class="panel">
   <h3>常見音量參考</h3>
-  <table>
+  <table class="ref">
     <tr><td>30 dB</td><td>安靜臥室、圖書館</td></tr>
     <tr><td>40–50</td><td>安靜住宅區夜間</td></tr>
     <tr><td>60 dB</td><td>一般對話</td></tr>
@@ -130,127 +243,319 @@ footer{margin-top:14px;text-align:center;color:var(--muted);font-size:12px}
     <tr><td>120 dB</td><td>疼痛閾值</td></tr>
   </table>
   <h3 style="margin-top:14px">名詞</h3>
-  <p>• <b>AVG</b>：開始（或重設）後的能量平均 Leq，不是算術平均。<br>
-  • <b>MAX／MIN</b>：期間內的最高／最低讀數。<b>PEAK</b>：未經時間平滑的瞬間最高值。<br>
-  • <b>A 加權</b>模擬人耳，量噪音用；<b>C 加權</b>保留低頻，對喇叭／重低音音量用；<b>Z</b> 不加權。</p>
+  <p>• <b>AVG／Leq</b>：期間內的能量平均（不是算術平均）。<b>MAX／MIN</b>：最高／最低讀數。<b>PEAK</b>：未經時間平滑的瞬間最高值。<br>
+  • <b>A 加權</b>模擬人耳（量噪音）；<b>C 加權</b>保留低頻（對喇叭）；<b>Z</b> 不加權。<br>
+  • <b>L10／L50／L90</b>：有 10%／50%／90% 時間超過的音量。L90 ≈ 背景音，L10 ≈ 吵的時段。<br>
+  • <b>C − A 差值</b>：&gt;20 dB 代表低頻成分明顯（重低音、冷氣壓縮機、馬達），A 加權會低估這類噪音的困擾。<br>
+  • <b>噪音劑量</b>：以職業安全 NIOSH 標準（85 dBA／8 小時＝100%）換算的累積聽力負擔。<br>
+  • <b>RTA</b>：把聲音分成 30 個 1/3 倍頻程頻段，看哪一段特別多或少。<br>
+  • <b>主頻</b>：目前最強的頻率與對應音名，找嗡嗡聲、共振來源用。</p>
   <h3>準確度</h3>
-  <p>手機麥克風沒有出廠校正，誤差約 ±3–5 dB，低於 35 dB 或高於 100 dB 更不準。可在「設定」用校正偏移對齊標準分貝計。量測時螢幕保持常亮；本頁不錄音、不上傳，聲音只在手機內即時計算。</p>
-  <button class="close" data-close>關閉</button>
+  <p>手機麥克風沒有出廠校正，誤差約 ±3–5 dB；低於 35 dB、高於 100 dB、或 50 Hz 以下更不準。可在「設定」用校正偏移對齊標準分貝計。量測時螢幕保持常亮；本頁不錄音、不上傳，聲音只在手機內即時計算。iPhone 不支援網頁震動，超標時以閃紅提示。</p>
+  <h3>USB 量測麥克風</h3>
+  <p>可接 miniDSP UMIK-1／UMIK-2 等 USB 麥克風（iPhone 需轉接頭；接上後通常自動成為預設輸入），在「設定」選麥克風並載入廠商提供的校正檔（.txt）。校正檔的 Sens Factor 會換算成絕對音壓、頻率曲線會修正頻譜與加權。⚠️ 使用 Sens Factor 時，電腦／手機的麥克風輸入音量要開到最大，否則數字會偏低。</p>
+  <button class="wide" data-close>關閉</button>
 </div></div>
+
+<div id="report"></div>
 
 <script>
 (() => {
   'use strict';
-  const BASE_OFFSET = 100;                 // dBFS → 約略 dB SPL（未校正手機的經驗值）
-  const LS = { cal: 'dbmeter-cal', w: 'dbmeter-w', t: 'dbmeter-t' };
-  const G_MIN = 20, G_MAX = 130;           // 錶面刻度範圍
+  const LS = { cal: 'dbmeter-cal', w: 'dbmeter-w', t: 'dbmeter-t', a: 'dbmeter-alarm', p: 'dbmeter-preset', mic: 'dbmeter-mic', prof: 'dbmeter-micprof' };
+  const G_MIN = 20, G_MAX = 130;
   const $ = id => document.getElementById(id);
   const ls = (k, v) => { try { if (v === undefined) return localStorage.getItem(k); localStorage.setItem(k, v); } catch (e) { return null; } };
+  const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+  const fmt = v => isFinite(v) ? v.toFixed(1) : '--';
+  const dB = x => 10*Math.log10(Math.max(x, 1e-15));
 
+  // ---------- 狀態 ----------
   let cal = parseFloat(ls(LS.cal)) || 0;
   let weighting = ls(LS.w) || 'A', response = ls(LS.t) || 'fast';
-  let ctx = null, analyser = null, stream = null, raf = 0, wakeLock = null;
-  let timeBuf, freqBuf, peakSpec, weightsA, weightsC, sampleRate = 48000;
-  let ms = null, lastT = 0, startedAt = 0, elapsedBefore = 0;
-  let leqSum = 0, leqTime = 0, vMax = -Infinity, vMin = Infinity, vPeak = -Infinity;
-  const log = [];                          // 匯出用：每 0.5 秒一筆
-  let lastLog = 0, lastSpec = 0;
+  let alarmTh = parseFloat(ls(LS.a)) || 0;
+  let micId = ls(LS.mic) || ''; let micLabel = '';
+  let prof = null; try { prof = JSON.parse(ls(LS.prof) || 'null'); } catch (e) {}
+  // dBFS → dB SPL：有校正檔 Sens Factor 時＝94 − Sens Factor（REW 慣例），否則用手機經驗值 100
+  const base = () => (prof && isFinite(prof.sens)) ? 94 - prof.sens : 100;
+  let kZ1, kA1, kC1, c2, cDb2, fD2;
+  let ctx = null, src = null, a1 = null, a2 = null, sp = null, mute = null, stream = null, raf = 0, wakeLock = null;
+  let sampleRate = 48000;
+  let tBuf1, fBuf1, tBuf2, fBuf2, peakSpec, wA1, wC1;
+  let lastT = 0, startedAt = 0, elapsedBefore = 0, sessionStart = null, sessionEnd = null;
+  const W = ['A', 'C', 'Z'];
+  let tw = { A: null, C: null, Z: null };            // 時間加權均方
+  let st;                                            // 各加權統計
+  let secAcc, secHist = [], events = [], alarmState = null;
+  let rtaMs = null, rtaPeak = null;
+  let lastSpec = 0, lastSg = 0, curDisplay = NaN;
+  let tab = 'spec';
+
+  function newStats() {
+    const o = {}; W.forEach(w => o[w] = { leq: 0, max: -Infinity, min: Infinity, peak: -Infinity, hist: new Float64Array(1500) });
+    o.time = 0; o.dose = 0; return o;
+  }
+  st = newStats();
+  secAcc = { A: 0, C: 0, t: 0 };
 
   // ---------- 加權（IEC 61672 解析式）----------
   const aW = f => { const f2 = f*f; return 20*Math.log10((12194**2*f2*f2)/((f2+20.6**2)*Math.sqrt((f2+107.7**2)*(f2+737.9**2))*(f2+12194**2))) + 2.0; };
   const cW = f => { const f2 = f*f; return 20*Math.log10((12194**2*f2)/((f2+20.6**2)*(f2+12194**2))) + 0.06; };
-  function buildWeights(n, sr) {
-    weightsA = new Float32Array(n); weightsC = new Float32Array(n);
-    for (let i = 1; i < n; i++) { const f = i*sr/(2*n); weightsA[i] = 10**(aW(f)/10); weightsC[i] = 10**(cW(f)/10); }
+  function weights(n, sr) {
+    const A = new Float32Array(n), C = new Float32Array(n);
+    for (let i = 1; i < n; i++) { const f = i*sr/(2*n); A[i] = 10**(aW(f)/10); C[i] = 10**(cW(f)/10); }
+    return [A, C];
   }
-  // ΣP·W / ΣP：與 FFT 視窗無關的加權比例，乘到時域均方上
-  function weightRatio() {
-    if (weighting === 'Z') return 1;
-    const w = weighting === 'A' ? weightsA : weightsC;
-    let sp = 0, spw = 0;
-    for (let i = 1; i < freqBuf.length; i++) {
-      const d = freqBuf[i]; if (!isFinite(d)) continue;
-      const p = 10**(d/10); sp += p; spw += p*w[i];
-    }
-    return sp > 0 ? spw/sp : 1;
+
+  // ---------- 麥克風校正曲線 ----------
+  function corrArrays(n, sr) {           // 回傳 [線性功率倍數, dB 修正]；修正＝減去麥克風本身的頻率響應
+    const lin = new Float32Array(n).fill(1), db = new Float32Array(n);
+    const cv = prof && prof.curve;
+    if (cv && cv.length > 1) { let k = 0;
+      for (let i = 1; i < n; i++) {
+        const f = i*sr/(2*n); let v;
+        if (f <= cv[0][0]) v = cv[0][1]; else if (f >= cv[cv.length-1][0]) v = cv[cv.length-1][1];
+        else { while (k < cv.length - 2 && cv[k+1][0] < f) k++;
+          const [fa, da] = cv[k], [fb, dbb] = cv[k+1], t = Math.log(f/fa)/Math.log(fb/fa); v = da + (dbb - da)*t; }
+        db[i] = -v; lin[i] = 10**(-v/10);
+      } }
+    return [lin, db];
+  }
+  function buildCorr() {
+    if (!a1) return;
+    const [l1] = corrArrays(a1.frequencyBinCount, sampleRate);
+    kZ1 = l1; kA1 = l1.map((v, i) => v*wA1[i]); kC1 = l1.map((v, i) => v*wC1[i]);
+    [c2, cDb2] = corrArrays(a2.frequencyBinCount, sampleRate);
+  }
+  function parseCal(text, name) {
+    const sm = text.match(/sens\s*factor\s*=\s*([-+]?\d*\.?\d+)/i), sn = text.match(/SERNO:\s*([\w-]+)/i);
+    const curve = [];
+    text.split(/\r?\n/).forEach(line => {
+      const t = line.trim(); if (!t || /^["*#;a-zA-Z]/.test(t)) return;
+      const parts = t.split(/[\s,;]+/).map(Number);
+      if (parts.length >= 2 && isFinite(parts[0]) && isFinite(parts[1]) && parts[0] > 0) curve.push([parts[0], parts[1]]);
+    });
+    curve.sort((a, b) => a[0] - b[0]);
+    if (curve.length < 5) throw new Error('看不懂這個檔案（找不到至少 5 行「頻率 dB」數據）');
+    return { name, sens: sm ? parseFloat(sm[1]) : NaN, serial: sn ? sn[1] : '', curve };
+  }
+  function calInfo() {
+    if (!prof) { $('calInfo').textContent = '未載入（使用手機內建麥克風的估計值）'; $('calRemove').style.display = 'none'; return; }
+    const f0 = prof.curve[0][0], f1 = prof.curve[prof.curve.length-1][0];
+    const ext = prof.curve.reduce((m, p) => Math.max(m, Math.abs(p[1])), 0);
+    $('calInfo').innerHTML = `✅ 已載入：${prof.name}${prof.serial ? '（序號 ' + prof.serial + '）' : ''}<br>`
+      + `頻率修正 ${prof.curve.length} 點、${f0 < 1000 ? f0.toFixed(1) : f0} Hz～${(f1/1000).toFixed(1)} kHz、最大修正 ±${ext.toFixed(1)} dB<br>`
+      + (isFinite(prof.sens) ? `Sens Factor ${prof.sens} dB → 換算基準 ${(94 - prof.sens).toFixed(2)} dB（輸入音量需開到最大）` : '檔案沒有 Sens Factor：只修正頻率響應，絕對音量仍用估計值＋校正偏移');
+    $('calRemove').style.display = 'block';
   }
 
   // ---------- 指針錶 ----------
-  const NS = 'http://www.w3.org/2000/svg';
-  const CX = 180, CY = 190, R = 150;
-  const A0 = -160, A1 = -20;                      // 起訖角（度；0=右方，-90=正上方）
+  const NS = 'http://www.w3.org/2000/svg', CX = 180, CY = 190;
+  const A0 = -160, A1 = -20;
   const ang = v => (A0 + (Math.max(G_MIN, Math.min(G_MAX, v)) - G_MIN)/(G_MAX - G_MIN)*(A1 - A0)) * Math.PI/180;
   const pt = (a, r) => [CX + r*Math.cos(a), CY + r*Math.sin(a)];
   function el(tag, attrs, parent) { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); parent.appendChild(e); return e; }
   let needle, minTxt, peakTxt;
   function buildGauge() {
     const g = $('gauge'); g.innerHTML = '';
-    const cs = getComputedStyle(document.documentElement);
-    const tick = cs.getPropertyValue('--tick').trim(), hot = cs.getPropertyValue('--hotTick').trim();
-    const rIn = 108;
-    const arcPath = (v0, v1) => { const [x0,y0] = pt(ang(v0), rIn), [x1,y1] = pt(ang(v1), rIn);
-      const large = (ang(v1)-ang(v0)) > Math.PI ? 1 : 0; return `M${x0},${y0} A${rIn},${rIn} 0 ${large} 1 ${x1},${y1}`; };
-    el('path', { d: arcPath(G_MIN, 90), stroke: tick, 'stroke-width': 4, fill: 'none', 'stroke-linecap': 'round' }, g);
-    el('path', { d: arcPath(90, G_MAX), stroke: hot, 'stroke-width': 4, fill: 'none', 'stroke-linecap': 'round' }, g);
+    const tick = css('--tick'), hot = css('--hotTick'), rIn = 108;
+    const arc = (v0, v1) => { const [x0,y0] = pt(ang(v0), rIn), [x1,y1] = pt(ang(v1), rIn); return `M${x0},${y0} A${rIn},${rIn} 0 0 1 ${x1},${y1}`; };
+    el('path', { d: arc(G_MIN, 90), stroke: tick, 'stroke-width': 4, fill: 'none', 'stroke-linecap': 'round' }, g);
+    el('path', { d: arc(90, G_MAX), stroke: hot, 'stroke-width': 4, fill: 'none', 'stroke-linecap': 'round' }, g);
     for (let v = G_MIN; v <= G_MAX; v += 5) {
       const major = v % 10 === 0, a = ang(v), c = v >= 90 ? hot : tick;
       const [x0,y0] = pt(a, rIn), [x1,y1] = pt(a, major ? rIn + 34 : rIn + 16);
       el('line', { x1:x0, y1:y0, x2:x1, y2:y1, stroke: c, 'stroke-width': major ? 4 : 2, 'stroke-linecap': 'round' }, g);
       if (major) {
         const [tx,ty] = pt(a, rIn + 50), deg = a*180/Math.PI + 90;
-        const t = el('text', { x: tx, y: ty, fill: c, 'font-size': 15, 'text-anchor': 'middle', 'dominant-baseline': 'middle',
-          transform: `rotate(${deg} ${tx} ${ty})`, 'font-family': '-apple-system,sans-serif' }, g);
-        t.textContent = v;
+        el('text', { x: tx, y: ty, fill: c, 'font-size': 15, 'text-anchor': 'middle', 'dominant-baseline': 'middle',
+          transform: `rotate(${deg} ${tx} ${ty})`, 'font-family': '-apple-system,sans-serif' }, g).textContent = v;
       }
     }
-    // MIN / PEAK 小讀數
-    const lab = (x, txt, anchor, c) => { const t = el('text', { x, y: CY - 40, fill: c, 'font-size': 11, 'text-anchor': anchor, 'letter-spacing': 1, 'font-family': '-apple-system,sans-serif' }, g); t.textContent = txt; };
+    if (alarmTh > 0) {   // 警示門檻刻度
+      const [x0,y0] = pt(ang(alarmTh), rIn - 6), [x1,y1] = pt(ang(alarmTh), rIn + 40);
+      el('line', { x1:x0, y1:y0, x2:x1, y2:y1, stroke: css('--warn'), 'stroke-width': 2, 'stroke-dasharray': '3 3' }, g);
+    }
+    const lab = (x, txt, anchor, c) => { el('text', { x, y: CY - 40, fill: c, 'font-size': 11, 'text-anchor': anchor, 'letter-spacing': 1, 'font-family': '-apple-system,sans-serif' }, g).textContent = txt; };
     lab(CX - 8, 'MIN', 'end', tick); lab(CX + 8, 'PEAK', 'start', hot);
     el('line', { x1: CX - 30, y1: CY - 33, x2: CX + 30, y2: CY - 33, stroke: tick, 'stroke-width': 3, 'stroke-linecap': 'round' }, g);
     minTxt = el('text', { x: CX - 8, y: CY - 13, fill: tick, 'font-size': 16, 'text-anchor': 'end', 'font-family': '-apple-system,sans-serif' }, g);
     peakTxt = el('text', { x: CX + 8, y: CY - 13, fill: hot, 'font-size': 16, 'text-anchor': 'start', 'font-family': '-apple-system,sans-serif' }, g);
     minTxt.textContent = '--'; peakTxt.textContent = '--';
-    needle = el('line', { x1: CX, y1: CY, x2: CX, y2: CY, stroke: cs.getPropertyValue('--needle').trim(), 'stroke-width': 4, 'stroke-linecap': 'round' }, g);
-    setNeedle(G_MIN);
+    needle = el('line', { x1: CX, y1: CY, x2: CX, y2: CY, stroke: css('--needle'), 'stroke-width': 4, 'stroke-linecap': 'round' }, g);
+    setNeedle(isFinite(curDisplay) ? curDisplay : G_MIN);
   }
   function setNeedle(v) {
     const a = ang(v), [x1,y1] = pt(a, 62), [x2,y2] = pt(a, 140);
-    needle.setAttribute('x1', x1); needle.setAttribute('y1', y1);
-    needle.setAttribute('x2', x2); needle.setAttribute('y2', y2);
+    needle.setAttribute('x1', x1); needle.setAttribute('y1', y1); needle.setAttribute('x2', x2); needle.setAttribute('y2', y2);
   }
+
+  // ---------- 畫布工具 ----------
+  function prep(c) {
+    const dpr = window.devicePixelRatio || 1, w = c.clientWidth, h = c.clientHeight;
+    if (!w) return null;
+    if (c.width !== Math.round(w*dpr)) { c.width = Math.round(w*dpr); c.height = Math.round(h*dpr); }
+    const g = c.getContext('2d'); g.setTransform(dpr,0,0,dpr,0,0); g.clearRect(0,0,w,h); return [g, w, h];
+  }
+  const F0 = 20, F1 = 20000;
+  const FREQ_TICKS = [[50,'50'],[100,'100'],[200,'200'],[500,'500'],[1000,'1k'],[2000,'2k'],[5000,'5k'],[10000,'10k'],[20000,'20k']];
 
   // ---------- 頻譜 ----------
   function drawSpec() {
-    const c = $('spec'), dpr = window.devicePixelRatio || 1, w = c.clientWidth, h = c.clientHeight;
-    if (c.width !== Math.round(w*dpr)) { c.width = Math.round(w*dpr); c.height = Math.round(h*dpr); }
-    const g = c.getContext('2d'); g.setTransform(dpr,0,0,dpr,0,0); g.clearRect(0,0,w,h);
-    const cs = getComputedStyle(document.documentElement);
-    const muted = cs.getPropertyValue('--muted').trim(), line = cs.getPropertyValue('--line').trim(),
-          blue = cs.getPropertyValue('--blue').trim(), peak = cs.getPropertyValue('--peak').trim(), hot = cs.getPropertyValue('--hotTick').trim();
-    const padL = 34, padR = 6, padT = 6, padB = 18, F0 = 20, F1 = 20000, D0 = -120, D1 = -20;
+    const r = prep($('spec')); if (!r) return; const [g, w, h] = r;
+    const line = css('--line'), blue = css('--blue'), peak = css('--peak'), hot = css('--hotTick');
+    const padL = 34, padR = 6, padT = 6, padB = 18, D0 = -120, D1 = -20;
     const X = f => padL + Math.log(f/F0)/Math.log(F1/F0)*(w - padL - padR);
     const Y = d => padT + (1 - (Math.max(D0, Math.min(D1, d)) - D0)/(D1 - D0))*(h - padT - padB);
-    g.font = '10px -apple-system,sans-serif'; g.lineWidth = 1;
-    g.strokeStyle = line; g.fillStyle = hot;
+    g.font = '10px -apple-system,sans-serif'; g.lineWidth = 1; g.strokeStyle = line; g.fillStyle = hot;
     for (let d = -120; d <= -20; d += 20) { g.beginPath(); g.moveTo(padL, Y(d)); g.lineTo(w - padR, Y(d)); g.stroke(); g.fillText(d, 2, Y(d) + 3); }
-    g.fillStyle = hot; g.textAlign = 'center';
-    [[50,'50'],[100,'100'],[200,'200'],[500,'500'],[1000,'1k'],[2000,'2k'],[5000,'5k'],[10000,'10k'],[20000,'20k']].forEach(([f,t]) => {
-      g.strokeStyle = line; g.beginPath(); g.moveTo(X(f), padT); g.lineTo(X(f), h - padB); g.stroke();
-      g.fillText(t, Math.min(X(f), w - 10), h - 4);
+    g.textAlign = 'center';
+    FREQ_TICKS.forEach(([f,t]) => { g.beginPath(); g.moveTo(X(f), padT); g.lineTo(X(f), h - padB); g.stroke(); g.fillText(t, Math.min(X(f), w - 10), h - 4); });
+    g.textAlign = 'left';
+    if (!fD2) return;
+    const n = fD2.length, binHz = sampleRate/(2*n);
+    // 對數軸上每個像素取該像素頻率範圍內的最大值（避免高頻端密集鋸齒）
+    const cols = Math.floor(w - padL - padR);
+    const colVal = (arr) => { const out = new Float32Array(cols);
+      for (let c = 0; c < cols; c++) {
+        const fa = F0*Math.pow(F1/F0, c/cols), fb = F0*Math.pow(F1/F0, (c+1)/cols);
+        let i0 = Math.max(1, Math.floor(fa/binHz)), i1 = Math.min(n - 1, Math.ceil(fb/binHz)), m = -Infinity;
+        for (let i = i0; i <= i1; i++) if (arr[i] > m) m = arr[i];
+        out[c] = m; }
+      return out; };
+    const cur = colVal(fD2);
+    g.beginPath(); g.moveTo(padL, h - padB);
+    for (let c = 0; c < cols; c++) g.lineTo(padL + c, Y(cur[c]));
+    g.lineTo(padL + cols, h - padB); g.closePath(); g.fillStyle = blue + '22'; g.fill();
+    g.beginPath(); for (let c = 0; c < cols; c++) c ? g.lineTo(padL + c, Y(cur[c])) : g.moveTo(padL, Y(cur[0]));
+    g.strokeStyle = blue; g.lineWidth = 1.2; g.stroke();
+    if (peakSpec && st.time > 0.5) {
+      const pk = colVal(peakSpec);
+      g.beginPath(); for (let c = 0; c < cols; c++) c ? g.lineTo(padL + c, Y(pk[c])) : g.moveTo(padL, Y(pk[0]));
+      g.strokeStyle = peak; g.lineWidth = 1; g.stroke();
+    }
+  }
+
+  // ---------- 1/3 倍頻程 RTA ----------
+  const BANDS = []; for (let k = -16; k <= 13; k++) BANDS.push(1000*Math.pow(2, k/3));
+  const BAND_LABEL = f => { const nominal = [25,31.5,40,50,63,80,100,125,160,200,250,315,400,500,630,800,1000,1250,1600,2000,2500,3150,4000,5000,6300,8000,10000,12500,16000,20000];
+    let best = nominal[0]; nominal.forEach(x => { if (Math.abs(Math.log(x/f)) < Math.abs(Math.log(best/f))) best = x; }); return best; };
+  let bandBins = null;
+  function buildBands(n, sr) {
+    const binHz = sr/(2*n);
+    bandBins = BANDS.map(fc => {
+      const lo = fc*Math.pow(2, -1/6), hi = fc*Math.pow(2, 1/6);
+      return [Math.max(1, Math.round(lo/binHz)), Math.min(n - 1, Math.round(hi/binHz) - 1)];
+    });
+  }
+  // 由 a2 的頻譜計算各頻段的 dB（以時域均方校準，與視窗無關）
+  function rtaInstant() {
+    let tot = 0; const p = new Float64Array(fBuf2.length);
+    for (let i = 1; i < fBuf2.length; i++) { const d = fBuf2[i]; p[i] = isFinite(d) ? 10**(d/10) : 0; tot += p[i]; }
+    let s = 0; for (let i = 0; i < tBuf2.length; i++) s += tBuf2[i]*tBuf2[i];
+    const msZ = s/tBuf2.length;
+    return bandBins.map(([i0, i1]) => { let b = 0; for (let i = i0; i <= i1; i++) b += p[i]*c2[i]; return tot > 0 ? msZ*b/tot : 0; });
+  }
+  function drawRta() {
+    const r = prep($('rta')); if (!r) return; const [g, w, h] = r;
+    const line = css('--line'), blue = css('--blue'), peak = css('--peak'), hot = css('--hotTick');
+    const padL = 28, padR = 4, padT = 6, padB = 18, D0 = 20, D1 = 110;
+    const Y = d => padT + (1 - (Math.max(D0, Math.min(D1, d)) - D0)/(D1 - D0))*(h - padT - padB);
+    g.font = '10px -apple-system,sans-serif'; g.strokeStyle = line; g.fillStyle = hot; g.lineWidth = 1;
+    for (let d = 30; d <= 110; d += 20) { g.beginPath(); g.moveTo(padL, Y(d)); g.lineTo(w - padR, Y(d)); g.stroke(); g.fillText(d, 2, Y(d) + 3); }
+    const bw = (w - padL - padR)/BANDS.length;
+    g.textAlign = 'center';
+    BANDS.forEach((fc, i) => {
+      const lab = BAND_LABEL(fc);
+      if ([31.5,63,125,250,500,1000,2000,4000,8000,16000].includes(lab)) g.fillText(lab >= 1000 ? (lab/1000) + 'k' : lab, padL + bw*(i + .5), h - 4);
     });
     g.textAlign = 'left';
-    if (!freqBuf) return;
-    const n = freqBuf.length, binHz = sampleRate/(2*n);
-    const path = (arr) => { g.beginPath(); let first = true;
-      for (let i = 1; i < n; i++) { const f = i*binHz; if (f < F0 || f > F1) continue;
-        const x = X(f), y = Y(arr[i]); if (first) { g.moveTo(x, y); first = false; } else g.lineTo(x, y); }
-      return first; };
-    if (!path(freqBuf)) {
-      g.lineTo(X(Math.min(F1, (n-1)*binHz)), h - padB); g.lineTo(X(Math.max(F0, binHz)), h - padB); g.closePath();
-      g.fillStyle = blue + '22'; g.globalAlpha = 1; g.fill();
-      path(freqBuf); g.strokeStyle = blue; g.lineWidth = 1.2; g.stroke();
+    if (!rtaMs) return;
+    const off = base() + cal;
+    let maxI = 0;
+    rtaMs.forEach((m, i) => {
+      const v = dB(m) + off; if (v > dB(rtaMs[maxI]) + off) maxI = i;
+      g.fillStyle = blue; g.fillRect(padL + bw*i + 1, Y(v), Math.max(1, bw - 2), h - padB - Y(v));
+      if (rtaPeak && isFinite(rtaPeak[i])) { g.fillStyle = peak; g.fillRect(padL + bw*i + 1, Y(rtaPeak[i]) - 1, Math.max(1, bw - 2), 2); }
+    });
+    $('rtaMax').textContent = '最強頻段 ' + BAND_LABEL(BANDS[maxI]) + ' Hz';
+  }
+
+  // ---------- 瀑布頻譜圖 ----------
+  const SG_LEFT = 60;
+  const LUT = (() => {
+    const stops = [[0,0,4],[40,11,84],[101,21,110],[159,42,99],[212,72,66],[245,125,21],[250,193,39],[252,255,164]];
+    const out = new Uint8ClampedArray(256*3);
+    for (let i = 0; i < 256; i++) { const x = i/255*(stops.length - 1), k = Math.min(stops.length - 2, Math.floor(x)), t = x - k;
+      for (let c = 0; c < 3; c++) out[i*3+c] = stops[k][c] + (stops[k+1][c] - stops[k][c])*t; }
+    return out; })();
+  let sgRows = null;
+  function sgInit() {
+    const c = $('sg'), g = c.getContext('2d');
+    g.fillStyle = '#000004'; g.fillRect(0, 0, c.width, c.height);
+    sgLabels();
+  }
+  function sgLabels() {
+    const c = $('sg'), g = c.getContext('2d'), H = c.height;
+    g.fillStyle = css('--card'); g.fillRect(0, 0, SG_LEFT, H);
+    g.fillStyle = css('--hotTick'); g.font = '20px -apple-system,sans-serif'; g.textAlign = 'right';
+    [[50,'50'],[100,'100'],[200,'200'],[500,'500'],[1000,'1k'],[2000,'2k'],[5000,'5k'],[10000,'10k']].forEach(([f,t]) => {
+      const y = H - Math.log(f/F0)/Math.log(F1/F0)*H; g.fillText(t, SG_LEFT - 6, y + 7); });
+    g.textAlign = 'left';
+  }
+  function sgColumn() {
+    if (!fD2) return;
+    const c = $('sg'), g = c.getContext('2d'), Wd = c.width, H = c.height, step = 2;
+    g.drawImage(c, SG_LEFT + step, 0, Wd - SG_LEFT - step, H, SG_LEFT, 0, Wd - SG_LEFT - step, H);
+    const n = fD2.length, binHz = sampleRate/(2*n);
+    if (!sgRows || sgRows.length !== H) {
+      sgRows = []; for (let y = 0; y < H; y++) {
+        const fa = F0*Math.pow(F1/F0, (H - y - 1)/H), fb = F0*Math.pow(F1/F0, (H - y)/H);
+        sgRows.push([Math.max(1, Math.floor(fa/binHz)), Math.min(n - 1, Math.ceil(fb/binHz))]); }
     }
-    if (peakSpec && !path(peakSpec)) { g.strokeStyle = peak; g.lineWidth = 1; g.stroke(); }
+    const img = g.createImageData(step, H);
+    for (let y = 0; y < H; y++) {
+      const [i0, i1] = sgRows[y]; let m = -200; for (let i = i0; i <= i1; i++) if (fD2[i] > m) m = fD2[i];
+      const k = Math.max(0, Math.min(255, Math.round((m + 120)/100*255)));
+      for (let x = 0; x < step; x++) { const o = (y*step + x)*4; img.data[o] = LUT[k*3]; img.data[o+1] = LUT[k*3+1]; img.data[o+2] = LUT[k*3+2]; img.data[o+3] = 255; }
+    }
+    g.putImageData(img, Wd - step, 0);
+  }
+
+  // ---------- 主頻偵測 ----------
+  const NOTES = ['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];
+  function dominant() {
+    const n = fD2.length, binHz = sampleRate/(2*n);
+    const i0 = Math.ceil(20/binHz), i1 = Math.min(n - 2, Math.floor(20000/binHz));
+    let mi = i0; for (let i = i0; i <= i1; i++) if (fD2[i] > fD2[mi]) mi = i;
+    const sorted = Array.from(fD2.subarray(i0, i1)).filter(isFinite).sort((a, b) => a - b);
+    const median = sorted[Math.floor(sorted.length/2)];
+    if (!isFinite(fD2[mi]) || fD2[mi] - median < 25 || fD2[mi] < -90) return null;
+    const a = fD2[mi-1], b = fD2[mi], c = fD2[mi+1];
+    const p = (isFinite(a) && isFinite(c) && (a - 2*b + c) !== 0) ? 0.5*(a - c)/(a - 2*b + c) : 0;
+    const f = (mi + p)*binHz;
+    const midi = 12*Math.log2(f/440) + 69, nr = Math.round(midi), cents = Math.round((midi - nr)*100);
+    return { f, note: NOTES[(nr % 12 + 12) % 12] + (Math.floor(nr/12) - 1), cents };
+  }
+
+  // ---------- 統計 ----------
+  function percentile(hist, pct) {           // pct=10 → 有 10% 時間超過的值
+    let tot = 0; for (let i = 0; i < hist.length; i++) tot += hist[i];
+    if (tot <= 0) return NaN;
+    let acc = 0; const target = tot*pct/100;
+    for (let i = hist.length - 1; i >= 0; i--) { acc += hist[i]; if (acc >= target) return i/10; }
+    return NaN;
+  }
+  const leqOf = w => st.time > 0 ? dB(st[w].leq/st.time) : NaN;
+  function updateStatsPane() {
+    const LA = leqOf('A'), LC = leqOf('C'), ca = LC - LA, s = st[weighting];
+    $('tLAeq').textContent = fmt(LA); $('tLCeq').textContent = fmt(LC); $('tCA').textContent = fmt(ca);
+    $('tL10').textContent = fmt(percentile(s.hist, 10)); $('tL50').textContent = fmt(percentile(s.hist, 50)); $('tL90').textContent = fmt(percentile(s.hist, 90));
+    $('tMin').textContent = fmt(s.min); $('tPeak').textContent = fmt(s.peak);
+    $('tDose').textContent = st.time > 0 ? (st.dose < 10 ? st.dose.toFixed(2) : st.dose.toFixed(0)) + '%' : '--';
+    $('caNote').textContent = st.time < 10 ? 'C − A 差值：量 10 秒以上才有意義。L10/L50/L90 以目前加權（' + weighting + '）計算。'
+      : 'C − A = ' + fmt(ca) + ' dB → ' + (ca >= 20 ? '低頻成分明顯（重低音、冷氣壓縮機、馬達類），A 加權會低估實際困擾。'
+        : ca >= 10 ? '有一些低頻成分。' : '以中高頻為主（說話、交通、一般環境音）。');
   }
 
   // ---------- 主迴圈 ----------
@@ -263,47 +568,99 @@ footer{margin-top:14px;text-align:center;color:var(--muted);font-size:12px}
     if (db < 100) return ['長時間會傷聽力', 'var(--hot)'];
     return ['危險音量，請保護耳朵', 'var(--hot)'];
   }
-  const fmt = v => isFinite(v) ? v.toFixed(1) : '--';
   const mmss = s => { s = Math.floor(s); const h = Math.floor(s/3600), m = Math.floor(s/60)%60, x = s%60;
     return (h ? h + ':' : '') + String(m).padStart(2,'0') + ':' + String(x).padStart(2,'0'); };
   const elapsed = () => elapsedBefore + (raf ? (performance.now() - startedAt)/1000 : 0);
 
+  function ratio(wt) {
+    let sp_ = 0, spw = 0;
+    for (let i = 1; i < fBuf1.length; i++) { const d = fBuf1[i]; if (!isFinite(d)) continue; const p = 10**(d/10); sp_ += p; spw += p*wt[i]; }
+    return sp_ > 0 ? spw/sp_ : 1;
+  }
+
   function tick(now) {
     raf = requestAnimationFrame(tick);
     const t = now/1000, dt = lastT ? Math.min(t - lastT, 0.25) : 0.016; lastT = t;
-    analyser.getFloatTimeDomainData(timeBuf);
-    analyser.getFloatFrequencyData(freqBuf);
-    let s = 0; for (let i = 0; i < timeBuf.length; i++) s += timeBuf[i]*timeBuf[i];
-    const blockMs = (s/timeBuf.length)*weightRatio();
-    const tau = response === 'fast' ? 0.125 : 1.0;
-    ms = ms === null ? blockMs : ms + (dt/tau)*(blockMs - ms);
-    const off = BASE_OFFSET + cal;
-    const db = 10*Math.log10(Math.max(ms, 1e-12)) + off;
-    const blockDb = 10*Math.log10(Math.max(blockMs, 1e-12)) + off;
+    a1.getFloatTimeDomainData(tBuf1); a1.getFloatFrequencyData(fBuf1);
+    a2.getFloatTimeDomainData(tBuf2); a2.getFloatFrequencyData(fBuf2);
+    for (let i = 0; i < fBuf2.length; i++) fD2[i] = fBuf2[i] + cDb2[i];
+    let s = 0; for (let i = 0; i < tBuf1.length; i++) s += tBuf1[i]*tBuf1[i];
+    const msZ = s/tBuf1.length, blk = { Z: msZ*ratio(kZ1), A: msZ*ratio(kA1), C: msZ*ratio(kC1) };
+    const tau = response === 'fast' ? 0.125 : 1.0, off = base() + cal, warm = st.time > 0.5;
+    W.forEach(w => { tw[w] = tw[w] === null ? blk[w] : tw[w] + (dt/tau)*(blk[w] - tw[w]); });
 
-    leqSum += 10**(blockDb/10)*dt; leqTime += dt;
-    if (leqTime > 0.5) { vMax = Math.max(vMax, db); vMin = Math.min(vMin, db); vPeak = Math.max(vPeak, blockDb); }
-    if (leqTime > 0.5) for (let i = 0; i < freqBuf.length; i++) if (freqBuf[i] > peakSpec[i]) peakSpec[i] = freqBuf[i];
+    st.time += dt;
+    W.forEach(w => {
+      const o = st[w], lv = dB(tw[w]) + off, lb = dB(blk[w]) + off;
+      o.leq += 10**(lb/10)*dt;
+      if (warm) { o.max = Math.max(o.max, lv); o.min = Math.min(o.min, lv); o.peak = Math.max(o.peak, lb);
+        const bi = Math.max(0, Math.min(1499, Math.round(lv*10))); o.hist[bi] += dt; }
+    });
+    const LAblk = dB(blk.A) + off;
+    if (LAblk >= 80) st.dose += dt/(8*3600/Math.pow(2, (LAblk - 85)/3))*100;
+    // 每秒紀錄
+    secAcc.A += blk.A*dt; secAcc.C += blk.C*dt; secAcc.t += dt;
+    if (secAcc.t >= 1) { secHist.push({ t: Date.now(), A: dB(secAcc.A/secAcc.t) + off, C: dB(secAcc.C/secAcc.t) + off }); secAcc = { A: 0, C: 0, t: 0 }; }
 
-    const avg = leqTime > 0 ? 10*Math.log10(leqSum/leqTime) : NaN;
+    // RTA 時間加權
+    const ri = rtaInstant();
+    if (!rtaMs) rtaMs = ri.slice(); else for (let i = 0; i < ri.length; i++) rtaMs[i] += (dt/tau)*(ri[i] - rtaMs[i]);
+    if (warm) { if (!rtaPeak) rtaPeak = new Array(BANDS.length).fill(-Infinity);
+      rtaMs.forEach((m, i) => { const v = dB(m) + off; if (v > rtaPeak[i]) rtaPeak[i] = v; });
+      for (let i = 0; i < fD2.length; i++) if (fD2[i] > peakSpec[i]) peakSpec[i] = fD2[i]; }
+
+    const db = dB(tw[weighting]) + off; curDisplay = db;
+    const o = st[weighting];
     $('big').textContent = fmt(db);
-    $('sAvg').textContent = fmt(avg); $('sMax').textContent = fmt(vMax);
-    minTxt.textContent = isFinite(vMin) ? Math.round(vMin) : '--';
-    peakTxt.textContent = isFinite(vPeak) ? Math.round(vPeak) : '--';
+    $('sAvg').textContent = fmt(leqOf(weighting)); $('sMax').textContent = fmt(o.max);
+    minTxt.textContent = isFinite(o.min) ? Math.round(o.min) : '--';
+    peakTxt.textContent = isFinite(o.peak) ? Math.round(o.peak) : '--';
     setNeedle(db);
     const [txt, color] = levelText(db); $('desc').textContent = txt; $('desc').style.color = color;
     $('timer').textContent = mmss(elapsed());
-    if (t - lastSpec > 0.05) { lastSpec = t; drawSpec(); }
-    if (t - lastLog >= 0.5) { lastLog = t; log.push([new Date().toISOString(), weighting, response, db.toFixed(1), fmt(avg)]); }
+    checkAlarm(db, dt);
+    if (chMeas) chMeasure(dt);
+
+    if (t - lastSpec > 0.06) {
+      lastSpec = t;
+      const d = dominant();
+      $('dom').innerHTML = d ? '主頻 <b>' + (d.f >= 1000 ? (d.f/1000).toFixed(2) + ' kHz' : d.f.toFixed(1) + ' Hz') + '</b> · ' + d.note + ' ' + (d.cents >= 0 ? '+' : '') + d.cents + '¢' : '主頻 --';
+      if (tab === 'spec') drawSpec(); else if (tab === 'rta') drawRta(); else if (tab === 'st') updateStatsPane();
+    }
+    if (t - lastSg > 0.08) { lastSg = t; sgColumn(); }
+  }
+
+  // ---------- 超標警示 ----------
+  function checkAlarm(db, dt) {
+    if (!(alarmTh > 0)) { if (alarmState) endAlarm(); return; }
+    if (!alarmState) {
+      if (db > alarmTh) { alarmState = { over: (alarmState?.over || 0) }; }
+    }
+    if (!alarmState) return;
+    if (!alarmState.active) {
+      if (db > alarmTh) { alarmState.over = (alarmState.over || 0) + dt;
+        if (alarmState.over >= 0.5) { alarmState.active = true; alarmState.start = Date.now(); alarmState.max = db; alarmState.below = 0;
+          document.body.classList.add('alarm'); $('status').classList.add('alarm'); $('status').textContent = '超過 ' + alarmTh + ' dB！';
+          try { navigator.vibrate && navigator.vibrate([200, 100, 200]); } catch (e) {} } }
+      else alarmState = null;
+    } else {
+      alarmState.max = Math.max(alarmState.max, db);
+      if (db < alarmTh - 2) { alarmState.below += dt; if (alarmState.below >= 1) endAlarm(); } else alarmState.below = 0;
+    }
+  }
+  function endAlarm() {
+    if (alarmState && alarmState.active) events.push({ start: alarmState.start, end: Date.now(), max: alarmState.max, th: alarmTh });
+    alarmState = null; document.body.classList.remove('alarm'); $('status').classList.remove('alarm');
+    if (raf) $('status').textContent = '量測中' + (events.length ? '（超標 ' + events.length + ' 次）' : '');
   }
 
   function resetStats() {
-    leqSum = 0; leqTime = 0; vMax = -Infinity; vMin = Infinity; vPeak = -Infinity;
-    if (peakSpec) peakSpec.fill(-Infinity);
-    elapsedBefore = 0; startedAt = performance.now();
+    st = newStats(); tw = { A: null, C: null, Z: null }; secHist = []; secAcc = { A: 0, C: 0, t: 0 }; events = [];
+    rtaPeak = null; if (peakSpec) peakSpec.fill(-Infinity);
+    elapsedBefore = 0; startedAt = performance.now(); sessionStart = raf ? new Date() : null; sessionEnd = null;
     ['sAvg','sMax'].forEach(id => $(id).textContent = '--');
     if (minTxt) { minTxt.textContent = '--'; peakTxt.textContent = '--'; }
-    $('timer').textContent = '00:00'; drawSpec();
+    $('timer').textContent = '00:00'; drawSpec(); drawRta(); updateStatsPane();
   }
 
   async function requestWake() { try { if ('wakeLock' in navigator) wakeLock = await navigator.wakeLock.request('screen'); } catch (e) {} }
@@ -311,49 +668,276 @@ footer{margin-top:14px;text-align:center;color:var(--muted);font-size:12px}
   async function start() {
     $('err').style.display = 'none';
     try {
-      stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: false } });
+      const cons = { echoCancellation: false, noiseSuppression: false, autoGainControl: false };
+      try { stream = await navigator.mediaDevices.getUserMedia({ audio: micId ? { ...cons, deviceId: { exact: micId } } : cons }); }
+      catch (e1) { if (micId && (e1.name === 'OverconstrainedError' || e1.name === 'NotFoundError')) { micId = ''; ls(LS.mic, ''); stream = await navigator.mediaDevices.getUserMedia({ audio: cons }); } else throw e1; }
     } catch (e) {
       $('err').textContent = '無法使用麥克風：' + (e.name === 'NotAllowedError'
         ? '權限被拒。請在瀏覽器網址列（或 iPhone 設定 → App → Safari → 麥克風）允許後重新整理。' : (e.message || e.name));
-      $('err').style.display = 'block'; return;
+      $('err').style.display = 'block'; return false;
     }
     ctx = new (window.AudioContext || window.webkitAudioContext)();
     if (ctx.state === 'suspended') await ctx.resume();
     sampleRate = ctx.sampleRate;
-    analyser = ctx.createAnalyser(); analyser.fftSize = 4096; analyser.smoothingTimeConstant = 0;
-    analyser.minDecibels = -140; analyser.maxDecibels = 0;
-    ctx.createMediaStreamSource(stream).connect(analyser);
-    timeBuf = new Float32Array(analyser.fftSize);
-    freqBuf = new Float32Array(analyser.frequencyBinCount);
-    peakSpec = new Float32Array(analyser.frequencyBinCount).fill(-Infinity);
-    buildWeights(analyser.frequencyBinCount, sampleRate);
-    ms = null; lastT = 0; log.length = 0; resetStats();
-    startedAt = performance.now();
-    $('recBtn').classList.add('on');
-    $('status').textContent = '量測中';
+    src = ctx.createMediaStreamSource(stream);
+    a1 = ctx.createAnalyser(); a1.fftSize = 4096; a1.smoothingTimeConstant = 0; a1.minDecibels = -140; a1.maxDecibels = 0;
+    a2 = ctx.createAnalyser(); a2.fftSize = 16384; a2.smoothingTimeConstant = 0; a2.minDecibels = -140; a2.maxDecibels = 0;
+    src.connect(a1); src.connect(a2);
+    // 原始取樣（RT60 用）：ScriptProcessor → 靜音 → destination
+    sp = ctx.createScriptProcessor(2048, 1, 1); mute = ctx.createGain(); mute.gain.value = 0;
+    src.connect(sp); sp.connect(mute); mute.connect(ctx.destination);
+    sp.onaudioprocess = e => rtFeed(e.inputBuffer.getChannelData(0));
+    tBuf1 = new Float32Array(a1.fftSize); fBuf1 = new Float32Array(a1.frequencyBinCount);
+    tBuf2 = new Float32Array(a2.fftSize); fBuf2 = new Float32Array(a2.frequencyBinCount);
+    peakSpec = new Float32Array(a2.frequencyBinCount).fill(-Infinity);
+    [wA1, wC1] = weights(a1.frequencyBinCount, sampleRate);
+    fD2 = new Float32Array(a2.frequencyBinCount); buildCorr();
+    buildBands(a2.frequencyBinCount, sampleRate); rtaMs = null; sgRows = null;
+    lastT = 0; raf = 1; resetStats(); sgInit();
+    sessionStart = new Date(); startedAt = performance.now();
+    $('recBtn').classList.add('on'); $('status').textContent = '量測中';
+    listMics();
     requestWake();
     raf = requestAnimationFrame(tick);
+    return true;
   }
   function stop() {
-    elapsedBefore = elapsed();
+    elapsedBefore = elapsed(); sessionEnd = new Date();
+    if (alarmState) endAlarm();
     cancelAnimationFrame(raf); raf = 0;
+    if (sp) sp.onaudioprocess = null;
     if (stream) stream.getTracks().forEach(t => t.stop());
     if (ctx) ctx.close();
-    stream = ctx = analyser = null;
+    stream = ctx = a1 = a2 = sp = src = null;
     if (wakeLock) { wakeLock.release().catch(() => {}); wakeLock = null; }
-    $('recBtn').classList.remove('on');
-    $('status').textContent = '已停止（數值保留）';
-    $('desc').textContent = '';
+    $('recBtn').classList.remove('on'); $('status').textContent = '已停止（數值保留）'; $('desc').textContent = '';
+    rtArmed = false; chMeas = null;
   }
+
+  // ---------- RT60 ----------
+  let rtArmed = false, rtPre = [], rtPreLen = 0, rtBg = null, rtCap = null, rtResults = [];
+  function rtFeed(x) {
+    if (!rtArmed) return;
+    const chunk = new Float32Array(x);
+    let s = 0; for (let i = 0; i < chunk.length; i++) s += chunk[i]*chunk[i];
+    const lv = dB(s/chunk.length);
+    if (rtCap) {
+      rtCap.push(chunk); rtCap.len += chunk.length;
+      if (rtCap.len >= sampleRate*1.8) { const cap = rtCap; rtCap = null; rtArmed = false; rtProcess(cap); }
+      return;
+    }
+    if (rtBg !== null && lv > rtBg + 25 && rtPreLen >= sampleRate*0.3) {
+      rtCap = [...rtPre]; rtCap.len = rtPreLen; rtCap.preLen = rtPreLen; rtCap.push(chunk); rtCap.len += chunk.length;
+      $('rtMsg').textContent = '偵測到聲音，計算中…'; return;
+    }
+    rtBg = rtBg === null ? lv : rtBg + 0.1*(lv - rtBg);
+    rtPre.push(chunk); rtPreLen += chunk.length;
+    while (rtPreLen - rtPre[0].length >= sampleRate*0.4) { rtPreLen -= rtPre[0].length; rtPre.shift(); }
+  }
+  function biquadBP(x, f0, sr) {           // RBJ 帶通（0 dB 峰值），Q≈1.41 ≈ 一個倍頻程
+    const Q = Math.SQRT2, w0 = 2*Math.PI*f0/sr, al = Math.sin(w0)/(2*Q), a0 = 1 + al;
+    const b0 = al/a0, b2 = -al/a0, a1_ = -2*Math.cos(w0)/a0, a2_ = (1 - al)/a0;
+    const y = new Float32Array(x.length); let x1 = 0, x2 = 0, y1 = 0, y2 = 0;
+    for (let i = 0; i < x.length; i++) { const v = b0*x[i] + b2*x2 - a1_*y1 - a2_*y2; x2 = x1; x1 = x[i]; y2 = y1; y1 = v; y[i] = v; }
+    return y;
+  }
+  // 回傳 {t20, edt, range}；x＝完整取樣（含觸發前 preLen）
+  function rt60Of(x, sr, preLen) {
+    const blk = Math.round(sr*0.01), nb = Math.floor(x.length/blk);
+    const env = new Float64Array(nb);
+    for (let b = 0; b < nb; b++) { let s = 0; for (let i = b*blk; i < (b+1)*blk; i++) s += x[i]*x[i]; env[b] = s/blk; }
+    const preB = Math.max(1, Math.floor(preLen/blk) - 3);
+    let noise = 0; for (let b = 0; b < preB; b++) noise += env[b]; noise /= preB;
+    let pk = preB; for (let b = preB; b < nb; b++) if (env[b] > env[pk]) pk = b;
+    const range = dB(env[pk]) - dB(noise);
+    if (range < 20) return { t20: NaN, edt: NaN, range };
+    let trunc = nb - 1;
+    for (let b = pk; b < nb; b++) if (dB(env[b]) <= dB(noise) + 5) { trunc = b; break; }
+    // Schroeder 反向積分（減去噪音）
+    const e = new Float64Array(trunc - pk + 1); let acc = 0;
+    for (let b = trunc; b >= pk; b--) { acc += Math.max(0, env[b] - noise); e[b - pk] = acc; }
+    const edc = Array.from(e, v => dB(v/e[0]));
+    const fit = (hi, lo) => {          // 在 EDC hi..lo dB 間線性回歸，回傳 dB/秒 斜率
+      const xs = [], ys = [];
+      edc.forEach((v, i) => { if (v <= hi && v >= lo) { xs.push(i*0.01); ys.push(v); } });
+      if (xs.length < 4) return NaN;
+      const mx = xs.reduce((a, b) => a + b)/xs.length, my = ys.reduce((a, b) => a + b)/ys.length;
+      let num = 0, den = 0; xs.forEach((x_, i) => { num += (x_ - mx)*(ys[i] - my); den += (x_ - mx)**2; });
+      return num/den;
+    };
+    const minEdc = Math.min(...edc);
+    let t20 = NaN, used = '';
+    if (minEdc <= -25 && range >= 35) { const sl = fit(-5, -25); t20 = -60/sl; used = 'T20'; }
+    else if (minEdc <= -15) { const sl = fit(-5, -15); t20 = -60/sl; used = 'T10'; }
+    const se = fit(0, -10), edt = -60/se;
+    return { t20, edt, range, used };
+  }
+  function rtProcess(cap) {
+    const x = new Float32Array(cap.len); let o = 0; cap.forEach(c => { x.set(c, o); o += c.length; });
+    const sr = sampleRate, pre = cap.preLen;
+    const bb = rt60Of(x, sr, pre);
+    const r500 = rt60Of(biquadBP(x, 500, sr), sr, pre), r1k = rt60Of(biquadBP(x, 1000, sr), sr, pre), r2k = rt60Of(biquadBP(x, 2000, sr), sr, pre);
+    if (!isFinite(bb.t20) || bb.t20 <= 0 || bb.t20 > 5) {
+      $('rtMsg').textContent = '這次失敗：' + (bb.range < 30 ? '拍手聲不夠大或環境太吵（動態範圍 ' + bb.range.toFixed(0) + ' dB，需 30 dB 以上）' : '衰減曲線不規則') + '。請再按一次「開始偵測」重拍。';
+    } else {
+      rtResults.push({ bb: bb.t20, b500: r500.t20, b1k: r1k.t20, b2k: r2k.t20, edt: bb.edt, used: bb.used });
+      $('rtMsg').textContent = '第 ' + rtResults.length + ' 次成功（' + bb.used + '，動態範圍 ' + bb.range.toFixed(0) + ' dB）。可再拍一次取平均。';
+    }
+    rtRender(); $('rtGo').textContent = '開始偵測';
+  }
+  const f2 = v => (isFinite(v) && v > 0 && v < 5) ? v.toFixed(2) : '--';
+  function rtRender() {
+    const tb = $('rtTable').querySelector('tbody'); tb.innerHTML = '';
+    rtResults.forEach((r, i) => { tb.insertAdjacentHTML('beforeend', `<tr><td>${i+1}</td><td>${f2(r.bb)}</td><td>${f2(r.b500)}</td><td>${f2(r.b1k)}</td><td>${f2(r.b2k)}</td><td>${f2(r.edt)}</td></tr>`); });
+    if (rtResults.length) {
+      const avg = k => { const v = rtResults.map(r => r[k]).filter(x => isFinite(x) && x > 0 && x < 5); return v.length ? v.reduce((a, b) => a + b)/v.length : NaN; };
+      tb.insertAdjacentHTML('beforeend', `<tr style="font-weight:700"><td>平均</td><td>${f2(avg('bb'))}</td><td>${f2(avg('b500'))}</td><td>${f2(avg('b1k'))}</td><td>${f2(avg('b2k'))}</td><td>${f2(avg('edt'))}</td></tr>`);
+      $('rtBig').textContent = f2(avg('bb')) + ' 秒';
+    } else $('rtBig').textContent = '--';
+  }
+  $('rtGo').onclick = async () => {
+    if (!raf && !(await start())) return;
+    rtPre = []; rtPreLen = 0; rtBg = null; rtCap = null; rtArmed = true;
+    $('rtMsg').textContent = '準備好了，請用力拍手一下…'; $('rtGo').textContent = '等待拍手中…';
+  };
+  $('rtClear').onclick = () => { rtResults = []; rtRender(); $('rtMsg').textContent = '尚未量測'; };
+
+  // ---------- 喇叭聲道對齊 ----------
+  const PRESETS = {
+    '422': ['FL','FR','SL','SR','TFL','TFR','SW1','SW2'],
+    '51': ['FL','C','FR','SL','SR','SW'],
+    '71': ['FL','C','FR','SL','SR','SBL','SBR','SW'],
+    '514': ['FL','C','FR','SL','SR','TFL','TFR','TRL','TRR','SW']
+  };
+  const CH_NAME = { FL:'前左', FR:'前右', C:'中置', SL:'環繞左', SR:'環繞右', SBL:'後環繞左', SBR:'後環繞右',
+    TFL:'天空前左', TFR:'天空前右', TRL:'天空後左', TRR:'天空後右', SW:'重低音', SW1:'重低音1', SW2:'重低音2' };
+  let preset = ls(LS.p) || '422', chVals = {}, chMeas = null;
+  function chRender() {
+    const box = $('chips'); box.innerHTML = '';
+    PRESETS[preset].forEach(ch => {
+      const b = document.createElement('button');
+      const v = chVals[ch];
+      b.className = (chMeas && chMeas.ch === ch) ? 'busy' : (isFinite(v) ? 'done' : '');
+      b.innerHTML = CH_NAME[ch] + '<b>' + (chMeas && chMeas.ch === ch ? Math.max(0, 4 - chMeas.t).toFixed(0) + 's' : isFinite(v) ? v.toFixed(1) : ch) + '</b>';
+      b.onclick = () => chStart(ch); box.appendChild(b);
+    });
+    const mains = PRESETS[preset].filter(c => !c.startsWith('SW') && isFinite(chVals[c]));
+    const avg = mains.length ? mains.reduce((a, c) => a + chVals[c], 0)/mains.length : NaN;
+    const tb = $('chTable').querySelector('tbody'); tb.innerHTML = '';
+    PRESETS[preset].forEach(ch => {
+      const v = chVals[ch]; if (!isFinite(v)) return;
+      const d = v - avg, cls = Math.abs(d) <= 1 ? '' : d > 0 ? 'pos' : 'neg';
+      const adv = !isFinite(d) ? '' : Math.abs(d) <= 1 ? '✓ OK' : (d > 0 ? '調低 ' : '調高 ') + Math.abs(d).toFixed(1) + ' dB';
+      tb.insertAdjacentHTML('beforeend', `<tr><td>${CH_NAME[ch]}</td><td>${v.toFixed(1)}</td><td class="${cls}">${isFinite(d) ? (d > 0 ? '+' : '') + d.toFixed(1) : '--'}</td><td class="${cls}">${adv}</td></tr>`);
+    });
+    if (isFinite(avg)) tb.insertAdjacentHTML('beforeend', `<tr style="font-weight:700"><td>主喇叭平均</td><td>${avg.toFixed(1)}</td><td></td><td></td></tr>`);
+  }
+  async function chStart(ch) {
+    if (chMeas) return;
+    if (!raf && !(await start())) return;
+    chMeas = { ch, t: -0.5, sum: 0, time: 0 };   // 先等 0.5 秒穩定
+    chRender();
+  }
+  let chLastRender = 0;
+  function chMeasure(dt) {
+    chMeas.t += dt;
+    if (chMeas.t > 0) { chMeas.sum += 10**((dB(tw.C) + base() + cal)/10)*dt; chMeas.time += dt; }
+    if (chMeas.t >= 4) { chVals[chMeas.ch] = dB(chMeas.sum/chMeas.time); chMeas = null; chRender(); return; }
+    if (chMeas.t - chLastRender > 0.5 || chMeas.t < chLastRender) { chLastRender = chMeas.t; chRender(); }
+  }
+  $('segPreset').querySelectorAll('button').forEach(b => {
+    b.classList.toggle('on', b.dataset.v === preset);
+    b.onclick = () => { preset = b.dataset.v; ls(LS.p, preset); $('segPreset').querySelectorAll('button').forEach(x => x.classList.toggle('on', x === b)); chRender(); };
+  });
+  $('chClear').onclick = () => { chVals = {}; chRender(); };
+
+  // ---------- 報告 / CSV ----------
+  const pad2 = n => String(n).padStart(2, '0');
+  const tstr = d => d ? `${d.getFullYear()}/${pad2(d.getMonth()+1)}/${pad2(d.getDate())} ${pad2(d.getHours())}:${pad2(d.getMinutes())}:${pad2(d.getSeconds())}` : '--';
+  function historyImage() {
+    const c = document.createElement('canvas'); c.width = 1400; c.height = 420; const g = c.getContext('2d');
+    g.fillStyle = '#fff'; g.fillRect(0, 0, c.width, c.height);
+    const padL = 60, padR = 20, padT = 20, padB = 50, lo = 20, hi = 120;
+    const Y = v => padT + (1 - (Math.max(lo, Math.min(hi, v)) - lo)/(hi - lo))*(c.height - padT - padB);
+    g.font = '20px sans-serif'; g.fillStyle = '#555'; g.strokeStyle = '#ddd';
+    for (let v = 30; v <= 110; v += 10) { g.beginPath(); g.moveTo(padL, Y(v)); g.lineTo(c.width - padR, Y(v)); g.stroke(); g.fillText(v, 10, Y(v) + 6); }
+    const n = secHist.length; if (n < 2) return c.toDataURL();
+    const X = i => padL + i/(n - 1)*(c.width - padL - padR);
+    if (alarmTh > 0) { g.strokeStyle = '#e08a00'; g.setLineDash([8, 6]); g.beginPath(); g.moveTo(padL, Y(alarmTh)); g.lineTo(c.width - padR, Y(alarmTh)); g.stroke(); g.setLineDash([]); }
+    [['C', '#e88a9a'], ['A', '#2f6fde']].forEach(([k, col]) => { g.strokeStyle = col; g.lineWidth = 2; g.beginPath();
+      secHist.forEach((r, i) => i ? g.lineTo(X(i), Y(r[k])) : g.moveTo(X(i), Y(r[k]))); g.stroke(); });
+    g.fillStyle = '#555'; const d0 = new Date(secHist[0].t), d1 = new Date(secHist[n-1].t);
+    g.fillText(tstr(d0).slice(11), padL, c.height - 15); g.textAlign = 'right'; g.fillText(tstr(d1).slice(11), c.width - padR, c.height - 15);
+    g.textAlign = 'left'; g.fillStyle = '#2f6fde'; g.fillText('— LA（1 秒 Leq）', padL + 300, c.height - 15); g.fillStyle = '#e88a9a'; g.fillText('— LC', padL + 520, c.height - 15);
+    return c.toDataURL('image/png');
+  }
+  function rtaImage() {
+    const c = document.createElement('canvas'); c.width = 1400; c.height = 360; const g = c.getContext('2d');
+    g.fillStyle = '#fff'; g.fillRect(0, 0, c.width, c.height);
+    if (!rtaPeak) return c.toDataURL();
+    const padL = 60, padB = 40, lo = 20, hi = 110, bw = (c.width - padL - 20)/BANDS.length;
+    const Y = v => 10 + (1 - (Math.max(lo, Math.min(hi, v)) - lo)/(hi - lo))*(c.height - 10 - padB);
+    g.font = '18px sans-serif'; g.fillStyle = '#555'; g.strokeStyle = '#ddd';
+    for (let v = 30; v <= 110; v += 20) { g.beginPath(); g.moveTo(padL, Y(v)); g.lineTo(c.width - 20, Y(v)); g.stroke(); g.fillText(v, 10, Y(v) + 6); }
+    g.textAlign = 'center';
+    BANDS.forEach((fc, i) => { const v = rtaPeak[i]; g.fillStyle = '#2f6fde'; if (isFinite(v)) g.fillRect(padL + bw*i + 3, Y(v), bw - 6, c.height - padB - Y(v));
+      const lab = BAND_LABEL(fc); if ([31.5,63,125,250,500,1000,2000,4000,8000,16000].includes(lab)) { g.fillStyle = '#555'; g.fillText(lab >= 1000 ? (lab/1000) + 'k' : lab, padL + bw*(i + .5), c.height - 12); } });
+    return c.toDataURL('image/png');
+  }
+  function buildReport() {
+    const LA = leqOf('A'), LC = leqOf('C'), s = st[weighting];
+    const evRows = events.map((e, i) => `<tr><td>${i+1}</td><td>${tstr(new Date(e.start))}</td><td>${tstr(new Date(e.end)).slice(11)}</td><td>${((e.end - e.start)/1000).toFixed(0)} 秒</td><td>${e.max.toFixed(1)}</td></tr>`).join('');
+    const rt = rtResults.length ? `<h3>殘響時間 RT60</h3><p>平均（全頻）：${$('rtBig').textContent}，共 ${rtResults.length} 次量測</p>` : '';
+    const chs = Object.keys(chVals).length ? `<h3>喇叭聲道音量（dB(C)）</h3><table><tr>${Object.keys(chVals).map(k => `<th>${CH_NAME[k]}</th>`).join('')}</tr><tr>${Object.values(chVals).map(v => `<td>${v.toFixed(1)}</td>`).join('')}</tr></table>` : '';
+    $('report').innerHTML = `
+      <h1>噪音量測報告</h1>
+      <div>量測期間：${tstr(sessionStart)} ～ ${tstr(sessionEnd || new Date())}（${mmss(elapsed())}）</div>
+      <div>設定：${weighting} 加權、${response === 'fast' ? '快' : '慢'}反應、校正偏移 ${cal.toFixed(1)} dB${alarmTh > 0 ? '、超標門檻 ' + alarmTh + ' dB' : ''}</div>
+      <div>麥克風：${micLabel || '預設麥克風'}；校正檔：${prof ? prof.name + (prof.serial ? '（序號 ' + prof.serial + '）' : '') + (isFinite(prof.sens) ? '，Sens Factor ' + prof.sens + ' dB' : '') : '無（手機內建麥克風估計值）'}</div>
+      <table>
+        <tr><th>LAeq</th><th>LCeq</th><th>C − A</th><th>L10</th><th>L50</th><th>L90</th><th>最大</th><th>最小</th><th>瞬間峰值</th><th>噪音劑量</th></tr>
+        <tr><td>${fmt(LA)}</td><td>${fmt(LC)}</td><td>${fmt(LC - LA)}</td><td>${fmt(percentile(s.hist,10))}</td><td>${fmt(percentile(s.hist,50))}</td><td>${fmt(percentile(s.hist,90))}</td><td>${fmt(s.max)}</td><td>${fmt(s.min)}</td><td>${fmt(s.peak)}</td><td>${st.dose.toFixed(2)}%</td></tr>
+      </table>
+      <div style="font-size:11px;color:#555">L10／L50／L90、最大、最小、峰值為 ${weighting} 加權；單位 dB。</div>
+      <h3>音量隨時間變化</h3><img src="${historyImage()}">
+      <h3>1/3 倍頻程頻譜（期間峰值，Z 加權）</h3><img src="${rtaImage()}">
+      <h3>超標紀錄${alarmTh > 0 ? '（門檻 ' + alarmTh + ' dB，持續 0.5 秒以上）' : ''}</h3>
+      ${alarmTh > 0 ? (events.length ? `<table><tr><th>#</th><th>開始</th><th>結束</th><th>持續</th><th>最大 dB</th></tr>${evRows}</table>` : '<p>期間內無超標。</p>') : '<p>未啟用超標警示。</p>'}
+      ${rt}${chs}
+      <p style="font-size:11px;color:#555;margin-top:12px">${prof && isFinite(prof.sens) ? '以 USB 量測麥克風搭配原廠校正檔量測，' : '以手機麥克風量測，未經聲學儀器校正，誤差約 ±3–5 dB，'}僅供參考。產生時間：${tstr(new Date())}。分貝計（highker21.github.io/tools/db-meter.html），工具版本：2026-11-16。</p>`;
+  }
+  $('openRep').onclick = () => {
+    $('toolSheet').classList.remove('show');
+    if (!st.time) { $('err').textContent = '還沒有量測資料，請先量測再產生報告。'; $('err').style.display = 'block'; return; }
+    buildReport(); setTimeout(() => window.print(), 300);
+  };
+  $('openCsv').onclick = () => {
+    if (!secHist.length) { $('toolSheet').classList.remove('show'); $('err').textContent = '還沒有量測資料可匯出。'; $('err').style.display = 'block'; return; }
+    const rows = [['時間','LA(1秒Leq)','LC(1秒Leq)']].concat(secHist.map(r => [tstr(new Date(r.t)), r.A.toFixed(1), r.C.toFixed(1)]));
+    if (events.length) { rows.push([]); rows.push(['超標紀錄','開始','結束','最大dB']); events.forEach((e, i) => rows.push([i+1, tstr(new Date(e.start)), tstr(new Date(e.end)), e.max.toFixed(1)])); }
+    const blob = new Blob(['﻿' + rows.map(r => r.join(',')).join('\n')], { type: 'text/csv' });
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+    a.download = '分貝紀錄_' + tstr(new Date()).replace(/[\/: ]/g, '') + '.csv';
+    document.body.appendChild(a); a.click(); a.remove();
+  };
 
   // ---------- 介面 ----------
   $('recBtn').onclick = () => (raf ? stop() : start());
-  $('resetBtn').onclick = () => { resetStats(); if (raf) startedAt = performance.now(); };
+  $('resetBtn').onclick = () => { resetStats(); };
   const openSheet = id => $(id).classList.add('show');
   document.querySelectorAll('.sheet').forEach(sh => sh.addEventListener('click', e => {
     if (e.target === sh || e.target.hasAttribute('data-close')) sh.classList.remove('show'); }));
   $('calBtn').onclick = () => openSheet('calSheet');
   $('infoBtn').onclick = () => openSheet('infoSheet');
+  $('toolBtn').onclick = () => openSheet('toolSheet');
+  $('openRt').onclick = () => { $('toolSheet').classList.remove('show'); rtRender(); openSheet('rtSheet'); };
+  $('openCh').onclick = () => { $('toolSheet').classList.remove('show'); chRender(); openSheet('chSheet'); };
+  $('tabs').querySelectorAll('button').forEach(b => b.onclick = () => {
+    tab = b.dataset.p;
+    $('tabs').querySelectorAll('button').forEach(x => x.classList.toggle('on', x === b));
+    document.querySelectorAll('.pane').forEach(p => p.classList.toggle('on', p.id === 'p-' + tab));
+    if (tab === 'spec') drawSpec(); else if (tab === 'rta') drawRta(); else if (tab === 'st') updateStatsPane();
+  });
 
   function applyW(v) {
     weighting = v; ls(LS.w, v);
@@ -365,35 +949,54 @@ footer{margin-top:14px;text-align:center;color:var(--muted);font-size:12px}
     $('segT').querySelectorAll('button').forEach(b => b.classList.toggle('on', b.dataset.v === v));
     applyW(weighting);
   }
-  $('wBtn').onclick = () => { applyW({A:'C', C:'Z', Z:'A'}[weighting]); ms = null; resetStats(); if (raf) startedAt = performance.now(); };
-  $('segW').querySelectorAll('button').forEach(b => b.onclick = () => { applyW(b.dataset.v); ms = null; resetStats(); if (raf) startedAt = performance.now(); });
-  $('segT').querySelectorAll('button').forEach(b => b.onclick = () => applyT(b.dataset.v));
-
-  function setCal(v) {
-    cal = Math.round(v*10)/10; ls(LS.cal, String(cal));
-    $('calVal').textContent = (cal > 0 ? '+' : '') + cal.toFixed(1) + ' dB';
+  function applyA(v) {
+    alarmTh = +v; ls(LS.a, String(alarmTh));
+    $('segA').querySelectorAll('button').forEach(b => b.classList.toggle('on', +b.dataset.v === alarmTh));
+    if (alarmState) endAlarm(); buildGauge();
   }
+  // 三種加權同時在算，切換不必重設
+  $('wBtn').onclick = () => applyW({A:'C', C:'Z', Z:'A'}[weighting]);
+  $('segW').querySelectorAll('button').forEach(b => b.onclick = () => applyW(b.dataset.v));
+  $('segT').querySelectorAll('button').forEach(b => b.onclick = () => applyT(b.dataset.v));
+  $('segA').querySelectorAll('button').forEach(b => b.onclick = () => applyA(b.dataset.v));
+
+  async function listMics() {
+    try {
+      const devs = (await navigator.mediaDevices.enumerateDevices()).filter(d => d.kind === 'audioinput');
+      const tr = stream && stream.getAudioTracks()[0], cur = tr ? (tr.getSettings().deviceId || '') : micId;
+      if (tr) micLabel = tr.label;
+      const sel = $('micSel'); sel.innerHTML = '';
+      devs.forEach((d, i) => { const o = document.createElement('option'); o.value = d.deviceId; o.textContent = d.label || ('麥克風 ' + (i + 1)); sel.appendChild(o); });
+      if (!devs.length) sel.innerHTML = '<option value="">預設麥克風</option>';
+      sel.value = cur; if (sel.selectedIndex < 0) sel.selectedIndex = 0;
+      $('micNote').textContent = '找到 ' + devs.length + ' 個麥克風' + (tr ? '，目前使用：' + tr.label : '') + '。USB 麥克風接上後重新開始量測即可出現在清單。';
+    } catch (e) {}
+  }
+  $('micSel').onchange = async () => { micId = $('micSel').value; ls(LS.mic, micId); if (raf) { stop(); await start(); } };
+  $('calLoad').onclick = () => $('calFile').click();
+  $('calFile').onchange = async () => {
+    const f = $('calFile').files[0]; if (!f) return;
+    try { prof = parseCal(await f.text(), f.name); ls(LS.prof, JSON.stringify(prof)); buildCorr(); calInfo(); }
+    catch (e) { $('calInfo').textContent = '❌ ' + e.message; }
+    $('calFile').value = '';
+  };
+  $('calRemove').onclick = () => { prof = null; ls(LS.prof, 'null'); buildCorr(); calInfo(); };
+  if (navigator.mediaDevices && navigator.mediaDevices.addEventListener) navigator.mediaDevices.addEventListener('devicechange', listMics);
+
+  function setCal(v) { cal = Math.round(v*10)/10; ls(LS.cal, String(cal)); $('calVal').textContent = (cal > 0 ? '+' : '') + cal.toFixed(1) + ' dB'; }
   $('calUp').onclick = () => setCal(cal + 0.5);
   $('calDown').onclick = () => setCal(cal - 0.5);
 
-  $('csvBtn').onclick = () => {
-    if (!log.length) { $('err').textContent = '還沒有量測資料可匯出。'; $('err').style.display = 'block'; return; }
-    const rows = [['時間(UTC)','加權','反應','即時dB','平均Leq']].concat(log);
-    const blob = new Blob(['﻿' + rows.map(r => r.join(',')).join('\n')], { type: 'text/csv' });
-    const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
-    a.download = '分貝紀錄_' + new Date().toISOString().slice(0,19).replace(/[:T]/g,'-') + '.csv';
-    document.body.appendChild(a); a.click(); a.remove();
-  };
-
   document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && raf) requestWake(); });
-  window.matchMedia('(prefers-color-scheme: dark)').addEventListener?.('change', () => { buildGauge(); drawSpec(); });
-  window.addEventListener('resize', drawSpec);
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener?.('change', () => { buildGauge(); drawSpec(); drawRta(); sgLabels(); });
+  window.addEventListener('resize', () => { drawSpec(); drawRta(); });
   if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
     $('err').textContent = '這個瀏覽器不支援麥克風（需 HTTPS，請用 Safari 或 Chrome 開啟）。'; $('err').style.display = 'block';
   }
 
-  buildGauge(); applyT(response); applyW(weighting); setCal(cal); drawSpec();
-  window.__dbm = { get db() { return $('big').textContent; }, aW, cW };
+  buildGauge(); applyT(response); applyW(weighting); applyA(alarmTh); setCal(cal); calInfo(); sgInit(); drawSpec(); drawRta(); updateStatsPane();
+  window.__dbm = { aW, cW, rt60Of, biquadBP, percentile, get st() { return st; }, get rtaMs() { return rtaMs; }, BANDS, dominant: () => fD2 ? dominant() : null, parseCal, get prof() { return prof; }, base,
+    get rtResults() { return rtResults; }, get chVals() { return chVals; }, get events() { return events; }, get secHist() { return secHist; } };
 })();
 </script>
 </body>
