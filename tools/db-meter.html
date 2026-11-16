@@ -1,0 +1,400 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f6f7f9">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="分貝計">
+<title>分貝計</title>
+<style>
+:root{
+  --bg:#f6f7f9; --card:#ffffff; --line:#e3e6ea; --text:#1f2a37; --muted:#7a8594;
+  --tick:#5f6b7a; --hotTick:#8c4a3c; --needle:#d63a3a; --blue:#2f6fde; --peak:#e88a9a;
+  --rec:#e02424; --ok:#1f9d55; --warn:#c98a00; --hot:#d63a3a;
+}
+@media (prefers-color-scheme: dark){
+  :root{ --bg:#0f1318; --card:#181d24; --line:#2a313a; --text:#e8edf2; --muted:#8d97a3;
+    --tick:#aab3be; --hotTick:#d08572; --blue:#5b93f5; --peak:#e07d91; }
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,"PingFang TC","Noto Sans TC",sans-serif}
+body{padding:calc(env(safe-area-inset-top) + 10px) 16px calc(env(safe-area-inset-bottom) + 14px);
+  max-width:520px;margin:0 auto;user-select:none;-webkit-user-select:none}
+.top{display:flex;gap:10px}
+.pill{background:var(--card);border:1px solid var(--line);border-radius:12px;height:52px;
+  display:flex;align-items:center;justify-content:center;font-size:18px;color:var(--text)}
+.pill.status{flex:1}
+.pill.btn{width:96px;border:1px solid var(--line);font:inherit;font-size:18px;cursor:pointer}
+.pill.btn small{font-size:12px;color:var(--muted);margin-left:3px}
+.gauge{display:block;width:100%;margin-top:14px}
+.readout{display:grid;grid-template-columns:1fr 1.6fr 1fr;align-items:end;margin-top:-6px}
+.side{text-align:center}
+.side span{display:block;font-size:14px;color:var(--muted);letter-spacing:.5px}
+.side b{font-size:26px;font-weight:400;font-variant-numeric:tabular-nums}
+.big{text-align:center;font-size:76px;font-weight:300;line-height:1;font-variant-numeric:tabular-nums;letter-spacing:-1px}
+.desc{text-align:center;font-size:14px;margin-top:8px;min-height:18px;font-weight:600}
+.timer{font-size:17px;color:var(--muted);margin:14px 0 4px;font-variant-numeric:tabular-nums}
+canvas{display:block;width:100%;height:170px}
+.legend{display:flex;gap:14px;font-size:11px;color:var(--muted);margin-top:2px}
+.legend i{display:inline-block;width:12px;height:3px;border-radius:2px;vertical-align:middle;margin-right:4px}
+.controls{display:flex;align-items:center;justify-content:space-between;margin-top:14px;padding:0 4px}
+.cbtn{width:54px;height:54px;border-radius:50%;border:1.5px solid var(--tick);background:transparent;
+  color:var(--text);display:flex;align-items:center;justify-content:center;flex-direction:column;cursor:pointer;padding:0}
+.cbtn svg{width:22px;height:22px}
+.cbtn em{font-style:normal;font-size:10px;color:var(--muted);margin-top:1px}
+.rec{width:86px;height:86px;border-radius:50%;border:0;background:var(--rec);display:flex;align-items:center;
+  justify-content:center;cursor:pointer;box-shadow:0 4px 14px rgba(224,36,36,.35)}
+.rec i{display:block;width:30px;height:30px;border-radius:50%;background:#fff;transition:all .15s}
+.rec.on i{border-radius:5px;width:28px;height:28px}
+.err{color:var(--hot);font-size:14px;margin-top:10px;display:none;line-height:1.5;text-align:center}
+.sheet{position:fixed;inset:0;background:rgba(0,0,0,.35);display:none;align-items:flex-end;z-index:9}
+.sheet.show{display:flex}
+.sheet .panel{background:var(--card);width:100%;max-width:520px;margin:0 auto;border-radius:18px 18px 0 0;
+  padding:18px 18px calc(env(safe-area-inset-bottom) + 18px);max-height:80vh;overflow:auto;font-size:15px;line-height:1.6}
+.panel h3{margin:0 0 8px;font-size:17px}
+.panel table{width:100%;border-collapse:collapse}
+.panel td{padding:4px 0;border-bottom:1px solid var(--line)}
+.panel td:first-child{width:66px;color:var(--muted);font-variant-numeric:tabular-nums}
+.panel .close{width:100%;margin-top:14px;height:46px;border:0;border-radius:12px;background:var(--blue);color:#fff;font-size:16px;font-weight:600}
+.calrow{display:flex;align-items:center;gap:12px;margin:10px 0}
+.calrow button{width:56px;height:46px;border-radius:12px;border:1px solid var(--line);background:var(--bg);color:var(--text);font-size:22px}
+.calrow b{flex:1;text-align:center;font-size:30px;font-weight:400;font-variant-numeric:tabular-nums}
+.seg{display:flex;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:3px;margin:6px 0 12px}
+.seg button{flex:1;border:0;background:transparent;color:var(--muted);font-size:15px;padding:9px 0;border-radius:7px}
+.seg button.on{background:var(--blue);color:#fff;font-weight:600}
+footer{margin-top:14px;text-align:center;color:var(--muted);font-size:12px}
+</style>
+</head>
+<body>
+
+<div class="top">
+  <div class="pill status" id="status">按紅色按鈕開始</div>
+  <button class="pill btn" id="wBtn">dB-A</button>
+</div>
+
+<svg class="gauge" id="gauge" viewBox="0 0 360 200" aria-label="音量指針錶"></svg>
+
+<div class="readout">
+  <div class="side"><span>AVG</span><b id="sAvg">--</b></div>
+  <div class="big" id="big">--.-</div>
+  <div class="side"><span>MAX</span><b id="sMax">--</b></div>
+</div>
+<div class="desc" id="desc"></div>
+
+<div class="timer" id="timer">00:00</div>
+<canvas id="spec"></canvas>
+<div class="legend"><span><i style="background:var(--blue)"></i>即時頻譜</span><span><i style="background:var(--peak)"></i>峰值保持</span><span>縱軸 dBFS</span></div>
+
+<div class="controls">
+  <button class="cbtn" id="calBtn" aria-label="校正與設定">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg><em>設定</em>
+  </button>
+  <button class="cbtn" id="resetBtn" aria-label="重設">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 12a8 8 0 1 0 2.4-5.7M4 4v4h4"/></svg><em>重設</em>
+  </button>
+  <button class="rec" id="recBtn" aria-label="開始或停止"><i></i></button>
+  <button class="cbtn" id="csvBtn" aria-label="匯出 CSV">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg><em>匯出</em>
+  </button>
+  <button class="cbtn" id="infoBtn" aria-label="說明">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5"/></svg><em>說明</em>
+  </button>
+</div>
+<div class="err" id="err"></div>
+<footer>工具版本：2026-11-16</footer>
+
+<div class="sheet" id="calSheet"><div class="panel">
+  <h3>設定</h3>
+  <div>頻率加權</div>
+  <div class="seg" id="segW"><button data-v="A" class="on">A（環境噪音）</button><button data-v="C">C（喇叭校正）</button><button data-v="Z">Z（不加權）</button></div>
+  <div>時間反應</div>
+  <div class="seg" id="segT"><button data-v="fast" class="on">快 F（0.125 秒）</button><button data-v="slow">慢 S（1 秒）</button></div>
+  <div>校正偏移（跟標準分貝計同時量同一個聲音後對齊，會自動記住）</div>
+  <div class="calrow"><button id="calDown">−</button><b id="calVal">0.0 dB</b><button id="calUp">＋</button></div>
+  <button class="close" data-close>完成</button>
+</div></div>
+
+<div class="sheet" id="infoSheet"><div class="panel">
+  <h3>常見音量參考</h3>
+  <table>
+    <tr><td>30 dB</td><td>安靜臥室、圖書館</td></tr>
+    <tr><td>40–50</td><td>安靜住宅區夜間</td></tr>
+    <tr><td>60 dB</td><td>一般對話</td></tr>
+    <tr><td>70 dB</td><td>吸塵器、繁忙辦公室</td></tr>
+    <tr><td>75 dB</td><td>家庭劇院喇叭校正參考（C 加權、慢反應）</td></tr>
+    <tr><td>85 dB</td><td>長時間暴露開始傷聽力（約 8 小時上限）</td></tr>
+    <tr><td>100 dB</td><td>機車近距離、演唱會（約 15 分鐘上限）</td></tr>
+    <tr><td>120 dB</td><td>疼痛閾值</td></tr>
+  </table>
+  <h3 style="margin-top:14px">名詞</h3>
+  <p>• <b>AVG</b>：開始（或重設）後的能量平均 Leq，不是算術平均。<br>
+  • <b>MAX／MIN</b>：期間內的最高／最低讀數。<b>PEAK</b>：未經時間平滑的瞬間最高值。<br>
+  • <b>A 加權</b>模擬人耳，量噪音用；<b>C 加權</b>保留低頻，對喇叭／重低音音量用；<b>Z</b> 不加權。</p>
+  <h3>準確度</h3>
+  <p>手機麥克風沒有出廠校正，誤差約 ±3–5 dB，低於 35 dB 或高於 100 dB 更不準。可在「設定」用校正偏移對齊標準分貝計。量測時螢幕保持常亮；本頁不錄音、不上傳，聲音只在手機內即時計算。</p>
+  <button class="close" data-close>關閉</button>
+</div></div>
+
+<script>
+(() => {
+  'use strict';
+  const BASE_OFFSET = 100;                 // dBFS → 約略 dB SPL（未校正手機的經驗值）
+  const LS = { cal: 'dbmeter-cal', w: 'dbmeter-w', t: 'dbmeter-t' };
+  const G_MIN = 20, G_MAX = 130;           // 錶面刻度範圍
+  const $ = id => document.getElementById(id);
+  const ls = (k, v) => { try { if (v === undefined) return localStorage.getItem(k); localStorage.setItem(k, v); } catch (e) { return null; } };
+
+  let cal = parseFloat(ls(LS.cal)) || 0;
+  let weighting = ls(LS.w) || 'A', response = ls(LS.t) || 'fast';
+  let ctx = null, analyser = null, stream = null, raf = 0, wakeLock = null;
+  let timeBuf, freqBuf, peakSpec, weightsA, weightsC, sampleRate = 48000;
+  let ms = null, lastT = 0, startedAt = 0, elapsedBefore = 0;
+  let leqSum = 0, leqTime = 0, vMax = -Infinity, vMin = Infinity, vPeak = -Infinity;
+  const log = [];                          // 匯出用：每 0.5 秒一筆
+  let lastLog = 0, lastSpec = 0;
+
+  // ---------- 加權（IEC 61672 解析式）----------
+  const aW = f => { const f2 = f*f; return 20*Math.log10((12194**2*f2*f2)/((f2+20.6**2)*Math.sqrt((f2+107.7**2)*(f2+737.9**2))*(f2+12194**2))) + 2.0; };
+  const cW = f => { const f2 = f*f; return 20*Math.log10((12194**2*f2)/((f2+20.6**2)*(f2+12194**2))) + 0.06; };
+  function buildWeights(n, sr) {
+    weightsA = new Float32Array(n); weightsC = new Float32Array(n);
+    for (let i = 1; i < n; i++) { const f = i*sr/(2*n); weightsA[i] = 10**(aW(f)/10); weightsC[i] = 10**(cW(f)/10); }
+  }
+  // ΣP·W / ΣP：與 FFT 視窗無關的加權比例，乘到時域均方上
+  function weightRatio() {
+    if (weighting === 'Z') return 1;
+    const w = weighting === 'A' ? weightsA : weightsC;
+    let sp = 0, spw = 0;
+    for (let i = 1; i < freqBuf.length; i++) {
+      const d = freqBuf[i]; if (!isFinite(d)) continue;
+      const p = 10**(d/10); sp += p; spw += p*w[i];
+    }
+    return sp > 0 ? spw/sp : 1;
+  }
+
+  // ---------- 指針錶 ----------
+  const NS = 'http://www.w3.org/2000/svg';
+  const CX = 180, CY = 190, R = 150;
+  const A0 = -160, A1 = -20;                      // 起訖角（度；0=右方，-90=正上方）
+  const ang = v => (A0 + (Math.max(G_MIN, Math.min(G_MAX, v)) - G_MIN)/(G_MAX - G_MIN)*(A1 - A0)) * Math.PI/180;
+  const pt = (a, r) => [CX + r*Math.cos(a), CY + r*Math.sin(a)];
+  function el(tag, attrs, parent) { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); parent.appendChild(e); return e; }
+  let needle, minTxt, peakTxt;
+  function buildGauge() {
+    const g = $('gauge'); g.innerHTML = '';
+    const cs = getComputedStyle(document.documentElement);
+    const tick = cs.getPropertyValue('--tick').trim(), hot = cs.getPropertyValue('--hotTick').trim();
+    const rIn = 108;
+    const arcPath = (v0, v1) => { const [x0,y0] = pt(ang(v0), rIn), [x1,y1] = pt(ang(v1), rIn);
+      const large = (ang(v1)-ang(v0)) > Math.PI ? 1 : 0; return `M${x0},${y0} A${rIn},${rIn} 0 ${large} 1 ${x1},${y1}`; };
+    el('path', { d: arcPath(G_MIN, 90), stroke: tick, 'stroke-width': 4, fill: 'none', 'stroke-linecap': 'round' }, g);
+    el('path', { d: arcPath(90, G_MAX), stroke: hot, 'stroke-width': 4, fill: 'none', 'stroke-linecap': 'round' }, g);
+    for (let v = G_MIN; v <= G_MAX; v += 5) {
+      const major = v % 10 === 0, a = ang(v), c = v >= 90 ? hot : tick;
+      const [x0,y0] = pt(a, rIn), [x1,y1] = pt(a, major ? rIn + 34 : rIn + 16);
+      el('line', { x1:x0, y1:y0, x2:x1, y2:y1, stroke: c, 'stroke-width': major ? 4 : 2, 'stroke-linecap': 'round' }, g);
+      if (major) {
+        const [tx,ty] = pt(a, rIn + 50), deg = a*180/Math.PI + 90;
+        const t = el('text', { x: tx, y: ty, fill: c, 'font-size': 15, 'text-anchor': 'middle', 'dominant-baseline': 'middle',
+          transform: `rotate(${deg} ${tx} ${ty})`, 'font-family': '-apple-system,sans-serif' }, g);
+        t.textContent = v;
+      }
+    }
+    // MIN / PEAK 小讀數
+    const lab = (x, txt, anchor, c) => { const t = el('text', { x, y: CY - 40, fill: c, 'font-size': 11, 'text-anchor': anchor, 'letter-spacing': 1, 'font-family': '-apple-system,sans-serif' }, g); t.textContent = txt; };
+    lab(CX - 8, 'MIN', 'end', tick); lab(CX + 8, 'PEAK', 'start', hot);
+    el('line', { x1: CX - 30, y1: CY - 33, x2: CX + 30, y2: CY - 33, stroke: tick, 'stroke-width': 3, 'stroke-linecap': 'round' }, g);
+    minTxt = el('text', { x: CX - 8, y: CY - 13, fill: tick, 'font-size': 16, 'text-anchor': 'end', 'font-family': '-apple-system,sans-serif' }, g);
+    peakTxt = el('text', { x: CX + 8, y: CY - 13, fill: hot, 'font-size': 16, 'text-anchor': 'start', 'font-family': '-apple-system,sans-serif' }, g);
+    minTxt.textContent = '--'; peakTxt.textContent = '--';
+    needle = el('line', { x1: CX, y1: CY, x2: CX, y2: CY, stroke: cs.getPropertyValue('--needle').trim(), 'stroke-width': 4, 'stroke-linecap': 'round' }, g);
+    setNeedle(G_MIN);
+  }
+  function setNeedle(v) {
+    const a = ang(v), [x1,y1] = pt(a, 62), [x2,y2] = pt(a, 140);
+    needle.setAttribute('x1', x1); needle.setAttribute('y1', y1);
+    needle.setAttribute('x2', x2); needle.setAttribute('y2', y2);
+  }
+
+  // ---------- 頻譜 ----------
+  function drawSpec() {
+    const c = $('spec'), dpr = window.devicePixelRatio || 1, w = c.clientWidth, h = c.clientHeight;
+    if (c.width !== Math.round(w*dpr)) { c.width = Math.round(w*dpr); c.height = Math.round(h*dpr); }
+    const g = c.getContext('2d'); g.setTransform(dpr,0,0,dpr,0,0); g.clearRect(0,0,w,h);
+    const cs = getComputedStyle(document.documentElement);
+    const muted = cs.getPropertyValue('--muted').trim(), line = cs.getPropertyValue('--line').trim(),
+          blue = cs.getPropertyValue('--blue').trim(), peak = cs.getPropertyValue('--peak').trim(), hot = cs.getPropertyValue('--hotTick').trim();
+    const padL = 34, padR = 6, padT = 6, padB = 18, F0 = 20, F1 = 20000, D0 = -120, D1 = -20;
+    const X = f => padL + Math.log(f/F0)/Math.log(F1/F0)*(w - padL - padR);
+    const Y = d => padT + (1 - (Math.max(D0, Math.min(D1, d)) - D0)/(D1 - D0))*(h - padT - padB);
+    g.font = '10px -apple-system,sans-serif'; g.lineWidth = 1;
+    g.strokeStyle = line; g.fillStyle = hot;
+    for (let d = -120; d <= -20; d += 20) { g.beginPath(); g.moveTo(padL, Y(d)); g.lineTo(w - padR, Y(d)); g.stroke(); g.fillText(d, 2, Y(d) + 3); }
+    g.fillStyle = hot; g.textAlign = 'center';
+    [[50,'50'],[100,'100'],[200,'200'],[500,'500'],[1000,'1k'],[2000,'2k'],[5000,'5k'],[10000,'10k'],[20000,'20k']].forEach(([f,t]) => {
+      g.strokeStyle = line; g.beginPath(); g.moveTo(X(f), padT); g.lineTo(X(f), h - padB); g.stroke();
+      g.fillText(t, Math.min(X(f), w - 10), h - 4);
+    });
+    g.textAlign = 'left';
+    if (!freqBuf) return;
+    const n = freqBuf.length, binHz = sampleRate/(2*n);
+    const path = (arr) => { g.beginPath(); let first = true;
+      for (let i = 1; i < n; i++) { const f = i*binHz; if (f < F0 || f > F1) continue;
+        const x = X(f), y = Y(arr[i]); if (first) { g.moveTo(x, y); first = false; } else g.lineTo(x, y); }
+      return first; };
+    if (!path(freqBuf)) {
+      g.lineTo(X(Math.min(F1, (n-1)*binHz)), h - padB); g.lineTo(X(Math.max(F0, binHz)), h - padB); g.closePath();
+      g.fillStyle = blue + '22'; g.globalAlpha = 1; g.fill();
+      path(freqBuf); g.strokeStyle = blue; g.lineWidth = 1.2; g.stroke();
+    }
+    if (peakSpec && !path(peakSpec)) { g.strokeStyle = peak; g.lineWidth = 1; g.stroke(); }
+  }
+
+  // ---------- 主迴圈 ----------
+  function levelText(db) {
+    if (db < 35) return ['非常安靜', 'var(--ok)'];
+    if (db < 50) return ['安靜', 'var(--ok)'];
+    if (db < 65) return ['一般對話音量', 'var(--ok)'];
+    if (db < 75) return ['有點吵', 'var(--warn)'];
+    if (db < 85) return ['吵雜', 'var(--warn)'];
+    if (db < 100) return ['長時間會傷聽力', 'var(--hot)'];
+    return ['危險音量，請保護耳朵', 'var(--hot)'];
+  }
+  const fmt = v => isFinite(v) ? v.toFixed(1) : '--';
+  const mmss = s => { s = Math.floor(s); const h = Math.floor(s/3600), m = Math.floor(s/60)%60, x = s%60;
+    return (h ? h + ':' : '') + String(m).padStart(2,'0') + ':' + String(x).padStart(2,'0'); };
+  const elapsed = () => elapsedBefore + (raf ? (performance.now() - startedAt)/1000 : 0);
+
+  function tick(now) {
+    raf = requestAnimationFrame(tick);
+    const t = now/1000, dt = lastT ? Math.min(t - lastT, 0.25) : 0.016; lastT = t;
+    analyser.getFloatTimeDomainData(timeBuf);
+    analyser.getFloatFrequencyData(freqBuf);
+    let s = 0; for (let i = 0; i < timeBuf.length; i++) s += timeBuf[i]*timeBuf[i];
+    const blockMs = (s/timeBuf.length)*weightRatio();
+    const tau = response === 'fast' ? 0.125 : 1.0;
+    ms = ms === null ? blockMs : ms + (dt/tau)*(blockMs - ms);
+    const off = BASE_OFFSET + cal;
+    const db = 10*Math.log10(Math.max(ms, 1e-12)) + off;
+    const blockDb = 10*Math.log10(Math.max(blockMs, 1e-12)) + off;
+
+    leqSum += 10**(blockDb/10)*dt; leqTime += dt;
+    if (leqTime > 0.5) { vMax = Math.max(vMax, db); vMin = Math.min(vMin, db); vPeak = Math.max(vPeak, blockDb); }
+    if (leqTime > 0.5) for (let i = 0; i < freqBuf.length; i++) if (freqBuf[i] > peakSpec[i]) peakSpec[i] = freqBuf[i];
+
+    const avg = leqTime > 0 ? 10*Math.log10(leqSum/leqTime) : NaN;
+    $('big').textContent = fmt(db);
+    $('sAvg').textContent = fmt(avg); $('sMax').textContent = fmt(vMax);
+    minTxt.textContent = isFinite(vMin) ? Math.round(vMin) : '--';
+    peakTxt.textContent = isFinite(vPeak) ? Math.round(vPeak) : '--';
+    setNeedle(db);
+    const [txt, color] = levelText(db); $('desc').textContent = txt; $('desc').style.color = color;
+    $('timer').textContent = mmss(elapsed());
+    if (t - lastSpec > 0.05) { lastSpec = t; drawSpec(); }
+    if (t - lastLog >= 0.5) { lastLog = t; log.push([new Date().toISOString(), weighting, response, db.toFixed(1), fmt(avg)]); }
+  }
+
+  function resetStats() {
+    leqSum = 0; leqTime = 0; vMax = -Infinity; vMin = Infinity; vPeak = -Infinity;
+    if (peakSpec) peakSpec.fill(-Infinity);
+    elapsedBefore = 0; startedAt = performance.now();
+    ['sAvg','sMax'].forEach(id => $(id).textContent = '--');
+    if (minTxt) { minTxt.textContent = '--'; peakTxt.textContent = '--'; }
+    $('timer').textContent = '00:00'; drawSpec();
+  }
+
+  async function requestWake() { try { if ('wakeLock' in navigator) wakeLock = await navigator.wakeLock.request('screen'); } catch (e) {} }
+
+  async function start() {
+    $('err').style.display = 'none';
+    try {
+      stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: false } });
+    } catch (e) {
+      $('err').textContent = '無法使用麥克風：' + (e.name === 'NotAllowedError'
+        ? '權限被拒。請在瀏覽器網址列（或 iPhone 設定 → App → Safari → 麥克風）允許後重新整理。' : (e.message || e.name));
+      $('err').style.display = 'block'; return;
+    }
+    ctx = new (window.AudioContext || window.webkitAudioContext)();
+    if (ctx.state === 'suspended') await ctx.resume();
+    sampleRate = ctx.sampleRate;
+    analyser = ctx.createAnalyser(); analyser.fftSize = 4096; analyser.smoothingTimeConstant = 0;
+    analyser.minDecibels = -140; analyser.maxDecibels = 0;
+    ctx.createMediaStreamSource(stream).connect(analyser);
+    timeBuf = new Float32Array(analyser.fftSize);
+    freqBuf = new Float32Array(analyser.frequencyBinCount);
+    peakSpec = new Float32Array(analyser.frequencyBinCount).fill(-Infinity);
+    buildWeights(analyser.frequencyBinCount, sampleRate);
+    ms = null; lastT = 0; log.length = 0; resetStats();
+    startedAt = performance.now();
+    $('recBtn').classList.add('on');
+    $('status').textContent = '量測中';
+    requestWake();
+    raf = requestAnimationFrame(tick);
+  }
+  function stop() {
+    elapsedBefore = elapsed();
+    cancelAnimationFrame(raf); raf = 0;
+    if (stream) stream.getTracks().forEach(t => t.stop());
+    if (ctx) ctx.close();
+    stream = ctx = analyser = null;
+    if (wakeLock) { wakeLock.release().catch(() => {}); wakeLock = null; }
+    $('recBtn').classList.remove('on');
+    $('status').textContent = '已停止（數值保留）';
+    $('desc').textContent = '';
+  }
+
+  // ---------- 介面 ----------
+  $('recBtn').onclick = () => (raf ? stop() : start());
+  $('resetBtn').onclick = () => { resetStats(); if (raf) startedAt = performance.now(); };
+  const openSheet = id => $(id).classList.add('show');
+  document.querySelectorAll('.sheet').forEach(sh => sh.addEventListener('click', e => {
+    if (e.target === sh || e.target.hasAttribute('data-close')) sh.classList.remove('show'); }));
+  $('calBtn').onclick = () => openSheet('calSheet');
+  $('infoBtn').onclick = () => openSheet('infoSheet');
+
+  function applyW(v) {
+    weighting = v; ls(LS.w, v);
+    $('wBtn').innerHTML = 'dB-' + v + '<small>' + (response === 'fast' ? 'F' : 'S') + '</small>';
+    $('segW').querySelectorAll('button').forEach(b => b.classList.toggle('on', b.dataset.v === v));
+  }
+  function applyT(v) {
+    response = v; ls(LS.t, v);
+    $('segT').querySelectorAll('button').forEach(b => b.classList.toggle('on', b.dataset.v === v));
+    applyW(weighting);
+  }
+  $('wBtn').onclick = () => { applyW({A:'C', C:'Z', Z:'A'}[weighting]); ms = null; resetStats(); if (raf) startedAt = performance.now(); };
+  $('segW').querySelectorAll('button').forEach(b => b.onclick = () => { applyW(b.dataset.v); ms = null; resetStats(); if (raf) startedAt = performance.now(); });
+  $('segT').querySelectorAll('button').forEach(b => b.onclick = () => applyT(b.dataset.v));
+
+  function setCal(v) {
+    cal = Math.round(v*10)/10; ls(LS.cal, String(cal));
+    $('calVal').textContent = (cal > 0 ? '+' : '') + cal.toFixed(1) + ' dB';
+  }
+  $('calUp').onclick = () => setCal(cal + 0.5);
+  $('calDown').onclick = () => setCal(cal - 0.5);
+
+  $('csvBtn').onclick = () => {
+    if (!log.length) { $('err').textContent = '還沒有量測資料可匯出。'; $('err').style.display = 'block'; return; }
+    const rows = [['時間(UTC)','加權','反應','即時dB','平均Leq']].concat(log);
+    const blob = new Blob(['﻿' + rows.map(r => r.join(',')).join('\n')], { type: 'text/csv' });
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+    a.download = '分貝紀錄_' + new Date().toISOString().slice(0,19).replace(/[:T]/g,'-') + '.csv';
+    document.body.appendChild(a); a.click(); a.remove();
+  };
+
+  document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && raf) requestWake(); });
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener?.('change', () => { buildGauge(); drawSpec(); });
+  window.addEventListener('resize', drawSpec);
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+    $('err').textContent = '這個瀏覽器不支援麥克風（需 HTTPS，請用 Safari 或 Chrome 開啟）。'; $('err').style.display = 'block';
+  }
+
+  buildGauge(); applyT(response); applyW(weighting); setCal(cal); drawSpec();
+  window.__dbm = { get db() { return $('big').textContent; }, aW, cW };
+})();
+</script>
+</body>
+</html>
