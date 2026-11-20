@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>高醫單一入口驗證碼自動填入（Chrome 插件）</title>
+<style>
+  :root{ --accent:#19499D; --ink:#1b1f24; --line:#dde2ea; --soft:#f3f6fb; --bg:#eef2f8; --muted:#5d6675; --warn:#b4540a; --warnbg:#fff4e8; }
+  *{box-sizing:border-box;}
+  body{font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif; color:var(--ink); background:var(--bg); margin:0; padding:0 16px 60px; line-height:1.75;}
+  .wrap{max-width:820px; margin:0 auto;}
+  h1{font-size:22px; margin:22px 0 4px;}
+  h2{font-size:17px; margin:0 0 8px;}
+  .sub{color:var(--muted); font-size:14px; margin-bottom:12px;}
+  .card{background:#fff; border:1px solid var(--line); border-radius:10px; padding:16px 18px; margin:14px 0; overflow-wrap:anywhere;}
+  .dl{display:flex; flex-wrap:wrap; gap:10px;}
+  a.btn{display:inline-block; background:var(--accent); color:#fff; text-decoration:none; border-radius:8px; padding:10px 16px; font-weight:600;}
+  a.btn.ghost{background:#fff; color:var(--accent); border:1px solid var(--accent);}
+  ol,ul{padding-left:22px; margin:6px 0;}
+  li{margin:3px 0;}
+  code{background:var(--soft); border:1px solid var(--line); border-radius:4px; padding:0 4px; font-size:13.5px;}
+  .warn{background:var(--warnbg); border-color:#f0c79c;}
+  .small{font-size:13px; color:var(--muted);}
+  footer{font-size:12px; color:var(--muted); margin-top:20px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>高醫單一入口驗證碼自動填入（Chrome 插件）</h1>
+  <div class="sub">打開高醫體系單一入口登入頁，自動辨識 4 碼驗證碼並填好；帳號密碼照常由 Chrome 自己填，按 Enter 就登入。</div>
+
+  <div class="card">
+    <h2>下載</h2>
+    <div class="dl">
+      <a class="btn" href="downloads/kmu-captcha-fill-v1.1.0.zip" download>插件 v1.1.0（zip）</a>
+    </div>
+    <p class="small">驗證碼只在你的電腦上辨識，不傳到任何地方；外掛不讀、不存帳號密碼。權限只有「儲存設定」一項。</p>
+  </div>
+
+  <div class="card">
+    <h2>安裝（第一次）</h2>
+    <ol>
+      <li>下載 zip，解壓縮到一個<strong>固定的資料夾</strong>（之後不要搬動或刪除）。Windows 用「解壓縮全部」時會多包一層，請選到裡面有 <code>manifest.json</code> 的那一層。</li>
+      <li>Chrome 網址列輸入 <code>chrome://extensions</code>，打開右上角「開發人員模式」。</li>
+      <li>按「載入未封裝項目」，選剛才的資料夾。</li>
+      <li>先讓 Chrome 記住單一入口的帳號密碼（登入時按「儲存密碼」）。</li>
+    </ol>
+  </div>
+
+  <div class="card">
+    <h2>更新到新版</h2>
+    <ol>
+      <li>新版解壓後，<strong>直接覆蓋</strong>原本的資料夾。</li>
+      <li>到 <code>chrome://extensions</code>，在這個插件上按「重新載入」↻。</li>
+    </ol>
+  </div>
+
+  <div class="card">
+    <h2>使用</h2>
+    <ol>
+      <li>打開單一入口登入頁，上方出現綠色提示「驗證碼已填入」後，按 <strong>Enter</strong> 登入。</li>
+      <li>Chrome 自動填入的密碼在你按鍵之前外掛讀不到，所以預設停在「登入」等你按 Enter；讀得到帳密時會直接自動登入。</li>
+      <li>點插件圖示可以關掉「自動按登入」或整個停用。</li>
+    </ol>
+  </div>
+
+  <div class="card warn">
+    <strong>注意</strong>
+    <ul>
+      <li>沒把握的驗證碼不會亂填，會自己換一張圖重認，最多 3 次；再不行就請你手動輸入。</li>
+      <li>同一個分頁 3 分鐘內最多自動送出 2 次，避免帳號被鎖。</li>
+      <li>如果常常認錯：點插件圖示按「收集 40 張驗證碼樣本」，把下載的檔案傳給助理（檔案裡只有驗證碼圖）。</li>
+    </ul>
+  </div>
+
+  <div class="card small">
+    <strong>版本紀錄</strong>
+    <ul>
+      <li>v1.1.0（2026-11-20）：改用院內驗證碼專用辨識，40 張真圖測試 39 張全對、另 1 張自動換圖；打開就填好，不用等載入。</li>
+      <li>v1.0.2（2026-11-18）：初版（通用文字辨識）、收集樣本功能。</li>
+    </ul>
+  </div>
+
+  <footer>工具版本：2026-11-20</footer>
+</div>
+</body>
+</html>
