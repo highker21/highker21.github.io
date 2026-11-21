@@ -38,6 +38,9 @@ jobs:
         with:
           # Upload entire repository
           path: '.'
+      - name: Wait for artifact to be listed
+        # deploy-pages 有時查不到剛上傳的 artifact（actions/deploy-pages#451），先等一下
+        run: sleep 30
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
