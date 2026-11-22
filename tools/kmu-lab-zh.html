@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>中文檢驗報告（Chrome 插件）</title>
+<style>
+  :root{ --accent:#0b6e4f; --ink:#1b1f24; --line:#dde2ea; --soft:#f3f6fb; --bg:#eef2f8; --muted:#5d6675; --warnbg:#fff4e8; }
+  *{box-sizing:border-box;}
+  body{font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif; color:var(--ink); background:var(--bg); margin:0; padding:0 16px 60px; line-height:1.75;}
+  .wrap{max-width:820px; margin:0 auto;}
+  h1{font-size:22px; margin:22px 0 4px;}
+  h2{font-size:17px; margin:0 0 8px;}
+  .sub{color:var(--muted); font-size:14px; margin-bottom:12px;}
+  .card{background:#fff; border:1px solid var(--line); border-radius:10px; padding:16px 18px; margin:14px 0; overflow-wrap:anywhere;}
+  .dl{display:flex; flex-wrap:wrap; gap:10px;}
+  a.btn{display:inline-block; background:var(--accent); color:#fff; text-decoration:none; border-radius:8px; padding:10px 16px; font-weight:600;}
+  ol,ul{padding-left:22px; margin:6px 0;}
+  li{margin:3px 0;}
+  code{background:var(--soft); border:1px solid var(--line); border-radius:4px; padding:0 4px; font-size:13.5px;}
+  .warn{background:var(--warnbg); border-color:#f0c79c;}
+  .small{font-size:13px; color:var(--muted);}
+  footer{font-size:12px; color:var(--muted); margin-top:20px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>中文檢驗報告（Chrome 插件）</h1>
+  <div class="sub">體系病歷「檢驗」頁多兩個鈕：把英文檢驗報告整理成中文說明版，或把多個項目一年內的變化畫成折線圖，預覽後印給病人。院內網路使用。</div>
+
+  <div class="card">
+    <h2>下載</h2>
+    <div class="dl">
+      <a class="btn" href="downloads/kmu-lab-zh-v0.1.0.zip" download>插件 v0.1.0（zip）</a>
+    </div>
+    <p class="small">只讀病歷、不連院外、不存檔；不需要任何額外權限。</p>
+  </div>
+
+  <div class="card">
+    <h2>安裝（第一次）</h2>
+    <ol>
+      <li>下載 zip，解壓縮到一個<strong>固定的資料夾</strong>（之後不要搬動或刪除），會得到 <code>kmu-lab-zh</code> 資料夾（裡面有 <code>manifest.json</code>）。</li>
+      <li>Chrome 網址列輸入 <code>chrome://extensions</code>，打開右上角「開發人員模式」。</li>
+      <li>按「載入未封裝項目」，選 <code>kmu-lab-zh</code> 資料夾。</li>
+      <li>已經開著的檢驗頁請重新整理一次。</li>
+    </ol>
+  </div>
+
+  <div class="card">
+    <h2>使用</h2>
+    <ol>
+      <li>開體系病歷的「檢驗」頁，院內「列印」鈕旁邊會多出「🖨 中文版」「📈 多項變化」。</li>
+      <li><strong>🖨 中文版</strong>：左邊點抽血日期，直接按就是當天全部；只要其中幾份就先勾選再按。</li>
+      <li><strong>📈 多項變化</strong>：列出查詢區間內驗過的項目，勾一個或多個，每項一張折線圖加數值表。要看一年請先把「查詢區間」改成 1 年。</li>
+      <li>先出現預覽，確認後按「🖨 列印」；按「關閉」或 Esc 就清掉。</li>
+    </ol>
+  </div>
+
+  <div class="card">
+    <h2>報告內容</h2>
+    <ul>
+      <li>抬頭：姓名、病歷號、院區、採檢日、報告日（不印身分證、生日）。</li>
+      <li>依類別分區，每項：中文名（英文原名）、結果、單位、參考範圍、一句「這項在看什麼」。</li>
+      <li>高低照院內報告的標示（↑偏高、↓偏低、＊異常、危急值），插件不自己重算。</li>
+      <li>沒有中文對照的項目保留英文，標「無中文對照」。</li>
+      <li>頁尾：「非官方中文報告，翻譯僅供參考」。</li>
+    </ul>
+  </div>
+
+  <div class="card warn">
+    <strong>注意</strong>
+    <ul>
+      <li>其他院區的報告院方系統不讓在這裡列印，插件照規定略過，並在報告上註明。</li>
+      <li>讀不到病歷號或姓名時不會產生報告（避免印錯人）。</li>
+      <li>印出的報告含病人資料，若另存 PDF 請勿放進雲端資料夾，用完請刪除。</li>
+    </ul>
+  </div>
+
+  <div class="card small">
+    <strong>版本紀錄</strong>
+    <ul>
+      <li>v0.1.0（2026-11-23）：🖨 中文版（當天全部或勾選）、📈 多項變化（折線圖）、中英對照 185 項。</li>
+    </ul>
+  </div>
+
+  <footer>工具版本：2026-11-23</footer>
+</div>
+</body>
+</html>
