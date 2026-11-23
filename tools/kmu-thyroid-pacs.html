@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>甲狀腺 PACS 截圖（Chrome 插件）</title>
+<title>PACS 截圖（Chrome 插件）</title>
 <style>
   :root{ --accent:#19499D; --ink:#1b1f24; --line:#dde2ea; --soft:#f3f6fb; --bg:#eef2f8; --muted:#5d6675; --warnbg:#fff4e8; }
   *{box-sizing:border-box;}
@@ -25,13 +25,13 @@
 </head>
 <body>
 <div class="wrap">
-  <h1>甲狀腺 PACS 截圖（Chrome 插件）</h1>
-  <div class="sub">在體系病歷「檢查」頁，甲狀腺報告那一列多一顆「🩻 截圖」：列出那次檢查的 PACS 影像，點選看大圖、拖曳框選，按「複製」直接貼到報告，或存成 JPG。高醫附院、岡山都可用。</div>
+  <h1>PACS 截圖（Chrome 插件）</h1>
+  <div class="sub">在體系病歷「檢查」頁，每一筆有 PACS 影像的檢查（超音波、X 光、CT、MRI…）旁多一顆「🩻 截圖」：列出那次檢查的 PACS 影像，點選看大圖、拖曳框選，按「複製」直接貼到報告，或存成 JPG。高醫附院、岡山都可用。</div>
 
   <div class="card">
     <h2>下載</h2>
     <div class="dl">
-      <a class="btn" href="downloads/kmu-thyroid-pacs-v0.1.3.zip" download>插件 v0.1.3（zip）</a>
+      <a class="btn" href="downloads/kmu-thyroid-pacs-v0.2.2.zip" download>插件 v0.2.2（zip）</a>
     </div>
     <p class="small">只在院內網路可用。只讀院內資料，不連院外網路；不存帳號密碼、不存 PACS 通行碼。<strong>試用版：院內實測中。</strong></p>
   </div>
@@ -57,9 +57,9 @@
   <div class="card">
     <h2>使用</h2>
     <ol>
-      <li>開病人的體系病歷「檢查」頁。甲狀腺報告、有「開啟PACS」按鈕的列，旁邊會多一顆「🩻 截圖」。</li>
-      <li>按下去會開「甲狀腺 PACS 截圖」小視窗，列出這次檢查的影像縮圖（最多 150 張）。</li>
-      <li>點縮圖看大圖：拖曳框選；「複製」（Ctrl+C）有框選就只複製框選範圍；「存 JPG」（Ctrl+S）存到 <code>下載/Thyroid_PACS/</code>，檔名不含病歷號；← → 換上一張／下一張。</li>
+      <li>開病人的體系病歷「檢查」頁。有「開啟PACS」按鈕的列，旁邊會多一顆「🩻 截圖」（不限甲狀腺）。</li>
+      <li>按下去會開「PACS 截圖」小視窗，列出這次檢查的影像縮圖（最多 150 張）。</li>
+      <li>點縮圖看大圖：拖曳框選；「複製」（Ctrl+C）有框選就只複製框選範圍；「存 JPG」（Ctrl+S）存到 <code>下載/PACS/</code>，檔名以檢查種類開頭（例如 <code>CR_20261123_01.jpg</code>），不含病歷號；← → 換上一張／下一張。</li>
     </ol>
   </div>
 
@@ -69,6 +69,7 @@
       <li>插件會借用那一列的「開啟PACS」一次性連結接上 WebPACS。之後再按那一列的「開啟」看片可能打不開，把檢查頁重新整理即可。</li>
       <li>接不上時：先自己開一個 WebPACS 分頁並登入，再按一次「🩻 截圖」；或重新整理檢查頁再按。</li>
       <li>防看錯人：檢查頁、報告連結、PACS 三邊病歷號要一致，且檢查單號只找到一筆才顯示；對不上就不顯示並寫原因。</li>
+      <li>沒有檢查單號的列（附院一般攝影常見）：只配同一天、同一種檢查剛好一筆的，小視窗頂端會用橘底寫「依日期配對」和 PACS 那一筆的名稱，請先確認再用；認不出種類就不自動找。</li>
       <li>超音波影像上常印有病人姓名、病歷號，複製或存檔前請確認，必要時用框選避開。存下的 JPG 請留在院內電腦、不要放雲端，用完刪除。</li>
     </ul>
   </div>
@@ -76,6 +77,7 @@
   <div class="card small">
     <strong>版本紀錄</strong>
     <ul>
+      <li>v0.2.2（2026-11-23）：改名「PACS 截圖」，每一筆有 WebPACS 開啟鈕的檢查都能截圖（不限甲狀腺）；沒有檢查單號時只配同種檢查並醒目提示；存檔改到「下載/PACS/」。</li>
       <li>v0.1.3（2026-11-23）：附院檢查頁（每列有兩顆 PACS 鈕）也會出現「🩻 截圖」；有甲狀腺列的連結格式不認得時，表格上方顯示一行原因。</li>
       <li>v0.1.1（2026-11-22）：小視窗標題拿掉病歷號；存檔後清除 Chrome 下載紀錄那筆；關小視窗清背景暫存；縮圖同時載 3 張、檢查頁比較不卡。</li>
       <li>v0.1.0（2026-11-22）：第一版。</li>
