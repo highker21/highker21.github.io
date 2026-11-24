@@ -26,12 +26,12 @@
 <body>
 <div class="wrap">
   <h1>中文檢驗報告（Chrome 插件）</h1>
-  <div class="sub">體系病歷「檢驗」頁多兩個鈕：把英文檢驗報告整理成中文說明版，或把多個項目一年內的變化畫成折線圖，預覽後印給病人。院內網路使用。</div>
+  <div class="sub">體系病歷「檢驗」頁多三個鈕：把英文檢驗報告整理成中文說明版、把多個項目一年內的變化畫成折線圖，或開「🧮 計算機」自動帶入檢驗值算臨床指標，預覽後印給病人。院內網路使用。</div>
 
   <div class="card">
     <h2>下載</h2>
     <div class="dl">
-      <a class="btn" href="downloads/kmu-lab-zh-v0.4.1.zip" download>插件 v0.4.1（zip）</a>
+      <a class="btn" href="downloads/kmu-lab-zh-v0.5.0.zip" download>插件 v0.5.0（zip）</a>
     </div>
     <p class="small">只讀病歷、不連院外、不存檔；不需要任何額外權限。</p>
   </div>
@@ -82,6 +82,7 @@
   <div class="card small">
     <strong>版本紀錄</strong>
     <ul>
+      <li>v0.5.0（2026-11-24）：新增「🧮 計算機」鈕，浮動視窗開檢驗資料臨床計算機，自動帶入這位病人最近的檢驗值、年齡、性別並算好（mmol/L 自動換算 mg/dL；混到不同日期的數值會標示提醒），可複製、列印。</li>
       <li>v0.4.1（2026-11-24）：修正院內尿肌酸酐（U-CRE）、岡山血清肌酸酐（CRTN）認不得，UACR、eGFR 之前常算不出來；一年折線圖改成 eGFR、UACR、UPCR、HbA1c、空腹血糖各自勾選。</li>
       <li>v0.4.0（2026-11-24）：預設算 eGFR、UACR、UPCR（新增）、FIB-4、HOMA-IR，缺資料的那項不顯示；中文版預覽可勾「附一年 eGFR／UACR 折線圖」，會記住設定。</li>
       <li>v0.3.3（2026-11-24）：修正「📈 多項變化」異常值沒畫進圖、表格露出「flag=」；表格改標 ↑偏高／↓偏低。異常的肌酸酐、血糖也算進 eGFR、HOMA-IR 變化。</li>
