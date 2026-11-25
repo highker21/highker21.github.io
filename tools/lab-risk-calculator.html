@@ -123,7 +123,7 @@ button.ghost{background:#fff;color:var(--ink);border:1px solid var(--line)}
     其他：BMI 依國健署成人標準；TyG＝ln(TG×FPG/2)；HOMA-β＝360×胰島素/(血糖−63)；QUICKI＝1/(log 胰島素 + log 血糖)，&lt;0.357 為健康成人 95% 下限；eAG＝28.7×A1c−46.7；GA↔HbA1c 用韓國兩段式迴歸（HbA1c &lt;5.868%：GA＝6.960＋0.8963×A1c；≥5.868%：GA＝−9.609＋3.720×A1c）；NFS（Angulo 2007，&lt;−1.455／&gt;0.676，≥65 歲低切點 0.12）；APRI＝(AST/40)/PLT×100；KFRE 4 變數（Tangri；非北美 S0 2 年 0.9832、5 年 0.9365）；校正鈣＝Ca＋0.8×(4−Alb)；校正鈉 Katz 1.6／Hillier 2.4；滲透壓＝2Na＋血糖/18＋BUN/2.8；AG＝Na−(Cl＋HCO₃)，白蛋白校正 ＋2.5×(4−Alb)；FENa、FEUrea（&lt;35% 腎前性、&gt;50% 腎性）；Sampson LDL＝TC/0.948−HDL/0.971−(TG/8.56＋TG×NonHDL/2140−TG²/16100)−9.44；ABI 依 AHA/ACC 2016；baPWV、CAVI 切點為研究慣例。<br>
     血脂：2025 台灣血脂管理臨床路徑共識（中華民國心臟學會等 10 個機構，內科學誌 2024;35(6)）五級風險與 LDL-C 目標 &lt;130／&lt;115／&lt;100／&lt;70／&lt;55 mg/dL；Non-HDL-C 目標＝LDL-C 目標 + 30。LDL 缺值時優先以 Sampson（NIH 2）公式估算（TG ≤800），否則 Friedewald（TG &lt;400）。
   </p>
-  <div class="foot">計算結果僅供臨床參考，請依病人整體狀況判斷。　｜　盧子文醫師　｜　工具版本：2026-10-22</div>
+  <div class="foot">計算結果僅供臨床參考，請依病人整體狀況判斷。　｜　盧子文醫師　｜　工具版本：2026-11-25</div>
 </div>
 
 <script>
@@ -172,7 +172,7 @@ const MAP=[
  ["ast",/(^|\b|-)(s-?got|got|ast)\b|麩胺酸苯醋酸/i],
  ["alt",/(^|\b|-)(s-?gpt|gpt|alt)\b|麩胺酸丙酮酸/i],
  ["plt",/(platelet|^plt\b|血小板)/i],
- ["glu",/^(?!.*(pc|post|飯後|ogtt|2\s*hr|尿|urine|u-)).*(glu\s*ac|glucose.*(ac|ante|fasting)|ac\s*sugar|fbg|fpg|空腹血糖|飯前血糖|葡萄糖-空腹)/i],
+ ["glu",/^(?!.*(pc|post|飯後|ogtt|2\s*hr|尿|urine|u-)).*(glu[\s(\[\-_.]*ac|glucose.*(ac|ante|fasting)|ac\s*sugar|fbg|fpg|空腹血糖|飯前血糖|葡萄糖-空腹)/i],
  ["ins",/^(?!.*(pc|post|飯後|ab|抗體)).*(insulin|胰島素)/i],
  ["a1c",/(hba1c|a1c|糖化血色素)/i],
  ["tc",/^(?!.*(hdl|ldl|ratio|\/)).*(chol|t-cho|cholesterol|總膽固醇)/i],
