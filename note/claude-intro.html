@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>寫給一般人的 Claude 新手教學 · 30 分鐘完整功能導覽</title>
+<style>
+:root{--bg:#f6f8f9;--panel:#ffffff;--ink:#26302f;--muted:#6b7778;--line:#e6eced;--accent:#0091AC;--accent2:#00778e;--soft:#eaf3f5;--code:#eef2f3}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,"Segoe UI",Roboto,system-ui,"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;line-height:1.9;font-size:var(--fs,16.5px);-webkit-font-smoothing:antialiased}
+.fontctl{display:flex;flex-wrap:wrap;align-items:center;gap:6px;padding:4px 10px 12px;margin-bottom:8px;border-bottom:1px solid var(--line);font-size:12px;color:var(--muted)}
+.fontctl button{border:1px solid var(--line);background:#fff;border-radius:7px;padding:3px 10px;cursor:pointer;font-family:inherit;color:var(--ink);line-height:1}
+.fontctl button:hover{background:var(--soft);border-color:var(--accent);color:var(--accent)}
+.fontctl .printbtn{margin-left:auto;font-weight:700;white-space:nowrap;border-color:var(--accent);color:var(--accent2)}
+@media print{.fontctl{display:none}}
+a{color:var(--accent2);text-decoration:none}
+a:hover{text-decoration:underline}
+/* layout */
+.wrap{display:flex;min-height:100vh}
+.sidebar{width:300px;flex:0 0 300px;background:var(--panel);border-right:1px solid var(--line);height:100vh;position:sticky;top:0;overflow-y:auto;padding:22px 14px 40px}
+.brand{padding:6px 10px 16px;border-bottom:1px solid var(--line);margin-bottom:12px}
+.brand h1{font-size:16px;margin:0 0 4px;letter-spacing:.3px}
+.brand p{font-size:12px;color:var(--muted);margin:0}
+.searchbox{width:100%;padding:8px 12px;border:1px solid var(--line);border-radius:9px;background:var(--soft);margin:8px 0 14px;font-size:13px;font-family:inherit}
+.navgroup{margin-bottom:2px}
+.navhead{width:100%;display:flex;align-items:center;gap:8px;background:none;border:0;padding:9px 10px;border-radius:9px;cursor:pointer;font:inherit;color:var(--ink);text-align:left}
+.navhead:hover{background:var(--soft)}
+.navhead .ic{font-size:15px}
+.navhead .nt{flex:1;font-size:13.5px;font-weight:600}
+.navhead .chev{color:var(--muted);font-size:11px;transition:transform .18s}
+.navgroup.open .chev{transform:rotate(90deg)}
+.navsubs{display:none;padding:2px 0 6px 30px}
+.navgroup.open .navsubs{display:block}
+.navsub{display:block;padding:5px 10px;font-size:12.5px;color:var(--muted);border-radius:7px;border-left:2px solid transparent;line-height:1.5}
+.navsub:hover{background:var(--soft);color:var(--ink);text-decoration:none}
+.navsub.active{color:var(--accent);border-left-color:var(--accent);background:var(--soft);font-weight:600}
+/* main */
+.main{flex:1;min-width:0}
+.hero{background:linear-gradient(135deg,#0091AC,#006d84);color:#fff;padding:54px 48px 46px}
+.hero h1{margin:0 0 10px;font-size:30px;letter-spacing:.5px}
+.hero p{margin:0;font-size:15px;opacity:.92;max-width:640px}
+.hero .stat{margin-top:20px;display:flex;gap:26px;font-size:13px;opacity:.95}
+.hero .stat b{font-size:20px;display:block;font-weight:700}
+.content{max-width:840px;margin:0 auto;padding:8px 48px 120px}
+.course{padding-top:26px}
+.coursebar{display:flex;align-items:center;gap:14px;margin:34px 0 6px;padding:16px 18px;background:var(--panel);border:1px solid var(--line);border-radius:14px;border-left:5px solid var(--accent)}
+.coursebar .cic{font-size:26px}
+.ctitle{margin:0;font-size:21px}
+.csub{color:var(--muted);font-size:13px;margin-top:2px}
+.note{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:8px 26px 20px;margin:16px 0;scroll-margin-top:20px}
+.ntitle{font-size:18px;margin:18px 0 6px;padding-bottom:8px;border-bottom:1px dashed var(--line)}
+.nbody h2{font-size:18px;margin:24px 0 8px;color:#1c1c19}
+.nbody h3{font-size:16.5px;margin:22px 0 8px;color:#1c1c19;font-weight:800}
+.nbody h4{font-size:15px;margin:20px 0 8px;color:var(--accent);letter-spacing:.3px}
+.nbody h5{font-size:14px;margin:16px 0 6px;color:#333}
+.nbody p{margin:9px 0}
+.nbody p.lead{margin:16px 0 6px;font-weight:600;color:#1c1c19}
+.nbody ul,.nbody ol{margin:8px 0;padding-left:22px}
+.nbody li{margin:5px 0}
+.nbody li>ul,.nbody li>ol{margin:4px 0}
+.nbody code{background:var(--code);padding:2px 6px;border-radius:6px;font-family:"SF Mono",Consolas,monospace;font-size:.9em}
+blockquote{margin:14px 0;padding:12px 18px;background:#fbf7ef;border-left:4px solid #d9a441;border-radius:0 10px 10px 0;color:#5c4a1f}
+.callout{margin:14px 0;padding:12px 16px 12px 44px;border-radius:10px;border-left:4px solid;position:relative}
+.callout .cx-t{font-weight:700;margin-bottom:3px}
+.callout .cx-b{font-size:.97em}
+.callout::before{position:absolute;left:14px;top:11px;font-size:16px;line-height:1.4}
+.cx-key{background:#eef4fb;border-color:#3b82c4;color:#20384d}.cx-key::before{content:"📌"}
+.cx-tip{background:#edf7f0;border-color:#3fa46a;color:#1f4632}.cx-tip::before{content:"💡"}
+.cx-warn{background:#fdf0ec;border-color:#d9663f;color:#5c2f1f}.cx-warn::before{content:"⚠️"}
+.cx-quote{background:#f4f0fb;border-color:#8a63c4;color:#3d2f5c}.cx-quote::before{content:"❝"}
+.cx-note{background:#f1f4f5;border-color:#8a9797;color:#374343}.cx-note::before{content:"📝"}
+.cx-ex{background:#fbf7ef;border-color:#d9a441;color:#5c4a1f}.cx-ex::before{content:"🔎"}
+.cx-fig{background:#eef1f8;border-color:#5b6ea8;color:#2f3a5c}.cx-fig::before{content:"🖼️"}
+.callout .cx-b>:first-child{margin-top:0}.callout .cx-b>:last-child{margin-bottom:0}
+.callout .cx-b ul,.callout .cx-b ol{margin:5px 0;padding-left:20px}
+.nbody li.task{list-style:none;margin-left:-20px}
+.nbody li.task>label{display:flex;gap:9px;align-items:flex-start;cursor:pointer}
+.nbody li.task input.tk{margin:4px 0 0;flex:none;width:16px;height:16px;accent-color:var(--accent);cursor:pointer}
+.coursemap{background:var(--panel);border:1px solid var(--line);border-radius:14px;margin:16px 0;padding:2px 22px}
+.coursemap>summary{cursor:pointer;font-weight:800;font-size:16px;padding:14px 0;list-style:none;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.coursemap>summary::-webkit-details-marker{display:none}
+.coursemap>summary::before{content:"▸";color:var(--accent);font-size:13px}
+.coursemap[open]>summary::before{content:"▾"}
+.coursemap .cm-hint{font-size:12.5px;font-weight:500;color:var(--muted)}
+.cmtable{width:100%;border-collapse:collapse;margin:0 0 16px;font-size:14.5px}
+.cmtable td{padding:9px 10px;border-top:1px solid var(--line);vertical-align:top}
+.cmtable tr:first-child td{border-top:0}
+.cmtable .cm-u{width:32%;font-weight:700}
+.cmtable .cm-s{color:var(--muted);line-height:1.7}
+@media(max-width:640px){.cmtable,.cmtable tbody,.cmtable tr,.cmtable td{display:block;width:auto}.cmtable .cm-u{border-top:1px solid var(--line);padding-bottom:0}.cmtable .cm-s{padding-top:2px}}
+.nbody figure.fig{margin:16px 0;text-align:center;position:relative;display:inline-block;width:100%}
+.nbody figure.fig img{max-width:100%;height:auto;border:1px solid var(--line);border-radius:10px;cursor:zoom-in}
+.nbody figure.fig:not(.fig-missing)::after{content:"🔍";position:absolute;top:9px;right:9px;background:rgba(15,26,40,.6);color:#fff;border-radius:7px;padding:1px 7px;font-size:12.5px;pointer-events:none}
+@media print{.nbody figure.fig::after{display:none}}
+.nbody figure.fig figcaption{margin-top:7px;font-size:13.5px;color:var(--muted);line-height:1.6}
+.nbody figure.fig-missing{background:var(--soft);border:1px dashed var(--line);border-radius:10px;padding:11px 15px;text-align:left}
+.nbody figure.fig-missing figcaption{margin:0;color:var(--muted)}
+#lightbox{position:fixed;inset:0;background:rgba(15,26,40,.92);display:none;align-items:center;justify-content:center;z-index:999;cursor:zoom-out;padding:24px}
+#lightbox.show{display:flex}
+#lightbox img{max-width:96%;max-height:96%;border-radius:8px;box-shadow:0 8px 40px rgba(0,0,0,.5)}
+@media print{#lightbox{display:none!important}.nbody figure.fig img{cursor:default}}
+.quiz,.flashcards{border:1px solid var(--line);border-radius:14px;padding:4px 20px 18px;margin:18px 0;background:var(--panel)}
+.wgh{font-weight:800;font-size:16px;padding:13px 0 4px;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.wghint{font-size:12.5px;font-weight:500;color:var(--muted)}
+.qzscore{margin-left:auto;font-size:13.5px;font-weight:700;color:var(--accent2)}
+.qzretry{border:1px solid var(--line);background:#fff;border-radius:8px;padding:3px 10px;font:inherit;font-size:12.5px;color:var(--muted);cursor:pointer}
+.qzretry:hover{border-color:var(--accent);color:var(--accent)}
+@media print{.qzretry{display:none!important}}
+.qzq{margin:12px 0;padding-top:13px;border-top:1px solid var(--line)}
+.qzq:first-of-type{border-top:0}
+.qzqt{font-weight:600;margin-bottom:9px}
+.qzopts{display:flex;flex-direction:column;gap:7px}
+.qzopt{text-align:left;padding:9px 13px;border:1px solid var(--line);border-radius:9px;background:#fff;font:inherit;font-size:14.5px;color:var(--ink);cursor:pointer;transition:background .12s}
+.qzopt:hover:not(:disabled){border-color:var(--accent);background:var(--soft)}
+.qzopt:disabled{cursor:default}
+.qzopt.right{border-color:#3fa46a;background:#edf7f0;color:#1f4632;font-weight:700}
+.qzopt.wrong{border-color:#d9663f;background:#fdf0ec;color:#5c2f1f}
+.qzex{margin-top:9px;font-size:14px;color:var(--muted);background:var(--soft);border-radius:9px;padding:9px 13px;display:none}
+.qzq.done .qzex{display:block}
+.fcgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:12px;margin-top:6px}
+.fc{border:0;background:none;padding:0;font:inherit;cursor:pointer;perspective:1000px;min-height:112px;display:block}
+.fc-in{position:relative;display:block;width:100%;min-height:112px;transition:transform .4s;transform-style:preserve-3d}
+.fc.flipped .fc-in{transform:rotateY(180deg)}
+.fc-f,.fc-b{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border:1px solid var(--line);border-radius:11px;padding:14px;display:flex;align-items:center;justify-content:center;text-align:center;line-height:1.55}
+.fc-f{background:var(--soft);font-weight:700;color:var(--ink)}
+.fc-b{background:#fff;transform:rotateY(180deg);color:var(--muted);font-size:14px}
+@media print{.qzopt{border:1px solid #ccc}.qzq.done .qzex,.qzex{display:block}.fc-in{transform:none!important}.fc-b{position:static;transform:none;margin-top:8px}.fc-f,.fc-b{backface-visibility:visible;-webkit-backface-visibility:visible;position:static}.fc{min-height:0}}
+pre.codeblock{background:#0f1e2e;color:#dbe6f0;padding:14px 16px;border-radius:10px;overflow-x:auto;font-family:"SF Mono",Consolas,monospace;font-size:13px;line-height:1.6;margin:14px 0;white-space:pre}
+pre.codeblock code{background:none;padding:0;font:inherit;color:inherit;border-radius:0}
+@media print{.callout,pre.codeblock{break-inside:avoid}pre.codeblock{white-space:pre-wrap}}
+.tablewrap{overflow-x:auto;margin:14px 0}
+.nbody table{border-collapse:collapse;width:100%;font-size:14px;background:#fff;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.nbody th{background:var(--soft);text-align:left;padding:10px 12px;font-weight:700;border-bottom:2px solid var(--line)}
+.nbody td{padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+.nbody tr:last-child td{border-bottom:0}
+hr{border:0;border-top:1px solid var(--line);margin:18px 0}
+.totop{position:fixed;right:26px;bottom:26px;background:var(--accent);color:#fff;border:0;width:44px;height:44px;border-radius:50%;font-size:18px;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.18);opacity:0;pointer-events:none;transition:opacity .2s}
+.totop.show{opacity:1;pointer-events:auto}
+.foot{color:var(--muted);font-size:12px;text-align:center;padding:30px}
+mark{background:#fde68a;padding:0 2px}
+.noresults{color:var(--muted);text-align:center;padding:60px 20px;font-size:15px}
+/* mobile：側欄變成頂部橫條，搜尋／字級／導覽在手機上都還在 */
+@media(max-width:860px){.wrap{flex-direction:column}.sidebar{width:100%;flex:none;height:auto;position:static;overflow:visible;border-right:0;border-bottom:1px solid var(--line);padding:16px 18px}.hero,.content{padding-left:22px;padding-right:22px}}
+/* print */
+@media print{.sidebar,.totop{display:none}.main{width:100%}.hero{background:#0091AC!important;-webkit-print-color-adjust:exact}.note,.coursebar{break-inside:avoid;border:1px solid #ddd}.navsubs{display:block}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <aside class="sidebar">
+    <div class="brand"><h1>寫給一般人的 Claude 新手教學 · 30 分鐘完整功能導覽</h1><p>把買了看不完的線上課程，一鍵變成能讀完的筆記。</p></div>
+    <input class="searchbox" id="search" placeholder="🔍 搜尋筆記…" oninput="doSearch(this.value)">
+    <div class="fontctl"><span>字級</span><button onclick="setFs(-1)" title="縮小">A−</button><button onclick="setFs(0)" title="預設">A</button><button onclick="setFs(1)" title="放大">A+</button><button class="printbtn" onclick="window.print()">🖨 列印／存 PDF</button></div>
+    
+  <div class="navgroup" data-course="c0">
+    <button class="navhead"><span class="ic">📄</span><span class="nt">_index</span><span class="chev">▸</span></button>
+    <div class="navsubs" id="subs-c0">
+      <a href="#c0-0" class="navsub">寫給一般人的 Claude 新手教學 — 30 分鐘完整功能導覽</a>
+    </div>
+  </div>
+  <div class="navgroup" data-course="c1">
+    <button class="navhead"><span class="ic">📄</span><span class="nt">001_入門與設定</span><span class="chev">▸</span></button>
+    <div class="navsubs" id="subs-c1">
+      <a href="#c1-0" class="navsub">1. 入門與設定：雲端 Claude、Claude Code、模型與權限</a>
+    </div>
+  </div>
+  <div class="navgroup" data-course="c2">
+    <button class="navhead"><span class="ic">📄</span><span class="nt">002_高效提問與專案</span><span class="chev">▸</span></button>
+    <div class="navsubs" id="subs-c2">
+      <a href="#c2-0" class="navsub">2. 高效提問公式、對話技巧與專案工作空間</a>
+    </div>
+  </div>
+  <div class="navgroup" data-course="c3">
+    <button class="navhead"><span class="ic">📄</span><span class="nt">003_成品白板與子代理</span><span class="chev">▸</span></button>
+    <div class="navsubs" id="subs-c3">
+      <a href="#c3-0" class="navsub">3. 成品（Artifacts）、白板與子代理研究</a>
+    </div>
+  </div>
+  <div class="navgroup" data-course="c4">
+    <button class="navhead"><span class="ic">📄</span><span class="nt">004_連接服務技能與排程</span><span class="chev">▸</span></button>
+    <div class="navsubs" id="subs-c4">
+      <a href="#c4-0" class="navsub">4. 連接郵件日曆（MCP）、建立技能（Skills）與排程任務</a>
+    </div>
+  </div>
+  <div class="navgroup" data-course="c5">
+    <button class="navhead"><span class="ic">📄</span><span class="nt">005_試算表與文件編輯</span><span class="chev">▸</span></button>
+    <div class="navsubs" id="subs-c5">
+      <a href="#c5-0" class="navsub">5. 試算表與文件編輯：整理 Excel、條件格式、圖表與改寫文案</a>
+    </div>
+  </div>
+  <div class="navgroup" data-course="c6">
+    <button class="navhead"><span class="ic">📄</span><span class="nt">006_設計系統簡報與儀表板</span><span class="chev">▸</span></button>
+    <div class="navsubs" id="subs-c6">
+      <a href="#c6-0" class="navsub">6. 設計系統、簡報、數據儀表板與側邊欄整理</a>
+    </div>
+  </div>
+  <div class="navgroup" data-course="c7">
+    <button class="navhead"><span class="ic">📄</span><span class="nt">007_瀏覽器自動化與生成素材</span><span class="chev">▸</span></button>
+    <div class="navsubs" id="subs-c7">
+      <a href="#c7-0" class="navsub">7. 瀏覽器自動操作、生成圖片與網頁設計稿</a>
+    </div>
+  </div>
+  <div class="navgroup" data-course="c8">
+    <button class="navhead"><span class="ic">📄</span><span class="nt">008_Code工程化部署與自動化</span><span class="chev">▸</span></button>
+    <div class="navsubs" id="subs-c8">
+      <a href="#c8-0" class="navsub">8. 切換 Claude Code：CLAUDE.md、部署、遠端控制、Hook 與程式碼動畫</a>
+    </div>
+  </div>
+  </aside>
+  <div class="main">
+    <div class="hero">
+      <h1>寫給一般人的 Claude 新手教學 · 30 分鐘完整功能導覽</h1>
+      <p>把買了看不完的線上課程，一鍵變成能讀完的筆記。</p>
+      <div class="stat"><span><b>9</b>門課程</span><span><b>9</b>篇筆記</span><span><b>一鍵</b>自動整理</span></div>
+    </div>
+    <div class="content">
+      
+  <section class="course" id="course-c0">
+    <div class="coursebar"><span class="cic">📄</span><div><h2 class="ctitle">_index</h2><div class="csub"> · 1 篇</div></div></div>
+    
+    
+      <article class="note" id="c0-0">
+        <h3 class="ntitle">寫給一般人的 Claude 新手教學 — 30 分鐘完整功能導覽</h3>
+        <div class="nbody"><p>這門課用一個貫穿全程的故事，把 Claude 從「雲端問答」到「本機自動化」的核心功能一次走完。主角<strong>小芳</strong>是「暖窩動物之家」收容所的行政人員——<strong>不會寫程式、平常只用 Line、懂一點 Office</strong>。她被主任王姐要求「三個月內改善下滑的認養率」，於是從零開始用 Claude 解決每一個實際問題。</p>
+<p>你會跟著小芳的任務線，依序學到：<strong>註冊與設定 → 高效提問 → 專案工作空間 → 成品（Artifacts）白板 → 子代理研究 → 串接 Gmail/日曆 → 技能與排程 → 試算表與文件 → 設計系統與簡報 → 數據儀表板 → 瀏覽器自動操作 → 生成圖片 → 網頁設計稿 → 切換 Claude Code 本機模式 → CLAUDE.md → 部署網站 → 遠端控制 → Hook → 程式碼動畫</strong>。</p>
+<div class="callout cx-tip"><div class="cx-t">建議閱讀順序</div><div class="cx-b"><p>照篇序讀即可——每一篇都接續小芳的下一個任務，前後有因果。想快速查某個功能，用上方的「本課地圖」或搜尋跳到該篇。</p></div></div>
+<div class="callout cx-note"><div class="cx-t">關於本筆記</div><div class="cx-b"><p>整理自 PAPAYA 電腦教室《【全民 AI 手冊】寫給一般人的 Claude 新手教學》（片長 29:37）。內文為重新組織、去口水後的完整重寫，保留所有步驟、公式與技巧；UI 位置描述照影片示範，讓你能一邊開 Claude 一邊跟著做。</p></div></div></div>
+      </article>
+  </section>
+  <section class="course" id="course-c1">
+    <div class="coursebar"><span class="cic">📄</span><div><h2 class="ctitle">001_入門與設定</h2><div class="csub"> · 1 篇</div></div></div>
+    
+    
+      <article class="note" id="c1-0">
+        <h3 class="ntitle">1. 入門與設定：雲端 Claude、Claude Code、模型與權限</h3>
+        <div class="nbody"><div class="callout cx-note"><div class="cx-t">全民 AI 手冊 · 章節 1–3 · 00:00–04:18</div></div>
+<div class="callout cx-key"><div class="cx-t">一句話總結</div><div class="cx-b"><p class="lead"><strong>先分清「雲端 Claude（隨處問答）」和「Claude Code（跑在本機、能讀改檔案）」，再把個人背景一次設好、選對模型與權限模式，之後每次提問都省力又省 Token。</strong></p></div></div>
+<div class="callout cx-key"><div class="cx-t">你會學到</div><div class="cx-b"><ul><li>註冊訂閱、以及雲端 Claude 與 Claude Code 的根本差別</li><li>用「帳戶設定＋記憶」讓 Claude 永遠記得你的背景，不必每次重講</li><li>Claude 模型家族怎麼挑、「投入程度」與「權限模式」各是什麼</li><li>為什麼要把 PDF 先轉成 Markdown 再丟給 AI</li></ul></div></div>
+<h3>內容筆記</h3>
+<h4>雲端 Claude vs. Claude Code（最關鍵的分野）⏱ 00:00</h4>
+<p>註冊很簡單：用 Google 帳號到 Claude 首頁註冊，選訂閱方案。</p>
+<div class="callout cx-tip"><div class="cx-t">免費版 vs. 付費版</div><div class="cx-b"><p>免費版已有不少功能；但<strong>想讓 Claude 操作你電腦上的檔案與工具，要訂閱 Pro 以上方案</strong>。填好信用卡、點「訂閱」，再下載安裝桌面版軟體即可。</p></div></div>
+<p>打開桌面版後，<strong>左上角有一個 Claude ↔ Code 的切換開關</strong>，兩者差別在「程式跑在哪裡」：</p>
+<div class="tablewrap"><table><thead><tr><th></th><th>雲端 Claude</th><th>Claude Code</th></tr></thead><tbody><tr><td>運作位置</td><td>官方雲端伺服器</td><td>你的電腦本機</td></tr><tr><td>能不能讀改本機檔案</td><td>否</td><td><strong>能</strong>（直接讀取、修改電腦裡的檔案）</td></tr><tr><td>典型用途</td><td>日常提問、文件、簡報</td><td>開發 App、建立自動化工具</td></tr><tr><td>電腦關機時</td><td>不受影響、照常用</td><td>停擺（任務跑在本機）</td></tr></tbody></table></div>
+<h4>設定個人偏好與記憶 ⏱ 01:37</h4>
+<p>不想每次提問都重講自己的背景？到<strong>「設定」→「帳戶」</strong>分頁：上傳頭像、填全名與暱稱、描述工作性質，並在下方填「想讓 Claude 預先知道的資訊」——在哪裡工作、工作內容、以及<strong>回覆時應遵守的原則</strong>。</p>
+<div class="callout cx-key"><div class="cx-t">兩種「記住你」的機制</div><div class="cx-b"><ul><li><strong>帳戶設定裡的個人資訊</strong>：你主動輸入、固定不變的背景與原則。</li><li><strong>記憶（Memory）</strong>：Claude 在對話過程中，自動把與你相關的重要資訊記錄下來。</li></ul></div></div>
+<h4>模型家族、投入程度、權限模式 ⏱ 02:18</h4>
+<p>提問前可在底下<strong>指定一個專案資料夾</strong>當參考，右邊下拉選單選「負責思考回答的模型」。Claude 是一個<strong>模型家族</strong>：</p>
+<div class="tablewrap"><table><thead><tr><th>模型</th><th>定位</th></tr></thead><tbody><tr><td><strong>Haiku</strong></td><td>速度最快，適合簡單小任務</td></tr><tr><td><strong>Sonnet</strong></td><td>能力與速度最平衡，日常工作主力（示範選 <strong>Sonnet 5.5</strong>）</td></tr><tr><td><strong>Opus</strong></td><td>邏輯複雜、需長時間深度思考的任務</td></tr><tr><td><strong>Fable</strong></td><td>更聰明一籌，但<strong>消耗更多額度</strong></td></tr></tbody></table></div>
+<ul><li><strong>投入程度</strong>：Claude 會投入多少時間與運算資源去思考分析，一般維持預設「中」即可。</li><li><strong>權限模式</strong>：選「<strong>手動</strong>」時，Claude 每次改檔或執行指令前都會先跟你確認；嫌囉嗦就切「<strong>自動</strong>」。</li></ul>
+<h4>把 PDF 先轉 Markdown 再用 ⏱ 03:00</h4>
+<p>小芳拿到一份內容很多的「認養作業手冊」PDF。可以直接把 PDF 拖進對話框，但——</p>
+<div class="callout cx-tip"><div class="cx-t">省 Token 的實務習慣</div><div class="cx-b"><p>PDF 的初衷是「給人看的視覺排版」。常用文件<strong>先請 Claude 轉成 Markdown</strong>，AI 解析內容與結構更有效率、也更省 Token。轉好的文件會顯示在右側窗格，點右上角「下載」即可存成 .md 重複使用。</p></div></div>
+<h3>關鍵詞</h3>
+<ul><li><strong>Claude Code</strong>：跑在本機、能直接讀寫電腦檔案的版本，用來開發與自動化。</li><li><strong>投入程度（Effort）</strong>：Claude 花多少思考時間與運算資源，預設「中」。</li><li><strong>權限模式</strong>：手動＝每次動作前先確認；自動＝不再逐一確認。</li><li><strong>記憶（Memory）</strong>：Claude 在對話中自動保存與你相關的重要資訊。</li><li><strong>Markdown</strong>：純文字的輕量標記格式，AI 解析比 PDF 省 Token。</li></ul>
+<h3>可執行要點</h3>
+<ul><li class="task"><label><input type="checkbox" class="tk">到「設定 → 帳戶」把全名、工作性質、回覆原則一次填好</label></li><li class="task"><label><input type="checkbox" class="tk">確認「記憶」已開啟</label></li><li class="task"><label><input type="checkbox" class="tk">日常任務先用 Sonnet；遇到複雜深度任務才換 Opus</label></li><li class="task"><label><input type="checkbox" class="tk">常用 PDF 先請 Claude 轉成 Markdown 存起來重複使用</label></li></ul>
+<div class="quiz" id="qz0" data-total="3"><div class="wgh">📝 隨堂測驗<span class="wghint">（點選項作答）</span><span class="qzscore"></span><button class="qzretry" style="display:none">↺ 重做</button></div><div class="qzq"><div class="qzqt">雲端 Claude 與 Claude Code 最根本的差別是什麼？</div><div class="qzopts"><button class="qzopt" data-c="0">介面顏色不同</button><button class="qzopt" data-c="1">運作位置不同：Code 跑在本機、能讀改電腦檔案</button><button class="qzopt" data-c="0">只有付費與免費差別</button><button class="qzopt" data-c="0">Code 不能上網</button></div><div class="qzex">Code 跑在電腦本機，可直接讀取與修改本機檔案，常用於開發與自動化；雲端 Claude 跑在官方伺服器。</div></div><div class="qzq"><div class="qzqt">下列哪個模型『更聰明但更耗額度』？</div><div class="qzopts"><button class="qzopt" data-c="0">Haiku</button><button class="qzopt" data-c="0">Sonnet</button><button class="qzopt" data-c="0">Opus</button><button class="qzopt" data-c="1">Fable</button></div><div class="qzex">Fable 聰明程度更勝一籌，但相對消耗更多額度。</div></div><div class="qzq"><div class="qzqt">為什麼建議把常用 PDF 先轉成 Markdown？</div><div class="qzopts"><button class="qzopt" data-c="0">Markdown 比較漂亮</button><button class="qzopt" data-c="1">可以省 AI 處理的 Token、解析更有效率</button><button class="qzopt" data-c="0">PDF 不能上傳</button><button class="qzopt" data-c="0">Markdown 會自動翻譯</button></div><div class="qzex">PDF 以視覺排版為主，轉成 Markdown 讓 AI 更有效率解析內容結構，並節省 Token。</div></div></div></div>
+      </article>
+  </section>
+  <section class="course" id="course-c2">
+    <div class="coursebar"><span class="cic">📄</span><div><h2 class="ctitle">002_高效提問與專案</h2><div class="csub"> · 1 篇</div></div></div>
+    
+    
+      <article class="note" id="c2-0">
+        <h3 class="ntitle">2. 高效提問公式、對話技巧與專案工作空間</h3>
+        <div class="nbody"><div class="callout cx-note"><div class="cx-t">全民 AI 手冊 · 章節 4–5 · 04:18–07:18</div></div>
+<div class="callout cx-key"><div class="cx-t">一句話總結</div><div class="cx-b"><p class="lead"><strong>用「背景／任務目標／具體要求／驗證方式／輸出格式」五要素寫提示詞，搭配四個省 Token 的對話習慣；重複性的工作則開一個「專案」當長期工作空間，資料與規則一次放好、每次自動帶入。</strong></p></div></div>
+<div class="callout cx-key"><div class="cx-t">你會學到</div><div class="cx-b"><ul><li>一條能大幅提升回答品質的「五要素提問公式」</li><li>四個讓對話更準、更省額度的習慣</li><li>用「專案」打造獨立工作空間，省去每次重傳檔案</li></ul></div></div>
+<h3>內容筆記</h3>
+<h4>五要素提問公式 ⏱ 04:18</h4>
+<p>先開一個<strong>新對話</strong>（別把不同任務全塞同一個對話，會互相干擾、也浪費 Token）。把文件拉進來後，用這個公式寫提示詞：</p>
+<div class="callout cx-key"><div class="cx-t">提問五要素</div><div class="cx-b"><ol><li><strong>背景</strong> — 你是誰、情境是什麼</li><li><strong>任務目標</strong> — 要達成什麼</li><li><strong>具體要求</strong> — 細節條件、限制</li><li><strong>驗證方式</strong> — 怎麼算做對（例如附上出處）</li><li><strong>輸出格式</strong> — 要表格、清單還是摘要</li></ol></div></div>
+<p>按這個公式，Claude 會給出<strong>條理分明、附章節出處</strong>的結果。若追問與上下文有關，直接在同一對話底下continue即可，不必另開。</p>
+<h4>四個對話技巧（都跟「省 Token、保準度」有關）⏱ 05:10</h4>
+<div class="callout cx-tip"><div class="cx-t">跟 AI 對話的四個好習慣</div><div class="cx-b"><ol><li><strong>一次把需求說清楚</strong>——別像傳 Line 一樣拆成好幾則慢慢補；每送一次，Claude 就把整段對話重新處理一遍，浪費 Token 又容易偏題。</li><li><strong>對話別拉太長</strong>——Claude 一次能記住的上下文有上限，太長會讓重要資訊被淹沒。</li><li><strong>對話中別切換模型</strong>——Claude 有<strong>快取（Cache）</strong>暫存對話以省運算；中途換模型會讓快取失效，被迫重讀上下文、浪費 Token。</li><li><strong>隨時注意用量</strong>——額度分「<strong>五小時</strong>」與「<strong>每週</strong>」兩個指標，超過要等下次重設。</li></ol></div></div>
+<h4>建立專案工作空間 ⏱ 06:11</h4>
+<p>接下來幾個月的工作都圍繞「提升認養率」，若每次都要重傳手冊很麻煩。改用 Claude 的<strong>「專案」</strong>功能建一個獨立工作空間：</p>
+<ol><li>取好記的<strong>專案名稱</strong>與<strong>明確具體的目標</strong></li><li>左下角「新增」，把<strong>作業手冊</strong>與<strong>待認養動物表格清單</strong>一起上傳，點「建立」</li><li>右上角<strong>「指示」欄</strong>寫這個專案的專屬規則（例如「如何介紹毛孩」「毛孩資料必須以清單檔案為準」）</li><li>確認<strong>「記憶」區塊</strong>已開啟（讓 Claude 主動保存對話關鍵內容）</li></ol>
+<p>設定好後，因為手冊與清單已在專案裡，Claude 能<strong>立即根據背景知識</strong>產出完整的「毛孩介紹卡」，不必再重貼資料。</p>
+<h3>關鍵詞</h3>
+<ul><li><strong>提問五要素</strong>：背景、任務目標、具體要求、驗證方式、輸出格式。</li><li><strong>快取（Cache）</strong>：暫存對話以省運算；中途切換模型會使其失效。</li><li><strong>額度指標</strong>：五小時額度與每週額度兩種，超過需等重設。</li><li><strong>專案（Project）</strong>：放固定資料與規則的獨立工作空間，提問自動帶入。</li><li><strong>指示欄</strong>：寫在專案裡、對該專案所有對話生效的專屬規則。</li></ul>
+<h3>可執行要點</h3>
+<ul><li class="task"><label><input type="checkbox" class="tk">把下一個重要提問改寫成「五要素」格式再送出</label></li><li class="task"><label><input type="checkbox" class="tk">不同任務各開新對話，別全塞同一串</label></li><li class="task"><label><input type="checkbox" class="tk">一次把需求講清楚，對話別無限拉長</label></li><li class="task"><label><input type="checkbox" class="tk">同一對話內不要中途切換模型（保住快取）</label></li><li class="task"><label><input type="checkbox" class="tk">為反覆進行的目標建立一個「專案」，放好資料與指示</label></li></ul>
+<div class="quiz" id="qz1" data-total="3"><div class="wgh">📝 隨堂測驗<span class="wghint">（點選項作答）</span><span class="qzscore"></span><button class="qzretry" style="display:none">↺ 重做</button></div><div class="qzq"><div class="qzqt">提問五要素不包含下列哪一項？</div><div class="qzopts"><button class="qzopt" data-c="0">背景</button><button class="qzopt" data-c="0">任務目標</button><button class="qzopt" data-c="1">AI 的名字</button><button class="qzopt" data-c="0">輸出格式</button></div><div class="qzex">五要素是背景、任務目標、具體要求、驗證方式、輸出格式。</div></div><div class="qzq"><div class="qzqt">為什麼不建議在同一個對話中途切換模型？</div><div class="qzopts"><button class="qzopt" data-c="0">會當機</button><button class="qzopt" data-c="1">會讓快取失效、被迫重讀上下文浪費 Token</button><button class="qzopt" data-c="0">模型會打架</button><button class="qzopt" data-c="0">會自動扣費</button></div><div class="qzex">切換模型會使暫存對話的快取失效，Claude 必須重新讀取上下文，造成 Token 浪費。</div></div><div class="qzq"><div class="qzqt">Claude 的用量額度分成哪兩個指標？</div><div class="qzopts"><button class="qzopt" data-c="0">每日與每月</button><button class="qzopt" data-c="1">五小時與每週</button><button class="qzopt" data-c="0">每次與每年</button><button class="qzopt" data-c="0">免費與付費</button></div><div class="qzex">額度分『五小時』與『每週』兩個指標，超過要等下次重設。</div></div></div></div>
+      </article>
+  </section>
+  <section class="course" id="course-c3">
+    <div class="coursebar"><span class="cic">📄</span><div><h2 class="ctitle">003_成品白板與子代理</h2><div class="csub"> · 1 篇</div></div></div>
+    
+    
+      <article class="note" id="c3-0">
+        <h3 class="ntitle">3. 成品（Artifacts）、白板與子代理研究</h3>
+        <div class="nbody"><div class="callout cx-note"><div class="cx-t">全民 AI 手冊 · 章節 6–7 · 07:18–09:12</div></div>
+<div class="callout cx-key"><div class="cx-t">一句話總結</div><div class="cx-b"><p class="lead"><strong>Claude 不只回答，還能直接生出「成品（Artifacts）」——用白板把雜亂筆記整理成流程圖、用「評論」就單一步驟追問風險；研究大題目則派「子代理」分頭並行蒐集、再統整成清單。</strong></p></div></div>
+<div class="callout cx-key"><div class="cx-t">你會學到</div><div class="cx-b"><ul><li>什麼是「成品（Artifacts）」與「白板」畫布</li><li>怎麼讓 Claude 幫你把亂筆記整理成結構化流程圖</li><li>「評論」功能如何就某個環節請 Claude 點出風險</li><li>「子代理（Subagent）」如何把一個大研究並行拆解</li></ul></div></div>
+<h3>內容筆記</h3>
+<h4>成品與白板 ⏱ 07:18</h4>
+<p>除了問答，Claude 能直接幫你生成完整的<strong>成品（Artifact）</strong>。側邊欄進入「成品」分頁，啟用<strong>「白板」</strong>——一張可無限延伸的畫布：</p>
+<ul><li>用底部工具列建立<strong>方塊、文字、便利貼</strong>等圖形</li><li>每張卡片可自由改外觀（如顏色）</li><li>點卡片四周的圓點可在旁邊延伸新卡片</li></ul>
+<div class="callout cx-key"><div class="cx-t">白板最強的地方：交給 Claude 來建</div><div class="cx-b"><p>把你的「會議筆記」拉進文字框，請 Claude「用白板功能整理分類」，稍待就會生出一張<strong>結構清楚的流程圖</strong>。右上角可展開，裡面每個方格都能編輯文字或延伸新方塊。</p></div></div>
+<div class="callout cx-tip"><div class="cx-t">用「評論」就單點追問</div><div class="cx-b"><p>對某個環節不放心時，用<strong>「評論」</strong>功能就「這個步驟」向 Claude 提問，Claude 會立即在旁邊點出<strong>潛在風險與注意事項</strong>——等於邊畫邊做風險檢查。</p></div></div>
+<h4>子代理進行研究 ⏱ 08:45</h4>
+<p>小芳想知道「別的收容所用哪些方法提高認養率」，但方向很多、一個個查太慢。</p>
+<div class="callout cx-key"><div class="cx-t">子代理（Subagent）= Claude 派出去的分身</div><div class="cx-b"><p>請 Claude 派出<strong>子代理</strong>，把不同研究方向<strong>同時分頭找齊</strong>，最後由 Claude 統一梳理成一份重點清單。多方向並行，整個流程事半功倍。</p></div></div>
+<h3>關鍵詞</h3>
+<ul><li><strong>成品（Artifact）</strong>：Claude 直接生成的完整產物（白板、文件、簡報、儀表板等），不只是文字回答。</li><li><strong>白板（Whiteboard）</strong>：可無限延伸的畫布，放方塊／文字／便利貼，可由 Claude 代為規劃建構。</li><li><strong>評論（Comment）</strong>：就成品中某一步驟向 Claude 定點追問風險與建議。</li><li><strong>子代理（Subagent）</strong>：Claude 派出的分身助手，並行處理多個研究方向後統整。</li></ul>
+<h3>可執行要點</h3>
+<ul><li class="task"><label><input type="checkbox" class="tk">把一份亂糟糟的筆記拉給 Claude，請它用白板整理成流程圖</label></li><li class="task"><label><input type="checkbox" class="tk">對流程圖中不放心的環節，用「評論」請 Claude 指出風險</label></li><li class="task"><label><input type="checkbox" class="tk">下次遇到「多方向的查找」任務，明確請 Claude 派子代理並行研究</label></li></ul>
+<div class="flashcards"><div class="wgh">🎴 單字卡<span class="wghint">（點卡片翻面）</span></div><div class="fcgrid"><button class="fc"><span class="fc-in"><span class="fc-f">成品（Artifact）是什麼？</span><span class="fc-b">Claude 直接生成的完整產物，如白板、文件、簡報、儀表板，而非只是對話文字。</span></span></button><button class="fc"><span class="fc-in"><span class="fc-f">子代理（Subagent）解決什麼問題？</span><span class="fc-b">把一個大研究拆成多個方向、由分身並行蒐集，再由 Claude 統整成重點清單，省時。</span></span></button><button class="fc"><span class="fc-in"><span class="fc-f">白板的『評論』功能用途？</span><span class="fc-b">就成品中的某一個步驟定點向 Claude 追問，讓它點出該環節的潛在風險與注意事項。</span></span></button></div></div></div>
+      </article>
+  </section>
+  <section class="course" id="course-c4">
+    <div class="coursebar"><span class="cic">📄</span><div><h2 class="ctitle">004_連接服務技能與排程</h2><div class="csub"> · 1 篇</div></div></div>
+    
+    
+      <article class="note" id="c4-0">
+        <h3 class="ntitle">4. 連接郵件日曆（MCP）、建立技能（Skills）與排程任務</h3>
+        <div class="nbody"><div class="callout cx-note"><div class="cx-t">全民 AI 手冊 · 章節 8–10 · 09:12–12:46</div></div>
+<div class="callout cx-key"><div class="cx-t">一句話總結</div><div class="cx-b"><p class="lead"><strong>用 MCP 把 Claude 接上 Gmail、日曆、雲端硬碟，它就能讀信、擬草稿、登記行程；把重複做兩次以上的流程打包成「技能（Skill）」，再用「排程任務」讓它每天自動跑。</strong></p></div></div>
+<div class="callout cx-key"><div class="cx-t">你會學到</div><div class="cx-b"><ul><li>什麼是 MCP，以及如何一鍵串接 Gmail／Google 日曆／雲端硬碟</li><li>「技能（Skill）」是什麼、怎麼建立與觸發、它其實就是一份 Markdown</li><li>用「排程任務」讓技能定時自動執行</li></ul></div></div>
+<h3>內容筆記</h3>
+<h4>用 MCP 連接電子郵件與日曆 ⏱ 09:12</h4>
+<p>小芳的信箱每天塞滿認養詢問信，光回信就耗掉一下午。解法是把 Claude 接上她的信箱——透過一種叫 <strong>MCP</strong> 的技術。</p>
+<div class="callout cx-key"><div class="cx-t">MCP 串接非常簡單</div><div class="cx-b"><p>點 <strong>Gmail 旁邊的「＋」號</strong>，Claude 會自動開瀏覽器協助完成<strong>連接器設定與帳號授權</strong>。接著可順手把 <strong>Google 日曆</strong>與<strong>雲端硬碟</strong>一起串進來。</p></div></div>
+<p>串好後做個測試——請 Claude「把所有詢問認養的來信整理成表格，信中若提到想參觀的時間就登記到 Google 日曆」。稍待，Claude 就：</p>
+<ul><li>把所有詢問信整理成表格</li><li>在 Gmail 裡<strong>每封信都附上寫好的回覆草稿</strong></li><li>把民眾預約的參觀時段<strong>自動記進行事曆</strong></li></ul>
+<h4>建立技能（Skills）⏱ 10:22</h4>
+<p>每次請 Claude 回信都要重講細節很煩。</p>
+<div class="callout cx-key"><div class="cx-t">兩次以上就該打包成 Skill</div><div class="cx-b"><p>任何事只要你會<strong>重複做兩次以上</strong>，就適合打包成一個 <strong>Skill（技能）</strong>＝一套固定的標準作業流程。</p></div></div>
+<p>做法：把回信的所有步驟與注意事項整理成一份文件、拉進輸入框，請 Claude「根據這份文件建立一個回覆郵件的技能」。之後觸發方式有兩種：</p>
+<ul><li>輸入<strong>斜線 <code>/</code></strong>，從選單選「回覆郵件」技能</li><li>更省事：<strong>直接交代</strong> Claude「到信箱回信給蔡小姐」，它會自動啟用對應技能、寫好回信存成<strong>草稿</strong>讓你最後檢查</li></ul>
+<div class="callout cx-tip"><div class="cx-t">技能其實就是一份 Markdown</div><div class="cx-b"><p>側邊欄點「外掛程式」→ 切到 <strong>Skills</strong> 分頁，可以：用「新增」上傳別人分享的技能、把技能暫時停用或刪除。打開技能本身，會發現它就是一份 <strong>Markdown 文件</strong>，裡面的流程步驟都能手動編輯。</p></div></div>
+<h4>設定排程任務 ⏱ 12:00</h4>
+<p>技能建好了，但你不主動吩咐它就不會跑。可在專案內建<strong>自動排程任務</strong>：自訂執行內容、觸發頻率與時間；也能直接在對話框用白話描述，例如「<strong>每天早上 9 點到我的信箱，替每封信擬好回信草稿</strong>」。之後到左側「排程任務」可<strong>暫停、刪除、修改</strong>觸發時間與內容。</p>
+<h3>關鍵詞</h3>
+<ul><li><strong>MCP</strong>：把 Claude 連上第三方服務（Gmail、日曆、雲端硬碟、圖片平台等）的連接技術。</li><li><strong>連接器（Connector）</strong>：某個外部服務的 MCP 連線設定，授權後 Claude 即可操作該服務。</li><li><strong>技能（Skill）</strong>：打包成標準作業流程的 Markdown 文件，可被 <code>/</code> 或自然語言觸發。</li><li><strong>排程任務</strong>：讓指定工作（含技能）在設定的時間自動執行。</li></ul>
+<h3>可執行要點</h3>
+<ul><li class="task"><label><input type="checkbox" class="tk">點 Gmail 旁的「＋」串接信箱，再順手接日曆與雲端硬碟</label></li><li class="task"><label><input type="checkbox" class="tk">把一個你常重複的流程寫成文件，請 Claude 建成 Skill</label></li><li class="task"><label><input type="checkbox" class="tk">用 <code>/</code> 或直接交代來觸發技能，先存草稿再人工檢查</label></li><li class="task"><label><input type="checkbox" class="tk">替常態工作建一個排程任務（如每天早上擬回信草稿）</label></li></ul>
+<div class="quiz" id="qz2" data-total="3"><div class="wgh">📝 隨堂測驗<span class="wghint">（點選項作答）</span><span class="qzscore"></span><button class="qzretry" style="display:none">↺ 重做</button></div><div class="qzq"><div class="qzqt">把 Claude 接上 Gmail、日曆等服務用的是什麼技術？</div><div class="qzopts"><button class="qzopt" data-c="0">VPN</button><button class="qzopt" data-c="1">MCP</button><button class="qzopt" data-c="0">SQL</button><button class="qzopt" data-c="0">FTP</button></div><div class="qzex">透過 MCP 串接第三方服務；點服務旁的『＋』即可授權連接。</div></div><div class="qzq"><div class="qzqt">影片建議『什麼情況』就該把流程打包成 Skill？</div><div class="qzopts"><button class="qzopt" data-c="0">只做一次的事</button><button class="qzopt" data-c="1">會重複做兩次以上的事</button><button class="qzopt" data-c="0">很難的事</button><button class="qzopt" data-c="0">別人叫你做的事</button></div><div class="qzex">任何會重複做兩次以上的事，都適合打包成固定 SOP 的技能。</div></div><div class="qzq"><div class="qzqt">打開一個 Skill 的本體，會發現它其實是？</div><div class="qzopts"><button class="qzopt" data-c="0">一段程式碼執行檔</button><button class="qzopt" data-c="1">一份可編輯的 Markdown 文件</button><button class="qzopt" data-c="0">一張圖片</button><button class="qzopt" data-c="0">一個壓縮檔</button></div><div class="qzex">技能本身就是一份 Markdown，流程步驟都可以手動編輯修改。</div></div></div></div>
+      </article>
+  </section>
+  <section class="course" id="course-c5">
+    <div class="coursebar"><span class="cic">📄</span><div><h2 class="ctitle">005_試算表與文件編輯</h2><div class="csub"> · 1 篇</div></div></div>
+    
+    
+      <article class="note" id="c5-0">
+        <h3 class="ntitle">5. 試算表與文件編輯：整理 Excel、條件格式、圖表與改寫文案</h3>
+        <div class="nbody"><div class="callout cx-note"><div class="cx-t">全民 AI 手冊 · 章節 11 · 12:46–15:42</div></div>
+<div class="callout cx-key"><div class="cx-t">一句話總結</div><div class="cx-b"><p class="lead"><strong>把散亂的 Excel 丟給 Claude 合併成標準 CSV，再用整合進「成品」的試算表做下拉選單、條件式格式與圖表——不會函數也能「詢問 Claude」幫你算；文件則能像 Word 一樣直接編輯、改寫語氣、匯出成 Word／PDF。</strong></p></div></div>
+<div class="callout cx-key"><div class="cx-t">你會學到</div><div class="cx-b"><ul><li>用 Claude 合併多張格式不一的工作表成乾淨 CSV</li><li>Claude 試算表：下拉選單、條件式格式、用一句話生成公式與圖表</li><li>在「成品」裡像 Word 一樣編輯文件、改寫文案、插入圖片、匯出</li></ul></div></div>
+<h3>內容筆記</h3>
+<h4>先把亂 Excel 整理成 CSV ⏱ 12:46</h4>
+<p>董事會關心認養數下滑，但一整年的資料<strong>散在 12 張不同月份的工作表、格式還不一致</strong>。把這個 Excel 上傳給 Claude，請它「合併 12 張工作表、統一格式、存成標準 CSV」，完成後即可下載。</p>
+<h4>Claude 試算表（成品的重大更新）⏱ 13:30</h4>
+<p>「成品」新整合了<strong>試算表</strong>功能，可在儲存格手動輸入，或用底部工具列<strong>匯入外部 CSV／Excel</strong>。幾個貼心設計：</p>
+<div class="tablewrap"><table><thead><tr><th>功能</th><th>怎麼用</th><th>效果</th></tr></thead><tbody><tr><td><strong>自動下拉選單</strong></td><td>系統替欄位主動生成</td><td>免手動輸入、減少錯字</td></tr><tr><td><strong>條件式格式</strong></td><td>選取「收容天數」整欄 → 底部「條件式格式」→「建立規則」</td><td>例：收容天數 &gt; 90 天的格子全標黃，久留毛孩一眼看出</td></tr><tr><td><strong>詢問 Claude（公式）</strong></td><td>底部「詢問 Claude」，講出想要的統計</td><td>不會 Excel 函數也行，Claude 把設好公式的統計表列在指定位置</td></tr><tr><td><strong>生成圖表</strong></td><td>一句話交代</td><td>把數據轉成圖表，一年認養量變化一目了然</td></tr></tbody></table></div>
+<h4>文件編輯與改寫 ⏱ 14:30</h4>
+<p>小芳的宣傳文案被王姐退回（太長、太悲情）。在「成品」分頁<strong>新增空白文件</strong>：</p>
+<ul><li>因已授權連接 Google 雲端硬碟，可請 Claude <strong>直接把雲端文件匯入</strong></li><li>冗長句子可在這裡<strong>像用 Word 一樣直接編輯</strong></li><li>用<strong>「插入圖片」</strong>做出圖文並茂的版面</li><li>寫提示詞請 Claude「把貼文改寫成<strong>溫暖正向</strong>的語氣」</li><li>滿意後：右上角「分享」→「匯出」→ 下載成 <strong>Word 或 PDF</strong></li></ul>
+<h3>關鍵詞</h3>
+<ul><li><strong>CSV</strong>：以逗號分隔、格式乾淨統一的表格檔，適合當資料的標準中繼格式。</li><li><strong>條件式格式</strong>：依設定條件（如數值 &gt; 90）自動為儲存格上色，突出重點。</li><li><strong>詢問 Claude（試算表內）</strong>：用自然語言請 Claude 直接生成公式、統計表或圖表。</li><li><strong>匯出</strong>：把成品文件下載成 Word、PDF 等常見格式。</li></ul>
+<h3>可執行要點</h3>
+<ul><li class="task"><label><input type="checkbox" class="tk">把多張、格式不一的工作表上傳，請 Claude 合併成標準 CSV</label></li><li class="task"><label><input type="checkbox" class="tk">用條件式格式把需要關注的資料（如久留天數）自動上色</label></li><li class="task"><label><input type="checkbox" class="tk">不會函數時，用試算表底部「詢問 Claude」直接生成統計與圖表</label></li><li class="task"><label><input type="checkbox" class="tk">文案在成品文件裡改寫語氣後，匯出成 Word 或 PDF</label></li></ul>
+<div class="quiz" id="qz3" data-total="2"><div class="wgh">📝 隨堂測驗<span class="wghint">（點選項作答）</span><span class="qzscore"></span><button class="qzretry" style="display:none">↺ 重做</button></div><div class="qzq"><div class="qzqt">面對『一年資料散在 12 張格式不一的工作表』，影片的做法是？</div><div class="qzopts"><button class="qzopt" data-c="0">手動一張張複製</button><button class="qzopt" data-c="1">上傳給 Claude 合併並統一格式、存成 CSV</button><button class="qzopt" data-c="0">放棄不處理</button><button class="qzopt" data-c="0">只看最後一張</button></div><div class="qzex">把混亂 Excel 上傳，請 Claude 合併 12 張工作表、整理格式，儲存成標準 CSV。</div></div><div class="qzq"><div class="qzqt">不會 Excel 函數，想在 Claude 試算表做統計，該用哪個功能？</div><div class="qzopts"><button class="qzopt" data-c="0">條件式格式</button><button class="qzopt" data-c="1">底部的『詢問 Claude』</button><button class="qzopt" data-c="0">插入圖片</button><button class="qzopt" data-c="0">放映</button></div><div class="qzex">點底部『詢問 Claude』講出想要的統計，它會把設好公式的表直接列在指定位置，甚至生成圖表。</div></div></div></div>
+      </article>
+  </section>
+  <section class="course" id="course-c6">
+    <div class="coursebar"><span class="cic">📄</span><div><h2 class="ctitle">006_設計系統簡報與儀表板</h2><div class="csub"> · 1 篇</div></div></div>
+    
+    
+      <article class="note" id="c6-0">
+        <h3 class="ntitle">6. 設計系統、簡報、數據儀表板與側邊欄整理</h3>
+        <div class="nbody"><div class="callout cx-note"><div class="cx-t">全民 AI 手冊 · 章節 12–14 · 15:42–19:36</div></div>
+<div class="callout cx-key"><div class="cx-t">一句話總結</div><div class="cx-b"><p class="lead"><strong>先用參考圖與 Logo 建一套「設計系統」當統一準則，之後做簡報、網站、平面都沿用同一風格；用 @ 提及既有成品一句話生出質感簡報，再把數據做成可互動、可分享連結的儀表板，最後用側邊欄「區段」把愈來愈多的成品歸檔。</strong></p></div></div>
+<div class="callout cx-key"><div class="cx-t">你會學到</div><div class="cx-b"><ul><li>用參考圖建立「設計系統」，讓 AI 產出風格一致</li><li>用 @ 提及既有成品，快速生成合乎設計規範的簡報並匯出 PPT／PDF</li><li>做出含數字卡、圖表、篩選器的互動式數據儀表板並分享連結</li><li>用側邊欄「區段」整理擁擠的對話與成品</li></ul></div></div>
+<h3>內容筆記</h3>
+<h4>先建「設計系統」再做簡報 ⏱ 15:42</h4>
+<p>小芳擔心 AI 做的簡報平庸、風格前後不一。解法是先打造一套<strong>專屬設計系統</strong>當準則。</p>
+<div class="callout cx-tip"><div class="cx-t">不必寫一堆文字規定字體間距</div><div class="cx-b"><p>更簡單的作法：到網路上找幾個你喜歡的設計作品，右鍵存到電腦。回 Claude 點輸入框「＋」→「<strong>新增設計系統</strong>」→「<strong>使用 Claude</strong>」，把<strong>參考圖</strong>和<strong>機構 Logo</strong> 一起上傳。可要求 Claude 多產幾個版本以供挑選。</p></div></div>
+<p>建好後設計系統會顯示在右側視窗，可從左上角選單檢視<strong>配色、標題與內文字型、字體大小、行高</strong>等規範；挑一套中意的版本，之後簡報、網站、平面設計都沿用同一風格。</p>
+<h4>用設計系統製作簡報 ⏱ 16:50</h4>
+<p>點輸入框「＋」，在「設計系統」選剛建的「暖窩動物之家」。寫提示詞時用 <strong><code>@</code> 符號提及既有成品</strong>（例如先前的白板與認養記錄試算表），請 Claude「根據這兩份資料製作向董事會提案的簡報」。</p>
+<ul><li>生出的簡報<strong>合乎設計系統、質感出眾</strong>；可改投影片文字或微調版面元素（如面板顏色）</li><li>展開到整視窗後，左側點 <strong>View</strong> 開縮圖窗格逐張瀏覽</li><li>右上角「<strong>放映</strong>」全螢幕播放；旁邊「<strong>下載</strong>」存成 <strong>PPT 或 PDF</strong></li></ul>
+<h4>製作數據儀表板 ⏱ 18:05</h4>
+<p>董事會希望有個頁面快速掌握關鍵數據。到成品頁面點「<strong>資料</strong>」，提示詞請 Claude「用試算表數據做一個儀表板，包含<strong>重點數字卡、圖表、篩選器</strong>」。</p>
+<div class="callout cx-key"><div class="cx-t">生成後務必測這兩點</div><div class="cx-b"><ul><li>切換<strong>篩選器</strong>時，數據有沒有跟著變化</li><li>滑鼠移到圖表上方時，有沒有顯示數據<strong>出自哪一份資料</strong></li></ul></div></div>
+<p>確認正常後，右上角「分享」產生專屬連結、權限設「<strong>知道連結的任何人</strong>」，王姐與董事就能用手機隨時查看最新認養數據。</p>
+<h4>整理側邊欄區段 ⏱ 19:07</h4>
+<p>成品一多，側邊欄會擁擠。在旁邊打開功能選單→「<strong>新增區段</strong>」→命名，把相關項目與成品拖進這個資料夾歸檔；之後可從選單「重新命名」「刪除」。</p>
+<h3>關鍵詞</h3>
+<ul><li><strong>設計系統（Design System）</strong>：由參考圖與 Logo 生成的統一視覺準則（配色、字型、字級、行高），跨簡報／網站／平面共用。</li><li><strong>@ 提及成品</strong>：在提示詞中用 <code>@</code> 引用先前建立的白板、試算表等成品當素材。</li><li><strong>數據儀表板</strong>：含數字卡、圖表、篩選器的互動頁面，可分享連結供他人查看。</li><li><strong>側邊欄區段</strong>：把對話與成品分類歸檔的資料夾。</li></ul>
+<h3>可執行要點</h3>
+<ul><li class="task"><label><input type="checkbox" class="tk">蒐集幾張喜歡的設計參考圖＋Logo，建一套設計系統</label></li><li class="task"><label><input type="checkbox" class="tk">做簡報時套用設計系統，並用 <code>@</code> 提及既有成品當素材</label></li><li class="task"><label><input type="checkbox" class="tk">把數據做成儀表板，分享前先測篩選器與圖表來源提示</label></li><li class="task"><label><input type="checkbox" class="tk">用側邊欄「新增區段」把成品歸檔，保持清爽</label></li></ul>
+<div class="quiz" id="qz4" data-total="3"><div class="wgh">📝 隨堂測驗<span class="wghint">（點選項作答）</span><span class="qzscore"></span><button class="qzretry" style="display:none">↺ 重做</button></div><div class="qzq"><div class="qzqt">為什麼要先建立『設計系統』？</div><div class="qzopts"><button class="qzopt" data-c="0">為了多花錢</button><button class="qzopt" data-c="1">讓 AI 產出的簡報／網站／平面風格一致、不流於平庸</button><button class="qzopt" data-c="0">設計系統能加速電腦</button><button class="qzopt" data-c="0">這是必填步驟</button></div><div class="qzex">設計系統提供配色、字型等統一準則，讓之後各種產出風格一致、更有質感。</div></div><div class="qzq"><div class="qzqt">分享數據儀表板前，影片提醒要測哪兩點？</div><div class="qzopts"><button class="qzopt" data-c="0">字體大小與背景色</button><button class="qzopt" data-c="1">切換篩選器數據會不會變、圖表有沒有顯示資料來源</button><button class="qzopt" data-c="0">網速與電量</button><button class="qzopt" data-c="0">登入帳號與密碼</button></div><div class="qzex">測篩選器切換時數據是否連動，以及游標移到圖表時是否顯示數據出處。</div></div><div class="qzq"><div class="qzqt">在提示詞中引用先前做好的白板、試算表當素材，用什麼符號？</div><div class="qzopts"><button class="qzopt" data-c="0"># 井號</button><button class="qzopt" data-c="1">@ 符號</button><button class="qzopt" data-c="0">/ 斜線</button><button class="qzopt" data-c="0">＋ 加號</button></div><div class="qzex">用 @ 符號提及曾建立過的成品。</div></div></div></div>
+      </article>
+  </section>
+  <section class="course" id="course-c7">
+    <div class="coursebar"><span class="cic">📄</span><div><h2 class="ctitle">007_瀏覽器自動化與生成素材</h2><div class="csub"> · 1 篇</div></div></div>
+    
+    
+      <article class="note" id="c7-0">
+        <h3 class="ntitle">7. 瀏覽器自動操作、生成圖片與網頁設計稿</h3>
+        <div class="nbody"><div class="callout cx-note"><div class="cx-t">全民 AI 手冊 · 章節 15–17 · 19:36–23:49</div></div>
+<div class="callout cx-key"><div class="cx-t">一句話總結</div><div class="cx-b"><p class="lead"><strong>Claude 能像真人一樣操作內建瀏覽器，照文件自動把整份 Google 表單建好；它本身不生圖，可改用 ChatGPT 或透過 MCP 接 Magnific 等平台生成主視覺；再套用設計系統產出含手機版的網頁設計稿、存成 HTML。</strong></p></div></div>
+<div class="callout cx-key"><div class="cx-t">你會學到</div><div class="cx-b"><ul><li>讓 Claude 操作瀏覽器，自動建立一份完整的 Google 表單</li><li>Claude 不支援生圖時的兩條路：用 ChatGPT，或用 MCP 接圖片平台</li><li>用設計系統生成網頁設計稿、為何存成 HTML</li></ul></div></div>
+<h3>內容筆記</h3>
+<h4>瀏覽器自動操作：自動建 Google 表單 ⏱ 19:36</h4>
+<p>實體認養日需要一份線上申請表，但題目很多、手打太慢。Claude 有<strong>操作瀏覽器與電腦</strong>的功能：</p>
+<ol><li>請 Claude 開啟<strong>內建瀏覽器</strong>、前往 Google 表單首頁</li><li><strong>你親自</strong>用 Google 帳號登入（登入動作由本人完成）</li><li>把整理好的表單題目存成一份 <strong>Markdown 文件</strong></li><li>寫提示詞請 Claude「參考這份文件操作瀏覽器，建立一份全新的 Google 表單」</li></ol>
+<p>Claude 就會<strong>像真人一樣讀取畫面、建立題目、逐一填寫</strong>，幾分鐘內完成一份欄位齊全的申請表。</p>
+<h4>生成圖片的兩條路 ⏱ 20:30</h4>
+<div class="callout cx-warn"><div class="cx-t">Claude 本身不支援生成圖片</div><div class="cx-b"><p>需要主視覺插圖時，要借助外部工具。</p></div></div>
+<p><strong>路線 A：用 ChatGPT</strong> — 把活動計畫書上傳到 ChatGPT，請它依企劃繪製網頁主視覺圖。</p>
+<p><strong>路線 B：用 MCP 接圖片平台 ⏱ 21:02</strong> — 以 <strong>Magnific</strong> 為例（需訂閱付費方案）：在它網站左下角點插座圖示→選 MCP→把 <strong>MCP 網址</strong>複製貼給 Claude 請它安裝，或點「一鍵新增」。之後把活動文件丟給 Claude、寫生圖提示詞。</p>
+<div class="callout cx-tip"><div class="cx-t">用 MCP 生圖記得指定模型</div><div class="cx-b"><p>Magnific 提供的 AI 模型種類很多，提示詞裡<strong>要標明想用的模型名稱</strong>，Claude 才能呼叫到正確模型。</p></div></div>
+<h4>製作網頁設計稿 ⏱ 21:57</h4>
+<p>網頁素材較多，先集中放一個資料夾。點輸入框左下角「＋」→「<strong>新增資料夾</strong>」指向該位置，別忘了在選單<strong>套用先前的設計系統</strong>。貼上製作網頁的提示詞送出，Claude 會在旁邊窗格生出<strong>網頁設計稿</strong>，還額外附一個<strong>手機版介面</strong>。</p>
+<div class="callout cx-tip"><div class="cx-t">設計稿存成 HTML 的理由</div><div class="cx-b"><p>HTML 檔內含網頁的程式碼與圖片素材，之後要轉成正式版網頁會省事許多（接續下一篇的部署）。</p></div></div>
+<h3>關鍵詞</h3>
+<ul><li><strong>瀏覽器自動操作</strong>：Claude 讀取畫面、模擬真人點擊與填寫，自動完成網頁上的任務（如建表單）。</li><li><strong>生成圖片的替代方案</strong>：Claude 不生圖，改用 ChatGPT 或 MCP 接 Magnific 等平台。</li><li><strong>一鍵新增（MCP）</strong>：在支援平台上快速把其 MCP 連接器加到 Claude。</li><li><strong>網頁設計稿（HTML）</strong>：含程式碼與素材的設計稿，便於後續轉成正式網站。</li></ul>
+<h3>可執行要點</h3>
+<ul><li class="task"><label><input type="checkbox" class="tk">把表單題目寫成 Markdown，請 Claude 操作瀏覽器自動建 Google 表單（登入由你本人做）</label></li><li class="task"><label><input type="checkbox" class="tk">需要插圖時用 ChatGPT，或用 MCP 接圖片平台（生圖提示詞要指定模型）</label></li><li class="task"><label><input type="checkbox" class="tk">做網頁設計稿前，先新增資料夾並套用設計系統，完成後存成 HTML</label></li></ul>
+<div class="quiz" id="qz5" data-total="3"><div class="wgh">📝 隨堂測驗<span class="wghint">（點選項作答）</span><span class="qzscore"></span><button class="qzretry" style="display:none">↺ 重做</button></div><div class="qzq"><div class="qzqt">關於 Claude 生成圖片，下列何者正確？</div><div class="qzopts"><button class="qzopt" data-c="0">Claude 內建強大生圖</button><button class="qzopt" data-c="1">Claude 本身不支援生圖，要靠 ChatGPT 或 MCP 接圖片平台</button><button class="qzopt" data-c="0">只能生黑白圖</button><button class="qzopt" data-c="0">生圖免費無限</button></div><div class="qzex">Claude 不支援生成圖片；需用 ChatGPT，或透過 MCP 連上 Magnific 等第三方平台。</div></div><div class="qzq"><div class="qzqt">用 MCP 接 Magnific 生圖時，提示詞特別要注意什麼？</div><div class="qzopts"><button class="qzopt" data-c="0">要很長</button><button class="qzopt" data-c="1">要標明想使用的模型名稱</button><button class="qzopt" data-c="0">要用英文</button><button class="qzopt" data-c="0">要附信用卡號</button></div><div class="qzex">Magnific 模型種類多，需在提示詞標明模型名稱，Claude 才能呼叫到正確模型。</div></div><div class="qzq"><div class="qzqt">網頁設計稿為何建議存成 HTML？</div><div class="qzopts"><button class="qzopt" data-c="0">比較小</button><button class="qzopt" data-c="1">HTML 含網頁程式碼與圖片素材，之後轉正式網站省事</button><button class="qzopt" data-c="0">HTML 才能列印</button><button class="qzopt" data-c="0">避免被複製</button></div><div class="qzex">HTML 檔內含程式碼與圖片素材，後續轉換成正式版網頁會省事許多。</div></div></div></div>
+      </article>
+  </section>
+  <section class="course" id="course-c8">
+    <div class="coursebar"><span class="cic">📄</span><div><h2 class="ctitle">008_Code工程化部署與自動化</h2><div class="csub"> · 1 篇</div></div></div>
+    
+    
+      <article class="note" id="c8-0">
+        <h3 class="ntitle">8. 切換 Claude Code：CLAUDE.md、部署、遠端控制、Hook 與程式碼動畫</h3>
+        <div class="nbody"><div class="callout cx-note"><div class="cx-t">全民 AI 手冊 · 章節 18–22（含 Code 切換）· 22:40–29:37</div></div>
+<div class="callout cx-key"><div class="cx-t">一句話總結</div><div class="cx-b"><p class="lead"><strong>把網頁交給本機的 Claude Code 維護：用 <code>/init</code> 建 CLAUDE.md 讓它每次開場就懂專案、用 Vercel 連接器一鍵部署成真網站、出門用遠端控制從手機改、用 Hook 強制擋住危險操作，最後用程式碼＋ElevenLabs 配音生成宣傳動畫。</strong></p></div></div>
+<div class="callout cx-key"><div class="cx-t">你會學到</div><div class="cx-b"><ul><li>從雲端切到 Claude Code 本機模式，以及它「不讀雲端個人背景」的差異</li><li>用 <code>/init</code> 建立 CLAUDE.md，與「專案層級 vs 個人層級（跨專案）」的差別</li><li>用 Vercel 連接器把 HTML 部署成可互動的真網站</li><li>遠端控制（Remote Control）、Hook（強制攔截）、程式碼動畫＋ElevenLabs 配音</li></ul></div></div>
+<h3>內容筆記</h3>
+<h4>切換到 Claude Code 本機模式 ⏱ 22:40</h4>
+<p>網頁常要更新，於是把工作從雲端切到<strong>本機的 Code 模式</strong>：在本機建一個專案資料夾（例「認養日活動網頁」），把下載的 HTML 設計稿拖進去。用 Claude Code 時系統會問「在哪個環境作業」，選「<strong>這台電腦</strong>」，再把專案指向含 HTML 的資料夾。</p>
+<div class="callout cx-warn"><div class="cx-t">Claude Code 不會讀你雲端的個人背景</div><div class="cx-b"><p>本機版<strong>不會</strong>讀取你存在雲端的個人經歷與偏好，所以它不知道小芳在收容所工作。解法就是下一段的 CLAUDE.md。</p></div></div>
+<h4>建立 CLAUDE.md ⏱ 23:49</h4>
+<div class="callout cx-key"><div class="cx-t">CLAUDE.md = Claude 每次開場先讀的專案筆記</div><div class="cx-b"><p>在對話框輸入斜線 <strong><code>/init</code></strong> 加一些簡短補充說明，按 Enter，Claude 會掃描專案資料夾、自動生成一個 <strong>CLAUDE.md</strong>。打開它就是「Claude 寫給自己的筆記」：這專案做什麼、該注意什麼。每開新對話，Claude 都會第一時間讀它。</p></div></div>
+<p>兩種層級：</p>
+<div class="tablewrap"><table><thead><tr><th>層級</th><th>範圍</th><th>怎麼設</th></tr></thead><tbody><tr><td><strong>專案層級</strong></td><td>只對這個專案</td><td><code>/init</code> 在專案資料夾生成</td></tr><tr><td><strong>個人層級（跨專案）</strong></td><td>不管開哪個專案都生效</td><td>把雲端的個人指示拷貝、貼到 Claude Code，請它記到「個人層級」的 CLAUDE.md</td></tr></tbody></table></div>
+<p>如此不論開哪個專案，Claude 都記得你的身分與偏好。</p>
+<h4>部署網站（Vercel）⏱ 24:47</h4>
+<p>要讓大家都能瀏覽，需免費穩定的<strong>託管平台</strong>。小芳用 Gmail 註冊 <strong>Vercel</strong> 免費帳號，回 Claude「外掛程式」分頁搜尋 <strong>Vercel</strong> 連接器→右下角「連接」。接著請 Claude「把 HTML 設計稿轉成能真正運作的網站」，並附上先前 Google 表單連結。幾分鐘後部署完成，Claude 給一個網址——所有元素可真實互動，點「申請認養」會跳到 Google 表單，手機瀏覽也正常。</p>
+<h4>遠端控制（Remote Control）⏱ 25:56</h4>
+<p>人在外面臨時要改網頁？事先在 Claude Code 啟用<strong>遠端控制</strong>。</p>
+<div class="callout cx-warn"><div class="cx-t">遠端的前提</div><div class="cx-b"><p>遠端操作要從外面連回辦公室電腦，因此必須<strong>防止那台電腦進入睡眠</strong>。</p></div></div>
+<p>測試：手機打開 Claude App→切到 <strong>Code</strong> 分頁→找到「認養日網頁」對話→進去直接下指令請 Claude 改網頁。</p>
+<h4>用 Hook 強制執行指令 ⏱ 26:32</h4>
+<div class="callout cx-key"><div class="cx-t">CLAUDE.md 是柔性提醒，Hook 是硬性保證</div><div class="cx-b"><p>CLAUDE.md 對 Claude 只是「口頭提醒」，對話一長仍可能忘。<strong>Hook（勾子）</strong> 會在特定動作<strong>之前或之後 100% 自動執行指令，絕不漏掉</strong>。</p></div></div>
+<p>例：要確保 Claude 無論如何<strong>不要改認養動物清單</strong>，請它建一個 Hook——任何指令想改表格資料，系統在執行前就攔下，並顯示「原始資料只能由小芳親自修改」。實測故意下「改毛孩年齡」的指令，Claude 一要執行就被 Hook 當場攔截，原始資料獲得 100% 保障。</p>
+<h4>建立程式碼動畫（＋ElevenLabs 配音）⏱ 27:32</h4>
+<p>攤位想循環播一支 30 秒導覽短片，但小芳不會剪輯、也沒配音預算。改請 Claude<strong>用程式碼生成動畫</strong>：</p>
+<ol><li>到 <strong>Futurepedia</strong> 挑一個喜歡的動畫範本，複製它的提示詞，貼到 Word／Google 文件再存成 <strong>Markdown</strong></li><li>要人聲旁白：到 <strong>ElevenLabs</strong> 註冊免費帳號，回 Claude「外掛程式」裝 <strong>ElevenLabs 連接器</strong>，讓 Claude 製作動畫時直接呼叫它配音</li><li>把預先寫好的<strong>分鏡與台詞</strong>存成「動畫腳本」MD，連同風格範本放進專案資料夾</li><li>寫提示詞請 Claude「參考附件，用程式碼製作一支簡短宣傳動畫」。幾分鐘後點「播放」即可欣賞</li></ol>
+<h3>關鍵詞</h3>
+<ul><li><strong>CLAUDE.md</strong>：Claude Code 每次開場先讀的專案筆記，分專案層級與個人層級（跨專案）。</li><li><strong><code>/init</code></strong>：掃描專案資料夾、自動生成 CLAUDE.md 的指令。</li><li><strong>連接器（Vercel）</strong>：在外掛程式分頁連接後，Claude 可代為管理與部署網站。</li><li><strong>遠端控制（Remote Control）</strong>：從手機連回本機電腦下指令，需防電腦睡眠。</li><li><strong>Hook（勾子）</strong>：在特定動作前後 100% 自動執行的強制規則，比 CLAUDE.md 更硬。</li></ul>
+<h3>可執行要點</h3>
+<ul><li class="task"><label><input type="checkbox" class="tk">本機專案用 <code>/init</code> 建 CLAUDE.md；把常用的個人偏好設到「個人層級」跨專案生效</label></li><li class="task"><label><input type="checkbox" class="tk">用 Vercel 連接器把 HTML 一鍵部署成真網站</label></li><li class="task"><label><input type="checkbox" class="tk">需要在外操作時先啟用遠端控制，並設定電腦不睡眠</label></li><li class="task"><label><input type="checkbox" class="tk">用 Hook 把「絕不能動」的資料或操作硬性鎖住</label></li><li class="task"><label><input type="checkbox" class="tk">要生成動畫：挑範本提示詞＋ElevenLabs 配音，寫好分鏡台詞交給 Claude</label></li></ul>
+<div class="quiz" id="qz6" data-total="4"><div class="wgh">📝 隨堂測驗<span class="wghint">（點選項作答）</span><span class="qzscore"></span><button class="qzretry" style="display:none">↺ 重做</button></div><div class="qzq"><div class="qzqt">為什麼切到 Claude Code 後要建 CLAUDE.md？</div><div class="qzopts"><button class="qzopt" data-c="0">為了美觀</button><button class="qzopt" data-c="1">因為本機版不會讀雲端的個人背景，要靠它讓 Claude 開場就懂專案</button><button class="qzopt" data-c="0">CLAUDE.md 能加速電腦</button><button class="qzopt" data-c="0">這是付費功能</button></div><div class="qzex">Claude Code 不讀雲端個人經歷，CLAUDE.md 讓它每次開新對話先讀、理解專案與你的偏好。</div></div><div class="qzq"><div class="qzqt">CLAUDE.md 與 Hook 的關鍵差別是？</div><div class="qzopts"><button class="qzopt" data-c="0">沒有差別</button><button class="qzopt" data-c="1">CLAUDE.md 是柔性提醒可能被忘，Hook 在動作前後 100% 強制執行</button><button class="qzopt" data-c="0">Hook 比較慢</button><button class="qzopt" data-c="0">CLAUDE.md 要付費</button></div><div class="qzex">CLAUDE.md 像口頭提醒、對話長了可能被忽略；Hook 會在特定動作前後必定執行，絕不漏掉。</div></div><div class="qzq"><div class="qzqt">要讓 Claude 生成的動畫有人聲旁白，影片用的是哪個平台？</div><div class="qzopts"><button class="qzopt" data-c="0">Vercel</button><button class="qzopt" data-c="0">Magnific</button><button class="qzopt" data-c="1">ElevenLabs</button><button class="qzopt" data-c="0">Futurepedia</button></div><div class="qzex">到 ElevenLabs 註冊並裝其連接器，讓 Claude 製作動畫時直接呼叫它配音。</div></div><div class="qzq"><div class="qzqt">啟用遠端控制時，為什麼要防止辦公室電腦睡眠？</div><div class="qzopts"><button class="qzopt" data-c="0">省電考量</button><button class="qzopt" data-c="1">因為遠端操作要從外面連回那台本機電腦，睡眠會連不上</button><button class="qzopt" data-c="0">避免中毒</button><button class="qzopt" data-c="0">讓螢幕更亮</button></div><div class="qzex">遠端操作需從外部連回本機執行任務，電腦睡眠就無法連回。</div></div></div></div>
+      </article>
+  </section>
+      <div class="noresults" id="noresults" style="display:none">找不到符合的筆記</div>
+      <div class="foot">由 Course2Notes 自動生成 · 內容為使用者自有課程的個人學習筆記</div>
+    </div>
+  </div>
+</div>
+<button class="totop" id="totop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+<div id="lightbox"><img alt=""></div>
+<script>
+function lsGet(k){try{return localStorage.getItem(k)}catch(_){return null}}
+function lsSet(k,v){try{localStorage.setItem(k,v)}catch(_){}}
+var _fs=parseFloat(lsGet('c2n_fs'))||16.5;
+function applyFs(){document.documentElement.style.setProperty('--fs',_fs+'px')}
+function setFs(d){_fs=d===0?16.5:Math.max(13,Math.min(27,_fs+d*2));applyFs();lsSet('c2n_fs',_fs)}
+applyFs();
+document.querySelectorAll('.navhead').forEach(function(b){b.addEventListener('click',function(){b.closest('.navgroup').classList.toggle('open')})});
+// 展開第一個
+document.querySelector('.navgroup')&&document.querySelector('.navgroup').classList.add('open');
+// active on scroll
+const subs=[...document.querySelectorAll('.navsub')];
+const map={};subs.forEach(a=>map[a.getAttribute('href').slice(1)]=a);
+const io=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){subs.forEach(s=>s.classList.remove('active'));const a=map[e.target.id];if(a){a.classList.add('active');a.closest('.navsubs').parentElement.classList.add('open')}}})},{rootMargin:'-10% 0px -80% 0px'});
+document.querySelectorAll('.note').forEach(n=>io.observe(n));
+// back to top
+addEventListener('scroll',()=>{document.getElementById('totop').classList.toggle('show',scrollY>500)});
+// 隨堂測驗：作答即時對錯＋計分；單字卡：點擊翻面
+var QZTPL="答對 {a}/{t}",QZPROG="已答 {a}/{t}";
+function _qzf(tpl,a,t){return tpl.replace('{a}',a).replace('{t}',t);}
+document.querySelectorAll('.quiz').forEach(function(q){
+  var total=+q.getAttribute('data-total'),sc=q.querySelector('.qzscore'),rb=q.querySelector('.qzretry');
+  function upd(){
+    var done=q.querySelectorAll('.qzq.done').length,wrong=q.querySelectorAll('.qzq .qzopt.wrong').length;
+    if(!done){sc.textContent='';if(rb)rb.style.display='none';return;}
+    // 沒答完先顯示進度，答完才給總分（避免中途分數被讀成最終成績）
+    sc.textContent=done<total?_qzf(QZPROG,done,total):_qzf(QZTPL,done-wrong,total);
+    if(rb)rb.style.display=done===total?'':'none';
+  }
+  q.querySelectorAll('.qzq').forEach(function(qq){
+    qq.querySelectorAll('.qzopt').forEach(function(op){
+      op.addEventListener('click',function(){
+        if(qq.classList.contains('done'))return;
+        qq.classList.add('done');
+        if(op.getAttribute('data-c')!=='1')op.classList.add('wrong');
+        qq.querySelectorAll('.qzopt').forEach(function(o){if(o.getAttribute('data-c')==='1')o.classList.add('right');o.disabled=true;});
+        upd();
+      });
+    });
+  });
+  if(rb)rb.addEventListener('click',function(){
+    q.querySelectorAll('.qzq').forEach(function(qq){qq.classList.remove('done');
+      qq.querySelectorAll('.qzopt').forEach(function(o){o.classList.remove('right','wrong');o.disabled=false;});});
+    upd();
+  });
+});
+document.querySelectorAll('.fc').forEach(function(c){c.addEventListener('click',function(){c.classList.toggle('flipped');});});
+// 圖片點擊放大（lightbox）
+(function(){var lb=document.getElementById('lightbox');if(!lb)return;var li=lb.querySelector('img');
+document.querySelectorAll('.nbody figure.fig img').forEach(function(img){img.addEventListener('click',function(){li.src=img.src;lb.classList.add('show')})});
+lb.addEventListener('click',function(){lb.classList.remove('show');li.src='';});
+document.addEventListener('keydown',function(e){if(e.key==='Escape'){lb.classList.remove('show');li.src='';}});})();
+// 待辦勾選狀態持久化（key＝標題+輸出檔名鹽＋筆記 id＋項次，避免兩份同名筆記在同 origin 下互相污染；localStorage 優先於 markdown 的 [x]）
+var TKSALT="寫給一般人的 Claude 新手教學 · 30 分鐘完整功能導覽|Claude新手教學_筆記.html";
+document.querySelectorAll('.note').forEach(n=>{[...n.querySelectorAll('input.tk')].forEach((cb,idx)=>{
+  const k='c2n_tk:'+TKSALT+':'+n.id+':'+idx;const v=lsGet(k);if(v==='1')cb.checked=true;else if(v==='0')cb.checked=false;
+  cb.addEventListener('change',()=>lsSet(k,cb.checked?'1':'0'));});});
+// search: 隱藏不含關鍵字的 note
+function doSearch(q){q=q.trim().toLowerCase();let shown=0;
+  document.querySelectorAll('.note').forEach(n=>{const hit=!q||n.textContent.toLowerCase().includes(q);n.style.display=hit?'':'none';if(hit&&q)shown++;const a=document.querySelector('.navsub[href="#'+n.id+'"]');if(a)a.style.display=hit?'':'none'});
+  document.querySelectorAll('.course').forEach(c=>{const any=[...c.querySelectorAll('.note')].some(n=>n.style.display!=='none');c.style.display=any?'':'none'});
+  document.querySelectorAll('.navgroup').forEach(g=>{const any=[...g.querySelectorAll('.navsub')].some(a=>a.style.display!=='none');g.style.display=any?'':'none'});
+  const nr=document.getElementById('noresults');if(nr)nr.style.display=(q&&shown===0)?'':'none'}
+</script>
+</body>
+</html>
